@@ -1,6 +1,6 @@
 # HedgeMark Operations Secure
 
-The project is created to approve and manager wire tickets generated from HM-Operations site
+The project is created to approve and manage wire tickets generated from HM-Operations site
 
 ## Project Description
 
