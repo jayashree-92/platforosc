@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F4B70A85-B67C-412F-BCAD-22DB58E1110A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HedgeMark.SwiftMessageHandler</RootNamespace>
+    <AssemblyName>HedgeMark.SwiftMessageHandler</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Local|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Local\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'QA|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\QA\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\Blocks\SwiftBlock.cs" />
+    <Compile Include="Model\Blocks\SwiftBlock4.cs" />
+    <Compile Include="Model\Blocks\SwiftBlock1.cs" />
+    <Compile Include="Model\Blocks\SwiftBlock2.cs" />
+    <Compile Include="Model\Blocks\SwiftBlock3.cs" />
+    <Compile Include="Model\Blocks\SwiftBlock5.cs" />
+    <Compile Include="Model\Blocks\SwiftBlockUser.cs" />
+    <Compile Include="Model\Blocks\SwiftBlockWithFields.cs" />
+    <Compile Include="Model\Fields\Field.cs" />
+    <Compile Include="Model\Fields\Field119.cs" />
+    <Compile Include="Model\Fields\Field11S.cs" />
+    <Compile Include="Model\Fields\Field121.cs" />
+    <Compile Include="Model\Fields\Field13C.cs" />
+    <Compile Include="Model\Fields\Field16R.cs" />
+    <Compile Include="Model\Fields\Field16S.cs" />
+    <Compile Include="Model\Fields\Field20.cs" />
+    <Compile Include="Model\Fields\Field20C.cs" />
+    <Compile Include="Model\Fields\Field21.cs" />
+    <Compile Include="Model\Fields\Field22H.cs" />
+    <Compile Include="Model\Fields\Field22F.cs" />
+    <Compile Include="Model\Fields\Field23B.cs" />
+    <Compile Include="Model\Fields\Field23G.cs" />
+    <Compile Include="Model\Fields\Field25.cs" />
+    <Compile Include="Model\Fields\Field25D.cs" />
+    <Compile Include="Model\Fields\Field30.cs" />
+    <Compile Include="Model\Fields\Field32A.cs" />
+    <Compile Include="Model\Fields\Field32B.cs" />
+    <Compile Include="Model\Fields\Field35B.cs" />
+    <Compile Include="Model\Fields\Field36B.cs" />
+    <Compile Include="Model\Fields\Field50A.cs" />
+    <Compile Include="Model\Fields\Field50K.cs" />
+    <Compile Include="Model\Fields\Field54A.cs" />
+    <Compile Include="Model\Fields\Field53A.cs" />
+    <Compile Include="Model\Fields\Field52A.cs" />
+    <Compile Include="Model\Fields\Field56A.cs" />
+    <Compile Include="Model\Fields\Field57A.cs" />
+    <Compile Include="Model\Fields\Field57D.cs" />
+    <Compile Include="Model\Fields\Field58A.cs" />
+    <Compile Include="Model\Fields\Field59.cs" />
+    <Compile Include="Model\Fields\Field61.cs" />
+    <Compile Include="Model\Fields\Field71A.cs" />
+    <Compile Include="Model\Fields\Field72.cs" />
+    <Compile Include="Model\Fields\Field90A.cs" />
+    <Compile Include="Model\Fields\Field95P.cs" />
+    <Compile Include="Model\Fields\Field95R.cs" />
+    <Compile Include="Model\Fields\Field97A.cs" />
+    <Compile Include="Model\Fields\Field98A.cs" />
+    <Compile Include="Model\Fields\Field98C.cs" />
+    <Compile Include="Model\Fields\FieldConstants.cs" />
+    <Compile Include="Model\Fields\FieldDirectory.cs" />
+    <Compile Include="Model\Fields\FieldValidator.cs" />
+    <Compile Include="Model\Fields\FieldWithAccountAndBIC.cs" />
+    <Compile Include="Model\Fields\FieldWithAccountBICAndDCMark.cs" />
+    <Compile Include="Model\Fields\FieldWithAccountAndAddress.cs" />
+    <Compile Include="Model\Fields\FieldWithDate.cs" />
+    <Compile Include="Model\Fields\FieldWithQualifierAndCode.cs" />
+    <Compile Include="Model\Fields\FieldWithQualifierCodeAndValue.cs" />
+    <Compile Include="Model\Fields\FieldWithQualifierDateAndTime.cs" />
+    <Compile Include="Model\MT\AbstractMT.cs" />
+    <Compile Include="Model\MT\MT1XX\MT103.cs" />
+    <Compile Include="Model\MT\MT1XX\MT192.cs" />
+    <Compile Include="Model\MT\MT2XX\MT202.cs" />
+    <Compile Include="Model\MT\MT2XX\MT202COV.cs" />
+    <Compile Include="Model\MT\MT2XX\MT210.cs" />
+    <Compile Include="Model\MT\MT2XX\MT292.cs" />
+    <Compile Include="Model\MT\MT5XX\MT540.cs" />
+    <Compile Include="Model\MT\MT5XX\MT548.cs" />
+    <Compile Include="Model\MT\MT5XX\MT542.cs" />
+    <Compile Include="Model\MT\MT9XX\MT940.cs" />
+    <Compile Include="Model\MT\MTDirectory.cs" />
+    <Compile Include="Model\SwiftMessage.cs" />
+    <Compile Include="Model\SwiftMessageType.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SwiftMessageInterpreter.cs" />
+    <Compile Include="SwiftMessageValidator.cs" />
+    <Compile Include="Utils\Cloner.cs" />
+    <Compile Include="Utils\ComponentHelper.cs" />
+    <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Utils\FieldInstantiator.cs" />
+    <Compile Include="Utils\SwiftMessageParser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
