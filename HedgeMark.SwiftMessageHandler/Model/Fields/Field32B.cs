@@ -18,16 +18,17 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public Field32B setAmount(decimal amount)
         {
-            Amount = amount.ToString(CultureInfo.InvariantCulture).Replace(".", ",");
+            var amountStr = amount.ToString(CultureInfo.InvariantCulture);
+            Amount = amountStr.Contains(".") ? amountStr.ToString(CultureInfo.InvariantCulture).Replace(".", ",") : string.Format("{0},", amountStr);
             return this;
         }
-        
+
         public string Currency { get; set; }
         public string Amount { get; set; }
 
         public override string GetValue()
         {
-            return Value = string.Format("{0}{1}", Currency ?? FieldConstants.USD, Amount);
+            return Value = string.Format("{0}{1}", Currency ?? FieldConstants.USD, Amount == null ? "0," : Amount);
         }
 
         public override List<string> Components

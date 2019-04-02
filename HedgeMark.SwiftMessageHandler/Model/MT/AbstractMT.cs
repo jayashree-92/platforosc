@@ -18,7 +18,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.MT
         public AbstractMT setSenderAndReceiver(string sender, string receiver)
         {
             setSender(sender);
-            setReceiver(sender);
+            setReceiver(receiver);
             return this;
         }
 

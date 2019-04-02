@@ -52,13 +52,14 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public Field32A setAmount(decimal amount)
         {
-            Amount = amount.ToString(CultureInfo.InvariantCulture).Replace(".", ",");
+            var amountStr = amount.ToString(CultureInfo.InvariantCulture);
+            Amount = amountStr.Contains(".") ? amountStr.ToString(CultureInfo.InvariantCulture).Replace(".", ",") : string.Format("{0},", amountStr);
             return this;
         }
 
         public override string GetValue()
         {
-            return Value = string.Format("{0}{1}{2}", DateString ?? string.Empty, Currency ?? FieldConstants.USD, Amount == null ? "0" : Amount);
+            return Value = string.Format("{0}{1}{2}", DateString ?? string.Empty, Currency ?? FieldConstants.USD, Amount == null ? "0," : Amount);
         }
 
         public string Currency { get; set; }
