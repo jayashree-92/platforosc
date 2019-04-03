@@ -1,0 +1,78 @@
+FORM {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	MARGIN: 0px; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; COLOR: #666666; FONT-SIZE: 11px
+}
+TD {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #666666; FONT-SIZE: 12px
+}
+.bodytext {
+	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; COLOR: #666666; FONT-SIZE: 11px
+}
+A.bodytext {
+	FONT-SIZE: 11px
+}
+H1 {
+	MARGIN-TOP: 0px; FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #666666; FONT-SIZE: 16px
+}
+.logintitle {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #A29060; FONT-SIZE: 14px; FONT-WEIGHT: bold
+}
+.formtitle {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #000000; FONT-SIZE: 12px; FONT-WEIGHT: bold
+}
+.rightcol {
+	BACKGROUND-COLOR: #e4e4e4; FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #5a5a5a; FONT-SIZE: 12px
+}
+.errormsg {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: red; FONT-SIZE: 12px; FONT-WEIGHT: bold; PADDING-TOP: 12px
+}
+A {
+	COLOR: #666666; TEXT-DECORATION: underline
+}
+A:visited {
+	COLOR: #666666; TEXT-DECORATION: underline
+}
+A:hover {
+	COLOR: #008127
+}
+.copyright {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #666666; FONT-SIZE: 10px
+}
+.footer {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #ffffff; FONT-SIZE: 10px
+}
+.footer A:link {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #ffffff; FONT-SIZE: 10px; TEXT-DECORATION: none
+}
+.footer A:visited {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #ffffff; FONT-SIZE: 10px; TEXT-DECORATION: none
+}
+.footer A:hover {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #ffffff; FONT-SIZE: 10px; TEXT-DECORATION: underline
+}
+.tinylink {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #5a5a5a; FONT-SIZE: 10px
+}
+.tinylink A:link {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #5a5a5a; FONT-SIZE: 11px; TEXT-DECORATION: none
+}
+.tinylink A:visited {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #5a5a5a; FONT-SIZE: 11px; TEXT-DECORATION: none
+}
+.tinylink A:hover {
+	FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: #5a5a5a; FONT-SIZE: 11px; TEXT-DECORATION: underline
+}
+#headerTable {
+	BORDER-BOTTOM: #ccc 1px solid
+}
+#mainContent {
+	MARGIN: 0px 15px 15px; WIDTH: 600px; FONT-SIZE: 11px
+}
+#loginTools {
+	TEXT-ALIGN: right; MARGIN: 10px 0px 0px; WIDTH: 600px; DISPLAY: block; FONT-SIZE: 11px
+}
+#loginTools A {
+	COLOR: #008127
+}

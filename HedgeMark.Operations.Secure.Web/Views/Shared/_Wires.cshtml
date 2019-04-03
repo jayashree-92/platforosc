@@ -1,0 +1,776 @@
+﻿<div class="modal fade" id="modalToRetrieveWires" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-mlg2" role="document">
+        <div class="modal-content">
+            <div class="row" style="position: sticky;top: 0;z-index:2;">
+                <span class="col-md-12">
+                    <p class="panel panel-heading" style="margin-bottom: 10px;background: #F5F5F5;border-bottom: 1px solid lightgray;">
+                        <img src="..\Images\spinner.gif" alt="Loading..." class='triggerTasklogLoadSpinner' ng-style="{ 'display': isWireLoadingInProgress ? 'inline' : 'none' }" />
+                        @*<i class="glyphicon glyphicon-usd"></i>*@
+                        <span style="font-size: 15px;font-weight: bold">Wire Ticket Details  </span>
+                        <span ng-if="!isApprovedOrFailed">
+                            <span style="padding-top: 5px;font-size: 12px;">
+                                | &nbsp;Deadline To Approve:
+                            </span>
+                            <i class="glyphicon glyphicon-time"></i>&nbsp;
+                            <span style="position: absolute">
+                                <span class="col-md-2" style="font-size: 13px;padding: 0px;"><label class="label label-success">{{ timeToShow }}</label></span>
+                            </span>|&nbsp;
+                        </span>
+                        <span ng-style="{'margin-left': isApprovedOrFailed ? '0px' : '55px' }">|&nbsp;Wire Status: <span id="spnwireStatus"><b>{{ getWireStatus() }}</b></span></span>
+                        <span ng-style="{'margin-left': isApprovedOrFailed ? '0px' : '55px' }" ng-show="WireTicket.SwiftStatusId != 1">|&nbsp;Swift Status: <span id="spnswiftStatus"><b>{{ getSwiftStatus() }}</b></span></span>
+                    </p>
+                    <div class="panel panel-heading collapse" id="wireErrorStatus">
+                        <div>
+                            <p style="color: darkred; font-weight:bold;"> {{ validationMsg }}</p>
+                        </div>
+                    </div>
+                </span>
+                <span class="pull-right" style="padding: 5px; position: absolute; margin: 5px 0px 0px -50px">
+                    <button title="close this log" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </span>
+            </div>
+
+            <div class="modal-body" style="padding: 5px 15px">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Value Date:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <span><a href='#' id="wireValueDate" data-date="{{ WireTicket.ValueDate | date: 'MM/dd/yyyy' }}" ng-model="WireTicket.ValueDate" title="Choose a value date">{{ WireTicket.ValueDate | date: 'MM/dd/yyyy' }}</a></span>
+                        </div>
+                    </div>
+                </div>
+                <p />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Sending Account:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="liWireAccount" class="form-control" ng-model="accountDetail.AccountName" readonly />
+                        </div>
+                    </div>
+                </div>
+                <p />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Receiving Account:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="liSSITemplate" class="form-control" ng-model="wireTicketObj.ReceivingAccountName" readonly />
+                        </div>
+                    </div>
+                </div>
+                <p />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Amount:<span style="color: red"> *</span></label>
+                        </div>
+                        <div class="col-md-3">
+                            <span type="text" id="wireAmount" class="form-control" ng-disabled="!isEditEnabled" />
+                        </div>
+                        <div class="col-md-1">
+                            <input type="text" class="form-control" ng-model="wireTicketObj.ReceivingAccountCurrency" readonly style="width:60px;" />
+                        </div>
+                    </div>
+                </div>
+                <p style="height:5px;" />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Message Type:<span style="color: red"> *</span></label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="liMessageType" class="form-control" ng-disabled="!isEditEnabled" />
+                        </div>
+                    </div>
+                </div>
+                <p style="height:5px;" />
+                <div class="row" ng-show="WireTicket.WireMessageTypeId == 1">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Delivery Charges:<span style="color: red"> *</span></label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="liDeliveryCharges" class="form-control" ng-disabled="!isEditEnabled" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <p style="height:5px;" ng-show="WireTicket.WireMessageTypeId == 1" />
+                <div class="panel panel-default" id="panelAccountSelector">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#accountDetailDiv" ng-click="collapseContainer('Account')" aria-expanded="false" aria-controls="accountDetailDiv">
+                        <span class="">Sending Account Details</span>&nbsp;&nbsp;<span class="label label-primary shadowBox prewrap">{{ accountDetail.AccountNumber + " - " + accountDetail.AccountName }}</span><span class='glyphicon  pull-right' ng-class="{ 'glyphicon-chevron-right': !isAccountCollapsed , 'glyphicon-chevron-down': isAccountCollapsed }"></span>
+                    </div>
+                    <div id="accountDetailDiv" class="panel-body collapse">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Account Name </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" ng-model="accountDetail.AccountName" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Account Number </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input name="accountnumber" type="text" class="form-control" ng-model="accountDetail.AccountNumber" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Currency </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" ng-model="accountDetail.Currency" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Description </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input ng-model="accountDetail.Description" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Cash Sweep</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input ng-model="accountDetail.CashSweep" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6 cashSweepTimeDiv">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Cash Sweep Time</label>
+                                </div>
+                                <div class="col-sm-8 col-md-7 col-lg-7">
+                                    <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
+                                        <input type="time" ng-model="accountDetail.CashSweepTime" name="cashSweepTime" class="form-control" readonly />
+                                    </div>
+                                    <div class="col-sm-8 col-md-4 col-lg-4" style="padding-left: 0; padding-right: 20px;">
+                                        <input ng-model="accountDetail.CashSweepTimeZone" class="form-control control-label" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Wire Portal Cutoff</label>
+                                </div>
+                                <div class="col-sm-8 col-md-6 col-lg-7">
+                                    <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
+                                        <input type="time" name="cutOffTime" ng-model="accountDetail.CutoffTime" class="form-control" readonly />
+                                    </div>
+                                    <div class="col-sm-8 col-md-4 col-lg-4" style="margin-top: 5px; padding-left: 0;">
+                                        <label class="label label-success" style="font-size: 12px; padding: 5px;">{{accountDetail.DaystoWire}} {{accountDetail.DaystoWire > 1 ? "Days" : "Day"}}</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <p />
+                        <hr />
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">FFC Name</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" ng-model="accountDetail.FFCName" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">FFC Number</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" ng-model="accountDetail.FFCNumber" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Reference</label>
+
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" ng-model="accountDetail.Reference" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <span class="row font-primary">Beneficiary:</span>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <span class="row font-primary">Intermediary:</span>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <span class="row font-primary">Ultimate Beneficiary:</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left: 15px;">Account Number</label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="accountDetail.BeneficiaryAccountNumber" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" ng-model="accountDetail.IntermediaryAccountNumber" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" ng-model="accountDetail.AccountNumber" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left: 15px;">Type</label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" value="{{ accountDetail.IsBeneficiaryABA ? 'ABA' : 'BIC' }}" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" value="{{ accountDetail.IsIntermediaryABA ? 'ABA' : 'BIC' }}" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" value="{{ accountDetail.IsUltimateBeneficiaryABA ? 'ABA' : 'BIC' }}" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="accountDetail.BeneficiaryBICorABA" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3 ">
+                                <input type="text" ng-model="accountDetail.IntermediaryBICorABA" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="accountDetail.UltimateBeneficiaryBICorABA" class="form-control control-label" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left: 15px;">Bank Name </label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="accountDetail.BeneficiaryBankName" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="accountDetail.IntermediaryBankName" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" name="BankName" ng-model="accountDetail.UltimateBeneficiaryBankName" class="form-control control-label" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left: 15px;">Bank Address </label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <textarea class="form-control" rows="3" cols="10" ng-model="accountDetail.BeneficiaryBankAddress" readonly></textarea>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <textarea class="form-control" rows="3" cols="10" ng-model="accountDetail.IntermediaryBankAddress" readonly></textarea>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <textarea class="form-control modalInputWidth" rows="3" cols="10" ng-model="accountDetail.UltimateBeneficiaryBankAddress" readonly></textarea>
+                            </div>
+                        </div>
+                        <p />
+                    </div>
+                </div>
+
+                <div class="panel panel-default ng-show-hide" id="panelReceivingAccountSelector" ng-if="WireTicket.IsBookTransfer">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#receivingAccountDetailDiv" ng-click="collapseContainer('ReceivingAccount')" aria-expanded="false" aria-controls="receivingAccountDetailDiv">
+                        <span class="">Receiving Account Details</span>&nbsp;&nbsp;<span class="label label-primary shadowBox">{{ receivingAccountDetail.AccountNumber + " - " + receivingAccountDetail.AccountName }}</span>
+                        <span class='glyphicon  pull-right' ng-class="{ 'glyphicon-chevron-right': !isReceivingAccountCollapsed , 'glyphicon-chevron-down': isReceivingAccountCollapsed }"></span>
+                    </div>
+                    <div id="receivingAccountDetailDiv" class="panel-body collapse">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Account Name </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" ng-model="receivingAccountDetail.AccountName" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Account Number </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input name="accountnumber" type="text" class="form-control" ng-model="receivingAccountDetail.AccountNumber" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Currency </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" ng-model="receivingAccountDetail.Currency" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Description </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input ng-model="receivingAccountDetail.Description" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Cash Sweep</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input ng-model="receivingAccountDetail.CashSweep" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6 cashSweepTimeDiv">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Cash Sweep Time</label>
+                                </div>
+                                <div class="col-sm-8 col-md-7 col-lg-7">
+                                    <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
+                                        <input type="time" ng-model="receivingAccountDetail.CashSweepTime" name="cashSweepTime" class="form-control" readonly />
+                                    </div>
+                                    <div class="col-sm-8 col-md-4 col-lg-4" style="padding-left: 0; padding-right: 20px;">
+                                        <input ng-model="receivingAccountDetail.CashSweepTimeZone" class="form-control control-label" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Wire Portal Cutoff</label>
+                                </div>
+                                <div class="col-sm-8 col-md-6 col-lg-7">
+                                    <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
+                                        <input type="time" name="cutOffTime" ng-model="receivingAccountDetail.CutoffTime" class="form-control" readonly />
+                                    </div>
+                                    <div class="col-sm-8 col-md-4 col-lg-4" style="margin-top: 5px; padding-left: 0;">
+                                        <label class="label label-success" style="font-size: 12px; padding: 5px;">{{receivingAccountDetail.DaystoWire}} {{receivingAccountDetail.DaystoWire > 1 ? "Days" : "Day"}}</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">FFC Name</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" ng-model="receivingAccountDetail.FFCName" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">FFC Number</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" ng-model="receivingAccountDetail.FFCNumber" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Reference</label>
+
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" ng-model="receivingAccountDetail.Reference" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <span class="row font-primary">Beneficiary:</span>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <span class="row font-primary">Intermediary:</span>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <span class="row font-primary">Ultimate Beneficiary:</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left:15px;">Account Number</label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="receivingAccountDetail.BeneficiaryAccountNumber" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" ng-model="receivingAccountDetail.IntermediaryAccountNumber" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" ng-model="receivingAccountDetail.AccountNumber" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left:15px;">Type</label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" value="{{ receivingAccountDetail.IsBeneficiaryABA ? 'ABA' : 'BIC' }}" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" value="{{ receivingAccountDetail.IsIntermediaryABA ? 'ABA' : 'BIC' }}" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" value="{{ receivingAccountDetail.IsUltimateBeneficiaryABA ? 'ABA' : 'BIC' }}" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left:15px;">ABA/BIC</label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="receivingAccountDetail.BeneficiaryBICorABA" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="receivingAccountDetail.IntermediaryBICorABA" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="receivingAccountDetail.UltimateBeneficiaryBICorABA" class="form-control control-label" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left:15px;">Bank Name </label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="receivingAccountDetail.BeneficiaryBankName" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="receivingAccountDetail.IntermediaryBankName" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" name="BankName" ng-model="receivingAccountDetail.UltimateBeneficiaryBankName" class="form-control control-label" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left:15px;">Bank Address </label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <textarea class="form-control" rows="3" cols="10" ng-model="receivingAccountDetail.BeneficiaryBankAddress" readonly></textarea>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <textarea class="form-control" rows="3" cols="10" ng-model="receivingAccountDetail.IntermediaryBankAddress" readonly></textarea>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <textarea class="form-control modalInputWidth" rows="3" cols="10" ng-model="receivingAccountDetail.UltimateBeneficiaryBankAddress" readonly></textarea>
+                            </div>
+                        </div>
+                        <p />
+                    </div>
+                </div>
+
+                <div class="panel panel-default ng-show-hide" id="panelSSITemplateSelector" ng-if="!WireTicket.IsBookTransfer">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#ssiTemplateDetailDiv" ng-click="collapseContainer('SSITemplate')" aria-expanded="false" aria-controls="ssiTemplateDetailDiv">
+                        <span class=""> Receiving Account Details</span>&nbsp;&nbsp;<span class="label label-primary shadowBox prewrap">{{ ssiTemplate.AccountNumber + " - " + ssiTemplate.TemplateName }}</span>
+                        <span class='glyphicon  pull-right' ng-class="{ 'glyphicon-chevron-right': !isSSITemplateCollapsed , 'glyphicon-chevron-down': isSSITemplateCollapsed }"></span>
+                    </div>
+                    <div class="panel-body collapse" id="ssiTemplateDetailDiv">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">SSI Template Type</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" ng-model="ssiTemplate.SSITemplateType" id="liSSITemplateType" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Broker <span style="color: red"> *</span></label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" ng-model="ssiTemplate.TemplateEntityId" id="liBroker" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Service Provider</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" ng-model="ssiTemplate.ServiceProvider" id="liServiceProvider" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Currency</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" ng-model="ssiTemplate.Currency" id="liCurrency" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Payment/Receipt Reason</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input ng-model="ssiTemplate.ReasonDetail" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6 cashSweepTimeDiv">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Other Reason</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" ng-model="ssiTemplate.OtherReason" class="form-control" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">FFC Name</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" ng-model="ssiTemplate.FFCName" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">FFC Number</label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" ng-model="ssiTemplate.FFCNumber" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Reference</label>
+
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" ng-model="ssiTemplate.Reference" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <span class="row font-primary">Beneficiary:</span>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <span class="row font-primary">Intermediary:</span>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <span class="row font-primary">Ultimate Beneficiary:</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left: 15px;">Account Number</label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="ssiTemplate.BeneficiaryAccountNumber" class="form-control" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" ng-model="ssiTemplate.IntermediaryAccountNumber" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" ng-model="ssiTemplate.AccountNumber" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="ssiTemplate.BeneficiaryBICorABA" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="ssiTemplate.IntermediaryBICorABA" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="ssiTemplate.UltimateBeneficiaryBICorABA" class="form-control control-label" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left: 15px;">Bank Name </label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="ssiTemplate.BeneficiaryBankName" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" ng-model="ssiTemplate.IntermediaryBankName" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" name="BankName" ng-model="ssiTemplate.UltimateBeneficiaryBankName" class="form-control control-label" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left: 15px;">Bank Address </label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <textarea class="form-control" rows="3" cols="10" ng-model="ssiTemplate.BeneficiaryBankAddress" readonly></textarea>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <textarea class="form-control" rows="3" cols="10" ng-model="ssiTemplate.IntermediaryBankAddress" readonly></textarea>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <textarea class="form-control modalInputWidth" rows="3" cols="10" ng-model="ssiTemplate.UltimateBeneficiaryBankAddress" readonly></textarea>
+                            </div>
+                        </div>
+                        <p />
+                    </div>
+                </div>
+
+                <div class="panel panel-default" id="wireAttachment">
+                    <div class="panel-heading" data-toggle="collapse" ng-click="collapseContainer('Attachment')" data-target="#attachmentsDiv" aria-expanded="false" aria-controls="attachmentsDiv">
+                        <span class="">Attachment</span>
+                        <span class='glyphicon  pull-right' ng-class="{ 'glyphicon-chevron-right': !isAttachmentsCollapsed , 'glyphicon-chevron-down': isAttachmentsCollapsed }"></span>
+                    </div>
+                    <div class="panel-body collapse" id="attachmentsDiv">
+                        <div class="">
+                            <p />
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12" ng-show="isEditEnabled">
+                                    <div id="wireDropZone" style="width: 100%;">
+                                        <form class="dropzone" enctype="multipart/form-data" id="uploadWireFiles" method="post" novalidate style="min-height: 60px !important;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br ng-show="isEditEnabled" />
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <table id="documentTable" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
+                                </div>
+                            </div>
+                            <p />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default ng-show-hide" id="wireWorkFlowLogs" ng-show="WireTicket.hmsWireWorkflowLogs.length > 0">
+                    <div class="panel-heading" ng-click="collapseContainer('Workflow')" data-toggle="collapse" data-target="#wireWorkflowLogsDiv" aria-expanded="false" aria-controls="wireWorkflowLogsDiv">
+                        <span class="">Workflow Logs {{ " (" + WireTicket.hmsWireWorkflowLogs.length + ")" }}</span>
+                        <span class='glyphicon  pull-right' ng-class="{ 'glyphicon-chevron-right': !isWorkflowLogsCollapsed , 'glyphicon-chevron-down': isWorkflowLogsCollapsed }"></span>
+                    </div>
+                    <div class="panel-body collapse" id="wireWorkflowLogsDiv" style="padding: 10px 15px 0px 15px; overflow-y: scroll; max-height: 270px; margin-bottom: 2px;">
+                        <span id="spnWireLogs">
+                            <ul class="milestones  milestones-bordered">
+                                <li ng-repeat="wireLog in WireTicket.hmsWireWorkflowLogs">
+                                    <i class="milestone-default glyphicon glyphicon-comment"></i>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading panel-arrow" style="text-transform: initial; font-size: 12px; border-top: 2px !important; padding: 5px 10px;">
+                                            <span> {{ workflowUsers[$index] + " " }} <span id="workflowStatus_{{$index}}" style="font-size:13px;"><b> {{ getWireLogStatus(wireLog, $index) }} </b></span> {{ getWireLogText(wireLog) }}</span>
+                                        </div>
+                                        <div class="panel-body" ng-show="wireLog.Comment.length >0" style="padding: 6px 10px;">{{ wireLog.Comment }}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="panel panel-default ng-show-hide" id="wireSwiftMessages" ng-show="wireTicketObj.HMWire.SwiftStatusId > 1">
+                    <div class="panel-heading" style="cursor: pointer;" ng-click="collapseContainer('SwiftMessage')" data-toggle="collapse" data-target="#wireSwiftMessagesDiv" aria-expanded="false" aria-controls="wireSwiftMessagesDiv">
+                        <span class="">Swift Messages</span>
+                        &nbsp;<button class="btn btn-default btn-xs ng-show-hide" ng-hide="SwiftFormatMessageActiveTag==''" ng-click="fnPrintSwiftMessage($event)"><i class="glyphicon glyphicon-print"></i>&nbsp;Print</button>
+                        <span class='glyphicon  pull-right' ng-class="{ 'glyphicon-chevron-right': !isSwiftMessagesCollapsed , 'glyphicon-chevron-down': isSwiftMessagesCollapsed }"></span>
+                    </div>
+                    <div class="panel-body collapse" id="wireSwiftMessagesDiv" style="padding: 2px 15px 0px 15px; overflow-y: scroll; max-height: 270px; margin-bottom: 2px;">
+                        <ol class="status-track" style='text-align: center;    padding-bottom: 12px;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    '>
+                            <li class="{{value ==''?'status-track-todo': 'status-track-done'}}" ng-class="{'status-active': SwiftFormatMessageActiveTag==key}" ng-repeat="(key, value) in wireTicketObj.SwiftMessages" ng-click='fnShowFormattedSwiftMsg(key,value)' style='width:inherit;border-bottom:2px solid #43B02A'>{{key}}</li>
+                        </ol>
+                        <p class="ng-show-hide swiftMessgeBlock">{{TrustedSwiftMessage}}</p>
+                    </div>
+                </div>
+
+                
+            </div>
+
+            <div class="modal-footer form-inline" style="padding: 8px 20px 8px 20px;position: sticky;bottom: 0;background: #F5F5F5;border-top: 1px solid lightgray;">
+                <textarea type="text" placeholder="Enter Comments" id="wireComment" ng-model="wireComments" class="form-control" rows="2" style="width:50%;float:left;"></textarea>
+                <button type="button" class="btn btn-sm btn-warning ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="WireTicket.WireStatusId == 2 || WireTicket.WireStatusId == 5" ng-click="fnUpdateWireWithStatus(1)">
+                    <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save as Draft
+                </button>
+                <button type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="WireTicket.WireStatusId == 1" ng-click="fnUpdateWireWithStatus(2)">
+                    <i class="glyphicon glyphicon-plus"></i>&nbsp;Re-Initiate Wire
+                </button>
+                <button type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-disabled="isUserActionDone" ng-if="isAuthorizedUserToApprove" ng-click="fnUpdateWireWithStatus(3)">
+                    <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
+                </button>
+                <button type="button" class="btn btn-sm btn-info  ng-show-only" title="Cancel" ng-disabled="isUserActionDone" ng-if="isCancelEnabled" ng-click="fnUpdateWireWithStatus(4)">
+                    <i class="glyphicon glyphicon-repeat"></i>&nbsp;Cancel
+                </button>
+                <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Dismiss</a>
+                <p />
+            </div>
+        </div>
+    </div>
+</div>

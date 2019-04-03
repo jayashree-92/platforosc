@@ -1,0 +1,1039 @@
+﻿<!-- SiteMinder Encoding=UTF-8; -->
+@username=%username%
+@password=%PASSWRD%
+@smretries=0
+@smacefcc=1
+
+
+<!-- Don't change the lines above -->
+
+<HTML>
+
+<HEAD>
+<TITLE>Hedgemark - DMA Operations & Accounting</TITLE>
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<META http-equiv='Content-Type' content='text/html;charset=UTF-8'>
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<meta name="viewport" content="width=device-width" />
+<meta name="google-site-verification" content="EJIcNO6c1DD7Rqd2wrjvIGIXgbfLAKa8MfkMc1XUAe4" />
+
+<!-- Cross-frame scripting prevention: This code will prevent this page from being encapsulated within HTML frames. Remove, or comment out, this code if the functionality that is contained in this SiteMinder page is to be included within HTML frames. -->
+<link rel="stylesheet" href="/login/forms/css/bootstrap-bny-2.css" type="text/css">
+<link rel="stylesheet" href="/Content/site.css" type="text/css">
+<link rel="stylesheet" href="/login/forms/css/login.css" type="text/css">
+<style>
+	html{
+	display : none ;
+	visibility : hidden ;
+	}
+	body{
+		background-image: url(/login/forms/LoginBackground.jpg);
+		background-position: center;
+		background-size: 100% auto;
+    }
+</style>
+
+<SCRIPT LANGUAGE="JavaScript">
+	if( self == top ) {
+	document.documentElement.style.display = 'block' ;
+	document.documentElement.style.visibility = 'visible' ;
+	}
+	else {
+	top.location = self.location ;
+	}
+</script>
+
+<!--   end - frame busting script -->
+
+<!--redirect to error.html if not true -->
+
+<SCRIPT LANGUAGE="JavaScript">
+function initForm()
+	{
+	   //console.log("HI" + @username + " updated");
+		//if (!validate())
+		//{
+		//	top.location="/login/forms/Error.html";
+		//}
+		document.getElementById("hmOpsUserID").value = localStorage.getItem("SM-HM-Ops-Secure-CommitId");
+		
+	}
+
+<!-- Validate all the function before proceeding -->	
+function validate()
+	{
+	
+	if(!isValidURL(window.location.toString()))
+	{
+	return false;
+	}
+	if (!validateSMAUTHREASON()){		
+			return false;
+		}
+	 else if (!validateMETHOD()){
+			return false;
+		}
+	 else{
+			resetCredFields();
+			return true;
+		}
+	}
+
+<!--   SMAUTHREASON validation script.  Should be an integer between 0 and 51. -->	
+function validateSMAUTHREASON()
+	{
+	if (  "$$SMAUTHREASON$$"  == "" ){
+		return true;
+		}
+	 else if ( "$$SMAUTHREASON$$" <=  51 && "$$SMAUTHREASON$$" >= 0){
+			return true;
+		}
+	else
+	{
+		return false;
+	}
+	}
+
+<!--   METHOD validation script.  Add additional methods if approved by IRM and policy updated. -->
+function validateMETHOD()
+	{
+	
+	if (  "$$METHOD$$"  == "" ){
+		return true;
+	}
+	else if (  "$$METHOD$$"  == "GET" ){
+		return true;
+	}
+	else if (  "$$METHOD$$"  == "POST" ){
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	}
+
+
+<!-- validate the UserID for Bad CSS chars 	--> 
+function validateInput(input){
+		    if( input.match(/^[<>'\"]+$/)) {
+		    	
+		      
+		       return false;
+		        
+		 }
+		    else
+		    	return true; 
+	  }
+	  
+	  
+	  <!-- validate the requested url has bad chars -->  
+function isValidURL(data) {
+                
+				if( data.match(/.*[~<>'\"\\s].*/) || data.match(/^\\p{Cntrl}*$/) || data.match(/[\\x7F-\\xFF]/) )
+        {
+           
+			return false;
+        }
+		return true;
+	
+}
+
+ 
+
+
+function searchKeyPress(e)
+{
+	// look for window.event in case event isn't passed in
+	if (typeof e == 'undefined' && window.event) { e = window.event; }
+	if (e.which || e.keyCode)
+	{
+		if ((e.which == 13) || (e.keyCode == 13))
+		{
+			document.getElementById('Enter').click();			
+		}
+	}		
+}
+
+
+function resetCredFields()
+{
+    
+    if ($$smauthreason$$ == 0 || $$smauthreason$$ == 4 || $$smauthreason$$ == 5 || $$smauthreason$$ == 28 || $$smauthreason$$ == 30 )
+    {
+        document.PWChange.PASSWRD.value = '';
+    }
+    else if ($$smauthreason$$ == 1 || $$smauthreason$$ == 18 || $$smauthreason$$ == 20 || $$smauthreason$$ == 22 || $$smauthreason$$ == 31 || $$smauthreason$$ == 34)
+    {
+        document.PWChange.NEWPASSWORD.value = '';
+        document.PWChange.CONFIRMATION.value = '';
+    }
+}
+
+// Function for Validating Forms
+function validateForm(form)
+{
+	if ($$smauthreason$$ == 1 || $$smauthreason$$ == 18 || $$smauthreason$$ == 20 || $$smauthreason$$ == 21 || $$smauthreason$$ == 22 || $$smauthreason$$ == 31 || $$smauthreason$$ == 34)
+	{
+		if ( form.PASSWRD.value == "" ){
+			//alert( "Please enter your current Password.");
+			form.PASSWRD.focus();
+			return false;
+		}
+		else if ( form.NEWPASSWORD.value == "" ){
+			//alert( "Please enter a new Password.");
+			form.NEWPASSWORD.focus();
+			return false;
+		}
+		else if ( form.CONFIRMATION.value == "" ){
+			//alert( "Please confirm your new Password.");
+			form.CONFIRMATION.focus();
+			return false;
+		}
+		else if ( form.NEWPASSWORD.value != form.CONFIRMATION.value ){
+			//alert( "Please match your New Password and Confirmation.");
+			form.NEWPASSWORD.focus();
+			return false;
+		}
+		else if ( form.PASSWRD.value == form.NEWPASSWORD.value ){
+			//alert( "Please make your New Password different from your Old Password.");
+			form.NEWPASSWORD.focus();
+			return false;
+		}
+		else {
+			return	true;
+		}
+	}
+	else if ($$smauthreason$$ == 0 || $$smauthreason$$ == 4 || $$smauthreason$$ == 5 || $$smauthreason$$ == 28 || $$smauthreason$$ == 30)
+	{
+	
+		//if ( form.username.value == "" ){
+		//		//alert( "Please enter your username.");
+		//		form.username.focus();
+		//		return false;
+		//}
+		//else 
+		if ( form.PASSWRD.value == "" ){
+				//alert( "Please enter your current Password.");
+				document.getElementById("errorMessage").innerHTML = "Please enter your current PIN + Tokencode.";
+				form.PASSWRD.focus();
+				return false;
+		}
+		else {
+				return	true;
+		}
+
+	}
+	else if ($$smauthreason$$ == 29)
+	{
+		//if ( form.username.value == "" ){
+				//alert( "Please enter your username.");
+		//		form.username.focus();
+		//		return false;
+		//}
+		//else 
+		if ( form.PASSWRD.value == "" ){
+				//alert( "Please enter your PIN followed by your new Tokencode.");
+				document.getElementById("errorMessage").innerHTML = "Please enter your PIN followed by your new Tokencode.";
+				form.PASSWRD.focus();
+				return false;
+		}
+		else if ( form.SELECT.checked ){
+				form.NEWPASSWORD.value = "SYSTEM";
+				return	true;
+		}
+		else {
+				form.NEWPASSWORD.value = "NONSYSTEM";
+				return	true;
+		}
+	}
+	else {
+		return false;
+	}
+}
+
+
+<!-- validate the form data and submit if valid -->
+function submitForm(thisForm) {
+	if(validateForm(thisForm)) {
+		console.log("valid form");
+		if ($$smauthreason$$ == 18){
+			document.forms['PWChange'].elements['smauthreason'].value = 23;
+			console.log("session set and form submitted");
+			document.PWChange.submit();
+		}
+		else {
+		console.log("form submitted");
+		console.log(document.PWChange.username.value + "adgsad" + document.PWChange.PASSWRD.value)
+			document.PWChange.submit();
+			console.log("form submitted already");
+			
+		}
+		return true;
+		}
+	else if ($$smauthreason$$ == 32) {
+		console.log("form submitted 32");
+		document.PWChange.submit();
+		return true;
+		}
+	else {
+		console.log("form not valid");
+		return false;
+		}
+	}
+
+
+function clearSubmit ()
+{
+	document.PWChange.PASSWRD.value = '';
+	document.PWChange.NEWPASSWORD.value = '';
+	document.PWChange.CONFIRMATION.value = '';
+	submitform();
+}
+
+<!-- Display Pop-Up window for help info. -->
+		
+
+function displayWindow(url, width, height)
+	{
+
+		var Win = window.open(url,"displayWindow",'width=' + width + ',height=' + height + ',left=50,top=50,resizable=yes,scrollbars=yes,menubar=no,status=no');
+
+	}
+
+
+</SCRIPT>
+
+
+
+</HEAD>
+
+<body onLoad="javascript: initForm()">
+
+  <!-- false form for resetting SMAUTHREASON if Step-Up (5) -->
+
+
+    <form id="stepup_form" action="/login/forms/ProcessTokenLogin.fcc?SMQUERYDATA=$$smencode(SMQUERYDATA)$$" method="POST">
+    <input type="hidden" name="username" value="redirect">
+    <input type="hidden" name="PASSWRD" value="redirect">
+    <input type=hidden name=postpreservationdata value="$$smdecode(postpreservationdata)$$">
+    <INPUT type='hidden' name='BUFFER' value='endl'>
+    </form>
+
+<script language='JavaScript'>
+    var authreason = "$$smauthreason$$";
+    if (authreason == 5)
+    {
+    document.getElementById("stepup_form").submit();
+    }
+</script>
+
+
+  <!-- form for collecting Password change data -->
+
+  <!-- The pasword change form will post to "/login/forms/ProcessTokenLogin.fcc" file of the onSubmit="return submitForm(this)" -->
+
+  <!-- same site that is serving the password change page. -->
+
+
+
+
+
+<form name="PWChange" action="/login/forms/ProcessTokenLogin.fcc?SMQUERYDATA=$$smencode(SMQUERYDATA)$$"  method="POST">
+
+<div class="container center-block" id="loginForm" style="max-height: 450px; max-width: 700px; padding-top: 10%">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Sign In</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row" style="text-align: center;">
+                            <div class="">
+                                <img src="/images/Hedge_Mark_Bny.png" alt="HedgeMark Logo" style="padding-top: 10px;" />
+                            </div>
+                        </div>                        
+                            <div class="page-header" style="text-align: center">
+                                <h2>
+                                    <small>DMA OPERATIONS SECURE</small>
+                                </h2>
+                            </div>                           
+                            <div class="form-group row">
+                                <div class="input-group col-sm-8 col-sm-offset-2">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input id="hmOpsUserID" class="form-control" type="text" name="username" placeholder="USERID" style="cursor: no-drop;background-color: #eeeeee;" autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="input-group col-sm-8 col-sm-offset-2">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-barcode"></i></span>
+                                    <input id="hmOpsPassword" data-toggle="popover"  data-placement="right" data-container="body" data-trigger="manual" data-html="true" data-content="<i class='glyphicon glyphicon glyphicon-barcode'></i> Caps On" class="form-control" type="password" name="PASSWRD" autocomplete="off" placeholder="PIN + Tokencode" autofocus onkeydown='searchKeyPress(event);' />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-offset-2">
+                                   <!--<INPUT type='button' id='Enter' value='Enter' tabindex=7 onClick='submitForm(this.form)'> -->
+								   <button id='Enter' type="submit" name="SUBMIT" class="btn btn-primary"><i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;Sign in</button> </div>
+                            </div>
+							<div class="form-group row">
+                                <div class="input-group col-sm-8 col-sm-offset-2">
+                                    <span id="errorMessage" class="errormsg" ></span>
+                                </div>
+                            </div>
+							<div class="form-group row">
+                                <div class="input-group col-sm-9 col-sm-offset-2">
+                                   <p>
+									<b>Need Help?</b><br /><br />
+									<a href="javascript:displayWindow('/pw/forms/PasswordSecurity.html',650,400)"><b>Password / PIN Security</b></a>
+									<!--To log in you must know your COMIT ID and your system password (also known as the LDAP password). If you are having problems because of ID or password issues, you will find <a href="javascript:displayWindow('/login/forms/LoginHelp.html',650,400)">Step By Step Instructions</a> here.<br /><br />
+                                    If you have registered for the <a href='https://essservices.bnymellon.com/dsgportal/fps/forgotpwd'>Forgotten Password Service</a>, you may use it now.<br /><br />
+						            If you haven't registered for the forgotten password service, please contact the<br />
+		                            <a href="http://mysource.bnymellon.net/corporate/csd/index.html" target="_blank">Customer Service Desk</a> and ask to have your LDAP password reset.<br /> -->
+		                          </p>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row" style="text-align: center;">
+                                <small>
+                                    ©<script>document.write(new Date().getFullYear())</script> HedgeMark International, LLC. All rights reserved.
+                                </small>
+                            </div>
+							<!--start  trick the browser to enter the password into a fake input password field   -->
+				            <div style="display:none;">
+				            <input type="text" name=”preventAutoPass” id=" NoAutoPass"/>
+				            <input type="password" name=”textPass” id=" NoAutoPass "/>
+				            </div>   
+				           <!-- end  trick the browser to enter the password into a fake input password field  -->
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<!--<table width="784" border="0" cellspacing="0" cellpadding="0">
+
+  <tr>
+
+    <td>
+
+    <table width="784" border="0" cellspacing="0" cellpadding="0">
+
+      <tr>
+
+	<td colspan="5"><img src="/login/forms/img/tbnymlogo.gif" vspace="15" hspace="15" width="200" height="25" alt="BNY Mellon" /></td>
+
+      </tr>
+
+      <tr>
+
+        <td colspan="2"><img src="/login/forms/img/bnym_login_photo_sm.jpg" width="556" height="120"/></td>
+
+        <td width="12" rowspan="3" valign="bottom" class="rightcol"><img src="/login/forms/img/spacer.gif" width="12" height="146" hspace="0" /></td>
+
+        <td width="208" rowspan="3" valign="top" class="rightcol">
+
+
+        	<table width="208" border="0" cellspacing="0" cellpadding="0">
+
+			<tr>
+
+				<td colspan="2" class="bodytext">
+
+				<br><br>
+
+				<b>Digital Service Centre</b><br><br>
+
+				
+
+	United States<br>
+	&nbsp;&nbsp;+1 855 435 4357<br>
+	<br>
+	Pershing (Global)<br>
+	&nbsp;&nbsp;+1 866 698 8668<br>
+	<br>
+	Europe / Middle East (EMEA)<br>
+	&nbsp;&nbsp;hMellon: +44 207 163 4357<br>
+	&nbsp;&nbsp;hBNY: +44 20 7964 6666 option 2<br>
+	<br>
+	Asia / Pacific (APAC)<br>
+	&nbsp;&nbsp;hBNY: +65 6432 0399<br>
+
+
+				</td>
+
+			</tr>
+
+        	</table>
+
+
+        </td>
+
+        <td rowspan="3" class="rightcol"><img src="/login/forms/img/spacer.gif" height="1" width="8" /></td>
+
+      </tr>
+
+      <tr>
+
+        <td colspan="2">&nbsp;</td>
+
+      </tr>
+
+      <tr>
+
+        <td width="18">&nbsp;</td>
+
+        <td width="538" style="padding-right:18px;">
+
+		  <table width="100%"  border="0" cellspacing="0" cellpadding="5">
+			<tr><td colspan="2" align="right" valign="top"><a href="javascript:displayWindow('/pw/forms/PasswordSecurity.html',650,400)"><b>Password / PIN Security</b></a>&nbsp;</td>
+
+			</tr>
+
+			<tr>
+
+				<td colspan="2"><h1>
+
+<SCRIPT language='JavaScript'>
+// Page Title
+
+                       	if ($$smauthreason$$ == 0 || $$smauthreason$$ == 4 || $$smauthreason$$ == 5)
+                            document.write("Token Login Request");                       	
+                        else if ($$smauthreason$$ == 7  || $$smauthreason$$ == 21 || $$smauthreason$$ == 24 || $$smauthreason$$ == 25)
+                            document.write("Account Information");
+                        else if ($$smauthreason$$ == 18 || $$smauthreason$$ == 19 || $$smauthreason$$ == 20 || $$smauthreason$$ == 22 || $$smauthreason$$ == 34)
+                            document.write("Password Change Request");
+     			else if ($$smauthreason$$ == 1)
+			    document.write("Please Change Your Password");
+			else if ($$smauthreason$$ == 23)
+			    document.write("Password Change Information");
+			else if ($$smauthreason$$ == 28)
+			    document.write("Next Tokencode Request");			
+			else if ($$smauthreason$$ == 29)
+			    document.write("New PIN Selection");			
+			else if ($$smauthreason$$ == 30 || $$smauthreason$$ == 31 || $$smauthreason$$ == 32 )
+			    document.write("New PIN Assignment");
+			else
+			    document.write("Diagnostic Information");			
+			
+</SCRIPT>
+
+			</h1></td>
+</tr>
+			<tr>
+			<td colspan="2" align="left">
+			<font color="993333" face="Arial,Helvetica" size="2"><b>
+
+
+
+
+
+<SCRIPT language='JavaScript'>
+    var usermessage = "$$smdecode(SMPWUSRMSG)$$"
+    if (usermessage == "Default_User_Message.")
+    {
+    usermessage = "";
+    }
+    //Auth Reason 0 - Reason none
+    //Auth Reason 4 - Session Expired
+    //Auth Reason 5 - AuthLevelTooLow
+    // Auth Reason 30 - Sm_Api_Reason_New_PIN_Sys_Tokencode 
+    if ($$smauthreason$$ == 0 || $$smauthreason$$ == 4 || $$smauthreason$$ == 5 || $$smauthreason$$ == 30)
+      {
+      if ($$smauthreason$$ == 0)
+      	{
+	document.write("Please enter your username and PIN + Token Code.");
+	}
+      else if ($$smauthreason$$ == 4)
+      	{
+	document.write("Your session has expired.<p>Please enter your username and PIN + Token Code.");
+	}
+      else if ($$smauthreason$$ == 5)
+      	{
+	document.write("A higher Authorization Level is needed.<p>Please enter your username and PIN + Token Code.");
+	}
+      else if ($$smauthreason$$ == 30)
+      	{
+	document.write("To continue a new System-generated PIN is required.");
+	document.write("<p>Wait for the tokencode to change, then enter your current PIN followed by the tokencode.");
+	document.write("<p>If you do not have a PIN assigned, then just enter the tokencode.");
+	}
+      document.write("</B></font><br><br></td></tr>");
+      document.write("<tr><td width='35%' align='right'>");
+      document.write("<p>UserName:");
+      document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+      document.write("<INPUT type='text' name='username' size='30' tabindex=1 onkeydown='searchKeyPress(event);'>");
+      document.write("</font></td></tr>");
+      document.write("<tr><td width='35%' align='right'>");
+      document.write("<p>PIN + Tokencode:");
+      document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+      document.write("<INPUT type='password' name='PASSWRD' size='30' autocomplete='off' tabindex=2 onkeydown='searchKeyPress(event);'>");
+      document.write("</font></td></tr>");
+      } //Auth Reason - 0,4,5 and 30
+    
+    //Auth Reason 7 - Account disabled
+    else if ($$smauthreason$$ == 7) 
+      {
+    	document.write("You cannot access your account at this time.<p>Please contact your Security Administrator or Help Desk.");
+	document.write("</B></font><br><br></td></tr>");
+      } //Auth Reason - 7
+
+      //Auth Reason = 18 - Password change option
+      else if ($$smauthreason$$ == 18)
+      {
+      
+	 if ("$$username$$" == "")
+	 {
+      	document.write(usermessage + "<p>Please change your current password before continuing.");
+	document.write("</B></font><br><br></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>UserName");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='text' name='username' size='30' tabindex=1 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+
+        }
+        else 
+        {
+      	document.write(usermessage + "<p>Please change your current password before continuing.");
+      	}
+	document.write("</B></font><br><br></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>Old Password");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='PASSWRD' size='30' autocomplete='off' tabindex=2 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>New Password");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='NEWPASSWORD' size='30' tabindex=3 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>Confirm New Password");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='CONFIRMATION' size='30' tabindex=4 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+     } //Auth Reason = 18
+
+    //Auth Reason 19 - Account disabled due to inactivity      
+    else if ($$smauthreason$$ == 19)
+      {
+    	document.write("You cannot access your account because your password has expired.<p>Please contact your Security Administrator or Help Desk.");
+	document.write("</B></font><br><br></td></tr>");
+      } //Auth Reason - 19
+
+// Auth Reason 1 - Password must change
+// Auth Reason 20 - Password change immediately
+// Auth Reason 21 - Password change failed
+// Auth Reason 22 - Bad Password
+    else if ($$smauthreason$$ == 1 || $$smauthreason$$ == 20 || $$smauthreason$$ == 21 || $$smauthreason$$ == 22)
+    {
+        // password must change
+        if ($$smauthreason$$ == 1 || $$smauthreason$$ == 20)
+        {
+        document.write("Please change your current password before continuing.");
+        }
+        else if ($$smauthreason$$ == 21)
+        {
+        document.write("Your password change request was not processed correctly. <p> Please try again.");
+        }
+        else if ($$smauthreason$$ == 22)
+        {
+        document.write("Your password change was not accepted. <p>" + usermessage + "<p> Please try again. ");
+        }
+	if ("$$username$$" == "")
+        	{
+        	document.write("</B></font><br><br></td></tr>");
+        	document.write("<tr><td width='35%' align='right'>");
+        	document.write("<p>UserName");
+        	document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        	document.write("<INPUT type='text' name='username' size='30' tabindex=1 onkeydown='searchKeyPress(event);'>");
+        	document.write("</font></td></tr>");
+        	}
+	else {
+        	document.write("</B></font><br><br></td></tr>");
+        	}
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>Old Password");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='PASSWRD' size='30' autocomplete='off' tabindex=2 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>New Password");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='NEWPASSWORD' size='30' tabindex=3 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>Confirm New Password");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='CONFIRMATION' size='30' tabindex=4 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+    } // Auth Reason 1, 20, 21 & 22
+    
+     //Auth Reason = 23 - Password Change Accepted
+    else if ($$smauthreason$$ == 23)
+    {
+	document.write("Your new password has been set. <p> Use this new password the next time you log into your account.");
+	document.write("</B></font><br><br></td></tr>");
+	document.write("<tr><td align='right'>&nbsp;</td><td align='left'>&nbsp; &nbsp;");
+	document.write("<input type='button' id='Enter' name='ContinueButton' value='CONTINUE' tabindex=6 onClick='document.PWChange.submit();''>");
+	document.write("</td></tr>");
+     }  //Auth Reason =23
+   
+    //Auth Reason 24 - Account disabled due to excess Login
+    else if ($$smauthreason$$ == 24)
+      {
+    	document.write("You cannot access your account because you have exceeded the limit of login attempts. <p>Please contact your Security Administrator or Help Desk.");
+	document.write("</B></font><br><br></td></tr>");
+	document.write("</table>");
+
+      } //Auth Reason - 24
+
+    //Auth Reason 25 - account has been disabled due to inactivity       
+    else if ($$smauthreason$$ == 25)
+      {
+    	document.write("Your account has been disabled due to inactivity. <p> Please contact your Security Administrator or Help Desk.");
+	document.write("</B></font><br><br></td></tr>");
+      } //Auth Reason - 25
+
+//Auth Reason 28 - Sm_Api_Reason_Next_Tokencode
+    else if ($$smauthreason$$ == 28)
+      {
+	document.write("Wait for the Tokencode to change, then enter your PIN followed by the tokencode");
+	document.write("<p>Finally, wait for the tokencode to change again, then enter ONLY the tokencode.</font>");
+	document.write("</B></font><br><br></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>UserName");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='text' name='username' size='30' tabindex=1 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>PIN + Tokencode");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='PASSWRD' size='30' autocomplete='off' tabindex=2 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>Next Tokencode");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='NEWPASSWORD' size='30' tabindex=3 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+      } //Auth Reason - 28
+
+//Auth Reason 29 - Sm_Api_Reason_New_PIN_Select
+    else if ($$smauthreason$$ == 29)
+      {
+	document.write("To continue you must register a new PIN.");
+	document.write("<p>Wait for the tokencode to change then enter a your current PIN plus the new tokencode.");
+	document.write("<p>If you do not have a PIN assigned, then just enter the tokencode.");
+	document.write("<p>If you want the System to automatically assign a PIN select the System PIN Checkbox.");
+	document.write("<p>Otherwise, you will be asked to create your own within standard guidelines.");
+	document.write("</B></font><br><br></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>UserName");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='text' name='username' size='30' tabindex=1 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>PIN + Tokencode");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='PASSWRD' size='30' autocomplete='off' tabindex=2 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>System PIN Request");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<input type='checkbox' name='SELECT' size='30' tabindex=5 style='MARGIN-LEFT: 1px' value='1' checked>");
+        document.write("</font></td></tr>");
+      } //Auth Reason - 29
+      
+      //Auth Reason = 31 - Sm_Api_Reason_New_User_PIN_Tokencode
+    else if ($$smauthreason$$ == 31)
+      {
+	document.write(usermessage + "<p>Wait for the tokencode to change, then enter your current PIN followed by the tokencode.");
+	document.write("<p>Then enter your new PIN and confirm it.");
+	document.write("</B></font><br><br></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>UserName");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='text' name='username' size='30' tabindex=1 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>PIN + Tokencode");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='PASSWRD' size='30' autocomplete='off' tabindex=2 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>New PIN");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='NEWPASSWORD' size='30' tabindex=3 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>Confirm New PIN");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='CONFIRMATION' size='30' tabindex=4 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+      } //Auth Reason - 31
+
+ //Auth Reason - 32 - Sm_Api_Reason_New_PIN_Accepted
+    else if ($$smauthreason$$ == 32)
+    {
+	document.write("Your PIN has been accepted.<p>" + usermessage + "<p>Use the new PIN when you continue and when you login.");
+	document.write("</B></font><br><br></td></tr>");
+	document.write("<tr><td align='right'>&nbsp;</td><td align='left'>&nbsp; &nbsp;");
+	document.write("<INPUT type='button' id='Enter' value='CONTINUE' tabindex=6 onClick='submitForm(this.form)'>");
+	document.write("</td></tr>");
+     }  //Auth Reason =32
+
+//Auth Reason = 34 - User self password change
+    else if ($$smauthreason$$ == 34)
+      {
+	document.write("Please enter name and current password then propose new password and confirm before continuing.");
+	document.write("</B></font><br><br></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>UserName");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='text' name='USERNAME' size='30' tabindex=1 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>Old Password");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='PASSWRD' size='30' autocomplete='off' tabindex=2 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>New Password");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='NEWPASSWORD' size='30' tabindex=3 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+        document.write("<tr><td width='35%' align='right'>");
+        document.write("<p>Confirm New Password");
+        document.write("</td><td width='65%'><font face='Arial,Helvetica' size='2'>");
+        document.write("<INPUT type='password' name='CONFIRMATION' size='30' tabindex=4 onkeydown='searchKeyPress(event);'>");
+        document.write("</font></td></tr>");
+      } //Auth Reason - 34
+     else
+     {
+        document.write("Security Protection Fault: Condition not handled for SMAUTHREASON = $$smauthreason$$");
+        document.write("Please contact your Security Administrator or Help Desk.");
+	document.write("</B></font><br><br></td></tr>");
+	document.write("<tr><td align='right'>&nbsp;</td><td align='left'>&nbsp; &nbsp;");
+	document.write("</td></tr>");
+    }
+
+</SCRIPT>
+
+<SCRIPT language='JavaScript'>
+
+
+	document.write("<tr><td colspan='2' align='right'>");
+	if (("$$username$$" != "") && $$smauthreason$$ != 0 && $$smauthreason$$ != 4 && $$smauthreason$$ != 5 && $$smauthreason$$ != 28 && $$smauthreason$$ != 29 && $$smauthreason$$ != 30 && $$smauthreason$$ != 34)
+    {
+        document.write("<INPUT type='hidden' name='USERNAME' value='$$username$$'>");
+    }
+    
+    if ($$smauthreason$$ == 34)
+    {   
+        document.write("<INPUT type='hidden' name='smpwselfchange' value='$$smpwselfchange$$'>");
+        document.write("<INPUT type='hidden' name='TARGET' value='$$target$$'>");
+        document.write("<INPUT type='hidden' name='SMAGENTNAME' value='$$smagentname$$'>");
+    }
+    
+
+</SCRIPT>
+                            <input type=hidden name=postpreservationdata value="$$smdecode(postpreservationdata)$$">
+                            <SCRIPT language='JavaScript'>
+			    
+			     if ($$smauthreason$$ == 0 || $$smauthreason$$ == 1 || $$smauthreason$$ == 4 || $$smauthreason$$ == 5 || $$smauthreason$$ == 21 || $$smauthreason$$ == 28 || $$smauthreason$$ == 29 || $$smauthreason$$ == 30 || $$smauthreason$$ == 31 )
+			     {
+			     	  document.write("<INPUT type='button' id='Enter' value='Enter' tabindex=7 onClick='submitForm(this.form)'>");
+			     	  document.write("&nbsp;");
+			          document.write("<input type='reset' value='Clear this form' tabindex=8>");
+			     }
+			     else if ($$smauthreason$$ == 18)
+			     {
+			      	  document.write("<INPUT type='button' id='Enter' value='Change Password' tabindex=7 onClick='submitForm(this.form)'>");
+			     	  document.write("&nbsp;");
+			     	  document.write("<input type='reset' value='Clear this form' tabindex=8>");
+			     	  document.write("&nbsp;");
+			     	  document.write("<input type='button' value='Remind me later' tabindex=9 onClick='clearSubmit()'>");
+			     }
+			     else if ($$smauthreason$$ == 20 || $$smauthreason$$ ==22 || $$smauthreason$$ == 34)
+			     {
+			     	  document.write("<INPUT type='button' id='Enter' value='Change Password' tabindex=7 onClick='submitForm(this.form)'>");
+			     	  document.write("&nbsp;");
+			          document.write("<input type='reset' value='Clear this form' tabindex=8>");
+			     }
+			     
+			     if ($$smauthreason$$ == 29)
+			     {
+			       document.write("<INPUT type='hidden' name='NEWPASSWORD' value='NONSYSTEM'>");
+			     }
+			     if ($$smauthreason$$ == 0 || $$smauthreason$$ ==4 || $$smauthreason$$ == 5 || $$smauthreason$$ == 20 || $$smauthreason$$ == 28 || $$smauthreason$$ == 29 || $$smauthreason$$ == 30 || $$smauthreason$$ == 31 || $$smauthreason$$ == 34)
+			     {
+        			document.write("<INPUT type='hidden' name='BUFFER' value='endl'>");
+			     }
+			     document.write("</td></tr>");
+			     if ($$smauthreason$$ == 0) {
+			        var smauthstatus = "$$smauthstatus$$";
+			        if (smauthstatus == 1) {
+                                   document.write("<tr><td colspan='2' align='center' class='errormsg'>");
+                                   document.write("Invalid Credentials");
+                                   document.write("</td></tr>");
+			        }
+			        else if (smauthstatus == 2) {
+                                   document.write("<tr><td colspan='2' align='center' class='errormsg'>");
+                                   document.write("Unauthorized User");
+                                   document.write("</td></tr>");
+			        }
+			     }
+                        </SCRIPT>
+                        
+</table>
+</FORM>
+<br><br>
+
+</td>
+
+</tr>
+
+</table>
+
+    <table width="784" border="0" cellspacing="0" cellpadding="0">
+
+	  <tr>
+
+		<td width="784" colspan="2" bgcolor="#666666" height="22" align="right" class="footer" style="padding-right:10px;">
+		<a href="javascript:displayWindow('/login/forms/LoginHelp.html',650,400)">Help</a>
+		&nbsp; | &nbsp;
+		<a href="javascript:displayWindow('/login/forms/PrivacyPolicy.html',650,400)">Privacy Policy</a>
+		&nbsp; | &nbsp;
+		<a href="javascript:displayWindow('/login/forms/TermsOfUse.html',650,400)">Terms of Use</a>
+		</td>
+
+	  </tr>
+
+	  <tr>
+
+		<td width="50%"><img src="img/bnym_logo_footer.gif" /></td>
+
+		<td width="50%" align="right" style="padding-right:10px;"><span class="copyright">&copy; Copyright BNY Mellon Corporation. All Rights Reserved.</span></td>
+
+	  </tr>
+
+    </table>
+
+    </td>
+
+  </tr>
+
+</table> -->
+</FORM>
+<SCRIPT language='JavaScript'>
+						//function getUrlParameter(name) {
+						//	name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+						//    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+						//	var results = regex.exec(location.search);
+						//    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+						//	}
+						//	var commitId = getUrlParameter("CommitId");
+						//	console.log("HI "+ commitId);
+						
+						function getCookie(cname) {
+						  var name = cname + "=";
+						  var ca = document.cookie.split(';');
+						  for(var i = 0; i < ca.length; i++) {
+							var c = ca[i];
+							while (c.charAt(0) == ' ') {
+							  c = c.substring(1);
+							}
+							if (c.indexOf(name) == 0) {
+							  return c.substring(name.length, c.length);
+							}
+						  }
+						  return "";
+						}
+							
+						  //var cookieValue = $.cookie("CommitId");
+							//var usermessage = "$$smdecode(SMQUERYDATA)$$"
+							//var x = document.cookie;
+							//console.log(x);
+							
+							
+							//var username="$$username$$";
+							//console.log("HI "+ username);
+							//Auth Reason 4 - Session Expired
+							//Auth Reason 5 - AuthLevelTooLow 
+							if ($$smauthreason$$ == 4 || $$smauthreason$$ == 5)
+								document.getElementById("errorMessage").innerHTML = "Token Login Request";                       	
+							else if ($$smauthreason$$ == 7  || $$smauthreason$$ == 21 || $$smauthreason$$ == 24 || $$smauthreason$$ == 25)
+								document.getElementById("errorMessage").innerHTML = "Account Information";
+							else if ($$smauthreason$$ == 18 || $$smauthreason$$ == 19 || $$smauthreason$$ == 20 || $$smauthreason$$ == 22 || $$smauthreason$$ == 34)
+								document.getElementById("errorMessage").innerHTML = "Password Change Request";
+							else if ($$smauthreason$$ == 1)
+								document.getElementById("errorMessage").innerHTML = "Please Change Your Password";
+							else if ($$smauthreason$$ == 23)
+								document.getElementById("errorMessage").innerHTML = "Password Change Information";
+							else if ($$smauthreason$$ == 28)
+								document.getElementById("errorMessage").innerHTML = "Next Tokencode Request";			
+							else if ($$smauthreason$$ == 29)
+								document.getElementById("errorMessage").innerHTML = "New PIN Selection";			
+							else if ($$smauthreason$$ == 30 || $$smauthreason$$ == 31 || $$smauthreason$$ == 32 )
+								document.getElementById("errorMessage").innerHTML = "New PIN Assignment";
+								
+							//var hmOpsSecureId = localStorage.getItem("SM-HM-Ops-Secure-CommitId");//getCookie("CommitId");
+							//console.log("HI "+ hmOpsSecureId);
+							//document.getElementById("hmOpsUserID").value = localStorage.getItem("SM-HM-Ops-Secure-CommitId");
+							
+							var smauthstatus = "$$smauthstatus$$";
+							if (smauthstatus == 1)
+                            	document.getElementById("errorMessage").innerHTML = "Invalid Credentials<br>";							
+							else if (smauthstatus == 2)
+                            	document.getElementById("errorMessage").innerHTML = "Unauthorized User<br>";
+							
+                        </SCRIPT>
+						<SCRIPT language='JavaScript'>
+
+
+	
+	if (("$$username$$" != "") && $$smauthreason$$ != 0 && $$smauthreason$$ != 4 && $$smauthreason$$ != 5 && $$smauthreason$$ != 28 && $$smauthreason$$ != 29 && $$smauthreason$$ != 30 && $$smauthreason$$ != 34)
+    {
+        //document.write("<INPUT type='hidden' name='USERNAME' value='$$username$$'>");
+    }
+    
+    if ($$smauthreason$$ == 34)
+    {   
+        document.write("<INPUT type='hidden' name='smpwselfchange' value='$$smpwselfchange$$'>");
+        document.write("<INPUT type='hidden' name='TARGET' value='$$target$$'>");
+        document.write("<INPUT type='hidden' name='SMAGENTNAME' value='$$smagentname$$'>");
+    }
+    
+
+</SCRIPT>
+<SCRIPT language='JavaScript'>
+// set focus in form
+
+    if ($$smauthreason$$ == 0 || $$smauthreason$$ == 4 || $$smauthreason$$ == 5 || $$smauthreason$$ == 30 || $$smauthreason$$ == 31 || $$smauthreason$$ == 34)
+    {
+        document.forms['PWChange'].elements['username'].focus();
+		document.forms['PWChange'].elements['username'].value = "$$username$$";
+    }
+    else if (("$$username$$" != "") && ($$smauthreason$$ == 1 || $$smauthreason$$ == 18 || $$smauthreason$$ == 20 || $$smauthreason$$ == 21 || $$smauthreason$$ == 22))
+    {
+        document.forms['PWChange'].elements['PASSWRD'].focus();
+    }
+	else if($$smauthreason$$ == 32 || $$smauthreason$$ == 23 )
+	{
+        document.forms['PWChange'].elements['ContinueButton'].focus();
+    }
+	else if (("$$username$$" == "") && ($$smauthreason$$ == 1 || $$smauthreason$$ == 18 || $$smauthreason$$ == 20 || $$smauthreason$$ == 21 || $$smauthreason$$ == 22))
+	{
+		document.forms['PWChange'].elements['username'].focus();
+	}
+
+</SCRIPT>
+<script src="/Scripts/jquery-3.3.1.js"></script>
+<script src="/Scripts/bootstrap.js"></script>
+</BODY>
+</HTML>

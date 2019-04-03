@@ -1,0 +1,335 @@
+﻿<!-- SiteMinder Encoding=UTF-8; -->
+@username=%USER%
+@password=%PASSWORD%
+@smretries=0
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+
+<title>BNY Mellon Login Services</title>
+<link rel="stylesheet" href="css/login.css" type="text/css">
+
+<!-- Cross-frame scripting prevention: This code will prevent this page from being encapsulated within HTML frames. Remove, or comment out, this code if the functionality that is contained in this SiteMinder page is to be included within HTML frames. -->
+
+<style>
+	html{
+	display : none ;
+	visibility : hidden ;
+	}
+</style>
+
+<SCRIPT LANGUAGE="JavaScript">
+	if( self == top ) {
+	document.documentElement.style.display = 'block' ;
+	document.documentElement.style.visibility = 'visible' ;
+	}
+	else {
+	top.location = self.location ;
+	}
+</script>
+
+<!--   end - frame busting script -->
+
+<!--redirect to error.html if not true -->
+
+<SCRIPT LANGUAGE="JavaScript">
+function initForm()
+	{
+		if (!validate())
+		{
+		top.location=("/login/forms/Error.html");
+		}
+	}
+
+
+<!-- Validate all the function before proceeding -->	
+function validate()
+	{
+	
+	if(!isValidURL(window.location.toString()))
+	{
+	return false;
+	}
+	if (!validateSMAUTHREASON()){		
+			return false;
+		}
+	 else if (!validateMETHOD()){
+			return false;
+		}
+	 else {
+			resetCredFields();
+			return true;
+		}
+	}
+	
+
+<!-- reset the fields -->
+function resetCredFields()
+	{
+	  document.Login.PASSWRD.value = "";
+	  document.Login.USER.value = "";
+	}
+
+	
+function validateSMAUTHREASON()
+	{
+	if (  "$$SMAUTHREASON$$"  == "" ){
+			
+			return true;
+		}
+	 else if (  "$$SMAUTHREASON$$"  <=  51 && "$$SMAUTHREASON$$" >= 0){
+			
+			return true;
+		}
+	else
+	{
+		return false;
+	}
+	}
+
+<!--   METHOD validation script.  Add additional methods if approved by IRM and policy updated. -->
+function validateMETHOD()
+	{
+	
+	if (  "$$METHOD$$"  == "" ){
+		return true;
+	}
+	else if (  "$$METHOD$$"  == "GET" ){
+		return true;
+	}
+	else if (  "$$METHOD$$"  == "POST" ){
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	}
+	
+
+	
+
+
+<!-- validate the UserID for Bad CSS chars 	--> 
+function validateInput(input){
+		  
+		    if( input.match(/^[<>'\"]+$/)) {
+		    	
+		      
+		       return false;
+		        
+		 }
+		    else
+		    	return true; 
+	  }
+	  
+	  
+	  <!-- validate the requested url has bad chars -->  
+function isValidURL(data) {
+                
+				if( data.match(/.*[~<>'\"\\s].*/) || data.match(/^\\p{Cntrl}*$/) || data.match(/[\\x7F-\\xFF]/) )
+        {
+           
+			return false;
+        }
+		return true;
+	
+}
+
+ 
+	  
+	<!-- validate the form data for empty String or alphaneumeric userid --> 
+function validateForm(){
+
+	   if ( document.Login.USER.value == "" ){
+			alert( "Field entry is required." );
+			document.Login.USER.focus();
+			return false;
+		   } 
+	   else if ( document.Login.PASSWRD.value == "" ){
+			alert( "Field entry is required." );
+			document.Login.PASSWRD.focus();
+			return false;
+	   }
+		else if(!validateInput( document.Login.USER.value))
+		{
+		 alert('Please enter a vaild user id');
+		 
+		 return false;
+		}
+	  return true;
+}
+	
+
+
+<!-- validate the form data and submit if valid -->
+function submitForm()
+{
+	if(validateForm()){
+	document.Login.submit();
+	return true;
+	}
+	else
+	{
+	return false;
+	}
+}
+
+<!-- Display Pop-Up window for help info. -->
+		
+
+function displayWindow(url, width, height)
+	{
+
+		var Win = window.open(url,"displayWindow",'width=' + width + ',height=' + height + ',left=50,top=50,resizable=yes,scrollbars=yes,menubar=no,status=no');
+
+	}
+
+function searchKeyPress(e)
+{
+	// look for window.event in case event isn't passed in
+	if (typeof e == 'undefined' && window.event) { e = window.event; }
+	if (e.which || e.keyCode)
+	{
+		if ((e.which == 13) || (e.keyCode == 13))
+		{
+			document.getElementById('Enter').click();			
+		}
+	}		
+}
+
+</script>
+
+</head>
+
+<body onLoad="javascript: initForm()">
+
+  <!-- Form for collecting login credentials -->
+  <!-- Typically the login form will post the ProcessLogin.fcc file of the -->
+  <!-- same site that is serving the login page.  An absolute URL could also be specified. -->
+<form NAME="Login" METHOD="POST" action="/login/forms/ProcessLogin.fcc?SMQUERYDATA=$$smencode(SMQUERYDATA)$$" AUTOCOMPLETE="OFF">
+<INPUT TYPE=HIDDEN NAME="SMENC" VALUE="UTF-8">
+<table width="784" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+    <table width="784" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td colspan="5"><img src="img/tbnymlogo.gif" vspace="15" hspace="15" width="200" height="25" alt="BNY Mellon" /></td>
+      </tr>
+      <tr>
+        <td colspan="2" valign="top"><img src="img/bnym_login_photo.jpg" width="556" height="194" alt="Welcome to BNY Mellon" /></td>
+        <td width="12" rowspan="3" valign="top" class="rightcol"><img src="img/verticalhrlong.gif" width="12" height="409" hspace="0" /></td>
+        <td width="208" rowspan="3" valign="top" class="rightcol">
+
+
+
+				<table width="208" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                <!-- Update the login title below with the application name if desired   -->
+                <td colspan="2" valign="bottom" align="right" class="logintitle"><br>Login
+                </td>
+                </tr>
+                <tr>
+                <td colspan="2" align="center"><img src="img/bnym_login_dottedhr.gif" width="208" height="34" /></td>
+                </tr>              
+                <tr>
+                <td class="formtitle">User ID:</td>
+                <td align="right"><input type="text" name="USER" value="" style="width:135px;" maxlength="132" onkeydown="searchKeyPress(event);" /></td>
+                </tr>
+
+				<!--start  trick the browser to enter the password into a fake input password field   -->
+				<div style="display:none;">
+				<input type="text" name=”preventAutoPass” id=" NoAutoPass"/>
+				<input type="password" name=”textPass” id=" NoAutoPass "/>
+				</div>   
+				<!-- end  trick the browser to enter the password into a fake input password field  -->
+
+                <tr>
+                <td class="formtitle">Password:</td>
+                <td align="right"><input type="password" name="PASSWRD" value="" style="width:135px;" maxlength="132" autocomplete="off" onkeydown="searchKeyPress(event);" /></td>
+                </tr>
+                <tr>
+                <td colspan="2" align="right"><img src="img/spacer.gif" width="1" height="25" />
+                <input type=hidden name=postpreservationdata value="$$smdecode(postpreservationdata)$$">
+                <input type="button" id="Enter" value="Login" onClick="submitForm();">
+                </td>
+                </tr>
+
+                 <!-- Display an error message when user failed to login. -->
+                 <!-- The SMAuthStatus is supplied by SiteMinder -->
+
+                        <tr>
+                        <td colspan="2" align="center" class="errormsg">
+			<SCRIPT language='JavaScript'>
+			//Auth Reason 4 - Session Expired
+			//Auth Reason 5 - AuthLevelTooLow 
+			if ($$smauthreason$$ == 4)
+                      	{
+                	document.write("Your session has expired.<br>");
+                	}
+			if ($$smauthreason$$ == 5)
+                      	{
+                	document.write("Authentication Level too low.<br>");
+                	}
+                        var smauthstatus = "$$smauthstatus$$";
+                       	if (smauthstatus == 1)
+                            document.write("Invalid Credentials<br>");                       	
+                        else if (smauthstatus == 2)
+                            document.write("Unauthorized User<br>");
+                        </SCRIPT>
+                        </td>
+                        </tr>
+                <tr>
+                <td colspan="2" align="center"><img src="img/bnym_login_dottedhr.gif" width="208" height="34" /></td>
+                </tr>
+                <tr>
+                <td colspan='2' class='tinylink' align='left'>Employees must not access the company's network from publically available computing devices (e.g. kiosks containing personal computers located in an airport, internet cafe, hotel lobby or other such unsecured devices).<br><br>For more information refer to Personal Computing Security Standard I-N-310.</td>
+                </tr>
+                </table>
+
+        </td>
+        <td rowspan="3" class="rightcol"><img src="img/spacer.gif" height="1" width="8" /></td>
+      </tr>
+
+      <tr>
+        <td width="18" height="215">&nbsp;</td>
+        <td width="538" style="padding-right:18px;" valign="top">
+
+                        <br><b>Need Help?</b><br><br>To log in you must know your COMIT ID and your LDAP password. If you are having issues with your ID or password, you will find <a href="javascript:displayWindow('/login/forms/LoginHelp.html',650,400)">Step By Step Instructions</a> here.
+                        <br><br>For additional assistance, please contact the <a href="http://mysource.bnymellon.net/corporate/csd/index.html" target="_blank">Digital Service Centre</a> and ask to have your LDAP account reset.<br><br><br>
+		</td>
+        <td width="18">&nbsp;</td>
+      </tr>
+    </table>
+    <table width="784" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+                <td width="784" colspan="2" bgcolor="#666666" height="22" align="right" class="footer" style="padding-right:10px;">
+		<a href="javascript:displayWindow('/login/forms/LoginHelp.html',650,400)">Help</a>
+		&nbsp; | &nbsp;
+		<a href="javascript:displayWindow('/login/forms/PrivacyPolicy.html',650,400)">Privacy Policy</a>
+		&nbsp; | &nbsp;
+		<a href="javascript:displayWindow('/login/forms/TermsOfUse.html',650,400)">Terms of Use</a>
+		</td>
+          </tr>
+          <tr>
+                <td width="50%"><img src="img/bnym_logo_footer.gif" /></td>
+                <td width="50%" align="right" style="padding-right:10px;"><span class="copyright">&copy; Copyright BNY Mellon Corporation. All Rights Reserved.</span></td>
+          </tr>
+    </table>
+    </td>
+  </tr>
+</table>
+
+        <!-- Target is the field that tells SiteMinder where to go after successful login.  This  -->
+        <!-- value is typically supplied by SiteMinder, but can be supplied by this page if      -->
+        <!-- no value is specified (see initForm())     -->
+        
+</form>
+
+</body>
+</html>

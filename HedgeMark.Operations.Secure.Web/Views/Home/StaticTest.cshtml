@@ -1,0 +1,51 @@
+﻿@using HMOSecureWeb.Utility
+@{
+    ViewBag.Title = "Static Test";
+}
+
+@if (!Util.IsLowerEnvironment)
+{
+    <legend>This page is not not authorized in this environment</legend>
+}
+else
+{
+
+    <legend>Static Test Page - Only in Lower environment</legend>
+    <div ng-controller="StaticTestCtrl">
+        <div class="container-fluid">
+            <textarea rows="20" placeholder="paste sample MT message to send" cols="100" ng-model="StaticMessage"></textarea>
+            <br />
+
+            <span>
+                <button type="button" id="btnCreateWire" class="btn btn-sm btn-primary" ng-click="sendSwiftMessage()">
+                    <i class="glyphicon glyphicon-cloud-upload"></i>&nbsp;Send Swift Message
+                </button>
+                &nbsp;
+                <button type="button" id="btnReceiveWire" class="btn btn-sm btn-primary" ng-click="receiveInboundMessages()">
+                    <i class="glyphicon glyphicon-cloud-download"></i>&nbsp;Receive Inbound Messages
+                </button>
+            </span>
+
+        </div>
+
+    </div>
+    @section Javascript{
+        <script type="text/javascript">
+            HmOpsApp.controller("StaticTestCtrl", function ($scope, $http) {
+
+                $scope.sendSwiftMessage = function () {
+                    $http.post("/Home/SendSwiftMessage", { swiftMessage: $scope.StaticMessage }).then(function (response) {
+                        notifySuccess("Message sent to MQ");
+                    });
+                }
+
+                $scope.receiveInboundMessages = function () {
+                    $http.post("/Home/ReceiveSwiftMessage").then(function (response) {
+                        notifySuccess("Receiving messages from MQ");
+                    });
+                }
+
+            });
+        </script>
+    }
+}

@@ -1,0 +1,69 @@
+﻿@using HMOSecureWeb.Utility
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body ng-app="HmOperationsSecureApp" style="background: #F5F5F5">
+
+    @foreach (var bundle in BundleTable.Bundles.Where(bundle => bundle is StyleBundle))
+    {
+        @Styles.Render(bundle.Path)
+    }
+    <meta http-equiv="X-UA-Compatible" content="IE=9">
+    <meta charset="utf-8">
+    <title> Operations Secured- @ViewBag.Title</title>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href=@Url.Action("Index", "Home")><i class="glyphicon glyphicon-home pull-left"></i>&nbsp;&nbsp;HM Operations Secure</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav"></ul>
+                <ul class="nav navbar-nav navbar-right">
+
+                    @if (Util.IsLowerEnvironment)
+                    {
+                        <li>@Html.ActionLink("Static Message Test", "StaticTest", "Home")</li>
+                    }
+                    <li>@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
+                    <li>@Html.ActionLink("User Audits", "Index", "Audit")</li>
+                    <li title="Logout" class="navbar-right"><a id="btnLogOff" class="navbar-icon" href=@Url.Action("LogOff", "Account")><i class="glyphicon glyphicon-log-out"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" style="margin-top: 70px; ">
+        @RenderSection("featured", required: false)
+        @RenderBody()
+    </div>
+    <div class="notifications top-right" style="z-index: 1000"></div>
+    <div class="notifications bottom-right"></div>
+    <div class="notifications top-left"></div>
+    <div class="notifications bottom-left"></div>
+    <div class="notifications center"></div>
+
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted"><small>© @DateTime.Now.Year HedgeMark International, LLC. All rights reserved.</small></p>
+        </div>
+    </footer>
+
+
+    @foreach (var bundle in BundleTable.Bundles.Where(bundle => bundle is ScriptBundle))
+    {
+        @Scripts.Render(bundle.Path)
+    }
+
+    <script type="text/javascript" src="~/Scripts/OpsSecure/OpsSecureAngularFactory.js"></script>
+
+    @RenderSection("JavaScript", required: false)
+    @this.InjectAdditionalScripts()
+
+</body>
+</html>
