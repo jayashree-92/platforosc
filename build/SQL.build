@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<project name="Application" default="executeSQLScripts" basedir=".">
+  <property name="dir.sql" value="..\HMSQLDBProject\HM_DMA\CreateScripts\"/>
+  <property name="Change.sql" value="..\HMSQLDBProject\HM_DMA\ChangeScripts\"/>
+  <property name="Data.sql" value="..\HMSQLDBProject\HM_DMA\DataScripts\"/>  
+  <property name="sql.user" value="HMWIRESDEV"/>
+  <property name="sql.pwd" value="5$#2wires@1"/>
+  <property name="sql.svr" value="W00001N00\MSDMUT05"/>
+  <property name="sql.DB" value="HM_WIRES"/>
+  <property name="DMAStagingTypes" value = "..\HMSQLDBProject\HM_DMA\DMAStagingTypes.sql"/>
+  - <target name="executeSQLScripts">
+    <echo message="Executing Scripts to DataBase:${sql.DB}"/>
+    <echo message="* Executing ${Change.sql}"/>
+
+    <foreach item="File" property="sql.script">
+      <in>
+        <items>
+          <include name="${dir.sql}\Tables\*.sql"/>
+          <include name="${Change.sql}\*.sql"/>
+          <include name="${dir.sql}\Views\*.sql"/>
+          <include name="${Data.sql}\*.sql"/>
+		  <include name="${dir.sql}\BaseTables\*.sql"/>
+        </items>
+      </in>
+      <do>
+        <echo message="* Executing ${path::get-file-name(sql.script)}"/>
+        <sql
+        connstring="Provider=SQLOLEDB;Data Source=${sql.svr}; Initial Catalog=${sql.DB};User ID=${sql.user};Password=${sql.pwd}"
+        transaction="true"
+        delimiter="GO"
+        delimstyle="Line"
+        print="true"
+        source="${sql.script}"
+        failonerror="true"/>
+      </do>
+    </foreach>
+	<foreach item="File" property="SP.script">
+      <in>
+        <items>          
+		  <include name="${dir.sql}\StoredProcedures\*.sql"/>
+          <include name="${dir.sql}\Functions\*.sql"/>
+        </items>
+      </in>
+      <do>
+        <echo message="* Executing ${path::get-file-name(SP.script)}"/>
+        <exec program="sqlcmd" commandline="-S ${sql.svr} -U ${sql.user} -P ${sql.pwd} -d ${sql.DB} -i ${SP.script}" failonerror="true"/>
+      </do>
+    </foreach> 
+	<!-- <echo message="* Executing DMAStagingTypes"/> -->
+    <!-- <sql -->
+        <!-- connstring="Provider=SQLOLEDB;Data Source=${sql.svr}; Initial Catalog=${sql.DB};User ID=${sql.user};Password=${sql.pwd}" -->
+        <!-- transaction="true" -->
+        <!-- delimiter="GO" -->
+        <!-- delimstyle="Line" -->
+        <!-- print="true" -->
+        <!-- source="${DMAStagingTypes}" -->
+        <!-- failonerror="true"/> -->
+  </target>
+</project>
+
+
+
+
