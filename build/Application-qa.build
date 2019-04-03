@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<project xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" basedir="." default="CopyQADeployServer1"> 
+ <!-- property settings-->  
+  <tstamp>            
+     <formatter property="timestamp" pattern="yyMMdd_HHmm"/>
+  </tstamp> 
+  <property name="CurrentDir" value="${directory::get-current-directory()}" overwrite="false"/>
+  <property name="buildDirectory" value="../HedgeMark.Operations.Secure.Web/bin" /> 
+  <property name="copyToDirectory" value="../Commons/bin" />
+  <property name="Configuration" value="QA" overwrite="false"/>
+  <property name="EnableNuGetPackageRestore" value="true" />
+  <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
+  <property name="ProjectFile" value="../HedgeMark.Operations.Secure.Web/HMOSecureWeb.csproj"/>   
+  <property name="OutputFile1" value="../HedgeMark.Operations.Secure.Web/obj/QA/"/>   
+  <property name="OutputFile2" value="\\w001gmn0c\Operations_Secure_Jenkins"/>    
+  <property name="nant.settings.currentframework" value="net-4.0"/> 
+  <property name="UnitTestLocation" value="../HedgeMark.Operations.Secure.Middleware.Tests/bin" />  
+  <property name="MSTest" value="C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\MSTest.exe"/>
+  <property name="testResults" value="${CurrentDir}\TestResults"/>  
+  <property name="QAPathToCopyServer1" value="\\wc08a10003pv00\OPS_Secure_QA01"/>
+  <property name="QAPathToCopyServer2" value="\\wc08a10004pv00\OPS_Secure_QA01"/>
+ 
+  <!-- Target to Clear the solution and the Previous test Case Results  Available in System -->
+  <target name="Clear">
+    <echo message="Clearing the builds and test results.."/>
+    <delete dir="${testResults}" failonerror="false" />	
+	<msbuild project="${SolutionFile}" >
+	  <arg value="/p:Configuration=${Configuration}" />
+      <arg value="/t:Clean"/>
+    </msbuild>  
+    <mkdir dir="${testResults}" />	
+  </target>
+   
+  <!-- Target for Building -->
+  <target name="Build" depends="Clear">
+    <echo message="Building the Application by setting Configuration to '${Configuration}'" />
+    <msbuild project="${SolutionFile}" >
+      <arg value="/tv:4.0"/>
+      <arg line="/property:Configuration=${Configuration}" />
+      <arg value="/verbosity:detailed" />
+      <arg value="/v:minimal" />
+    </msbuild>
+  </target>  
+
+  <!-- Post Build Event - Copy License file -->
+  <target name="PostBuildCopy" depends="Build">
+  <copy todir="..\HedgeMark.Operations.Web\bin\" verbose="true">
+    <!-- <fileset basedir="."> -->
+		<!-- <include name="..\HedgeMark.Operations.Web\bin\ExternalLibraries\Aspose.Cells.lic"/>	 -->
+		<!-- <include name="..\HedgeMark.Operations.Web\bin\ExternalLibraries\Aspose.Pdf.lic"/>			 -->
+	<!-- </fileset>   -->
+    </copy>  
+  </target>  
+   
+
+  <target name="UnitTestBuild"  depends="PostBuildCopy">
+    <echo message="Current Directory= '${CurrentDir}'" />
+    <exec program ="${MSTest}" basedir="."  verbose="true" failonerror="false" >	  
+      <arg value="/testcontainer:${UnitTestLocation}/QA/HMOSecureMiddleware.Tests.dll"/>
+      <arg value="/resultsfile:${testResults}\TestResults.trx"/> 	    
+    </exec>
+  </target>
+  
+  <!-- Target for SQL -->
+  <!-- File set Including the Required Build File for the SQL Process -->
+  <fileset id="SQLFiles">
+    <include name="SQL_QA.Build" />
+  </fileset>
+
+  <!-- target for SQL Process, includes files in fileset deployFiles-->
+  <target name="SQLBuild" depends="UnitTestBuild">
+    <nant>
+      <buildfiles refid="SQLFiles" />
+    </nant>
+  </target>
+ 
+  <!-- Target for Publishing -->
+  <target name="Publish" description="Publish Project" depends="SQLBuild" >
+    <exec program="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" failonerror="true">
+      <arg value="${ProjectFile}" />
+      <arg value="/p:Configuration=${Configuration}" />
+      <arg value="/t:_WPPCopyWebApplication" />
+      <arg value="/t:TransformWebConfig" />
+      <arg value="/p:OutDir=${OutputFile1}" />
+      <arg value="/p:WebProjectOutputDir=${OutputFile2}" />
+    </exec>
+  </target>
+  
+  <!-- Post Publish Event - Copy License file -->
+   <target name="PostPublishCopy" depends="Publish">
+    <copy todir="${OutputFile2}\bin\" verbose="true">
+    <!-- <fileset basedir="."> -->
+		<!-- <include name="..\HedgeMark.Operations.Web\bin\ExternalLibraries\Aspose.Cells.lic"/> -->
+		<!-- <include name="..\HedgeMark.Operations.Web\bin\ExternalLibraries\Aspose.Pdf.lic"/>		 -->
+	<!-- </fileset>   -->
+    </copy>  
+   </target>     
+  
+  
+   <!-- QA -->   
+   <!-- Target for SQL QA -->
+   <!-- File set Including the Required Build File for the SQL Process -->
+   <fileset id="SQLFilesQA">
+     <include name="SQL_QA.Build" />
+   </fileset>
+
+   <!-- target for SQL Process, includes files in fileset deployFiles-->
+   <target name="SQLBuildQA"  depends="PostPublishCopy">
+    <nant>
+      <buildfiles refid="SQLFilesQA" />
+    </nant>
+  </target>
+   
+    <!-- Target to Clean QA  (to alternate server)-->
+    <target name = "cleanQADeployServer2" depends="SQLBuildQA">
+     <delete>
+      <fileset basedir="${QAPathToCopyServer2}">   
+        <include name="***/*.*" />  
+	    <exclude name="***/web.Config" />
+		 <exclude name="**/login/**" />
+	     <exclude name="**/logout/**" />
+		 <exclude name="**/pw/**" />
+      </fileset>
+     </delete>
+   </target>
+   
+   <!-- Target to Clean QA (to main server)-->
+   <target name = "cleanQADeployServer1" depends="cleanQADeployServer2">
+     <delete>
+    <fileset basedir="${QAPathToCopyServer1}">   
+     <include name="***/*.*" />  
+	 <exclude name="***/web.Config" />
+	  <exclude name="**/login/**" />
+	 <exclude name="**/logout/**" />
+	 <exclude name="**/pw/**" />
+    </fileset>
+   </delete>
+   </target>
+   
+  <!-- Target to Copy from Dev To Test Opt1 (to alternate server) -->
+   <target name="CopyQADeployServer2" depends="cleanQADeployServer1">    
+     <copy todir="${QAPathToCopyServer2}" includeemptydirs="false" overwrite="true">
+      <fileset basedir="${OutputFile2}">        
+        <exclude name="***/web.Config" />
+        <include name="***/*.*" />        
+      </fileset>
+    </copy>   
+   </target>
+   
+   <!-- Target to Copy from Dev To QA (to main server) -->
+   <target name="CopyQADeployServer1" depends="CopyQADeployServer2">    
+     <copy todir="${QAPathToCopyServer1}" includeemptydirs="false" overwrite="true">
+      <fileset basedir="${OutputFile2}">        
+        <exclude name="***/web.Config" />
+        <include name="***/*.*" />        
+      </fileset>
+    </copy>   
+   </target> 
+   
+</project>
+
+
