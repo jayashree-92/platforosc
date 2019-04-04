@@ -17,7 +17,7 @@
                             </span>|&nbsp;
                         </span>
                         <span ng-style="{'margin-left': isApprovedOrFailed ? '0px' : '55px' }">|&nbsp;Wire Status: <span id="spnwireStatus"><b>{{ getWireStatus() }}</b></span></span>
-                        <span ng-style="{'margin-left': isApprovedOrFailed ? '0px' : '55px' }" ng-show="WireTicket.SwiftStatusId != 1">|&nbsp;Swift Status: <span id="spnswiftStatus"><b>{{ getSwiftStatus() }}</b></span></span>
+                        <span ng-style="{'margin-left': isApprovedOrFailed ? '0px' : '55px' }" ng-show="WireTicket.SwiftStatusId > 1">|&nbsp;Swift Status: <span id="spnswiftStatus"><b>{{ getSwiftStatus() }}</b></span></span>
                     </p>
                     <div class="panel panel-heading collapse" id="wireErrorStatus">
                         <div>
@@ -729,7 +729,7 @@
                                         <div class="panel-heading panel-arrow" style="text-transform: initial; font-size: 12px; border-top: 2px !important; padding: 5px 10px;">
                                             <span> {{ workflowUsers[$index] + " " }} <span id="workflowStatus_{{$index}}" style="font-size:13px;"><b> {{ getWireLogStatus(wireLog, $index) }} </b></span> {{ getWireLogText(wireLog) }}</span>
                                         </div>
-                                        <div class="panel-body" ng-show="wireLog.Comment.length >0" style="padding: 6px 10px;">{{ wireLog.Comment }}</div>
+                                        <div class="panel-body" ng-show="wireLog.Comment.length > 0" style="padding: 6px 10px;">{{ wireLog.Comment }}</div>
                                     </div>
                                 </li>
                             </ul>
@@ -750,25 +750,23 @@
                         <p class="ng-show-hide swiftMessgeBlock">{{TrustedSwiftMessage}}</p>
                     </div>
                 </div>
-
-                
             </div>
 
             <div class="modal-footer form-inline" style="padding: 8px 20px 8px 20px;position: sticky;bottom: 0;background: #F5F5F5;border-top: 1px solid lightgray;">
                 <textarea type="text" placeholder="Enter Comments" id="wireComment" ng-model="wireComments" class="form-control" rows="2" style="width:50%;float:left;"></textarea>
-                <button type="button" class="btn btn-sm btn-warning ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="WireTicket.WireStatusId == 2 || WireTicket.WireStatusId == 5" ng-click="fnUpdateWireWithStatus(1)">
+                <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="WireTicket.WireStatusId == 2 || WireTicket.WireStatusId == 5" ng-click="fnUpdateWireWithStatus(1)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Reverting to Draft...</span>">
                     <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save as Draft
                 </button>
-                <button type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="WireTicket.WireStatusId == 1" ng-click="fnUpdateWireWithStatus(2)">
+                <button id="initiateWire" type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="WireTicket.WireStatusId == 1" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Initiating...</span>">
                     <i class="glyphicon glyphicon-plus"></i>&nbsp;Re-Initiate Wire
                 </button>
-                <button type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-disabled="isUserActionDone" ng-if="isAuthorizedUserToApprove" ng-click="fnUpdateWireWithStatus(3)">
+                <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-disabled="isUserActionDone" ng-if="isAuthorizedUserToApprove" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
                     <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
                 </button>
-                <button type="button" class="btn btn-sm btn-info  ng-show-only" title="Cancel" ng-disabled="isUserActionDone" ng-if="isCancelEnabled" ng-click="fnUpdateWireWithStatus(4)">
+                <button id="cancelWire" type="button" class="btn btn-sm btn-info  ng-show-only" ng-disabled="isUserActionDone" ng-if="isCancelEnabled" ng-click="confirmCancellation()" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Cancelling...</span>">
                     <i class="glyphicon glyphicon-repeat"></i>&nbsp;Cancel
                 </button>
-                <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Dismiss</a>
+                <a href="#" class="btn btn-sm btn-default" style="vertical-align:-webkit-baseline-middle;" data-dismiss="modal">Dismiss</a>
                 <p />
             </div>
         </div>

@@ -78,18 +78,12 @@ namespace HedgeMark.SwiftMessageHandler.Model
 
         public string GetSender()
         {
-            if (IsIncoming())
-                return Block2.GetReceiver();
-
-            return Block1.GetLogicalTerminal();
+            return IsIncoming() ? Block2.GetReceiver() : Block1.GetLogicalTerminal();
         }
 
         public string GetReceiver()
         {
-            if (IsIncoming())
-                return Block1.GetLogicalTerminal();
-
-            return Block2.GetReceiver();
+            return IsIncoming() ? Block1.GetLogicalTerminal() : Block2.GetReceiver();
         }
 
         public bool IsType(string messageType)

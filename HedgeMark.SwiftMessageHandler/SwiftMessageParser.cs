@@ -5,8 +5,9 @@ using System.Text.RegularExpressions;
 using HedgeMark.SwiftMessageHandler.Model;
 using HedgeMark.SwiftMessageHandler.Model.Blocks;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
+using HedgeMark.SwiftMessageHandler.Utils;
 
-namespace HedgeMark.SwiftMessageHandler.Utils
+namespace HedgeMark.SwiftMessageHandler
 {
     public class SwiftMessageParser
     {
@@ -242,13 +243,13 @@ namespace HedgeMark.SwiftMessageHandler.Utils
             return match.Value;
         }
 
-        private static string GetFieldValueFromBlock4(string message, string field)
-        {
-            var pattern = FieldExtractorFromBlock4.Replace("X", field);
-            var regex = new Regex(pattern, RegexOptions.Singleline);
-            var match = regex.Match(message);
-            return match.Value;
-        }
+        //private static string GetFieldValueFromBlock4(string message, string field)
+        //{
+        //    var pattern = FieldExtractorFromBlock4.Replace("X", field);
+        //    var regex = new Regex(pattern, RegexOptions.Singleline);
+        //    var match = regex.Match(message);
+        //    return match.Value;
+        //}
 
         private const string ServiceIdExtractorFromBlock1 = @"(?<=^.{4}).{2}";
         private const string MessageTypeExtractorFromBlock2 = @"(?<=^.{1}).{3}";
@@ -256,7 +257,7 @@ namespace HedgeMark.SwiftMessageHandler.Utils
         private const string FieldExtractorFromBlockWith2Levels = @"(?<=\{X:)(.*?)(?=\})";
         private const string FieldExtractorFromBlock4 = @"(?<=X:)(.*?)(?=:)";
 
-        private const string FieldsExtractor = @"(?<=\{)(.*?)(?=\})";
+        //private const string FieldsExtractor = @"(?<=\{)(.*?)(?=\})";
 
         //private const string Blocks1Extractor = @"(?<=\{1:)(.*?)(?=\})";
         //private const string Blocks2Extractor = @"(?<=\{2:)(.*?)(?=\})";

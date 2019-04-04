@@ -56,6 +56,18 @@ BEGIN
 END
 
 
+IF((Select count(*) from hmsSwiftStatusLkup) =5)
+BEGIN
+
+	UPDATE hmsSwiftStatusLkup SET [Status] = 'Negative Acknowledge' WHERE hmsSwiftStatusId =4;
+	UPDATE hmsSwiftStatusLkup SET [Status] = 'Completed' WHERE hmsSwiftStatusId  =5;
+
+	SET IDENTITY_INSERT  hmsSwiftStatusLkup ON
+		INSERT INTO hmsSwiftStatusLkup ([hmsSwiftStatusId],[Status]) VALUES (6,'Failed');
+	SET IDENTITY_INSERT  hmsSwiftStatusLkup OFF
+
+END
+
 IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'IsBookTransfer' and TABLE_NAME = 'hmsWires')
 BEGIN
 	ALTER TABLE hmsWires ADD IsBookTransfer BIT NOT NULL DEFAULT 0

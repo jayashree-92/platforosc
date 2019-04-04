@@ -25,6 +25,7 @@ namespace HMOSecureMiddleware
             NotInitiated = 1,
             Processing,
             Acknowledged,
+            NegativeAcknowledged,
             Completed,
             Failed,
         }
@@ -161,34 +162,34 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static void SetWireStatus(WireInBoundMessage inBoundMessage, SwiftStatus swiftStatus, string comment)
+        public static void SetWireStatus(long wireId, SwiftStatus swiftStatus, string comment)
         {
             using (var context = new OperationsSecureContext())
             {
                 //Update Wire Status Id
-                var hmsWire = context.hmsWires.First(s => s.hmsWireId == inBoundMessage.WireId);
+                var hmsWire = context.hmsWires.First(s => s.hmsWireId == wireId);
                 hmsWire.SwiftStatusId = (int)swiftStatus;
                 context.SaveChanges();
 
                 //Add a Workflow Status 
-                SaveWireWorflow(inBoundMessage.WireId, (WorkflowStatus)hmsWire.WireStatusId, swiftStatus, comment, -1);
+                SaveWireWorflow(wireId, (WorkflowStatus)hmsWire.WireStatusId, swiftStatus, comment, -1);
             }
         }
 
-        public static void SetWireStatus(WireInBoundMessage inBoundMessage, WorkflowStatus workflowStatus, SwiftStatus swiftStatus, string comment)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                //Update Wire Status Id
-                var hmsWire = context.hmsWires.First(s => s.hmsWireId == inBoundMessage.WireId);
-                hmsWire.WireStatusId = (int)workflowStatus;
-                hmsWire.SwiftStatusId = (int)swiftStatus;
-                context.SaveChanges();
+        //public static void SetWireStatus(WireInBoundMessage inBoundMessage, WorkflowStatus workflowStatus, SwiftStatus swiftStatus, string comment)
+        //{
+        //    using (var context = new OperationsSecureContext())
+        //    {
+        //        //Update Wire Status Id
+        //        var hmsWire = context.hmsWires.First(s => s.hmsWireId == inBoundMessage.WireId);
+        //        hmsWire.WireStatusId = (int)workflowStatus;
+        //        hmsWire.SwiftStatusId = (int)swiftStatus;
+        //        context.SaveChanges();
 
-                //Add a Workflow Status 
-                SaveWireWorflow(inBoundMessage.WireId, workflowStatus, swiftStatus, comment, -1);
-            }
-        }
+        //        //Add a Workflow Status 
+        //        SaveWireWorflow(inBoundMessage.WireId, workflowStatus, swiftStatus, comment, -1);
+        //    }
+        //}
 
         public static void SetWireStatus(long wireId, WorkflowStatus workflowStatus, SwiftStatus swiftStatus, string comment)
         {

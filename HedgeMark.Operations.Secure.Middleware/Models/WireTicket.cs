@@ -67,6 +67,7 @@ namespace HMOSecureMiddleware.Models
         public string MessageType { get; private set; }
         public bool IsConfirmed { get; set; }
         public bool IsAcknowledged { get; set; }
+        public bool IsNegativeAcknowledged { get; set; }
         public string ExceptionMessage { get; set; }
         public string ConfirmationMessage { get; set; }
     }

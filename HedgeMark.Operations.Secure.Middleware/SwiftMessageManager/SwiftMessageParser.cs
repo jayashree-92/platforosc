@@ -39,7 +39,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             if (!message.SwiftMessage.IsNack())
                 return message;
-            
+
+            message.IsNegativeAcknowledged = true;
             message.ExceptionMessage = string.Format("Swift returned Un-acknowledged for wire ticket Id :{0}  with errorCode: {1}", message.WireId, message.SwiftMessage.GetNackReasonCode());
             return message;
         }
@@ -57,7 +58,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static WireInBoundMessage Parse900Or910Confirmation(WireInBoundMessage message)
         {
             message.IsConfirmed = true;
-            
+
             //We might need to compare with the original message and double check on the confirmation
 
             return message;

@@ -26,6 +26,7 @@ BEGIN
 	INSERT INTO hmsSwiftStatusLkup ([Status]) VALUES ('Not Initiated');
 	INSERT INTO hmsSwiftStatusLkup ([Status]) VALUES ('Processing');
 	INSERT INTO hmsSwiftStatusLkup ([Status]) VALUES ('Acknowledged');
+	INSERT INTO hmsSwiftStatusLkup ([Status]) VALUES ('Negative Acknowledged');
 	INSERT INTO hmsSwiftStatusLkup ([Status]) VALUES ('Completed');
 	INSERT INTO hmsSwiftStatusLkup ([Status]) VALUES ('Failed');
 END

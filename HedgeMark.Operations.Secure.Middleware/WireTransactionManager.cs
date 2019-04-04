@@ -159,23 +159,26 @@ namespace HMOSecureMiddleware
                 context.SaveChanges();
             }
         }
-        
+
         public static void ProcessInboundMessage(string swiftMessage)
         {
             LogInBoundWireMessage(swiftMessage);
 
             //var confirmationData = GetWireInBoundMessage(swiftMessage);
-            var confirmationData = new WireInBoundMessage(swiftMessage);
+            var confirmationData = SwiftMessageParser.ParseMessage(swiftMessage);
 
-            if (!string.IsNullOrWhiteSpace(confirmationData.ExceptionMessage))
-                WireDataManager.SetWireStatus(confirmationData, WireDataManager.SwiftStatus.Failed, string.Format("Wire Transaction Failed with error: {0}", confirmationData.ExceptionMessage));
+            if (confirmationData.IsAckOrNack && confirmationData.IsAcknowledged)
+                WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.SwiftStatus.Acknowledged, string.Empty);
 
-            else if (confirmationData.IsAckOrNack && confirmationData.IsAcknowledged)
-                WireDataManager.SetWireStatus(confirmationData, WireDataManager.SwiftStatus.Acknowledged, string.Empty);
+            else if (confirmationData.IsAckOrNack && confirmationData.IsNegativeAcknowledged)
+                WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.SwiftStatus.NegativeAcknowledged, confirmationData.ExceptionMessage);
 
             //Update the given wire Id to "Completed" in workflow and wire table
             else if (confirmationData.IsConfirmed)
-                WireDataManager.SetWireStatus(confirmationData, WireDataManager.SwiftStatus.Completed, string.Empty);
+                WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.SwiftStatus.Completed, confirmationData.ConfirmationMessage);
+
+            else if (!string.IsNullOrWhiteSpace(confirmationData.ExceptionMessage))
+                WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.SwiftStatus.Failed, string.Format("Wire Transaction Failed with error: {0}", confirmationData.ExceptionMessage));
 
             //Put an entry to Wire Log table with the parameters used to create Swift Message
             LogInBoundWireTransaction(confirmationData, swiftMessage);

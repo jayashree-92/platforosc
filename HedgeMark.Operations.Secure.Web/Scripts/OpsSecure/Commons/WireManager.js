@@ -54,15 +54,19 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.getWireMessageTypes = function (module) {
-        return $http.get("/Home/GetWireMessageTypeDetails?module=" + module + "&isAdhocWire=false").then(function (response) {
-            if (module == "Adhoc Report" || $scope.Purpose == "Respond to Broker Call")
+        return $http.get("/Home/GetWireMessageTypeDetails?module=" + module).then(function (response) {
+            if (module == "Adhoc Report")
                 $scope.MessageTypes = response.data;
-            else {
-                if ($scope.Purpose == "Send Call")
+            else
+            {
+                if ($scope.Purpose == "Respond to Broker Call")
+                    $scope.MessageTypes = $filter('filter')(response.data, function (type) { return type.text != "MT210" }, true);
+                else
                     $scope.MessageTypes = $filter('filter')(response.data, { text: 'MT210' }, true);
             }
         });
     }
+
     $scope.SwiftFormatMessageActiveTag = "";
 
     $scope.fnShowFormattedSwiftMsg = function (key, value) {
@@ -111,7 +115,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 val.hmsWire = null;
             });
             $timeout(function () {
-                $interval.cancel($scope.promise);
                 $scope.timeToApprove = angular.copy(response.data.deadlineToApprove);
                 $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
                 if (!$scope.isApprovedOrFailed) {
@@ -124,6 +127,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         $scope.validationMsg = "Deadline crossed. Please select a future date for settlement.";
                     }
                 }
+                $interval.cancel($scope.promise);
                 $scope.promise = $interval(timer, 1000);
             }, 50);
 
@@ -201,9 +205,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 return " & Processing";
             case 3: if ($container != null) $container.addClass("text-info");
                 return " & Acknowledged";
-            case 4: if ($container != null) $container.addClass("text-success");
+            case 4: if ($container != null) $container.addClass("text-dander");
+                return " & N-Acknowledged";
+            case 5: if ($container != null) $container.addClass("text-success");
                 return " & Completed";
-            case 5: if ($container != null) $container.addClass("text-dander");
+            case 6: if ($container != null) $container.addClass("text-dander");
                 return " & Failed";
         }
         return "";
@@ -237,9 +243,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 return "Pending Acknowledgement";
             case 3: angular.element("#spnswiftStatus").addClass("text-info");
                 return "Pending Confirmation";
-            case 4: angular.element("#spnswiftStatus").addClass("text-success");
+            case 4: angular.element("#spnswiftStatus").addClass("text-dander");
+                return "N-Acknowledged";
+            case 5: angular.element("#spnswiftStatus").addClass("text-success");
                 return "Completed";
-            case 5: angular.element("#spnswiftStatus").addClass("text-dander");
+            case 6: angular.element("#spnswiftStatus").addClass("text-dander");
                 return "Failed";
         }
     }
@@ -265,24 +273,69 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.fnUpdateWireWithStatus = function (statusId) {
         if ($scope.bindAndValidateWireData()) {
             $scope.isUserActionDone = true;
-            $scope.isWireLoadingInProgress = true;
+            $scope.changeButtonStatus(statusId);
             var wireData = statusId == 4 ? $scope.dummyWire : $scope.WireTicket;
             $http.post("/Home/SaveWire", JSON.stringify({ wireTicket: $scope.wireTicketObj, statusId: statusId, comment: $scope.wireComments }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
                 angular.element("#modalToRetrieveWires").modal("hide");
                 if (statusId == 3)
                     notifySuccess("Wire approved successfully");
                 else if (statusId == 4)
-                    notifySuccess("Wire canceled successfully");
+                    notifySuccess("Wire cancelled successfully");
                 else
                     notifySuccess("Wire modified successfully");
-                //$scope.wireObj.contextDate = angular.element("#wireEntryDate").text();
-                //$scope.getWireDetails();
+            }, function (error) {
+                angular.element("#modalToRetrieveWires").modal("hide");
+                notifyError("Wire failed due to Internal server error");
             });
         }
     }
 
+    $scope.changeButtonStatus = function (statusId) {
+        switch (statusId) {
+            case 1: $("#draftWire").button("loading");
+                break;
+            case 2: $("#initiateWire").button("loading");
+                break;
+            case 3: $("#approveWire").button("loading");
+                break;
+            case 4: $("#cancelWire").button("loading");
+                break;
+        }
+    }
+
+    $scope.confirmCancellation = function () {
+        angular.element('#cancelWire').popover('destroy').popover({
+            trigger: 'click',
+            title: "Are you sure to cancel this wire?",
+            placement: 'top',
+            container: 'body',
+            content: function () {
+                return "<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
+                    + "<button class=\"btn btn-sm btn-success confirmCancellation\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
+                    + "<button class=\"btn btn-sm btn-default dismissCancellation\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
+                    + "</div>";
+            },
+            html: true
+        }).popover("show");
+        $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
+                    + "<button class=\"btn btn-sm btn-success confirmCancellation\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
+                    + "<button class=\"btn btn-sm btn-default dismissCancellation\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
+                    + "</div>");
+    }
+
+    $(document).on('click', ".confirmCancellation", function () {
+        angular.element('#cancelWire').popover("hide");
+        $scope.fnUpdateWireWithStatus(4);
+
+    });
+    $(document).on('click', ".dismissCancellation", function () {
+        angular.element('#cancelWire').popover("hide");
+    });
+
     angular.element("#modalToRetrieveWires").on("hidden.bs.modal", function () {
         $("#accountDetailDiv,#receivingAccountDetailDiv,#ssiTemplateDetailDiv,#attachmentsDiv,#wireWorkflowLogsDiv,#wireSwiftMessagesDiv").collapse("hide");
+        $("button").button("reset");
+        angular.element("#cancelWire").popover("hide");
     });
 
     $scope.bindAndValidateWireData = function () {
@@ -326,7 +379,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.getApprovalTime = function (account) {
         $http.post("/Home/GetTimeToApproveTheWire", JSON.stringify({ cashSweepOfAccount: account.CashSweepTime, cutOffTimeOfAccount: account.CutoffTime, valueDate: $("#wireValueDate").text(), cashSweepTimeZone: account.CashSweepTimeZone }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
-            $interval.cancel($scope.promise);
+            
             $scope.timeToApprove = response.data;
             $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
             if ($scope.timeToApprove.Hours > 0) {
@@ -337,6 +390,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $("#wireErrorStatus").collapse("show");
                 $scope.validationMsg = "Deadline crossed. Please select a future date for settlement.";
             }
+            $interval.cancel($scope.promise);
             $scope.promise = $interval(timer, 1000);
         });
     }
