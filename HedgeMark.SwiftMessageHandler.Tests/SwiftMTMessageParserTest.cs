@@ -1,4 +1,5 @@
-﻿using HedgeMark.SwiftMessageHandler.Model;
+﻿using System;
+using HedgeMark.SwiftMessageHandler.Model;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT9XX;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -32,19 +33,17 @@ namespace HedgeMark.SwiftMessageHandler.Tests
                          "ORDPRTY : ABC DO BRASIL LTDA RUA LIBERO BADARO,293-SAO \n" +
                          "PAULO BRAZIL }";
 
-
             /*
 		 * Parse the String content into a SWIFT message object
 		 */
             var mt = new MT940().parse(msg);
-
 
             Assert.AreEqual(mt.GetReceiver(), "AAAABB99BSMK");
             Assert.AreEqual(mt.GetSender(), "BBBBAA33XXXX");
             Assert.AreEqual(mt.GetMessageType(), "940");
 
             Field20 f = (Field20)mt.GetField("20");
-            var labelInfo = f.Label +": " + f.Value;
+            var labelInfo = f.Label + ": " + f.Value;
 
             Assert.AreEqual(labelInfo, "Transaction Reference Number: 0112230000000890");
 
@@ -56,7 +55,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
                 var fieldAmount = f61.GetComponentValue(FieldConstants.AMOUNT);
                 Assert.AreEqual(fieldAmount, iteration == 0 ? "110,92" : "3519,76");
 
-                var fieldTransaction =  f61.GetComponentValue(FieldConstants.TRANSACTION_TYPE);
+                var fieldTransaction = f61.GetComponentValue(FieldConstants.TRANSACTION_TYPE);
                 Assert.AreEqual(fieldTransaction, "N");
 
                 var fieldIdentification = f61.GetComponentValue(FieldConstants.IDENTIFICATION_CODE);
@@ -89,18 +88,12 @@ namespace HedgeMark.SwiftMessageHandler.Tests
             SwiftMessage sm = SwiftMessage.Parse(fin);
 
             Assert.IsTrue(sm.IsAck());
-            //Assert.IsTrue(sm.isServiceMessage());
-
-            //if (sm.isServiceMessage())
-            //{
-            //    sm = SwiftMessage.parse(sm.getUnparsedTexts().getAsFINString());
-            //}
-            //at this point the sm variable will contain the actual user to user message, regardless if it was preceded by and ACK.
-
+            Assert.IsTrue(sm.IsServiceMessage21());
+            
             Assert.AreEqual(sm.MessageType, "940");
             Assert.AreEqual(sm.Block2.MessageType, "940");
             Assert.AreEqual(sm.UnderlyingOriginalSwiftMessage.GetFieldValue("20"), "USD940NO1");
-          //  Assert.AreEqual(sm.GetFieldValue("20"), "USD940NO1");
+            //  Assert.AreEqual(sm.GetFieldValue("20"), "USD940NO1");
             if (sm.IsType("940"))
             {
                 /*
@@ -222,6 +215,62 @@ namespace HedgeMark.SwiftMessageHandler.Tests
 
             //var comparator = new AckMessageComparator();
             //Assert.AreEqual(comparator.compare(acknowledged, original), 0);
+
+        }
+
+
+        [TestMethod]
+        public void AckMessageForEmxTest()
+        {
+            var message = @"{1:F01IRVTBEBBAXXX0000000000}{2:I950BLKSUS33XANEN}{4: 
+:20:1111111111111111
+:25:4444444444
+:28C:1269/1
+:60F:C180717EUR0,
+:62F:C180718EUR0,
+:64:C180718EUR0,-}{1:F21IRVTBEBBVXXX1234222222}{4:{177:3333333333}{451:0}}";
+
+
+            var swiftMsg = SwiftMessage.Parse(message);
+
+            Assert.IsTrue(swiftMsg.IsAck());
+            Assert.IsTrue(swiftMsg.IsServiceMessage21());
+            Assert.IsFalse(swiftMsg.IsNack());
+
+
+            Assert.AreEqual(swiftMsg.MessageType, "950");
+            Assert.AreEqual(swiftMsg.Block2.MessageType, "950");
+            Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.GetFieldValue("20"), "1111111111111111");
+            Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.Block4.GetFieldValue("25"), "4444444444");
+            Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.Block4.GetFieldValue("28C"), "1269/1");
+            Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.Block4.GetFieldValue("60F"), "C180717EUR0,");
+            Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.Block4.GetFieldValue("62F"), "C180718EUR0,");
+            Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.Block4.GetFieldValue("64"), "C180718EUR0,");
+        }
+
+        [TestMethod]
+        public void AckMessageForEmxTest2()
+        {
+            var message = @"{1:F01BICFOOYYAXXX1234123456}{2:I103BICFOARXXXXXN1}{3:{119:STP}}{4:
+:20:REFERENCE
+:23B:CRED
+:32A:" + DateTime.Today.ToString("yyMMdd") + @"EUR1234567,
+:50A:/12345678901234567890
+FOOBANKXXXXX
+:59:/12345678901234567890
+JOE DOE
+:71A:OUR
+-}{5:{MAC:00000000}{PDE:}}{S:{SAC:}{COP:P}}{1:F21BICFOOYYAXXX1234222222}{4:{177:3333333333}{451:0}}";
+
+            var swiftMsg = SwiftMessage.Parse(message);
+            Assert.IsTrue(swiftMsg.IsServiceMessage21());
+            Assert.IsTrue(swiftMsg.IsAck());
+            Assert.IsFalse(swiftMsg.IsNack());
+
+
+            Assert.AreEqual(swiftMsg.MessageType, "103STP");
+            Assert.AreEqual(swiftMsg.Block2.MessageType, "103");
+            Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.Block4.GetFieldValue("20"), "REFERENCE");
 
         }
     }

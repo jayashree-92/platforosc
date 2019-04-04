@@ -14,7 +14,7 @@
   <property name="OutputFile1" value="../HedgeMark.Operations.Secure.Web/obj/QA/"/>   
   <property name="OutputFile2" value="\\w001gmn0c\Operations_Secure_Jenkins"/>   
   <property name="nant.settings.currentframework" value="net-4.0"/> 
-  <property name="UnitTestLocation" value="../HedgeMark.Operations.Secure.Middleware.Tests/bin" />  
+  <property name="UnitTestLocation" value="../HedgeMark.SwiftMessageHandler.Tests/bin" />  
   <property name="MSTest" value="C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\MSTest.exe"/>
   <property name="testResults" value="${CurrentDir}\TestResults"/>  
   <property name="DevPathToCopyServer1" value="\\W002UYN0C\OPS_Secure_Dev01"/>
@@ -38,14 +38,6 @@
 <property name="msbuild-VS2015" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" unless="${property::exists('msbuild-VS2015')}"/>
 
 <!-- <property name="msbuild.args" value="/p:RunOctoPack=true;OctoPackPublishPackageToFileShare=${package.dir}" /> -->
-
-
- 
- 
- 
- 
- 
- 
  
  
   <!-- Target to Clear the solution and the Previous test Case Results  Available in System -->
@@ -95,7 +87,7 @@
   <target name="UnitTestBuild"  depends="PostBuildCopy">
     <echo message="Current Directory= '${CurrentDir}'" />
     <exec program ="${MSTest}" basedir="."  verbose="true" failonerror="true" >	   
-     <arg value="/testcontainer:${UnitTestLocation}/QA/HMOSecureMiddleware.Tests.dll"/>
+     <arg value="/testcontainer:${UnitTestLocation}/QA/HedgeMark.SwiftMessageHandler.dll"/>
      <arg value="/resultsfile:${testResults}\TestResults.trx"/> 
     </exec>
   </target>

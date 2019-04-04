@@ -313,6 +313,10 @@ namespace HedgeMark.SwiftMessageHandler.Utils
                     if (serviceId == "21")
                     {
                         isServiceMessage21 = true;
+
+                        //If the Service Message is in the rear end - we need to properly set the Underlying original properly
+                        qualifiedBlocks.ForEach(s => { underlyingOriginalMessage.AppendFormat("{{{0}:{1}", s.Key, s.Value); });
+                        qualifiedBlocks = new Dictionary<string, string>();
                     }
 
                     qualifiedBlocks.Add("1", block.Replace("{1:", string.Empty));
