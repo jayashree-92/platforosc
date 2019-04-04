@@ -67,7 +67,6 @@
   <arg line="/property:Configuration=${Configuration}" /> 
    <arg value="/verbosity:detailed" /> 
    <arg value="/v:minimal" /> 
-   <arg value="/EnableNuGetPackageRestore:true"/>
    </msbuild> 
    </target>  
 
