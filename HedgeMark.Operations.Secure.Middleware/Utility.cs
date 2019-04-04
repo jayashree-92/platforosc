@@ -1,4 +1,4 @@
-﻿using Humanizer;
+﻿using System.Globalization;
 using System;
 using Com.HedgeMark.Commons;
 
@@ -13,6 +13,8 @@ namespace HMOSecureMiddleware
         //    get { return Holidays.Select(s => s.HolidayContextDate.Date).ToList(); }
         //}
         public static string Environment = ConfigurationManagerWrapper.StringSetting("Environment");
+        public static readonly TextInfo TextInfo = new CultureInfo("en-US", false).TextInfo;
+
         public static bool IsLocal()
         {
             return Environment.Equals("Local");
@@ -57,8 +59,8 @@ namespace HMOSecureMiddleware
             if (charIndex > 0)
                 emailId = emailId.Substring(0, charIndex);
 
-            return emailId.Replace(".", " ").Titleize();
+            var userName = emailId.Replace(".", " ");
+            return TextInfo.ToTitleCase(userName);
         }
-
     }
 }

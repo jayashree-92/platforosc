@@ -47,9 +47,6 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Humanizer">
-      <HintPath>..\packages\Humanizer.Core.2.5.16\lib\netstandard1.0\Humanizer.dll</HintPath>
-    </Reference>
     <Reference Include="IBM.XMS, Version=9.0.0.5, Culture=neutral, PublicKeyToken=d2666ab12fca862b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalLibraries\IBM-MQ\IBM.XMS.dll</HintPath>
