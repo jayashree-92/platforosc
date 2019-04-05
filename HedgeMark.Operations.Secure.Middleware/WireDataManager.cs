@@ -128,11 +128,11 @@ namespace HMOSecureMiddleware
                 SSITemplate = wireSSITemplate,
                 AttachmentUsers = attachmentUsers,
                 WorkflowUsers = workflowUsers,
-                SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireLogs.ToList(), hmWire.WireStatusId)
+                SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireLogs.ToList(), hmWire.WireStatusId, hmWire.SwiftStatusId)
             };
         }
 
-        private static Dictionary<string, string> GetFormattedSwiftMessages(List<hmsWireLog> wireLogs, int wireStatusId)
+        private static Dictionary<string, string> GetFormattedSwiftMessages(List<hmsWireLog> wireLogs, int wireStatusId, int swiftStatusId)
         {
             var swiftMessages = new Dictionary<string, string>();
 
@@ -141,7 +141,10 @@ namespace HMOSecureMiddleware
                 return swiftMessages;
 
             swiftMessages.Add("Outbound", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.OutBoundSwiftMessage, true));
-            swiftMessages.Add("Acknowledgment", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.ServiceSwiftMessage, true));
+
+            var ackLabel = string.Format("{0}Acknowledgement", (swiftStatusId == (int)SwiftStatus.NegativeAcknowledged ? "N-" : string.Empty));
+            swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.ServiceSwiftMessage, true));
+
             swiftMessages.Add("Confirmation", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
 
             return swiftMessages;
@@ -290,7 +293,7 @@ namespace HMOSecureMiddleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
                 return context.hmsWireJobSchedules.FirstOrDefault(s => s.hmsWireId == wireId);
-               
+
             }
         }
 

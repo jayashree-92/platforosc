@@ -17,6 +17,7 @@ namespace HedgeMark.SwiftMessageHandler
 
             public string Name { get; set; }
             public string Label { get; set; }
+            public string Value { get; set; }
             public Dictionary<string, string> BreakDowns { get; private set; }
         }
 
@@ -51,6 +52,9 @@ namespace HedgeMark.SwiftMessageHandler
             foreach (var fieldElement in fieldElements)
             {
                 var thisFieldDetails = string.Empty;
+
+                if (!string.IsNullOrWhiteSpace(fieldElement.Value))
+                    continue;
 
                 //No break down availabel equals, no value present
                 if (!fieldElement.BreakDowns.Any())
@@ -96,7 +100,8 @@ namespace HedgeMark.SwiftMessageHandler
                 var thisField = new FieldElements()
                 {
                     Name = field.Name,
-                    Label = field.Label
+                    Label = field.Label,
+                    Value = field.GetValue()
                 };
 
                 foreach (var component in field.Components)

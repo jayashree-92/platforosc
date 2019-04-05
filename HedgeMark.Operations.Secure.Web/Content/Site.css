@@ -1156,21 +1156,24 @@ ol.status-track {
         transition: 0.5s;
     }
 
-
-
         ol.status-track li.status-track-done {
-            border-bottom: 4px solid #43B02A;
+            border-bottom: 2px solid #43B02A;
             cursor: pointer;
         }
 
         ol.status-track li.status-track-todo {
             color: silver;
-            border-bottom: 4px solid silver;
+            border-bottom: 2px solid silver;
+        }
+
+        ol.status-track li.status-track-failed {
+            color: #E65032;
+            border-bottom: 2px solid #E65032;
         }
 
         ol.status-track li.status-track-active {
             font-weight: bold;
-            border-bottom: 4px solid #A29060;
+            border-bottom: 2px solid #A29060;
             -webkit-animation: progress-animation 0.5s linear alternate infinite;
         }
 
@@ -1202,6 +1205,19 @@ ol.status-track {
             border-radius: 1.2em;
             cursor: pointer;
         }
+
+        ol.status-track li.status-track-failed:before {
+            content: "\2715";
+            color: white;
+            background-color: #E65032;
+            height: 1.2em;
+            width: 1.2em;
+            line-height: 1.2em;
+            border: none;
+            border-radius: 1.2em;
+            cursor: pointer;
+        }
+
 
 @-webkit-keyframes progress-animation {
     0% {
@@ -2147,6 +2163,22 @@ div.DTCR_pointer {
     -o-transition: top 3000ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
     transition: top 3000ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
     -webkit-font-smoothing: antialiased;
+}
+
+.swap-animation.ng-enter, .swap-animation.ng-leave {
+    transition:0.5s linear all;
+}
+.swap-animation.ng-enter {
+    top:-250px;
+}
+.swap-animation.ng-enter-active {
+    top:0px;
+}
+.swap-animation.ng-leave {
+    top:0px;
+}
+.swap-animation.ng-leave-active {
+    top:250px;
 }
 
 .number-counter {

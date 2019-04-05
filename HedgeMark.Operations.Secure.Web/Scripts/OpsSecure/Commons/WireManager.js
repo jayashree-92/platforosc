@@ -57,8 +57,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         return $http.get("/Home/GetWireMessageTypeDetails?module=" + module).then(function (response) {
             if (module == "Adhoc Report")
                 $scope.MessageTypes = response.data;
-            else
-            {
+            else {
                 if ($scope.Purpose == "Respond to Broker Call")
                     $scope.MessageTypes = $filter('filter')(response.data, function (type) { return type.text != "MT210" }, true);
                 else
@@ -67,14 +66,49 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         });
     }
 
+
     $scope.SwiftFormatMessageActiveTag = "";
 
-    $scope.fnShowFormattedSwiftMsg = function (key, value) {
+    $scope.fnToggleCollapeSwiftMessagePanel = function () {
+        if ($scope.SwiftFormatMessageActiveTag == "") {
+            $("#wireSwiftMessagesDiv").collapse("show");
+
+            $timeout(function () { $scope.fnShowFormattedSwiftMsg(null, "Outbound", $scope.wireTicketObj.SwiftMessages["Outbound"]); }, 10);
+            $scope.isSwiftMessagesCollapsed = false;
+            return;
+        }
+        if ($scope.SwiftFormatMessageActiveTag != "") {
+            $("#wireSwiftMessagesDiv").collapse("hide");
+            $scope.SwiftFormatMessageActiveTag = "";
+            $scope.isSwiftMessagesCollapsed = true;
+            return;
+        }
+    }
+
+
+    $scope.fnShowFormattedSwiftMsg = function ($event, key, value) {
 
         if (value == "")
             return;
 
+        if ($event != null) {
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+
+        if ($scope.SwiftFormatMessageActiveTag == key) {
+            return;
+
+            //$("#wireSwiftMessagesDiv").collapse("hide");
+            //$scope.SwiftFormatMessageActiveTag = "";
+            //$scope.isSwiftMessagesCollapsed = true;
+        }
+
+        $("#wireSwiftMessagesDiv").collapse("show");
         $scope.SwiftFormatMessageActiveTag = key;
+        $scope.isSwiftMessagesCollapsed = false;
+
+        //$scope.SwiftFormatMessageActiveTag = key;
         $scope.TrustedSwiftMessage = $sce.trustAsHtml(value);
     }
 
@@ -84,9 +118,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         PrintSwiftMessage($(".swiftMessgeBlock").html());
     }
 
-    $("#wireSwiftMessagesDiv").on("shown.bs.collapse", function () {
-        $scope.fnShowFormattedSwiftMsg("Outbound", $scope.wireTicketObj.SwiftMessages["Outbound"]);
-    });
+    //$("#wireSwiftMessagesDiv").on("shown.bs.collapse", function () {
+    //    if ($scope.SwiftFormatMessageActiveTag == "")
+    //        $scope.fnShowFormattedSwiftMsg(null, "Outbound", $scope.wireTicketObj.SwiftMessages["Outbound"]);
+    //});
 
     $scope.getWireDetails = function (wireId) {
         return $http.get("/Home/GetWireDetails?wireId=" + wireId).then(function (response) {
@@ -144,8 +179,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $("#wireAmount").numericEditor({
         bAllowNegative: true,
         fnFocusInCallback: function () {
-           if($(this).text() == "0")
-           $(this).html('');
+            if ($(this).text() == "0")
+                $(this).html('');
         },
         fnFocusOutCallback: function () {
             $scope.WireTicket.Amount = $.convertToNumber($(this).text(), true);
@@ -336,6 +371,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $("#accountDetailDiv,#receivingAccountDetailDiv,#ssiTemplateDetailDiv,#attachmentsDiv,#wireWorkflowLogsDiv,#wireSwiftMessagesDiv").collapse("hide");
         $("button").button("reset");
         angular.element("#cancelWire").popover("hide");
+        $scope.TrustedSwiftMessage = "";
     });
 
     $scope.bindAndValidateWireData = function () {
@@ -349,7 +385,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.WireTicket.OnBoardSSITemplateId = $scope.WireTicket.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : angular.copy($scope.ssiTemplate.onBoardingSSITemplateId);
         $scope.WireTicket.WireMessageTypeId = angular.element("#liMessageType").select2("val");
         $scope.WireTicket.DeliveryCharges = $scope.WireTicket.WireMessageTypeId == "1" ? angular.element("#liDeliveryCharges").select2("val") : null;
-        
+
         if ($scope.WireTicket.WireMessageTypeId != "" && ($scope.WireTicket.WireMessageTypeId != "1" || ($scope.WireTicket.WireMessageTypeId == "1" && $scope.WireTicket.DeliveryCharges != "")) && ($scope.WireTicket.Amount != 0)) {
             $("#wireErrorStatus").collapse("hide");
             $scope.validationMsg = "";
@@ -379,7 +415,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.getApprovalTime = function (account) {
         $http.post("/Home/GetTimeToApproveTheWire", JSON.stringify({ cashSweepOfAccount: account.CashSweepTime, cutOffTimeOfAccount: account.CutoffTime, valueDate: $("#wireValueDate").text(), cashSweepTimeZone: account.CashSweepTimeZone }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
-            
+
             $scope.timeToApprove = response.data;
             $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
             if ($scope.timeToApprove.Hours > 0) {
@@ -597,8 +633,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 break;
             case "Workflow": $scope.isWorkflowLogsCollapsed = !$scope.isWorkflowLogsCollapsed;
                 break;
-            case "SwiftMessage": $scope.isSwiftMessagesCollapsed = !$scope.isSwiftMessagesCollapsed;
-                break;
+                //case "SwiftMessage": $scope.isSwiftMessagesCollapsed = !$scope.isSwiftMessagesCollapsed;
+                //    break;
         }
     }
 

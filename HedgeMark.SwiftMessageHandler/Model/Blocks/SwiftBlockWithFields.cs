@@ -20,10 +20,10 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
         {
             var thisField = Fields.FirstOrDefault(s => s.Name == field.Name);
 
-            if (thisField!=null)
-                thisField.Value = field.Value;
+            if (thisField != null)
+                thisField.SetValue(field.Value);
             else
-                Fields.Add(field); ;
+                Fields.Add(field);
         }
 
         public void AddField(Field field)
@@ -34,7 +34,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
             //if (Fields.ContainsKey(field.Name))
             //    Fields[field.Name] = field;
             //else
-            Fields.Add(field); ;
+            Fields.Add(field);
         }
 
         public void RemoveField(Field field)

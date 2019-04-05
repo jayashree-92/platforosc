@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using HedgeMark.SwiftMessageHandler.Model.Blocks;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
-using HedgeMark.SwiftMessageHandler.Utils;
 
 namespace HedgeMark.SwiftMessageHandler.Model
 {

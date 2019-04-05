@@ -24,7 +24,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public string Value
         {
             get { return value; }
-            set
+            protected set
             {
                 if (value.Any(s => InvalidFieldValues.Contains(s)))
                     throw new InvalidDataException(string.Format("{0}: The field value cannot contain characters like '{{','}}' or ':' in {1}", Name, value));

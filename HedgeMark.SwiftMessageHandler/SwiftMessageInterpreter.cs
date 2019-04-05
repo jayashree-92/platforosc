@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data.SqlClient;
-using System.Text;
+﻿using System.Text;
 using HedgeMark.SwiftMessageHandler.Model;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 
@@ -21,7 +19,7 @@ namespace HedgeMark.SwiftMessageHandler
             var builder = new StringBuilder();
             foreach (var field in swiftMessage.Block4.GetFields())
             {
-                var parentFieldName = field.Name + ": ";
+                var parentFieldName = string.Format("{0}: ", field.Name);
                 parentFieldName = parentFieldName.PadRight(parentFieldName.Length + (5 - parentFieldName.Length), ' ');
                 builder.AppendFormat(parentFieldName);
 
@@ -107,12 +105,12 @@ namespace HedgeMark.SwiftMessageHandler
             }
 
             builder.AppendLine("------------------------- Message Header -----------------------------------------");
-            builder.AppendLine(string.Format("Swift    : " + "MT {0}", swiftMsg.MessageType));
-            builder.AppendLine("Sender   : " + swiftMsg.GetSender());
-            builder.AppendLine("Receiver : " + swiftMsg.GetReceiver());
+            builder.AppendLine(string.Format("Swift    : MT {0}", swiftMsg.MessageType));
+            builder.AppendLine(string.Format("Sender   : {0}", swiftMsg.GetSender()));
+            builder.AppendLine(string.Format("Receiver : {0}", swiftMsg.GetReceiver()));
             if (!string.IsNullOrWhiteSpace(swiftMsg.GetMUR()))
             {
-                builder.AppendLine("MUR      : " + swiftMsg.GetMUR());
+                builder.AppendLine(string.Format("MUR      : {0}", swiftMsg.GetMUR()));
             }
 
             builder.AppendLine("------------------------- Message Text -------------------------------------------");
