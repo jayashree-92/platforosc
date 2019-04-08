@@ -3,12 +3,10 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using HedgeMark.Operations.Secure.DataModel;
-using HedgeMark.SwiftMessageHandler;
 using HMOSecureMiddleware.Models;
 using HMOSecureMiddleware.Queues;
 using HMOSecureMiddleware.SwiftMessageManager;
 using log4net;
-using SwiftMessageParser = HMOSecureMiddleware.SwiftMessageManager.SwiftMessageParser;
 
 namespace HMOSecureMiddleware
 {
@@ -134,7 +132,7 @@ namespace HMOSecureMiddleware
             var swiftMessage = SwiftMessageCreater.CreateMessage(messageType, wire);
 
             //Validate Error Message 
-            SwiftMessageValidator.Validate(swiftMessage);
+            //SwiftMessageValidator.Validate(swiftMessage);
 
             //Put an entry to Wire Log table with the parameters used to create Swift Message
             LogOutBoundWireTransaction(wire, swiftMessage);

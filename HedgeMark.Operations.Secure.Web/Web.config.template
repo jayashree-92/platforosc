@@ -43,9 +43,6 @@
     <add key="ToMailAddress" value="Nadhiya.Rajendran@bnymellon.com,madhanraj.jayavel@bnymellon.com,Mohansrikant.RameshKumar@bnymellon.com"/>
     <add key="HMOpsFromAddress" value="hm-ops-dev@bnymellon.com"/>
 
-    <!-- siteminder logout url-->
-    <add key="SiteminderLogoffUri" value="/Account/LogOff"/>
-
   </appSettings>
   <!--<location path="elmah.axd">
     <system.web>

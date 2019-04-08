@@ -46,18 +46,18 @@ namespace HMOSecureMiddleware.Models
         public Dictionary<string, string> SwiftMessages { get; set; }
     }
 
-
-
     public class WireInBoundMessage
     {
         public WireInBoundMessage(string swiftMessage)
         {
             FinMessage = swiftMessage;
             SwiftMessage = SwiftMessage.Parse(swiftMessage);
-
-            WireId = SwiftMessage.GetFieldValue(FieldDirectory.FIELD_20).Replace(string.Format("{0}DMOTRN", Utility.Environment.ToUpper()), string.Empty).ToInt();
             MessageType = SwiftMessage.MessageType;
             IsAckOrNack = SwiftMessage.IsAck() || SwiftMessage.IsNack();
+
+            WireId = IsAckOrNack 
+                ? SwiftMessage.UnderlyingOriginalSwiftMessage.GetFieldValue(FieldDirectory.FIELD_20).Replace(string.Format("{0}DMOTRN", Utility.Environment.ToUpper()), string.Empty).ToInt() 
+                : SwiftMessage.GetFieldValue(FieldDirectory.FIELD_20).Replace(string.Format("{0}DMOTRN", Utility.Environment.ToUpper()), string.Empty).ToInt();
         }
 
         public bool IsAckOrNack { get; private set; }

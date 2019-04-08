@@ -148,7 +148,6 @@ namespace HMOSecureMiddleware
             swiftMessages.Add("Confirmation", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
 
             return swiftMessages;
-
         }
 
 

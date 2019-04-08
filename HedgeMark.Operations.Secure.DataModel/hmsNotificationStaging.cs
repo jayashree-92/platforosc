@@ -12,18 +12,13 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class hmsUserAuditLog
+    public partial class hmsNotificationStaging
     {
-        public long hmsUserAuditLogId { get; set; }
-        public string Module { get; set; }
-        public string Action { get; set; }
-        public string UserName { get; set; }
+        public long hmsNotificationStagingId { get; set; }
+        public int FromUserId { get; set; }
+        public int ToUserId { get; set; }
+        public string Title { get; set; }
+        public string Message { get; set; }
         public System.DateTime CreatedAt { get; set; }
-        public string Log { get; set; }
-        public Nullable<long> AssociationId { get; set; }
-        public string Field { get; set; }
-        public string PreviousStateValue { get; set; }
-        public string ModifiedStateValue { get; set; }
-        public bool IsLogFromOps { get; set; }
     }
 }

@@ -27,15 +27,15 @@ namespace HMOSecureWeb
                 "~/Scripts/angular-parse-ext.js",
                 "~/Scripts/angular-resource.js",
                 "~/Scripts/angular-sanitize.js"
-                //"~/Scripts/angular-route.js",
-                //"~/Scripts/angular-sanitize.js",
-                //"~/Scripts/angular-scenario.js",
-                //"~/Scripts/angular-touch.js"
+            //"~/Scripts/angular-route.js",
+            //"~/Scripts/angular-sanitize.js",
+            //"~/Scripts/angular-scenario.js",
+            //"~/Scripts/angular-touch.js"
 
-                //"~/Scripts/detect-element-resize.js",
-                //"~/Scripts/tree.jquery.js",
-                //"~/Scripts/jquery.mark.js",
-                //"~/Scripts/jquery.resize.js"
+            //"~/Scripts/detect-element-resize.js",
+            //"~/Scripts/tree.jquery.js",
+            //"~/Scripts/jquery.mark.js",
+            //"~/Scripts/jquery.resize.js"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/datatable").Include(
@@ -86,6 +86,11 @@ namespace HMOSecureWeb
                 "~/Scripts/Plugins/NumericCellEditor.js",
                 "~/Scripts/Plugins/ContextMenu.js",
                 "~/Scripts/Plugins/SideNavigationMenu.js"
+            ));
+
+            bundles.Add(new ScriptBundle("~/bundles/layout").Include(
+                "~/Scripts/OpsSecure/OpsSecureAngularFactory.js",
+                "~/Scripts/OpsSecure/layout.js"
             ));
 
 

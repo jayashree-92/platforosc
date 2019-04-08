@@ -15,7 +15,6 @@ namespace HMOSecureMiddleware
                 return;
 
             QueueSystemManager.EstablishConnection();
-            Logger.Info("MQ Connection establishment - Complete");
         }
     }
 }

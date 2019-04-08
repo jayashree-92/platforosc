@@ -25,11 +25,6 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav"></ul>
                 <ul class="nav navbar-nav navbar-right">
-
-                    @if (Util.IsLowerEnvironment)
-                    {
-                        <li>@Html.ActionLink("Static Message Test", "StaticTest", "Home")</li>
-                    }
                     <li>@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
                     <li>@Html.ActionLink("User Audits", "Index", "Audit")</li>
                     <li title="Logout" class="navbar-right"><a id="btnLogOff" class="navbar-icon" href=@Url.Action("LogOff", "Account")><i class="glyphicon glyphicon-log-out"></i></a></li>
@@ -47,7 +42,8 @@
     <div class="notifications bottom-left"></div>
     <div class="notifications center"></div>
 
-
+    <br />
+    <br />
     <footer class="footer">
         <div class="container">
             <p class="text-muted"><small>© @DateTime.Now.Year HedgeMark International, LLC. All rights reserved.</small></p>
@@ -59,8 +55,6 @@
     {
         @Scripts.Render(bundle.Path)
     }
-
-    <script type="text/javascript" src="~/Scripts/OpsSecure/OpsSecureAngularFactory.js"></script>
 
     @RenderSection("JavaScript", required: false)
     @this.InjectAdditionalScripts()

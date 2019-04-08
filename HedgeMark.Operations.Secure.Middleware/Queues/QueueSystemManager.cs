@@ -53,7 +53,7 @@ namespace HMOSecureMiddleware.Queues
                 QueueManager = new MQQueueManager(QueueManagerName, connectionParams);
                 QueueManager.Disconnect();
                 QueueManager.Connect(QueueManagerName);
-                Logger.Info("MQ Connected Successfully to Send Message");
+                Logger.Debug("MQ Connected Successfully to Send Message");
             }
             catch (MQException mexc)
             {
@@ -65,6 +65,9 @@ namespace HMOSecureMiddleware.Queues
 
         public static void SendMessage(string swiftMessage, long wireWireId)
         {
+            if (Utility.IsLocal())
+                return;
+
             //Read all Existing acks messages
             GetAndProcessAcknowledgement();
 
@@ -78,7 +81,7 @@ namespace HMOSecureMiddleware.Queues
             GetAndProcessAcknowledgement(wireWireId);
 
         }
-        public static void SendMessage(string swiftMessage)
+        private static void SendMessage(string swiftMessage)
         {
             try
             {
@@ -125,6 +128,9 @@ namespace HMOSecureMiddleware.Queues
 
         private static void GetAndProcessQueueMessage(string queueName, long wireId = -1)
         {
+            if (Utility.IsLocal())
+                return;
+
             if (QueueManager == null || !QueueManager.IsConnected)
                 ConnectMQ();
 
@@ -138,9 +144,8 @@ namespace HMOSecureMiddleware.Queues
 
             // creating a message options object
             var mqGetMsgOpts = new MQGetMessageOptions { Options = MQC.MQGMO_FAIL_IF_QUIESCING | MQC.MQGMO_WAIT };
-            bool isDone = false;
-
-
+            var isDone = false;
+            
             while (!isDone)
             {
                 try
@@ -151,8 +156,7 @@ namespace HMOSecureMiddleware.Queues
                     queue.Get(message, mqGetMsgOpts);
                     var messageAsText = message.ReadString(message.MessageLength);
                     Logger.Info("Got a message: " + messageAsText);
-
-
+                    
                     if (messageAsText == "FEACK" && wireId != -1)
                         WireTransactionManager.LogFrontEndAcknowledgment(messageAsText, wireId);
                     else
@@ -219,7 +223,6 @@ namespace HMOSecureMiddleware.Queues
         //    consumer.MessageListener = ml;
         //    connection.Start();
         //    Logger.Info("Consumer started..");
-
 
         //}
 

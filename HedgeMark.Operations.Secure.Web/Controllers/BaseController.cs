@@ -9,16 +9,6 @@ using HMOSecureMiddleware;
 
 namespace HMOSecureWeb.Controllers
 {
-    public static class OpsSecureUserRoles
-    {
-        public const string Developer = "Developer";
-        public const string DmaAdminUser = "DMAAdmin";
-        public const string DmaReviewer = "DMAReviewer";
-        public const string DmaUser = "DMAUser";
-        public const string DmaWireInitiator = "DMAWireInitiator";
-        public const string DmaWireApprover = "DMAWireApprover";
-    }
-
     public class AuthorizedRolesAttribute : AuthorizeAttribute
     {
         public AuthorizedRolesAttribute(params string[] roles)
@@ -27,7 +17,7 @@ namespace HMOSecureWeb.Controllers
         }
     }
 
-    [AuthorizedRoles(OpsSecureUserRoles.DmaWireInitiator, OpsSecureUserRoles.DmaWireApprover, OpsSecureUserRoles.DmaAdminUser)]
+    [AuthorizedRoles(OpsSecureUserRoles.DmaWireInitiator, OpsSecureUserRoles.DmaWireApprover)]
     [Authorize, RedirectToHttps, Compress]
     public abstract class BaseController : Controller
     {

@@ -1,4 +1,4 @@
-﻿
+﻿@model dynamic
 @{
     Layout = null;
 }
@@ -32,7 +32,16 @@
         <div style="color:White; font-family:Arial,Helvetica;font-size:small;text-align:center">
             <!-- Display a message after user successfully logged out from the application. -->
             <h2><small>HM OPERATIONS SECURE</small></h2>
-            <p>Successfully logged out.</p>
+
+            @if (string.IsNullOrWhiteSpace(ViewBag.ReasonString))
+            {
+                <p>Successfully logged out.</p>
+            }
+            else
+            {
+                <p>@ViewBag.ReasonString</p>
+            }
+
 
             <div style="margin-bottom: 15px;">
                 Click <a href="/" style="color:white;text-decoration:underline">here</a> to log in.
@@ -43,11 +52,11 @@
 </html>
 <script type="text/javascript">
 
-    //var storageItemsToRemove = ["hm-ops-session-timeout-local", "hm-ops-total-tabs-opened-local"];
+    var storageItemsToRemove = ["hm-ops-secure-session-timeout-local", "hm-ops-secure-total-tabs-opened-local"];
 
-    //for (var i = 0; i < storageItemsToRemove.length - 1; i++) {
-    //    localStorage.removeItem(storageItemsToRemove[i]);
-    //}
+    for (var i = 0; i < storageItemsToRemove.length - 1; i++) {
+        localStorage.removeItem(storageItemsToRemove[i]);
+    }
 
 </script>
 

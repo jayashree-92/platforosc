@@ -28,12 +28,9 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
 
         public void AddField(Field field)
         {
-            //if (field.Name == FieldDirectory.FIELD_111 && Fields.All(s => s.Name != FieldDirectory.FIELD_121))
-            //    AddField(new Field121());
-
-            //if (Fields.ContainsKey(field.Name))
-            //    Fields[field.Name] = field;
-            //else
+            if (field.Name == FieldDirectory.FIELD_111 && Fields.All(s => s.Name != FieldDirectory.FIELD_121))
+                AddField(new Field121());
+            
             Fields.Add(field);
         }
 

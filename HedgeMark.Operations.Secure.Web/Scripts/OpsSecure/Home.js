@@ -2,7 +2,7 @@
 
 });
 
-HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $q) {
+HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interval) {
     $(".dashBoardTile").on("mouseover", function () {
         $(this).css("cursor", "pointer");
         $(this).addClass("shadowBoxSelect");
@@ -35,26 +35,25 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $q) {
         //$("#contextDate").html(moment(ev.date).format("MMM Do"));
         $scope.fnSetContextDate(moment(ev.date));
         $(".datepicker").hide();
-        $scope.fnRetriveAllWireTickets($scope.SelectedStatusId);
+        $scope.fnRetriveWireCounts();
 
     });
 
-    $scope.$on("wireClosed", function () {
-        $scope.fnRetriveAllWireTickets($scope.SelectedStatusId);
+    $scope.IsWireTicketModelOpen = false;
+    $scope.$on("wireTicketModelClosed", function (event, args) {
+        $scope.SelectedStatusId = args.statusId;
+        $scope.fnRetriveWireCounts();
+        $scope.IsWireTicketModelOpen = false;
+    });
+
+    $scope.$on("wireTicketModelOpen", function (event, args) {
+        $scope.IsWireTicketModelOpen = true;
     });
 
     $scope.SelectedStatusId = 0;
     $scope.ShouldApplyDatepickerScope = false;
     $scope.ContextDate = {};
     $scope.WireStatusCounts = {};
-    $scope.WireStatusCounts.Pending = 0;
-    $scope.WireStatusCounts.Approved = 0;
-    $scope.WireStatusCounts.Completed = 0;
-    $scope.WireStatusCounts.Cancelled = 0;
-    $scope.WireStatusCounts.CancelledAndProcessing = 0;
-    $scope.WireStatusCounts.Failed = 0;
-    $scope.WireStatusCounts.Total = 0;
-
 
     $scope.fnSetContextDate = function (dateTime) {
 
@@ -107,28 +106,32 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $q) {
 
     $scope.fnRetriveWireCounts = function () {
 
+        if ($scope.IsWireTicketModelOpen)
+            return;
+
         $http.get("/Home/GetWireStatusCount?contextDate=" + $scope.ContextDate.Date).then(function (response) {
             var wireCounts = response.data;
-            $scope.WireStatusCounts = {};
-            $scope.WireStatusCounts.Pending = wireCounts.TotalPending;
-            $scope.WireStatusCounts.Approved = wireCounts.TotalApproved;
-            $scope.WireStatusCounts.Cancelled = wireCounts.TotalCancelled;
-            $scope.WireStatusCounts.CancelledAndProcessing = wireCounts.TotalCancelledAndProcessing;
-            $scope.WireStatusCounts.Completed = wireCounts.TotalCompleted;
-            $scope.WireStatusCounts.Failed = wireCounts.TotalFailed;
-            $scope.WireStatusCounts.Total = wireCounts.TotalPending + wireCounts.TotalApproved + wireCounts.TotalCancelled + wireCounts.TotalCompleted + wireCounts.TotalFailed + wireCounts.TotalCancelledAndProcessing;
 
-            $timeout(function () { initiateNumberCounter(); $scope.$apply(); }, 20);
-
+            if (!isEquivalent($scope.WireStatusCounts, wireCounts)) {
+                $scope.WireStatusCounts = wireCounts;
+                $timeout(function () { initiateNumberCounter(); $scope.$apply(); }, 500);
+                $scope.$broadcast("loadWireDetailsGrid", $scope.SelectedStatusId, $scope.ContextDate.Date, $scope.ContextDate.Date);
+            }
         });
     }
 
+    $interval.cancel($scope.RefreshWireCounts);
+    $scope.RefreshWireCounts = $interval(function () {
+        $scope.fnRetriveWireCounts();
+    }, 5 * 1000);
+
+
     $scope.fnRetriveAllWireTickets = function (statusId) {
-        $scope.fnRetriveWireCounts(),
-        $timeout(function () { $scope.$broadcast("loadWireDetailsGrid", statusId, $scope.ContextDate.Date, $scope.ContextDate.Date) });
+        $scope.SelectedStatusId = statusId;
+        $scope.$broadcast("loadWireDetailsGrid", $scope.SelectedStatusId, $scope.ContextDate.Date, $scope.ContextDate.Date);
     }
 
-    $scope.fnRetriveAllWireTickets(0);
+    $scope.fnRetriveWireCounts();
 
 });
 

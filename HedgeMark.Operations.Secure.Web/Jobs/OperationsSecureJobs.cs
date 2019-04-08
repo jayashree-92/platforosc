@@ -75,20 +75,19 @@ namespace HMOSecureWeb.Jobs
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void StartAll()
         {
-            log.Info("Starting all background jobs schedulers...");
+            log.Debug("Starting all background jobs schedulers...");
             OperationsSecureRecurringJob.Initialise();
             BackgroundJobScheduler.Start();
         }
 
         public void Stop(bool immediate)
         {
-            log.InfoFormat("Unregistering from host and stoping all background job schedulers with immediate flag: {0}", immediate);
+            log.DebugFormat("Unregistering from host and stoping all background job schedulers with immediate flag: {0}", immediate);
             HostingEnvironment.UnregisterObject(this);
         }
 
         private void Start()
         {
-            log.Info("Registering with host...");
             HostingEnvironment.RegisterObject(this);
 
             if (KeepBackGroundAlive)

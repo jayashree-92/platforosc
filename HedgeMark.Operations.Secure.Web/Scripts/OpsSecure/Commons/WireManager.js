@@ -18,6 +18,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.isWorkflowLogsCollapsed = true;
         $scope.isSwiftMessagesCollapsed = true;
         $scope.Purpose = purpose;
+        $scope.module = module;
         $q.all([$scope.getWireDetails(wireTicketId), $scope.getWireMessageTypes(module)])
             .then(function () {
                 if ($scope.dzRawFileUploads != undefined)
@@ -141,6 +142,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.ssiTemplate = angular.copy($scope.wireTicketObj.SSITemplate);
             $scope.workflowUsers = $scope.wireTicketObj.WorkflowUsers;
             $scope.attachmentUsers = $scope.wireTicketObj.AttachmentUsers;
+
+            $scope.IsSwiftMessagesPresent = $scope.wireTicketObj.SwiftMessages != null && Object.keys($scope.wireTicketObj.SwiftMessages).length > 0;
+
             angular.forEach($scope.WireTicket.hmsWireDocuments, function (val, ind) {
                 val.CreatedAt = moment(val.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
                 val.hmsWire = null;
@@ -250,7 +254,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         return "";
     }
 
-
     $scope.getWireStatus = function () {
 
         angular.element("#spnwireStatus").removeClass("text-info text-warning text-success text-blocked text-danger");
@@ -278,11 +281,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 return "Pending Acknowledgement";
             case 3: angular.element("#spnswiftStatus").addClass("text-info");
                 return "Pending Confirmation";
-            case 4: angular.element("#spnswiftStatus").addClass("text-dander");
+            case 4: angular.element("#spnswiftStatus").addClass("text-danger");
                 return "N-Acknowledged";
             case 5: angular.element("#spnswiftStatus").addClass("text-success");
                 return "Completed";
-            case 6: angular.element("#spnswiftStatus").addClass("text-dander");
+            case 6: angular.element("#spnswiftStatus").addClass("text-danger");
                 return "Failed";
         }
     }
@@ -291,11 +294,13 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         angular.element("#wireEntryDate").html(getFormattedUIDate(moment($scope.WireTicket.ContextDate)._d));
         if ($scope.isEditEnabled) {
             $scope.initializeDatePicker();
+            angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditible', true);
             angular.element("#wireValueDate").datepicker("setDate", moment(getDateForDisplay($scope.WireTicket.ValueDate))._d);
         }
-        else
+        else {
+            angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditible', false);
             angular.element("#wireValueDate").datepicker('remove').html(getFormattedUIDate(moment(getDateForDisplay($scope.WireTicket.ValueDate))._d))
-        angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2));
+        }
         angular.element("#liMessageType").select2("val", $scope.WireTicket.WireMessageTypeId).trigger("change");
         angular.element("#liDeliveryCharges").select2("val", $scope.WireTicket.DeliveryCharges).trigger("change");
         $scope.WireTicket.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
@@ -318,6 +323,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     notifySuccess("Wire cancelled successfully");
                 else
                     notifySuccess("Wire modified successfully");
+                $scope.auditWireLogs(statusId);
             }, function (error) {
                 angular.element("#modalToRetrieveWires").modal("hide");
                 notifyError("Wire failed due to Internal server error");
@@ -372,6 +378,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $("button").button("reset");
         angular.element("#cancelWire").popover("hide");
         $scope.TrustedSwiftMessage = "";
+        $scope.SwiftFormatMessageActiveTag = "";
     });
 
     $scope.bindAndValidateWireData = function () {
@@ -642,6 +649,58 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         var target = $(this).prev();
         $("#modalToRetrieveWires").animate({ scrollTop: $("#modalToRetrieveWires").scrollTop() + target.offset().top - 50 }, 1000);
     });
+
+    $scope.auditWireLogs = function (statusId) {
+        var auditLogData = createWireAuditData(statusId);
+        $http.post("/Audit/AuditWireLogs", JSON.stringify({ auditLogData: auditLogData }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
+        });
+    }
+
+    function createWireAuditData(statusId) {
+        var changes = new Array();
+        var index = 0;
+        var action = $scope.WireTicket.hmsWireId == 0 ? "Added" : "Edited";
+        if ($scope.WireTicket.WireStatusId < 2) {
+            changes[index] = new Array();
+            changes[index][1] = "Value Date";
+            changes[index][2] = action == "Added" ? "" : $scope.dummyWire.HMWire.ValueDate;
+            changes[index][3] = $scope.WireTicket.ValueDate;
+            index++;
+            changes[index] = new Array();
+            changes[index][1] = "Amount";
+            changes[index][2] = action == "Added" ? "" : $scope.dummyWire.HMWire.Amount;
+            changes[index][3] = $scope.WireTicket.Amount;
+            index++;
+            changes[index] = new Array();
+            changes[index][1] = "Wire Message Type";
+            changes[index][2] = action == "Added" ? "" : $scope.dummyWire.HMWire.WireMessageTypeId;
+            changes[index][3] = $scope.WireTicket.WireMessageTypeId;
+            index++;
+            if ($scope.WireTicket.WireMessageTypeId == 1) {
+                changes[index] = new Array();
+                changes[index][1] = "Delivery Charges";
+                changes[index][2] = action == "Added" ? "" : $scope.dummyWire.HMWire.DeliveryCharges;
+                changes[index][3] = $scope.WireTicket.DeliveryCharges;
+                index++;
+            }
+        }
+        changes[index] = new Array();
+        changes[index][1] = "Wire Status";
+        changes[index][2] = action == "Added" ? "" : $scope.dummyWire.HMWire.WireStatusId;
+        changes[index][3] = statusId;
+        var auditdata = {};
+        auditdata.ModuleName = $scope.wireObj.Report;
+        auditdata.Action = action;
+        auditdata.Changes = changes;
+        auditdata.AgreementName = $scope.wireObj.AgreementName;
+        auditdata.SendingAccount = $scope.accountDetail.AccountName;
+        auditdata.IsBookTransfer = $scope.WireTicket.IsBookTransfer;
+        auditdata.ReceivingAccount = auditdata.IsBookTransfer ? $scope.receivingAccountDetail.AccountName : $scope.ssiTemplate.TemplateName;
+        auditdata.Purpose = $scope.wireObj.Purpose;
+        auditdata.AssociationId = $scope.WireTicket.hmsWireId;
+        return auditdata;
+    }
+
 });
 
 

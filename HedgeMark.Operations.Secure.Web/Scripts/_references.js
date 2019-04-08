@@ -157,6 +157,7 @@
 /// <reference path="opssecure/commons/wiredetails.js" />
 /// <reference path="opssecure/commons/wiremanager.js" />
 /// <reference path="opssecure/home.js" />
+/// <reference path="opssecure/layout.js" />
 /// <reference path="opssecure/opssecureangularfactory.js" />
 /// <reference path="opssecure/userauditlog.js" />
 /// <reference path="opssecure/wirelog.js" />

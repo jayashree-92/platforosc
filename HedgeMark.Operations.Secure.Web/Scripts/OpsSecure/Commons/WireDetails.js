@@ -2,18 +2,26 @@
 
 HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSharedScopes) {
 
+    $scope.IsWireTicketModelOpen = false;
+
     $scope.$on("loadWireDetailsGrid", function (event, statusId, startContextDate, endContextDate) {
         $scope.fnLoadWireDetailsGrid(statusId, startContextDate, endContextDate);
     });
 
     $("#modalToRetrieveWires").on("show.bs.modal", function () {
     }).on("shown.bs.modal", function () {
+        $scope.IsWireTicketModelOpen = true;
         $opsSharedScopes.get("wireInitiationCtrl").fnLoadWireTicketDetails($scope.wireObj.WireId, $scope.wireObj.HMWire.hmsWirePurposeLkup.ReportName, $scope.wireObj.HMWire.hmsWirePurposeLkup.Purpose);
+        $scope.$emit("wireTicketModelOpen");
     }).on("hidden.bs.modal", function () {
-        $scope.$emit("wireClosed");
+        $scope.IsWireTicketModelOpen = false;
+        $scope.$emit("wireTicketModelClosed", { statusId: $scope.SelectedStatusId });
     });
 
     $scope.fnLoadWireDetailsGrid = function (statusId, startContextDate, endContextDate) {
+
+        if ($scope.IsWireTicketModelOpen)
+            return;
 
         $scope.SelectedStatusId = statusId;
 
@@ -26,9 +34,9 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 aaData: wireDetails,
                 pageResize: true,
                 // dom: 'Bfrtip',
-                //fixedHeader: {
-                //    headerOffset: 0
-                //},
+                fixedHeader: {
+                    headerOffset: 40
+                },
                 //"dom": "<'row'<'col-md-6'i><'#toolbar_tasklog'><'col-md-6 pull-right'f>>trI",
                 "dom": "<'pull-right'f>tI",
                 rowId: "hmsWireId",
@@ -85,11 +93,23 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         "mData": "HMWire.WireStatusId", "sTitle": "Wire Status",
                         "mRender": function (tdata, type, row) {
                             switch (tdata) {
-                                case 1: return "<label class='label label-info'>Drafted</label>";
+                                case 1: return "<label class='label label-default'>Drafted</label>";
                                 case 2: return "<label class='label label-warning'>Pending</label>";
                                 case 3: return "<label class='label label-success'>Approved</label>";
                                 case 4: return "<label class='label label-default'>Cancelled</label>";
                                 case 5: return "<label class='label label-danger'>Failed</label>";
+                            }
+                        }
+                    }, {
+                        "mData": "HMWire.SwiftStatusId", "sTitle": "Swift Status",
+                        "mRender": function (tdata, type, row) {
+                            switch (tdata) {
+                                case 1: return "<label class='label label-default'>Not Started</label>";
+                                case 2: return "<label class='label label-info'>Processing</label>";
+                                case 3: return "<label class='label label-success'>Acknowledged</label>";
+                                case 4: return "<label class='label label-danger'>N-Acknowledged</label>";
+                                case 5: return "<label class='label label-success'>Completed</label>";
+                                case 6: return "<label class='label label-danger'>Failed</label>";
                             }
                         }
                     },
@@ -149,10 +169,11 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 "scrollX": false,
                 "sScrollX": "100%",
                 "sScrollXInner": "100%",
+                "sScrollY": false,
                 //"scrollY": $("#pageMainContent").offset().top + 600,
                 //stateSave: true,
                 //"scrollX": true,
-                "order": [[1, "asc"]],
+                "order": [[16, "asc"]],
                 //"bSort": false,
                 "bPaginate": false,
                 iDisplayLength: -1,
@@ -174,7 +195,10 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
 
             $("#tblWireStatusDetails").off("dblclick", "tbody tr").on("dblclick", "tbody tr", function (event) {
                 $scope.wireObj = tblWireStatusDetails.row($(this)).data();
-                console.log($scope.wireObj);
+
+                if ($scope.wireObj == undefined)
+                    return;
+
                 angular.element("#modalToRetrieveWires").modal({ backdrop: 'static', keyboard: true, show: true });
             });
         });

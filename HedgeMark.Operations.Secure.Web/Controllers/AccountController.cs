@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,47 +10,16 @@ using HedgeMark.Operations.Secure.DataModel.Models;
 
 namespace HMOSecureWeb.Controllers
 {
-
-    public class LoginModel
+    public static class OpsSecureUserRoles
     {
-        [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; }
-
+        public const string DmaWireInitiator = "DMAWireInitiator";
+        public const string DmaWireApprover = "DMAWireApprover";
     }
 
     public class AccountController : BaseController
     {
-
-        private static readonly List<string> AllowedDomains = ConfigurationManagerWrapper.StringListSetting("AllowedDomains", "@hedgemark.com,@payoda.com,bnymellon.com,@inautix.co.in");
-        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", "DMAUser,DMAAdmin,DMAReviewer,HMDataUser");
-
-        [AllowAnonymous]
-        public ActionResult Index(string returnUrl)
-        {
-            if (Request.IsAuthenticated && AllowedDomains.Any(UserName.EndsWith))
-            {
-                if (AllowedUserRoles.Any(role => Roles.IsUserInRole(UserName, role)))
-                {
-                    if (!Utility.Util.IsSiteminder)
-                        FormsAuthentication.SetAuthCookie(UserName, true);
-
-                    SetSessionValue("userName", UserName);
-
-                    var userDetails = GetUserDetails(UserName);
-
-                    SetSessionValue("UserDetails", userDetails);
-                }
-                return RedirectToHome();
-            }
-            ViewBag.ReturnUrl = returnUrl;
-            return View(new LoginModel());
-        }
+        public static readonly List<string> AllowedDomains = ConfigurationManagerWrapper.StringListSetting("AllowedDomains", "@hedgemark.com,@payoda.com,bnymellon.com,@inautix.co.in");
+        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", "DMAWireInitiator,DMAWireApprover,HMOSecureAdmin");
 
         public static hLoginRegistration GetUserDetail(string userName)
         {
@@ -71,53 +39,30 @@ namespace HMOSecureWeb.Controllers
                     ? OpsSecureUserRoles.DmaWireApprover
                     : Roles.IsUserInRole(OpsSecureUserRoles.DmaWireInitiator)
                         ? OpsSecureUserRoles.DmaWireInitiator
-                        : Roles.IsUserInRole(OpsSecureUserRoles.DmaAdminUser)
-                            ? OpsSecureUserRoles.DmaAdminUser
                                 : "Unknown"
             };
             return userDetails;
         }
 
-        [HttpGet]
-        public ActionResult LogOff()
+        [AllowAnonymous]
+        public ActionResult LogOff(string reasonStr)
         {
-            SiteMinderLogOff();
-            return View();
-        }
-
-        private RedirectToRouteResult RedirectToHome()
-        {
-            return RedirectToAction("Index", "Home");
-        }
-
-        private void SiteMinderLogOff()
-        {
-            string[] cookies = Request.Cookies.AllKeys;
-            foreach (string cookie in cookies)
-            {
-                HttpCookie httpCookie = Response.Cookies[cookie];
-                if (httpCookie != null) httpCookie.Expires = DateTime.Now.AddDays(-1);
-            }
-            if (Request.Cookies["SMSESSION"] != null)
-            {
-                var smCookie = new HttpCookie("SMSESSION", "NO");
-                smCookie.Domain = Utility.Util.Domain;
-                smCookie.Expires = DateTime.Now.AddDays(-1);
-                Response.Cookies.Add(smCookie);
-            }
-            if (Request.Cookies["SMUSRMSG"] != null)
-            {
-                var smUsrCookie = new HttpCookie("SMUSRMSG", "NO");
-                smUsrCookie.Domain = Utility.Util.Domain;
-                smUsrCookie.Expires = DateTime.Now.AddDays(-1);
-                Response.Cookies.Add(smUsrCookie);
-            }
-
             FormsAuthentication.SignOut();
+
             Session.Abandon();
             Session.Clear();
             Session.RemoveAll();
+
+            ViewBag.ReasonString = reasonStr;
+            return View();
         }
 
+        public static USP_NEXEN_GetUserDetails_Result GetEmailOfLdapUserId(string userName)
+        {
+            using (var context = new AdminContext())
+            {
+                return context.USP_NEXEN_GetUserDetails(userName, "SITEMINDER").FirstOrDefault();
+            }
+        }
     }
 }

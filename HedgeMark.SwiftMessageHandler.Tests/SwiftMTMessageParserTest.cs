@@ -273,5 +273,28 @@ JOE DOE
             Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.Block4.GetFieldValue("20"), "REFERENCE");
 
         }
+        [TestMethod]
+        public void AckMessageForEmxTest3()
+        {
+            var message = @"{1:F01IRVTBEB0XXXX1002100002}{2:I202BNPAUS30PBSXN}{3:{121:cb8ed355-10e8-40b5-a26b-f8f90626f651}}{4:
+:20:TESTDMOTRN79
+:21:BNP
+:32A:190404USD20000,
+:58A:/465446564654
+BNPAUS30PBS
+:72:/INS/BNP FFC
+-}{1:F21IRVTBEB07XXX2778158385}{4:{177:1904041219}{451:1}{405:H50}} 
+";
+
+            var swiftMsg = SwiftMessage.Parse(message);
+            Assert.IsTrue(swiftMsg.IsServiceMessage21());
+            Assert.IsFalse(swiftMsg.IsAck());
+            Assert.IsTrue(swiftMsg.IsNack());
+
+            Assert.AreEqual(swiftMsg.MessageType, "202");
+            Assert.AreEqual(swiftMsg.Block2.MessageType, "202");
+            Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.Block4.GetFieldValue("20"), "TESTDMOTRN79");
+
+        }
     }
 }

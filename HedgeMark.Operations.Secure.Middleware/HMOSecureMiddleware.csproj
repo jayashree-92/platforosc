@@ -75,9 +75,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminFundManager.cs" />
+    <Compile Include="AuditManager.cs" />
     <Compile Include="BootUpMiddleware.cs" />
     <Compile Include="FileSystemManager.cs" />
+    <Compile Include="Models\AuditLogData.cs" />
     <Compile Include="Models\WireTicket.cs" />
+    <Compile Include="NotificationManager.cs" />
     <Compile Include="Queues\QueueSystemManager.cs" />
     <Compile Include="SwiftMessageManager\SwiftMessageCreater.cs" />
     <Compile Include="SwiftMessageManager\SwiftMessageParser.cs" />
