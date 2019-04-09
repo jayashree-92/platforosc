@@ -43,11 +43,10 @@ namespace HMOSecureMiddleware
         public static string GetAssociationToLog(AuditLogData auditData)
         {
             var association = "";
-            var transferType = auditData.IsBookTransfer ? "Book Transfer" : "Normal Transfer";
             if(!auditData.IsBookTransfer)
-                association = string.Format("Purpose: <i>{0}</i><br/>Agreement Name: <i>{1}</i><br/>Sending Account: <i>{2}</i><br/>Receiving Account: <i>{3}</i><br/>Transfer Type:<i>{4}</i>", auditData.Purpose, auditData.AgreementName, auditData.SendingAccount, auditData.ReceivingAccount, transferType);
+                association = string.Format("Purpose: <i>{0}</i><br/>Agreement Name: <i>{1}</i><br/>Sending Account: <i>{2}</i><br/>Receiving Account: <i>{3}</i><br/>Transfer Type:<i>{4}</i>", auditData.Purpose, auditData.AgreementName, auditData.SendingAccount, auditData.ReceivingAccount, auditData.TransferType);
             else
-                association = string.Format("Purpose: <i>{0}</i><br/>Sending Account: <i>{1}</i><br/>Receiving Account: <i>{2}</i><br/>Transfer Type:<i>{3}</i>", auditData.Purpose, auditData.SendingAccount, auditData.ReceivingAccount, transferType);
+                association = string.Format("Purpose: <i>{0}</i><br/>Sending Account: <i>{1}</i><br/>Receiving Account: <i>{2}</i><br/>Transfer Type:<i>{3}</i>", auditData.Purpose, auditData.SendingAccount, auditData.ReceivingAccount, auditData.TransferType);
             return association;
         }
 

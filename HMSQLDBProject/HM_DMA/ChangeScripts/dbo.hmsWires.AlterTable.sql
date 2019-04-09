@@ -194,6 +194,27 @@ DELETE FROM hmsWireWorkflowLog
 END
 GO
 
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'TransferType' and TABLE_NAME = 'hmsWires')
+BEGIN
+	ALTER TABLE hmsWires ADD TransferType VARCHAR(30) NULL
+	
+	DECLARE @Command  NVARCHAR(1000)
+
+	SELECT @Command ='UPDATE dbo.hmsWires 
+			SET TransferType = CASE IsBookTransfer
+			WHEN 1 THEN ''Book Transfer'' 
+			ELSE ''Normal Transfer''
+	      END'
+
+	EXECUTE (@Command);
+END
+GO
+
+IF NOT EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME = 'hmsInBoundMQLogs_PK')
+BEGIN
+	ALTER TABLE [dbo].[hmsInBoundMQLogs]  WITH CHECK ADD CONSTRAINT hmsInBoundMQLogs_PK PRIMARY KEY NONCLUSTERED (hmsInBoundMQLogsId)
+END
+
 
 
 

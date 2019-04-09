@@ -132,6 +132,7 @@
           <Property Name="DeliveryCharges" Type="varchar" MaxLength="20" />
           <Property Name="IsBookTransfer" Type="bit" Nullable="false" />
           <Property Name="SwiftStatusId" Type="int" Nullable="false" />
+          <Property Name="TransferType" Type="varchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="hmsWireStatusLkup">
           <Key>
@@ -642,6 +643,7 @@
           <NavigationProperty Name="hmsWirePurposeLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" FromRole="hmsWire" ToRole="hmsWirePurposeLkup" />
           <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsWireStatusLkup" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireWorkflowLog" />
+          <Property Name="TransferType" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
           <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
@@ -878,6 +880,7 @@
           <EntitySetMapping Name="hmsWires">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsWire">
               <MappingFragment StoreEntitySet="hmsWires">
+                <ScalarProperty Name="TransferType" ColumnName="TransferType" />
                 <ScalarProperty Name="SwiftStatusId" ColumnName="SwiftStatusId" />
                 <ScalarProperty Name="IsBookTransfer" ColumnName="IsBookTransfer" />
                 <ScalarProperty Name="DeliveryCharges" ColumnName="DeliveryCharges" />

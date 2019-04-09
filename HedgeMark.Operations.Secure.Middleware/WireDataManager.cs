@@ -338,5 +338,13 @@ namespace HMOSecureMiddleware
                 return context.hmsWireJobSchedules.Where(s => !s.IsJobCreated).ToList();
             }
         }
+
+        public static List<hmsInBoundMQLog> GetInboundMQLogs(DateTime startDate, DateTime endDate)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                return context.hmsInBoundMQLogs.Where(s => s.CreatedAt >= startDate && s.CreatedAt <= endDate).ToList();
+            }
+        }
     }
 }

@@ -46,6 +46,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string DeliveryCharges { get; set; }
         public bool IsBookTransfer { get; set; }
         public int SwiftStatusId { get; set; }
+        public string TransferType { get; set; }
     
         public virtual hmsSwiftStatusLkup hmsSwiftStatusLkup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

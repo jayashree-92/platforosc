@@ -11,7 +11,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
     $("#modalToRetrieveWires").on("show.bs.modal", function () {
     }).on("shown.bs.modal", function () {
         $scope.IsWireTicketModelOpen = true;
-        $opsSharedScopes.get("wireInitiationCtrl").fnLoadWireTicketDetails($scope.wireObj.WireId, $scope.wireObj.HMWire.hmsWirePurposeLkup.ReportName, $scope.wireObj.HMWire.hmsWirePurposeLkup.Purpose);
+        $opsSharedScopes.get("wireInitiationCtrl").fnLoadWireTicketDetails($scope.wireObj.WireId, $scope.wireObj.HMWire.hmsWirePurposeLkup.ReportName, $scope.wireObj.HMWire.hmsWirePurposeLkup.Purpose, $scope.wireObj.Agreement.AgreementShortName);
         $scope.$emit("wireTicketModelOpen");
     }).on("hidden.bs.modal", function () {
         $scope.IsWireTicketModelOpen = false;
@@ -59,10 +59,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
 
                     },
                     {
-                        "mData": "HMWire.IsBookTransfer", "sTitle": "Transfer Type",
-                        "mRender": function (tdata) {
-                            return "<div>" + (tdata == false ? "Normal Transfer" : "Book Transfer") + "</div>";
-                        }
+                        "mData": "HMWire.TransferType", "sTitle": "Transfer Type"
                     },
                     {
                         "mData": "Agreement.AgreementShortName", "sTitle": "Agreement",

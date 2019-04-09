@@ -21,6 +21,11 @@ namespace HMOSecureWeb.Controllers
             return View(DateTime.Now.GetContextDate());
         }
 
+        public ActionResult InboundLogs()
+        {
+            return View();
+        }
+
         private class WireStatusCount
         {
             public int Pending { get; set; }
@@ -416,6 +421,12 @@ namespace HMOSecureWeb.Controllers
             {
                 return new TimeSpan();
             }
+        }
+
+        public JsonResult GetInboundMQLogs(DateTime startDate, DateTime endDate)
+        {
+           var inBoundMQLogs = WireDataManager.GetInboundMQLogs(startDate, endDate);
+           return Json(inBoundMQLogs);
         }
 
     }

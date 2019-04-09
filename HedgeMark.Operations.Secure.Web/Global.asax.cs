@@ -131,19 +131,20 @@ namespace HMOSecureWeb
             Session.Timeout = ConfigurationManagerWrapper.IntegerSetting("GlobalSessionTimeOut", 60);
             Session["SessionStartTime"] = DateTime.Now;
             if (!ActiveUsers.Contains(User.Identity.Name))
+            {
                 ActiveUsers.Add(User.Identity.Name);
+                hmsUserAuditLog auditData = new hmsUserAuditLog
+                {
+                    Action = "Log In",
+                    Module = "Account",
+                    Log = "Signed into Secure System",
+                    CreatedAt = DateTime.Now,
+                    UserName = User.Identity.Name
+                };
+                AuditManager.LogAudit(auditData);
+            }
 
             Session["userName"] = User.Identity.Name;
-
-            hmsUserAuditLog auditData = new hmsUserAuditLog
-            {
-                Action = "Log In",
-                Module = "Account",
-                Log = "Signed into Secure System",
-                CreatedAt = DateTime.Now,
-                UserName = User.Identity.Name
-            };
-            AuditManager.LogAudit(auditData);
         }
         
         public static ConcurrentBag<string> ActiveUsers = new ConcurrentBag<string>();

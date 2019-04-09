@@ -359,6 +359,14 @@
           <Property Name="DaystoWire" Type="int" />
           <Property Name="SwiftGroup" Type="varchar" MaxLength="30" />
           <Property Name="SendersBIC" Type="varchar" MaxLength="30" />
+          <Property Name="AccountPurpose" Type="varchar" MaxLength="50" />
+          <Property Name="AccountStatus" Type="varchar" MaxLength="50" />
+          <Property Name="HoldbackAmount" Type="float" />
+          <Property Name="SweepComments" Type="varchar" MaxLength="1000" />
+          <Property Name="AssociatedCustodyAcct" Type="varchar" MaxLength="200" />
+          <Property Name="PortfolioSelection" Type="varchar" MaxLength="200" />
+          <Property Name="TickerorISIN" Type="varchar" MaxLength="200" />
+          <Property Name="SweepCurrency" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -555,8 +563,6 @@
           <Property Name="ClientRiskCSPrimary" Type="varchar" MaxLength="200" />
           <Property Name="ClientRiskCSSecondaryA" Type="varchar" MaxLength="200" />
           <Property Name="ClientRiskCSSecondaryB" Type="varchar" MaxLength="200" />
-          <Property Name="AdminChoice" Type="varchar" MaxLength="1000" />
-          <Property Name="HMDescription" Type="varchar" MaxLength="1000" />
           <Property Name="FundChecklistView" Type="varchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="onBoardingSSITemplate">
@@ -1556,9 +1562,17 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <NavigationProperty Name="dmaAgreementOnBoarding" Relationship="AdminModel.FK_onBoardingAccount_dmaAgreementOnBoardingId" FromRole="onBoardingAccount" ToRole="dmaAgreementOnBoarding" />
           <NavigationProperty Name="onBoardingAccountDocuments" Relationship="AdminModel.FK_onBoardingAccountDocument_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountDocument" />
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="AdminModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
-          <NavigationProperty Name="onboardingFund" Relationship="AdminModel.FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId" FromRole="onBoardingAccount" ToRole="onboardingFund" />
           <Property Name="SwiftGroup" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="SendersBIC" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="AccountPurpose" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AccountStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="HoldbackAmount" Type="Double" />
+          <Property Name="SweepComments" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="AssociatedCustodyAcct" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PortfolioSelection" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TickerorISIN" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SweepCurrency" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="onboardingFund" Relationship="AdminModel.FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId" FromRole="onBoardingAccount" ToRole="onboardingFund" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -2026,11 +2040,9 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <Property Name="ClientRiskCSPrimary" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ClientRiskCSSecondaryA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ClientRiskCSSecondaryB" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="HMDescription" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="FundChecklistView" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="dmaAgreementOnBoardings" Relationship="AdminModel.FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId" FromRole="onboardingFund" ToRole="dmaAgreementOnBoarding" />
           <NavigationProperty Name="onBoardingAccounts" Relationship="AdminModel.FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId" FromRole="onboardingFund" ToRole="onBoardingAccount" />
-          <Property Name="FundChecklistView" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId">
           <End Type="AdminModel.onboardingFund" Role="onboardingFund" Multiplicity="1" />
@@ -2465,6 +2477,14 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <EntitySetMapping Name="onBoardingAccounts">
             <EntityTypeMapping TypeName="AdminModel.onBoardingAccount">
               <MappingFragment StoreEntitySet="onBoardingAccount">
+                <ScalarProperty Name="SweepCurrency" ColumnName="SweepCurrency" />
+                <ScalarProperty Name="TickerorISIN" ColumnName="TickerorISIN" />
+                <ScalarProperty Name="PortfolioSelection" ColumnName="PortfolioSelection" />
+                <ScalarProperty Name="AssociatedCustodyAcct" ColumnName="AssociatedCustodyAcct" />
+                <ScalarProperty Name="SweepComments" ColumnName="SweepComments" />
+                <ScalarProperty Name="HoldbackAmount" ColumnName="HoldbackAmount" />
+                <ScalarProperty Name="AccountStatus" ColumnName="AccountStatus" />
+                <ScalarProperty Name="AccountPurpose" ColumnName="AccountPurpose" />
                 <ScalarProperty Name="SendersBIC" ColumnName="SendersBIC" />
                 <ScalarProperty Name="SwiftGroup" ColumnName="SwiftGroup" />
                 <ScalarProperty Name="DaystoWire" ColumnName="DaystoWire" />
@@ -2659,8 +2679,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             <EntityTypeMapping TypeName="AdminModel.onboardingFund">
               <MappingFragment StoreEntitySet="onboardingFund">
                 <ScalarProperty Name="FundChecklistView" ColumnName="FundChecklistView" />
-                <ScalarProperty Name="HMDescription" ColumnName="HMDescription" />
-                <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
                 <ScalarProperty Name="ClientRiskCSSecondaryB" ColumnName="ClientRiskCSSecondaryB" />
                 <ScalarProperty Name="ClientRiskCSSecondaryA" ColumnName="ClientRiskCSSecondaryA" />
                 <ScalarProperty Name="ClientRiskCSPrimary" ColumnName="ClientRiskCSPrimary" />

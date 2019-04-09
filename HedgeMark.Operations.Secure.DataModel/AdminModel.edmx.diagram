@@ -45,7 +45,7 @@
         <EntityTypeShape EntityType="AdminModel.onboardingFund" Width="1.5" PointX="0.75" PointY="13.25" />
         <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId" />
         <AssociationConnector Association="AdminModel.FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId" />
-      </Diagram>
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

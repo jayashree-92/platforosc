@@ -1482,6 +1482,7 @@
     <Content Include="Scripts\OpsSecure\Commons\WireDetails.js" />
     <Content Include="Scripts\OpsSecure\Commons\WireManager.js" />
     <Content Include="Scripts\OpsSecure\Home.js" />
+    <Content Include="Scripts\OpsSecure\InboundLog.js" />
     <Content Include="Scripts\OpsSecure\layout.js" />
     <Content Include="Scripts\OpsSecure\OpsSecureAngularFactory.js" />
     <Content Include="Scripts\OpsSecure\UserAuditLog.js" />
@@ -1574,6 +1575,7 @@
     <Content Include="Views\Account\LogOff.cshtml" />
     <Content Include="Views\Shared\_Wires.cshtml" />
     <Content Include="Views\WireLog\Index.cshtml" />
+    <Content Include="Views\Home\InboundLogs.cshtml" />
     <None Include="Web.Local.config">
       <SubType>Designer</SubType>
     </None>

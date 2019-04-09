@@ -4,12 +4,12 @@
 HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q, $opsSharedScopes, $interval, $filter, $sce) {
     $opsSharedScopes.store("wireInitiationCtrl", $scope);
 
-    $scope.$on("loadWireTicketDetails", function (event, wireTicketId, module, purpose) {
+    $scope.$on("loadWireTicketDetails", function (event, wireTicketId, module, purpose, agreementName) {
         $scope.fnLoadWireTicketDetails(wireTicketId);
     });
 
 
-    $scope.fnLoadWireTicketDetails = function (wireTicketId, module, purpose) {
+    $scope.fnLoadWireTicketDetails = function (wireTicketId, module, purpose, agreementName) {
         $scope.isWireLoadingInProgress = true;
         $scope.isAccountCollapsed = true;
         $scope.isReceivingAccountCollapsed = true;
@@ -18,7 +18,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.isWorkflowLogsCollapsed = true;
         $scope.isSwiftMessagesCollapsed = true;
         $scope.Purpose = purpose;
-        $scope.module = module;
+        $scope.Module = module;
+        $scope.AgreementName = agreementName;
         $q.all([$scope.getWireDetails(wireTicketId), $scope.getWireMessageTypes(module)])
             .then(function () {
                 if ($scope.dzRawFileUploads != undefined)
@@ -689,14 +690,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         changes[index][2] = action == "Added" ? "" : $scope.dummyWire.HMWire.WireStatusId;
         changes[index][3] = statusId;
         var auditdata = {};
-        auditdata.ModuleName = $scope.wireObj.Report;
+        auditdata.ModuleName = $scope.Module;
         auditdata.Action = action;
         auditdata.Changes = changes;
-        auditdata.AgreementName = $scope.wireObj.AgreementName;
+        auditdata.AgreementName = $scope.AgreementName;
         auditdata.SendingAccount = $scope.accountDetail.AccountName;
         auditdata.IsBookTransfer = $scope.WireTicket.IsBookTransfer;
+        auditdata.TransferType = $scope.WireTicket.TransferType;
         auditdata.ReceivingAccount = auditdata.IsBookTransfer ? $scope.receivingAccountDetail.AccountName : $scope.ssiTemplate.TemplateName;
-        auditdata.Purpose = $scope.wireObj.Purpose;
+        auditdata.Purpose = $scope.Purpose;
         auditdata.AssociationId = $scope.WireTicket.hmsWireId;
         return auditdata;
     }

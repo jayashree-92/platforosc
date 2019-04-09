@@ -25,6 +25,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav"></ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("Inbound MQ Logs", "InboundLogs", "Home")</li>
                     <li>@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
                     <li>@Html.ActionLink("User Audits", "Index", "Audit")</li>
                     <li title="Logout" class="navbar-right"><a id="btnLogOff" class="navbar-icon" href=@Url.Action("LogOff", "Account")><i class="glyphicon glyphicon-log-out"></i></a></li>

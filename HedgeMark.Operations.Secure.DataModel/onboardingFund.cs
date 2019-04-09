@@ -162,8 +162,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string ClientRiskCSPrimary { get; set; }
         public string ClientRiskCSSecondaryA { get; set; }
         public string ClientRiskCSSecondaryB { get; set; }
-        public string AdminChoice { get; set; }
-        public string HMDescription { get; set; }
         public string FundChecklistView { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

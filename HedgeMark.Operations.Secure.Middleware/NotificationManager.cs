@@ -30,13 +30,12 @@ namespace HMOSecureMiddleware
                 ? wireTicket.FundName
                 : wireTicket.Agreement.AgreementShortName);
 
-            message.AppendFormat(" {0}", wireStatus);
+            message.AppendFormat(" is {0}", wireStatus);
 
             //need to derive recipients 
             var qualifiedReceipients = isSwiftStatusNotInitiated
                 ? wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == 2).Select(s => s.CreatedBy).ToList() 
                 : wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == 2 || s.WireStatusId == 3).Select(s => s.CreatedBy).ToList();
-
 
             using (var context = new OperationsSecureContext())
             {

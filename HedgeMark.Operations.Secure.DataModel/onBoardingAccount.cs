@@ -68,6 +68,14 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<int> DaystoWire { get; set; }
         public string SwiftGroup { get; set; }
         public string SendersBIC { get; set; }
+        public string AccountPurpose { get; set; }
+        public string AccountStatus { get; set; }
+        public Nullable<double> HoldbackAmount { get; set; }
+        public string SweepComments { get; set; }
+        public string AssociatedCustodyAcct { get; set; }
+        public string PortfolioSelection { get; set; }
+        public string TickerorISIN { get; set; }
+        public string SweepCurrency { get; set; }
     
         public virtual dmaAgreementOnBoarding dmaAgreementOnBoarding { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

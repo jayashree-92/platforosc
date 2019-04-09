@@ -18,6 +18,7 @@ namespace HMOSecureMiddleware.Models
         public string ReceivingAccount { get; set; }
         public string MessageType { get; set; }
         public long AssociationId { get; set; }
+        public string TransferType { get; set; }
         public string[][] changes { get; set; }
     }
 }
