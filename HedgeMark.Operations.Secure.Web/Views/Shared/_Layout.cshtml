@@ -12,6 +12,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=9">
     <meta charset="utf-8">
     <title> Operations Secured- @ViewBag.Title</title>
+
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -25,9 +26,10 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav"></ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li>@Html.ActionLink("Inbound MQ Logs", "InboundLogs", "Home")</li>
+                    <li>@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
                     <li>@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
                     <li>@Html.ActionLink("User Audits", "Index", "Audit")</li>
+                    <li>@Html.ActionLink("Inbound MQ Logs", "InboundLogs", "Audit")</li>
                     <li title="Logout" class="navbar-right"><a id="btnLogOff" class="navbar-icon" href=@Url.Action("LogOff", "Account")><i class="glyphicon glyphicon-log-out"></i></a></li>
                 </ul>
             </div>
@@ -37,7 +39,7 @@
         @RenderSection("featured", required: false)
         @RenderBody()
     </div>
-    <div class="notifications top-right" style="z-index: 1000"></div>
+    <div class="notifications top-right" style="z-index: 2000"></div>
     <div class="notifications bottom-right"></div>
     <div class="notifications top-left"></div>
     <div class="notifications bottom-left"></div>

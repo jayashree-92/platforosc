@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Mvc;
 using HedgeMark.Operations.Secure.DataModel;
@@ -10,18 +11,20 @@ using HMOSecureMiddleware.Queues;
 using HMOSecureWeb.Utility;
 using Hangfire;
 using HMOSecureWeb.Jobs;
+using log4net;
 using log4net.Repository.Hierarchy;
 
 namespace HMOSecureWeb.Controllers
 {
     public class HomeController : BaseController
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(HomeController));
         public ActionResult Index()
         {
             return View(DateTime.Now.GetContextDate());
         }
 
-        public ActionResult InboundLogs()
+        public ActionResult WirePurpose()
         {
             return View();
         }
@@ -76,7 +79,7 @@ namespace HMOSecureWeb.Controllers
                         wireStatusCount.Cancelled += 1;
 
                     //Failed
-                    if (statusCount.WireStatusId == 5  || statusCount.SwiftStatusId == 4 || statusCount.SwiftStatusId == 6)
+                    if (statusCount.WireStatusId == 5 || statusCount.SwiftStatusId == 4 || statusCount.SwiftStatusId == 6)
                         wireStatusCount.Failed += 1;
 
                     //Acknowledged
@@ -163,6 +166,9 @@ namespace HMOSecureWeb.Controllers
                 //Update User Details
                 thisWire.WireCreatedBy = users.First(s => s.Key == thisWire.HMWire.CreatedBy).Value.HumanizeEmail();
                 thisWire.WireLastUpdatedBy = users.First(s => s.Key == thisWire.HMWire.LastUpdatedBy).Value.HumanizeEmail();
+
+                if (thisWire.WireLastUpdatedBy == thisWire.WireCreatedBy)
+                    thisWire.WireLastUpdatedBy = "-";
 
                 wireData.Add(thisWire);
 
@@ -399,6 +405,7 @@ namespace HMOSecureWeb.Controllers
             }
             catch (TimeZoneNotFoundException e)
             {
+                Logger.Error(e.Message, e);
                 return new TimeSpan();
             }
         }
@@ -419,15 +426,74 @@ namespace HMOSecureWeb.Controllers
             }
             catch (TimeZoneNotFoundException e)
             {
+                Logger.Error(e.Message, e);
                 return new TimeSpan();
             }
         }
 
-        public JsonResult GetInboundMQLogs(DateTime startDate, DateTime endDate)
+        public JsonResult GetWirePurposes()
         {
-           var inBoundMQLogs = WireDataManager.GetInboundMQLogs(startDate, endDate);
-           return Json(inBoundMQLogs);
+            List<hmsWirePurposeLkup> wirePurposes;
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                wirePurposes = context.hmsWirePurposeLkups.ToList();
+            }
+
+            var userIds = wirePurposes.Select(s => s.CreatedBy).Union(wirePurposes.Where(s => s.ModifiedBy != null).Select(s => (int)s.ModifiedBy)).ToList();
+            Dictionary<int, string> users;
+            using (var context = new AdminContext())
+            {
+                users = context.hLoginRegistrations.Where(s => UserDetails.Id == s.intLoginID || userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
+            }
+
+
+            var allPurposes = wirePurposes.Select(wirePurpose =>
+                new
+                {
+                    hmsWirePurposeId = wirePurpose.hmsWirePurposeId,
+                    ReportName = wirePurpose.ReportName,
+                    Purpose = wirePurpose.Purpose,
+                    CreatedBy = wirePurpose.CreatedBy > 0 ? users.ContainsKey(wirePurpose.CreatedBy) ? users[wirePurpose.CreatedBy] : "Unknown User" : "System",
+                    CreatedAt = wirePurpose.CreatedAt,
+                    ModifiedBy = wirePurpose.ModifiedBy == null ? "-" : wirePurpose.ModifiedBy > 0 ? users.ContainsKey((int)wirePurpose.ModifiedBy) ? users[(int)wirePurpose.ModifiedBy] : "Unknown User" : "System",
+                    ModifiedAt = wirePurpose.ModifiedAt,
+                    IsApproved = wirePurpose.IsApproved,
+                    IsRejected = !wirePurpose.IsApproved && wirePurpose.ModifiedBy != null,
+                    IsAuthorizedToApprove = wirePurpose.CreatedBy != UserDetails.Id
+                });
+
+            return Json(allPurposes);
+
         }
 
+        public void AddWirePurpose(string reportName, string purpose)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var wirePurpose = new hmsWirePurposeLkup()
+                {
+                    ReportName = reportName,
+                    Purpose = purpose,
+                    CreatedBy = UserDetails.Id,
+                    CreatedAt = DateTime.Now
+                };
+
+                context.hmsWirePurposeLkups.Add(wirePurpose);
+                context.SaveChanges();
+            }
+        }
+
+        public void ApproveOrRejectWirePurpose(int wirePurposeId, bool isApproved)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var wirePurpose = context.hmsWirePurposeLkups.First(s => s.hmsWirePurposeId == wirePurposeId);
+                wirePurpose.ModifiedAt = DateTime.Now;
+                wirePurpose.ModifiedBy = UserDetails.Id;
+                wirePurpose.IsApproved = isApproved;
+                context.SaveChanges();
+            }
+        }
     }
 }

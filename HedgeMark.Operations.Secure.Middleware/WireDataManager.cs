@@ -158,9 +158,6 @@ namespace HMOSecureMiddleware
 
             }
 
-
-
-
             return swiftMessages;
         }
 

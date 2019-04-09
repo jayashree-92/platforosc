@@ -80,7 +80,7 @@
  
   <!-- Target for Publishing -->
   <target name="Publish" description="Publish Project" depends="SQLBuild" >
-    <exec program="${msbuild-VS2015}" failonerror="true">
+    <exec program="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" failonerror="true">
       <arg value="${ProjectFile}" />
       <arg value="/p:Configuration=${Configuration}" />
       <arg value="/t:_WPPCopyWebApplication" />

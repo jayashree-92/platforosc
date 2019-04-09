@@ -216,6 +216,38 @@ BEGIN
 END
 
 
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'CreatedBy' and TABLE_NAME = 'hmsWirePurposeLkup')
+BEGIN
+	ALTER TABLE hmsWirePurposeLkup ADD [CreatedBy] INT NOT NULL DEFAULT(-1);
+END
+GO
+
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'CreatedAt' and TABLE_NAME = 'hmsWirePurposeLkup')
+BEGIN
+	ALTER TABLE hmsWirePurposeLkup ADD [CreatedAt] DATETIME NOT NULL DEFAULT(GETDATE());
+END
+GO
+
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'ModifiedBy' and TABLE_NAME = 'hmsWirePurposeLkup')
+BEGIN
+	ALTER TABLE hmsWirePurposeLkup ADD [ModifiedBy] INT NULL;
+END
+GO
+
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'ModifiedAt' and TABLE_NAME = 'hmsWirePurposeLkup')
+BEGIN
+	ALTER TABLE hmsWirePurposeLkup ADD [ModifiedAt] DATETIME NULL;
+END
+GO
+
+
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'IsApproved' and TABLE_NAME = 'hmsWirePurposeLkup')
+BEGIN
+	ALTER TABLE hmsWirePurposeLkup ADD [IsApproved] BIT NOT NULL DEFAULT(0)
+END
+GO
+
+
 
 
 

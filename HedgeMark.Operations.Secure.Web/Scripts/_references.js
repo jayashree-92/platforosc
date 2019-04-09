@@ -162,6 +162,7 @@
 /// <reference path="opssecure/opssecureangularfactory.js" />
 /// <reference path="opssecure/userauditlog.js" />
 /// <reference path="opssecure/wirelog.js" />
+/// <reference path="opssecure/wirepurpose.js" />
 /// <reference path="plugins/contextmenu.js" />
 /// <reference path="plugins/numericcelleditor.js" />
 /// <reference path="plugins/sidenavigationmenu.js" />
