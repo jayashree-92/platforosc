@@ -83,6 +83,23 @@ namespace Com.HedgeMark.Commons.Extensions
             }
         }
 
+        public static string ToCurrency(this object value, string groupSeparator = ",", string currencySymbol = "")
+        {
+            var nfi = new NumberFormatInfo
+            {
+                CurrencyGroupSeparator = groupSeparator,
+                //CurrencyDecimalDigits = noOfDecimalPlaces,
+                CurrencySymbol = currencySymbol
+            };
+
+            if (string.IsNullOrWhiteSpace(value.ToString())) return 0.ToString("C", nfi);
+
+            decimal decimalNo;
+            decimal.TryParse(value.ToString(), NumberStyles.Currency | NumberStyles.Any, null, out decimalNo);
+
+            return decimalNo.ToString("C", nfi);
+        }
+
         public static string JoinToCsv<T>(this IEnumerable<T> array, string separator = ",")
         {
             return string.Join(separator, array);

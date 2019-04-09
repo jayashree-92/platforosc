@@ -145,7 +145,7 @@ namespace HMOSecureMiddleware.Queues
             // creating a message options object
             var mqGetMsgOpts = new MQGetMessageOptions { Options = MQC.MQGMO_FAIL_IF_QUIESCING | MQC.MQGMO_WAIT };
             var isDone = false;
-            
+
             while (!isDone)
             {
                 try
@@ -155,9 +155,9 @@ namespace HMOSecureMiddleware.Queues
                     var message = new MQMessage();
                     queue.Get(message, mqGetMsgOpts);
                     var messageAsText = message.ReadString(message.MessageLength);
-                    Logger.Info("Got a message: " + messageAsText);
-                    
-                    if (messageAsText == "FEACK" && wireId != -1)
+                    Logger.Info(string.Format("Got a message in Queue {0}: {1}", queueName, messageAsText));
+
+                    if (messageAsText.Trim().EndsWith("FEACK"))
                         WireTransactionManager.LogFrontEndAcknowledgment(messageAsText, wireId);
                     else
                         WireTransactionManager.ProcessInboundMessage(messageAsText);
@@ -170,6 +170,10 @@ namespace HMOSecureMiddleware.Queues
                     if (mqe.ReasonCode != 2033)
                         Logger.Error("MQException caught: " + mqe.ReasonCode + " " + mqe.Message, mqe);
                     isDone = true;
+                }
+                catch(Exception ex)
+                {
+                    Logger.Error("Exception when processing inbound : "+ ex.Message, ex);
                 }
             }
 

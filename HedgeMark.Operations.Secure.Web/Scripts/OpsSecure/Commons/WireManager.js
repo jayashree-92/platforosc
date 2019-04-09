@@ -294,11 +294,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         angular.element("#wireEntryDate").html(getFormattedUIDate(moment($scope.WireTicket.ContextDate)._d));
         if ($scope.isEditEnabled) {
             $scope.initializeDatePicker();
-            angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditible', true);
+            angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditable', true);
             angular.element("#wireValueDate").datepicker("setDate", moment(getDateForDisplay($scope.WireTicket.ValueDate))._d);
         }
         else {
-            angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditible', false);
+            angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditable', false);
             angular.element("#wireValueDate").datepicker('remove').html(getFormattedUIDate(moment(getDateForDisplay($scope.WireTicket.ValueDate))._d))
         }
         angular.element("#liMessageType").select2("val", $scope.WireTicket.WireMessageTypeId).trigger("change");

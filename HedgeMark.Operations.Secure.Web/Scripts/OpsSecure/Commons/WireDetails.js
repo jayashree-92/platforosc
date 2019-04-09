@@ -38,7 +38,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     headerOffset: 40
                 },
                 //"dom": "<'row'<'col-md-6'i><'#toolbar_tasklog'><'col-md-6 pull-right'f>>trI",
-                "dom": "<'pull-right'f>tI",
+                "dom": "<'pull-right'f>itI",
                 rowId: "hmsWireId",
                 rowCallback: function (row, data, index) {
 
@@ -163,8 +163,8 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 },
                 "oLanguage": {
                     "sSearch": "",
-                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ Task configured",
-                    "sInfoFiltered": " - filtering from _MAX_ Tasks"
+                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ wire tickets",
+                    "sInfoFiltered": " - filtering from _MAX_ tickets"
                 },
                 "scrollX": false,
                 "sScrollX": "100%",
@@ -173,7 +173,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 //"scrollY": $("#pageMainContent").offset().top + 600,
                 //stateSave: true,
                 //"scrollX": true,
-                "order": [[16, "asc"]],
+                "order": [[16, "desc"]],
                 //"bSort": false,
                 "bPaginate": false,
                 iDisplayLength: -1,

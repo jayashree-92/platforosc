@@ -22,12 +22,12 @@ namespace HMOSecureWeb.Jobs
         public static void CancelThisWire(long wireId, hmsWireJobSchedule wireSchedule)
         {
             var wireStatus = WireDataManager.GetWireStatus(wireId);
-            if (wireStatus.WorkflowStatus != WireDataManager.WorkflowStatus.Initiated)
+            if (wireStatus.WireStatus != WireDataManager.WireStatus.Initiated)
                 return;
 
             var wireTicket = WireDataManager.GetWireData(wireId);
             var workflowComment = "Auto Cancelled by System as deadline crossed.";
-            WireDataManager.SaveWireData(wireTicket, WireDataManager.WorkflowStatus.Cancelled, workflowComment, -1);
+            WireDataManager.SaveWireData(wireTicket, WireDataManager.WireStatus.Cancelled, workflowComment, -1);
             wireSchedule.IsJobCreated = true;
             WireDataManager.EditJobSchedule(wireSchedule);
         }

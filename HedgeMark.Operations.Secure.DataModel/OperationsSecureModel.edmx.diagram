@@ -17,18 +17,18 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireLog" Width="1.5" PointX="5.875" PointY="4.75" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLog_hmsWireMessageType_WireMessageTypeId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLog_hmsWireStatusLkup_WireStatusId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsWireJobSchedule" Width="1.5" PointX="16.25" PointY="3.25" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsNotificationStaging" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsInBoundMQLog" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWire" Width="1.5" PointX="14" PointY="1.25" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLog_hmsWires_hmsWireId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsInBoundMQLog" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsWireJobSchedule" Width="1.5" PointX="16.25" PointY="3.25" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsNotificationStaging" Width="1.5" PointX="0.75" PointY="3.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

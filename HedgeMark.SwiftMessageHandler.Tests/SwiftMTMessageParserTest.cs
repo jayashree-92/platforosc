@@ -89,7 +89,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
 
             Assert.IsTrue(sm.IsAck());
             Assert.IsTrue(sm.IsServiceMessage21());
-            
+
             Assert.AreEqual(sm.MessageType, "940");
             Assert.AreEqual(sm.Block2.MessageType, "940");
             Assert.AreEqual(sm.UnderlyingOriginalSwiftMessage.GetFieldValue("20"), "USD940NO1");
@@ -296,5 +296,25 @@ BNPAUS30PBS
             Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.Block4.GetFieldValue("20"), "TESTDMOTRN79");
 
         }
+
+
+        [TestMethod]
+        public void AckMessageInboundParserTest()
+        {
+            var message = @"{1:F01HMRKUS30XXXX1010100010}{2:I202IRVTBEB0XXXXN}{3:{121:cb38bd34-99bc-4c6e-b464-36eb49386123}}{4:
+:20:TESTDMOTRN93
+:21:050129287
+:32A:190408USD11000,
+:58A:/40616408XXXX
+GSILGB2XXXX
+:72:/INS/Goldman Sachs
+-}{1:F21HMRKUS30LXXX0013000006}{4:{177:1904080905}{451:0}} 
+";
+
+            var confirmationData = HMOSecureMiddleware.SwiftMessageManager.SwiftMessageParser.ParseMessage(message);
+            Assert.IsTrue(confirmationData.IsAckOrNack);
+
+        }
+
     }
 }

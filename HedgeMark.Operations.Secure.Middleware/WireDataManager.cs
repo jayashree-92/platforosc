@@ -11,7 +11,7 @@ namespace HMOSecureMiddleware
 {
     public class WireDataManager
     {
-        public enum WorkflowStatus
+        public enum WireStatus
         {
             Drafted = 1,
             Initiated,
@@ -32,7 +32,7 @@ namespace HMOSecureMiddleware
 
         public class WireTicketStatus
         {
-            public WorkflowStatus WorkflowStatus { get; set; }
+            public WireStatus WireStatus { get; set; }
             public SwiftStatus SwiftStatus { get; set; }
         }
 
@@ -136,16 +136,30 @@ namespace HMOSecureMiddleware
         {
             var swiftMessages = new Dictionary<string, string>();
 
-            var wireTransactionLog = wireLogs.Count <= 1 ? wireLogs.FirstOrDefault() : wireLogs.LastOrDefault(s => s.WireStatusId == wireStatusId);
-            if (wireTransactionLog == null)
+            if (wireLogs.Count == 0)
                 return swiftMessages;
 
-            swiftMessages.Add("Outbound", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.OutBoundSwiftMessage, true));
+            var shouldIncludeMsgType = wireLogs.Count > 1;
 
-            var ackLabel = string.Format("{0}Acknowledgement", (swiftStatusId == (int)SwiftStatus.NegativeAcknowledged ? "N-" : string.Empty));
-            swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.ServiceSwiftMessage, true));
+            //var wireTransactionLog = wireLogs.Count <= 1 ? wireLogs.FirstOrDefault() : wireLogs.LastOrDefault(s => s.WireStatusId == wireStatusId);
 
-            swiftMessages.Add("Confirmation", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
+            foreach (var wireTransactionLog in wireLogs)
+            {
+
+                if (wireTransactionLog == null)
+                    return swiftMessages;
+
+                swiftMessages.Add("Outbound" + (shouldIncludeMsgType ? wireTransactionLog.hmsWireMessageType.MessageType : string.Empty), SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.OutBoundSwiftMessage, true));
+
+                var ackLabel = string.Format("{0}Acknowledgement" + (shouldIncludeMsgType ? wireTransactionLog.hmsWireMessageType.MessageType : string.Empty), (swiftStatusId == (int)SwiftStatus.NegativeAcknowledged ? "N-" : string.Empty));
+                swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.ServiceSwiftMessage, true));
+
+                swiftMessages.Add("Confirmation" + (shouldIncludeMsgType ? wireTransactionLog.hmsWireMessageType.MessageType : string.Empty), SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
+
+            }
+
+
+
 
             return swiftMessages;
         }
@@ -158,7 +172,7 @@ namespace HMOSecureMiddleware
                 var wireTicket = context.hmsWires.First(s => s.hmsWireId == wireId);
                 return new WireTicketStatus()
                 {
-                    WorkflowStatus = (WorkflowStatus)wireTicket.WireStatusId,
+                    WireStatus = (WireStatus)wireTicket.WireStatusId,
                     SwiftStatus = (SwiftStatus)wireTicket.SwiftStatusId
                 };
             }
@@ -174,7 +188,7 @@ namespace HMOSecureMiddleware
                 context.SaveChanges();
 
                 //Add a Workflow Status 
-                SaveWireWorflow(wireId, (WorkflowStatus)hmsWire.WireStatusId, swiftStatus, comment, -1);
+                SaveWireWorflow(wireId, (WireStatus)hmsWire.WireStatusId, swiftStatus, comment, -1);
             }
         }
 
@@ -193,7 +207,7 @@ namespace HMOSecureMiddleware
         //    }
         //}
 
-        public static void SetWireStatus(long wireId, WorkflowStatus workflowStatus, SwiftStatus swiftStatus, string comment)
+        public static void SetWireStatus(long wireId, WireStatus workflowStatus, SwiftStatus swiftStatus, string comment)
         {
             using (var context = new OperationsSecureContext())
             {
@@ -208,7 +222,7 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static WireTicket SaveWireData(WireTicket wireTicket, WorkflowStatus workflowStatus, string comment, int userId)
+        public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus workflowStatus, string comment, int userId)
         {
             using (var context = new OperationsSecureContext())
             {
@@ -224,17 +238,17 @@ namespace HMOSecureMiddleware
                 var currentWireStatus = GetWireStatus(wireTicket.HMWire.hmsWireId);
                 wireTicket = GetWireData(wireTicket.HMWire.hmsWireId);
 
-                if (currentWireStatus.WorkflowStatus == WorkflowStatus.Approved)
+                if (currentWireStatus.WireStatus == WireStatus.Approved)
                     WireTransactionManager.InititateWireTransfer(wireTicket);
 
-                if (priorWireStatus.WorkflowStatus == WorkflowStatus.Approved && currentWireStatus.WorkflowStatus == WorkflowStatus.Cancelled)
+                if (priorWireStatus.WireStatus == WireStatus.Approved && currentWireStatus.WireStatus == WireStatus.Cancelled)
                     WireTransactionManager.CancelWireTransfer(wireTicket);
 
                 return wireTicket;
             }
         }
 
-        public static void SaveWireWorflow(long wireId, WorkflowStatus workflowStatus, SwiftStatus swiftStatus, string comment, int userId)
+        public static void SaveWireWorflow(long wireId, WireStatus workflowStatus, SwiftStatus swiftStatus, string comment, int userId)
         {
             using (var context = new OperationsSecureContext())
             {

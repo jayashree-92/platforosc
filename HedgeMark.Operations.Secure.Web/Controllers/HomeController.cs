@@ -28,6 +28,7 @@ namespace HMOSecureWeb.Controllers
             public int Completed { get; set; }
             public int Failed { get; set; }
             public int Approved { get; set; }
+            public int Acknowledged { get; set; }
             public int CancelledAndProcessing { get; set; }
 
             public int Total
@@ -54,24 +55,28 @@ namespace HMOSecureWeb.Controllers
                         wireStatusCount.Pending += 1;
 
                     //Approved and Processing
-                    if (statusCount.WireStatusId == 3 && statusCount.SwiftStatusId != 5)
+                    if (statusCount.WireStatusId == 3 && (statusCount.SwiftStatusId == 2 || statusCount.SwiftStatusId == 3))
                         wireStatusCount.Approved += 1;
+
+                    //Cancelled and Processing
+                    if (statusCount.WireStatusId == 4 && (statusCount.SwiftStatusId == 2 || statusCount.SwiftStatusId == 3))
+                        wireStatusCount.CancelledAndProcessing += 1;
 
                     //Approved and Completed
                     if (statusCount.WireStatusId == 3 && statusCount.SwiftStatusId == 5)
                         wireStatusCount.Completed += 1;
 
-                    //Cancelled and Processing
-                    if (statusCount.WireStatusId == 4 && statusCount.SwiftStatusId != 1 && statusCount.SwiftStatusId != 5)
-                        wireStatusCount.CancelledAndProcessing += 1;
-
                     //Cancelled and Completed
-                    if (statusCount.WireStatusId == 4 && (statusCount.SwiftStatusId == 1 || statusCount.SwiftStatusId == 5))
+                    if (statusCount.WireStatusId == 4 && statusCount.SwiftStatusId == 5)
                         wireStatusCount.Cancelled += 1;
 
                     //Failed
-                    if (statusCount.WireStatusId == 5 || statusCount.SwiftStatusId == 6)
+                    if (statusCount.WireStatusId == 5  || statusCount.SwiftStatusId == 4 || statusCount.SwiftStatusId == 6)
                         wireStatusCount.Failed += 1;
+
+                    //Acknowledged
+                    if (statusCount.SwiftStatusId == 3)
+                        wireStatusCount.Acknowledged += 1;
                 }
             }
             return Json(wireStatusCount);
@@ -182,17 +187,17 @@ namespace HMOSecureWeb.Controllers
         {
             var wireTicket = WireDataManager.GetWireData(wireId);
             var isDeadlineCrossed = DateTime.Now.Date > wireTicket.HMWire.ValueDate.Date;
-            var isAuthorizedUserToApprove = (WireDataManager.WorkflowStatus.Initiated == (WireDataManager.WorkflowStatus)(wireTicket.HMWire.WireStatusId) && wireTicket.HMWire.LastUpdatedBy != UserDetails.Id) && !isDeadlineCrossed;
-            var isEditEnabled = WireDataManager.WorkflowStatus.Drafted == (WireDataManager.WorkflowStatus)(wireTicket.HMWire.WireStatusId) && !isDeadlineCrossed;
-            var isApprovedOrFailed = (int)WireDataManager.WorkflowStatus.Cancelled == wireTicket.HMWire.WireStatusId
-                                     || (int)WireDataManager.WorkflowStatus.Approved == wireTicket.HMWire.WireStatusId
+            var isAuthorizedUserToApprove = (WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && wireTicket.HMWire.LastUpdatedBy != UserDetails.Id) && !isDeadlineCrossed;
+            var isEditEnabled = WireDataManager.WireStatus.Drafted == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && !isDeadlineCrossed;
+            var isApprovedOrFailed = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId
+                                     || (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId
                                      || (int)WireDataManager.SwiftStatus.Processing == wireTicket.HMWire.SwiftStatusId
                                      || (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
-                                     || (int)WireDataManager.WorkflowStatus.Failed == wireTicket.HMWire.WireStatusId;
+                                     || (int)WireDataManager.WireStatus.Failed == wireTicket.HMWire.WireStatusId;
 
-            var isCompletedOrFailed = (int)WireDataManager.WorkflowStatus.Cancelled == wireTicket.HMWire.WireStatusId
+            var isCompletedOrFailed = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId
                                       || (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
-                                      || (int)WireDataManager.WorkflowStatus.Failed == wireTicket.HMWire.WireStatusId;
+                                      || (int)WireDataManager.WireStatus.Failed == wireTicket.HMWire.WireStatusId;
 
             var isCancelEnabled = !isCompletedOrFailed && !isDeadlineCrossed;
             var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CashSweepTime ?? new TimeSpan());
@@ -211,11 +216,11 @@ namespace HMOSecureWeb.Controllers
         {
             wireTicket.HMWire.LastModifiedAt = DateTime.Now;
             wireTicket.HMWire.LastUpdatedBy = UserDetails.Id;
-            wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WorkflowStatus)statusId, comment, UserDetails.Id);
+            wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
             var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CashSweepTime ?? new TimeSpan());
             var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CutoffTime ?? new TimeSpan());
             var deadlineToApprove = GetDeadlineToApprove(cashSweep, cutOff, wireTicket.Account.CashSweepTimeZone);
-            SaveWireScheduleInfo(wireTicket, (WireDataManager.WorkflowStatus)statusId, UserDetails.Id, deadlineToApprove);
+            SaveWireScheduleInfo(wireTicket, (WireDataManager.WireStatus)statusId, UserDetails.Id, deadlineToApprove);
             var tempFilePath = string.Format("Temp\\{0}", UserName);
 
             foreach (var file in wireTicket.HMWire.hmsWireDocuments)
@@ -241,13 +246,13 @@ namespace HMOSecureWeb.Controllers
         }
 
 
-        private static void SaveWireScheduleInfo(WireTicket wire, WireDataManager.WorkflowStatus workflowStatus, int userId, TimeSpan deadlineToApprove)
+        private static void SaveWireScheduleInfo(WireTicket wire, WireDataManager.WireStatus workflowStatus, int userId, TimeSpan deadlineToApprove)
         {
 
             var thisWireSchedule = WireDataManager.GetJobSchedule(wire.WireId);
             var scheduleName = OverdueWireCancellationScheduleManager.GetJobName(wire.WireId);
 
-            if (workflowStatus != WireDataManager.WorkflowStatus.Initiated)
+            if (workflowStatus != WireDataManager.WireStatus.Initiated)
             {
                 if (thisWireSchedule != null)
                 {

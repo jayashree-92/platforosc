@@ -5,13 +5,9 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="OperationsSecureModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="hmsInBoundMQLogs">
           <Key>
             <PropertyRef Name="hmsInBoundMQLogsId" />
-            <PropertyRef Name="InBoundMessage" />
-            <PropertyRef Name="CreatedAt" />
           </Key>
           <Property Name="hmsInBoundMQLogsId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="InBoundMessage" Type="varchar" MaxLength="8000" Nullable="false" />
@@ -301,6 +297,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="OperationsSecureModelStoreContainer">
+          <EntitySet Name="hmsInBoundMQLogs" EntityType="Self.hmsInBoundMQLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsNotificationStaging" EntityType="Self.hmsNotificationStaging" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUserAuditLog" EntityType="Self.hmsUserAuditLog" Schema="dbo" store:Type="Tables" />
@@ -312,13 +309,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
           <EntitySet Name="hmsWires" EntityType="Self.hmsWires" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireStatusLkup" EntityType="Self.hmsWireStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireWorkflowLog" EntityType="Self.hmsWireWorkflowLog" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="hmsInBoundMQLogs" EntityType="Self.hmsInBoundMQLogs" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [hmsInBoundMQLogs].[hmsInBoundMQLogsId] AS [hmsInBoundMQLogsId], 
-    [hmsInBoundMQLogs].[InBoundMessage] AS [InBoundMessage], 
-    [hmsInBoundMQLogs].[CreatedAt] AS [CreatedAt]
-    FROM [dbo].[hmsInBoundMQLogs] AS [hmsInBoundMQLogs]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK_hmsWireDocument_hmsWires_hmsWireId" Association="Self.FK_hmsWireDocument_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsWireDocument" EntitySet="hmsWireDocument" />
@@ -397,6 +387,9 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
             <End Role="hmsWireStatusLkup" EntitySet="hmsWireStatusLkups" />
             <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
           </AssociationSet>
+          <EntitySet Name="hmsWireJobSchedules" EntityType="OperationsSecureModel.hmsWireJobSchedule" />
+          <EntitySet Name="hmsNotificationStagings" EntityType="OperationsSecureModel.hmsNotificationStaging" />
+          <EntitySet Name="hmsInBoundMQLogs" EntityType="OperationsSecureModel.hmsInBoundMQLog" />
           <EntitySet Name="hmsWires" EntityType="OperationsSecureModel.hmsWire" />
           <AssociationSet Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" Association="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
             <End Role="hmsSwiftStatusLkup" EntitySet="hmsSwiftStatusLkups" />
@@ -405,6 +398,10 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
           <AssociationSet Name="FK_hmsWireDocument_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId">
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireDocument" EntitySet="hmsWireDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId">
+            <End Role="hmsWire" EntitySet="hmsWires" />
+            <End Role="hmsWireJobSchedule" EntitySet="hmsWireJobSchedules" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWireLog_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireLog_hmsWires_hmsWireId">
             <End Role="hmsWire" EntitySet="hmsWires" />
@@ -426,13 +423,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
           </AssociationSet>
-          <EntitySet Name="hmsInBoundMQLogs" EntityType="OperationsSecureModel.hmsInBoundMQLog" />
-          <EntitySet Name="hmsWireJobSchedules" EntityType="OperationsSecureModel.hmsWireJobSchedule" />
-          <AssociationSet Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId">
-            <End Role="hmsWire" EntitySet="hmsWires" />
-            <End Role="hmsWireJobSchedule" EntitySet="hmsWireJobSchedules" />
-          </AssociationSet>
-          <EntitySet Name="hmsNotificationStagings" EntityType="OperationsSecureModel.hmsNotificationStaging" />
           </EntityContainer>
         <EntityType Name="hmsUserAuditLog">
           <Key>
@@ -556,8 +546,8 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
           <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWireLog_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireLog" ToRole="hmsWireMessageType" />
           <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWireLog_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireLog" ToRole="hmsWireStatusLkup" />
-          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireLog_hmsWires_hmsWireId" FromRole="hmsWireLog" ToRole="hmsWire" />
           <Property Name="IsFrontEndAcknowleged" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireLog_hmsWires_hmsWireId" FromRole="hmsWireLog" ToRole="hmsWire" />
         </EntityType>
         <Association Name="FK_hmsWireLog_hmsWireMessageType_WireMessageTypeId">
           <End Type="OperationsSecureModel.hmsWireMessageType" Role="hmsWireMessageType" Multiplicity="1" />
@@ -583,6 +573,40 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="hmsWireJobSchedule">
+          <Key>
+            <PropertyRef Name="hmsWireJobSchedulerId" />
+          </Key>
+          <Property Name="hmsWireJobSchedulerId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
+          <Property Name="ScheduledDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsJobCreated" Type="Boolean" Nullable="false" />
+          <Property Name="IsJobInActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="UpdatedBy" Type="Int32" Nullable="false" />
+          <Property Name="LastModifiedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWireJobSchedule" ToRole="hmsWire" />
+        </EntityType>
+        <EntityType Name="hmsNotificationStaging">
+          <Key>
+            <PropertyRef Name="hmsNotificationStagingId" />
+          </Key>
+          <Property Name="hmsNotificationStagingId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FromUserId" Type="Int32" Nullable="false" />
+          <Property Name="ToUserId" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Message" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="hmsInBoundMQLog">
+          <Key>
+            <PropertyRef Name="hmsInBoundMQLogsId" />
+          </Key>
+          <Property Name="hmsInBoundMQLogsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InBoundMessage" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         <EntityType Name="hmsWire">
           <Key>
             <PropertyRef Name="hmsWireId" />
@@ -612,12 +636,12 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
           <Property Name="SwiftStatusId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="hmsSwiftStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsSwiftStatusLkup" />
           <NavigationProperty Name="hmsWireDocuments" Relationship="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireDocument" />
+          <NavigationProperty Name="hmsWireJobSchedules" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireJobSchedule" />
           <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireLog" />
           <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWire" ToRole="hmsWireMessageType" />
           <NavigationProperty Name="hmsWirePurposeLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" FromRole="hmsWire" ToRole="hmsWirePurposeLkup" />
           <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsWireStatusLkup" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireWorkflowLog" />
-          <NavigationProperty Name="hmsWireJobSchedules" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireJobSchedule" />
         </EntityType>
         <Association Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
           <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
@@ -639,6 +663,18 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
               <PropertyRef Name="hmsWireId" />
             </Principal>
             <Dependent Role="hmsWireDocument">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireJobSchedule" Role="hmsWireJobSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireJobSchedule">
               <PropertyRef Name="hmsWireId" />
             </Dependent>
           </ReferentialConstraint>
@@ -703,54 +739,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="hmsInBoundMQLog">
-          <Key>
-            <PropertyRef Name="hmsInBoundMQLogsId" />
-            <PropertyRef Name="InBoundMessage" />
-            <PropertyRef Name="CreatedAt" />
-          </Key>
-          <Property Name="hmsInBoundMQLogsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="InBoundMessage" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
-        <EntityType Name="hmsWireJobSchedule">
-          <Key>
-            <PropertyRef Name="hmsWireJobSchedulerId" />
-          </Key>
-          <Property Name="hmsWireJobSchedulerId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
-          <Property Name="ScheduledDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsJobCreated" Type="Boolean" Nullable="false" />
-          <Property Name="IsJobInActive" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="UpdatedBy" Type="Int32" Nullable="false" />
-          <Property Name="LastModifiedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWireJobSchedule" ToRole="hmsWire" />
-        </EntityType>
-        <Association Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId">
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireJobSchedule" Role="hmsWireJobSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWire">
-              <PropertyRef Name="hmsWireId" />
-            </Principal>
-            <Dependent Role="hmsWireJobSchedule">
-              <PropertyRef Name="hmsWireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="hmsNotificationStaging">
-          <Key>
-            <PropertyRef Name="hmsNotificationStagingId" />
-          </Key>
-          <Property Name="hmsNotificationStagingId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FromUserId" Type="Int32" Nullable="false" />
-          <Property Name="ToUserId" Type="Int32" Nullable="false" />
-          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Message" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -851,6 +839,42 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="hmsWireJobSchedules">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireJobSchedule">
+              <MappingFragment StoreEntitySet="hmsWireJobSchedules">
+                <ScalarProperty Name="LastModifiedAt" ColumnName="LastModifiedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="IsJobInActive" ColumnName="IsJobInActive" />
+                <ScalarProperty Name="IsJobCreated" ColumnName="IsJobCreated" />
+                <ScalarProperty Name="ScheduledDate" ColumnName="ScheduledDate" />
+                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+                <ScalarProperty Name="hmsWireJobSchedulerId" ColumnName="hmsWireJobSchedulerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsNotificationStagings">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsNotificationStaging">
+              <MappingFragment StoreEntitySet="hmsNotificationStaging">
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ToUserId" ColumnName="ToUserId" />
+                <ScalarProperty Name="FromUserId" ColumnName="FromUserId" />
+                <ScalarProperty Name="hmsNotificationStagingId" ColumnName="hmsNotificationStagingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsInBoundMQLogs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsInBoundMQLog">
+              <MappingFragment StoreEntitySet="hmsInBoundMQLogs">
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="InBoundMessage" ColumnName="InBoundMessage" />
+                <ScalarProperty Name="hmsInBoundMQLogsId" ColumnName="hmsInBoundMQLogsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="hmsWires">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsWire">
               <MappingFragment StoreEntitySet="hmsWires">
@@ -877,42 +901,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsInBoundMQLogs' does not have a pri
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="hmsInBoundMQLogs">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsInBoundMQLog">
-              <MappingFragment StoreEntitySet="hmsInBoundMQLogs">
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="InBoundMessage" ColumnName="InBoundMessage" />
-                <ScalarProperty Name="hmsInBoundMQLogsId" ColumnName="hmsInBoundMQLogsId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="hmsWireJobSchedules">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireJobSchedule">
-              <MappingFragment StoreEntitySet="hmsWireJobSchedules">
-                <ScalarProperty Name="LastModifiedAt" ColumnName="LastModifiedAt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="IsJobInActive" ColumnName="IsJobInActive" />
-                <ScalarProperty Name="IsJobCreated" ColumnName="IsJobCreated" />
-                <ScalarProperty Name="ScheduledDate" ColumnName="ScheduledDate" />
-                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
-                <ScalarProperty Name="hmsWireJobSchedulerId" ColumnName="hmsWireJobSchedulerId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="hmsNotificationStagings">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsNotificationStaging">
-              <MappingFragment StoreEntitySet="hmsNotificationStaging">
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="ToUserId" ColumnName="ToUserId" />
-                <ScalarProperty Name="FromUserId" ColumnName="FromUserId" />
-                <ScalarProperty Name="hmsNotificationStagingId" ColumnName="hmsNotificationStagingId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
