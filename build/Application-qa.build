@@ -12,13 +12,17 @@
   <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
   <property name="ProjectFile" value="../HedgeMark.Operations.Secure.Web/HMOSecureWeb.csproj"/>   
   <property name="OutputFile1" value="../HedgeMark.Operations.Secure.Web/obj/QA/"/>   
-  <property name="OutputFile2" value="\\w001gmn0c\Operations_Secure_Jenkins"/>    
+  <property name="OutputFile2" value="\\w001gmn0c\Operations_Secure_Jenkins"/>
   <property name="nant.settings.currentframework" value="net-4.0"/> 
   <property name="UnitTestLocation" value="../HedgeMark.Operations.Secure.Middleware.Tests/bin" />  
   <property name="MSTest" value="C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\MSTest.exe"/>
   <property name="testResults" value="${CurrentDir}\TestResults"/>  
   <property name="QAPathToCopyServer1" value="\\wc08a10003pv00\OPS_Secure_QA01"/>
   <property name="QAPathToCopyServer2" value="\\wc08a10004pv00\OPS_Secure_QA01"/>
+
+
+<!-- <property name="msbuild-VS2013" value="C:\Program Files (x86)\MSBuild\12.0\Bin\msbuild.exe" unless="${property::exists('msbuild-VS2013')}"/> -->
+<property name="msbuild-VS2015" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" unless="${property::exists('msbuild-VS2015')}"/>
  
   <!-- Target to Clear the solution and the Previous test Case Results  Available in System -->
   <target name="Clear">
@@ -120,6 +124,7 @@
 		 <exclude name="**/login/**" />
 	     <exclude name="**/logout/**" />
 		 <exclude name="**/pw/**" />
+		 <exclude name="**/pw2/**" />
       </fileset>
      </delete>
    </target>
@@ -133,6 +138,7 @@
 	  <exclude name="**/login/**" />
 	 <exclude name="**/logout/**" />
 	 <exclude name="**/pw/**" />
+     <exclude name="**/pw2/**" />
     </fileset>
    </delete>
    </target>
