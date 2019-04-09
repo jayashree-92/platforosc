@@ -55,7 +55,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                 //"sScrollX": "100%",
                 //"sScrollXInner": "100%",
                 "bDestroy": true,
-                "order": [[2, "desc"]],
+                "order": [[7, "desc"]],
                 "scrollX": true,
                 "scrollY": $("#tblAuditLogsDetails").offset().top + 450,
                 "aoColumns": [{
@@ -78,17 +78,47 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     "sTitle": "Field Modified",
                     "mData": "Field",
                     "mRender": function (tdata, type, row) {
+                        return tdata != null ? tdata : "";
+                    }
+                },
+                {
+                    "sTitle": "Previous State Value",
+                    "mData": "PreviousStateValue",
+                    "mRender": function (tdata, type, row) {
                         switch (row.Action) {
                             case "Log In": 
-                            case "Log Out": return "<span class='text-success'>Log Out</span>";
-                            case "Edited": return "<span class='text-warning'>Edited</span>";
+                            case "Log Out": return "";
+                            case "Edited": if (row.Field == "Wire Status") {
+                                return  $scope.getWireStatus(row.PreviousStateValue);
+                            }
+                            else {
+                                return "<b>" + $scope.getFieldValue(row.Field, row.PreviousStateValue) + "</b>";
+                            }
                         }
                     }
                 },
                 {
-                    "sTitle": "User",
+                    "sTitle": "Modified State Value",
                     "mData": "ModifiedStateValue",
-                    "className": "seeFullText"
+                    "mRender": function (tdata, type, row) {
+                        switch (row.Action) {
+                            case "Log In": 
+                            case "Log Out": return "";
+                            case "Edited": if (row.Field == "Wire Status") {
+                                return $scope.getWireStatus(row.ModifiedStateValue);
+                            }
+                            else {
+                                return "<b>" + $scope.getFieldValue(row.Field, row.ModifiedStateValue) + "</b>";
+                            }
+                        }
+                    }
+                },
+                {
+                    "sTitle": "Origin",
+                    "mData": "IsLogFromOps",
+                    "mRender": function (tdata, type, row) {
+                        return tdata == true || row.Action != "Edited" ? "Operations Secure" : "Operations";
+                    }
                 },
                 {
                 "sTitle": "User",
@@ -96,28 +126,6 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                 "className": "seeFullText"
                 },
                 {
-                "sTitle": "User Activity",
-                "mData": "hmsUserAuditLogId",
-                "mRender": function (tdata, type, row) {
-                    switch (row.Action) {
-                        case "Log In": return row.UserName + " logged into the Operations Secure System.";
-                        case "Log Out": return row.UserName + " logged out from the Operations Secure System.";
-                        case "Added": if (row.Field == "Wire Status") {
-                            return row.UserName + " added the status as " + $scope.getWireStatus(row.ModifiedStateValue) + (row.IsLogFromOps ? " in Operations." : "");
-                        }
-                        else {
-                            return row.UserName + " added " + row.Field + " as <b>" + $scope.getFieldValue(row.Field, row.ModifiedStateValue) + "</b>" + (row.IsLogFromOps ? " in Operations." : "");
-                        }
-                        case "Edited": if (row.Field == "Wire Status") {
-                            return row.UserName + " modified the status from " + $scope.getWireStatus(row.PreviousStateValue) + " to " + $scope.getWireStatus(row.ModifiedStateValue) + (row.IsLogFromOps ? " in Operations." : "");
-                        }
-                        else {
-                            return row.UserName + " modified " + row.Field + " from <b>" + $scope.getFieldValue(row.Field, row.PreviousStateValue) + "</b>" + " to <b>" + $scope.getFieldValue(row.Field, row.ModifiedStateValue) + "</b>" + (row.IsLogFromOps ? " in Operations." : "");
-                        }
-                    }
-                }
-            },
-            {
                 "mData": "CreatedAt", "sTitle": "Updated As Of",
                 "type": "dotnet-date",
                 "mRender": function (tdata, type, row) {
