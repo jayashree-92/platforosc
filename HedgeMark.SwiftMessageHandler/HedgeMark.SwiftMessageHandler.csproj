@@ -62,6 +62,7 @@
     <Compile Include="Model\Fields\Field13C.cs" />
     <Compile Include="Model\Fields\Field16R.cs" />
     <Compile Include="Model\Fields\Field16S.cs" />
+    <Compile Include="Model\Fields\Field177.cs" />
     <Compile Include="Model\Fields\Field20.cs" />
     <Compile Include="Model\Fields\Field20C.cs" />
     <Compile Include="Model\Fields\Field21.cs" />
@@ -76,6 +77,8 @@
     <Compile Include="Model\Fields\Field32B.cs" />
     <Compile Include="Model\Fields\Field35B.cs" />
     <Compile Include="Model\Fields\Field36B.cs" />
+    <Compile Include="Model\Fields\Field405.cs" />
+    <Compile Include="Model\Fields\Field451.cs" />
     <Compile Include="Model\Fields\Field50A.cs" />
     <Compile Include="Model\Fields\Field50K.cs" />
     <Compile Include="Model\Fields\Field54A.cs" />
@@ -101,6 +104,7 @@
     <Compile Include="Model\Fields\FieldWithAccountAndBIC.cs" />
     <Compile Include="Model\Fields\FieldWithAccountBICAndDCMark.cs" />
     <Compile Include="Model\Fields\FieldWithAccountAndAddress.cs" />
+    <Compile Include="Model\Fields\FieldWithDateAndTime.cs" />
     <Compile Include="Model\Fields\FieldWithDate.cs" />
     <Compile Include="Model\Fields\FieldWithQualifierAndCode.cs" />
     <Compile Include="Model\Fields\FieldWithQualifierCodeAndValue.cs" />

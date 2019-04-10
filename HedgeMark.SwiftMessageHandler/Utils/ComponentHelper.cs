@@ -40,9 +40,15 @@ namespace HedgeMark.SwiftMessageHandler.Utils
                     componentVal = Extensions.GetFormatedCurrency(value.Replace(",", "."));
                     break;
                 case FieldConstants.DATE:
+                case FieldConstants.VALUE_DATE:
                     DateTime dateTime;
                     DateTime.TryParseExact(value, new[] { Extensions.DefaultDateFormat, Extensions.DefaultDateFormatWithFullYear }, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
                     componentVal = dateTime.ToString("MMM dd, yyyy");
+                    break;
+                case FieldConstants.TIME:
+                    DateTime dateTime2;
+                    DateTime.TryParseExact(value, new[] { Extensions.DefaultTimeFormat, Extensions.DefaultDateFormatWithFullYear }, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime2);
+                    componentVal = dateTime2.ToString("hh:mm tt");
                     break;
                 default:
                     componentVal = value;

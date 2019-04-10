@@ -189,49 +189,49 @@ namespace HMOSecureMiddleware
             }
         }
 
-        //public static void SetWireStatus(WireInBoundMessage inBoundMessage, WorkflowStatus workflowStatus, SwiftStatus swiftStatus, string comment)
-        //{
-        //    using (var context = new OperationsSecureContext())
-        //    {
-        //        //Update Wire Status Id
-        //        var hmsWire = context.hmsWires.First(s => s.hmsWireId == inBoundMessage.WireId);
-        //        hmsWire.WireStatusId = (int)workflowStatus;
-        //        hmsWire.SwiftStatusId = (int)swiftStatus;
-        //        context.SaveChanges();
+        public static void SetWireStatus(WireInBoundMessage inBoundMessage, WireStatus wireStatus, SwiftStatus swiftStatus, string comment)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                //Update Wire Status Id
+                var hmsWire = context.hmsWires.First(s => s.hmsWireId == inBoundMessage.WireId);
+                hmsWire.WireStatusId = (int)wireStatus;
+                hmsWire.SwiftStatusId = (int)swiftStatus;
+                context.SaveChanges();
 
-        //        //Add a Workflow Status 
-        //        SaveWireWorflow(inBoundMessage.WireId, workflowStatus, swiftStatus, comment, -1);
-        //    }
-        //}
+                //Add a Workflow Status 
+                SaveWireWorflow(inBoundMessage.WireId, wireStatus, swiftStatus, comment, -1);
+            }
+        }
 
-        public static void SetWireStatus(long wireId, WireStatus workflowStatus, SwiftStatus swiftStatus, string comment)
+        public static void SetWireStatus(long wireId, WireStatus wireStatus, SwiftStatus swiftStatus, string comment)
         {
             using (var context = new OperationsSecureContext())
             {
                 //Update Wire Status Id
                 var hmsWire = context.hmsWires.First(s => s.hmsWireId == wireId);
-                hmsWire.WireStatusId = (int)workflowStatus;
+                hmsWire.WireStatusId = (int)wireStatus;
                 hmsWire.SwiftStatusId = (int)swiftStatus;
                 context.SaveChanges();
 
                 //Add a Workflow Status 
-                SaveWireWorflow(wireId, workflowStatus, swiftStatus, comment, -1);
+                SaveWireWorflow(wireId, wireStatus, swiftStatus, comment, -1);
             }
         }
 
-        public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus workflowStatus, string comment, int userId)
+        public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus wireStatus, string comment, int userId)
         {
             using (var context = new OperationsSecureContext())
             {
                 var priorWireStatus = GetWireStatus(wireTicket.HMWire.hmsWireId);
 
-                wireTicket.HMWire.WireStatusId = (int)workflowStatus;
+                wireTicket.HMWire.WireStatusId = (int)wireStatus;
                 wireTicket.HMWire.SwiftStatusId = (int)SwiftStatus.NotInitiated;
                 context.hmsWires.AddOrUpdate(wireTicket.HMWire);
                 context.hmsWireDocuments.AddRange(wireTicket.HMWire.hmsWireDocuments.Where(s => s.hmsWireDocumentId == 0));
                 context.SaveChanges();
 
-                SaveWireWorflow(wireTicket.HMWire.hmsWireId, workflowStatus, (SwiftStatus)wireTicket.HMWire.SwiftStatusId, comment, userId);
+                SaveWireWorflow(wireTicket.HMWire.hmsWireId, wireStatus, (SwiftStatus)wireTicket.HMWire.SwiftStatusId, comment, userId);
                 var currentWireStatus = GetWireStatus(wireTicket.HMWire.hmsWireId);
                 wireTicket = GetWireData(wireTicket.HMWire.hmsWireId);
 
@@ -245,14 +245,14 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static void SaveWireWorflow(long wireId, WireStatus workflowStatus, SwiftStatus swiftStatus, string comment, int userId)
+        public static void SaveWireWorflow(long wireId, WireStatus wireStatus, SwiftStatus swiftStatus, string comment, int userId)
         {
             using (var context = new OperationsSecureContext())
             {
                 var wireWorkFlowLog = new hmsWireWorkflowLog
                 {
                     hmsWireId = wireId,
-                    WireStatusId = (int)workflowStatus,
+                    WireStatusId = (int)wireStatus,
                     SwiftStatusId = (int)swiftStatus,
                     Comment = comment,
                     CreatedAt = DateTime.Now,

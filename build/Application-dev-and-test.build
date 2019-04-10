@@ -24,17 +24,7 @@
   <property name="QAPathToCopyServer1" value=""/>
   <property name="QAPathToCopyServer2" value=""/> 
 
-<!-- <property name="build.configuration" value="Release" unless="${property::exists('build.configuration')}"/> -->
-<!-- <property name="build.platform" value="Any CPU" unless="${property::exists('build.platform')}"/> -->
-<!-- <property name="build.out.dir" value="" unless="${property::exists('build.out.dir')}"/> -->
-<!-- <property name="build.verbosity" value="Normal" unless="${property::exists('build.verbosity')}"  /> -->
-<!-- <property name="solution.name" value="${project::get-name()}" unless="${property::exists('solution.name')}"/> -->
-<!-- <property name="solution.extension" value="sln" unless="${property::exists('solution.extension')}"/> -->
-<!-- <property name="solution.dir" value="${project::get-base-directory()}"  unless="${property::exists('solution.dir')}"/> -->
-<!-- <property name="package.dir" value="${solution.dir}\_release"/> -->
 <!-- <property name="msbuild-VS2013" value="C:\Program Files (x86)\MSBuild\12.0\Bin\msbuild.exe" unless="${property::exists('msbuild-VS2013')}"/> -->
-
-
 <property name="msbuild-VS2015" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" unless="${property::exists('msbuild-VS2015')}"/>
 
 <!-- <property name="msbuild.args" value="/p:RunOctoPack=true;OctoPackPublishPackageToFileShare=${package.dir}" /> -->

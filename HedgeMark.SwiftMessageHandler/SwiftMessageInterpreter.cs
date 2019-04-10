@@ -28,7 +28,7 @@ namespace HedgeMark.SwiftMessageHandler
 
                 if (field.Components.Count == 0)
                 {
-                    builder.AppendLine(string.Format(":{0}", field.Value));
+                    builder.AppendLine(string.Format(":{0}", field.GetComponentValue(field.Label)));
                     continue;
                 }
 

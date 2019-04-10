@@ -380,6 +380,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         angular.element("#cancelWire").popover("hide");
         $scope.TrustedSwiftMessage = "";
         $scope.SwiftFormatMessageActiveTag = "";
+        $scope.wireTicketObj.SwiftMessages = [];
     });
 
     $scope.bindAndValidateWireData = function () {

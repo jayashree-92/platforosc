@@ -301,6 +301,12 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         /// </summary>
         public static string FIELD_61 = "61";
 
+        /// <summary>
+        /// Date and Time of User Submission
+        /// </summary>
+        public static string FIELD_177 = "177";
+        
+
         public static bool IsBlock3Field(string fieldName)
         {
             return QualifiedBlock3FieldsList.Contains(fieldName);
@@ -368,11 +374,17 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
             {FIELD_165,"Payment release information receiver (For FINInform services only)"},
 
+            {FIELD_177,"Submitted Date/Time"},
+
+            {FIELD_405,"Reason Code for N-Ack"},
+
             {FIELD_423,"Balance checkpoint date and time (for MIRS only)"},
             {FIELD_424,"Related reference (for MIRS only)"},
 
             {FIELD_433,"Sanctions screening information for the receiver"},
             {FIELD_434,"Payment controls information for receiver"},
+
+            {FIELD_451,"Accept / Reject Tag"},
         };
 
 
