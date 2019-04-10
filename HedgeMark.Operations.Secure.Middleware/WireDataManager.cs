@@ -50,8 +50,12 @@ namespace HMOSecureMiddleware
                                          .Include("hmsWireWorkflowLogs")
                                          .Include("hmsWireStatusLkup")
                                          .Include("hmsWirePurposeLkup")
-                                         .Include("hmsWireLogs").FirstOrDefault(s => s.hmsWireId == wireId) ?? new hmsWire();
+                                         .Include("hmsWireLogs").FirstOrDefault(s => s.hmsWireId == wireId);
             }
+
+
+            if (hmWire == null)
+                return null;
 
             hmWire.hmsWireLogs.ForEach(s =>
             {
