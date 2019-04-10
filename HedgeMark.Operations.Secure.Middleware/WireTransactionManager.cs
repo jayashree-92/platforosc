@@ -184,7 +184,7 @@ namespace HMOSecureMiddleware
                 WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.SwiftStatus.Completed, confirmationData.ConfirmationMessage);
 
             else if (!string.IsNullOrWhiteSpace(confirmationData.ExceptionMessage))
-                WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.SwiftStatus.Failed, string.Format("Wire Transaction Failed with error: {0}", confirmationData.ExceptionMessage));
+                WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.Failed, string.Format("Wire Transaction Failed with error: {0}", confirmationData.ExceptionMessage));
 
             //Put an entry to Wire Log table with the parameters used to create Swift Message
             LogInBoundWireTransaction(confirmationData, swiftMessage);

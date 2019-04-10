@@ -229,6 +229,7 @@
     <Content Include="Content\DataTables\css\dataTables.foundation.min.css" />
     <Content Include="Content\DataTables\css\dataTables.jqueryui.css" />
     <Content Include="Content\DataTables\css\dataTables.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\datatables.mark.css" />
     <Content Include="Content\DataTables\css\dataTables.material.css" />
     <Content Include="Content\DataTables\css\dataTables.material.min.css" />
     <Content Include="Content\DataTables\css\dataTables.semanticui.css" />
@@ -533,6 +534,7 @@
     <Content Include="Scripts\DataTables\dataTables.jqueryui.min.js" />
     <Content Include="Scripts\DataTables\dataTables.keyTable.js" />
     <Content Include="Scripts\DataTables\dataTables.keyTable.min.js" />
+    <Content Include="Scripts\DataTables\datatables.mark.js" />
     <Content Include="Scripts\DataTables\dataTables.material.js" />
     <Content Include="Scripts\DataTables\dataTables.material.min.js" />
     <Content Include="Scripts\DataTables\dataTables.responsive.js" />

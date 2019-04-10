@@ -54,21 +54,24 @@ HmOpsApp.controller("InboundLogsCtrl", function ($scope, $http, $timeout, $filte
                 "bDestroy": true,
                 "order": [[1, "desc"]],
                 "scrollX": true,
-                "scrollY": $("#tblInboundLogsDetails").offset().top + 450,
+                "scrollY": $("#tblInboundLogsDetails").offset().top + 900,
                 "aoColumns": [{
-                "sTitle": "Inbound Message",
-                "mData": "InBoundMessage",
+                    "sTitle": "Inbound Message",
+                    "mData": "InBoundMessage",
+                    "mRender": function (tdata) {
+                        return "<p class=\"swiftMessgeBlock\">" + tdata + "</p>";
+                    }
                 },
                 {
-                "mData": "CreatedAt", "sTitle": "Updated As Of",
-                "type": "dotnet-date",
-                "mRender": function (tdata, type, row) {
-                    if (tdata == null)
-                        return "-";
+                    "mData": "CreatedAt", "sTitle": "Received At",
+                    "type": "dotnet-date",
+                    "mRender": function (tdata, type, row) {
+                        if (tdata == null)
+                            return "-";
 
-                    return "<div  class='auditUpdatedAtColumn' title='" + getDateForToolTip(tdata) + "' date ='" + tdata + "'>" + $.getPrettyDate(tdata) + "</div>";
-                }
-            }],
+                        return "<div  class='auditUpdatedAtColumn' title='" + getDateForToolTip(tdata) + "' date ='" + tdata + "'>" + $.getPrettyDate(tdata) + "</div>";
+                    }
+                }],
                 "oLanguage": {
                     "sSearch": "",
                     "sEmptyTable": "No Inbound logs available for the selected context date.",
@@ -82,6 +85,7 @@ HmOpsApp.controller("InboundLogsCtrl", function ($scope, $http, $timeout, $filte
             notifyError(error.Message);
         });
     }
-
+    $scope.fnGetInboundLogs();
 });
 
+$("#liLogs").addClass("active");

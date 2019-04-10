@@ -147,19 +147,39 @@ namespace HMOSecureMiddleware
 
             //var wireTransactionLog = wireLogs.Count <= 1 ? wireLogs.FirstOrDefault() : wireLogs.LastOrDefault(s => s.WireStatusId == wireStatusId);
 
-            foreach (var wireTransactionLog in wireLogs)
+            foreach (var wireTransactionLog in wireLogs.OrderBy(s => s.WireStatusId).ToList())
             {
-
                 if (wireTransactionLog == null)
                     return swiftMessages;
 
-                swiftMessages.Add("Outbound" + (shouldIncludeMsgType ? wireTransactionLog.hmsWireMessageType.MessageType : string.Empty), SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.OutBoundSwiftMessage, true));
+                if (shouldIncludeMsgType)
+                {
+                    if (!string.IsNullOrWhiteSpace(wireTransactionLog.OutBoundSwiftMessage) && !swiftMessages.ContainsKey("Outbound"))
+                        swiftMessages.Add("Outbound", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.OutBoundSwiftMessage, true));
 
-                var ackLabel = string.Format("{0}Acknowledgement" + (shouldIncludeMsgType ? wireTransactionLog.hmsWireMessageType.MessageType : string.Empty), (swiftStatusId == (int)SwiftStatus.NegativeAcknowledged ? "N-" : string.Empty));
-                swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.ServiceSwiftMessage, true));
+                }
+                else if (!swiftMessages.ContainsKey("Outbound"))
+                    swiftMessages.Add("Outbound", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.OutBoundSwiftMessage, true));
 
-                swiftMessages.Add("Confirmation" + (shouldIncludeMsgType ? wireTransactionLog.hmsWireMessageType.MessageType : string.Empty), SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
+                var ackLabel = string.Format("{0}Acknowledgement", (swiftStatusId == (int)SwiftStatus.NegativeAcknowledged ? "N-" : string.Empty));
 
+
+                if (shouldIncludeMsgType)
+                {
+                    if (!string.IsNullOrWhiteSpace(wireTransactionLog.ServiceSwiftMessage) && !swiftMessages.ContainsKey(ackLabel))
+                        swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.ServiceSwiftMessage, true));
+                }
+                else if (!swiftMessages.ContainsKey(ackLabel))
+                    swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.ServiceSwiftMessage, true));
+
+
+                if (shouldIncludeMsgType)
+                {
+                    if (!string.IsNullOrWhiteSpace(wireTransactionLog.InBoundSwiftMessage) && !swiftMessages.ContainsKey("Confirmation"))
+                        swiftMessages.Add("Confirmation", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
+                }
+                else if (!swiftMessages.ContainsKey("Confirmation"))
+                    swiftMessages.Add("Confirmation", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
             }
 
             return swiftMessages;
@@ -342,6 +362,7 @@ namespace HMOSecureMiddleware
 
         public static List<hmsInBoundMQLog> GetInboundMQLogs(DateTime startDate, DateTime endDate)
         {
+            endDate = endDate.Date == DateTime.Now.Date ? DateTime.Now : endDate;
             using (var context = new OperationsSecureContext())
             {
                 return context.hmsInBoundMQLogs.Where(s => s.CreatedAt >= startDate && s.CreatedAt <= endDate).ToList();

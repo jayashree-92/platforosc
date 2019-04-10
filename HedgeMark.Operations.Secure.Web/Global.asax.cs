@@ -130,19 +130,19 @@ namespace HMOSecureWeb
         {
             Session.Timeout = ConfigurationManagerWrapper.IntegerSetting("GlobalSessionTimeOut", 60);
             Session["SessionStartTime"] = DateTime.Now;
-            if (!ActiveUsers.Contains(User.Identity.Name))
-            {
-                ActiveUsers.Add(User.Identity.Name);
-                hmsUserAuditLog auditData = new hmsUserAuditLog
-                {
-                    Action = "Log In",
-                    Module = "Account",
-                    Log = "Signed into Secure System",
-                    CreatedAt = DateTime.Now,
-                    UserName = User.Identity.Name
-                };
-                AuditManager.LogAudit(auditData);
-            }
+            //if (!ActiveUsers.Contains(User.Identity.Name))
+            //{
+            //    ActiveUsers.Add(User.Identity.Name);
+            //    hmsUserAuditLog auditData = new hmsUserAuditLog
+            //    {
+            //        Action = "Logged In",
+            //        Module = "Account",
+            //        Log = "Signed into Secure System",
+            //        CreatedAt = DateTime.Now,
+            //        UserName = User.Identity.Name
+            //    };
+            //    AuditManager.LogAudit(auditData);
+            //}
 
             Session["userName"] = User.Identity.Name;
         }
@@ -172,15 +172,15 @@ namespace HMOSecureWeb
 
             string userNameOut;
             ActiveUsers.TryTake(out userNameOut);
-            hmsUserAuditLog auditData = new hmsUserAuditLog
-            {
-                Action = "Log Out",
-                Module = "Account",
-                Log = "Signed out from Secure System",
-                CreatedAt = DateTime.Now,
-                UserName = User.Identity.Name
-            };
-            AuditManager.LogAudit(auditData);
+            //hmsUserAuditLog auditData = new hmsUserAuditLog
+            //{
+            //    Action = "Log Out",
+            //    Module = "Account",
+            //    Log = "Signed out from Secure System",
+            //    CreatedAt = DateTime.Now,
+            //    UserName = User.Identity.Name
+            //};
+            //AuditManager.LogAudit(auditData);
 
         }
 

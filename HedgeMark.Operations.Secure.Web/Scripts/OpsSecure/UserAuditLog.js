@@ -40,6 +40,11 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
         createAuditLogsTable($scope.RangeStartDate, $scope.RangeEndDate, moduleText);
     }
 
+
+    var actions = []; actions.push("All");
+    // The indices are hardcoded w.r.t table index   
+    var actionIndex = 0;
+
     function createAuditLogsTable(auditStartDate, auditEndDate, module) {
         $("#btnGetAuditLogs").button("loading");
         fnDestroyDataTable("#tblAuditLogsDetails");
@@ -55,78 +60,127 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                 //"sScrollX": "100%",
                 //"sScrollXInner": "100%",
                 "bDestroy": true,
-                "order": [[2, "desc"]],
+                "order": [[7, "desc"]],
                 "scrollX": true,
                 "scrollY": $("#tblAuditLogsDetails").offset().top + 450,
-                "aoColumns": [{
-                    "sTitle": "Description",
-                    "mData": "Log",
-                    "className": "seeFullText"
-                },
-                {
-                    "sTitle": "Action",
-                    "mData": "Action",
-                    "mRender": function (tdata, type, row) {
-                        switch (tdata) {
-                            case "Log In": return "<span class='text-info'>Log In</span>";
-                            case "Log Out": return "<span class='text-success'>Log Out</span>";
-                            case "Edited": return "<span class='text-warning'>Edited</span>";
-                        }
+                "initComplete": function (settings, json) {
+                    var actionsMessage = "";
+                    if (actions.length > 1) {
+                        $(actions).each(function (i, action) {
+                            if (action == "Deleted") {
+                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-danger\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
+                            }
+                            else if (action == "Edited") {
+                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-warning\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
+                            }
+                            else if (action == "Added") {
+                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-success\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
+                            }
+                            else if (action == "All") {
+                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-default active\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
+                            }
+                        });
+                        $("div.toolbar").append("<div class=\"btn-group btn-group-sm\" data-toggle=\"buttons-radio\" id = \"actionFilter\">" + actionsMessage + "</div>");
                     }
                 },
+                "mark": { "exclude": [".ignoreMark"] },
+                "columnDefs": [{ className: "ignoreMark", "targets": [0] }],
+                "aoColumns": [
+                    {
+                        "sTitle": "Action",
+                        "mData": "Action",
+                        "mRender": function (tdata, type, row) {
+
+
+                            if ($.inArray(tdata, actions) < 0) {
+                                actions.push(tdata);
+                            }
+
+                            switch (tdata) {
+
+
+
+                                case "Logged In":
+                                case "Logged Out":
+                                    return "<span class=\"label label-default ignoreMark\"> " + tdata + "</span>";
+                                case "Edited":
+                                    return "<span class=\"label label-warning ignoreMark\"> " + tdata + "</span>";
+                                case "Added":
+                                    return "<span class=\"label label-success ignoreMark\"> " + tdata + "</span>";
+                            }
+                        }
+                    },
+
+                    {
+                        "sTitle": "Description",
+                        "mData": "Log",
+                        "className": "seeFullText"
+                    },
+
                 {
                     "sTitle": "Field Modified",
                     "mData": "Field",
                     "mRender": function (tdata, type, row) {
+                        return tdata != null ? tdata : "";
+                    }
+                },
+                {
+                    "sTitle": "Previous State Value",
+                    "mData": "PreviousStateValue",
+                    "mRender": function (tdata, type, row) {
                         switch (row.Action) {
-                            case "Log In": 
-                            case "Log Out": return "<span class='text-success'>Log Out</span>";
-                            case "Edited": return "<span class='text-warning'>Edited</span>";
+                            case "Log In":
+                            case "Log Out":
+                            case "Added": return "";
+                            case "Edited": if (row.Field == "Wire Status") {
+                                return $scope.getWireStatus(row.PreviousStateValue);
+                            }
+                            else {
+                                return "<b>" + $scope.getFieldValue(row.Field, row.PreviousStateValue) + "</b>";
+                            }
+
                         }
+                    }
+                },
+                {
+                    "sTitle": "Modified State Value",
+                    "mData": "ModifiedStateValue",
+                    "mRender": function (tdata, type, row) {
+                        switch (row.Action) {
+                            case "Log In":
+                            case "Log Out": return "";
+                            case "Edited":
+                            case "Added": if (row.Field == "Wire Status") {
+                                return $scope.getWireStatus(row.ModifiedStateValue);
+                            }
+                            else {
+                                return "<b>" + $scope.getFieldValue(row.Field, row.ModifiedStateValue) + "</b>";
+                            }
+                        }
+                    }
+                },
+                {
+                    "sTitle": "Origin",
+                    "mData": "IsLogFromOps",
+                    "mRender": function (tdata, type, row) {
+                        return tdata == true || row.Action != "Edited" ? "Operations Secure" : "Operations";
                     }
                 },
                 {
                     "sTitle": "User",
-                    "mData": "ModifiedStateValue",
+                    "mData": "UserName",
                     "className": "seeFullText"
                 },
                 {
-                "sTitle": "User",
-                "mData": "UserName",
-                "className": "seeFullText"
-                },
-                {
-                "sTitle": "User Activity",
-                "mData": "hmsUserAuditLogId",
-                "mRender": function (tdata, type, row) {
-                    switch (row.Action) {
-                        case "Log In": return row.UserName + " logged into the Operations Secure System.";
-                        case "Log Out": return row.UserName + " logged out from the Operations Secure System.";
-                        case "Added": if (row.Field == "Wire Status") {
-                            return row.UserName + " added the status as " + $scope.getWireStatus(row.ModifiedStateValue) + (row.IsLogFromOps ? " in Operations." : "");
-                        }
-                        else {
-                            return row.UserName + " added " + row.Field + " as <b>" + $scope.getFieldValue(row.Field, row.ModifiedStateValue) + "</b>" + (row.IsLogFromOps ? " in Operations." : "");
-                        }
-                        case "Edited": if (row.Field == "Wire Status") {
-                            return row.UserName + " modified the status from " + $scope.getWireStatus(row.PreviousStateValue) + " to " + $scope.getWireStatus(row.ModifiedStateValue) + (row.IsLogFromOps ? " in Operations." : "");
-                        }
-                        else {
-                            return row.UserName + " modified " + row.Field + " from <b>" + $scope.getFieldValue(row.Field, row.PreviousStateValue) + "</b>" + " to <b>" + $scope.getFieldValue(row.Field, row.ModifiedStateValue) + "</b>" + (row.IsLogFromOps ? " in Operations." : "");
-                        }
-                    }
-                }
-            },
-            {
-                "mData": "CreatedAt", "sTitle": "Updated As Of",
-                "type": "dotnet-date",
-                "mRender": function (tdata, type, row) {
-                    if (tdata == null)
-                        return "-";
+                    "mData": "CreatedAt", "sTitle": "Updated As Of",
+                    "type": "dotnet-date",
+                    "mRender": function (tdata, type, row) {
+                        if (tdata == null)
+                            return "-";
 
-                    return "<div  class='auditUpdatedAtColumn' title='" + getDateForToolTip(tdata) + "' date ='" + tdata + "'>" + $.getPrettyDate(tdata) + "</div>";
-                }
-            }],
+                        return "<div  class='auditUpdatedAtColumn' title='" + getDateForToolTip(tdata) + "' date ='" + tdata + "'>" + $.getPrettyDate(tdata) + "</div>";
+                    }
+                }],
                 "oLanguage": {
                     "sSearch": "",
                     "sEmptyTable": "No audit logs available for the selected context date.",
@@ -141,14 +195,13 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
         });
     }
 
-    $scope.getWireStatus = function (wireStatusId)
-    {
+    $scope.getWireStatus = function (wireStatusId) {
         switch (parseInt(wireStatusId)) {
-            case 1: return "<span class='text-info'>Drafted</span>";
-            case 2: return "<span class='text-warning'>Initiated</span>";
-            case 3: return "<span class='text-danger'>Approved</span>";
-            case 4: return "<span class='text-blocked'>Cancelled</span>";
-            case 5: return "<span class='text-danger'>Failed</span>";
+            case 1: return "<span class='text-info'><b>Drafted</b></span>";
+            case 2: return "<span class='text-warning'><b>Initiated</b></span>";
+            case 3: return "<span class='text-success'><b>Approved</b></span>";
+            case 4: return "<span class='text-blocked'><b>Cancelled</b></span>";
+            case 5: return "<span class='text-danger'><b>Failed</b></span>";
         }
     }
 
@@ -164,8 +217,11 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
     $scope.DeliveryCharges = [{ id: "BEN", text: "Beneficiary" }, { id: "OUR", text: "Our customer charged" }, { id: "SHA", text: " Shared charges" }];
 
     $http.get("/Audit/GetMessageTypesForAudits").then(function (response) {
-       $scope.MessageTypes = response.data;
+        $scope.MessageTypes = response.data;
     });
+
+
+    $scope.fnGetUserAuditLogs();
 
 });
 

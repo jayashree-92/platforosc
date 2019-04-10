@@ -26,7 +26,7 @@ namespace HMOSecureWeb
                 "~/Scripts/angular-mocks.js",
                 "~/Scripts/angular-parse-ext.js",
                 "~/Scripts/angular-resource.js",
-                "~/Scripts/angular-sanitize.js"
+                "~/Scripts/angular-sanitize.js",
             //"~/Scripts/angular-route.js",
             //"~/Scripts/angular-sanitize.js",
             //"~/Scripts/angular-scenario.js",
@@ -34,7 +34,7 @@ namespace HMOSecureWeb
 
             //"~/Scripts/detect-element-resize.js",
             //"~/Scripts/tree.jquery.js",
-            //"~/Scripts/jquery.mark.js",
+            "~/Scripts/jquery.mark.js"
             //"~/Scripts/jquery.resize.js"
             ));
 
@@ -55,7 +55,7 @@ namespace HMOSecureWeb
                 "~/Scripts/DataTables/dataTables.rowReorder.js",
                 "~/Scripts/DataTables/dataTables.colReorder.js",
                 "~/Scripts/DataTables/dataTables.keyTable.js",
-                //"~/Scripts/DataTables/datatables.mark.js",
+                "~/Scripts/DataTables/datatables.mark.js",
                 "~/Scripts/dataTables-extentions.js"));
 
 

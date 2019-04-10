@@ -102,7 +102,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         "mRender": function (tdata, type, row) {
                             switch (tdata) {
                                 case 1: return "<label class='label label-default'>Not Started</label>";
-                                case 2: return "<label class='label label-info'>Processing</label>";
+                                case 2: return "<label class='label label-warning'>Pending Ack</label>";
                                 case 3: return "<label class='label label-success'>Acknowledged</label>";
                                 case 4: return "<label class='label label-danger'>N-Acknowledged</label>";
                                 case 5: return "<label class='label label-success'>Completed</label>";

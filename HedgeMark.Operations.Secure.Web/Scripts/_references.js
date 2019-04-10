@@ -43,6 +43,7 @@
 /// <reference path="datatables/datatables.foundation.min.js" />
 /// <reference path="datatables/datatables.jqueryui.min.js" />
 /// <reference path="datatables/datatables.keytable.min.js" />
+/// <reference path="datatables/datatables.mark.js" />
 /// <reference path="datatables/datatables.material.min.js" />
 /// <reference path="datatables/datatables.responsive.min.js" />
 /// <reference path="datatables/datatables.rowgroup.min.js" />

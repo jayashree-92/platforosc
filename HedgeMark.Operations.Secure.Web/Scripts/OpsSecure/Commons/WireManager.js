@@ -164,7 +164,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     }
                     else {
                         $("#wireErrorStatus").collapse("show");
-                        $scope.validationMsg = "Deadline crossed. Please select a future date for settlement.";
+                        $scope.validationMsg = "Note:Deadline crossed. Please select a future date for settlement.";
                     }
                 }
                 $interval.cancel($scope.promise);
@@ -202,7 +202,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     $("#wireErrorStatus").collapse("hide");
                 else {
                     $("#wireErrorStatus").collapse("show");
-                    $scope.validationMsg = "An Initiated wire exists for the same value date, purpose, sending and receiving account. Please change values accordingly.";
+                    $scope.validationMsg = "Note:An Initiated wire exists for the same value date, purpose, sending and receiving account.";
                 }
             });
         }

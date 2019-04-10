@@ -316,5 +316,27 @@ GSILGB2XXXX
 
         }
 
+        [TestMethod]
+        public void AckMessageInboundParserTest2()
+        {
+            var message = @"{1:F01HMRKUS30XXXX1001100001}{2:I103IRVTBEB0XXXXN}{3:{121:fc4d9690-ffe6-405d-af33-3b7dc16a4503}}{4:
+:20:TESTDMOTRN116
+:23B:CRED
+:32A:190410USD1000000,
+:50K:/314908818400
+GS
+:52A:/314908818400
+IRVTBEB0
+:57D:/221000089XXX
+CITIBANK N.A.
+:59:/314908818400
+BNY Mellon
+:71A:BEN
+-}";
+
+            var formattedMessage = SwiftMessageInterpreter.GetDetailedFormatted(message).Trim();
+
+        }
+
     }
 }

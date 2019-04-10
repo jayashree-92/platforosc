@@ -102,7 +102,7 @@ namespace HMOSecureWeb.Controllers
                 wireStatusDetails = context.hmsWires.Include("hmsWireMessageType")
                                                     .Include("hmsWirePurposeLkup")
                                                     .Include("hmsWireStatusLkup")
-                                                    .Where(s => s.ContextDate >= startContextDate && s.ContextDate <= endContextDate && (statusId == 0 || s.WireStatusId == statusId)).ToList();
+                                                    .Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (statusId == 0 || s.WireStatusId == statusId)).ToList();
             }
 
             List<dmaAgreementOnBoarding> wireAgreements;
@@ -390,9 +390,15 @@ namespace HMOSecureWeb.Controllers
             {
                 cashSweepTimeZone = cashSweepTimeZone ?? "";
                 TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones.ContainsKey(cashSweepTimeZone) ? TimeZones[cashSweepTimeZone] : TimeZones[FileSystemManager.DefaultTimeZone]);
-                var actualTime = TimeZoneInfo.ConvertTime(cashSweep, customTimeZone);
-                var cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(actualTime, "Eastern Standard Time");
-                var cutOffTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(cutOff, "Eastern Standard Time");
+                var cashSweepTime = new DateTime();
+                if (cashSweepTimeZone != "EST")
+                {
+                    var actualTime = TimeZoneInfo.ConvertTime(cashSweep, customTimeZone);
+                    cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(actualTime, "Eastern Standard Time");
+                }
+                else
+                    cashSweepTime = cashSweep;
+                var cutOffTime = cutOff;
                 var currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
 
                 TimeSpan offSetTime;
