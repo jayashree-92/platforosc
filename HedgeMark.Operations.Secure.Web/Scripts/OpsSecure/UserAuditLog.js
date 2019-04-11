@@ -97,9 +97,6 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                             }
 
                             switch (tdata) {
-
-
-
                                 case "Logged In":
                                 case "Logged Out":
                                     return "<span class=\"label label-default ignoreMark\"> " + tdata + "</span>";

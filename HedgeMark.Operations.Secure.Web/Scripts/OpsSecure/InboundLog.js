@@ -54,7 +54,7 @@ HmOpsApp.controller("InboundLogsCtrl", function ($scope, $http, $timeout, $filte
                 "bDestroy": true,
                 "order": [[1, "desc"]],
                 "scrollX": true,
-                "scrollY": $("#tblInboundLogsDetails").offset().top + 900,
+                "scrollY": $("#tblInboundLogsDetails").offset().top + 550,
                 "aoColumns": [{
                     "sTitle": "Inbound Message",
                     "mData": "InBoundMessage",
