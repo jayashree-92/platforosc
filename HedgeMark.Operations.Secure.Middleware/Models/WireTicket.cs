@@ -58,8 +58,8 @@ namespace HMOSecureMiddleware.Models
             //Please note here, Field 21 is the related reference number of corresponding transaction
 
             WireId = IsAckOrNack
-                ? SwiftMessage.UnderlyingOriginalSwiftMessage.GetFieldValue(FieldDirectory.FIELD_20).Replace(string.Format("{0}DMO", Utility.Environment.ToUpper()), string.Empty).Replace("C", string.Empty).ToInt()
-                : SwiftMessage.GetFieldValue(FieldDirectory.FIELD_21).Replace(string.Format("{0}DMO", Utility.Environment.ToUpper()), string.Empty).ToInt();
+                ? SwiftMessage.UnderlyingOriginalSwiftMessage.GetFieldValue(FieldDirectory.FIELD_20).Replace(string.Format("{0}DMO", Utility.Environment.ToUpper()), string.Empty).Replace("C", string.Empty).Replace("TRN", string.Empty).ToInt()
+                : SwiftMessage.GetFieldValue(FieldDirectory.FIELD_21).Replace(string.Format("{0}DMO", Utility.Environment.ToUpper()), string.Empty).Replace("TRN", string.Empty).ToInt();
         }
 
         public bool IsAckOrNack { get; private set; }

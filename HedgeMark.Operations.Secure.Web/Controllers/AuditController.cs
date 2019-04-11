@@ -20,6 +20,7 @@ namespace HMOSecureWeb.Controllers
         {
             return View();
         }
+
         public JsonResult GetInboundMQLogs(DateTime startDate, DateTime endDate)
         {
             var inBoundMQLogs = WireDataManager.GetInboundMQLogs(startDate, endDate);

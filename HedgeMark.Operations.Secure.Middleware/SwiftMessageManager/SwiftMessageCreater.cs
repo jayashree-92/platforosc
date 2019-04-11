@@ -51,7 +51,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f11S = new Field11S()
                 .setDate(wire.HMWire.ValueDate)
-                .setMT(wire.HMWire.hmsWireMessageType.MessageType);
+                .setMT(wire.HMWire.hmsWireMessageType.MessageType.Replace(" ", string.Empty));
             return f11S;
         }
 
