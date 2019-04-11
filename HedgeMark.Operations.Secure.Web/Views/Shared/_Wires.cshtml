@@ -19,7 +19,7 @@
                         <span ng-style="{'margin-left': isApprovedOrFailed ? '0px' : '55px' }">|&nbsp;Wire Status: <span id="spnwireStatus"><b>{{ getWireStatus() }}</b></span></span>
                         <span ng-style="{'margin-left': isApprovedOrFailed ? '0px' : '55px' }" ng-show="WireTicket.SwiftStatusId > 1">|&nbsp;Swift Status: <span id="spnswiftStatus"><b>{{ getSwiftStatus() }}</b></span></span>
                     </p>
-                    <div class="panel panel-heading collapse" id="wireErrorStatus" style="background: #F5F5F5;">
+                    <div class="panel panel-heading collapse" id="wireErrorStatus" style="background: #F5F5F5;text-transform: inherit; font-size:13px;">
                         <p style="color: darkred; font-weight:bold;"> {{ validationMsg }}</p>
                     </div>
                 </span>
@@ -212,6 +212,25 @@
                                 </div>
                                 <div class="col-sm-8 col-md-5 col-lg-5">
                                     <input type="text" ng-model="accountDetail.Reference" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Swift Group </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" ng-model="acccountDetail.SwiftGroup" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Sender BIC </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input name="accountnumber" type="text" class="form-control" ng-model="accountDetail.SendersBIC" readonly />
                                 </div>
                             </div>
                         </div>
@@ -420,6 +439,25 @@
                                 </div>
                                 <div class="col-sm-8 col-md-5 col-lg-5">
                                     <input type="text" ng-model="receivingAccountDetail.Reference" class="form-control control-label" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Swift Group </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" ng-model="receivingAcccountDetail.SwiftGroup" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-6">
+                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                    <label class="control-label">Sender BIC </label>
+                                </div>
+                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                    <input name="accountnumber" type="text" class="form-control" ng-model="receivingAccountDetail.SendersBIC" readonly />
                                 </div>
                             </div>
                         </div>

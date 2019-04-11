@@ -40,6 +40,11 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
         createAuditLogsTable($scope.RangeStartDate, $scope.RangeEndDate, moduleText);
     }
 
+
+    var actions = []; actions.push("All");
+    // The indices are hardcoded w.r.t table index   
+    var actionIndex = 0;
+
     function createAuditLogsTable(auditStartDate, auditEndDate, module) {
         $("#btnGetAuditLogs").button("loading");
         fnDestroyDataTable("#tblAuditLogsDetails");
@@ -58,22 +63,60 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                 "order": [[7, "desc"]],
                 "scrollX": true,
                 "scrollY": $("#tblAuditLogsDetails").offset().top + 450,
-                "aoColumns": [{
-                    "sTitle": "Description",
-                    "mData": "Log",
-                    "className": "seeFullText"
-                },
-                {
-                    "sTitle": "Action",
-                    "mData": "Action",
-                    "mRender": function (tdata, type, row) {
-                        switch (tdata) {
-                            case "Log In": return "<span class='text-info'>Log In</span>";
-                            case "Log Out": return "<span class='text-success'>Log Out</span>";
-                            case "Edited": return "<span class='text-warning'>Edited</span>";
-                        }
+                "initComplete": function (settings, json) {
+                    var actionsMessage = "";
+                    if (actions.length > 1) {
+                        $(actions).each(function (i, action) {
+                            if (action == "Deleted") {
+                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-danger\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
+                            }
+                            else if (action == "Edited") {
+                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-warning\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
+                            }
+                            else if (action == "Added") {
+                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-success\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
+                            }
+                            else if (action == "All") {
+                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-default active\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
+                            }
+                        });
+                        $("div.toolbar").append("<div class=\"btn-group btn-group-sm\" data-toggle=\"buttons-radio\" id = \"actionFilter\">" + actionsMessage + "</div>");
                     }
                 },
+                "mark": { "exclude": [".ignoreMark"] },
+                "columnDefs": [{ className: "ignoreMark", "targets": [0] }],
+                "aoColumns": [
+                    {
+                        "sTitle": "Action",
+                        "mData": "Action",
+                        "mRender": function (tdata, type, row) {
+
+
+                            if ($.inArray(tdata, actions) < 0) {
+                                actions.push(tdata);
+                            }
+
+                            switch (tdata) {
+
+
+
+                                case "Logged In":
+                                case "Logged Out":
+                                    return "<span class=\"label label-default ignoreMark\"> " + tdata + "</span>";
+                                case "Edited":
+                                    return "<span class=\"label label-warning ignoreMark\"> " + tdata + "</span>";
+                                case "Added":
+                                    return "<span class=\"label label-success ignoreMark\"> " + tdata + "</span>";
+                            }
+                        }
+                    },
+
+                    {
+                        "sTitle": "Description",
+                        "mData": "Log",
+                        "className": "seeFullText"
+                    },
+
                 {
                     "sTitle": "Field Modified",
                     "mData": "Field",
@@ -85,15 +128,34 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     "sTitle": "Previous State Value",
                     "mData": "PreviousStateValue",
                     "mRender": function (tdata, type, row) {
+                        return tdata != null ? tdata : "";
+                    }
+                },
+                {
+                    "sTitle": "Previous State Value",
+                    "mData": "PreviousStateValue",
+                    "mRender": function (tdata, type, row) {
                         switch (row.Action) {
+<<<<<<< HEAD
                             case "Log In": 
                             case "Log Out": return "";
                             case "Edited": if (row.Field == "Wire Status") {
                                 return  $scope.getWireStatus(row.PreviousStateValue);
+=======
+                            case "Log In":
+                            case "Log Out":
+                            case "Added": return "";
+                            case "Edited": if (row.Field == "Wire Status") {
+                                return $scope.getWireStatus(row.PreviousStateValue);
+>>>>>>> 06d282f95336b758aedf29b94430fa49dcee3096
                             }
                             else {
                                 return "<b>" + $scope.getFieldValue(row.Field, row.PreviousStateValue) + "</b>";
                             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 06d282f95336b758aedf29b94430fa49dcee3096
                         }
                     }
                 },
@@ -102,9 +164,16 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     "mData": "ModifiedStateValue",
                     "mRender": function (tdata, type, row) {
                         switch (row.Action) {
+<<<<<<< HEAD
                             case "Log In": 
                             case "Log Out": return "";
                             case "Edited": if (row.Field == "Wire Status") {
+=======
+                            case "Log In":
+                            case "Log Out": return "";
+                            case "Edited":
+                            case "Added": if (row.Field == "Wire Status") {
+>>>>>>> 06d282f95336b758aedf29b94430fa49dcee3096
                                 return $scope.getWireStatus(row.ModifiedStateValue);
                             }
                             else {
@@ -112,6 +181,16 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                             }
                         }
                     }
+<<<<<<< HEAD
+                },
+                {
+                    "sTitle": "Origin",
+                    "mData": "IsLogFromOps",
+                    "mRender": function (tdata, type, row) {
+                        return tdata == true || row.Action != "Edited" ? "Operations Secure" : "Operations";
+                    }
+=======
+>>>>>>> 06d282f95336b758aedf29b94430fa49dcee3096
                 },
                 {
                     "sTitle": "Origin",
@@ -121,11 +200,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     }
                 },
                 {
-                "sTitle": "User",
-                "mData": "UserName",
-                "className": "seeFullText"
-                },
-                {
+<<<<<<< HEAD
                 "mData": "CreatedAt", "sTitle": "Updated As Of",
                 "type": "dotnet-date",
                 "mRender": function (tdata, type, row) {
@@ -135,6 +210,22 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     return "<div  class='auditUpdatedAtColumn' title='" + getDateForToolTip(tdata) + "' date ='" + tdata + "'>" + $.getPrettyDate(tdata) + "</div>";
                 }
             }],
+=======
+                    "sTitle": "User",
+                    "mData": "UserName",
+                    "className": "seeFullText"
+                },
+                {
+                    "mData": "CreatedAt", "sTitle": "Updated As Of",
+                    "type": "dotnet-date",
+                    "mRender": function (tdata, type, row) {
+                        if (tdata == null)
+                            return "-";
+
+                        return "<div  class='auditUpdatedAtColumn' title='" + getDateForToolTip(tdata) + "' date ='" + tdata + "'>" + $.getPrettyDate(tdata) + "</div>";
+                    }
+                }],
+>>>>>>> 06d282f95336b758aedf29b94430fa49dcee3096
                 "oLanguage": {
                     "sSearch": "",
                     "sEmptyTable": "No audit logs available for the selected context date.",
@@ -149,14 +240,13 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
         });
     }
 
-    $scope.getWireStatus = function (wireStatusId)
-    {
+    $scope.getWireStatus = function (wireStatusId) {
         switch (parseInt(wireStatusId)) {
-            case 1: return "<span class='text-info'>Drafted</span>";
-            case 2: return "<span class='text-warning'>Initiated</span>";
-            case 3: return "<span class='text-danger'>Approved</span>";
-            case 4: return "<span class='text-blocked'>Cancelled</span>";
-            case 5: return "<span class='text-danger'>Failed</span>";
+            case 1: return "<span class='text-info'><b>Drafted</b></span>";
+            case 2: return "<span class='text-warning'><b>Initiated</b></span>";
+            case 3: return "<span class='text-success'><b>Approved</b></span>";
+            case 4: return "<span class='text-blocked'><b>Cancelled</b></span>";
+            case 5: return "<span class='text-danger'><b>Failed</b></span>";
         }
     }
 
@@ -172,8 +262,11 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
     $scope.DeliveryCharges = [{ id: "BEN", text: "Beneficiary" }, { id: "OUR", text: "Our customer charged" }, { id: "SHA", text: " Shared charges" }];
 
     $http.get("/Audit/GetMessageTypesForAudits").then(function (response) {
-       $scope.MessageTypes = response.data;
+        $scope.MessageTypes = response.data;
     });
+
+
+    $scope.fnGetUserAuditLogs();
 
 });
 

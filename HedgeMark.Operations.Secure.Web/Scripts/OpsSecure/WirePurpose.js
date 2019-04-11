@@ -110,11 +110,19 @@ HmOpsApp.controller("WirePurposeMgmtCtrl", function ($scope, $http, $timeout) {
             return;
         }
 
-        $http.post("/Home/ApproveOrRejectWirePurpose?wirePurposeId=" + wirePurpose.hmsWirePurposeId + "&isApproved=" + isApproved).then(function (response) {
-            $scope.fnGetWirePurposes();
-        }, function () {
-            notifyError("failed to perform the changes");
+
+        bootbox.confirm("Are you sure you want to " + (isApproved ? "approve" : "reject") + " the selected purpose ?", function (result) {
+            if (!result) {
+                return;
+            } else {
+                $http.post("/Home/ApproveOrRejectWirePurpose?wirePurposeId=" + wirePurpose.hmsWirePurposeId + "&isApproved=" + isApproved).then(function (response) {
+                    $scope.fnGetWirePurposes();
+                }, function () {
+                    notifyError("failed to perform the changes");
+                });
+            }
         });
+
     };
 
 

@@ -214,7 +214,7 @@ IF NOT EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME = 'hmsInBoundMQLogs_PK')
 BEGIN
 	ALTER TABLE [dbo].[hmsInBoundMQLogs]  WITH CHECK ADD CONSTRAINT hmsInBoundMQLogs_PK PRIMARY KEY NONCLUSTERED (hmsInBoundMQLogsId)
 END
-
+GO
 
 IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'CreatedBy' and TABLE_NAME = 'hmsWirePurposeLkup')
 BEGIN
@@ -247,7 +247,8 @@ BEGIN
 END
 GO
 
-
-
-
-
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME = 'UK_hmsWires_ValueDate_WirePurposeId_OnBoardAccountId_OnBoardSSITemplateId')
+BEGIN
+	ALTER TABLE [dbo].[hmsWires]  DROP CONSTRAINT UK_hmsWires_ValueDate_WirePurposeId_OnBoardAccountId_OnBoardSSITemplateId
+END
+GO
