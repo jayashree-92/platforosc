@@ -64,6 +64,7 @@
 /// <reference path="dropzone/dropzone-amd-module.min.js" />
 /// <reference path="esm/popper.min.js" />
 /// <reference path="esm/popper-utils.min.js" />
+/// <reference path="jquery.mark.js" />
 /// <reference path="jquery.validate.js" />
 /// <reference path="jquery.validate.unobtrusive.js" />
 /// <reference path="jquery-3.3.1.js" />
