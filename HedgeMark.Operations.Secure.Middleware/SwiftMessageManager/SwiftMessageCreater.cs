@@ -55,11 +55,18 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             return f11S;
         }
 
-        private static Field20 GetField20(WireTicket wire)
+        private static Field20 GetField20(WireTicket wire, bool isCancellation = false)
         {
             var environmentStr = Utility.Environment.ToUpper() == "PROD" ? string.Empty : Utility.Environment.ToUpper();
-            return new Field20(string.Format("{0}DMOTRN{1}", environmentStr, wire.WireId));
+            return new Field20(string.Format("{0}{1}DMO{2}", isCancellation ? "C" : string.Empty, environmentStr, wire.WireId));
         }
+
+        private static Field21 GetField21ForCancellation(WireTicket wire)
+        {
+            var environmentStr = Utility.Environment.ToUpper() == "PROD" ? string.Empty : Utility.Environment.ToUpper();
+            return new Field21().setReference(string.Format("{0}DMO{1}", environmentStr, wire.WireId));
+        }
+
 
         private static Field21 GetField21(WireTicket wire)
         {
@@ -289,9 +296,9 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             var mt192 = new MT192();
             SetSenderAndReceiverFromSSI(mt192, wire);
 
-            mt192.addField(GetField20(wire));
+            mt192.addField(GetField20(wire, true));
 
-            mt192.addField(GetField21(wire));
+            mt192.addField(GetField21ForCancellation(wire));
 
             mt192.addField(GetField11S(wire));
 
@@ -303,9 +310,9 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             var mt292 = new MT292();
             SetSenderAndReceiverFromSSI(mt292, wire);
 
-            mt292.addField(GetField20(wire));
+            mt292.addField(GetField20(wire, true));
 
-            mt292.addField(GetField21(wire));
+            mt292.addField(GetField21ForCancellation(wire));
 
             mt292.addField(GetField11S(wire));
 
