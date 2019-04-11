@@ -210,7 +210,9 @@ namespace HMOSecureWeb.Controllers
                                       || (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
                                       || (int)WireDataManager.WireStatus.Failed == wireTicket.HMWire.WireStatusId;
 
-            var isCancelEnabled = !isCompletedOrFailed && !isDeadlineCrossed;
+            var isApproved = (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId;
+
+            var isCancelEnabled = !isApproved && !isDeadlineCrossed || isCompletedOrFailed;
             var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CashSweepTime ?? new TimeSpan());
             var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CutoffTime ?? new TimeSpan());
             var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.Account.CashSweepTimeZone);
