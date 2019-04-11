@@ -9,7 +9,7 @@ using HedgeMark.SwiftMessageHandler.Model.MT.MT5XX;
 
 namespace HMOSecureMiddleware.SwiftMessageManager
 {
-    public class SwiftMessageCreater
+    public class OutboundSwiftMsgCreater
     {
         protected static readonly string HMBIC = ConfigurationManagerWrapper.StringSetting("HMBIC", "IRVTBEB0");
         protected static readonly string HMBICSender = string.Format("{0}{1}", HMBIC, ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX"));
@@ -51,7 +51,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f11S = new Field11S()
                 .setDate(wire.HMWire.ValueDate)
-                .setMT(wire.HMWire.hmsWireMessageType.MessageType.Replace(" ", string.Empty));
+                .setMT(wire.HMWire.hmsWireMessageType.MessageType.Replace(" ", string.Empty).Replace("COV", string.Empty));
             return f11S;
         }
 

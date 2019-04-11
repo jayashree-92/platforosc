@@ -72,7 +72,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             if (!string.IsNullOrWhiteSpace(BIC))
                 builder.AppendFormat("{0}{1}", Environment.NewLine, BIC);
 
-            return Value = builder.ToString();
+            return builder.ToString();
         }
 
         public T setDCMark<T>(T callingClass, string account)

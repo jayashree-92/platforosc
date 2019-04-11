@@ -82,8 +82,8 @@
     <Compile Include="Models\WireTicket.cs" />
     <Compile Include="NotificationManager.cs" />
     <Compile Include="Queues\QueueSystemManager.cs" />
-    <Compile Include="SwiftMessageManager\SwiftMessageCreater.cs" />
-    <Compile Include="SwiftMessageManager\SwiftMessageParser.cs" />
+    <Compile Include="SwiftMessageManager\OutboundSwiftMsgCreater.cs" />
+    <Compile Include="SwiftMessageManager\InboundSwiftMsgParser.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WireDataManager.cs" />

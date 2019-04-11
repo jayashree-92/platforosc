@@ -48,7 +48,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public override string GetValue()
         {
-            return Value = string.Format(":{0}/{1}/{2}", Qualifier, DataSource, Indicator);
+            return string.Format(":{0}/{1}/{2}", Qualifier, DataSource, Indicator);
         }
 
 

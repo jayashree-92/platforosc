@@ -27,7 +27,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public override string GetValue()
         {
-            return Value = string.Format(":{0}//{1}", Qualifier, Code);
+            return string.Format(":{0}//{1}", Qualifier, Code);
         }
 
         public override List<string> Components

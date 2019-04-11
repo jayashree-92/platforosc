@@ -44,7 +44,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             if (!string.IsNullOrWhiteSpace(NameAndFullAddress))
                 builder.Append(NameAndFullAddress);
 
-            return Value = builder.ToString();
+            return builder.ToString();
         }
 
         public string DCMark { get; set; }

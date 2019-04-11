@@ -46,7 +46,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             return component.GetComponentValue(value);
         }
 
-        public void SetValue(string newValue)
+        public virtual void SetValue(string newValue)
         {
             Value = newValue;
         }

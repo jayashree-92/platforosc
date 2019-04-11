@@ -166,6 +166,17 @@ namespace HedgeMark.SwiftMessageHandler.Tests
         //        }
 
         [TestMethod]
+        public void CreateMessageMt192WithBlocksTest3()
+        {
+            var m = new MT192();
+
+            m.Block4.AddField(new Field11S()
+                .setDate(new DateTime())
+                .setMT("192"));
+        }
+
+
+        [TestMethod]
         public void CreateMessageMt103WithBlocksTest3()
         {
             /*

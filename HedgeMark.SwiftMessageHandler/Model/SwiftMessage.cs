@@ -87,7 +87,12 @@ namespace HedgeMark.SwiftMessageHandler.Model
 
         public bool IsType(string messageType)
         {
-            return MessageType.Equals(messageType);
+            return Block2.MessageType.Equals(messageType);
+        }
+
+        public string GetMTType()
+        {
+            return Block2.MessageType;
         }
 
         public bool IsServiceMessage21()

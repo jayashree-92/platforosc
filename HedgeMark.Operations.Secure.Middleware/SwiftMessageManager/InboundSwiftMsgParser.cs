@@ -1,27 +1,36 @@
-﻿using HMOSecureMiddleware.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using HMOSecureMiddleware.Models;
+using HedgeMark.SwiftMessageHandler;
+using HedgeMark.SwiftMessageHandler.Model.MT;
 
 namespace HMOSecureMiddleware.SwiftMessageManager
 {
-    public class SwiftMessageParser
+    public class InboundSwiftMsgParser
     {
+        private static readonly List<string> HandledMTMessages = new List<string>() { MTDirectory.MT_196, MTDirectory.MT_296, MTDirectory.MT_900, MTDirectory.MT_910, MTDirectory.MT_548 };
+
         public static WireInBoundMessage ParseMessage(string swiftMessage)
         {
-            var inBoundWireMessage = new WireInBoundMessage(swiftMessage);
+            var inBoundWireMessage = new WireInBoundMessage().Parse(swiftMessage);
+
+            if (inBoundWireMessage.WireId == 0)
+                throw new Exception(string.Format("System cannot find Transaction ref for MT {0}: {1}", inBoundWireMessage.SwiftMessage.GetMTType(), inBoundWireMessage.FinMessage));
+
+            if (inBoundWireMessage.IsFeAck)
+                return inBoundWireMessage;
 
             if (inBoundWireMessage.IsAckOrNack)
                 return ParseServiceMessage(inBoundWireMessage);
-
-            //MT 900 Confirmation of Debit OR //MT 910 Confirmation of Credit
-            if (inBoundWireMessage.SwiftMessage.IsType("900") || inBoundWireMessage.SwiftMessage.IsType("910"))
-                return Parse900Or910Confirmation(inBoundWireMessage);
 
             //MT 548 Status of original 540/542 e.g.matched, settled, partial settlement, etc.      
             if (inBoundWireMessage.SwiftMessage.IsType("548"))
                 return Parse548(inBoundWireMessage);
 
-            //MT196 and 296 - confirmation of Cancelation
-            if (inBoundWireMessage.SwiftMessage.IsType("296") || inBoundWireMessage.SwiftMessage.IsType("196"))
-                return Parse196Or296Confirmation(inBoundWireMessage);
+            //MT196 and 296 and 900- confirmation of Cancelation
+            if (HandledMTMessages.Any(s => s.Equals(inBoundWireMessage.SwiftMessage.GetMTType())))
+                return ParseGeneralConfirmation(inBoundWireMessage);
 
             return ParseUnHandled(inBoundWireMessage);
         }
@@ -45,21 +54,14 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             return message;
         }
 
-        private static WireInBoundMessage Parse196Or296Confirmation(WireInBoundMessage message)
-        {
-            message.IsConfirmed = true;
-            message.ConfirmationMessage = message.SwiftMessage.GetFieldValue("76");
-
-            //We might need to compare with the original message and double check on the confirmation
-
-            return message;
-        }
-
-        private static WireInBoundMessage Parse900Or910Confirmation(WireInBoundMessage message)
+        private static WireInBoundMessage ParseGeneralConfirmation(WireInBoundMessage message)
         {
             message.IsConfirmed = true;
 
-            //We might need to compare with the original message and double check on the confirmation
+            //This applies to MT 196 and MT 296
+            var confirmationMessage = message.SwiftMessage.GetFieldValue("76");
+            if (!string.IsNullOrWhiteSpace(confirmationMessage))
+                message.ConfirmationMessage = confirmationMessage;
 
             return message;
         }

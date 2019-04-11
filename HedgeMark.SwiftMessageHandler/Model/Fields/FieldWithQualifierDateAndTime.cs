@@ -32,7 +32,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public override string GetValue()
         {
-            return Value = string.Format(":{0}//{1}{2}", Qualifier, DateString, TimeString);
+            return string.Format(":{0}//{1}{2}", Qualifier, DateString, TimeString);
         }
 
         public override List<string> Components

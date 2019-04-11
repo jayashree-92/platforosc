@@ -14,6 +14,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
                 {
                     {FieldConstants.MT},
                     {FieldConstants.DATE},
+                    {FieldConstants.SESSION},
+                    {FieldConstants.ISN},
                 };
             }
         }
@@ -52,9 +54,18 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public string MT { get; set; }
 
+
+
+        public string SessionNo { get; set; }
+        public string ISN { get; set; }
+
+        private static int _sessionNumber = 1000;
+        private static int _isn = 100000;
+
+
         public Field11S setMT(string name)
         {
-            MT = name.Replace(FieldConstants.MT, string.Empty).Trim();
+            MT = name.Replace(FieldConstants.MT, string.Empty).Trim().Substring(0, 3);
             return this;
         }
 
@@ -65,7 +76,15 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public override string GetValue()
         {
-            return Value = string.Format("{0}\r\n{1}", MT ?? string.Empty, DateString ?? string.Empty);
+            _sessionNumber++;
+            if (_sessionNumber == 9999)
+                _sessionNumber = 1000;
+
+            _isn++;
+            if (_isn == 999999)
+                _isn = 100000;
+
+            return string.Format("{0}\r\n{1}\r\n{2}{3}", MT ?? string.Empty, DateString ?? string.Empty, _sessionNumber, _isn);
         }
     }
 }

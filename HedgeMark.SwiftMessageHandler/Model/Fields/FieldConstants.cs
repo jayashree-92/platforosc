@@ -42,6 +42,9 @@
         public const string ISIN = "ISIN";
         public const string INDICATOR = "Indicator";
 
+        public const string SESSION = "Session";
+        public const string ISN = "ISN";
+
 
     }
 }

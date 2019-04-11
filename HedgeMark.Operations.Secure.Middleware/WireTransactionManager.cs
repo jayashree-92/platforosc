@@ -129,7 +129,7 @@ namespace HMOSecureMiddleware
         private static void CreateAndSendMessageToMQ(WireTicket wire, string messageType)
         {
             //Create Swift message
-            var swiftMessage = SwiftMessageCreater.CreateMessage(messageType, wire);
+            var swiftMessage = OutboundSwiftMsgCreater.CreateMessage(messageType, wire);
 
             //Validate Error Message 
             //SwiftMessageValidator.Validate(swiftMessage);
@@ -139,19 +139,11 @@ namespace HMOSecureMiddleware
 
             //Send the message to MQ
             if (!Utility.IsLocal())
-                QueueSystemManager.SendMessage(swiftMessage, wire.WireId);
+                QueueSystemManager.SendMessage(swiftMessage);
         }
 
-        public static void LogFrontEndAcknowledgment(string swiftMessage, long wireId)
+        public static void LogFrontEndAcknowledgment(long wireId)
         {
-            LogInBoundWireMessage(swiftMessage);
-
-            if (wireId == -1)
-            {
-                var confirmationData = SwiftMessageParser.ParseMessage(swiftMessage.Replace("FEACK", string.Empty));
-                wireId = confirmationData.WireId;
-            }
-
             using (var context = new OperationsSecureContext())
             {
                 var wireLog = context.hmsWireLogs.FirstOrDefault(s => s.hmsWireId == wireId);
@@ -169,11 +161,13 @@ namespace HMOSecureMiddleware
         public static void ProcessInboundMessage(string swiftMessage)
         {
             LogInBoundWireMessage(swiftMessage);
+            
+            var confirmationData = InboundSwiftMsgParser.ParseMessage(swiftMessage);
 
-            //var confirmationData = GetWireInBoundMessage(swiftMessage);
-            var confirmationData = SwiftMessageParser.ParseMessage(swiftMessage);
+            if (confirmationData.IsFeAck)
+                LogFrontEndAcknowledgment(confirmationData.WireId);
 
-            if (confirmationData.IsAckOrNack && confirmationData.IsAcknowledged)
+            else if (confirmationData.IsAckOrNack && confirmationData.IsAcknowledged)
                 WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.SwiftStatus.Acknowledged, string.Empty);
 
             else if (confirmationData.IsAckOrNack && confirmationData.IsNegativeAcknowledged)
@@ -199,7 +193,8 @@ namespace HMOSecureMiddleware
                     hmsWireId = wireTicket.WireId,
                     WireStatusId = wireTicket.HMWire.WireStatusId,
                     WireMessageTypeId = wireTicket.HMWire.WireMessageTypeId,
-                    RecCreatedAt = DateTime.Now
+                    RecCreatedAt = DateTime.Now,
+                    IsFrontEndAcknowleged = false
                 };
 
                 wireLog.OutBoundSwiftMessage = swiftMessage;
@@ -224,7 +219,8 @@ namespace HMOSecureMiddleware
                     hmsWireId = inBoundMsg.WireId,
                     WireStatusId = wireTicket.HMWire.WireStatusId,
                     WireMessageTypeId = wireTicket.HMWire.WireMessageTypeId,
-                    RecCreatedAt = DateTime.Now
+                    RecCreatedAt = DateTime.Now,
+                    IsFrontEndAcknowleged = false
                 };
 
                 if (inBoundMsg.IsAckOrNack)

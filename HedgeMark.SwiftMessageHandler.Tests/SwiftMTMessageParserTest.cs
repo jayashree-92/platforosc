@@ -2,6 +2,7 @@
 using HedgeMark.SwiftMessageHandler.Model;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT9XX;
+using HMOSecureMiddleware.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HedgeMark.SwiftMessageHandler.Tests
@@ -311,32 +312,33 @@ GSILGB2XXXX
 -}{1:F21HMRKUS30LXXX0013000006}{4:{177:1904080905}{451:0}} 
 ";
 
-            var confirmationData = HMOSecureMiddleware.SwiftMessageManager.SwiftMessageParser.ParseMessage(message);
+            var confirmationData = HMOSecureMiddleware.SwiftMessageManager.InboundSwiftMsgParser.ParseMessage(message);
             Assert.IsTrue(confirmationData.IsAckOrNack);
 
         }
 
+
         [TestMethod]
-        public void AckMessageInboundParserTest2()
+        public void ParserTestMT900()
         {
-            var message = @"{1:F01HMRKUS30XXXX1001100001}{2:I103IRVTBEB0XXXXN}{3:{121:fc4d9690-ffe6-405d-af33-3b7dc16a4503}}{4:
-:20:TESTDMOTRN116
-:23B:CRED
-:32A:190410USD1000000,
-:50K:/314908818400
-GS
-:52A:/314908818400
-IRVTBEB0
-:57D:/221000089XXX
-CITIBANK N.A.
-:59:/314908818400
-BNY Mellon
-:71A:BEN
--}";
-
-            var formattedMessage = SwiftMessageInterpreter.GetDetailedFormatted(message).Trim();
-
+            var message = @"{1:F01HMRKUS30AXXX0000000002}{2:O9001007190319HMRKUS30AXXX00000000021904110000N}{3:{108:GSP180720MT20201}}{4:
+:20:Test2
+:21:TESTDMOTRN117
+:25P:2483998401
+BSDTUS30
+:13D:1610171652+0100
+:32A:161017USD3,
+:50K:USD BNYM OMNIBUS USD
+:52D:BNY MELLON PITTSBURGH
+:72:ORD CUST:USD BNYM OMNIBUS USD
+                        ORD INST:B
+NY MELLON PITTSBURGH
+               REL REF:HUACHEN33C
+-}{5:{CHK:1A65DB62DB88}{TNG:}} 
+";
+            var confirmationData = new WireInBoundMessage().Parse(message); ;
+            Assert.IsFalse(confirmationData.IsAckOrNack);
+            Assert.AreEqual(117, confirmationData.WireId);
         }
-
     }
 }

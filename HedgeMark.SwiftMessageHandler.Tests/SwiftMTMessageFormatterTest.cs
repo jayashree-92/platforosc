@@ -192,90 +192,58 @@ CHK: 3916EF336FF7
         }
 
 
+        [TestMethod]
+        public void OutboundFormatterTest()
+        {
+            var message = @"{1:F01HMRKUS30XXXX1001100001}{2:I103IRVTBEB0XXXXN}{3:{121:fc4d9690-ffe6-405d-af33-3b7dc16a4503}}{4:
+:20:TESTDMOTRN116
+:23B:CRED
+:32A:190410USD1000000,
+:50K:/314908818400
+GS
+:52A:/314908818400
+IRVTBEB0
+:57D:/221000089XXX
+CITIBANK N.A.
+:59:/314908818400
+BNY Mellon
+:71A:BEN
+-}";
+            var formattedMessage = SwiftMessageInterpreter.GetDetailedFormatted(message).Trim();
 
-        //        [TestMethod]
-        //        public void TestSwiftMessageFormattingTest()
-        //        {
-        //            Locale locale = Locale.getDefault();
+            Assert.AreEqual(@"------------------------- Instance Type and Transmission -------------------------
+Copy sent to SWIFT
+Priority/Delivery : Normal
+------------------------- Message Header -----------------------------------------
+Swift    : MT 103
+Sender   : HMRKUS30XXXX
+Receiver : IRVTBEB0XXXX
+------------------------- Message Text -------------------------------------------
+20:  Transaction Reference Number
+        Reference: TESTDMOTRN116
+23B: Bank Operation Code
+        Type: CRED
+32A: Value Date/Currency/Interbank Settled Amount
+        Date: Apr 10, 2019
+        Currency: USD
+        Amount: 1,000,000.00
+50K: Ordering Customer
+        Account: 314908818400
+        Name and Address 2: GS
+52A: Ordering Institution
+        Account: 314908818400
+        BIC: IRVTBEB0
+57D: Account with Institution
+        Account: 221000089XXX
+        Name and Address 2: CITIBANK N.A.
+59:  Beneficiary Customer
+        Account: 314908818400
+        Name and Address 2: BNY Mellon
+71A: Details of Charges
+        Code: BEN
+------------------------------ End Of Message ------------------------------------", formattedMessage);
 
-        //            var builder = new StringBuilder();
-
-        //            /*
-        //             * With single value per field
-        //             */
-        //            builder.AppendLine("Sender: " + SwiftMessage103.getSender());
-        //            builder.AppendLine("Receiver: " + SwiftMessage103.getReceiver() + "\n");
-
-        //            foreach (Tag tag in SwiftMessage103.getBlock4().getTags().toArray())
-        //            {
-        //                var field = tag.asField();
-        //                builder.AppendLine(Field.getLabel(field.getName(), "103", null));
-        //                builder.AppendLine(field.getValueDisplay(locale) + "\n");
-        //            }
-
-        //            var singleValPerField = builder.ToString();
-
-        //            Assert.AreEqual(singleValPerField.Trim(), @"Sender: BACOARB1A0B2
-        //Receiver: ADRBNL21XXXX
-
-        //Sender's Reference
-        //REFERENCE
-
-        //Bank Operation Code
-        //CRED
-
-        //Value Date/Currency/Interbank Settled Amount
-        //Jul 30, 2018 USD 1,234,567.89
-
-        //Ordering Customer
-        //12345678901234567890 CFIMHKH1XXX
-
-        //Beneficiary Customer
-        //12345678901234567890 JOE DOE MyStreet 1234
-
-        //Details of Charges
-        //OUR".Trim());
-
-        //            builder = new StringBuilder();
-        //            foreach (Tag tag in SwiftMessage103.getBlock4().getTags().toArray())
-        //            {
-        //                var field = tag.asField();
-        //                builder.AppendLine("\n" + Field.getLabel(field.getName(), "103", null));
-        //                for (var component = 1; component <= field.componentsSize(); component++)
-        //                {
-        //                    if (field.getComponent(component) == null)
-        //                        continue;
-
-        //                    builder.Append(field.getComponentLabel(component) + ": ");
-        //                    builder.AppendLine(field.getValueDisplay(component, locale));
-        //                }
-        //            }
-
-        //            var detailedValPerField = builder.ToString();
-
-        //            Assert.AreEqual(detailedValPerField.Trim(), @"Sender's Reference
-        //Reference: REFERENCE
-
-        //Bank Operation Code
-        //Type: CRED
-
-        //Value Date/Currency/Interbank Settled Amount
-        //Date: Jul 30, 2018
-        //Currency: USD
-        //Amount: 1,234,567.89
-
-        //Ordering Customer
-        //Account: 12345678901234567890
-        //BIC: CFIMHKH1XXX
-
-        //Beneficiary Customer
-        //Account: 12345678901234567890
-        //Name And Address: JOE DOE
-        //Name And Address 2: MyStreet 1234
-
-        //Details of Charges
-        //Code: OUR".Trim());
-        //        }
+        }
 
     }
 }

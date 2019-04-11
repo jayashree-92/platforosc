@@ -28,7 +28,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public override string GetValue()
         {
-            return Value = string.Format("{0}{1}", Currency ?? FieldConstants.USD, Amount == null ? "0," : Amount);
+            return  string.Format("{0}{1}", Currency ?? FieldConstants.USD, Amount == null ? "0," : Amount);
         }
 
         public override List<string> Components

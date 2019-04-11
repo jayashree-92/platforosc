@@ -29,7 +29,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public override string GetValue()
         {
-            return Value = string.Format("/{0}/{1}{2}{3}", Code, Time, Sign ?? "+", OffSet ?? "0000");
+            return string.Format("/{0}/{1}{2}{3}", Code, Time, Sign ?? "+", OffSet ?? "0000");
         }
 
         public override string GetComponentValue(string component)

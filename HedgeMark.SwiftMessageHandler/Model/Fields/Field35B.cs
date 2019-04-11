@@ -45,11 +45,11 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             var builder = new StringBuilder();
 
             if (!string.IsNullOrWhiteSpace(ISIN))
-                builder.Append("ISIN "+ISIN);
+                builder.Append("ISIN " + ISIN);
             if (!string.IsNullOrWhiteSpace(DescriptionInFull))
                 builder.Append(DescriptionInFull);
 
-            return Value = builder.ToString();
+            return builder.ToString();
         }
 
         public Field35B setISIN(string isin)

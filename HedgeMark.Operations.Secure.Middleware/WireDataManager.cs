@@ -278,9 +278,9 @@ namespace HMOSecureMiddleware
                     hmsWireId = wireId,
                     WireStatusId = (int)wireStatus,
                     SwiftStatusId = (int)swiftStatus,
-                    Comment = comment,
+                    Comment = comment ?? string.Empty,
                     CreatedAt = DateTime.Now,
-                    CreatedBy = userId
+                    CreatedBy = userId,
                 };
                 context.hmsWireWorkflowLogs.AddOrUpdate(wireWorkFlowLog);
                 context.SaveChanges();

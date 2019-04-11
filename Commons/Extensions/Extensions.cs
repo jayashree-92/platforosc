@@ -59,6 +59,33 @@ namespace Com.HedgeMark.Commons.Extensions
             }
         }
 
+        public static DateTime ToDateTime(this object value, string parseFormat)
+        {
+            try
+            {
+                DateTime dateTime;
+                DateTime.TryParseExact(value.ToString(), new[] { DefaultDateFormat, parseFormat }, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
+                return dateTime;
+                //return (int)Convert.ChangeType(value, typeof(int));
+            }
+            catch (Exception)
+            {
+                return new DateTime();
+            }
+        }
+
+        public static decimal ToDecimal(this object value, decimal defaultValue = 0)
+        {
+            try
+            {
+                return (decimal)Convert.ChangeType(value, typeof(decimal));
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
+        }
+
         public static double ToDouble(this object value, double defaultValue = 0)
         {
             try

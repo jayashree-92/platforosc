@@ -39,7 +39,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             var builder = new StringBuilder();
 
             if (!string.IsNullOrWhiteSpace(Narrative))
-                return Value = Narrative;
+                return Narrative;
 
             if (!string.IsNullOrWhiteSpace(NarrativeLine1))
                 builder.Append(NarrativeLine1);
@@ -52,7 +52,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             if (!string.IsNullOrWhiteSpace(NarrativeLine5))
                 builder.AppendFormat("{0}{1}", Environment.NewLine, NarrativeLine5);
 
-            return Value = builder.ToString();
+            return builder.ToString();
         }
 
         public Field72 setNarrative(string narrative)

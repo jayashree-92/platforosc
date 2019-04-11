@@ -63,25 +63,22 @@ namespace HMOSecureMiddleware.Queues
             }
         }
 
-        public static void SendMessage(string swiftMessage, long wireWireId)
+        public static void SendMessage(string swiftMessage)
         {
             if (Utility.IsLocal())
                 return;
-
-            //Read all Existing acks messages
-            GetAndProcessAcknowledgement();
-
+            
             //Send this Swift Message
-            SendMessage(swiftMessage);
+            SendMessageInQueue(swiftMessage);
 
             //sleep for a second
             Thread.Sleep(1000 * 1);
 
-            //Look out for FEACK
-            GetAndProcessAcknowledgement(wireWireId);
-
+            //Look out for FEACK or ACK
+            GetAndProcessAcknowledgement();
         }
-        private static void SendMessage(string swiftMessage)
+
+        private static void SendMessageInQueue(string swiftMessage)
         {
             try
             {
@@ -117,7 +114,7 @@ namespace HMOSecureMiddleware.Queues
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void GetAndProcessAcknowledgement(long wireId = -1)
         {
-            GetAndProcessQueueMessage(ReceiverAckQueueName, wireId);
+            GetAndProcessQueueMessage(ReceiverAckQueueName);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -126,7 +123,7 @@ namespace HMOSecureMiddleware.Queues
             GetAndProcessQueueMessage(ReceiverQueueName);
         }
 
-        private static void GetAndProcessQueueMessage(string queueName, long wireId = -1)
+        private static void GetAndProcessQueueMessage(string queueName)
         {
             if (Utility.IsLocal())
                 return;
@@ -157,10 +154,7 @@ namespace HMOSecureMiddleware.Queues
                     var messageAsText = message.ReadString(message.MessageLength);
                     Logger.Info(string.Format("Got a message in Queue {0}: {1}", queueName, messageAsText));
 
-                    if (messageAsText.Trim().EndsWith("FEACK"))
-                        WireTransactionManager.LogFrontEndAcknowledgment(messageAsText, wireId);
-                    else
-                        WireTransactionManager.ProcessInboundMessage(messageAsText);
+                    WireTransactionManager.ProcessInboundMessage(messageAsText);
 
                     Logger.Debug("Message Processing Complete");
                     message.ClearMessage();
@@ -171,9 +165,9 @@ namespace HMOSecureMiddleware.Queues
                         Logger.Error("MQException caught: " + mqe.ReasonCode + " " + mqe.Message, mqe);
                     isDone = true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    Logger.Error("Exception when processing inbound : "+ ex.Message, ex);
+                    Logger.Error("Exception when processing inbound : " + ex.Message, ex);
                 }
             }
 
