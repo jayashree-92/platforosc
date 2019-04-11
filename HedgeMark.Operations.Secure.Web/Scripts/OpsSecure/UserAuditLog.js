@@ -128,17 +128,34 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     "sTitle": "Previous State Value",
                     "mData": "PreviousStateValue",
                     "mRender": function (tdata, type, row) {
+                        return tdata != null ? tdata : "";
+                    }
+                },
+                {
+                    "sTitle": "Previous State Value",
+                    "mData": "PreviousStateValue",
+                    "mRender": function (tdata, type, row) {
                         switch (row.Action) {
+<<<<<<< HEAD
+                            case "Log In": 
+                            case "Log Out": return "";
+                            case "Edited": if (row.Field == "Wire Status") {
+                                return  $scope.getWireStatus(row.PreviousStateValue);
+=======
                             case "Log In":
                             case "Log Out":
                             case "Added": return "";
                             case "Edited": if (row.Field == "Wire Status") {
                                 return $scope.getWireStatus(row.PreviousStateValue);
+>>>>>>> 06d282f95336b758aedf29b94430fa49dcee3096
                             }
                             else {
                                 return "<b>" + $scope.getFieldValue(row.Field, row.PreviousStateValue) + "</b>";
                             }
+<<<<<<< HEAD
+=======
 
+>>>>>>> 06d282f95336b758aedf29b94430fa49dcee3096
                         }
                     }
                 },
@@ -147,10 +164,16 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     "mData": "ModifiedStateValue",
                     "mRender": function (tdata, type, row) {
                         switch (row.Action) {
+<<<<<<< HEAD
+                            case "Log In": 
+                            case "Log Out": return "";
+                            case "Edited": if (row.Field == "Wire Status") {
+=======
                             case "Log In":
                             case "Log Out": return "";
                             case "Edited":
                             case "Added": if (row.Field == "Wire Status") {
+>>>>>>> 06d282f95336b758aedf29b94430fa49dcee3096
                                 return $scope.getWireStatus(row.ModifiedStateValue);
                             }
                             else {
@@ -158,6 +181,16 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                             }
                         }
                     }
+<<<<<<< HEAD
+                },
+                {
+                    "sTitle": "Origin",
+                    "mData": "IsLogFromOps",
+                    "mRender": function (tdata, type, row) {
+                        return tdata == true || row.Action != "Edited" ? "Operations Secure" : "Operations";
+                    }
+=======
+>>>>>>> 06d282f95336b758aedf29b94430fa49dcee3096
                 },
                 {
                     "sTitle": "Origin",
@@ -167,6 +200,17 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     }
                 },
                 {
+<<<<<<< HEAD
+                "mData": "CreatedAt", "sTitle": "Updated As Of",
+                "type": "dotnet-date",
+                "mRender": function (tdata, type, row) {
+                    if (tdata == null)
+                        return "-";
+
+                    return "<div  class='auditUpdatedAtColumn' title='" + getDateForToolTip(tdata) + "' date ='" + tdata + "'>" + $.getPrettyDate(tdata) + "</div>";
+                }
+            }],
+=======
                     "sTitle": "User",
                     "mData": "UserName",
                     "className": "seeFullText"
@@ -181,6 +225,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                         return "<div  class='auditUpdatedAtColumn' title='" + getDateForToolTip(tdata) + "' date ='" + tdata + "'>" + $.getPrettyDate(tdata) + "</div>";
                     }
                 }],
+>>>>>>> 06d282f95336b758aedf29b94430fa49dcee3096
                 "oLanguage": {
                     "sSearch": "",
                     "sEmptyTable": "No audit logs available for the selected context date.",

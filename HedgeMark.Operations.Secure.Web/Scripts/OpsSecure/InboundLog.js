@@ -40,7 +40,11 @@ HmOpsApp.controller("InboundLogsCtrl", function ($scope, $http, $timeout, $filte
     function createAuditLogsTable(auditStartDate, auditEndDate) {
         $("#btnGetInboundLogs").button("loading");
         fnDestroyDataTable("#tblAuditLogsDetails");
+<<<<<<< HEAD
+        $http.get("/Home/GetInboundMQLogs?startDate=" + moment(auditStartDate).format("YYYY-MM-DD") + "&endDate=" + moment().format("YYYY-MM-DD")).then(function (response) {
+=======
         $http.get("/Audit/GetInboundMQLogs?startDate=" + moment(auditStartDate).format("YYYY-MM-DD") + "&endDate=" + moment().format("YYYY-MM-DD")).then(function (response) {
+>>>>>>> 90ec0a105869858f75f73d00cf51ca4ad17db21c
             var auditLogTable = $("#tblInboundLogsDetails").DataTable({
                 "aaData": response.data,
                 "dom": "<\"toolbar\"><'row header'<'col-md-6 header-left'i><'col-md-6 header-right'f>>trI",
@@ -88,4 +92,11 @@ HmOpsApp.controller("InboundLogsCtrl", function ($scope, $http, $timeout, $filte
     $scope.fnGetInboundLogs();
 });
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 $("#liLogs").addClass("active");
+=======
+>>>>>>> 90ec0a105869858f75f73d00cf51ca4ad17db21c
+=======
+$("#liLogs").addClass("active");
+>>>>>>> 06d282f95336b758aedf29b94430fa49dcee3096
