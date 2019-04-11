@@ -23,6 +23,11 @@ namespace HedgeMark.Operations.Secure.DataModel
         public int hmsWirePurposeId { get; set; }
         public string ReportName { get; set; }
         public string Purpose { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedAt { get; set; }
+        public Nullable<int> ModifiedBy { get; set; }
+        public Nullable<System.DateTime> ModifiedAt { get; set; }
+        public bool IsApproved { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWire> hmsWires { get; set; }

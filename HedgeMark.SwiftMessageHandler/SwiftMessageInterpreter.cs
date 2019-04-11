@@ -28,7 +28,7 @@ namespace HedgeMark.SwiftMessageHandler
 
                 if (field.Components.Count == 0)
                 {
-                    builder.AppendLine(string.Format(":{0}", field.Value));
+                    builder.AppendLine(string.Format(":{0}", field.GetComponentValue(field.Label)));
                     continue;
                 }
 
@@ -74,7 +74,7 @@ namespace HedgeMark.SwiftMessageHandler
 
             builder.AppendLine("------------------------- Instance Type and Transmission -------------------------");
 
-            if (swiftMsg.IsIncoming())
+            if (swiftMsg.IsServiceMessage21() || swiftMsg.IsIncoming())
             {
                 builder.AppendLine("Copy received from SWIFT");
             }
@@ -83,7 +83,17 @@ namespace HedgeMark.SwiftMessageHandler
                 builder.AppendLine("Copy sent to SWIFT");
             }
 
-            if (swiftMsg.Block2.Priority != null)
+            if (swiftMsg.IsServiceMessage21())
+            {
+                builder.Append("Message format : Service message for ");
+
+                if (swiftMsg.IsAck())
+                    builder.Append("Acknowledgement");
+                else
+                    builder.Append("N-Acknowledgement");
+            }
+
+            else if (swiftMsg.Block2.Priority != null)
             {
                 builder.Append("Priority/Delivery : ");
                 builder.Append(swiftMsg.Block2.GetPriorityLabel());

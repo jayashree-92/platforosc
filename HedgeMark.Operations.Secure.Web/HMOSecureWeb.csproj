@@ -1487,6 +1487,7 @@
     <Content Include="Scripts\OpsSecure\OpsSecureAngularFactory.js" />
     <Content Include="Scripts\OpsSecure\UserAuditLog.js" />
     <Content Include="Scripts\OpsSecure\WireLog.js" />
+    <Content Include="Scripts\OpsSecure\WirePurpose.js" />
     <Content Include="Scripts\Plugins\ContextMenu.js" />
     <Content Include="Scripts\Plugins\NumericCellEditor.js" />
     <Content Include="Scripts\Plugins\SideNavigationMenu.js" />
@@ -1575,7 +1576,8 @@
     <Content Include="Views\Account\LogOff.cshtml" />
     <Content Include="Views\Shared\_Wires.cshtml" />
     <Content Include="Views\WireLog\Index.cshtml" />
-    <Content Include="Views\Home\InboundLogs.cshtml" />
+    <Content Include="Views\Audit\InboundLogs.cshtml" />
+    <Content Include="Views\Home\WirePurpose.cshtml" />
     <None Include="Web.Local.config">
       <SubType>Designer</SubType>
     </None>

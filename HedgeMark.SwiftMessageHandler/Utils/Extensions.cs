@@ -9,6 +9,8 @@ namespace HedgeMark.SwiftMessageHandler.Utils
     public static class Extensions
     {
         public static readonly string DefaultDateFormat = "yyMMdd";
+        public static readonly string DefaultTimeFormat = "hhmm";
+        public static readonly string DefaultDateAndTimeFormat = "yyMMddhhmm";
         public static readonly string DefaultDateFormatWithFullYear = "yyyyMMdd";
         public static T DeepCopy<T>(this T source) where T : class
         {

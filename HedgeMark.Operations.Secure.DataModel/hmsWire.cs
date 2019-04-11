@@ -56,9 +56,9 @@ namespace HedgeMark.Operations.Secure.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireLog> hmsWireLogs { get; set; }
         public virtual hmsWireMessageType hmsWireMessageType { get; set; }
-        public virtual hmsWirePurposeLkup hmsWirePurposeLkup { get; set; }
         public virtual hmsWireStatusLkup hmsWireStatusLkup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
+        public virtual hmsWirePurposeLkup hmsWirePurposeLkup { get; set; }
     }
 }

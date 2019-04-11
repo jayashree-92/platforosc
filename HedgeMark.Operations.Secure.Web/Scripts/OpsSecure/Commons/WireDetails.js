@@ -115,18 +115,18 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                      },
                     {
                         "mData": "HMWire.CreatedAt",
-                        "sTitle": "Initiated Date",
+                        "sTitle": "Initiated At",
                         "type": "dotnet-date",
                         "mRender": function (tdata) {
                             return "<div  title='" + $.getPrettyDate(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
                         }
                     },
-                     //{
-                     //    "mData": "WireLastUpdatedBy", "sTitle": "Modified By"
-                     //},
+                     {
+                         "mData": "WireLastUpdatedBy", "sTitle": "Last Updated By"
+                     },
                     {
                         "mData": "HMWire.LastModifiedAt",
-                        "sTitle": "Modified Date",
+                        "sTitle": "Last Updated At",
                         "type": "dotnet-date",
                         "mRender": function (tdata) {
                             return "<div  title='" + $.getPrettyDate(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";

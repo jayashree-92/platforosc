@@ -4,6 +4,9 @@
     {
         public const string MT = "MT";
         public const string DATE = "Date";
+        public const string VALUE_DATE = "Value Date";
+        public const string DATE_AND_TIME = "Date and Time";
+        public const string TIME = "At";
         public const string CURRENCY = "Currency";
         public const string AMOUNT = "Amount";
         public const string PRICE = "Price";
@@ -16,6 +19,7 @@
         public const string NAME_AND_ADDRESS_LINE_2 = "Name and Address 2";
         public const string NAME_AND_ADDRESS_LINE_3 = "Name and Address 3";
 
+        public const string STATUS = "Status";
         public const string DESCRIPTION = "Description";
         public const string DESCRIPTION_LINE_2 = "Description 2";
         public const string DESCRIPTION_LINE_3 = "Description 3";

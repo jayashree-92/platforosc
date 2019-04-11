@@ -687,15 +687,12 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default" id="wireAttachment">
-                    <div ng-show="WireTicket.WireStatusId < 3 || WireTicket.hmsWireDocuments.length > 0" class="panel-heading" data-toggle="collapse" ng-click="collapseContainer('Attachment')" data-target="#attachmentsDiv" aria-expanded="false" aria-controls="attachmentsDiv">
+                <div class="panel panel-default" id="wireAttachment"  ng-hide="WireTicket.WireStatusId >= 3 && WireTicket.hmsWireDocuments.length == 0">
+                    <div class="panel-heading" data-toggle="collapse" ng-click="collapseContainer('Attachment')" data-target="#attachmentsDiv" aria-expanded="false" aria-controls="attachmentsDiv">
                         <span class="">Attachment</span>
                         <span class='glyphicon  pull-right' ng-class="{ 'glyphicon-chevron-right': !isAttachmentsCollapsed , 'glyphicon-chevron-down': isAttachmentsCollapsed }"></span>
                     </div>
-                    <div ng-show="WireTicket.WireStatusId >= 3 && WireTicket.hmsWireDocuments.length == 0" class="panel-heading">
-                        <span class="">No Wire Attachments Available</span>
-                    </div>
-                    <div class="panel-body collapse" ng-show="WireTicket.WireStatusId < 3 || WireTicket.hmsWireDocuments.length > 0" id="attachmentsDiv">
+                    <div class="panel-body collapse" id="attachmentsDiv">
                         <div class="">
                             <p />
                             <div class="row">

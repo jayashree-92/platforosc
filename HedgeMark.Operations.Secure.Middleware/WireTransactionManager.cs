@@ -177,7 +177,7 @@ namespace HMOSecureMiddleware
                 WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.SwiftStatus.Acknowledged, string.Empty);
 
             else if (confirmationData.IsAckOrNack && confirmationData.IsNegativeAcknowledged)
-                WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.SwiftStatus.NegativeAcknowledged, confirmationData.ExceptionMessage);
+                WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.NegativeAcknowledged, confirmationData.ExceptionMessage);
 
             //Update the given wire Id to "Completed" in workflow and wire table
             else if (confirmationData.IsConfirmed)
