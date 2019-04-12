@@ -15,5 +15,10 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             DateString = date.ToString("yyMMdd");
             return callingClass;
         }
+
+        public override string GetValue()
+        {
+            return DateString;
+        }
     }
 }
