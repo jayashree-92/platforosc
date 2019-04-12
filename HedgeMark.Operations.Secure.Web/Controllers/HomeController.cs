@@ -53,7 +53,7 @@ namespace HMOSecureWeb.Controllers
             WireStatusCount wireStatusCount;
             using (var context = new OperationsSecureContext())
             {
-                var wireStatusCountMap = context.hmsWires.Where(s => s.ContextDate == contextDate).Select(s => new { s.WireStatusId, s.SwiftStatusId }).ToList();
+                var wireStatusCountMap = context.hmsWires.Where(s => s.ValueDate == contextDate).Select(s => new { s.WireStatusId, s.SwiftStatusId }).ToList();
                 wireStatusCount = new WireStatusCount();
 
                 foreach (var statusCount in wireStatusCountMap)
@@ -212,7 +212,7 @@ namespace HMOSecureWeb.Controllers
 
             var isApproved = (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId;
 
-            var isCancelEnabled = !isApproved && !isDeadlineCrossed || isCompletedOrFailed;
+            var isCancelEnabled = !isApproved && !isDeadlineCrossed || !isCompletedOrFailed;
             var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CashSweepTime ?? new TimeSpan());
             var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CutoffTime ?? new TimeSpan());
             var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.Account.CashSweepTimeZone);
@@ -393,15 +393,21 @@ namespace HMOSecureWeb.Controllers
                 cashSweepTimeZone = cashSweepTimeZone ?? "";
                 TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones.ContainsKey(cashSweepTimeZone) ? TimeZones[cashSweepTimeZone] : TimeZones[FileSystemManager.DefaultTimeZone]);
                 var cashSweepTime = new DateTime();
-                if (cashSweepTimeZone != "EST")
+                if (customTimeZone.Id != "Eastern Standard Time")
                 {
                     var actualTime = TimeZoneInfo.ConvertTime(cashSweep, customTimeZone);
-                    cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(actualTime, "Eastern Standard Time");
+                    if (TimeZoneInfo.Local.Id != "Eastern Standard Time")
+                        cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
+                    else
+                        cashSweepTime = actualTime;
                 }
                 else
                     cashSweepTime = cashSweep;
                 var cutOffTime = cutOff;
-                var currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
+
+                var currentTime = DateTime.Now;
+                if(TimeZoneInfo.Local.Id != "Eastern Standard Time") 
+                    currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
 
                 TimeSpan offSetTime;
                 if (cashSweepTime < cutOffTime)
