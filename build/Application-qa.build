@@ -60,7 +60,7 @@
   <target name="UnitTestBuild"  depends="PostBuildCopy">
     <echo message="Current Directory= '${CurrentDir}'" />
     <exec program ="${MSTest}" basedir="."  verbose="true" failonerror="false" >	  
-      <arg value="/testcontainer:${UnitTestLocation}/QA/HMOSecureMiddleware.Tests.dll"/>
+      <arg value="/testcontainer:${UnitTestLocation}/QA/HedgeMark.SwiftMessageHandler.dll"/>
       <arg value="/resultsfile:${testResults}\TestResults.trx"/> 	    
     </exec>
   </target>
@@ -80,7 +80,7 @@
  
   <!-- Target for Publishing -->
   <target name="Publish" description="Publish Project" depends="SQLBuild" >
-    <exec program="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" failonerror="true">
+    <exec program="${msbuild-VS2015}" failonerror="true">
       <arg value="${ProjectFile}" />
       <arg value="/p:Configuration=${Configuration}" />
       <arg value="/t:_WPPCopyWebApplication" />
