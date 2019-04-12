@@ -161,7 +161,7 @@ namespace HMOSecureMiddleware
         public static void ProcessInboundMessage(string swiftMessage)
         {
             LogInBoundWireMessage(swiftMessage);
-            
+
             var confirmationData = InboundSwiftMsgParser.ParseMessage(swiftMessage);
 
             if (confirmationData.IsFeAck)
@@ -181,7 +181,8 @@ namespace HMOSecureMiddleware
                 WireDataManager.SetWireStatus(confirmationData.WireId, WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.Failed, string.Format("Wire Transaction Failed with error: {0}", confirmationData.ExceptionMessage));
 
             //Put an entry to Wire Log table with the parameters used to create Swift Message
-            LogInBoundWireTransaction(confirmationData, swiftMessage);
+            if (!confirmationData.IsFeAck)
+                LogInBoundWireTransaction(confirmationData, swiftMessage);
         }
 
         private static void LogOutBoundWireTransaction(WireTicket wireTicket, string swiftMessage)
