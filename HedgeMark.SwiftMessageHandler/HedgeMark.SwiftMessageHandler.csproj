@@ -122,7 +122,6 @@
     <Compile Include="Model\MT\MT9XX\MT940.cs" />
     <Compile Include="Model\MT\MTDirectory.cs" />
     <Compile Include="Model\SwiftMessage.cs" />
-    <Compile Include="Model\SwiftMessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SwiftMessageInterpreter.cs" />
     <Compile Include="SwiftMessageValidator.cs" />

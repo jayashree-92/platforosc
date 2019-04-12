@@ -6,6 +6,7 @@ using System.Data.Entity.Migrations;
 using HMOSecureMiddleware.Models;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler;
+using HedgeMark.SwiftMessageHandler.Model;
 
 namespace HMOSecureMiddleware
 {
@@ -132,150 +133,103 @@ namespace HMOSecureMiddleware
                 SSITemplate = wireSSITemplate,
                 AttachmentUsers = attachmentUsers,
                 WorkflowUsers = workflowUsers,
-                SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireLogs.ToList(), hmWire.WireStatusId, hmWire.SwiftStatusId)
+                SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireId)
             };
         }
 
-        private static Dictionary<string, string> GetFormattedSwiftMessages(List<hmsWireLog> wireLogs, int wireStatusId, int swiftStatusId)
+        private static Dictionary<string, string> GetFormattedSwiftMessages(long wireId)
         {
             var swiftMessages = new Dictionary<string, string>();
+
+            List<hmsWireLog> wireLogs;
+
+            using (var context = new OperationsSecureContext())
+            {
+                wireLogs = context.hmsWireLogs.Include("hmsWireMessageType").Where(s => s.hmsWireId == wireId).ToList();
+            }
 
             if (wireLogs.Count == 0)
                 return swiftMessages;
 
-            var shouldIncludeMsgType = wireLogs.Count > 1;
+            var isMultiMessage = wireLogs.Select(s => s.WireMessageTypeId).Distinct().ToList().Count > 1;
 
             //var wireTransactionLog = wireLogs.Count <= 1 ? wireLogs.FirstOrDefault() : wireLogs.LastOrDefault(s => s.WireStatusId == wireStatusId);
-
-            foreach (var wireTransactionLog in wireLogs.OrderBy(s => s.WireStatusId).ToList())
+            var isPendingConfirmation = wireLogs.All(s => s.WireStatusId != (int)WireStatus.Failed);
+            foreach (var wireTransactionLog in wireLogs.OrderBy(s => s.hmsWireLogId).ToList())
             {
-                if (wireTransactionLog == null)
-                    return swiftMessages;
+                var messageType = isMultiMessage ? string.Format("-{0}", wireTransactionLog.hmsWireMessageType.MessageType) : string.Empty;
 
-                if (shouldIncludeMsgType)
+                //Outbound
+                var outbountStr = "Outbound" + messageType;
+                if (!string.IsNullOrWhiteSpace(wireTransactionLog.OutBoundSwiftMessage) && !swiftMessages.ContainsKey(outbountStr))
+                    swiftMessages.Add(outbountStr, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.OutBoundSwiftMessage, true));
+
+                //Ack or Nack
+                if (!string.IsNullOrWhiteSpace(wireTransactionLog.ServiceSwiftMessage))
                 {
-                    if (!string.IsNullOrWhiteSpace(wireTransactionLog.OutBoundSwiftMessage) && !swiftMessages.ContainsKey("Outbound"))
-                        swiftMessages.Add("Outbound", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.OutBoundSwiftMessage, true));
-
-                }
-                else if (!swiftMessages.ContainsKey("Outbound"))
-                    swiftMessages.Add("Outbound", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.OutBoundSwiftMessage, true));
-
-                var ackLabel = string.Format("{0}Acknowledgement", (swiftStatusId == (int)SwiftStatus.NegativeAcknowledged ? "N-" : string.Empty));
-
-
-                if (shouldIncludeMsgType)
-                {
+                    var swiftMsg = SwiftMessage.Parse(wireTransactionLog.ServiceSwiftMessage);
+                    var ackLabel = string.Format("{0}{2}{1}", swiftMsg.IsNack() ? "N-" : string.Empty, messageType, isMultiMessage ? "Ack" : "Acknowledgement");
                     if (!string.IsNullOrWhiteSpace(wireTransactionLog.ServiceSwiftMessage) && !swiftMessages.ContainsKey(ackLabel))
                         swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.ServiceSwiftMessage, true));
                 }
-                else if (!swiftMessages.ContainsKey(ackLabel))
-                    swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.ServiceSwiftMessage, true));
 
-
-                if (shouldIncludeMsgType)
-                {
-                    if (!string.IsNullOrWhiteSpace(wireTransactionLog.InBoundSwiftMessage) && !swiftMessages.ContainsKey("Confirmation"))
-                        swiftMessages.Add("Confirmation", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
-                }
-                else if (!swiftMessages.ContainsKey("Confirmation"))
-                    swiftMessages.Add("Confirmation", SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
+                //InBound
+                var confirmationLabel = "Confirmation" + messageType;
+                if (!swiftMessages.ContainsKey(confirmationLabel) && (isPendingConfirmation || !string.IsNullOrWhiteSpace(wireTransactionLog.InBoundSwiftMessage)))
+                    swiftMessages.Add(confirmationLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
             }
 
             return swiftMessages;
         }
 
-
-        public static WireTicketStatus GetWireStatus(long wireId)
+        private static hmsWire GetWire(long wireId)
         {
             using (var context = new OperationsSecureContext())
             {
                 var wireTicket = context.hmsWires.First(s => s.hmsWireId == wireId);
-                return new WireTicketStatus()
-                {
-                    WireStatus = (WireStatus)wireTicket.WireStatusId,
-                    SwiftStatus = (SwiftStatus)wireTicket.SwiftStatusId
-                };
-            }
-        }
-
-        public static void SetWireStatus(long wireId, SwiftStatus swiftStatus, string comment)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                //Update Wire Status Id
-                var hmsWire = context.hmsWires.First(s => s.hmsWireId == wireId);
-                hmsWire.SwiftStatusId = (int)swiftStatus;
-                context.SaveChanges();
-
-                //Add a Workflow Status 
-                SaveWireWorflow(wireId, (WireStatus)hmsWire.WireStatusId, swiftStatus, comment, -1);
-            }
-        }
-
-        public static void SetWireStatus(WireInBoundMessage inBoundMessage, WireStatus wireStatus, SwiftStatus swiftStatus, string comment)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                //Update Wire Status Id
-                var hmsWire = context.hmsWires.First(s => s.hmsWireId == inBoundMessage.WireId);
-                hmsWire.WireStatusId = (int)wireStatus;
-                hmsWire.SwiftStatusId = (int)swiftStatus;
-                context.SaveChanges();
-
-                //Add a Workflow Status 
-                SaveWireWorflow(inBoundMessage.WireId, wireStatus, swiftStatus, comment, -1);
-            }
-        }
-
-        public static void SetWireStatus(long wireId, WireStatus wireStatus, SwiftStatus swiftStatus, string comment)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                //Update Wire Status Id
-                var hmsWire = context.hmsWires.First(s => s.hmsWireId == wireId);
-                hmsWire.WireStatusId = (int)wireStatus;
-                hmsWire.SwiftStatusId = (int)swiftStatus;
-                context.SaveChanges();
-
-                //Add a Workflow Status 
-                SaveWireWorflow(wireId, wireStatus, swiftStatus, comment, -1);
-            }
-        }
-
-        public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus wireStatus, string comment, int userId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                var priorWireStatus = GetWireStatus(wireTicket.HMWire.hmsWireId);
-
-                wireTicket.HMWire.WireStatusId = (int)wireStatus;
-                wireTicket.HMWire.SwiftStatusId = (int)SwiftStatus.NotInitiated;
-                context.hmsWires.AddOrUpdate(wireTicket.HMWire);
-                context.hmsWireDocuments.AddRange(wireTicket.HMWire.hmsWireDocuments.Where(s => s.hmsWireDocumentId == 0));
-                context.SaveChanges();
-
-                SaveWireWorflow(wireTicket.HMWire.hmsWireId, wireStatus, (SwiftStatus)wireTicket.HMWire.SwiftStatusId, comment, userId);
-                var currentWireStatus = GetWireStatus(wireTicket.HMWire.hmsWireId);
-                wireTicket = GetWireData(wireTicket.HMWire.hmsWireId);
-
-                if (currentWireStatus.WireStatus == WireStatus.Approved)
-                    WireTransactionManager.InititateWireTransfer(wireTicket);
-
-                if (priorWireStatus.WireStatus == WireStatus.Approved && currentWireStatus.WireStatus == WireStatus.Cancelled)
-                    WireTransactionManager.CancelWireTransfer(wireTicket);
-
                 return wireTicket;
             }
         }
 
-        public static void SaveWireWorflow(long wireId, WireStatus wireStatus, SwiftStatus swiftStatus, string comment, int userId)
+        public static WireTicketStatus GetWireStatus(hmsWire wireTicket)
+        {
+            return new WireTicketStatus()
+            {
+                WireStatus = (WireStatus)wireTicket.WireStatusId,
+                SwiftStatus = (SwiftStatus)wireTicket.SwiftStatusId
+            };
+        }
+
+        public static WireTicketStatus GetWireStatus(long wireId)
+        {
+            var wireTicket = GetWire(wireId);
+            return GetWireStatus(wireTicket);
+        }
+
+        public static void SetWireStatusAndWorkFlow(long wireId, SwiftStatus swiftStatus, string comment)
+        {
+            var hmsWire = GetWire(wireId);
+            SetWireStatusAndWorkFlow(hmsWire, (WireStatus)hmsWire.WireStatusId, swiftStatus, comment, -1);
+        }
+
+        public static void SetWireStatusAndWorkFlow(long wireId, WireStatus wireStatus, WireDataManager.SwiftStatus swiftStatus, string comment, int userId)
+        {
+            var hmsWire = GetWire(wireId);
+            SetWireStatusAndWorkFlow(hmsWire, wireStatus, swiftStatus, comment, userId);
+        }
+
+        public static void SetWireStatusAndWorkFlow(hmsWire wire, WireDataManager.WireStatus wireStatus, WireDataManager.SwiftStatus swiftStatus, string comment, int userId)
         {
             using (var context = new OperationsSecureContext())
             {
+                wire.WireStatusId = (int)wireStatus;
+                wire.SwiftStatusId = (int)swiftStatus;
+                context.hmsWires.AddOrUpdate(wire);
+                context.SaveChanges();
+
                 var wireWorkFlowLog = new hmsWireWorkflowLog
                 {
-                    hmsWireId = wireId,
+                    hmsWireId = wire.hmsWireId,
                     WireStatusId = (int)wireStatus,
                     SwiftStatusId = (int)swiftStatus,
                     Comment = comment ?? string.Empty,
@@ -285,6 +239,29 @@ namespace HMOSecureMiddleware
                 context.hmsWireWorkflowLogs.AddOrUpdate(wireWorkFlowLog);
                 context.SaveChanges();
             }
+        }
+
+
+        public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus wireStatus, string comment, int userId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.hmsWireDocuments.AddRange(wireTicket.HMWire.hmsWireDocuments.Where(s => s.hmsWireDocumentId == 0));
+                context.SaveChanges();
+            }
+
+            wireTicket = GetWireData(wireTicket.HMWire.hmsWireId);
+
+            if (wireStatus == WireStatus.Approved)
+                WireTransactionManager.ApproveAndInititateWireTransfer(wireTicket, comment, userId);
+
+            else if (wireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus == WireStatus.Cancelled)
+                WireTransactionManager.CancelWireTransfer(wireTicket, comment, userId);
+
+            else
+                SetWireStatusAndWorkFlow(wireTicket.HMWire, wireStatus, SwiftStatus.NotInitiated, comment, userId);
+
+            return wireTicket;
         }
 
         public static bool IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId)

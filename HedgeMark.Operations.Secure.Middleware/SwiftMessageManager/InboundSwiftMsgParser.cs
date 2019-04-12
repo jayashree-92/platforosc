@@ -28,7 +28,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             if (inBoundWireMessage.SwiftMessage.IsType("548"))
                 return Parse548(inBoundWireMessage);
 
-            //MT196 and 296 and 900- confirmation of Cancelation
+            //MT196 and 296 and 900, 910- confirmation of Cancelation
             if (HandledMTMessages.Any(s => s.Equals(inBoundWireMessage.SwiftMessage.GetMTType())))
                 return ParseGeneralConfirmation(inBoundWireMessage);
 

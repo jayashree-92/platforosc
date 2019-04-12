@@ -45,6 +45,8 @@ namespace HMOSecureMiddleware.Models
             }
         }
         public Dictionary<string, string> SwiftMessages { get; set; }
+
+        public hmsWireMessageType CancellationWireMessageType { get; set; }
     }
 
     public class WireInBoundMessage
@@ -92,7 +94,7 @@ namespace HMOSecureMiddleware.Models
 
                 using (var context = new OperationsSecureContext())
                 {
-                    var wire = context.hmsWires.FirstOrDefault(s => s.ValueDate == valueDate.Date && s.Currency == currency && s.Amount == amount);
+                    var wire = context.hmsWires.FirstOrDefault(s => s.WireStatusId == 3 && s.SwiftStatusId != 5 && s.ValueDate == valueDate.Date && s.Currency == currency && s.Amount == amount);
 
                     if (wire != null)
                         WireId = wire.hmsWireId;

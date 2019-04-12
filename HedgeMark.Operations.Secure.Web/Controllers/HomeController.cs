@@ -53,7 +53,7 @@ namespace HMOSecureWeb.Controllers
             WireStatusCount wireStatusCount;
             using (var context = new OperationsSecureContext())
             {
-                var wireStatusCountMap = context.hmsWires.Where(s => s.ValueDate == contextDate).Select(s => new { s.WireStatusId, s.SwiftStatusId }).ToList();
+                var wireStatusCountMap = context.hmsWires.Where(s => s.ContextDate == contextDate).Select(s => new { s.WireStatusId, s.SwiftStatusId }).ToList();
                 wireStatusCount = new WireStatusCount();
 
                 foreach (var statusCount in wireStatusCountMap)
@@ -171,7 +171,6 @@ namespace HMOSecureWeb.Controllers
                     thisWire.WireLastUpdatedBy = "-";
 
                 wireData.Add(thisWire);
-
             }
             return Json(wireData);
         }
@@ -212,7 +211,7 @@ namespace HMOSecureWeb.Controllers
 
             var isApproved = (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId;
 
-            var isCancelEnabled = !isApproved && !isDeadlineCrossed || !isCompletedOrFailed;
+            var isCancelEnabled = !isApproved && !isDeadlineCrossed || isCompletedOrFailed;
             var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CashSweepTime ?? new TimeSpan());
             var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CutoffTime ?? new TimeSpan());
             var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.Account.CashSweepTimeZone);
@@ -230,6 +229,7 @@ namespace HMOSecureWeb.Controllers
             wireTicket.HMWire.LastModifiedAt = DateTime.Now;
             wireTicket.HMWire.LastUpdatedBy = UserDetails.Id;
             wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
+
             var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CashSweepTime ?? new TimeSpan());
             var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CutoffTime ?? new TimeSpan());
             var deadlineToApprove = GetDeadlineToApprove(cashSweep, cutOff, wireTicket.Account.CashSweepTimeZone);
@@ -393,21 +393,15 @@ namespace HMOSecureWeb.Controllers
                 cashSweepTimeZone = cashSweepTimeZone ?? "";
                 TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones.ContainsKey(cashSweepTimeZone) ? TimeZones[cashSweepTimeZone] : TimeZones[FileSystemManager.DefaultTimeZone]);
                 var cashSweepTime = new DateTime();
-                if (customTimeZone.Id != "Eastern Standard Time")
+                if (cashSweepTimeZone != "EST")
                 {
                     var actualTime = TimeZoneInfo.ConvertTime(cashSweep, customTimeZone);
-                    if (TimeZoneInfo.Local.Id != "Eastern Standard Time")
-                        cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
-                    else
-                        cashSweepTime = actualTime;
+                    cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(actualTime, "Eastern Standard Time");
                 }
                 else
                     cashSweepTime = cashSweep;
                 var cutOffTime = cutOff;
-
-                var currentTime = DateTime.Now;
-                if(TimeZoneInfo.Local.Id != "Eastern Standard Time") 
-                    currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
+                var currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
 
                 TimeSpan offSetTime;
                 if (cashSweepTime < cutOffTime)

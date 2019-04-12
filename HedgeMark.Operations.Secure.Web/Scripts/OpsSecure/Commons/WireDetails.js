@@ -170,7 +170,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 //"scrollY": $("#pageMainContent").offset().top + 600,
                 //stateSave: true,
                 //"scrollX": true,
-                "order": [[16, "desc"]],
+                "order": [[17, "desc"]],
                 //"bSort": false,
                 "bPaginate": false,
                 iDisplayLength: -1,

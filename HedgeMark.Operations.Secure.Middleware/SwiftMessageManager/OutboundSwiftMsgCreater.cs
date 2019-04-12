@@ -13,7 +13,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
     {
         protected static readonly string HMBIC = ConfigurationManagerWrapper.StringSetting("HMBIC", "IRVTBEB0");
         protected static readonly string HMBICSender = string.Format("{0}{1}", HMBIC, ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX"));
-        public static string CreateMessage(string messageType, WireTicket wire)
+        public static string CreateMessage(WireTicket wire,string messageType)
         {
             switch (messageType)
             {
