@@ -151,49 +151,6 @@ BEGIN
 	ALTER TABLE hmsWires DROP COLUMN [CreditOrDebitConfirmedAt] ;
 END
 
-
-IF NOT EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME = 'UK_hmsWires_ValueDate_WirePurposeId_OnBoardAccountId_OnBoardSSITemplateId')
-BEGIN
-
-DELETE FROM hmsWireDocument
-		WHERE hmsWireId NOT IN (SELECT MAX(hmsWireId)
-						  FROM   hmsWires
-						  GROUP  BY ValueDate,
-									WirePurposeId,
-									OnBoardAccountId,
-									OnBoardSSITemplateId
-						 HAVING MAX(hmsWireId) IS NOT NULL)
-
-DELETE FROM hmsWireWorkflowLog
-		WHERE hmsWireId NOT IN (SELECT MAX(hmsWireId)
-						  FROM   hmsWires
-						  GROUP  BY ValueDate,
-									WirePurposeId,
-									OnBoardAccountId,
-									OnBoardSSITemplateId
-						 HAVING MAX(hmsWireId) IS NOT NULL)
- DELETE FROM hmsWireLog
-		WHERE hmsWireId NOT IN (SELECT MAX(hmsWireId)
-						  FROM   hmsWires
-						  GROUP  BY ValueDate,
-									WirePurposeId,
-									OnBoardAccountId,
-									OnBoardSSITemplateId
-						 HAVING MAX(hmsWireId) IS NOT NULL)
-
- DELETE FROM hmsWires
-		WHERE hmsWireId NOT IN (SELECT MAX(hmsWireId)
-						  FROM   hmsWires
-						  GROUP  BY ValueDate,
-									WirePurposeId,
-									OnBoardAccountId,
-									OnBoardSSITemplateId
-						 HAVING MAX(hmsWireId) IS NOT NULL)
-
-	ALTER TABLE [dbo].[hmsWires]  WITH CHECK ADD CONSTRAINT [UK_hmsWires_ValueDate_WirePurposeId_OnBoardAccountId_OnBoardSSITemplateId] UNIQUE (ValueDate,WirePurposeId,OnBoardAccountId,OnBoardSSITemplateId)
-END
-GO
-
 IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'TransferType' and TABLE_NAME = 'hmsWires')
 BEGIN
 	ALTER TABLE hmsWires ADD TransferType VARCHAR(30) NULL
