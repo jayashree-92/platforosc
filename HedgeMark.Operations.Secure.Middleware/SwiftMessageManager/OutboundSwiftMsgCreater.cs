@@ -19,14 +19,14 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             {
                 //MT103 - Single customer credit transfer
                 case "MT103":
-                    return CreateMt103(wire);
+                    return CreateMt103(wire).GetMessage(); 
                 //MT202 - General Financial inst Transfer
                 case "MT202":
-                    return CreateMt202(wire);
+                    return CreateMt202(wire).GetMessage();
                 //MT202 COV - General Financial inst Transfer
                 case "MT202 COV":
                 case "MT202COV":
-                    return CreateMt202Cov(wire);
+                    return CreateMt202Cov(wire).GetMessage();
                 //MT210 - Notice to Receive
                 case "MT210":
                     return CreateMt210(wire);
@@ -196,7 +196,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             callingMethod.setSenderAndReceiver(wire.Account.SendersBIC, wire.Account.UltimateBeneficiaryBICorABA);
         }
 
-        private static string CreateMt103(WireTicket wire)
+        private static MT103 CreateMt103(WireTicket wire)
         {
             var mt103 = new MT103();
             SetSenderAndReceiverFromSSI(mt103, wire);
@@ -217,10 +217,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             mt103.addField(GetField71A(wire));
 
-            return mt103.GetMessage();
+            return mt103;
         }
 
-        private static string CreateMt202(WireTicket wire)
+        private static MT202 CreateMt202(WireTicket wire)
         {
             var mt202 = new MT202();
             SetSenderAndReceiverFromSSI(mt202, wire);
@@ -239,10 +239,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             //Optional
             mt202.addField(GetField72(wire));
 
-            return mt202.GetMessage();
+            return mt202;
         }
 
-        private static string CreateMt202Cov(WireTicket wire)
+        private static MT202COV CreateMt202Cov(WireTicket wire)
         {
             var mt202Cov = new MT202COV();
             SetSenderAndReceiverFromSSI(mt202Cov, wire);
@@ -261,7 +261,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             mt202Cov.addField(GetField59(wire));
 
-            return mt202Cov.GetMessage();
+            return mt202Cov;
         }
 
 
@@ -302,6 +302,13 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             mt192.addField(GetField11S(wire));
 
+            // We need the original M103 message 
+            var mt103 = CreateMt103(wire);
+            foreach (var mt103Field in mt103.Block4.GetFields())
+            {
+                mt192.Block4.AddField(mt103Field);
+            }
+
             return mt192.GetMessage();
         }
 
@@ -315,6 +322,13 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             mt292.addField(GetField21ForCancellation(wire));
 
             mt292.addField(GetField11S(wire));
+
+            // We need the original M103 message 
+            var mt202 = CreateMt202(wire);
+            foreach (var mt103Field in mt202.Block4.GetFields())
+            {
+                mt292.Block4.AddField(mt103Field);
+            }
 
             return mt292.GetMessage();
         }
