@@ -381,6 +381,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.TrustedSwiftMessage = "";
         $scope.SwiftFormatMessageActiveTag = "";
         $scope.wireTicketObj.SwiftMessages = [];
+        $("#wireErrorStatus").collapse("hide");
     });
 
     $scope.bindAndValidateWireData = function () {
