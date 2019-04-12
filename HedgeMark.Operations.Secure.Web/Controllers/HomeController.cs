@@ -53,7 +53,7 @@ namespace HMOSecureWeb.Controllers
             WireStatusCount wireStatusCount;
             using (var context = new OperationsSecureContext())
             {
-                var wireStatusCountMap = context.hmsWires.Where(s => s.ContextDate == contextDate).Select(s => new { s.WireStatusId, s.SwiftStatusId }).ToList();
+                var wireStatusCountMap = context.hmsWires.Where(s => s.ValueDate == contextDate).Select(s => new { s.WireStatusId, s.SwiftStatusId }).ToList();
                 wireStatusCount = new WireStatusCount();
 
                 foreach (var statusCount in wireStatusCountMap)
