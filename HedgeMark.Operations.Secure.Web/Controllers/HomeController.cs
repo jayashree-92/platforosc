@@ -393,15 +393,21 @@ namespace HMOSecureWeb.Controllers
                 cashSweepTimeZone = cashSweepTimeZone ?? "";
                 TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones.ContainsKey(cashSweepTimeZone) ? TimeZones[cashSweepTimeZone] : TimeZones[FileSystemManager.DefaultTimeZone]);
                 var cashSweepTime = new DateTime();
-                if (cashSweepTimeZone != "EST")
+                if (customTimeZone.Id != "Eastern Standard Time")
                 {
                     var actualTime = TimeZoneInfo.ConvertTime(cashSweep, customTimeZone);
-                    cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(actualTime, "Eastern Standard Time");
+                    if (TimeZoneInfo.Local.Id != "Eastern Standard Time")
+                        cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
+                    else
+                        cashSweepTime = actualTime;
                 }
                 else
                     cashSweepTime = cashSweep;
                 var cutOffTime = cutOff;
-                var currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
+
+                var currentTime = DateTime.Now;
+                if(TimeZoneInfo.Local.Id != "Eastern Standard Time") 
+                    currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
 
                 TimeSpan offSetTime;
                 if (cashSweepTime < cutOffTime)
