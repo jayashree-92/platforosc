@@ -82,6 +82,13 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'WireTransferTypeId' and TABLE_NAME = 'hmsWires')
+BEGIN
+	ALTER TABLE hmsWires ADD WireTransferTypeId INT NOT NULL DEFAULT(1);
+	ALTER TABLE hmsWires ADD CONSTRAINT FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId FOREIGN KEY ([WireTransferTypeId]) REFERENCES hmsWireTransferTypeLKup(WireTransferTypeId);
+END
+GO
+
 
 IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'SwiftStatusId' and TABLE_NAME = 'hmsWireWorkflowLog')
 BEGIN

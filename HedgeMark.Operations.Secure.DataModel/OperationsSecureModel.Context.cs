@@ -35,7 +35,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsWireJobSchedule> hmsWireJobSchedules { get; set; }
         public virtual DbSet<hmsNotificationStaging> hmsNotificationStagings { get; set; }
         public virtual DbSet<hmsInBoundMQLog> hmsInBoundMQLogs { get; set; }
-        public virtual DbSet<hmsWire> hmsWires { get; set; }
         public virtual DbSet<hmsWirePurposeLkup> hmsWirePurposeLkups { get; set; }
+        public virtual DbSet<hmsWire> hmsWires { get; set; }
+        public virtual DbSet<hmsWireTransferTypeLKup> hmsWireTransferTypeLKups { get; set; }
     }
 }

@@ -47,6 +47,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public bool IsBookTransfer { get; set; }
         public int SwiftStatusId { get; set; }
         public string TransferType { get; set; }
+        public int WireTransferTypeId { get; set; }
     
         public virtual hmsSwiftStatusLkup hmsSwiftStatusLkup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -56,9 +57,9 @@ namespace HedgeMark.Operations.Secure.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireLog> hmsWireLogs { get; set; }
         public virtual hmsWireMessageType hmsWireMessageType { get; set; }
+        public virtual hmsWirePurposeLkup hmsWirePurposeLkup { get; set; }
         public virtual hmsWireStatusLkup hmsWireStatusLkup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
-        public virtual hmsWirePurposeLkup hmsWirePurposeLkup { get; set; }
     }
 }

@@ -50,6 +50,24 @@ BEGIN
 END
 GO
 
+
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE type='U' AND name='hmsWireTransferTypeLKup')
+BEGIN
+	CREATE TABLE [dbo].[hmsWireTransferTypeLKup]
+	(
+		WireTransferTypeId INT NOT NULL IDENTITY(1,1),
+		[TransferType] VARCHAR(30),
+
+		CONSTRAINT hmsWireTransferTypeLKup_PK PRIMARY KEY NONCLUSTERED (WireTransferTypeId)
+	);
+	
+	INSERT INTO hmsWireTransferTypeLKup ([TransferType]) VALUES ('Normal Transfer');
+	INSERT INTO hmsWireTransferTypeLKup ([TransferType]) VALUES ('Book Transfer');
+	INSERT INTO hmsWireTransferTypeLKup ([TransferType]) VALUES ('Fee/Expense Payment');
+END
+GO
+
+
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE type='U' AND name='hmsWireMessageType')
 BEGIN
 	CREATE TABLE [dbo].[hmsWireMessageType]

@@ -133,6 +133,9 @@
     <Compile Include="hmsWireStatusLkup.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsWireTransferTypeLKup.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsWireWorkflowLog.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
