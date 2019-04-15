@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HedgeMark.Operations.Secure.DataModel;
 using System.Data.Entity.Migrations;
+using System.Data.Entity.Migrations.Design;
 using HMOSecureMiddleware.Models;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler;
@@ -137,6 +138,14 @@ namespace HMOSecureMiddleware
             };
         }
 
+        private class SwiftFormattedMsg
+        {
+            public string MessageType { get; set; }
+            public string Outbound { get; set; }
+            public string AckOrNack { get; set; }
+            public string Inbound { get; set; }
+        }
+
         private static Dictionary<string, string> GetFormattedSwiftMessages(long wireId)
         {
             var swiftMessages = new Dictionary<string, string>();
@@ -151,33 +160,76 @@ namespace HMOSecureMiddleware
             if (wireLogs.Count == 0)
                 return swiftMessages;
 
-            var isMultiMessage = wireLogs.Select(s => s.WireMessageTypeId).Distinct().ToList().Count > 1;
+            //Group the message by Message Type and allMessages
+            var swiftRawMessage = new Dictionary<int, SwiftFormattedMsg>();
 
-            //var wireTransactionLog = wireLogs.Count <= 1 ? wireLogs.FirstOrDefault() : wireLogs.LastOrDefault(s => s.WireStatusId == wireStatusId);
-            var lastMessageTypeId = wireLogs.Select(s => s.WireMessageTypeId).Last();
-            foreach (var wireTransactionLog in wireLogs.OrderBy(s => s.hmsWireLogId).ToList())
+            foreach (var log in wireLogs)
             {
-                var messageType = isMultiMessage ? string.Format("-{0}", wireTransactionLog.hmsWireMessageType.MessageType) : string.Empty;
+                SwiftFormattedMsg thisSwiftMsg;
+
+                if (swiftRawMessage.ContainsKey(log.WireMessageTypeId))
+                    thisSwiftMsg = swiftRawMessage[log.WireMessageTypeId];
+                else
+                {
+                    thisSwiftMsg = new SwiftFormattedMsg()
+                    {
+                        MessageType = log.hmsWireMessageType.MessageType
+                    };
+                }
+
+                if (!string.IsNullOrWhiteSpace(log.OutBoundSwiftMessage))
+                    thisSwiftMsg.Outbound = log.OutBoundSwiftMessage;
+                if (!string.IsNullOrWhiteSpace(log.ServiceSwiftMessage))
+                    thisSwiftMsg.AckOrNack = log.ServiceSwiftMessage;
+                if (!string.IsNullOrWhiteSpace(log.InBoundSwiftMessage))
+                    thisSwiftMsg.Inbound = log.InBoundSwiftMessage;
+
+                if (swiftRawMessage.ContainsKey(log.WireMessageTypeId))
+                    swiftRawMessage[log.WireMessageTypeId] = thisSwiftMsg;
+                else
+                    swiftRawMessage.Add(log.WireMessageTypeId, thisSwiftMsg);
+            }
+
+            var isMultiMessage = swiftRawMessage.Count > 1;
+            var lastMessageTypeId = swiftRawMessage.Select(s => s.Key).Last();
+            foreach (var msg in swiftRawMessage)
+            {
+                var messageType = isMultiMessage ? string.Format("-{0}", msg.Value.MessageType) : string.Empty;
 
                 //Outbound
                 var outbountStr = "Outbound" + messageType;
-                if (!string.IsNullOrWhiteSpace(wireTransactionLog.OutBoundSwiftMessage) && !swiftMessages.ContainsKey(outbountStr))
-                    swiftMessages.Add(outbountStr, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.OutBoundSwiftMessage, true));
+                if (!string.IsNullOrWhiteSpace(msg.Value.Outbound) && !swiftMessages.ContainsKey(outbountStr))
+                    swiftMessages.Add(outbountStr, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Outbound, true));
+
+                var isThisMessageNacked = false;
 
                 //Ack or Nack
-                if (!string.IsNullOrWhiteSpace(wireTransactionLog.ServiceSwiftMessage))
+                if (!isMultiMessage || !string.IsNullOrWhiteSpace(msg.Value.AckOrNack))
                 {
-                    var swiftMsg = SwiftMessage.Parse(wireTransactionLog.ServiceSwiftMessage);
-                    var ackLabel = string.Format("{0}{2}{1}", swiftMsg.IsNack() ? "N-" : string.Empty, messageType, isMultiMessage ? "Ack" : "Acknowledgement");
-                    if (!string.IsNullOrWhiteSpace(wireTransactionLog.ServiceSwiftMessage) && !swiftMessages.ContainsKey(ackLabel))
-                        swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.ServiceSwiftMessage, true));
+                    var swiftMsg = SwiftMessage.Parse(msg.Value.AckOrNack);
+                    string ackLabel;
+                    if (string.IsNullOrWhiteSpace(msg.Value.AckOrNack))
+                        ackLabel = "Acknowledgement";
+                    else
+                    {
+                        ackLabel = string.Format("{0}{2}{1}", swiftMsg.IsNack() ? "N-" : string.Empty, messageType, isMultiMessage ? "Ack" : "Acknowledgement");
+                        isThisMessageNacked = swiftMsg.IsNack();
+                    }
+
+                    if (!isMultiMessage || !string.IsNullOrWhiteSpace(msg.Value.AckOrNack) && !swiftMessages.ContainsKey(ackLabel))
+                        swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.AckOrNack, true));
                 }
+
+                //When Nacked, we will not have any confirmation message
+                if (isThisMessageNacked)
+                    continue;
 
                 //InBound
                 var confirmationLabel = "Confirmation" + messageType;
-                if (!swiftMessages.ContainsKey(confirmationLabel) && ((lastMessageTypeId == wireTransactionLog.WireMessageTypeId) || !string.IsNullOrWhiteSpace(wireTransactionLog.InBoundSwiftMessage)))
-                    swiftMessages.Add(confirmationLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
+                if (!swiftMessages.ContainsKey(confirmationLabel) && (lastMessageTypeId == msg.Key || !string.IsNullOrWhiteSpace(msg.Value.Inbound)))
+                    swiftMessages.Add(confirmationLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Inbound, true));
             }
+            
 
             return swiftMessages;
         }

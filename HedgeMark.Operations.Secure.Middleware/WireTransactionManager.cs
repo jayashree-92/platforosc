@@ -131,7 +131,7 @@ namespace HMOSecureMiddleware
                 CreateAndSendMessageToMQ(wire, cancellationMessageType);
 
                 //Update the given wire Id to "processing" in workflow and wire table
-                WireDataManager.SetWireStatusAndWorkFlow(wire.WireId, WireDataManager.WireStatus.Cancelled, WireDataManager.SwiftStatus.Processing, "Wire Cancellation request sent and Processing", -1);
+                WireDataManager.SetWireStatusAndWorkFlow(wire.WireId, WireDataManager.WireStatus.Cancelled, WireDataManager.SwiftStatus.Processing, "Wire cancellation request sent and processing", -1);
             }
             catch (Exception ex)
             {
@@ -158,18 +158,22 @@ namespace HMOSecureMiddleware
                 QueueSystemManager.SendMessage(swiftMessage);
         }
 
-        public static void LogFrontEndAcknowledgment(long wireId)
+        public static void LogFrontEndAcknowledgment(long wireId, string fullMessageType)
         {
             using (var context = new OperationsSecureContext())
             {
-                var wireLog = context.hmsWireLogs.FirstOrDefault(s => s.hmsWireId == wireId);
+                //Get wire Details
+                var hmWire = context.hmsWires.First(s => s.hmsWireId == wireId);
+                var msgType = context.hmsWireMessageTypes.FirstOrDefault(s => s.MessageType == fullMessageType);
+
+                var wireLog = context.hmsWireLogs.FirstOrDefault(s => s.hmsWireId == wireId && s.WireStatusId == hmWire.WireStatusId && s.WireMessageTypeId == msgType.hmsWireMessageTypeId);
 
                 if (wireLog == null)
                     return;
 
                 wireLog.IsFrontEndAcknowleged = true;
 
-                context.hmsWireLogs.AddOrUpdate(h => h.hmsWireId, wireLog);
+                context.hmsWireLogs.AddOrUpdate(h => new { h.hmsWireId, h.WireStatusId, h.WireMessageTypeId }, wireLog);
                 context.SaveChanges();
             }
         }
@@ -181,9 +185,12 @@ namespace HMOSecureMiddleware
             var confirmationData = InboundSwiftMsgParser.ParseMessage(swiftMessage);
 
             if (confirmationData.IsFeAck)
-                LogFrontEndAcknowledgment(confirmationData.WireId);
+            {
+                LogFrontEndAcknowledgment(confirmationData.WireId, confirmationData.SwiftMessage.GetFullMessageType());
+                return;
+            }
 
-            else if (confirmationData.IsAckOrNack && confirmationData.IsAcknowledged)
+            if (confirmationData.IsAckOrNack && confirmationData.IsAcknowledged)
                 WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, WireDataManager.SwiftStatus.Acknowledged, string.Empty);
 
             else if (confirmationData.IsAckOrNack && confirmationData.IsNegativeAcknowledged)
@@ -225,17 +232,17 @@ namespace HMOSecureMiddleware
 
         private static void LogInBoundWireTransaction(WireInBoundMessage inBoundMsg, string swiftMessage)
         {
-            var wireTicket = WireDataManager.GetWireData(inBoundMsg.WireId);
-
             using (var context = new OperationsSecureContext())
             {
+                //Get wire Details
+                var hmWire = context.hmsWires.First(s => s.hmsWireId == inBoundMsg.WireId);
 
                 //We need last or default - as same wireId can be approved and cancelled
-                var wireLog = context.hmsWireLogs.Where(s => s.hmsWireId == wireTicket.WireId && s.WireStatusId == wireTicket.HMWire.WireStatusId).OrderBy(s => s.RecCreatedAt).ToList().LastOrDefault() ?? new hmsWireLog()
+                var wireLog = context.hmsWireLogs.Where(s => s.hmsWireId == hmWire.hmsWireId && s.WireStatusId == hmWire.WireStatusId).OrderBy(s => s.RecCreatedAt).ToList().LastOrDefault() ?? new hmsWireLog()
                 {
                     hmsWireId = inBoundMsg.WireId,
-                    WireStatusId = wireTicket.HMWire.WireStatusId,
-                    WireMessageTypeId = wireTicket.HMWire.WireMessageTypeId,
+                    WireStatusId = hmWire.WireStatusId,
+                    WireMessageTypeId = hmWire.WireMessageTypeId,
                     RecCreatedAt = DateTime.Now,
                     IsFrontEndAcknowleged = false
                 };
@@ -251,13 +258,12 @@ namespace HMOSecureMiddleware
                 if (!string.IsNullOrWhiteSpace(inBoundMsg.ConfirmationMessage))
                     wireLog.ConfirmationMessageDetails = inBoundMsg.ConfirmationMessage;
 
-                context.hmsWireLogs.AddOrUpdate(wireLog);
+                context.hmsWireLogs.AddOrUpdate(h => new { h.hmsWireId, h.WireStatusId }, wireLog);
                 context.SaveChanges();
+
+                if (hmWire.SwiftStatusId != (int)WireDataManager.SwiftStatus.Acknowledged)
+                    NotificationManager.NotifyOpsUser(hmWire.hmsWireId);
             }
-
-            if (wireTicket.HMWire.SwiftStatusId != (int)WireDataManager.SwiftStatus.Acknowledged)
-                NotificationManager.NotifyOpsUser(wireTicket);
-
         }
 
         private static void LogInBoundWireMessage(string inBoundMQMessage)

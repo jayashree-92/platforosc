@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using HedgeMark.SwiftMessageHandler.Model.Blocks;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 
@@ -95,6 +96,11 @@ namespace HedgeMark.SwiftMessageHandler.Model
             return Block2.MessageType;
         }
 
+        public string GetFullMessageType()
+        {
+            return string.Format("MT{0}{1}", Block2.MessageType, Block3.Fields.Any(s => s.Name == FieldDirectory.FIELD_119) ? string.Format(" {0}", Block3.GetFieldValue(FieldDirectory.FIELD_119)) : string.Empty).Trim();
+        }
+
         public bool IsServiceMessage21()
         {
             return Block1.ServiceId == "21";
@@ -174,6 +180,9 @@ namespace HedgeMark.SwiftMessageHandler.Model
         }
         public static SwiftMessage Parse(string finMessage)
         {
+            if (string.IsNullOrWhiteSpace(finMessage))
+                return null;
+
             return SwiftMessageParser.Parse(finMessage);
         }
     }

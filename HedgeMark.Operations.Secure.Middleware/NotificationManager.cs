@@ -11,6 +11,13 @@ namespace HMOSecureMiddleware
 {
     public class NotificationManager
     {
+
+        public static void NotifyOpsUser(long wireId)
+        {
+            var wireTicket = WireDataManager.GetWireData(wireId);
+            NotifyOpsUser(wireTicket);
+        }
+
         public static void NotifyOpsUser(WireTicket wireTicket)
         {
             //Notification is generated 
@@ -34,13 +41,13 @@ namespace HMOSecureMiddleware
 
             //need to derive recipients 
             var qualifiedReceipients = isSwiftStatusNotInitiated
-                ? wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == 2).Select(s => s.CreatedBy).ToList() 
+                ? wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == 2).Select(s => s.CreatedBy).ToList()
                 : wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == 2 || s.WireStatusId == 3).Select(s => s.CreatedBy).ToList();
 
             using (var context = new OperationsSecureContext())
             {
                 var notificationList = new List<hmsNotificationStaging>();
-                qualifiedReceipients.ForEach(toUserId=>
+                qualifiedReceipients.ForEach(toUserId =>
                 {
                     notificationList.Add(new hmsNotificationStaging()
                     {
@@ -51,7 +58,7 @@ namespace HMOSecureMiddleware
                         CreatedAt = DateTime.Now
                     });
                 });
-                
+
                 context.hmsNotificationStagings.AddRange(notificationList);
                 context.SaveChanges();
             }

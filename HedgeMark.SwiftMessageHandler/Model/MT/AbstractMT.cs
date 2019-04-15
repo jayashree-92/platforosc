@@ -53,6 +53,5 @@ namespace HedgeMark.SwiftMessageHandler.Model.MT
 
             return this;
         }
-
     }
 }
