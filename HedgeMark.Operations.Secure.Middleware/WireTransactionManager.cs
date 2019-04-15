@@ -131,7 +131,7 @@ namespace HMOSecureMiddleware
                 CreateAndSendMessageToMQ(wire, cancellationMessageType);
 
                 //Update the given wire Id to "processing" in workflow and wire table
-                WireDataManager.SetWireStatusAndWorkFlow(wire.WireId, WireDataManager.WireStatus.Cancelled, WireDataManager.SwiftStatus.Processing, "Wire Cancellation request sent and Processing", 1);
+                WireDataManager.SetWireStatusAndWorkFlow(wire.WireId, WireDataManager.WireStatus.Cancelled, WireDataManager.SwiftStatus.Processing, "Wire Cancellation request sent and Processing", -1);
             }
             catch (Exception ex)
             {

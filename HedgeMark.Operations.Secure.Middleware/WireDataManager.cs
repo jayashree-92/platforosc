@@ -104,8 +104,8 @@ namespace HMOSecureMiddleware
                 var users = context.hLoginRegistrations.Where(s => userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
                 users.Add(-1, "System");
 
-                workflowUsers = hmWire.hmsWireWorkflowLogs.Select(s => users[s.CreatedBy]).ToList();
-                attachmentUsers = hmWire.hmsWireDocuments.Select(s => users[s.CreatedBy]).ToList();
+                workflowUsers = hmWire.hmsWireWorkflowLogs.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
+                attachmentUsers = hmWire.hmsWireDocuments.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
 
                 wireSendingAccount = context.onBoardingAccounts.FirstOrDefault(s => hmWire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount();
                 wireReceivingAccount = context.onBoardingAccounts.FirstOrDefault(s => hmWire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount();
@@ -145,7 +145,7 @@ namespace HMOSecureMiddleware
 
             using (var context = new OperationsSecureContext())
             {
-                wireLogs = context.hmsWireLogs.Include("hmsWireMessageType").Where(s => s.hmsWireId == wireId).ToList();
+                wireLogs = context.hmsWireLogs.Include("hmsWireMessageType").Where(s => s.hmsWireId == wireId).OrderBy(s => s.hmsWireLogId).ToList();
             }
 
             if (wireLogs.Count == 0)
@@ -154,7 +154,7 @@ namespace HMOSecureMiddleware
             var isMultiMessage = wireLogs.Select(s => s.WireMessageTypeId).Distinct().ToList().Count > 1;
 
             //var wireTransactionLog = wireLogs.Count <= 1 ? wireLogs.FirstOrDefault() : wireLogs.LastOrDefault(s => s.WireStatusId == wireStatusId);
-            var isPendingConfirmation = wireLogs.All(s => s.WireStatusId != (int)WireStatus.Failed);
+            var lastMessageTypeId = wireLogs.Select(s => s.WireMessageTypeId).Last();
             foreach (var wireTransactionLog in wireLogs.OrderBy(s => s.hmsWireLogId).ToList())
             {
                 var messageType = isMultiMessage ? string.Format("-{0}", wireTransactionLog.hmsWireMessageType.MessageType) : string.Empty;
@@ -175,7 +175,7 @@ namespace HMOSecureMiddleware
 
                 //InBound
                 var confirmationLabel = "Confirmation" + messageType;
-                if (!swiftMessages.ContainsKey(confirmationLabel) && (isPendingConfirmation || !string.IsNullOrWhiteSpace(wireTransactionLog.InBoundSwiftMessage)))
+                if (!swiftMessages.ContainsKey(confirmationLabel) && ((lastMessageTypeId == wireTransactionLog.WireMessageTypeId) || !string.IsNullOrWhiteSpace(wireTransactionLog.InBoundSwiftMessage)))
                     swiftMessages.Add(confirmationLabel, SwiftMessageInterpreter.GetDetailedFormatted(wireTransactionLog.InBoundSwiftMessage, true));
             }
 
