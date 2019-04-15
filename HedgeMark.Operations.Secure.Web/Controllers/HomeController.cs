@@ -104,7 +104,10 @@ namespace HMOSecureWeb.Controllers
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
-                wireStatusDetails = context.hmsWires.Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (statusId == 0 || s.WireStatusId == statusId)).ToList();
+                wireStatusDetails = context.hmsWires.Include("hmsWireMessageType")
+                    .Include("hmsWirePurposeLkup")
+                    .Include("hmsWireStatusLkup")
+                    .Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (statusId == 0 || s.WireStatusId == statusId)).ToList();
             }
 
             List<dmaAgreementOnBoarding> wireAgreements;
