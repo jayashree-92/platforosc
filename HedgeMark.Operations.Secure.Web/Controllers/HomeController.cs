@@ -48,12 +48,12 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public JsonResult GetWireStatusCount(DateTime contextDate)
+        public JsonResult GetWireStatusCount(DateTime valueDate)
         {
             WireStatusCount wireStatusCount;
             using (var context = new OperationsSecureContext())
             {
-                var wireStatusCountMap = context.hmsWires.Where(s => s.ContextDate == contextDate).Select(s => new { s.WireStatusId, s.SwiftStatusId }).ToList();
+                var wireStatusCountMap = context.hmsWires.Where(s => s.ValueDate == valueDate).Select(s => new { s.WireStatusId, s.SwiftStatusId }).ToList();
                 wireStatusCount = new WireStatusCount();
 
                 foreach (var statusCount in wireStatusCountMap)
@@ -96,13 +96,15 @@ namespace HMOSecureWeb.Controllers
             List<hmsWire> wireStatusDetails;
             using (var context = new OperationsSecureContext())
             {
+                //context.Database.Log = s =>
+                //{
+                //    Logger.Debug(s);
+                //};
+
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
-                wireStatusDetails = context.hmsWires.Include("hmsWireMessageType")
-                                                    .Include("hmsWirePurposeLkup")
-                                                    .Include("hmsWireStatusLkup")
-                                                    .Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (statusId == 0 || s.WireStatusId == statusId)).ToList();
+                wireStatusDetails = context.hmsWires.Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (statusId == 0 || s.WireStatusId == statusId)).ToList();
             }
 
             List<dmaAgreementOnBoarding> wireAgreements;

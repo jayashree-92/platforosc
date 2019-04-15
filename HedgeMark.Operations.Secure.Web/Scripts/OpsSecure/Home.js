@@ -109,7 +109,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
         if ($scope.IsWireTicketModelOpen)
             return;
 
-        $http.get("/Home/GetWireStatusCount?contextDate=" + $scope.ContextDate.Date).then(function (response) {
+        $http.get("/Home/GetWireStatusCount?valueDate=" + $scope.ContextDate.Date).then(function (response) {
             var wireCounts = response.data;
 
             if (!isEquivalent($scope.WireStatusCounts, wireCounts)) {
