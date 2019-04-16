@@ -31,9 +31,9 @@ namespace HMOSecureMiddleware
 
             var message = new StringBuilder();
 
-            message.AppendFormat("{0}{1} Wire of {2} for ", wireTicket.HMWire.IsBookTransfer ? "Book transfer -" : string.Empty, wireTicket.HMWire.hmsWireMessageType.MessageType, wireTicket.HMWire.Amount.ToCurrency());
+            message.AppendFormat("{0}{1} Wire of {2} for ", wireTicket.IsBookTransfer ? "Book transfer -" : string.Empty, wireTicket.HMWire.hmsWireMessageType.MessageType, wireTicket.HMWire.Amount.ToCurrency());
 
-            message.Append(wireTicket.HMWire.IsBookTransfer
+            message.Append(wireTicket.IsBookTransfer
                 ? wireTicket.FundName
                 : wireTicket.Agreement.AgreementShortName);
 

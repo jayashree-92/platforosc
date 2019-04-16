@@ -14,7 +14,16 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class hmsWireTransferTypeLKup
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public hmsWireTransferTypeLKup()
+        {
+            this.hmsWires = new HashSet<hmsWire>();
+        }
+    
         public int WireTransferTypeId { get; set; }
         public string TransferType { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsWire> hmsWires { get; set; }
     }
 }

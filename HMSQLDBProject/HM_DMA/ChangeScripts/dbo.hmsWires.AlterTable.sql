@@ -158,21 +158,6 @@ BEGIN
 	ALTER TABLE hmsWires DROP COLUMN [CreditOrDebitConfirmedAt] ;
 END
 
-IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'TransferType' and TABLE_NAME = 'hmsWires')
-BEGIN
-	ALTER TABLE hmsWires ADD TransferType VARCHAR(30) NULL
-	
-	DECLARE @Command  NVARCHAR(1000)
-
-	SELECT @Command ='UPDATE dbo.hmsWires 
-			SET TransferType = CASE IsBookTransfer
-			WHEN 1 THEN ''Book Transfer'' 
-			ELSE ''Normal Transfer''
-	      END'
-
-	EXECUTE (@Command);
-END
-GO
 
 IF NOT EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME = 'hmsInBoundMQLogs_PK')
 BEGIN
@@ -216,3 +201,52 @@ BEGIN
 	ALTER TABLE [dbo].[hmsWires]  DROP CONSTRAINT UK_hmsWires_ValueDate_WirePurposeId_OnBoardAccountId_OnBoardSSITemplateId
 END
 GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IsBookTransfer' AND TABLE_NAME = 'hmsWires')
+BEGIN
+DECLARE @Command3 NVARCHAR(MAX)
+  select @Command3 ='Alter Table hmsWires Drop Constraint [' + (
+		select d.name
+     from 
+         sys.tables t
+         join sys.default_constraints d on d.parent_object_id = t.object_id
+         join sys.columns c on c.object_id = t.object_id
+                               and c.column_id = d.parent_column_id
+     where 
+         t.name = 'hmsWires'
+         and c.name = 'IsBookTransfer') + ']'
+		
+    print @Command3
+    exec sp_executesql @Command3;
+
+
+	ALTER TABLE hmsWires DROP COLUMN IsBookTransfer ;
+END
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'TransferType' AND TABLE_NAME = 'hmsWires')
+BEGIN
+	ALTER TABLE hmsWires DROP COLUMN TransferType;
+END
+
+
+--IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'TransferType' and TABLE_NAME = 'hmsWires')
+--BEGIN
+--	ALTER TABLE hmsWires ADD TransferType VARCHAR(30) NULL
+	
+--	DECLARE @Command  NVARCHAR(1000)
+
+--	SELECT @Command ='UPDATE dbo.hmsWires 
+--			SET TransferType = CASE IsBookTransfer
+--			WHEN 1 THEN ''Book Transfer'' 
+--			ELSE ''Normal Transfer''
+--	      END'
+
+--	EXECUTE (@Command);
+--END
+--GO
+
+
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'NotesToApprover' AND TABLE_NAME = 'hmsWires')
+BEGIN
+	ALTER TABLE hmsWires ADD NotesToApprover VARCHAR(1000);
+END

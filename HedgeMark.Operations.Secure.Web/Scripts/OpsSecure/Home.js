@@ -94,7 +94,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
         }
 
         $scope.IsNextDateNotAvailable = false;
-        if (nextContextDate.diff(moment(), 'days') >= 0) {
+        if (nextContextDate.diff(moment(), 'days') > 0) {
             $scope.IsNextDateNotAvailable = true;
             return;
         }

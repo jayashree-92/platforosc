@@ -32,6 +32,13 @@ namespace HMOSecureMiddleware
             Failed,
         }
 
+        public enum TransferType
+        {
+            NormalTransfer = 1,
+            BookTransfer,
+            FeeOrExpensesPayment
+        }
+
         public class WireTicketStatus
         {
             public WireStatus WireStatus { get; set; }
@@ -52,6 +59,7 @@ namespace HMOSecureMiddleware
                                          .Include("hmsWireWorkflowLogs")
                                          .Include("hmsWireStatusLkup")
                                          .Include("hmsWirePurposeLkup")
+                                         .Include("hmsWireTransferTypeLKup")
                                          .Include("hmsWireLogs").FirstOrDefault(s => s.hmsWireId == wireId);
             }
 
@@ -71,7 +79,9 @@ namespace HMOSecureMiddleware
             hmWire.hmsWireStatusLkup.hmsWireLogs = null;
             hmWire.hmsWirePurposeLkup.hmsWires = null;
             hmWire.hmsWireMessageType.hmsWires = null;
+            hmWire.hmsWireTransferTypeLKup.hmsWires = null;
             hmWire.hmsWireMessageType.hmsWireLogs = null;
+            
             hmWire.hmsWireDocuments.ForEach(s => s.hmsWire = null);
             hmWire.hmsWireWorkflowLogs.ForEach(s =>
             {
@@ -130,11 +140,11 @@ namespace HMOSecureMiddleware
                 HMWire = hmWire,
                 Agreement = wireAgreement,
                 Account = wireSendingAccount,
-                ReceivingAccount = hmWire.IsBookTransfer ? wireReceivingAccount : new onBoardingAccount(),
+                ReceivingAccount = hmWire.WireTransferTypeId == 2 ? wireReceivingAccount : new onBoardingAccount(),
                 SSITemplate = wireSSITemplate,
                 AttachmentUsers = attachmentUsers,
                 WorkflowUsers = workflowUsers,
-                SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireId)
+                SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireId),
             };
         }
 
@@ -229,7 +239,7 @@ namespace HMOSecureMiddleware
                 if (!swiftMessages.ContainsKey(confirmationLabel) && (lastMessageTypeId == msg.Key || !string.IsNullOrWhiteSpace(msg.Value.Inbound)))
                     swiftMessages.Add(confirmationLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Inbound, true));
             }
-            
+
 
             return swiftMessages;
         }

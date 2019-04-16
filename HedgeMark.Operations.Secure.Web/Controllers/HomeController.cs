@@ -21,7 +21,7 @@ namespace HMOSecureWeb.Controllers
         private static readonly ILog Logger = LogManager.GetLogger(typeof(HomeController));
         public ActionResult Index()
         {
-            return View(DateTime.Now.GetContextDate());
+            return View(DateTime.Today);
         }
 
         public ActionResult WirePurpose()
@@ -53,7 +53,7 @@ namespace HMOSecureWeb.Controllers
             WireStatusCount wireStatusCount;
             using (var context = new OperationsSecureContext())
             {
-                var wireStatusCountMap = context.hmsWires.Where(s => s.ValueDate == valueDate).Select(s => new { s.WireStatusId, s.SwiftStatusId }).ToList();
+                var wireStatusCountMap = context.hmsWires.Where(s => s.WireStatusId == 2 || s.ValueDate == valueDate).Select(s => new { s.WireStatusId, s.SwiftStatusId }).ToList();
                 wireStatusCount = new WireStatusCount();
 
                 foreach (var statusCount in wireStatusCountMap)
@@ -104,9 +104,11 @@ namespace HMOSecureWeb.Controllers
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
-                wireStatusDetails = context.hmsWires.Include("hmsWireMessageType")
+                wireStatusDetails = context.hmsWires
+                    .Include("hmsWireMessageType")
                     .Include("hmsWirePurposeLkup")
                     .Include("hmsWireStatusLkup")
+                    .Include("hmsWireTransferTypeLKup")
                     .Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (statusId == 0 || s.WireStatusId == statusId)).ToList();
             }
 
@@ -122,7 +124,7 @@ namespace HMOSecureWeb.Controllers
                 context.Configuration.LazyLoadingEnabled = false;
 
 
-                var accountIds = wireStatusDetails.Select(s => s.OnBoardAccountId).Union(wireStatusDetails.Where(s => s.IsBookTransfer).Select(s => s.OnBoardSSITemplateId)).Distinct().ToList();
+                var accountIds = wireStatusDetails.Select(s => s.OnBoardAccountId).Union(wireStatusDetails.Where(s => s.WireTransferTypeId == 2).Select(s => s.OnBoardSSITemplateId)).Distinct().ToList();
 
                 var ssiTemplateIds = wireStatusDetails.Select(s => s.OnBoardSSITemplateId).Distinct().ToList();
                 var userIds = wireStatusDetails.Select(s => s.LastUpdatedBy).Union(wireStatusDetails.Select(s => s.CreatedBy)).Distinct().ToList();
@@ -144,6 +146,7 @@ namespace HMOSecureWeb.Controllers
                 wire.hmsWireMessageType.hmsWires = null;
                 wire.hmsWirePurposeLkup.hmsWires = null;
                 wire.hmsWireStatusLkup.hmsWires = null;
+                wire.hmsWireTransferTypeLKup.hmsWires = null;
 
                 var thisWire = new WireTicket
                 {
@@ -154,8 +157,8 @@ namespace HMOSecureWeb.Controllers
                         dmaCounterPartyOnBoarding = new dmaCounterPartyOnBoarding() { CounterpartyName = string.Format("unknown agrId {0}", wire.OnBoardAgreementId) },
                     },
                     Account = wireAccounts.FirstOrDefault(s => wire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount(),
-                    ReceivingAccount = wire.IsBookTransfer ? wireAccounts.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount() : new onBoardingAccount(),
-                    SSITemplate = !wire.IsBookTransfer ? wireSSITemplates.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate() : new onBoardingSSITemplate(),
+                    ReceivingAccount = wire.WireTransferTypeId == 2 ? wireAccounts.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount() : new onBoardingAccount(),
+                    SSITemplate = wire.WireTransferTypeId != 2 ? wireSSITemplates.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate() : new onBoardingSSITemplate(),
                     FundName = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) == null ? "" : hFunds.First(s => s.HFundId == wire.hmFundId).PerferredFundName
                 };
 

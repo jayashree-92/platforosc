@@ -20,6 +20,17 @@ namespace HMOSecureMiddleware.Models
                 return HMWire == null ? 0 : HMWire.hmsWireId;
             }
         }
+
+        public bool IsBookTransfer
+        {
+            get { return HMWire.WireTransferTypeId == 2; }
+        }
+
+        public string TransferType
+        {
+            get { return HMWire.hmsWireTransferTypeLKup.TransferType; }
+        }
+
         public hmsWire HMWire { get; set; }
         public string WireCreatedBy { get; set; }
         public string WireLastUpdatedBy { get; set; }
@@ -34,14 +45,14 @@ namespace HMOSecureMiddleware.Models
         {
             get
             {
-                return HMWire.IsBookTransfer ? ReceivingAccount.AccountName : SSITemplate.TemplateName;
+                return IsBookTransfer ? ReceivingAccount.AccountName : SSITemplate.TemplateName;
             }
         }
         public string ReceivingAccountCurrency
         {
             get
             {
-                return HMWire.IsBookTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
+                return IsBookTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
             }
         }
         public Dictionary<string, string> SwiftMessages { get; set; }
@@ -94,7 +105,8 @@ namespace HMOSecureMiddleware.Models
 
                 using (var context = new OperationsSecureContext())
                 {
-                    var wire = context.hmsWires.FirstOrDefault(s => s.WireStatusId == 3 && s.SwiftStatusId != 5 && s.ValueDate == valueDate.Date && s.Currency == currency && s.Amount == amount);
+                    var allPendingWires = context.hmsWires.Where(s => s.WireStatusId == 3 && s.SwiftStatusId != 5 && s.ValueDate == valueDate.Date).ToList();
+                    var wire = allPendingWires.FirstOrDefault(s => s.Currency == currency && s.Amount == amount);
 
                     if (wire != null)
                         WireId = wire.hmsWireId;
