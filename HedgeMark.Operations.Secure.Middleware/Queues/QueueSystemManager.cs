@@ -182,10 +182,10 @@ namespace HMOSecureMiddleware.Queues
             {
                 var inBoundMessageMQLog = new hmsMQLog()
                 {
-                    IsOutBound = isOutBound,
-                    Message = message,
                     QueueManager = QueueManagerName,
+                    Message = message,
                     QueueName = queueName,
+                    IsOutBound = isOutBound,
                     CreatedAt = DateTime.Now
                 };
                 context.hmsMQLogs.Add(inBoundMessageMQLog);
