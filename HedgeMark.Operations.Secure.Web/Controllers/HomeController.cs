@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Mvc;
 using HedgeMark.Operations.Secure.DataModel;
 using HMOSecureMiddleware;
 using HMOSecureMiddleware.Models;
 using System.IO;
-using HMOSecureMiddleware.Queues;
-using HMOSecureWeb.Utility;
 using Hangfire;
 using HMOSecureWeb.Jobs;
 using log4net;
-using log4net.Repository.Hierarchy;
 
 namespace HMOSecureWeb.Controllers
 {

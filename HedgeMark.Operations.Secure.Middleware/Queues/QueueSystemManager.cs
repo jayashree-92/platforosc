@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using Com.HedgeMark.Commons;
+using HedgeMark.Operations.Secure.DataModel;
 using IBM.WMQ;
-using IBM.XMS;
 using log4net;
 using MQC = IBM.WMQ.MQC;
 
@@ -26,6 +25,7 @@ namespace HMOSecureMiddleware.Queues
         private static string SenderQueueName { get { return ConfigurationManagerWrapper.StringSetting("SenderQueueName", "DMO.EMX.DMO2EMX.OUTBOUND.U1.F"); } }
         /*In-Bound Parameters*/
         private static string ReceiverQueueName { get { return ConfigurationManagerWrapper.StringSetting("ReceiverQueueName", "DMO.EMX.EMX2DMO.INBOUND.U1.F"); } }
+        /*Ack In-Bound Parameters*/
         private static string ReceiverAckQueueName { get { return ConfigurationManagerWrapper.StringSetting("ReceiverAckQueueName", "DMO.EMX.EMX2DMO.ACK.U1.F"); } }
 
         //We might need to create Queue based on Environmental parametes
@@ -67,7 +67,7 @@ namespace HMOSecureMiddleware.Queues
         {
             if (Utility.IsLocal())
                 return;
-            
+
             //Send this Swift Message
             SendMessageInQueue(swiftMessage);
 
@@ -93,9 +93,11 @@ namespace HMOSecureMiddleware.Queues
 
                 var queuePutMessageOptions = new MQPutMessageOptions();
                 queue.Put(queueMessage, queuePutMessageOptions);
-
-                Logger.Info("Message sent to the queue successfully");
                 queue.Close();
+
+                //Log all OutGoing messages
+                LogMQMessage(swiftMessage, SenderQueueName, true);
+                Logger.Debug("MQ Message sent Successfully");
             }
 
             catch (MQException ex)
@@ -147,15 +149,15 @@ namespace HMOSecureMiddleware.Queues
             {
                 try
                 {
-                    // creating a message object
                     Logger.Debug("Getting the Inbound message from Queue..");
                     var message = new MQMessage();
                     queue.Get(message, mqGetMsgOpts);
                     var messageAsText = message.ReadString(message.MessageLength);
-                    Logger.Info(string.Format("Got a message in Queue {0}: {1}", queueName, messageAsText));
+
+                    //Log all Incoming messages
+                    LogMQMessage(messageAsText, queueName, false);
 
                     WireTransactionManager.ProcessInboundMessage(messageAsText);
-
                     Logger.Debug("Message Processing Complete");
                     message.ClearMessage();
                 }
@@ -172,6 +174,23 @@ namespace HMOSecureMiddleware.Queues
             }
 
             queue.Close();
+        }
+
+        public static void LogMQMessage(string message, string queueName, bool isOutBound)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var inBoundMessageMQLog = new hmsMQLog()
+                {
+                    IsOutBound = isOutBound,
+                    Message = message,
+                    QueueManager = QueueManagerName,
+                    QueueName = queueName,
+                    CreatedAt = DateTime.Now
+                };
+                context.hmsMQLogs.Add(inBoundMessageMQLog);
+                context.SaveChanges();
+            }
         }
 
         //private static void ProcessMessage(IMessage msg)

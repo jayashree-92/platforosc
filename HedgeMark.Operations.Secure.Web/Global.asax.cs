@@ -12,7 +12,6 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using Com.HedgeMark.Commons;
-using HedgeMark.Operations.Secure.DataModel;
 using HMOSecureMiddleware;
 using HMOSecureWeb.Controllers;
 using HMOSecureWeb.Utility;
@@ -108,7 +107,8 @@ namespace HMOSecureWeb
             }
 
             var webIdentity = new GenericIdentity(email, "SiteMinder");
-            var roles = Roles.GetRolesForUser(email);
+            string[] roles = Roles.GetRolesForUser(email);
+            
             var principal = new GenericPrincipal(webIdentity, roles);
             HttpContext.Current.User = principal;
             Thread.CurrentPrincipal = principal;

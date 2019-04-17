@@ -12,10 +12,13 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class hmsInBoundMQLog
+    public partial class hmsMQLog
     {
-        public long hmsInBoundMQLogsId { get; set; }
-        public string InBoundMessage { get; set; }
+        public long hmsMQLogsId { get; set; }
+        public bool IsOutBound { get; set; }
+        public string QueueManager { get; set; }
+        public string QueueName { get; set; }
+        public string Message { get; set; }
         public System.DateTime CreatedAt { get; set; }
     }
 }

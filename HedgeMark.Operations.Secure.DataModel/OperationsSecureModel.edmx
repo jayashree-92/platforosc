@@ -5,12 +5,22 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="OperationsSecureModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="hmsInBoundMQLogs">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HM_WIRES.dbo.hmsMQLogs' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="hmsMQLogs">
           <Key>
-            <PropertyRef Name="hmsInBoundMQLogsId" />
+            <PropertyRef Name="hmsMQLogsId" />
+            <PropertyRef Name="IsOutBound" />
+            <PropertyRef Name="QueueManager" />
+            <PropertyRef Name="QueueName" />
+            <PropertyRef Name="Message" />
+            <PropertyRef Name="CreatedAt" />
           </Key>
-          <Property Name="hmsInBoundMQLogsId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="InBoundMessage" Type="varchar" MaxLength="8000" Nullable="false" />
+          <Property Name="hmsMQLogsId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IsOutBound" Type="bit" Nullable="false" />
+          <Property Name="QueueManager" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="QueueName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Message" Type="varchar" MaxLength="8000" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsNotificationStaging">
@@ -322,7 +332,6 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="OperationsSecureModelStoreContainer">
-          <EntitySet Name="hmsInBoundMQLogs" EntityType="Self.hmsInBoundMQLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsNotificationStaging" EntityType="Self.hmsNotificationStaging" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUserAuditLog" EntityType="Self.hmsUserAuditLog" Schema="dbo" store:Type="Tables" />
@@ -335,6 +344,16 @@
           <EntitySet Name="hmsWireStatusLkup" EntityType="Self.hmsWireStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireTransferTypeLKup" EntityType="Self.hmsWireTransferTypeLKup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireWorkflowLog" EntityType="Self.hmsWireWorkflowLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsMQLogs" EntityType="Self.hmsMQLogs" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [hmsMQLogs].[hmsMQLogsId] AS [hmsMQLogsId], 
+    [hmsMQLogs].[IsOutBound] AS [IsOutBound], 
+    [hmsMQLogs].[QueueManager] AS [QueueManager], 
+    [hmsMQLogs].[QueueName] AS [QueueName], 
+    [hmsMQLogs].[Message] AS [Message], 
+    [hmsMQLogs].[CreatedAt] AS [CreatedAt]
+    FROM [dbo].[hmsMQLogs] AS [hmsMQLogs]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_hmsWireDocument_hmsWires_hmsWireId" Association="Self.FK_hmsWireDocument_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsWireDocument" EntitySet="hmsWireDocument" />
@@ -418,7 +437,6 @@
           </AssociationSet>
           <EntitySet Name="hmsWireJobSchedules" EntityType="OperationsSecureModel.hmsWireJobSchedule" />
           <EntitySet Name="hmsNotificationStagings" EntityType="OperationsSecureModel.hmsNotificationStaging" />
-          <EntitySet Name="hmsInBoundMQLogs" EntityType="OperationsSecureModel.hmsInBoundMQLog" />
           <EntitySet Name="hmsWirePurposeLkups" EntityType="OperationsSecureModel.hmsWirePurposeLkup" />
           <EntitySet Name="hmsWireTransferTypeLKups" EntityType="OperationsSecureModel.hmsWireTransferTypeLKup" />
           <EntitySet Name="hmsWires" EntityType="OperationsSecureModel.hmsWire" />
@@ -458,6 +476,7 @@
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
           </AssociationSet>
+          <EntitySet Name="hmsMQLogs" EntityType="OperationsSecureModel.hmsMQLog" />
           </EntityContainer>
         <EntityType Name="hmsUserAuditLog">
           <Key>
@@ -623,14 +642,6 @@
           <Property Name="ToUserId" Type="Int32" Nullable="false" />
           <Property Name="Title" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Message" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
-        <EntityType Name="hmsInBoundMQLog">
-          <Key>
-            <PropertyRef Name="hmsInBoundMQLogsId" />
-          </Key>
-          <Property Name="hmsInBoundMQLogsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="InBoundMessage" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="hmsWirePurposeLkup">
@@ -801,6 +812,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="hmsMQLog">
+          <Key>
+            <PropertyRef Name="hmsMQLogsId" />
+            <PropertyRef Name="IsOutBound" />
+            <PropertyRef Name="QueueManager" />
+            <PropertyRef Name="QueueName" />
+            <PropertyRef Name="Message" />
+            <PropertyRef Name="CreatedAt" />
+          </Key>
+          <Property Name="hmsMQLogsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsOutBound" Type="Boolean" Nullable="false" />
+          <Property Name="QueueManager" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QueueName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Message" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -919,15 +946,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="hmsInBoundMQLogs">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsInBoundMQLog">
-              <MappingFragment StoreEntitySet="hmsInBoundMQLogs">
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="InBoundMessage" ColumnName="InBoundMessage" />
-                <ScalarProperty Name="hmsInBoundMQLogsId" ColumnName="hmsInBoundMQLogsId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="hmsWirePurposeLkups">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsWirePurposeLkup">
               <MappingFragment StoreEntitySet="hmsWirePurposeLkup">
@@ -977,6 +995,18 @@
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsMQLogs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsMQLog">
+              <MappingFragment StoreEntitySet="hmsMQLogs">
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="QueueName" ColumnName="QueueName" />
+                <ScalarProperty Name="QueueManager" ColumnName="QueueManager" />
+                <ScalarProperty Name="IsOutBound" ColumnName="IsOutBound" />
+                <ScalarProperty Name="hmsMQLogsId" ColumnName="hmsMQLogsId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

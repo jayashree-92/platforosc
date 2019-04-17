@@ -16,15 +16,15 @@ namespace HMOSecureWeb.Controllers
         }
 
 
-        public ActionResult InboundLogs()
+        public ActionResult MqLogs()
         {
             return View();
         }
 
-        public JsonResult GetInboundMQLogs(DateTime startDate, DateTime endDate)
+        public JsonResult GetMQLogs(DateTime startDate, DateTime endDate)
         {
-            var inBoundMQLogs = WireDataManager.GetInboundMQLogs(startDate, endDate);
-            return Json(inBoundMQLogs);
+            var mqLogs = WireDataManager.GetMQLogs(startDate, endDate);
+            return Json(mqLogs);
         }
 
 

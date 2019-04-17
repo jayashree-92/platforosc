@@ -9,7 +9,6 @@ using Hangfire.Dashboard;
 using Hangfire.SqlServer;
 using HedgeMark.Operations.Secure.DataModel.Models;
 using HMOSecureWeb.Controllers;
-using HMOSecureMiddleware;
 using HMOSecureWeb.Jobs;
 using Microsoft.Owin;
 using Owin;

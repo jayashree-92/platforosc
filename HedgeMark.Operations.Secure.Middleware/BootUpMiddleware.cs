@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using HMOSecureMiddleware.Queues;
+﻿using HMOSecureMiddleware.Queues;
 using log4net;
 
 namespace HMOSecureMiddleware

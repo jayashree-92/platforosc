@@ -1,10 +1,7 @@
-﻿using System;
-using HedgeMark.Operations.Secure.DataModel;
+﻿using HedgeMark.Operations.Secure.DataModel;
 using System.Collections.Generic;
-using HMOSecureMiddleware.SwiftMessageManager;
 using System.Linq;
 using Com.HedgeMark.Commons.Extensions;
-using HedgeMark.SwiftMessageHandler;
 using HedgeMark.SwiftMessageHandler.Model;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT;

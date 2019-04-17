@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using HedgeMark.Operations.Secure.DataModel;
 using System.Data.Entity.Migrations;
-using System.Data.Entity.Migrations.Design;
 using HMOSecureMiddleware.Models;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler;
@@ -209,7 +208,7 @@ namespace HMOSecureMiddleware
                 //Outbound
                 var outbountStr = "Outbound" + messageType;
                 if (!string.IsNullOrWhiteSpace(msg.Value.Outbound) && !swiftMessages.ContainsKey(outbountStr))
-                    swiftMessages.Add(outbountStr, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Outbound, true));
+                    swiftMessages.Add(outbountStr, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Outbound));
 
                 var isThisMessageNacked = false;
 
@@ -227,7 +226,7 @@ namespace HMOSecureMiddleware
                     }
 
                     if (!isMultiMessage || !string.IsNullOrWhiteSpace(msg.Value.AckOrNack) && !swiftMessages.ContainsKey(ackLabel))
-                        swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.AckOrNack, true));
+                        swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.AckOrNack));
                 }
 
                 //When Nacked, we will not have any confirmation message
@@ -237,7 +236,7 @@ namespace HMOSecureMiddleware
                 //InBound
                 var confirmationLabel = "Confirmation" + messageType;
                 if (!swiftMessages.ContainsKey(confirmationLabel) && (lastMessageTypeId == msg.Key || !string.IsNullOrWhiteSpace(msg.Value.Inbound)))
-                    swiftMessages.Add(confirmationLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Inbound, true));
+                    swiftMessages.Add(confirmationLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Inbound));
             }
 
 
@@ -399,12 +398,12 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<hmsInBoundMQLog> GetInboundMQLogs(DateTime startDate, DateTime endDate)
+        public static List<hmsMQLog> GetMQLogs(DateTime startDate, DateTime endDate)
         {
             endDate = endDate.Date == DateTime.Now.Date ? DateTime.Now : endDate;
             using (var context = new OperationsSecureContext())
             {
-                return context.hmsInBoundMQLogs.Where(s => s.CreatedAt >= startDate && s.CreatedAt <= endDate).ToList();
+                return context.hmsMQLogs.Where(s => s.CreatedAt >= startDate && s.CreatedAt <= endDate).ToList();
             }
         }
     }

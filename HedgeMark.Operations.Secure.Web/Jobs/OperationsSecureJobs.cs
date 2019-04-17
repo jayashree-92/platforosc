@@ -2,15 +2,12 @@
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Web.Hosting;
 using Com.HedgeMark.Commons;
 using Hangfire;
 using Hangfire.Annotations;
-using HMOSecureMiddleware;
 using HMOSecureMiddleware.Queues;
 using log4net;
-using Timer = System.Timers.Timer;
 
 namespace HMOSecureWeb.Jobs
 {

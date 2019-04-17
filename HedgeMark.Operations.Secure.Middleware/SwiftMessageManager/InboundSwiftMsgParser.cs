@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using HMOSecureMiddleware.Models;
-using HedgeMark.SwiftMessageHandler;
 using HedgeMark.SwiftMessageHandler.Model.MT;
 
 namespace HMOSecureMiddleware.SwiftMessageManager

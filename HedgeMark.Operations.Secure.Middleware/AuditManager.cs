@@ -4,7 +4,6 @@ using System.Linq;
 using HedgeMark.Operations.Secure.DataModel;
 using System.Data.Entity.Migrations;
 using HMOSecureMiddleware.Models;
-using Com.HedgeMark.Commons.Extensions;
 
 namespace HMOSecureMiddleware
 {

@@ -180,8 +180,6 @@ namespace HMOSecureMiddleware
 
         public static void ProcessInboundMessage(string swiftMessage)
         {
-            LogInBoundWireMessage(swiftMessage);
-
             var confirmationData = InboundSwiftMsgParser.ParseMessage(swiftMessage);
 
             if (confirmationData.IsFeAck)
@@ -263,20 +261,6 @@ namespace HMOSecureMiddleware
 
                 if (hmWire.SwiftStatusId != (int)WireDataManager.SwiftStatus.Acknowledged)
                     NotificationManager.NotifyOpsUser(hmWire.hmsWireId);
-            }
-        }
-
-        private static void LogInBoundWireMessage(string inBoundMQMessage)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                var inBoundMessageMQLog = new hmsInBoundMQLog
-                {
-                    InBoundMessage = inBoundMQMessage,
-                    CreatedAt = DateTime.Now
-                };
-                context.hmsInBoundMQLogs.Add(inBoundMessageMQLog);
-                context.SaveChanges();
             }
         }
     }

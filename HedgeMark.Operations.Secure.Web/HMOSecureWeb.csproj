@@ -1579,7 +1579,7 @@
     <Content Include="Views\Account\LogOff.cshtml" />
     <Content Include="Views\Shared\_Wires.cshtml" />
     <Content Include="Views\WireLog\Index.cshtml" />
-    <Content Include="Views\Audit\InboundLogs.cshtml" />
+    <Content Include="Views\Audit\MqLogs.cshtml" />
     <Content Include="Views\Home\WirePurpose.cshtml" />
     <None Include="Web.Local.config">
       <SubType>Designer</SubType>

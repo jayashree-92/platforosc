@@ -40,7 +40,7 @@ HmOpsApp.controller("InboundLogsCtrl", function ($scope, $http, $timeout, $filte
     function createAuditLogsTable(auditStartDate, auditEndDate) {
         $("#btnGetInboundLogs").button("loading");
         fnDestroyDataTable("#tblAuditLogsDetails");
-        $http.get("/Audit/GetInboundMQLogs?startDate=" + moment(auditStartDate).format("YYYY-MM-DD") + "&endDate=" + moment().format("YYYY-MM-DD")).then(function (response) {
+        $http.get("/Audit/GetMQLogs?startDate=" + moment(auditStartDate).format("YYYY-MM-DD") + "&endDate=" + moment().format("YYYY-MM-DD")).then(function (response) {
             var auditLogTable = $("#tblInboundLogsDetails").DataTable({
                 "aaData": response.data,
                 "dom": "<\"toolbar\"><'row header'<'col-md-6 header-left'i><'col-md-6 header-right'f>>trI",
@@ -52,12 +52,26 @@ HmOpsApp.controller("InboundLogsCtrl", function ($scope, $http, $timeout, $filte
                 //"sScrollX": "100%",
                 //"sScrollXInner": "100%",
                 "bDestroy": true,
-                "order": [[1, "desc"]],
+                "order": [[4, "desc"]],
                 "scrollX": true,
                 "scrollY": $("#tblInboundLogsDetails").offset().top + 550,
-                "aoColumns": [{
-                    "sTitle": "Inbound Message",
-                    "mData": "InBoundMessage",
+                "aoColumns": [
+                    {
+                        "mData": "IsOutBound", "sTitle": "Inbound/Outbound",
+                        "mRender": function (tdata) {
+                            return tdata ? "<label class='label label-primary'>Outbound&nbsp;&nbsp;<i class='glyphicon glyphicon-log-out'></i></label>" : "<label class='label label-info'><i class='glyphicon glyphicon-log-in'></i>&nbsp;&nbsp;Inbound</label>";
+                        }
+                        
+                    },
+                    {
+                        "mData": "QueueManager", "sTitle": "Queue Manager"
+                    },
+                    {
+                        "mData": "QueueName", "sTitle": "Queue Name"
+                    },
+                    {
+                    "sTitle": "Messages",
+                    "mData": "Message",
                     "mRender": function (tdata) {
                         return "<p class=\"swiftMessgeBlock\">" + tdata + "</p>";
                     }
