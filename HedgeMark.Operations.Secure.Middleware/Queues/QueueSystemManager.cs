@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Com.HedgeMark.Commons;
@@ -116,12 +117,18 @@ namespace HMOSecureMiddleware.Queues
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void GetAndProcessAcknowledgement(long wireId = -1)
         {
+            if (!IsPendingResponseQueue())
+                return;
+
             GetAndProcessQueueMessage(ReceiverAckQueueName);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void GetAndProcessMessage()
         {
+            if (!IsPendingResponseQueue())
+                return;
+
             GetAndProcessQueueMessage(ReceiverQueueName);
         }
 
@@ -174,6 +181,21 @@ namespace HMOSecureMiddleware.Queues
             }
 
             queue.Close();
+        }
+
+        public static bool IsPendingResponseQueue()
+        {
+            //NotInitiated = 1,
+            //Processing =2,
+            //Acknowledged=3,
+            //NegativeAcknowledged=4,
+            //Completed=5,
+            //Failed=6,
+
+            using (var context = new OperationsSecureContext())
+            {
+                return context.hmsWires.Any(s => s.SwiftStatusId == 2 || s.SwiftStatusId == 3);
+            }
         }
 
         public static void LogMQMessage(string message, string queueName, bool isOutBound)
