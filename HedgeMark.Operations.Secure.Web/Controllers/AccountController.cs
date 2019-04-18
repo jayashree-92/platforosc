@@ -10,14 +10,14 @@ namespace HMOSecureWeb.Controllers
 {
     public static class OpsSecureUserRoles
     {
-        public const string DmaWireInitiator = "DMAWireInitiator";
-        public const string DmaWireApprover = "DMAWireApprover";
+        public const string WireInitiator = "HM-Wire-Initiator";
+        public const string WireApprover = "HM-Wire-Approver";
     }
 
     public class AccountController : BaseController
     {
         public static readonly List<string> AllowedDomains = ConfigurationManagerWrapper.StringListSetting("AllowedDomains", "@hedgemark.com,@payoda.com,bnymellon.com,@inautix.co.in");
-        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", "HM-Wire-Initiator,HM-Wire-Approver");
+        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", OpsSecureUserRoles.WireInitiator + "," + OpsSecureUserRoles.WireApprover);
 
         public static hLoginRegistration GetUserDetail(string userName)
         {
@@ -33,10 +33,10 @@ namespace HMOSecureWeb.Controllers
             {
                 User = GetUserDetail(userName),
                 Name = userName,
-                Role = Roles.IsUserInRole(OpsSecureUserRoles.DmaWireApprover)
-                    ? OpsSecureUserRoles.DmaWireApprover
-                    : Roles.IsUserInRole(OpsSecureUserRoles.DmaWireInitiator)
-                        ? OpsSecureUserRoles.DmaWireInitiator
+                Role = Roles.IsUserInRole(OpsSecureUserRoles.WireApprover)
+                    ? OpsSecureUserRoles.WireApprover
+                    : Roles.IsUserInRole(OpsSecureUserRoles.WireInitiator)
+                        ? OpsSecureUserRoles.WireInitiator
                                 : "Unknown"
             };
             return userDetails;

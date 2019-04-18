@@ -38,8 +38,8 @@ namespace HMOSecureWeb.Utility
             if (principal == null)
                 return "Unknown";
 
-            if (principal.IsInRole(OpsSecureUserRoles.DmaWireInitiator)) return OpsSecureUserRoles.DmaWireInitiator;
-            if (principal.IsInRole(OpsSecureUserRoles.DmaWireApprover)) return OpsSecureUserRoles.DmaWireApprover;
+            if (principal.IsInRole(OpsSecureUserRoles.WireInitiator)) return OpsSecureUserRoles.WireInitiator;
+            if (principal.IsInRole(OpsSecureUserRoles.WireApprover)) return OpsSecureUserRoles.WireApprover;
 
             return "Unknown";
         }

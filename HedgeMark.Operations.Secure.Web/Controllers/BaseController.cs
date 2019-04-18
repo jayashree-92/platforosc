@@ -17,7 +17,7 @@ namespace HMOSecureWeb.Controllers
         }
     }
 
-    [AuthorizedRoles(OpsSecureUserRoles.DmaWireInitiator, OpsSecureUserRoles.DmaWireApprover)]
+    [AuthorizedRoles(OpsSecureUserRoles.WireInitiator, OpsSecureUserRoles.WireApprover)]
     [Authorize, RedirectToHttps, Compress]
     public abstract class BaseController : Controller
     {
@@ -45,7 +45,7 @@ namespace HMOSecureWeb.Controllers
 
         public bool IsWireApprover
         {
-            get { return User.IsInRole(OpsSecureUserRoles.DmaWireApprover); }
+            get { return User.IsInRole(OpsSecureUserRoles.WireApprover); }
         }
 
         public object GetSessionValue(string key)

@@ -120,12 +120,6 @@ namespace HMOSecureWeb
             var formCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket) { Domain = Utility.Util.Domain };
             HttpContext.Current.Response.Cookies.Add(formCookie);
 
-            var userRole = User.GetRole();
-            if (string.IsNullOrWhiteSpace(userRole) || userRole == "Unknown")
-            {
-                Logger.Error(string.Format("access denied to user '{0}', no valid user role", email));
-                SiteMinderLogOff("User not authorized");
-            }
         }
         void Session_Start(object sender, EventArgs e)
         {
