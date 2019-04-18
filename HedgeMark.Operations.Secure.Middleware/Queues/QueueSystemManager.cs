@@ -18,7 +18,7 @@ namespace HMOSecureMiddleware.Queues
         private static string QueueManagerName { get { return ConfigurationManagerWrapper.StringSetting("QueueManagerName", "LQAL"); } }
         private static string HostName { get { return ConfigurationManagerWrapper.StringSetting("ChannelConnectionName", "r26ln00.bnymellon.net"); } }
         private static int ChannelConnectionPort { get { return ConfigurationManagerWrapper.IntegerSetting("ChannelConnectionPort", 1462); } }
-        private static string ClientChannelName { get { return ConfigurationManagerWrapper.StringSetting("SenderChannelName", "LQAL.DMO.CLIENT"); } }
+        private static string ClientChannelName { get { return ConfigurationManagerWrapper.StringSetting("ClientChannelName", QueueManagerName + ".DMO.CLIENT"); } }
 
         private static string QueueManagerCcIdProperty { get { return ConfigurationManagerWrapper.StringSetting("QueueManagerCCIdProperty", "1208"); } }
 
