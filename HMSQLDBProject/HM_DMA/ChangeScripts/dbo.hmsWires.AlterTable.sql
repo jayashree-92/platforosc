@@ -216,29 +216,6 @@ BEGIN
 	ALTER TABLE hmsWires DROP COLUMN TransferType;
 END
 
---IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'IsBookTransfer' and TABLE_NAME = 'hmsWires')
---BEGIN
---	ALTER TABLE hmsWires ADD IsBookTransfer BIT NOT NULL DEFAULT 0
---END
---GO
-
-
---IF NOT EXISTS(select * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'TransferType' and TABLE_NAME = 'hmsWires')
---BEGIN
---	ALTER TABLE hmsWires ADD TransferType VARCHAR(30) NULL
-	
---	DECLARE @Command  NVARCHAR(1000)
-
---	SELECT @Command ='UPDATE dbo.hmsWires 
---			SET TransferType = CASE IsBookTransfer
---			WHEN 1 THEN ''Book Transfer'' 
---			ELSE ''Normal Transfer''
---	      END'
-
---	EXECUTE (@Command);
---END
---GO
-
 
 IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'NotesToApprover' AND TABLE_NAME = 'hmsWires')
 BEGIN

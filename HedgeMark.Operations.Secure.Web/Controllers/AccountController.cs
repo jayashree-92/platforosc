@@ -17,7 +17,7 @@ namespace HMOSecureWeb.Controllers
     public class AccountController : BaseController
     {
         public static readonly List<string> AllowedDomains = ConfigurationManagerWrapper.StringListSetting("AllowedDomains", "@hedgemark.com,@payoda.com,bnymellon.com,@inautix.co.in");
-        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", "DMAWireInitiator,DMAWireApprover,HMOSecureAdmin");
+        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", "HM-Wire-Initiator,HM-Wire-Approver");
 
         public static hLoginRegistration GetUserDetail(string userName)
         {

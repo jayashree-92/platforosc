@@ -99,15 +99,16 @@ namespace HMOSecureWeb
                 return;
             }
 
-            if (AccountController.AllowedUserRoles.All(role => !Roles.IsUserInRole(email, role)))
-            {
-                Logger.Error(string.Format("access denied to user '{0}', unauthorized", email));
-                SiteMinderLogOff("User not authorized");
-                return;
-            }
+            //Aspnet roles will be re-placed by LDAP roles
+            //if (AccountController.AllowedUserRoles.All(role => !Roles.IsUserInRole(email, role)))
+            //{
+            //    Logger.Error(string.Format("access denied to user '{0}', unauthorized", email));
+            //    SiteMinderLogOff("User not authorized");
+            //    return;
+            //}
 
             var webIdentity = new GenericIdentity(email, "SiteMinder");
-            string[] roles = Roles.GetRolesForUser(email);
+            var roles = Roles.GetRolesForUser(email);
             
             var principal = new GenericPrincipal(webIdentity, roles);
             HttpContext.Current.User = principal;
