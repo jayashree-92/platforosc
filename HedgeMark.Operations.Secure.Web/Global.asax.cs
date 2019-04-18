@@ -108,9 +108,12 @@ namespace HMOSecureWeb
             //}
 
             var webIdentity = new GenericIdentity(email, "SiteMinder");
-            var roles = Roles.GetRolesForUser(email);
-            
-            var principal = new GenericPrincipal(webIdentity, roles);
+            var roles = Roles.GetRolesForUser(email).ToList();
+
+            //Overring Role - until LDAP groups can be identified
+            roles.Add(OpsSecureUserRoles.WireApprover);
+
+            var principal = new GenericPrincipal(webIdentity, roles.ToArray());
             HttpContext.Current.User = principal;
             Thread.CurrentPrincipal = principal;
             var userData = string.Join(",", roles);
@@ -119,7 +122,6 @@ namespace HMOSecureWeb
             var encTicket = FormsAuthentication.Encrypt(ticket);
             var formCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket) { Domain = Utility.Util.Domain };
             HttpContext.Current.Response.Cookies.Add(formCookie);
-
         }
         void Session_Start(object sender, EventArgs e)
         {
@@ -141,7 +143,7 @@ namespace HMOSecureWeb
 
             Session["userName"] = User.Identity.Name;
         }
-        
+
         public static ConcurrentBag<string> ActiveUsers = new ConcurrentBag<string>();
 
         public void Application_End(object sender, EventArgs e)
@@ -199,7 +201,7 @@ namespace HMOSecureWeb
                 };
                 Response.Cookies.Add(smUsrCookie);
             }
-            
+
             Response.StatusCode = 303;
             Response.Redirect(string.Format("{0}?reasonStr={1}", SiteMinderLogOffUrl, reasonStr), false);
         }
