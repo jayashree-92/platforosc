@@ -17,6 +17,7 @@ using HMOSecureWeb.Controllers;
 using HMOSecureWeb.Utility;
 using log4net;
 using log4net.Config;
+using System.Collections.Generic;
 
 namespace HMOSecureWeb
 {
@@ -108,9 +109,9 @@ namespace HMOSecureWeb
             //}
 
             var webIdentity = new GenericIdentity(email, "SiteMinder");
-            var roles = Roles.GetRolesForUser(email).ToList();
-
+            
             //Overring Role - until LDAP groups can be identified
+            var roles = new List<string>();
             roles.Add(OpsSecureUserRoles.WireApprover);
 
             var principal = new GenericPrincipal(webIdentity, roles.ToArray());

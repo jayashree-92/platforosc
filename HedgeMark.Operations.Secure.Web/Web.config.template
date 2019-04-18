@@ -16,7 +16,6 @@
     </sectionGroup>
   </configSections>
   <connectionStrings>
-    <add name="ASPNETConnectionString" connectionString="Data Source=W00001N00\MSDMUT05;Initial Catalog=HM;User ID=DMAHMUserDEV;Password=scG_8&amp;m;Persist Security Info=True;" providerName="System.Data.SqlClient"/>
     <add name="AdminContext" connectionString="metadata=res://*/AdminModel.csdl|res://*/AdminModel.ssdl|res://*/AdminModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=W00001N00\MSDMUT05;initial catalog=HM;persist security info=True;user id=DMAHMUserDEV;password=scG_8&amp;m;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
     <add name="OperationsSecureContext" connectionString="metadata=res://*/OperationsSecureModel.csdl|res://*/OperationsSecureModel.ssdl|res://*/OperationsSecureModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=W00001N00\MSDMUT05;initial catalog=HM_WIRES;persist security info=True;user id=HMWIRESDEV;password=5$#2wires@1;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient"/>
   </connectionStrings>
@@ -44,13 +43,6 @@
     <add key="HMOpsFromAddress" value="hm-ops-dev@bnymellon.com"/>
 
   </appSettings>
-  <!--<location path="elmah.axd">
-    <system.web>
-      <authorization>
-        <deny users="?"/>
-      </authorization>
-    </system.web>
-  </location>-->
   <system.web>
     <sessionState timeout="20" mode="InProc" ></sessionState>
     <customErrors mode="RemoteOnly" defaultRedirect="~/Home/Trouble" />
@@ -77,37 +69,9 @@
         <add namespace="System.Web.WebPages" />
       </namespaces>
     </pages>
-    <membership defaultProvider="SqlProvider" userIsOnlineTimeWindow="20">
-      <providers>
-        <clear />
-        <add name="SqlProvider" type="System.Web.Security.SqlMembershipProvider" connectionStringName="ASPNETConnectionString" applicationName="Hedgemark" enablePasswordRetrieval="false" enablePasswordReset="true" requiresQuestionAndAnswer="false" requiresUniqueEmail="true" />
-      </providers>
-    </membership>
-    <roleManager enabled="true">
-      <providers>
-        <clear />
-        <add name="AspNetSqlRoleProvider" connectionStringName="ASPNETConnectionString" applicationName="Hedgemark" type="System.Web.Security.SqlRoleProvider" />
-      </providers>
-    </roleManager>
-    <profile defaultProvider="AspNetSqlProfileProvider" inherits="HMOSecureWeb.Utility.UserProfile">
-      <providers>
-        <clear/>
-        <add name="AspNetSqlProfileProvider" connectionStringName="ASPNETConnectionString" applicationName="Hedgemark" type="System.Web.Profile.SqlProfileProvider"/>
-      </providers>
-    </profile>
+
     <globalization uiCulture="en" culture="en-US" />
     <!--<globalization culture="auto" uiCulture="auto"/>-->
-
-    <!-- Glimpse: This can be commented in to add additional data to the Trace tab when using WebForms
-        <trace writeToDiagnosticsTrace="true" enabled="true" pageOutput="false"/> -->
-    <httpModules>
-      <!--<add name="ErrorLog" type="Elmah.ErrorLogModule, Elmah"/>-->
-      <!--<add name="Glimpse" type="Glimpse.AspNet.HttpModule, Glimpse.AspNet"/>-->
-    </httpModules>
-    <httpHandlers>
-      <!--<add path="glimpse.axd" verb="GET" type="Glimpse.AspNet.HttpHandler, Glimpse.AspNet"/>-->
-      <!--<add verb="POST,GET,HEAD" path="elmah.axd" type="Elmah.ErrorLogPageFactory, Elmah" />-->
-    </httpHandlers>
   </system.web>
   <system.web.extensions>
     <scripting>
@@ -119,9 +83,6 @@
   <system.webServer>
     <validation validateIntegratedModeConfiguration="false" />
     <modules>
-      <!--<add name="ErrorLog" type="Elmah.ErrorLogModule, Elmah" />-->
-      <!--<add name="Glimpse" type="Glimpse.AspNet.HttpModule, Glimpse.AspNet" preCondition="integratedMode" />-->
-
     </modules>
     <handlers>
       <remove name="ExtensionlessUrlHandler-ISAPI-4.0_32bit" />
@@ -130,9 +91,6 @@
       <add name="ExtensionlessUrlHandler-ISAPI-4.0_32bit" path="*." verb="GET,HEAD,POST,DEBUG,PUT,DELETE,PATCH,OPTIONS" modules="IsapiModule" scriptProcessor="%windir%\Microsoft.NET\Framework\v4.0.30319\aspnet_isapi.dll" preCondition="classicMode,runtimeVersionv4.0,bitness32" responseBufferLimit="0" />
       <add name="ExtensionlessUrlHandler-ISAPI-4.0_64bit" path="*." verb="GET,HEAD,POST,DEBUG,PUT,DELETE,PATCH,OPTIONS" modules="IsapiModule" scriptProcessor="%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_isapi.dll" preCondition="classicMode,runtimeVersionv4.0,bitness64" responseBufferLimit="0" />
       <add name="ExtensionlessUrlHandler-Integrated-4.0" path="*." verb="GET,HEAD,POST,DEBUG,PUT,DELETE,PATCH,OPTIONS" type="System.Web.Handlers.TransferRequestHandler" preCondition="integratedMode,runtimeVersionv4.0" />
-      <!--<add name="Glimpse" path="glimpse.axd" verb="GET" type="Glimpse.AspNet.HttpHandler, Glimpse.AspNet" preCondition="integratedMode" />-->
-
-      <!--<add name="Elmah" verb="POST,GET,HEAD" path="elmah.axd" type="Elmah.ErrorLogPageFactory, Elmah" />-->
     </handlers>
     <security>
       <requestFiltering>
@@ -141,7 +99,6 @@
       </requestFiltering>
     </security>
     <staticContent>
-      <!--<mimeMap fileExtension=".less" mimeType="text/css" />-->
     </staticContent >
 
     <httpProtocol>
@@ -174,21 +131,6 @@
   </entityFramework>
   <system.net>
   </system.net>
-  <!--<glimpse defaultRuntimePolicy="On" endpointBaseUri="~/Glimpse.axd">
-    <logging level="Trace" />
-    <runtimePolicies>
-      <ignoredTypes>
-        <add type="Glimpse.AspNet.Policy.LocalPolicy, Glimpse.AspNet"/>
-        <add type="Glimpse.AspNet.Tab.Configuration, Glimpse.AspNet" />
-        <add type="Glimpse.AspNet.Tab.Environment, Glimpse.AspNet" />
-      </ignoredTypes>
-    </runtimePolicies>
-  </glimpse>-->
-
-  <!--<elmah>
-    <security allowRemoteAccess="1" />
-    <errorLog type="Elmah.SqlErrorLog, Elmah"  connectionStringName="ASPNETConnectionString"  applicationName="HMOperations" />
-  </elmah>-->
   <log4net>
     <appender name="SmtpAppender" type="log4net.Appender.SmtpAppender,log4net">
       <to value="Mohansrikant.RameshKumar@bnymellon.com" />
