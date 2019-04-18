@@ -37,7 +37,7 @@ namespace HMOSecureWeb.Controllers
                 if (userDetails != null)
                     return userDetails;
 
-                userDetails = AccountController.GetUserDetails(UserName);
+                userDetails = AccountController.GetUserDetails(UserName, User);
                 SetSessionValue("UserDetails", userDetails);
                 return userDetails;
             }

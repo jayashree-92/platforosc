@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Security;
 using Com.HedgeMark.Commons;
@@ -27,15 +29,15 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public static UserAccountDetails GetUserDetails(string userName)
+        public static UserAccountDetails GetUserDetails(string userName, IPrincipal user)
         {
             var userDetails = new UserAccountDetails
             {
                 User = GetUserDetail(userName),
                 Name = userName,
-                Role = Roles.IsUserInRole(OpsSecureUserRoles.WireApprover)
+                Role = user.IsInRole(OpsSecureUserRoles.WireApprover)
                     ? OpsSecureUserRoles.WireApprover
-                    : Roles.IsUserInRole(OpsSecureUserRoles.WireInitiator)
+                    : user.IsInRole(OpsSecureUserRoles.WireInitiator)
                         ? OpsSecureUserRoles.WireInitiator
                                 : "Unknown"
             };
