@@ -19,7 +19,7 @@ namespace HMOSecureWeb.Controllers
     public class AccountController : BaseController
     {
         public static readonly List<string> AllowedDomains = ConfigurationManagerWrapper.StringListSetting("AllowedDomains", "@hedgemark.com,@payoda.com,bnymellon.com,@inautix.co.in");
-        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", OpsSecureUserRoles.WireInitiator + "," + OpsSecureUserRoles.WireApprover);
+        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", string.Format("{0},{1}", OpsSecureUserRoles.WireInitiator, OpsSecureUserRoles.WireApprover));
 
         public static hLoginRegistration GetUserDetail(string userName)
         {
@@ -28,6 +28,12 @@ namespace HMOSecureWeb.Controllers
                 return context.hLoginRegistrations.Single(s => s.varLoginID.Equals(userName));
             }
         }
+
+        public ActionResult Index(string returnUrl)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
 
         public static UserAccountDetails GetUserDetails(string userName, IPrincipal user)
         {

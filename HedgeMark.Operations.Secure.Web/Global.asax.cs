@@ -76,9 +76,11 @@ namespace HMOSecureWeb
                 return;
 
             string email;
+            var roles = new List<string>();
             if (HttpContext.Current.Request.IsLocal)
             {
                 email = ConfigurationManager.AppSettings["LocalSiteminderUser"];
+                roles.Add(OpsSecureUserRoles.WireApprover);
             }
             else
             {
@@ -100,6 +102,7 @@ namespace HMOSecureWeb
                 return;
             }
 
+            //---------------------------
             //Aspnet roles will be re-placed by LDAP roles
             //if (AccountController.AllowedUserRoles.All(role => !Roles.IsUserInRole(email, role)))
             //{
@@ -108,12 +111,12 @@ namespace HMOSecureWeb
             //    return;
             //}
 
-            var webIdentity = new GenericIdentity(email, "SiteMinder");
-            
-            //Overring Role - until LDAP groups can be identified
-            var roles = new List<string>();
+            //Overriding Role - until LDAP groups can be identified
             roles.Add(OpsSecureUserRoles.WireApprover);
 
+            //---------------------------
+
+            var webIdentity = new GenericIdentity(email, "SiteMinder");
             var principal = new GenericPrincipal(webIdentity, roles.ToArray());
             HttpContext.Current.User = principal;
             Thread.CurrentPrincipal = principal;
@@ -124,6 +127,7 @@ namespace HMOSecureWeb
             var formCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket) { Domain = Utility.Util.Domain };
             HttpContext.Current.Response.Cookies.Add(formCookie);
         }
+
         void Session_Start(object sender, EventArgs e)
         {
             Session.Timeout = ConfigurationManagerWrapper.IntegerSetting("GlobalSessionTimeOut", 60);
