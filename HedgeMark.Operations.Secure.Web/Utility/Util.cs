@@ -30,7 +30,7 @@ namespace HMOSecureWeb.Utility
 
         public static string LowerEnvironmentFlag
         {
-            get { return !IsLowerEnvironment ? string.Empty : string.Format("({0})", Environment); }
+            get { return !IsLowerEnvironment ? string.Empty : string.Format("| {0}", Environment); }
         }
 
         public static string GetRole(this IPrincipal principal)
