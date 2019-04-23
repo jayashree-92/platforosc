@@ -5,16 +5,9 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="OperationsSecureModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'HM_WIRES.dbo.hmsMQLogs' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="hmsMQLogs">
           <Key>
             <PropertyRef Name="hmsMQLogsId" />
-            <PropertyRef Name="IsOutBound" />
-            <PropertyRef Name="QueueManager" />
-            <PropertyRef Name="QueueName" />
-            <PropertyRef Name="Message" />
-            <PropertyRef Name="CreatedAt" />
           </Key>
           <Property Name="hmsMQLogsId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IsOutBound" Type="bit" Nullable="false" />
@@ -332,6 +325,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsMQLogs' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="OperationsSecureModelStoreContainer">
+          <EntitySet Name="hmsMQLogs" EntityType="Self.hmsMQLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsNotificationStaging" EntityType="Self.hmsNotificationStaging" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUserAuditLog" EntityType="Self.hmsUserAuditLog" Schema="dbo" store:Type="Tables" />
@@ -344,16 +338,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsMQLogs' does not have a primary ke
           <EntitySet Name="hmsWireStatusLkup" EntityType="Self.hmsWireStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireTransferTypeLKup" EntityType="Self.hmsWireTransferTypeLKup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireWorkflowLog" EntityType="Self.hmsWireWorkflowLog" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="hmsMQLogs" EntityType="Self.hmsMQLogs" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [hmsMQLogs].[hmsMQLogsId] AS [hmsMQLogsId], 
-    [hmsMQLogs].[IsOutBound] AS [IsOutBound], 
-    [hmsMQLogs].[QueueManager] AS [QueueManager], 
-    [hmsMQLogs].[QueueName] AS [QueueName], 
-    [hmsMQLogs].[Message] AS [Message], 
-    [hmsMQLogs].[CreatedAt] AS [CreatedAt]
-    FROM [dbo].[hmsMQLogs] AS [hmsMQLogs]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK_hmsWireDocument_hmsWires_hmsWireId" Association="Self.FK_hmsWireDocument_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsWireDocument" EntitySet="hmsWireDocument" />
@@ -815,11 +799,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.hmsMQLogs' does not have a primary ke
         <EntityType Name="hmsMQLog">
           <Key>
             <PropertyRef Name="hmsMQLogsId" />
-            <PropertyRef Name="IsOutBound" />
-            <PropertyRef Name="QueueManager" />
-            <PropertyRef Name="QueueName" />
-            <PropertyRef Name="Message" />
-            <PropertyRef Name="CreatedAt" />
           </Key>
           <Property Name="hmsMQLogsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IsOutBound" Type="Boolean" Nullable="false" />
