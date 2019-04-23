@@ -7,11 +7,13 @@ using HMOSecureMiddleware.Models;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler;
 using HedgeMark.SwiftMessageHandler.Model;
+using log4net;
 
 namespace HMOSecureMiddleware
 {
     public class WireDataManager
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(WireDataManager));
         public enum WireStatus
         {
             Drafted = 1,
@@ -50,21 +52,30 @@ namespace HMOSecureMiddleware
 
             using (var context = new OperationsSecureContext())
             {
+                //context.Database.Log = s =>
+                //{
+                //    Logger.Debug(s);
+                //};
+
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
                 hmWire = context.hmsWires.Include("hmsWireMessageType")
-                                         .Include("hmsWireDocuments")
-                                         .Include("hmsWireWorkflowLogs")
+                                         //.Include("hmsWireDocuments")
+                                         //.Include("hmsWireWorkflowLogs")
                                          .Include("hmsWireStatusLkup")
                                          .Include("hmsWirePurposeLkup")
                                          .Include("hmsWireTransferTypeLKup")
-                                         .Include("hmsWireLogs").FirstOrDefault(s => s.hmsWireId == wireId);
+                                         //.Include("hmsWireLogs")
+                                         .First(s => s.hmsWireId == wireId);
+
+                hmWire.hmsWireDocuments = context.hmsWireDocuments.Where(s => s.hmsWireId == wireId).ToList();
+                hmWire.hmsWireWorkflowLogs = context.hmsWireWorkflowLogs.Where(s => s.hmsWireId == wireId).ToList();
+                hmWire.hmsWireLogs = context.hmsWireLogs.Where(s => s.hmsWireId == wireId).ToList();
             }
 
-
-            if (hmWire == null)
-                return null;
+            //if (hmWire == null)
+            //    return null;
 
             hmWire.hmsWireLogs.ForEach(s =>
             {
@@ -80,7 +91,7 @@ namespace HMOSecureMiddleware
             hmWire.hmsWireMessageType.hmsWires = null;
             hmWire.hmsWireTransferTypeLKup.hmsWires = null;
             hmWire.hmsWireMessageType.hmsWireLogs = null;
-            
+
             hmWire.hmsWireDocuments.ForEach(s => s.hmsWire = null);
             hmWire.hmsWireWorkflowLogs.ForEach(s =>
             {
