@@ -217,9 +217,9 @@ namespace HMOSecureMiddleware
                 var messageType = isMultiMessage ? string.Format("-{0}", msg.Value.MessageType) : string.Empty;
 
                 //Outbound
-                var outbountStr = "Outbound" + messageType;
-                if (!string.IsNullOrWhiteSpace(msg.Value.Outbound) && !swiftMessages.ContainsKey(outbountStr))
-                    swiftMessages.Add(outbountStr, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Outbound));
+                var outboundStr = "Outbound" + messageType;
+                if (!string.IsNullOrWhiteSpace(msg.Value.Outbound) && !swiftMessages.ContainsKey(outboundStr))
+                    swiftMessages.Add(outboundStr, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Outbound, true));
 
                 var isThisMessageNacked = false;
 
@@ -237,7 +237,7 @@ namespace HMOSecureMiddleware
                     }
 
                     if (!isMultiMessage || !string.IsNullOrWhiteSpace(msg.Value.AckOrNack) && !swiftMessages.ContainsKey(ackLabel))
-                        swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.AckOrNack));
+                        swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.AckOrNack, true));
                 }
 
                 //When Nacked, we will not have any confirmation message
@@ -247,7 +247,7 @@ namespace HMOSecureMiddleware
                 //InBound
                 var confirmationLabel = "Confirmation" + messageType;
                 if (!swiftMessages.ContainsKey(confirmationLabel) && (lastMessageTypeId == msg.Key || !string.IsNullOrWhiteSpace(msg.Value.Inbound)))
-                    swiftMessages.Add(confirmationLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Inbound));
+                    swiftMessages.Add(confirmationLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Inbound, true));
             }
 
 
