@@ -159,8 +159,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field58A GetField58A(WireTicket wire)
         {
             var f58A = new Field58A()
-                .setAccount(wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryAccountNumber : wire.SSITemplate.BeneficiaryAccountNumber)
-                .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryBICorABA : wire.SSITemplate.BeneficiaryBICorABA);
+                .setAccount(wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryAccountNumber : wire.SSITemplate.AccountNumber)
+                .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryBICorABA : wire.SSITemplate.UltimateBeneficiaryBICorABA);
             return f58A;
         }
 
