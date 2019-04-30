@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Com.HedgeMark.Commons;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.DataModel.Models;
+using log4net;
+using log4net.Repository.Hierarchy;
 
 namespace HMOSecureWeb.Controllers
 {
@@ -18,7 +21,8 @@ namespace HMOSecureWeb.Controllers
 
     public class AccountController : BaseController
     {
-        public static readonly List<string> AllowedDomains = ConfigurationManagerWrapper.StringListSetting("AllowedDomains", "@hedgemark.com,@payoda.com,bnymellon.com,@inautix.co.in");
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(AccountController));
+        public static readonly List<string> AllowedDomains = ConfigurationManagerWrapper.StringListSetting("AllowedDomains", "@hedgemark.com,@payoda.com,@bnymellon.com,@inautix.co.in");
         public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", string.Format("{0},{1}", OpsSecureUserRoles.WireInitiator, OpsSecureUserRoles.WireApprover));
 
         public static hLoginRegistration GetUserDetail(string userName)
@@ -53,14 +57,47 @@ namespace HMOSecureWeb.Controllers
         [AllowAnonymous]
         public ActionResult LogOff(string reasonStr)
         {
-            FormsAuthentication.SignOut();
+            Logger.Debug("Logging off- Clearing Cookie and Authentication with name:" + FormsAuthentication.FormsCookieName);
 
+            //Clear Site-Minder Cookie
+            ClearSiteMinder();
+
+            // Delete the user details from Session.
             Session.Abandon();
             Session.Clear();
             Session.RemoveAll();
 
+            // Delete the authentication ticket and sign out.
+            FormsAuthentication.SignOut();
+
+            // Clear authentication cookie.
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") { Expires = DateTime.Now.AddYears(-1) };
+            Response.Cookies.Add(cookie);
+
             ViewBag.ReasonString = reasonStr;
             return View();
+        }
+
+        private void ClearSiteMinder()
+        {
+            if (Request.Cookies["SMSESSION"] != null)
+            {
+                var smCookie = new HttpCookie("SMSESSION", "NO")
+                {
+                    Domain = Utility.Util.Domain,
+                    Expires = DateTime.Now.AddDays(-1)
+                };
+                Response.Cookies.Add(smCookie);
+            }
+            if (Request.Cookies["SMUSRMSG"] != null)
+            {
+                var smUsrCookie = new HttpCookie("SMUSRMSG", "NO")
+                {
+                    Domain = Utility.Util.Domain,
+                    Expires = DateTime.Now.AddDays(-1)
+                };
+                Response.Cookies.Add(smUsrCookie);
+            }
         }
 
         public static USP_NEXEN_GetUserDetails_Result GetEmailOfLdapUserId(string userName)

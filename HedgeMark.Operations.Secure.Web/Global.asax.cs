@@ -24,7 +24,8 @@ namespace HMOSecureWeb
     public class MvcApplication : System.Web.HttpApplication
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(MvcApplication));
-        private static readonly string SiteMinderLogOffUrl = ConfigurationManagerWrapper.StringSetting("SiteminderLogoffUri", "/Account/LogOff");
+        private static readonly string SiteMinderLogOffUrl = ConfigurationManagerWrapper.StringSetting("SiteMinderLogoffUri", "/Account/LogOff");
+        private static readonly int GlobalSessionTimeOut = ConfigurationManagerWrapper.IntegerSetting("GlobalSessionTimeOut", 20);
         private const string SiteMinderHeaderToken = "SMUSER";
 
         protected void Application_Start()
@@ -43,7 +44,7 @@ namespace HMOSecureWeb
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            //Boot up requied assemblies to middleware
+            //Boot up required assemblies to middleware
             BootUpMiddleware.BootUp();
 
         }
@@ -75,32 +76,36 @@ namespace HMOSecureWeb
             if (HttpContext.Current.Request.Url.AbsolutePath == SiteMinderLogOffUrl)
                 return;
 
-            string email;
+            if (IsAlreadyAuthenticated())
+                return;
+
+            Logger.Debug("New User Logging into the system - so Checking for Authorization");
+
+            var smUserId = HttpContext.Current.Request.Headers[SiteMinderHeaderToken];
             var roles = new List<string>();
             if (HttpContext.Current.Request.IsLocal)
             {
-                email = ConfigurationManager.AppSettings["LocalSiteminderUser"];
+                smUserId = ConfigurationManager.AppSettings["LocalSiteMinderCommitId"];
                 roles.Add(OpsSecureUserRoles.WireApprover);
             }
-            else
-            {
-                var smUserId = HttpContext.Current.Request.Headers[SiteMinderHeaderToken];
-                var userSso = AccountController.GetEmailOfLdapUserId(smUserId);
-                if (userSso == null)
-                {
-                    SiteMinderLogOff("access denied, user not registered");
-                    return;
-                }
 
-                email = userSso.varLoginID;
+            var userSso = AccountController.GetEmailOfLdapUserId(smUserId);
+            if (userSso == null)
+            {
+                Logger.Error(string.Format("access denied to user '{0}', user not registered", smUserId));
+                SiteMinderLogOff("access denied, user not registered");
+                return;
             }
 
-            if (AccountController.AllowedDomains.All(domain => !email.EndsWith(domain)))
+            var email = userSso.varLoginID;
+
+            if (AccountController.AllowedDomains.All(domain => !email.EndsWith(domain, StringComparison.InvariantCultureIgnoreCase)))
             {
                 Logger.Error(string.Format("access denied to user '{0}', invalid user domain", email));
                 SiteMinderLogOff("User domain is invalid/not authorized");
                 return;
             }
+
 
             //---------------------------
             //Aspnet roles will be re-placed by LDAP roles
@@ -121,16 +126,40 @@ namespace HMOSecureWeb
             HttpContext.Current.User = principal;
             Thread.CurrentPrincipal = principal;
             var userData = string.Join(",", roles);
-            var ticket = new FormsAuthenticationTicket(1, email, DateTime.Now, DateTime.Now.AddDays(30), true, userData, FormsAuthentication.FormsCookiePath);
-
+            var ticket = new FormsAuthenticationTicket(1, email, DateTime.Now, DateTime.Now.AddMinutes(GlobalSessionTimeOut), true, userData, FormsAuthentication.FormsCookiePath);
             var encTicket = FormsAuthentication.Encrypt(ticket);
             var formCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket) { Domain = Utility.Util.Domain };
-            HttpContext.Current.Response.Cookies.Add(formCookie);
+            Response.Cookies.Add(formCookie);
+        }
+
+        private bool IsAlreadyAuthenticated()
+        {
+            var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+            if (authCookie == null)
+                return false;
+
+            FormsAuthenticationTicket authTicket = null;
+            authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+
+            if (authTicket == null || authTicket.Expired)
+                return false;
+
+            if (FormsAuthentication.SlidingExpiration)
+                authTicket = FormsAuthentication.RenewTicketIfOld(authTicket);
+
+            if (authTicket == null)
+                return false;
+
+            var webIdentity = new GenericIdentity(authTicket.Name, "SiteMinder");
+            var principal = new GenericPrincipal(webIdentity, authTicket.UserData.Split(','));
+            HttpContext.Current.User = principal;
+            Thread.CurrentPrincipal = principal;
+            return true;
         }
 
         void Session_Start(object sender, EventArgs e)
         {
-            Session.Timeout = ConfigurationManagerWrapper.IntegerSetting("GlobalSessionTimeOut", 60);
+            Session.Timeout = GlobalSessionTimeOut;
             Session["SessionStartTime"] = DateTime.Now;
             //if (!ActiveUsers.Contains(User.Identity.Name))
             //{
@@ -168,12 +197,22 @@ namespace HMOSecureWeb
         {
             //var userName = Session["userName"] != null ? Session["userName"].ToString() : string.Empty;
 
-            Session.Clear();
-            Session.RemoveAll();
-            Session.Abandon();
-
             string userNameOut;
             ActiveUsers.TryTake(out userNameOut);
+
+            // Delete the user details from Session.
+            Session.Abandon();
+            Session.Clear();
+            Session.RemoveAll();
+
+            // Delete the authentication ticket and sign out.
+            FormsAuthentication.SignOut();
+
+            // Clear authentication cookie.
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") { Expires = DateTime.Now.AddYears(-1) };
+            Response.Cookies.Add(cookie);
+
+
             //hmsUserAuditLog auditData = new hmsUserAuditLog
             //{
             //    Action = "Log Out",
@@ -188,25 +227,6 @@ namespace HMOSecureWeb
 
         private void SiteMinderLogOff(string reasonStr)
         {
-            if (Request.Cookies["SMSESSION"] != null)
-            {
-                var smCookie = new HttpCookie("SMSESSION", "NO")
-                {
-                    Domain = Utility.Util.Domain,
-                    Expires = DateTime.Now.AddDays(-1)
-                };
-                Response.Cookies.Add(smCookie);
-            }
-            if (Request.Cookies["SMUSRMSG"] != null)
-            {
-                var smUsrCookie = new HttpCookie("SMUSRMSG", "NO")
-                {
-                    Domain = Utility.Util.Domain,
-                    Expires = DateTime.Now.AddDays(-1)
-                };
-                Response.Cookies.Add(smUsrCookie);
-            }
-
             Response.StatusCode = 303;
             Response.Redirect(string.Format("{0}?reasonStr={1}", SiteMinderLogOffUrl, reasonStr), false);
         }
