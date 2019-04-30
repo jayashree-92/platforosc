@@ -13,13 +13,13 @@ namespace HMOSecureMiddleware.SwiftMessageManager
     {
         protected static readonly string HMBIC = ConfigurationManagerWrapper.StringSetting("HMBIC", "IRVTBEB0");
         protected static readonly string HMBICSender = string.Format("{0}{1}", HMBIC, ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX"));
-        public static string CreateMessage(WireTicket wire,string messageType)
+        public static string CreateMessage(WireTicket wire, string messageType)
         {
             switch (messageType)
             {
                 //MT103 - Single customer credit transfer
                 case "MT103":
-                    return CreateMt103(wire).GetMessage(); 
+                    return CreateMt103(wire).GetMessage();
                 //MT202 - General Financial inst Transfer
                 case "MT202":
                     return CreateMt202(wire).GetMessage();
@@ -57,14 +57,14 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field20 GetField20(WireTicket wire, bool isCancellation = false)
         {
-            var environmentStr = Utility.Environment.ToUpper() == "PROD" ? string.Empty : Utility.Environment.ToUpper();
-            return new Field20(string.Format("{0}{1}DMO{2}", isCancellation ? "C" : string.Empty, environmentStr, wire.WireId));
+            var transactionId = WireDataManager.GetWireTransactionId(wire.WireId);
+            return new Field20(string.Format("{0}{1}", isCancellation ? "C" : string.Empty, transactionId));
         }
 
         private static Field21 GetField21ForCancellation(WireTicket wire)
         {
-            var environmentStr = Utility.Environment.ToUpper() == "PROD" ? string.Empty : Utility.Environment.ToUpper();
-            return new Field21().setReference(string.Format("{0}DMO{1}", environmentStr, wire.WireId));
+            var transactionId = WireDataManager.GetWireTransactionId(wire.WireId);
+            return new Field21().setReference(transactionId);
         }
 
         private static Field21 GetField21(WireTicket wire)
@@ -214,7 +214,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             mt103.addField(GetField50K(wire));
             //Optional
             mt103.addField(GetField52A(wire));
-            
+
             //Optional
             //mt103.addField(GetField57D(wire));
 

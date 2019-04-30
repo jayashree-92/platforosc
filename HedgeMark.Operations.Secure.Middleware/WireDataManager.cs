@@ -46,6 +46,15 @@ namespace HMOSecureMiddleware
             public SwiftStatus SwiftStatus { get; set; }
         }
 
+        public static string GetWireTransactionId(long wireId)
+        {
+            var wireIdStr = wireId.ToString();
+            wireIdStr = wireIdStr.Length < 6 ? wireIdStr.PadLeft(6, '0') : wireIdStr;
+            var environmentStr = Utility.Environment.ToUpper() == "PROD" ? string.Empty : Utility.Environment.ToUpper();
+            return string.Format("{0}DMO{1}", environmentStr, wireIdStr);
+        }
+
+
         public static WireTicket GetWireData(long wireId)
         {
             hmsWire hmWire;
