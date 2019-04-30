@@ -67,10 +67,9 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             return new Field21().setReference(string.Format("{0}DMO{1}", environmentStr, wire.WireId));
         }
 
-
         private static Field21 GetField21(WireTicket wire)
         {
-            return new Field21().setReference(wire.Account.Reference);
+            return new Field21().setReference(wire.Account.FFCNumber);
         }
 
         private static Field23B GetField23B()
@@ -191,9 +190,14 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             callingMethod.setSenderAndReceiver(wire.Account.SendersBIC, wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryBICorABA : wire.SSITemplate.UltimateBeneficiaryBICorABA);
         }
-        private static void SetSenderAndReceiverFromAccount(AbstractMT callingMethod, WireTicket wire)
+        private static void SetSenderAndReceiverFromAccountSender(AbstractMT callingMethod, WireTicket wire)
         {
             callingMethod.setSenderAndReceiver(wire.Account.SendersBIC, wire.Account.UltimateBeneficiaryBICorABA);
+        }
+
+        private static void SetSenderAndReceiverFromHM(AbstractMT callingMethod, WireTicket wire)
+        {
+            callingMethod.setSenderAndReceiver(HMBICSender, wire.Account.BeneficiaryBICorABA);
         }
 
         private static MT103 CreateMt103(WireTicket wire)
@@ -268,7 +272,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static string CreateMt210(WireTicket wire)
         {
             var mt210 = new MT210();
-            SetSenderAndReceiverFromAccount(mt210, wire);
+            SetSenderAndReceiverFromHM(mt210, wire);
 
             //mt210.setReceiver("IRVTBEB0XXXX");
 
