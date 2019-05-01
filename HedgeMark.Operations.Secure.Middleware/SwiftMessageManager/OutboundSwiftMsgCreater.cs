@@ -130,6 +130,16 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             return f52A;
         }
 
+
+        private static Field53A GetField53A(WireTicket wire)
+        {
+            var f53A = new Field53A()
+                .setAccount(wire.IsBookTransfer ? wire.ReceivingAccount.AccountNumber : wire.Account.AccountNumber)
+                .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryBICorABA : wire.Account.UltimateBeneficiaryBICorABA);
+            return f53A;
+        }
+
+
         private static Field56A GetField56A(WireTicket wire)
         {
             var f56A = new Field56A()
@@ -141,8 +151,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field57A GetField57A(WireTicket wire)
         {
             var f57A = new Field57A()
-                .setAccount(wire.IsBookTransfer ? wire.ReceivingAccount.IntermediaryAccountNumber : wire.SSITemplate.IntermediaryAccountNumber)
-                .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.IntermediaryBICorABA : wire.SSITemplate.IntermediaryBICorABA);
+                .setAccount(wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryAccountNumber : wire.SSITemplate.BeneficiaryAccountNumber)
+                .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryBICorABA : wire.SSITemplate.BeneficiaryBICorABA);
             return f57A;
         }
 
@@ -180,9 +190,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field72 GetField72(WireTicket wire)
         {
             var f72 = new Field72()
-                .setNarrative("/INS/" + (wire.IsBookTransfer ?
-                    wire.ReceivingAccount.FFCName : wire.SSITemplate.FFCName))
-                .setNarrativeLine1("/ACC/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SSITemplate.FFCNumber));
+                .setNarrative("/INS/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCName : wire.Account.FFCName))
+                .setNarrativeLine1("/ACC/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.Account.FFCNumber));
             return f72;
         }
 
@@ -228,7 +237,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static MT202 CreateMt202(WireTicket wire)
         {
             var mt202 = new MT202();
-            SetSenderAndReceiverFromSSI(mt202, wire);
+
+            mt202.setSenderAndReceiver(wire.Account.SendersBIC, wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryBICorABA : wire.SSITemplate.BeneficiaryBICorABA);
 
             mt202.addField(GetField20(wire));
 
@@ -237,8 +247,12 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             mt202.addField(GetField32A(wire));
             //Optional
             // mt202.addField(GetField56A(wire));
+
             //Optional
-            // mt202.addField(GetField57A(wire));
+            mt202.addField(GetField53A(wire));
+
+            //Optional
+            mt202.addField(GetField57A(wire));
 
             mt202.addField(GetField58A(wire));
             //Optional
@@ -250,7 +264,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static MT202COV CreateMt202Cov(WireTicket wire)
         {
             var mt202Cov = new MT202COV();
-            SetSenderAndReceiverFromSSI(mt202Cov, wire);
+
+            mt202Cov.setSenderAndReceiver(wire.Account.SendersBIC, wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryBICorABA : wire.SSITemplate.BeneficiaryBICorABA);
 
             mt202Cov.addField(GetField20(wire));
 
@@ -259,6 +274,12 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             mt202Cov.addField(GetField32A(wire));
             //Optional
             //mt202Cov.addField(GetField56A(wire));
+
+            //Optional
+            mt202Cov.addField(GetField53A(wire));
+
+            //Optional
+            mt202Cov.addField(GetField57A(wire));
 
             mt202Cov.addField(GetField58A(wire));
 
