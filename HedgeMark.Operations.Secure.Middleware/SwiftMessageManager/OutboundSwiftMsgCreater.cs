@@ -9,7 +9,7 @@ using HedgeMark.SwiftMessageHandler.Model.MT.MT5XX;
 
 namespace HMOSecureMiddleware.SwiftMessageManager
 {
-    public class OutboundSwiftMsgCreater
+    public class OutboundSwiftMsgCreator
     {
         protected static readonly string HMBIC = ConfigurationManagerWrapper.StringSetting("HMBIC", "IRVTBEB0");
         protected static readonly string HMBICSender = string.Format("{0}{1}", HMBIC, ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX"));
@@ -30,10 +30,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                 //MT210 - Notice to Receive
                 case "MT210":
                     return CreateMt210(wire);
-                //MT192 - request for cancelation
+                //MT192 - request for cancellation
                 case "MT192":
                     return CreateMt192(wire);
-                //MT292 - Request for Cancelation
+                //MT292 - Request for Cancellation
                 case "MT292":
                     return CreateMt292(wire);
                 //MT540 - Receive Free-- > To cancel, a new 540 with function code of CANC must be used.

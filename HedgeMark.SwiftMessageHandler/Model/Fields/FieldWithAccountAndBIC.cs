@@ -46,12 +46,18 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public T setAccount<T>(T callingClass, string account)
         {
+            if (string.IsNullOrWhiteSpace(account))
+                return callingClass;
+
             Account = account.PadRight(12, 'X');
             return callingClass;
         }
 
         public T setBIC<T>(T callingClass, string bic)
         {
+            if (string.IsNullOrWhiteSpace(bic))
+                return callingClass;
+
             BIC = bic.PadRight(8, 'X');
             return callingClass;
         }

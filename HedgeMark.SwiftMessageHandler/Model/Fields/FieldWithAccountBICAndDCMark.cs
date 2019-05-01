@@ -75,9 +75,12 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             return builder.ToString();
         }
 
-        public T setDCMark<T>(T callingClass, string account)
+        public T setDCMark<T>(T callingClass, string dcMark)
         {
-            Account = account;
+            if (string.IsNullOrWhiteSpace(dcMark))
+                return callingClass;
+
+            DCMark = dcMark;
             return callingClass;
         }
     }

@@ -145,7 +145,7 @@ namespace HMOSecureMiddleware
         private static void CreateAndSendMessageToMQ(WireTicket wire, hmsWireMessageType messageType)
         {
             //Create Swift message
-            var swiftMessage = OutboundSwiftMsgCreater.CreateMessage(wire, messageType.MessageType);
+            var swiftMessage = OutboundSwiftMsgCreator.CreateMessage(wire, messageType.MessageType);
 
             //Validate Error Message 
             //SwiftMessageValidator.Validate(swiftMessage);
