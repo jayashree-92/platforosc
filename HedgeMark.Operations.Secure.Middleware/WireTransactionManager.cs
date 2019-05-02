@@ -221,7 +221,7 @@ namespace HMOSecureMiddleware
 
                 wireLog.OutBoundSwiftMessage = swiftMessage;
 
-                context.hmsWireLogs.AddOrUpdate(h => new { h.hmsWireId, h.WireMessageTypeId }, wireLog);
+                context.hmsWireLogs.Add(wireLog);
                 context.SaveChanges();
             }
 

@@ -148,7 +148,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f53A = new Field53A()
                 .setAccount(wire.SendingAccount.BeneficiaryAccountNumber)
-                .setBICorABA(wire.SendingAccount.BeneficiaryBICorABA, wire.SendingAccount.IsBeneficiaryABA);
+                .setBIC(wire.SendingAccount.IsBeneficiaryABA ? string.Empty : wire.SendingAccount.BeneficiaryBICorABA);
             return f53A;
         }
 
@@ -203,7 +203,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f56D = new Field58D()
                 .setAccount(wire.IsBookTransfer ? wire.ReceivingAccount.AccountNumber : wire.SSITemplate.AccountNumber)
-                .setNameAndAddress(wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryBankName: wire.SSITemplate.UltimateBeneficiaryBankName)
+                .setNameAndAddress(wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryBankName : wire.SSITemplate.UltimateBeneficiaryBankName)
                 .setNameAndAddressLine1(wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryBankAddress : wire.SSITemplate.UltimateBeneficiaryBankAddress);
             return f56D;
         }
@@ -253,7 +253,19 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             mt103.addField(GetField53A(wire));
 
             //Optional
-            //mt103.addField(GetField57D(wire));
+            var isAbaIntermediaryUsed = wire.IsBookTransfer ? wire.ReceivingAccount.IsIntermediaryABA : wire.SSITemplate.IsIntermediaryABA;
+            if (!isAbaIntermediaryUsed)
+                mt103.addField(GetField56A(wire));
+            else
+                mt103.addField(GetField56D(wire));
+
+            //Optional
+            var isAbaBeneficiaryUsed = wire.IsBookTransfer ? wire.ReceivingAccount.IsBeneficiaryABA : wire.SSITemplate.IsBeneficiaryABA;
+
+            if (!isAbaBeneficiaryUsed)
+                mt103.addField(GetField57A(wire));
+            else
+                mt103.addField(GetField57D(wire));
 
             mt103.addField(GetField59(wire));
 
@@ -320,7 +332,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             mt202Cov.addField(GetField50K(wire));
 
-           //Optional
+            //Optional
             mt202Cov.addField(GetField53A(wire));
 
             //Optional

@@ -75,7 +75,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         }
                     },
                     { "mData": "HMWire.hmsWirePurposeLkup.Purpose", "sTitle": "Wire Purpose" },
-                    { "mData": "Account.AccountName", "sTitle": "Sending Account" },
+                    { "mData": "SendingAccount.AccountName", "sTitle": "Sending Account" },
                     { "mData": "ReceivingAccountName", "sTitle": "Receiving Account" },
                     {
                         "mData": "HMWire.Amount", "sTitle": "Amount",

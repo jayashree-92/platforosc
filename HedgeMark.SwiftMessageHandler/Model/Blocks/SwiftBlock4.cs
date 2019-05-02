@@ -19,6 +19,10 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
 
             Fields.ToList().ForEach(fld =>
             {
+                var fieldVal = fld.GetFieldAndValue;
+                if (string.IsNullOrWhiteSpace(fieldVal))
+                    return;
+
                 thisBlock.Append("\r\n:");
                 thisBlock.Append(fld.GetFieldAndValue);
             });

@@ -50,7 +50,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             if (string.IsNullOrWhiteSpace(account))
                 return callingClass;
 
-            Account = account.PadRight(12, 'X');
+            Account = account;
             return callingClass;
         }
 
@@ -59,7 +59,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             if (string.IsNullOrWhiteSpace(bic))
                 return callingClass;
 
-            BIC = bic.PadRight(8, 'X');
+            BIC = bic.PadRight(11, 'X');
             return callingClass;
         }
 
@@ -68,7 +68,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             if (string.IsNullOrWhiteSpace(aba))
                 return callingClass;
 
-            ABA = aba.PadRight(9, 'X');
+            ABA = aba;
             return callingClass;
         }
 
@@ -82,12 +82,15 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             var builder = new StringBuilder();
             var isAccAvailable = !string.IsNullOrWhiteSpace(Account);
 
-            if (isAccAvailable)
-                builder.AppendFormat("/{0}", Account);
-            if (!string.IsNullOrWhiteSpace(BIC))
-                builder.AppendFormat("{0}{1}", isAccAvailable ? Environment.NewLine : string.Empty, BIC);
-            else if (!string.IsNullOrWhiteSpace(ABA))
-                builder.AppendFormat("{0}//FW{1}", isAccAvailable ? Environment.NewLine : string.Empty, ABA);
+            if (!string.IsNullOrWhiteSpace(ABA))
+                builder.AppendFormat("//FW{0}", ABA);
+            else
+            {
+                if (isAccAvailable)
+                    builder.AppendFormat("/{0}", Account);
+                if (!string.IsNullOrWhiteSpace(BIC))
+                    builder.AppendFormat("{0}{1}", isAccAvailable ? Environment.NewLine : string.Empty, BIC);
+            }
 
             return builder.ToString();
         }

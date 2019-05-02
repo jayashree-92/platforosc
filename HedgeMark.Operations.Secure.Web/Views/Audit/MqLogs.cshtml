@@ -3,9 +3,9 @@
     ViewBag.Title = "MQ Logs";
 }
 
-<div ng-controller="InboundLogsCtrl">
+<div ng-controller="MQLogsCtrl">
 
-    <h4 style="display: inline-block">Inbound MQ Logs /</h4>
+    <h4 style="display: inline-block">Inbound/Outbound MQ Logs /</h4>
     <span id="inboundLogDateRange" class="dateRangeSelector">
         <i class="glyphicon glyphicon-calendar"></i>
         <span></span>&nbsp;<b class="caret" style="padding-bottom: 1px;"></b>
@@ -22,5 +22,5 @@
 </div>
 
 @section Javascript{
-    <script src="~/Scripts/OpsSecure/InboundLog.js"></script>
+    <script src="~/Scripts/OpsSecure/MQLog.js"></script>
 }

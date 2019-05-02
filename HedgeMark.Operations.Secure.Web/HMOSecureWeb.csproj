@@ -1485,7 +1485,7 @@
     <Content Include="Scripts\OpsSecure\Commons\WireDetails.js" />
     <Content Include="Scripts\OpsSecure\Commons\WireManager.js" />
     <Content Include="Scripts\OpsSecure\Home.js" />
-    <Content Include="Scripts\OpsSecure\InboundLog.js" />
+    <Content Include="Scripts\OpsSecure\MQLog.js" />
     <Content Include="Scripts\OpsSecure\layout.js" />
     <Content Include="Scripts\OpsSecure\OpsSecureAngularFactory.js" />
     <Content Include="Scripts\OpsSecure\UserAuditLog.js" />

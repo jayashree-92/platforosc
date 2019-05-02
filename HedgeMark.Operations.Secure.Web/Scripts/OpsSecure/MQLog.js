@@ -2,7 +2,7 @@
 
 var tblAuditLogsDetails;
 
-HmOpsApp.controller("InboundLogsCtrl", function ($scope, $http, $timeout, $filter) {
+HmOpsApp.controller("MQLogsCtrl", function ($scope, $http, $timeout, $filter) {
 
     $scope.RangeStartDate = moment().subtract(1, "days");
     $scope.RangeEndDate = moment();

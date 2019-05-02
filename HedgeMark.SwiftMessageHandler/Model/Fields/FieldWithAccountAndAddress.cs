@@ -49,7 +49,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         protected T setAccount<T>(T callingClass, string account)
         {
-            Account = account.PadRight(12, 'X');
+            Account = account;
             return callingClass;
         }
 
