@@ -46,7 +46,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 //"dom": "trI",
                 "bDestroy": true,
                 "columns": [
-                    { "mData": "WireId", "sTitle": "hmsWiresId", visible: false },
+                    { "mData": "WireId", "sTitle": "Id"},
                     { "mData": "FundName", "sTitle": "Fund" },
                     {
                         "mData": "", "sTitle": "CounterParty",
