@@ -16,6 +16,11 @@
             return setBIC(this, bic);
         }
 
+        public Field57A setBICorABA(string bicOrAba, bool isAba)
+        {
+            return setBICorABA(this, bicOrAba, isAba);
+        }
+
         public Field57A setDCMark(string dcMark)
         {
             return setDCMark(this, dcMark);

@@ -10,6 +10,10 @@
         {
             return setAccount(this, account);
         }
+        public Field56A setBICorABA(string bicOrAba, bool isAba)
+        {
+            return setBICorABA(this, bicOrAba, isAba);
+        }
 
         public Field56A setBIC(string bic)
         {

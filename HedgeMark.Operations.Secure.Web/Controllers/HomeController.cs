@@ -152,7 +152,7 @@ namespace HMOSecureWeb.Controllers
                         onboardingFund = new onboardingFund() { FundShortName = string.Format("unknown agrId {0}", wire.OnBoardAgreementId) },
                         dmaCounterPartyOnBoarding = new dmaCounterPartyOnBoarding() { CounterpartyName = string.Format("unknown agrId {0}", wire.OnBoardAgreementId) },
                     },
-                    Account = wireAccounts.FirstOrDefault(s => wire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount(),
+                    SendingAccount = wireAccounts.FirstOrDefault(s => wire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount(),
                     ReceivingAccount = wire.WireTransferTypeId == 2 ? wireAccounts.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount() : new onBoardingAccount(),
                     SSITemplate = wire.WireTransferTypeId != 2 ? wireSSITemplates.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate() : new onBoardingSSITemplate(),
                     FundName = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) == null ? "" : hFunds.First(s => s.HFundId == wire.hmFundId).PerferredFundName
@@ -216,9 +216,9 @@ namespace HMOSecureWeb.Controllers
             var isApproved = (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId;
 
             var isCancelEnabled = !isApproved && !isDeadlineCrossed || !isCompletedOrFailed;
-            var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CashSweepTime ?? new TimeSpan());
-            var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CutoffTime ?? new TimeSpan());
-            var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.Account.CashSweepTimeZone);
+            var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan());
+            var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan());
+            var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
             return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, deadlineToApprove });
         }
 
@@ -234,9 +234,9 @@ namespace HMOSecureWeb.Controllers
             wireTicket.HMWire.LastUpdatedBy = UserDetails.Id;
             wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
 
-            var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CashSweepTime ?? new TimeSpan());
-            var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.Account.CutoffTime ?? new TimeSpan());
-            var deadlineToApprove = GetDeadlineToApprove(cashSweep, cutOff, wireTicket.Account.CashSweepTimeZone);
+            var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan());
+            var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan());
+            var deadlineToApprove = GetDeadlineToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
             SaveWireScheduleInfo(wireTicket, (WireDataManager.WireStatus)statusId, UserDetails.Id, deadlineToApprove);
             var tempFilePath = string.Format("Temp\\{0}", UserName);
 

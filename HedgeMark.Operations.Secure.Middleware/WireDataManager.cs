@@ -158,7 +158,7 @@ namespace HMOSecureMiddleware
             {
                 HMWire = hmWire,
                 Agreement = wireAgreement,
-                Account = wireSendingAccount,
+                SendingAccount = wireSendingAccount,
                 ReceivingAccount = hmWire.WireTransferTypeId == 2 ? wireReceivingAccount : new onBoardingAccount(),
                 SSITemplate = wireSSITemplate,
                 AttachmentUsers = attachmentUsers,

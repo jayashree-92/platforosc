@@ -13,6 +13,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public string Account { get; set; }
         public string BIC { get; set; }
+        public string ABA { get; set; }
 
 
         public override List<string> Components
@@ -37,7 +38,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
                 case FieldConstants.BIC:
                     //var lengthOfAccount = GetComponentValue(FieldConstants.ACCOUNT).Length + 1;
                     var bicStartIndex = Value.IndexOf("\n", StringComparison.Ordinal);
-                    var bicCode= !string.IsNullOrWhiteSpace(BIC) ? BIC : Value.Length > bicStartIndex ? Value.Substring(bicStartIndex, Value.Length - bicStartIndex) : string.Empty;
+                    var bicCode = !string.IsNullOrWhiteSpace(BIC) ? BIC : Value.Length > bicStartIndex ? Value.Substring(bicStartIndex, Value.Length - bicStartIndex) : string.Empty;
                     return component.GetComponentValue(bicCode);
             }
 
@@ -62,14 +63,31 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             return callingClass;
         }
 
+        public T setABA<T>(T callingClass, string aba)
+        {
+            if (string.IsNullOrWhiteSpace(aba))
+                return callingClass;
+
+            ABA = aba.PadRight(9, 'X');
+            return callingClass;
+        }
+
+        public T setBICorABA<T>(T callingClass, string bicOrAba, bool isAba)
+        {
+            return !isAba ? setBIC(callingClass, bicOrAba) : setABA(callingClass, bicOrAba);
+        }
+
         public override string GetValue()
         {
-            var builder = new StringBuilder("/");
+            var builder = new StringBuilder();
+            var isAccAvailable = !string.IsNullOrWhiteSpace(Account);
 
-            if (!string.IsNullOrWhiteSpace(Account))
-                builder.Append(Account);
+            if (isAccAvailable)
+                builder.AppendFormat("/{0}", Account);
             if (!string.IsNullOrWhiteSpace(BIC))
-                builder.AppendFormat("{0}{1}", Environment.NewLine, BIC);
+                builder.AppendFormat("{0}{1}", isAccAvailable ? Environment.NewLine : string.Empty, BIC);
+            else if (!string.IsNullOrWhiteSpace(ABA))
+                builder.AppendFormat("{0}//FW{1}", isAccAvailable ? Environment.NewLine : string.Empty, ABA);
 
             return builder.ToString();
         }

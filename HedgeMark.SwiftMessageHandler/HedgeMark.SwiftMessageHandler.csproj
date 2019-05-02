@@ -86,6 +86,8 @@
     <Compile Include="Model\Fields\Field52A.cs" />
     <Compile Include="Model\Fields\Field56A.cs" />
     <Compile Include="Model\Fields\Field57A.cs" />
+    <Compile Include="Model\Fields\Field56D.cs" />
+    <Compile Include="Model\Fields\Field58D.cs" />
     <Compile Include="Model\Fields\Field57D.cs" />
     <Compile Include="Model\Fields\Field58A.cs" />
     <Compile Include="Model\Fields\Field59.cs" />

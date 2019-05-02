@@ -37,10 +37,10 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public override string GetValue()
         {
-            var builder = new StringBuilder("/");
+            var builder = new StringBuilder();
 
             if (!string.IsNullOrWhiteSpace(Account))
-                builder.Append(Account);
+                builder.AppendFormat("/{0}", Account);
             if (!string.IsNullOrWhiteSpace(NameAndFullAddress))
                 builder.Append(NameAndFullAddress);
 

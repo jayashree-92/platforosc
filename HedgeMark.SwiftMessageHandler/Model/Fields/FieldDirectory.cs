@@ -192,6 +192,11 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         /// <summary>
         /// "Account with Institution"
         /// </summary>
+        public const string FIELD_56D = "56D";
+
+        /// <summary>
+        /// "Account with Institution"
+        /// </summary>
         public const string FIELD_57A = "57A";
 
         /// <summary>
@@ -203,6 +208,12 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         /// "Beneficiary Institution"
         /// </summary>
         public const string FIELD_58A = "58A";
+
+        /// <summary>
+        /// "Account with Institution"
+        /// </summary>
+        public const string FIELD_58D = "58D";
+
 
         /// <summary>
         /// "Beneficiary Customer"
@@ -305,7 +316,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         /// Date and Time of User Submission
         /// </summary>
         public static string FIELD_177 = "177";
-        
+
 
         public static bool IsBlock3Field(string fieldName)
         {
@@ -344,10 +355,12 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             {FIELD_53A ,"Sender's Correspondent"},
             {FIELD_54A ,"Receiver's Correspondent"},
             {FIELD_56A ,"Intermediary"},
-            {FIELD_57A, "Account with Institution"},
+            {FIELD_56D, "Intermediary Institution"},
+            { FIELD_57A, "Account with Institution"},
             {FIELD_57D, "Account with Institution"},
             {FIELD_58A, "Beneficiary Institution"},
-            {FIELD_59, "Beneficiary Customer"},
+            {FIELD_58D, "Beneficiary Institution"},
+            { FIELD_59, "Beneficiary Customer"},
 
             {FIELD_61,"Statement Line" },
 
@@ -358,7 +371,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             {FIELD_90A,"Qualifier and Price"},
             {FIELD_97A,"Qualifier and Account"},
             {FIELD_98A,"Qualifier and Date"},
-            
+
 
 
             { FIELD_103,"Service Identifier"},

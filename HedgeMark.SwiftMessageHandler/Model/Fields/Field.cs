@@ -33,7 +33,14 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             }
         }
 
-        public string GetFieldAndValue { get { return string.Format("{0}:{1}", Name, GetValue()); } }
+        public string GetFieldAndValue
+        {
+            get
+            {
+                var val = GetValue();
+                return string.IsNullOrWhiteSpace(val) ? string.Empty : string.Format("{0}:{1}", Name, GetValue());
+            }
+        }
 
         public virtual string GetValue()
         {

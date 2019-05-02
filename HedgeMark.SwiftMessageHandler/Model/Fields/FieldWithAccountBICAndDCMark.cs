@@ -63,14 +63,18 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public override string GetValue()
         {
-            var builder = new StringBuilder("/");
+            var builder = new StringBuilder();
+
+            var isAccAvailable = !string.IsNullOrWhiteSpace(Account);
 
             if (!string.IsNullOrWhiteSpace(DCMark))
                 builder.Append(string.Format("{0}/", DCMark));
-            if (!string.IsNullOrWhiteSpace(Account))
-                builder.Append(Account);
+            if (isAccAvailable)
+                builder.AppendFormat("/{0}", Account);
             if (!string.IsNullOrWhiteSpace(BIC))
-                builder.AppendFormat("{0}{1}", Environment.NewLine, BIC);
+                builder.AppendFormat("{0}{1}", isAccAvailable ? Environment.NewLine : string.Empty, BIC);
+            else if (!string.IsNullOrWhiteSpace(ABA))
+                builder.AppendFormat("{0}//FW{1}", isAccAvailable ? Environment.NewLine : string.Empty, ABA);
 
             return builder.ToString();
         }

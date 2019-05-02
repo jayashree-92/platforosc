@@ -134,8 +134,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isApprovedOrFailed = response.data.isApprovedOrFailed;
             $scope.wireTicketObj.HMWire.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
-            $scope.castToDate($scope.wireTicketObj.Account);
-            $scope.accountDetail = angular.copy($scope.wireTicketObj.Account);
+            $scope.castToDate($scope.wireTicketObj.SendingAccount);
+            $scope.accountDetail = angular.copy($scope.wireTicketObj.SendingAccount);
             if ($scope.WireTicket.IsBookTransfer) {
                 $scope.castToDate($scope.wireTicketObj.ReceivingAccount);
                 $scope.receivingAccountDetail = angular.copy($scope.wireTicketObj.ReceivingAccount);

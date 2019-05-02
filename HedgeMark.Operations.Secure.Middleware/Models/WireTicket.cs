@@ -34,7 +34,7 @@ namespace HMOSecureMiddleware.Models
         public List<string> AttachmentUsers { get; set; }
         public List<string> WorkflowUsers { get; set; }
         public dmaAgreementOnBoarding Agreement { get; set; }
-        public onBoardingAccount Account { get; set; }
+        public onBoardingAccount SendingAccount { get; set; }
         public onBoardingAccount ReceivingAccount { get; set; }
         public onBoardingSSITemplate SSITemplate { get; set; }
         public string FundName { get; set; }
