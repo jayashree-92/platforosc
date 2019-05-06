@@ -174,6 +174,12 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         /// </summary>
         public const string FIELD_52A = "52A";
 
+
+        /// <summary>
+        /// "Ordering Institution"
+        /// </summary>
+        public const string FIELD_52D = "52D";
+
         /// <summary>
         /// "Sender's Correspondent"
         /// </summary>
@@ -352,6 +358,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             {FIELD_50A ,"Ordering Customer"},
             {FIELD_50K ,"Ordering Customer"},
             {FIELD_52A ,"Ordering Institution"},
+            {FIELD_52D ,"Ordering Institution"},
             {FIELD_53A ,"Sender's Correspondent"},
             {FIELD_54A ,"Receiver's Correspondent"},
             {FIELD_56A ,"Intermediary"},
