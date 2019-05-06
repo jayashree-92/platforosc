@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using HMOSecureMiddleware.Models;
 using Com.HedgeMark.Commons;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
@@ -175,10 +176,20 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field56D GetField56D(WireTicket wire)
         {
-            var f56D = new Field56D()
-                .setAccount(string.Format("//FW{0}", wire.IsBookTransfer ? wire.ReceivingAccount.IntermediaryBICorABA : wire.SSITemplate.IntermediaryBICorABA))
-                .setNameAndAddressLine1(wire.IsBookTransfer ? wire.ReceivingAccount.IntermediaryBankName : wire.SSITemplate.IntermediaryBankName)
-                .setNameAndAddressLine2(wire.IsBookTransfer ? wire.ReceivingAccount.IntermediaryBankAddress : wire.SSITemplate.IntermediaryBankAddress);
+            var interBicOrAba = wire.IsBookTransfer
+                ? wire.ReceivingAccount.IsIntermediaryABA ? wire.ReceivingAccount.IntermediaryBICorABA : string.Empty
+                : wire.SSITemplate.IsIntermediaryABA ? wire.SSITemplate.IntermediaryBICorABA : string.Empty;
+
+            var f56D = new Field56D().setAccount(!string.IsNullOrWhiteSpace(interBicOrAba) ? string.Format("/FW{0}", interBicOrAba) : string.Empty);
+
+            if (!string.IsNullOrWhiteSpace(interBicOrAba))
+            {
+                var nameAndAddressed = wire.IsBookTransfer
+                    ? string.Format("{0}\n{1}", wire.ReceivingAccount.IntermediaryBankName, wire.ReceivingAccount.IntermediaryBankAddress)
+                    : string.Format("{0}\n{1}", wire.SSITemplate.IntermediaryBankName, wire.SSITemplate.IntermediaryBankAddress);
+
+                f56D.setNameAndAddress(nameAndAddressed);
+            }
             return f56D;
         }
 
@@ -193,10 +204,21 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field57D GetField57D(WireTicket wire)
         {
-            var f57D = new Field57D()
-                .setAccount(string.Format("//FW{0}", wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryBICorABA : wire.SSITemplate.BeneficiaryBICorABA))
-                .setNameAndAddressLine1(wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryBankName : wire.SSITemplate.BeneficiaryBankName)
-                .setNameAndAddressLine2(wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryBankAddress : wire.SSITemplate.BeneficiaryBankAddress);
+            var beneBicOrAba = wire.IsBookTransfer
+                ? wire.ReceivingAccount.IsBeneficiaryABA ? wire.ReceivingAccount.BeneficiaryBICorABA : string.Empty
+                : wire.SSITemplate.IsBeneficiaryABA ? wire.SSITemplate.BeneficiaryBICorABA : string.Empty;
+
+            var f57D = new Field57D().setAccount(!string.IsNullOrWhiteSpace(beneBicOrAba) ? string.Format("/FW{0}", beneBicOrAba) : string.Empty);
+
+            if (!string.IsNullOrWhiteSpace(beneBicOrAba))
+            {
+                var nameAndAddressed = wire.IsBookTransfer
+                    ? string.Format("{0}\n{1}", wire.ReceivingAccount.BeneficiaryBankName, wire.ReceivingAccount.BeneficiaryBankAddress)
+                    : string.Format("{0}\n{1}", wire.SSITemplate.BeneficiaryBankName, wire.SSITemplate.BeneficiaryBankAddress);
+
+                f57D.setNameAndAddress(nameAndAddressed);
+            }
+
             return f57D;
         }
 
@@ -215,15 +237,22 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                                                           : wire.SSITemplate.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiaryBICorABA);
 
             var f58D = new Field58D()
-                .setAccount(isAbaAvailable ? string.Format("//FW{0}", wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryBICorABA : wire.SSITemplate.UltimateBeneficiaryBICorABA)
-                    : wire.IsBookTransfer ? wire.ReceivingAccount.AccountNumber : wire.SSITemplate.AccountNumber)
-                .setNameAndAddressLine1(isAbaAvailable  ? wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryBankName : wire.SSITemplate.UltimateBeneficiaryBankName :
-                    wire.IsBookTransfer ? wire.ReceivingAccount.Reference: wire.SSITemplate.Reference);
+                .setAccount(isAbaAvailable ? string.Format("/FW{0}", wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryBICorABA : wire.SSITemplate.UltimateBeneficiaryBICorABA)
+                    : wire.IsBookTransfer ? wire.ReceivingAccount.AccountNumber : wire.SSITemplate.AccountNumber);
 
-            if (!isAbaAvailable)
-                f58D.setNameAndAddressLine2(wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryBankAddress : wire.SSITemplate.UltimateBeneficiaryBankAddress);
+            if(!isAbaAvailable)
+                f58D.setNameAndAddress(wire.IsBookTransfer ? wire.ReceivingAccount.Reference : wire.SSITemplate.Reference);
+            
+            if (isAbaAvailable)
+            {
+                var nameAndAddressed = wire.IsBookTransfer
+                    ? string.Format("{0}\n{1}", wire.ReceivingAccount.UltimateBeneficiaryBankName, wire.ReceivingAccount.UltimateBeneficiaryBankAddress)
+                    : string.Format("{0}\n{1}", wire.SSITemplate.UltimateBeneficiaryBankName, wire.SSITemplate.UltimateBeneficiaryBankAddress);
 
-                return f58D;
+                f58D.setNameAndAddress(nameAndAddressed);
+            }
+
+            return f58D;
         }
 
         private static Field59 GetField59(WireTicket wire)
@@ -243,7 +272,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field72 GetField72(WireTicket wire)
         {
             var f72 = new Field72()
-                .setNarrative("/BNF/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SendingAccount.FFCNumber));
+                .setNarrative("/BNF/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SSITemplate.FFCNumber));
             return f72;
         }
 

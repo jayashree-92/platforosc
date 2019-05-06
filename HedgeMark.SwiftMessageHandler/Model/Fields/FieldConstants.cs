@@ -18,6 +18,7 @@
         public const string NAME_AND_ADDRESS = "Name and Address";
         public const string NAME_AND_ADDRESS_LINE_2 = "Name and Address 2";
         public const string NAME_AND_ADDRESS_LINE_3 = "Name and Address 3";
+        public const string NAME_AND_ADDRESS_LINE_4 = "Name and Address 4";
 
         public const string STATUS = "Status";
         public const string DESCRIPTION = "Description";

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using HedgeMark.SwiftMessageHandler.Utils;
 
 namespace HedgeMark.SwiftMessageHandler.Model.Fields
@@ -12,18 +13,15 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         }
 
         public string Account { get; set; }
-        public string NameAndAddress { get; set; }
         public string NameAndAddressLine1 { get; set; }
         public string NameAndAddressLine2 { get; set; }
         public string NameAndAddressLine3 { get; set; }
+        public string NameAndAddressLine4 { get; set; }
 
         protected string NameAndFullAddress
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(NameAndAddress))
-                    return string.Format("{0}{1}", Environment.NewLine, NameAndAddress);
-
                 var builder = new StringBuilder();
                 if (!string.IsNullOrWhiteSpace(NameAndAddressLine1))
                     builder.AppendFormat("{0}{1}", Environment.NewLine, NameAndAddressLine1);
@@ -31,6 +29,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
                     builder.AppendFormat("{0}{1}", Environment.NewLine, NameAndAddressLine2);
                 if (!string.IsNullOrWhiteSpace(NameAndAddressLine3))
                     builder.AppendFormat("{0}{1}", Environment.NewLine, NameAndAddressLine3);
+                if (!string.IsNullOrWhiteSpace(NameAndAddressLine4))
+                    builder.AppendFormat("{0}{1}", Environment.NewLine, NameAndAddressLine4);
                 return builder.ToString();
             }
         }
@@ -55,25 +55,51 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public T setNameAndAddress<T>(T callingClass, string nameAndAddress)
         {
-            NameAndAddress = nameAndAddress;
+            nameAndAddress = Regex.Replace(nameAndAddress, @"\t|\r", "");
+
+            var addressLines = nameAndAddress.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (addressLines.Length > 0)
+                setNameAndAddressLine1(callingClass, addressLines[0].Trim());
+            if (addressLines.Length > 1)
+                setNameAndAddressLine2(callingClass, addressLines[1].Trim());
+            if (addressLines.Length > 2)
+                setNameAndAddressLine3(callingClass, addressLines[2].Trim());
+            if (addressLines.Length > 3)
+                setNameAndAddressLine4(callingClass, addressLines[3].Trim());
+
             return callingClass;
         }
 
         public T setNameAndAddressLine1<T>(T callingClass, string nameAndAddressLine1)
         {
+            if (!string.IsNullOrWhiteSpace(nameAndAddressLine1))
+                nameAndAddressLine1 = Regex.Replace(nameAndAddressLine1, @"\t|\n|\r", string.Empty);
             NameAndAddressLine1 = nameAndAddressLine1;
             return callingClass;
         }
 
         public T setNameAndAddressLine2<T>(T callingClass, string nameAndAddressLine2)
         {
+            if (!string.IsNullOrWhiteSpace(nameAndAddressLine2))
+                nameAndAddressLine2 = Regex.Replace(nameAndAddressLine2, @"\t|\n|\r", string.Empty);
             NameAndAddressLine2 = nameAndAddressLine2;
             return callingClass;
         }
 
         public T setNameAndAddressLine3<T>(T callingClass, string nameAndAddressLine3)
         {
+            if (!string.IsNullOrWhiteSpace(nameAndAddressLine3))
+                nameAndAddressLine3 = Regex.Replace(nameAndAddressLine3, @"\t|\n|\r", string.Empty);
             NameAndAddressLine3 = nameAndAddressLine3;
+            return callingClass;
+        }
+
+        public T setNameAndAddressLine4<T>(T callingClass, string nameAndAddressLine4)
+        {
+            if (!string.IsNullOrWhiteSpace(nameAndAddressLine4))
+                nameAndAddressLine4 = Regex.Replace(nameAndAddressLine4, @"\t|\n|\r", string.Empty);
+            NameAndAddressLine4 = nameAndAddressLine4;
             return callingClass;
         }
 
@@ -84,7 +110,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             {
                 return new List<string>()
                 {
-                     FieldConstants.ACCOUNT,FieldConstants.NAME_AND_ADDRESS,FieldConstants.NAME_AND_ADDRESS_LINE_2,FieldConstants.NAME_AND_ADDRESS_LINE_3
+                     FieldConstants.ACCOUNT,FieldConstants.NAME_AND_ADDRESS,FieldConstants.NAME_AND_ADDRESS_LINE_2,FieldConstants.NAME_AND_ADDRESS_LINE_3,FieldConstants.NAME_AND_ADDRESS_LINE_4
                 };
             }
         }
@@ -92,7 +118,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public override string GetComponentValue(string component)
         {
             var nameAndAddressStartIndex = component.GetComponentValue(!string.IsNullOrWhiteSpace(Account) ? Account : Value).Length + 1;
-            var addressLine1 = !string.IsNullOrWhiteSpace(NameAndAddress) ? NameAndAddress : Value.Length > nameAndAddressStartIndex ? Value.Substring(nameAndAddressStartIndex, Value.Length - nameAndAddressStartIndex) : string.Empty;
+            var addressLine1 = !string.IsNullOrWhiteSpace(NameAndFullAddress) ? NameAndFullAddress : Value.Length > nameAndAddressStartIndex ? Value.Substring(nameAndAddressStartIndex, Value.Length - nameAndAddressStartIndex) : string.Empty;
 
             var address = addressLine1.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
             switch (component)
@@ -110,6 +136,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
                     return address.Length > 1 && !string.IsNullOrWhiteSpace(address[1]) ? address[1] : string.Empty;
                 case FieldConstants.NAME_AND_ADDRESS_LINE_3:
                     return address.Length > 2 && !string.IsNullOrWhiteSpace(address[2]) ? address[2] : string.Empty;
+                case FieldConstants.NAME_AND_ADDRESS_LINE_4:
+                    return address.Length > 3 && !string.IsNullOrWhiteSpace(address[3]) ? address[3] : string.Empty;
             }
 
             return string.Empty;
