@@ -265,7 +265,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
              * Add an optional user block
              */
             SwiftBlockUser blockUser = new SwiftBlockUser("S");
-            blockUser.AddField(new Field("SAC").setValue(""));
+            blockUser.AddField(new Field("SAC").setValue("1"));
             blockUser.AddField(new Field("COP").setValue("P"));
 
             m.AddBlock(blockUser);
@@ -279,7 +279,7 @@ FOOBANKXXXXX
 :59:/12345678901234567890
 JOE DOE
 :71A:OUR
--}{5:{MAC:00000000}{PDE:}}{S:{SAC:}{COP:P}}");
+-}{5:{MAC:00000000}{PDE:}}{S:{SAC:1}{COP:P}}");
         }
     }
 }
