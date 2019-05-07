@@ -3,6 +3,7 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using HedgeMark.Operations.Secure.DataModel;
+using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT;
 using HMOSecureMiddleware.Models;
 using HMOSecureMiddleware.Queues;
@@ -83,7 +84,7 @@ namespace HMOSecureMiddleware
                 if (currentStatus.WireStatus == WireDataManager.WireStatus.Approved)
                 {
                     WireDataManager.SetWireStatusAndWorkFlow(wire.HMWire, WireDataManager.WireStatus.Cancelled, WireDataManager.SwiftStatus.NotInitiated, comment, userId);
-                    ProcesCancellationOfWire(wire);
+                    ProcessCancellationOfWire(wire);
                 }
             }
         }
@@ -112,19 +113,19 @@ namespace HMOSecureMiddleware
             }
         }
 
-        private static void ProcesCancellationOfWire(WireTicket wire)
+        private static void ProcessCancellationOfWire(WireTicket wire)
         {
             try
             {
                 var originalMessageType = wire.HMWire.hmsWireMessageType.MessageType.Replace("MT", string.Empty);
 
                 //For cancellation of a processing wire, we will send a different message Type
-                var cancMsgTypeStr = string.Format("MT{0}", originalMessageType.StartsWith("1") ? MTDirectory.MT_192 : MTDirectory.MT_292);
+                var cancelMsgTypeStr = string.Format("MT{0}", originalMessageType.StartsWith("1") ? MTDirectory.MT_192 : MTDirectory.MT_292);
 
                 hmsWireMessageType cancellationMessageType;
                 using (var context = new OperationsSecureContext())
                 {
-                    cancellationMessageType = context.hmsWireMessageTypes.First(s => s.MessageType == cancMsgTypeStr);
+                    cancellationMessageType = context.hmsWireMessageTypes.First(s => s.MessageType == cancelMsgTypeStr);
                 }
 
                 //Create Swift Message and send to EMX team
@@ -144,18 +145,35 @@ namespace HMOSecureMiddleware
 
         private static void CreateAndSendMessageToMQ(WireTicket wire, hmsWireMessageType messageType)
         {
+            AbstractMT swiftMessage103 = null;
+            var is202Cov = messageType.MessageType.Equals("MT202 COV") || messageType.MessageType.Equals("MT202COV");
+
+            if (is202Cov)
+            {
+                //We need to create an MT 103 and use TransactionRef of 103 as Related Ref of MT 202 COV
+                swiftMessage103 = OutboundSwiftMsgCreator.CreateMessage(wire, "MT103", "COV");
+
+                //This has to be sent-out first
+                QueueSystemManager.SendMessage(swiftMessage103.GetMessage());
+            }
+
             //Create Swift message
             var swiftMessage = OutboundSwiftMsgCreator.CreateMessage(wire, messageType.MessageType);
+
+            if (is202Cov)
+            {
+                swiftMessage.updateFieldValue(FieldDirectory.FIELD_121, swiftMessage103.Block3.GetFieldValue(FieldDirectory.FIELD_121));
+                swiftMessage.updateFieldValue(FieldDirectory.FIELD_21, swiftMessage103.Block4.GetFieldValue(FieldDirectory.FIELD_20));
+            }
 
             //Validate Error Message 
             //SwiftMessageValidator.Validate(swiftMessage);
 
             //Put an entry to Wire Log table with the parameters used to create Swift Message
-            LogOutBoundWireTransaction(wire, messageType, swiftMessage);
+            LogOutBoundWireTransaction(wire, messageType, swiftMessage.GetMessage());
 
             //Send the message to MQ
-            if (!Utility.IsLocal())
-                QueueSystemManager.SendMessage(swiftMessage);
+            QueueSystemManager.SendMessage(swiftMessage.GetMessage());
         }
 
         public static void LogFrontEndAcknowledgment(long wireId, string fullMessageType)
@@ -182,6 +200,10 @@ namespace HMOSecureMiddleware
         {
             var confirmationData = InboundSwiftMsgParser.ParseMessage(swiftMessage);
 
+            //When  reference tag has "COV", it means its a MT103 generated on behalf of MT202COV. We should skip tracking MT103 and track only original MT202COV
+            if (confirmationData.ReferenceTag == "COV")
+                return;
+
             if (confirmationData.IsFeAck)
             {
                 LogFrontEndAcknowledgment(confirmationData.WireId, confirmationData.SwiftMessage.GetFullMessageType());
@@ -189,7 +211,7 @@ namespace HMOSecureMiddleware
             }
 
             if (confirmationData.IsAckOrNack && confirmationData.IsAcknowledged)
-                WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, WireDataManager.SwiftStatus.Acknowledged, string.Empty);
+                WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, WireDataManager.WireStatus.Approved, WireDataManager.SwiftStatus.Acknowledged, string.Empty, -1);
 
             else if (confirmationData.IsAckOrNack && confirmationData.IsNegativeAcknowledged)
                 WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.NegativeAcknowledged, confirmationData.ExceptionMessage, -1);

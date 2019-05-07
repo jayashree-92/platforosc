@@ -30,15 +30,30 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
         {
             if (field.Name == FieldDirectory.FIELD_111 && Fields.All(s => s.Name != FieldDirectory.FIELD_121))
                 AddField(new Field121());
-            
+
             Fields.Add(field);
         }
 
-        public void RemoveField(Field field)
+        public void UpdateField(string fieldName, string fieldValue)
         {
-            if (HasField(field.Name))
-                Fields.Remove(Fields.First(s => s.Name == field.Name));
+            if (!HasField(fieldName))
+                return;
+
+            foreach (var field in Fields)
+            {
+                if (field.Name != fieldValue)
+                    continue;
+
+                field.SetValue(fieldValue);
+            }
         }
+
+        public void RemoveField(string fieldName)
+        {
+            if (HasField(fieldName))
+                Fields.Remove(Fields.First(s => s.Name == fieldName));
+        }
+
         public List<Field> GetFields()
         {
             return Fields;

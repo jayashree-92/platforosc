@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
 using HMOSecureMiddleware.Models;
 using Com.HedgeMark.Commons;
@@ -14,20 +15,20 @@ namespace HMOSecureMiddleware.SwiftMessageManager
     {
         protected static readonly string HMBIC = ConfigurationManagerWrapper.StringSetting("HMBIC", "HMRKUS30");
         protected static readonly string HMBICSender = string.Format("{0}{1}", HMBIC, ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX"));
-        public static string CreateMessage(WireTicket wire, string messageType)
+        public static AbstractMT CreateMessage(WireTicket wire, string messageType, string referenceTag = "")
         {
             switch (messageType)
             {
                 //MT103 - Single customer credit transfer
                 case "MT103":
-                    return CreateMt103(wire).GetMessage();
+                    return CreateMt103(wire, referenceTag);
                 //MT202 - General Financial inst Transfer
                 case "MT202":
-                    return CreateMt202(wire).GetMessage();
+                    return CreateMt202(wire);
                 //MT202 COV - General Financial inst Transfer
                 case "MT202 COV":
                 case "MT202COV":
-                    return CreateMt202Cov(wire).GetMessage();
+                    return CreateMt202Cov(wire);
                 //MT210 - Notice to Receive
                 case "MT210":
                     return CreateMt210(wire);
@@ -56,10 +57,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             return f11S;
         }
 
-        private static Field20 GetField20(WireTicket wire, bool isCancellation = false)
+        private static Field20 GetField20(WireTicket wire, string referenceTag = "")
         {
             var transactionId = WireDataManager.GetWireTransactionId(wire.WireId);
-            return new Field20(string.Format("{0}{1}", isCancellation ? "C" : string.Empty, transactionId));
+            return new Field20(string.Format("{0}{1}{2}", transactionId, string.IsNullOrWhiteSpace(referenceTag) ? string.Empty : "/", referenceTag));
         }
 
         private static Field21 GetField21ForCancellation(WireTicket wire)
@@ -80,7 +81,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field25 GetField25(WireTicket wire)
         {
-            return new Field25().setAccount(wire.SendingAccount.AccountNumber);
+            return new Field25().setAccount(!string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber);
         }
 
         private static Field30 GetField30(WireTicket wire)
@@ -163,7 +164,42 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             return f53A;
         }
 
-        //need to check if 53B is required or not
+
+        private static void SetField52X(AbstractMT mtMessage, WireTicket wire)
+        {
+            if (!wire.SendingAccount.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiaryBICorABA))
+                mtMessage.addField(GetField52A(wire));
+            else
+                mtMessage.addField(GetField52D(wire));
+        }
+
+        private static void SetField56X(AbstractMT mtMessage, WireTicket wire)
+        {
+            var isBicIntermediaryAvailable = !wire.SSITemplate.IsIntermediaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.IntermediaryBICorABA);
+            if (isBicIntermediaryAvailable)
+                mtMessage.addField(GetField56A(wire));
+            else
+                mtMessage.addField(GetField56D(wire));
+        }
+
+        private static void SetField57X(AbstractMT mtMessage, WireTicket wire)
+        {
+            var isBicBeneficiaryAvailable = !wire.SSITemplate.IsBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.BeneficiaryBICorABA);
+            if (isBicBeneficiaryAvailable)
+                mtMessage.addField(GetField57A(wire));
+            else
+                mtMessage.addField(GetField57D(wire));
+        }
+
+        private static void SetField58X(AbstractMT mtMessage, WireTicket wire)
+        {
+            var isBicUltimateAvailable = !wire.SSITemplate.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiaryBICorABA);
+            if (isBicUltimateAvailable)
+                mtMessage.addField(GetField58A(wire));
+            else
+                mtMessage.addField(GetField58D(wire));
+        }
+
 
         private static Field56A GetField56A(WireTicket wire)
         {
@@ -182,14 +218,14 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             var f56D = new Field56D().setAccount(!string.IsNullOrWhiteSpace(interBicOrAba) ? string.Format("/FW{0}", interBicOrAba) : string.Empty);
 
-            if (!string.IsNullOrWhiteSpace(interBicOrAba))
-            {
-                var nameAndAddressed = wire.IsBookTransfer
-                    ? string.Format("{0}\n{1}", wire.ReceivingAccount.IntermediaryBankName, wire.ReceivingAccount.IntermediaryBankAddress)
-                    : string.Format("{0}\n{1}", wire.SSITemplate.IntermediaryBankName, wire.SSITemplate.IntermediaryBankAddress);
+            if (string.IsNullOrWhiteSpace(interBicOrAba))
+                return f56D;
 
-                f56D.setNameAndAddress(nameAndAddressed);
-            }
+            var nameAndAddressed = wire.IsBookTransfer
+                ? string.Format("{0}\n{1}", wire.ReceivingAccount.IntermediaryBankName, wire.ReceivingAccount.IntermediaryBankAddress)
+                : string.Format("{0}\n{1}", wire.SSITemplate.IntermediaryBankName, wire.SSITemplate.IntermediaryBankAddress);
+
+            f56D.setNameAndAddress(nameAndAddressed);
             return f56D;
         }
 
@@ -204,20 +240,20 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field57D GetField57D(WireTicket wire)
         {
-            var beneBicOrAba = wire.IsBookTransfer
+            var beneficiaryBicOrAba = wire.IsBookTransfer
                 ? wire.ReceivingAccount.IsBeneficiaryABA ? wire.ReceivingAccount.BeneficiaryBICorABA : string.Empty
                 : wire.SSITemplate.IsBeneficiaryABA ? wire.SSITemplate.BeneficiaryBICorABA : string.Empty;
 
-            var f57D = new Field57D().setAccount(!string.IsNullOrWhiteSpace(beneBicOrAba) ? string.Format("/FW{0}", beneBicOrAba) : string.Empty);
+            var f57D = new Field57D().setAccount(!string.IsNullOrWhiteSpace(beneficiaryBicOrAba) ? string.Format("/FW{0}", beneficiaryBicOrAba) : string.Empty);
 
-            if (!string.IsNullOrWhiteSpace(beneBicOrAba))
-            {
-                var nameAndAddressed = wire.IsBookTransfer
-                    ? string.Format("{0}\n{1}", wire.ReceivingAccount.BeneficiaryBankName, wire.ReceivingAccount.BeneficiaryBankAddress)
-                    : string.Format("{0}\n{1}", wire.SSITemplate.BeneficiaryBankName, wire.SSITemplate.BeneficiaryBankAddress);
+            if (string.IsNullOrWhiteSpace(beneficiaryBicOrAba))
+                return f57D;
 
-                f57D.setNameAndAddress(nameAndAddressed);
-            }
+            var nameAndAddressed = wire.IsBookTransfer
+                ? string.Format("{0}\n{1}", wire.ReceivingAccount.BeneficiaryBankName, wire.ReceivingAccount.BeneficiaryBankAddress)
+                : string.Format("{0}\n{1}", wire.SSITemplate.BeneficiaryBankName, wire.SSITemplate.BeneficiaryBankAddress);
+
+            f57D.setNameAndAddress(nameAndAddressed);
 
             return f57D;
         }
@@ -233,24 +269,25 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field58D GetField58D(WireTicket wire)
         {
-            var isAbaAvailable = wire.IsBookTransfer ? wire.ReceivingAccount.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.UltimateBeneficiaryBICorABA)
-                                                          : wire.SSITemplate.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiaryBICorABA);
+            var isAbaAvailable = wire.IsBookTransfer
+                ? wire.ReceivingAccount.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.UltimateBeneficiaryBICorABA)
+                : wire.SSITemplate.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiaryBICorABA);
 
             var f58D = new Field58D()
                 .setAccount(isAbaAvailable ? string.Format("/FW{0}", wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryBICorABA : wire.SSITemplate.UltimateBeneficiaryBICorABA)
                     : wire.IsBookTransfer ? wire.ReceivingAccount.AccountNumber : wire.SSITemplate.AccountNumber);
 
-            if(!isAbaAvailable)
+            if (!isAbaAvailable)
                 f58D.setNameAndAddress(wire.IsBookTransfer ? wire.ReceivingAccount.Reference : wire.SSITemplate.Reference);
-            
-            if (isAbaAvailable)
-            {
-                var nameAndAddressed = wire.IsBookTransfer
-                    ? string.Format("{0}\n{1}", wire.ReceivingAccount.UltimateBeneficiaryBankName, wire.ReceivingAccount.UltimateBeneficiaryBankAddress)
-                    : string.Format("{0}\n{1}", wire.SSITemplate.UltimateBeneficiaryBankName, wire.SSITemplate.UltimateBeneficiaryBankAddress);
 
-                f58D.setNameAndAddress(nameAndAddressed);
-            }
+            if (!isAbaAvailable)
+                return f58D;
+
+            var nameAndAddressed = wire.IsBookTransfer
+                ? string.Format("{0}\n{1}", wire.ReceivingAccount.UltimateBeneficiaryBankName, wire.ReceivingAccount.UltimateBeneficiaryBankAddress)
+                : string.Format("{0}\n{1}", wire.SSITemplate.UltimateBeneficiaryBankName, wire.SSITemplate.UltimateBeneficiaryBankAddress);
+
+            f58D.setNameAndAddress(nameAndAddressed);
 
             return f58D;
         }
@@ -266,7 +303,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field71A GetField71A(WireTicket wire)
         {
-            return new Field71A(wire.HMWire.DeliveryCharges);
+            return new Field71A("OUR");
         }
 
         private static Field72 GetField72(WireTicket wire)
@@ -281,12 +318,12 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             callingMethod.setSenderAndReceiver(HMBICSender, wire.SendingAccount.SendersBIC);
         }
 
-        private static MT103 CreateMt103(WireTicket wire)
+        private static MT103 CreateMt103(WireTicket wire, string referenceTag)
         {
             var mt103 = new MT103();
             SetSenderAndReceiverFromHM(mt103, wire);
 
-            mt103.addField(GetField20(wire));
+            mt103.addField(GetField20(wire, referenceTag));
 
             mt103.addField(GetField23B());
 
@@ -301,18 +338,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             // mt103.addField(GetField53A(wire));
 
             //Optional
-            var isBicIntermediaryAvailable = !wire.SSITemplate.IsIntermediaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.IntermediaryBICorABA);
-            if (isBicIntermediaryAvailable)
-                mt103.addField(GetField56A(wire));
-            else
-                mt103.addField(GetField56D(wire));
+            SetField56X(mt103, wire);
 
             //Optional
-            var isBicBeneficiaryAvailable = !wire.SSITemplate.IsBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.BeneficiaryBICorABA);
-            if (isBicBeneficiaryAvailable)
-                mt103.addField(GetField57A(wire));
-            else
-                mt103.addField(GetField57D(wire));
+            SetField57X(mt103, wire);
 
             mt103.addField(GetField59(wire));
 
@@ -333,35 +362,19 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             mt202.addField(GetField32A(wire));
 
-
-            if (!wire.SendingAccount.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiaryBICorABA))
-                mt202.addField(GetField52A(wire));
-            else
-                mt202.addField(GetField52D(wire));
+            SetField52X(mt202, wire);
 
             ////Optional
             //mt202.addField(GetField53A(wire));
 
             //Optional
-            var isBicIntermediaryAvailable = !wire.SSITemplate.IsIntermediaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.IntermediaryBICorABA);
-            if (isBicIntermediaryAvailable)
-                mt202.addField(GetField56A(wire));
-            else
-                mt202.addField(GetField56D(wire));
+            SetField56X(mt202, wire);
 
             //Optional
-            var isBicBeneficiaryAvailable = !wire.SSITemplate.IsBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.BeneficiaryBICorABA);
-            if (isBicBeneficiaryAvailable)
-                mt202.addField(GetField57A(wire));
-            else
-                mt202.addField(GetField57D(wire));
+            SetField57X(mt202, wire);
 
             //Optional
-            var isBicUltimateAvailable = !wire.SSITemplate.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiaryBICorABA);
-            if (isBicUltimateAvailable)
-                mt202.addField(GetField58A(wire));
-            else
-                mt202.addField(GetField58D(wire));
+            SetField58X(mt202, wire);
 
             //Optional
             mt202.addField(GetField72(wire));
@@ -383,36 +396,19 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             mt202Cov.addField(GetField50K(wire));
 
-            if (!wire.SendingAccount.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiaryBICorABA))
-                mt202Cov.addField(GetField52A(wire));
-            else
-                mt202Cov.addField(GetField52D(wire));
+            SetField52X(mt202Cov, wire);
 
             ////Optional
             //mt202Cov.addField(GetField53A(wire));
 
+            //Optional
+            SetField56X(mt202Cov, wire);
 
             //Optional
-            var isBicIntermediaryAvailable = !wire.SSITemplate.IsIntermediaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.IntermediaryBICorABA);
-            if (isBicIntermediaryAvailable)
-                mt202Cov.addField(GetField56A(wire));
-            else
-                mt202Cov.addField(GetField56D(wire));
+            SetField57X(mt202Cov, wire);
 
             //Optional
-            var isBicBeneficiaryAvailable = !wire.SSITemplate.IsBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.BeneficiaryBICorABA);
-            if (isBicBeneficiaryAvailable)
-                mt202Cov.addField(GetField57A(wire));
-            else
-                mt202Cov.addField(GetField57D(wire));
-
-            //Optional
-            var isBicUltimateAvailable = !wire.SSITemplate.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiaryBICorABA);
-            if (isBicUltimateAvailable)
-                mt202Cov.addField(GetField58A(wire));
-            else
-                mt202Cov.addField(GetField58D(wire));
-
+            SetField58X(mt202Cov, wire);
 
             mt202Cov.addField(GetField59(wire));
 
@@ -420,7 +416,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         }
 
 
-        private static string CreateMt210(WireTicket wire)
+        private static MT210 CreateMt210(WireTicket wire)
         {
             var mt210 = new MT210();
             SetSenderAndReceiverFromHM(mt210, wire);
@@ -436,42 +432,43 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             mt210.addField(GetField32B(wire));
             //Optional
             //mt210.addField(GetField50A(wire));
-
+            
             //Optional
-            mt210.addField(GetField52A(wire));
+            SetField52X(mt210, wire);
+
             //Optional
             //mt210.addField(GetField56A(wire));
 
-            return mt210.GetMessage();
+            return mt210;
         }
 
-        private static string CreateMt192(WireTicket wire)
+        private static MT192 CreateMt192(WireTicket wire, string referenceTag = "")
         {
             var mt192 = new MT192();
             SetSenderAndReceiverFromHM(mt192, wire);
 
-            mt192.addField(GetField20(wire, true));
+            mt192.addField(GetField20(wire, "CANC"));
 
             mt192.addField(GetField21ForCancellation(wire));
 
             mt192.addField(GetField11S(wire));
 
             // We need the original M103 message 
-            var mt103 = CreateMt103(wire);
+            var mt103 = CreateMt103(wire, referenceTag);
             foreach (var mt103Field in mt103.Block4.GetFields())
             {
                 mt192.Block4.AddField(mt103Field);
             }
 
-            return mt192.GetMessage();
+            return mt192;
         }
 
-        private static string CreateMt292(WireTicket wire)
+        private static MT292 CreateMt292(WireTicket wire)
         {
             var mt292 = new MT292();
             SetSenderAndReceiverFromHM(mt292, wire);
 
-            mt292.addField(GetField20(wire, true));
+            mt292.addField(GetField20(wire, "CANC"));
 
             mt292.addField(GetField21ForCancellation(wire));
 
@@ -484,27 +481,27 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                 mt292.Block4.AddField(mt103Field);
             }
 
-            return mt292.GetMessage();
+            return mt292;
         }
 
-        private static string CreateMt540(WireTicket wire)
+        private static MT540 CreateMt540(WireTicket wire)
         {
             var mt540 = new MT540();
             SetSenderAndReceiverFromHM(mt540, wire);
 
             mt540.addField(GetField20(wire));
 
-            return mt540.GetMessage();
+            return mt540;
         }
 
-        private static string CreateMt542(WireTicket wire)
+        private static MT542 CreateMt542(WireTicket wire)
         {
             var mt542 = new MT542();
             SetSenderAndReceiverFromHM(mt542, wire);
 
             mt542.addField(GetField20(wire));
 
-            return mt542.GetMessage();
+            return mt542;
         }
     }
 }

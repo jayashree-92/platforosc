@@ -18,14 +18,14 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
             var thisBlock = new StringBuilder();
 
             Fields.ToList().ForEach(fld =>
-            {
-                var fieldVal = fld.GetFieldAndValue;
-                if (string.IsNullOrWhiteSpace(fieldVal))
-                    return;
+              {
+                  var fieldVal = fld.GetFieldAndValue;
+                  if (string.IsNullOrWhiteSpace(fieldVal))
+                      return;
 
-                thisBlock.Append("\r\n:");
-                thisBlock.Append(fld.GetFieldAndValue);
-            });
+                  thisBlock.Append("\r\n:");
+                  thisBlock.Append(fld.GetFieldAndValue);
+              });
 
             return string.Format("{{{0}:{1}{2}-}}", Name, thisBlock, Environment.NewLine);
         }

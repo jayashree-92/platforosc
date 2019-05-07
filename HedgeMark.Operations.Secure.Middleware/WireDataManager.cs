@@ -50,7 +50,7 @@ namespace HMOSecureMiddleware
         {
             var wireIdStr = wireId.ToString();
             wireIdStr = wireIdStr.Length < 6 ? wireIdStr.PadLeft(6, '0') : wireIdStr;
-            var environmentStr = Utility.Environment.ToUpper() == "PROD" ? string.Empty : Utility.Environment.ToUpper();
+            var environmentStr = Utility.Environment.ToUpper() == "PROD" ? string.Empty : Utility.Environment.ToUpper()[0].ToString();
             return string.Format("{0}DMO{1}", environmentStr, wireIdStr);
         }
 

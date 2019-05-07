@@ -207,7 +207,7 @@ namespace HMOSecureWeb
             Session.RemoveAll();
 
             // Delete the authentication ticket and sign out.
-            FormsAuthentication.SignOut();
+            //FormsAuthentication.SignOut();
 
             // Clear authentication cookie.
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") { Expires = DateTime.Now.AddYears(-1) };

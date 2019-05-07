@@ -18,19 +18,31 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public string NameAndAddressLine3 { get; set; }
         public string NameAndAddressLine4 { get; set; }
 
+
+        private string GetQualifiedString(string addressLine)
+        {
+            if (string.IsNullOrWhiteSpace(addressLine))
+                return addressLine;
+
+            if (addressLine.Length <= 35)
+                return addressLine;
+
+            return addressLine.Substring(0, 35);
+        }
+
         protected string NameAndFullAddress
         {
             get
             {
                 var builder = new StringBuilder();
                 if (!string.IsNullOrWhiteSpace(NameAndAddressLine1))
-                    builder.AppendFormat("{0}{1}", Environment.NewLine, NameAndAddressLine1);
+                    builder.AppendFormat("{0}{1}", Environment.NewLine, GetQualifiedString(NameAndAddressLine1));
                 if (!string.IsNullOrWhiteSpace(NameAndAddressLine2))
-                    builder.AppendFormat("{0}{1}", Environment.NewLine, NameAndAddressLine2);
+                    builder.AppendFormat("{0}{1}", Environment.NewLine, GetQualifiedString(NameAndAddressLine2));
                 if (!string.IsNullOrWhiteSpace(NameAndAddressLine3))
-                    builder.AppendFormat("{0}{1}", Environment.NewLine, NameAndAddressLine3);
+                    builder.AppendFormat("{0}{1}", Environment.NewLine, GetQualifiedString(NameAndAddressLine3));
                 if (!string.IsNullOrWhiteSpace(NameAndAddressLine4))
-                    builder.AppendFormat("{0}{1}", Environment.NewLine, NameAndAddressLine4);
+                    builder.AppendFormat("{0}{1}", Environment.NewLine, GetQualifiedString(NameAndAddressLine4));
                 return builder.ToString();
             }
         }

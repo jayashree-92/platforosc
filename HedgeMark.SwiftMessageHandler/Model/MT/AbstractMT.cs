@@ -1,4 +1,5 @@
-﻿using HedgeMark.SwiftMessageHandler.Model.Fields;
+﻿using System.Security.Policy;
+using HedgeMark.SwiftMessageHandler.Model.Fields;
 
 namespace HedgeMark.SwiftMessageHandler.Model.MT
 {
@@ -8,7 +9,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.MT
         {
 
         }
-        
+
         public AbstractMT parse(string finMessage)
         {
             SetMessage(Parse(finMessage));
@@ -44,12 +45,22 @@ namespace HedgeMark.SwiftMessageHandler.Model.MT
             return this;
         }
 
-        public AbstractMT removeField(Field field)
+        public AbstractMT removeField(string fieldName)
         {
-            if (FieldDirectory.IsBlock3Field(field))
-                Block3.RemoveField(field);
+            if (FieldDirectory.IsBlock3Field(fieldName))
+                Block3.RemoveField(fieldName);
             else
-                Block4.RemoveField(field);
+                Block4.RemoveField(fieldName);
+
+            return this;
+        }
+
+        public AbstractMT updateFieldValue(string fieldName, string fieldValue)
+        {
+            if (FieldDirectory.IsBlock3Field(fieldName))
+                Block3.UpdateField(fieldName, fieldValue);
+            else
+                Block4.UpdateField(fieldName, fieldValue);
 
             return this;
         }

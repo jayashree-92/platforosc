@@ -1,4 +1,5 @@
-﻿using HedgeMark.Operations.Secure.DataModel;
+﻿using System;
+using HedgeMark.Operations.Secure.DataModel;
 using System.Collections.Generic;
 using System.Linq;
 using Com.HedgeMark.Commons.Extensions;
@@ -73,21 +74,24 @@ namespace HMOSecureMiddleware.Models
             MessageType = SwiftMessage.MessageType;
             IsAckOrNack = SwiftMessage.IsAck() || SwiftMessage.IsNack();
 
-            //There is couple of scenaios here
+            //There is couple of scenarios here
             //For Ack/Nack and FEACK we should look for field 20:
             //Please note here, Field 21 is the related reference number of corresponding transaction
 
+            var referenceTag = string.Empty;
+
             //Should use the original message
             if (IsFeAck)
-                WireId = GetWireIdFromTransaction(SwiftMessage.GetFieldValue(FieldDirectory.FIELD_20));
+                WireId = GetWireIdFromTransaction(SwiftMessage.GetFieldValue(FieldDirectory.FIELD_20), out referenceTag);
 
             //Should use the underlying message
             else if (IsAckOrNack)
-                WireId = GetWireIdFromTransaction(SwiftMessage.UnderlyingOriginalSwiftMessage.GetFieldValue(FieldDirectory.FIELD_20));
+                WireId = GetWireIdFromTransaction(SwiftMessage.UnderlyingOriginalSwiftMessage.GetFieldValue(FieldDirectory.FIELD_20), out referenceTag);
 
             //For inbound message type - 196,296 and 900 - we will receive
             else if (MessageWithHMTransRefInField21.Any(s => s.Equals(SwiftMessage.GetMTType())))
-                WireId = GetWireIdFromTransaction(SwiftMessage.GetFieldValue(FieldDirectory.FIELD_21));
+                WireId = GetWireIdFromTransaction(SwiftMessage.GetFieldValue(FieldDirectory.FIELD_21), out referenceTag);
+
 
             //Special Handling for MT 910 as We will not be able to derive using field 21.
             //As of now we are using field 32A - value date , currency and amount in MT 910            
@@ -110,16 +114,25 @@ namespace HMOSecureMiddleware.Models
                 }
             }
 
+
+            ReferenceTag = referenceTag;
+
             return this;
         }
 
 
-        private long GetWireIdFromTransaction(string fieldValue)
+        private long GetWireIdFromTransaction(string fieldValue, out string referenceTag)
         {
-            return fieldValue
-                .Replace(string.Format("{0}DMO", Utility.Environment.ToUpper()), string.Empty)
-                .Replace("C", string.Empty)
-                .Replace("TRN", string.Empty).ToLong();
+            var wireIdString = fieldValue.Replace(string.Format("{0}DMO", Utility.Environment.ToUpper()[0].ToString()), string.Empty);
+            var referenceStrSplits = wireIdString.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+            referenceTag = string.Empty;
+
+            if (wireIdString.Contains("/") && referenceStrSplits.Length > 1)
+            {
+                referenceTag = referenceStrSplits[1];
+            }
+
+            return referenceStrSplits[0].ToLong();
         }
 
         public bool IsFeAck { get; private set; }
@@ -127,6 +140,7 @@ namespace HMOSecureMiddleware.Models
         public string FinMessage { get; private set; }
         public SwiftMessage SwiftMessage { get; private set; }
         public long WireId { get; private set; }
+        public string ReferenceTag { get; private set; }
         public string ValueDateCurrencyAndAmount { get; private set; }
         public string MessageType { get; private set; }
         public bool IsConfirmed { get; set; }
