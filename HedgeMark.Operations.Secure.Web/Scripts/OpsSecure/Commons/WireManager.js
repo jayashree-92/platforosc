@@ -325,10 +325,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 else
                     notifySuccess("Wire modified successfully");
                 $scope.auditWireLogs(statusId);
-            }, function (data, status, headers) {
-                console.log(data, status, headers);
+            }, function (response, status, headers) {
+                console.log(response, status, headers);
                 angular.element("#modalToRetrieveWires").modal("hide");
-                notifyError(data);
+                notifyError(response.statusText);
             });
         }
     }

@@ -35,7 +35,7 @@ namespace HMOSecureMiddleware
                 var currentStatus = WireDataManager.GetWireStatus(wire.WireId);
 
                 if (currentStatus.WireStatus == WireDataManager.WireStatus.Approved)
-                    throw new InvalidOperationException("The selected wire ticket is already approved.");
+                    throw new InvalidOperationException(string.Format("The selected wire ticket is already approved by {0}", wire.WireLastUpdatedBy));
 
                 if (currentStatus.WireStatus == WireDataManager.WireStatus.Drafted)
                     throw new InvalidOperationException("Cannot process un-initiated Wire ticket");
