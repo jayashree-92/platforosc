@@ -21,13 +21,13 @@ namespace HMOSecureMiddleware
 
 
         /// <summary>
-        /// Only the stauts with "Approved" State is entertained
+        /// Only the status with "Approved" State is entertained
         /// </summary>
         /// <param name="wire"></param>
         /// <param name="comment"></param>
         /// <param name="userId"></param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void ApproveAndInititateWireTransfer(WireTicket wire, string comment, int userId)
+        public static void ApproveAndInitiateWireTransfer(WireTicket wire, string comment, int userId)
         {
             lock (WireTransactionLock)
             {

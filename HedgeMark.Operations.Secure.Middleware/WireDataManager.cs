@@ -334,7 +334,7 @@ namespace HMOSecureMiddleware
             wireTicket = GetWireData(wireTicket.HMWire.hmsWireId);
 
             if (wireStatus == WireStatus.Approved)
-                WireTransactionManager.ApproveAndInititateWireTransfer(wireTicket, comment, userId);
+                WireTransactionManager.ApproveAndInitiateWireTransfer(wireTicket, comment, userId);
 
             else if (wireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus == WireStatus.Cancelled)
                 WireTransactionManager.CancelWireTransfer(wireTicket, comment, userId);

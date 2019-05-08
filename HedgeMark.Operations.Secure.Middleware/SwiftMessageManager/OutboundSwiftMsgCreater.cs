@@ -164,6 +164,16 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             return f53A;
         }
 
+        private static Field53B GetField53B(WireTicket wire)
+        {
+            var ffcOrUltimateAccount = wire.IsBookTransfer
+                ? string.IsNullOrWhiteSpace(wire.ReceivingAccount.FFCNumber) ? wire.ReceivingAccount.FFCNumber : string.Empty
+                : string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : string.Empty;
+
+            var f53B = new Field53B().setAccount(ffcOrUltimateAccount);
+            return f53B;
+        }
+
 
         private static void SetField52X(AbstractMT mtMessage, WireTicket wire)
         {
@@ -309,7 +319,9 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field72 GetField72(WireTicket wire)
         {
             var f72 = new Field72()
-                .setNarrative("/BNF/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SSITemplate.FFCNumber));
+                .setNarrativeLine1("/BNF/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SSITemplate.FFCNumber))
+                .setNarrativeLine2("//" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCName : wire.SSITemplate.FFCName))
+                .setNarrativeLine3("//" + (wire.IsBookTransfer ? wire.ReceivingAccount.Reference : wire.SSITemplate.Reference));
             return f72;
         }
 
@@ -365,7 +377,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             SetField52X(mt202, wire);
 
             ////Optional
-            //mt202.addField(GetField53A(wire));
+            mt202.addField(GetField53B(wire));
 
             //Optional
             SetField56X(mt202, wire);
@@ -399,7 +411,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             SetField52X(mt202Cov, wire);
 
             ////Optional
-            //mt202Cov.addField(GetField53A(wire));
+            mt202Cov.addField(GetField53B(wire));
 
             //Optional
             SetField56X(mt202Cov, wire);
@@ -432,7 +444,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             mt210.addField(GetField32B(wire));
             //Optional
             //mt210.addField(GetField50A(wire));
-            
+
             //Optional
             SetField52X(mt210, wire);
 

@@ -126,7 +126,15 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
 
         internal void SetReceiver(string receiver)
         {
-            Receiver = receiver.PadRight(12, 'X');
+            var modifiedReceiver = receiver.Replace("X", string.Empty);
+
+            //this receiver bic can be 8 or 11 digits. if greater than 8
+            if (modifiedReceiver.Length == 12)
+                Receiver = modifiedReceiver;
+            else if (modifiedReceiver.Length == 11)
+                Receiver = string.Format("{0}X{1}", modifiedReceiver.Substring(0, 8), receiver.Substring(8, 3));
+            else
+                Receiver = modifiedReceiver.PadRight(12, 'X');
         }
 
         internal string GetReceiver()

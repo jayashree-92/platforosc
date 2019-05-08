@@ -12,6 +12,7 @@
         public const string PRICE = "Price";
         public const string QUANTITY = "Quantity";
         public const string ACCOUNT = "Account";
+        public const string LOCATION = "Location";
         public const string BIC = "BIC";
         public const string DC_MARK = "D/C Mark";
         public const string CODE = "Code";

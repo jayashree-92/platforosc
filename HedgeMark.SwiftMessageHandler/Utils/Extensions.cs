@@ -121,7 +121,7 @@ namespace HedgeMark.SwiftMessageHandler.Utils
             }
             return value;
         }
-     
+
         public static TV GetValue<TK, TV>(this Dictionary<TK, TV> dictionary, TK key)
         {
             TV value;
@@ -151,7 +151,7 @@ namespace HedgeMark.SwiftMessageHandler.Utils
                 format = DefaultDateFormat;
             return dateTime.ToString(format);
         }
-        
+
         public static bool IsEnumerable(this Type type)
         {
             if (type == typeof(string))
@@ -160,7 +160,7 @@ namespace HedgeMark.SwiftMessageHandler.Utils
             return type.IsArray || type.GetInterfaces().Contains(typeof(IEnumerable));
         }
 
-      
+
         public static double? Add(this double? value1, double? value2)
         {
             if (!value1.HasValue && !value2.HasValue)
@@ -191,7 +191,7 @@ namespace HedgeMark.SwiftMessageHandler.Utils
                 ? source.Select(selector).Where(x => !string.IsNullOrWhiteSpace(x as string))
                 : source.Select(selector).Where(x => x != null);
         }
-        
+
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             foreach (var item in source)
@@ -223,6 +223,18 @@ namespace HedgeMark.SwiftMessageHandler.Utils
 
             return decimalNo.ToString("C", nfi);
         }
+
+        public static string TrimToLength(this string addressLine, int length = 35)
+        {
+            if (string.IsNullOrWhiteSpace(addressLine))
+                return addressLine;
+
+            if (addressLine.Length <= 35)
+                return addressLine;
+
+            return addressLine.Substring(0, length);
+        }
+
 
     }
 }
