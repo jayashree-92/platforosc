@@ -137,7 +137,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f52A = new Field52A()
                 .setAccount(wire.SendingAccount.AccountNumber)
-                .setBIC(wire.SendingAccount.IsUltimateBeneficiaryABA ? string.Empty : wire.SendingAccount.UltimateBeneficiaryBICorABA);
+                .setBIC(wire.SendingAccount.IsUltimateBeneficiaryABA == "ABA" ? string.Empty : wire.SendingAccount.UltimateBeneficiaryBICorABA);
             return f52A;
         }
 
@@ -160,15 +160,15 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f53A = new Field53A()
                 .setAccount(wire.SendingAccount.BeneficiaryAccountNumber)
-                .setBIC(wire.SendingAccount.IsBeneficiaryABA ? string.Empty : wire.SendingAccount.BeneficiaryBICorABA);
+                .setBIC(wire.SendingAccount.IsBeneficiaryABA == "ABA" ? string.Empty : wire.SendingAccount.BeneficiaryBICorABA);
             return f53A;
         }
 
         private static Field53B GetField53B(WireTicket wire)
         {
             var ffcOrUltimateAccount = wire.IsBookTransfer
-                ? string.IsNullOrWhiteSpace(wire.ReceivingAccount.FFCNumber) ? wire.ReceivingAccount.FFCNumber : string.Empty
-                : string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : string.Empty;
+                ? !string.IsNullOrWhiteSpace(wire.ReceivingAccount.FFCNumber) ? wire.ReceivingAccount.FFCNumber : string.Empty
+                : !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : string.Empty;
 
             var f53B = new Field53B().setAccount(ffcOrUltimateAccount);
             return f53B;
@@ -177,7 +177,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static void SetField52X(AbstractMT mtMessage, WireTicket wire)
         {
-            if (!wire.SendingAccount.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiaryBICorABA))
+            if (wire.SendingAccount.IsUltimateBeneficiaryABA != "ABA" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiaryBICorABA))
                 mtMessage.addField(GetField52A(wire));
             else
                 mtMessage.addField(GetField52D(wire));
@@ -185,7 +185,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static void SetField56X(AbstractMT mtMessage, WireTicket wire)
         {
-            var isBicIntermediaryAvailable = !wire.SSITemplate.IsIntermediaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.IntermediaryBICorABA);
+            var isBicIntermediaryAvailable = wire.SSITemplate.IsIntermediaryABA != "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.IntermediaryBICorABA);
             if (isBicIntermediaryAvailable)
                 mtMessage.addField(GetField56A(wire));
             else
@@ -194,7 +194,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static void SetField57X(AbstractMT mtMessage, WireTicket wire)
         {
-            var isBicBeneficiaryAvailable = !wire.SSITemplate.IsBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.BeneficiaryBICorABA);
+            var isBicBeneficiaryAvailable = wire.SSITemplate.IsBeneficiaryABA != "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.BeneficiaryBICorABA);
             if (isBicBeneficiaryAvailable)
                 mtMessage.addField(GetField57A(wire));
             else
@@ -203,7 +203,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static void SetField58X(AbstractMT mtMessage, WireTicket wire)
         {
-            var isBicUltimateAvailable = !wire.SSITemplate.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiaryBICorABA);
+            var isBicUltimateAvailable = wire.SSITemplate.IsUltimateBeneficiaryABA != "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiaryBICorABA);
             if (isBicUltimateAvailable)
                 mtMessage.addField(GetField58A(wire));
             else
@@ -215,16 +215,16 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f56A = new Field56A()
                 .setAccount(wire.IsBookTransfer ? wire.ReceivingAccount.IntermediaryAccountNumber : wire.SSITemplate.IntermediaryAccountNumber)
-                .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.IsIntermediaryABA ? string.Empty :
-                        wire.ReceivingAccount.IntermediaryBICorABA : wire.SSITemplate.IsIntermediaryABA ? string.Empty : wire.SSITemplate.IntermediaryBICorABA);
+                .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.IsIntermediaryABA == "ABA" ? string.Empty :
+                        wire.ReceivingAccount.IntermediaryBICorABA : wire.SSITemplate.IsIntermediaryABA == "ABA" ? string.Empty : wire.SSITemplate.IntermediaryBICorABA);
             return f56A;
         }
 
         private static Field56D GetField56D(WireTicket wire)
         {
             var interBicOrAba = wire.IsBookTransfer
-                ? wire.ReceivingAccount.IsIntermediaryABA ? wire.ReceivingAccount.IntermediaryBICorABA : string.Empty
-                : wire.SSITemplate.IsIntermediaryABA ? wire.SSITemplate.IntermediaryBICorABA : string.Empty;
+                ? wire.ReceivingAccount.IsIntermediaryABA == "ABA" ? wire.ReceivingAccount.IntermediaryBICorABA : string.Empty
+                : wire.SSITemplate.IsIntermediaryABA == "ABA" ? wire.SSITemplate.IntermediaryBICorABA : string.Empty;
 
             var f56D = new Field56D().setAccount(!string.IsNullOrWhiteSpace(interBicOrAba) ? string.Format("/FW{0}", interBicOrAba) : string.Empty);
 
@@ -243,16 +243,16 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f57A = new Field57A()
                 .setAccount(wire.IsBookTransfer ? wire.ReceivingAccount.BeneficiaryAccountNumber : wire.SSITemplate.BeneficiaryAccountNumber)
-                .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.IsBeneficiaryABA ? string.Empty :
-                    wire.ReceivingAccount.BeneficiaryBICorABA : wire.SSITemplate.IsBeneficiaryABA ? string.Empty : wire.SSITemplate.BeneficiaryBICorABA);
+                .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.IsBeneficiaryABA == "ABA" ? string.Empty :
+                    wire.ReceivingAccount.BeneficiaryBICorABA : wire.SSITemplate.IsBeneficiaryABA == "ABA" ? string.Empty : wire.SSITemplate.BeneficiaryBICorABA);
             return f57A;
         }
 
         private static Field57D GetField57D(WireTicket wire)
         {
             var beneficiaryBicOrAba = wire.IsBookTransfer
-                ? wire.ReceivingAccount.IsBeneficiaryABA ? wire.ReceivingAccount.BeneficiaryBICorABA : string.Empty
-                : wire.SSITemplate.IsBeneficiaryABA ? wire.SSITemplate.BeneficiaryBICorABA : string.Empty;
+                ? wire.ReceivingAccount.IsBeneficiaryABA == "ABA" ? wire.ReceivingAccount.BeneficiaryBICorABA : string.Empty
+                : wire.SSITemplate.IsBeneficiaryABA == "ABA" ? wire.SSITemplate.BeneficiaryBICorABA : string.Empty;
 
             var f57D = new Field57D().setAccount(!string.IsNullOrWhiteSpace(beneficiaryBicOrAba) ? string.Format("/FW{0}", beneficiaryBicOrAba) : string.Empty);
 
@@ -272,16 +272,16 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f58A = new Field58A()
                 .setAccount(wire.IsBookTransfer ? wire.SendingAccount.AccountNumber : wire.SSITemplate.AccountNumber)
-                .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.IsUltimateBeneficiaryABA ? string.Empty :
-                    wire.ReceivingAccount.UltimateBeneficiaryBICorABA : wire.SSITemplate.IsUltimateBeneficiaryABA ? string.Empty : wire.SSITemplate.UltimateBeneficiaryBICorABA);
+                .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.IsUltimateBeneficiaryABA == "ABA" ? string.Empty :
+                    wire.ReceivingAccount.UltimateBeneficiaryBICorABA : wire.SSITemplate.IsUltimateBeneficiaryABA == "ABA" ? string.Empty : wire.SSITemplate.UltimateBeneficiaryBICorABA);
             return f58A;
         }
 
         private static Field58D GetField58D(WireTicket wire)
         {
             var isAbaAvailable = wire.IsBookTransfer
-                ? wire.ReceivingAccount.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.UltimateBeneficiaryBICorABA)
-                : wire.SSITemplate.IsUltimateBeneficiaryABA && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiaryBICorABA);
+                ? wire.ReceivingAccount.IsUltimateBeneficiaryABA == "ABA" && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.UltimateBeneficiaryBICorABA)
+                : wire.SSITemplate.IsUltimateBeneficiaryABA == "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiaryBICorABA);
 
             var f58D = new Field58D()
                 .setAccount(isAbaAvailable ? string.Format("/FW{0}", wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryBICorABA : wire.SSITemplate.UltimateBeneficiaryBICorABA)
@@ -319,9 +319,16 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field72 GetField72(WireTicket wire)
         {
             var f72 = new Field72()
-                .setNarrativeLine1("/BNF/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SSITemplate.FFCNumber))
-                .setNarrativeLine2("//" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCName : wire.SSITemplate.FFCName))
-                .setNarrativeLine3("//" + (wire.IsBookTransfer ? wire.ReceivingAccount.Reference : wire.SSITemplate.Reference));
+                .setNarrativeLine1("/BNF/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SSITemplate.FFCNumber));
+
+            var fccName = wire.IsBookTransfer ? wire.ReceivingAccount.FFCName : wire.SSITemplate.FFCName;
+            if (!string.IsNullOrWhiteSpace(fccName))
+                f72.setNarrativeLine2("//" + fccName);
+
+            var reference = wire.IsBookTransfer ? wire.ReceivingAccount.Reference : wire.SSITemplate.Reference;
+            if (!string.IsNullOrWhiteSpace(reference))
+                f72.setNarrativeLine3("//" + reference);
+
             return f72;
         }
 

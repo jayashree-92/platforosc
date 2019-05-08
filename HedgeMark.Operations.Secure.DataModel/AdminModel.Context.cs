@@ -39,16 +39,15 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<dmaAgreementSettlementInstruction> dmaAgreementSettlementInstructions { get; set; }
         public virtual DbSet<dmaAgreementStatu> dmaAgreementStatus { get; set; }
         public virtual DbSet<dmaAgreementType> dmaAgreementTypes { get; set; }
-        public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
-        public virtual DbSet<onBoardingAccountBICorABA> onBoardingAccountBICorABAs { get; set; }
         public virtual DbSet<OnBoardingAccountDescription> OnBoardingAccountDescriptions { get; set; }
         public virtual DbSet<onBoardingAccountDocument> onBoardingAccountDocuments { get; set; }
         public virtual DbSet<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
-        public virtual DbSet<onBoardingSSITemplate> onBoardingSSITemplates { get; set; }
         public virtual DbSet<OnBoardingSSITemplateAccountType> OnBoardingSSITemplateAccountTypes { get; set; }
         public virtual DbSet<onBoardingSSITemplateDocument> onBoardingSSITemplateDocuments { get; set; }
         public virtual DbSet<OnBoardingSSITemplateServiceProvider> OnBoardingSSITemplateServiceProviders { get; set; }
         public virtual DbSet<dmaCounterPartyOnBoarding> dmaCounterPartyOnBoardings { get; set; }
+        public virtual DbSet<onBoardingSSITemplate> onBoardingSSITemplates { get; set; }
+        public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
         public virtual DbSet<onboardingFund> onboardingFunds { get; set; }
     
         public virtual ObjectResult<USP_NEXEN_GetUserDetails_Result> USP_NEXEN_GetUserDetails(string userID, string userType)

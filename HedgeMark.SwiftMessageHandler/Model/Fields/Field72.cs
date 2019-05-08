@@ -43,7 +43,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             {
                 var builder = new StringBuilder();
                 if (!string.IsNullOrWhiteSpace(NarrativeLine1))
-                    builder.AppendFormat("{0}{1}", Environment.NewLine, NarrativeLine1.TrimToLength());
+                    builder.AppendFormat("{0}", NarrativeLine1.TrimToLength());
                 if (!string.IsNullOrWhiteSpace(NarrativeLine2))
                     builder.AppendFormat("{0}{1}", Environment.NewLine, NarrativeLine2.TrimToLength());
                 if (!string.IsNullOrWhiteSpace(NarrativeLine3))

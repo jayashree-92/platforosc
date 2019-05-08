@@ -164,9 +164,9 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual dmaAgreementType dmaAgreementType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaAgreementOnBoardingChecklist> dmaAgreementOnBoardingChecklists { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<onBoardingAccount> onBoardingAccounts { get; set; }
         public virtual dmaCounterPartyOnBoarding dmaCounterPartyOnBoarding { get; set; }
         public virtual onboardingFund onboardingFund { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<onBoardingAccount> onBoardingAccounts { get; set; }
     }
 }

@@ -325,9 +325,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 else
                     notifySuccess("Wire modified successfully");
                 $scope.auditWireLogs(statusId);
-            }, function (error) {
+            }, function (data, status, headers) {
+                console.log(data, status, headers);
                 angular.element("#modalToRetrieveWires").modal("hide");
-                notifyError("Wire failed due to Internal server error");
+                notifyError(data);
             });
         }
     }

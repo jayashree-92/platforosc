@@ -163,6 +163,15 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string ClientRiskCSSecondaryA { get; set; }
         public string ClientRiskCSSecondaryB { get; set; }
         public string FundChecklistView { get; set; }
+        public string AIFStatus { get; set; }
+        public string CPO { get; set; }
+        public string RegisterAddress { get; set; }
+        public string StructureChart { get; set; }
+        public string BusinessDay { get; set; }
+        public string MonthEndValuation { get; set; }
+        public string CPONameText { get; set; }
+        public string ConfirmwithOpsTeamthesweepisworkingproperly { get; set; }
+        public string AMLDueDiligenceforHMSAccessPlatform { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }

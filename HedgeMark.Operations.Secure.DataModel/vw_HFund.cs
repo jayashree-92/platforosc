@@ -23,5 +23,9 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string FiscalYearEnd { get; set; }
         public string varCurrencyISO { get; set; }
         public string subFunds { get; set; }
+        public string CreatedFor { get; set; }
+        public string FundStatus { get; set; }
+        public Nullable<int> DataProviderNameId { get; set; }
+        public string DataProviderName { get; set; }
     }
 }

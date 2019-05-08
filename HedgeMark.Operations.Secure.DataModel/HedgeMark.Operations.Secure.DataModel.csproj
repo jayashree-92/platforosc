@@ -144,9 +144,6 @@
     <Compile Include="onBoardingAccount.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="onBoardingAccountBICorABA.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="OnBoardingAccountDescription.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>

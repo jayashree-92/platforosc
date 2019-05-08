@@ -317,17 +317,17 @@
           <Property Name="dmaAgreementOnBoardingId" Type="bigint" />
           <Property Name="AccountName" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="AccountNumber" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="IsBeneficiaryABA" Type="bit" Nullable="false" />
+          <Property Name="IsBeneficiaryABA" Type="varchar" MaxLength="50" />
           <Property Name="BeneficiaryBICorABA" Type="varchar" MaxLength="100" />
           <Property Name="BeneficiaryBankName" Type="varchar" MaxLength="500" />
           <Property Name="BeneficiaryBankAddress" Type="varchar" MaxLength="3000" />
           <Property Name="BeneficiaryAccountNumber" Type="varchar" MaxLength="100" />
-          <Property Name="IsIntermediaryABA" Type="bit" Nullable="false" />
+          <Property Name="IsIntermediaryABA" Type="varchar" MaxLength="50" />
           <Property Name="IntermediaryBICorABA" Type="varchar" MaxLength="100" />
           <Property Name="IntermediaryBankName" Type="varchar" MaxLength="500" />
           <Property Name="IntermediaryBankAddress" Type="varchar" MaxLength="3000" />
           <Property Name="IntermediaryAccountNumber" Type="varchar" MaxLength="100" />
-          <Property Name="IsUltimateBeneficiaryABA" Type="bit" Nullable="false" />
+          <Property Name="IsUltimateBeneficiaryABA" Type="varchar" MaxLength="50" />
           <Property Name="UltimateBeneficiaryBICorABA" Type="varchar" MaxLength="100" />
           <Property Name="UltimateBeneficiaryBankName" Type="varchar" MaxLength="500" />
           <Property Name="UltimateBeneficiaryBankAddress" Type="varchar" MaxLength="3000" />
@@ -367,6 +367,7 @@
           <Property Name="PortfolioSelection" Type="varchar" MaxLength="200" />
           <Property Name="TickerorISIN" Type="varchar" MaxLength="200" />
           <Property Name="SweepCurrency" Type="varchar" MaxLength="10" />
+          <Property Name="UltimateBeneficiaryAccountName" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -564,6 +565,15 @@
           <Property Name="ClientRiskCSSecondaryA" Type="varchar" MaxLength="200" />
           <Property Name="ClientRiskCSSecondaryB" Type="varchar" MaxLength="200" />
           <Property Name="FundChecklistView" Type="varchar" MaxLength="1000" />
+          <Property Name="AIFStatus" Type="varchar" MaxLength="5" />
+          <Property Name="CPO" Type="varchar" MaxLength="1000" />
+          <Property Name="RegisterAddress" Type="varchar" MaxLength="1000" />
+          <Property Name="StructureChart" Type="varchar" MaxLength="1000" />
+          <Property Name="BusinessDay" Type="varchar" MaxLength="1000" />
+          <Property Name="MonthEndValuation" Type="varchar" MaxLength="100" />
+          <Property Name="CPONameText" Type="varchar" MaxLength="100" />
+          <Property Name="ConfirmwithOpsTeamthesweepisworkingproperly" Type="varchar" MaxLength="100" />
+          <Property Name="AMLDueDiligenceforHMSAccessPlatform" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="onBoardingSSITemplate">
           <Key>
@@ -581,17 +591,17 @@
           <Property Name="OtherReason" Type="varchar" MaxLength="500" />
           <Property Name="AccountName" Type="varchar" MaxLength="500" />
           <Property Name="AccountNumber" Type="varchar" MaxLength="100" />
-          <Property Name="IsBeneficiaryABA" Type="bit" Nullable="false" />
+          <Property Name="IsBeneficiaryABA" Type="varchar" MaxLength="50" />
           <Property Name="BeneficiaryBICorABA" Type="varchar" MaxLength="100" />
           <Property Name="BeneficiaryBankName" Type="varchar" MaxLength="500" />
           <Property Name="BeneficiaryBankAddress" Type="varchar" MaxLength="3000" />
           <Property Name="BeneficiaryAccountNumber" Type="varchar" MaxLength="100" />
-          <Property Name="IsIntermediaryABA" Type="bit" Nullable="false" />
+          <Property Name="IsIntermediaryABA" Type="varchar" MaxLength="50" />
           <Property Name="IntermediaryBICorABA" Type="varchar" MaxLength="100" />
           <Property Name="IntermediaryBankName" Type="varchar" MaxLength="500" />
           <Property Name="IntermediaryBankAddress" Type="varchar" MaxLength="3000" />
           <Property Name="IntermediaryAccountNumber" Type="varchar" MaxLength="100" />
-          <Property Name="IsUltimateBeneficiaryABA" Type="bit" Nullable="false" />
+          <Property Name="IsUltimateBeneficiaryABA" Type="varchar" MaxLength="50" />
           <Property Name="UltimateBeneficiaryBICorABA" Type="varchar" MaxLength="100" />
           <Property Name="UltimateBeneficiaryBankName" Type="varchar" MaxLength="500" />
           <Property Name="UltimateBeneficiaryBankAddress" Type="varchar" MaxLength="3000" />
@@ -605,6 +615,8 @@
           <Property Name="UpdatedBy" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="MessageType" Type="varchar" MaxLength="100" />
+          <Property Name="UltimateBeneficiaryAccountName" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="OnBoardingSSITemplateAccountType">
           <Key>
@@ -641,12 +653,18 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
             <PropertyRef Name="varFundLongName" />
             <PropertyRef Name="varFundShortName" />
             <PropertyRef Name="varMRDBName" />
+            <PropertyRef Name="CreatedFor" />
+            <PropertyRef Name="FundStatus" />
           </Key>
           <Property Name="intFundID" Type="int" Nullable="false" />
           <Property Name="FundMapId" Type="int" Nullable="false" />
           <Property Name="varFundLongName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="varFundShortName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="varMRDBName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedFor" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="FundStatus" Type="varchar" MaxLength="13" Nullable="false" />
+          <Property Name="DataProviderNameId" Type="int" />
+          <Property Name="DataProviderName" Type="varchar(max)" />
           <Property Name="varPositionFrequency" Type="varchar" MaxLength="200" />
           <Property Name="FiscalYearEnd" Type="varchar" MaxLength="10" />
           <Property Name="varCurrencyISO" Type="char" MaxLength="3" />
@@ -910,6 +928,10 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
     [vw_HFund].[varFundLongName] AS [varFundLongName], 
     [vw_HFund].[varFundShortName] AS [varFundShortName], 
     [vw_HFund].[varMRDBName] AS [varMRDBName], 
+    [vw_HFund].[CreatedFor] AS [CreatedFor], 
+    [vw_HFund].[FundStatus] AS [FundStatus], 
+    [vw_HFund].[DataProviderNameId] AS [DataProviderNameId], 
+    [vw_HFund].[DataProviderName] AS [DataProviderName], 
     [vw_HFund].[varPositionFrequency] AS [varPositionFrequency], 
     [vw_HFund].[FiscalYearEnd] AS [FiscalYearEnd], 
     [vw_HFund].[varCurrencyISO] AS [varCurrencyISO], 
@@ -1096,6 +1118,8 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             <PropertyRef Name="varFundLongName" />
             <PropertyRef Name="varFundShortName" />
             <PropertyRef Name="varMRDBName" />
+            <PropertyRef Name="CreatedFor" />
+            <PropertyRef Name="FundStatus" />
           </Key>
           <Property Name="intFundID" Type="Int32" Nullable="false" />
           <Property Name="FundMapId" Type="Int32" Nullable="false" />
@@ -1106,6 +1130,10 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <Property Name="FiscalYearEnd" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="varCurrencyISO" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
           <Property Name="subFunds" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedFor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FundStatus" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="DataProviderNameId" Type="Int32" />
+          <Property Name="DataProviderName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="vw_HFundOps">
           <Key>
@@ -1143,12 +1171,9 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <EntitySet Name="dmaAgreementSettlementInstructions" EntityType="AdminModel.dmaAgreementSettlementInstruction" />
           <EntitySet Name="dmaAgreementStatus" EntityType="AdminModel.dmaAgreementStatu" />
           <EntitySet Name="dmaAgreementTypes" EntityType="AdminModel.dmaAgreementType" />
-          <EntitySet Name="onBoardingAccounts" EntityType="AdminModel.onBoardingAccount" />
-          <EntitySet Name="onBoardingAccountBICorABAs" EntityType="AdminModel.onBoardingAccountBICorABA" />
           <EntitySet Name="OnBoardingAccountDescriptions" EntityType="AdminModel.OnBoardingAccountDescription" />
           <EntitySet Name="onBoardingAccountDocuments" EntityType="AdminModel.onBoardingAccountDocument" />
           <EntitySet Name="onBoardingAccountSSITemplateMaps" EntityType="AdminModel.onBoardingAccountSSITemplateMap" />
-          <EntitySet Name="onBoardingSSITemplates" EntityType="AdminModel.onBoardingSSITemplate" />
           <EntitySet Name="OnBoardingSSITemplateAccountTypes" EntityType="AdminModel.OnBoardingSSITemplateAccountType" />
           <EntitySet Name="onBoardingSSITemplateDocuments" EntityType="AdminModel.onBoardingSSITemplateDocument" />
           <EntitySet Name="OnBoardingSSITemplateServiceProviders" EntityType="AdminModel.OnBoardingSSITemplateServiceProvider" />
@@ -1172,10 +1197,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             <End Role="dmaAgreementOnBoarding" EntitySet="dmaAgreementOnBoardings" />
             <End Role="dmaAgreementOnBoardingChecklist" EntitySet="dmaAgreementOnBoardingChecklists" />
           </AssociationSet>
-          <AssociationSet Name="FK_onBoardingAccount_dmaAgreementOnBoardingId" Association="AdminModel.FK_onBoardingAccount_dmaAgreementOnBoardingId">
-            <End Role="dmaAgreementOnBoarding" EntitySet="dmaAgreementOnBoardings" />
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
-          </AssociationSet>
           <AssociationSet Name="FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId" Association="AdminModel.FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId">
             <End Role="dmaAgreementOnBoardingAttribute" EntitySet="dmaAgreementOnBoardingAttributes" />
             <End Role="dmaAgreementOnBoardingChecklist" EntitySet="dmaAgreementOnBoardingChecklists" />
@@ -1184,21 +1205,19 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             <End Role="dmaAgreementType" EntitySet="dmaAgreementTypes" />
             <End Role="OnBoardingAccountDescription" EntitySet="OnBoardingAccountDescriptions" />
           </AssociationSet>
-          <AssociationSet Name="FK_onBoardingSSITemplate_dmaAgreementTypeId" Association="AdminModel.FK_onBoardingSSITemplate_dmaAgreementTypeId">
-            <End Role="dmaAgreementType" EntitySet="dmaAgreementTypes" />
-            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
-          </AssociationSet>
           <AssociationSet Name="FK_OnBoardingSSITemplateAccountType_dmaAgreementTypeId" Association="AdminModel.FK_OnBoardingSSITemplateAccountType_dmaAgreementTypeId">
             <End Role="dmaAgreementType" EntitySet="dmaAgreementTypes" />
             <End Role="OnBoardingSSITemplateAccountType" EntitySet="OnBoardingSSITemplateAccountTypes" />
           </AssociationSet>
-          <AssociationSet Name="FK_onBoardingAccountDocument_onBoardingAccountId" Association="AdminModel.FK_onBoardingAccountDocument_onBoardingAccountId">
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
-            <End Role="onBoardingAccountDocument" EntitySet="onBoardingAccountDocuments" />
+          <EntitySet Name="dmaCounterPartyOnBoardings" EntityType="AdminModel.dmaCounterPartyOnBoarding" />
+          <AssociationSet Name="FK_dmaAgreementOnBoarding_dmaCounterPartyOnBoardId" Association="AdminModel.FK_dmaAgreementOnBoarding_dmaCounterPartyOnBoardId">
+            <End Role="dmaCounterPartyOnBoarding" EntitySet="dmaCounterPartyOnBoardings" />
+            <End Role="dmaAgreementOnBoarding" EntitySet="dmaAgreementOnBoardings" />
           </AssociationSet>
-          <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_AccountId" Association="AdminModel.FK_onBoardingAccountSSITemplateMap_AccountId">
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
-            <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMaps" />
+          <EntitySet Name="onBoardingSSITemplates" EntityType="AdminModel.onBoardingSSITemplate" />
+          <AssociationSet Name="FK_onBoardingSSITemplate_dmaAgreementTypeId" Association="AdminModel.FK_onBoardingSSITemplate_dmaAgreementTypeId">
+            <End Role="dmaAgreementType" EntitySet="dmaAgreementTypes" />
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
           </AssociationSet>
           <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" Association="AdminModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId">
             <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
@@ -1208,19 +1227,27 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
             <End Role="onBoardingSSITemplateDocument" EntitySet="onBoardingSSITemplateDocuments" />
           </AssociationSet>
-          <EntitySet Name="dmaCounterPartyOnBoardings" EntityType="AdminModel.dmaCounterPartyOnBoarding" />
-          <AssociationSet Name="FK_dmaAgreementOnBoarding_dmaCounterPartyOnBoardId" Association="AdminModel.FK_dmaAgreementOnBoarding_dmaCounterPartyOnBoardId">
-            <End Role="dmaCounterPartyOnBoarding" EntitySet="dmaCounterPartyOnBoardings" />
-            <End Role="dmaAgreementOnBoarding" EntitySet="dmaAgreementOnBoardings" />
-          </AssociationSet>
+          <EntitySet Name="onBoardingAccounts" EntityType="AdminModel.onBoardingAccount" />
           <EntitySet Name="onboardingFunds" EntityType="AdminModel.onboardingFund" />
           <AssociationSet Name="FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId" Association="AdminModel.FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId">
             <End Role="onboardingFund" EntitySet="onboardingFunds" />
             <End Role="dmaAgreementOnBoarding" EntitySet="dmaAgreementOnBoardings" />
           </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccount_dmaAgreementOnBoardingId" Association="AdminModel.FK_onBoardingAccount_dmaAgreementOnBoardingId">
+            <End Role="dmaAgreementOnBoarding" EntitySet="dmaAgreementOnBoardings" />
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+          </AssociationSet>
           <AssociationSet Name="FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId" Association="AdminModel.FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId">
             <End Role="onboardingFund" EntitySet="onboardingFunds" />
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccountDocument_onBoardingAccountId" Association="AdminModel.FK_onBoardingAccountDocument_onBoardingAccountId">
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+            <End Role="onBoardingAccountDocument" EntitySet="onBoardingAccountDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_AccountId" Association="AdminModel.FK_onBoardingAccountSSITemplateMap_AccountId">
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+            <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMaps" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
@@ -1442,9 +1469,9 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <NavigationProperty Name="dmaAgreementStatu" Relationship="AdminModel.FK_dmaAgreementOnBoarding_AgreementStatusId" FromRole="dmaAgreementOnBoarding" ToRole="dmaAgreementStatu" />
           <NavigationProperty Name="dmaAgreementType" Relationship="AdminModel.FK_dmaAgreementOnBoarding_AgreementTypeId" FromRole="dmaAgreementOnBoarding" ToRole="dmaAgreementType" />
           <NavigationProperty Name="dmaAgreementOnBoardingChecklists" Relationship="AdminModel.FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingId" FromRole="dmaAgreementOnBoarding" ToRole="dmaAgreementOnBoardingChecklist" />
-          <NavigationProperty Name="onBoardingAccounts" Relationship="AdminModel.FK_onBoardingAccount_dmaAgreementOnBoardingId" FromRole="dmaAgreementOnBoarding" ToRole="onBoardingAccount" />
           <NavigationProperty Name="dmaCounterPartyOnBoarding" Relationship="AdminModel.FK_dmaAgreementOnBoarding_dmaCounterPartyOnBoardId" FromRole="dmaAgreementOnBoarding" ToRole="dmaCounterPartyOnBoarding" />
           <NavigationProperty Name="onboardingFund" Relationship="AdminModel.FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId" FromRole="dmaAgreementOnBoarding" ToRole="onboardingFund" />
+          <NavigationProperty Name="onBoardingAccounts" Relationship="AdminModel.FK_onBoardingAccount_dmaAgreementOnBoardingId" FromRole="dmaAgreementOnBoarding" ToRole="onBoardingAccount" />
         </EntityType>
         <EntityType Name="dmaAgreementOnBoardingAttribute">
           <Key>
@@ -1507,87 +1534,8 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <Property Name="AgreementType" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="dmaAgreementOnBoardings" Relationship="AdminModel.FK_dmaAgreementOnBoarding_AgreementTypeId" FromRole="dmaAgreementType" ToRole="dmaAgreementOnBoarding" />
           <NavigationProperty Name="OnBoardingAccountDescriptions" Relationship="AdminModel.FK_OnBoardingAccountDescription_dmaAgreementTypeId" FromRole="dmaAgreementType" ToRole="OnBoardingAccountDescription" />
-          <NavigationProperty Name="onBoardingSSITemplates" Relationship="AdminModel.FK_onBoardingSSITemplate_dmaAgreementTypeId" FromRole="dmaAgreementType" ToRole="onBoardingSSITemplate" />
           <NavigationProperty Name="OnBoardingSSITemplateAccountTypes" Relationship="AdminModel.FK_OnBoardingSSITemplateAccountType_dmaAgreementTypeId" FromRole="dmaAgreementType" ToRole="OnBoardingSSITemplateAccountType" />
-        </EntityType>
-        <EntityType Name="onBoardingAccount">
-          <Key>
-            <PropertyRef Name="onBoardingAccountId" />
-          </Key>
-          <Property Name="onBoardingAccountId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="dmaFundOnBoardId" Type="Int64" Nullable="false" />
-          <Property Name="dmaAgreementOnBoardingId" Type="Int64" />
-          <Property Name="AccountName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="AccountNumber" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IsBeneficiaryABA" Type="Boolean" Nullable="false" />
-          <Property Name="BeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="BeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="BeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IsIntermediaryABA" Type="Boolean" Nullable="false" />
-          <Property Name="IntermediaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IntermediaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="IntermediaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="IntermediaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IsUltimateBeneficiaryABA" Type="Boolean" Nullable="false" />
-          <Property Name="UltimateBeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="UltimateBeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="UltimateBeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="FFCName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="FFCNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Reference" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
-          <Property Name="Notes" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
-          <Property Name="AuthorizedParty" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="CashInstruction" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="CashSweep" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CashSweepTime" Type="Time" Precision="7" />
-          <Property Name="CashSweepTimeZone" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="ContactType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ContactName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ContactNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ContactEmail" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="onBoardingAccountStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StatusComments" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="CutoffTime" Type="Time" Precision="7" />
-          <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BrokerId" Type="Int64" />
-          <Property Name="DaystoWire" Type="Int32" />
-          <NavigationProperty Name="dmaAgreementOnBoarding" Relationship="AdminModel.FK_onBoardingAccount_dmaAgreementOnBoardingId" FromRole="onBoardingAccount" ToRole="dmaAgreementOnBoarding" />
-          <NavigationProperty Name="onBoardingAccountDocuments" Relationship="AdminModel.FK_onBoardingAccountDocument_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountDocument" />
-          <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="AdminModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
-          <Property Name="SwiftGroup" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="SendersBIC" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="AccountPurpose" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="AccountStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="HoldbackAmount" Type="Double" />
-          <Property Name="SweepComments" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="AssociatedCustodyAcct" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="PortfolioSelection" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="TickerorISIN" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="SweepCurrency" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="onboardingFund" Relationship="AdminModel.FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId" FromRole="onBoardingAccount" ToRole="onboardingFund" />
-        </EntityType>
-        <EntityType Name="onBoardingAccountBICorABA">
-          <Key>
-            <PropertyRef Name="onBoardingAccountBICorABAId" />
-          </Key>
-          <Property Name="onBoardingAccountBICorABAId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BICorABA" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="IsABA" Type="Boolean" Nullable="false" />
-          <Property Name="BankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="onBoardingSSITemplates" Relationship="AdminModel.FK_onBoardingSSITemplate_dmaAgreementTypeId" FromRole="dmaAgreementType" ToRole="onBoardingSSITemplate" />
         </EntityType>
         <EntityType Name="OnBoardingAccountDescription">
           <Key>
@@ -1625,52 +1573,8 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StatusComments" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="onBoardingAccount" Relationship="AdminModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccountSSITemplateMap" ToRole="onBoardingAccount" />
           <NavigationProperty Name="onBoardingSSITemplate" Relationship="AdminModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingAccountSSITemplateMap" ToRole="onBoardingSSITemplate" />
-        </EntityType>
-        <EntityType Name="onBoardingSSITemplate">
-          <Key>
-            <PropertyRef Name="onBoardingSSITemplateId" />
-          </Key>
-          <Property Name="onBoardingSSITemplateId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="dmaAgreementTypeId" Type="Int32" Nullable="false" />
-          <Property Name="TemplateName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="TemplateTypeId" Type="Int32" Nullable="false" />
-          <Property Name="TemplateEntityId" Type="Int64" Nullable="false" />
-          <Property Name="SSITemplateType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ServiceProvider" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ReasonDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="OtherReason" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="AccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="AccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IsBeneficiaryABA" Type="Boolean" Nullable="false" />
-          <Property Name="BeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="BeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="BeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IsIntermediaryABA" Type="Boolean" Nullable="false" />
-          <Property Name="IntermediaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IntermediaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="IntermediaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="IntermediaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IsUltimateBeneficiaryABA" Type="Boolean" Nullable="false" />
-          <Property Name="UltimateBeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="UltimateBeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="UltimateBeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="FFCName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="FFCNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Reference" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="SSITemplateStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StatusComments" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="dmaAgreementType" Relationship="AdminModel.FK_onBoardingSSITemplate_dmaAgreementTypeId" FromRole="onBoardingSSITemplate" ToRole="dmaAgreementType" />
-          <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="AdminModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountSSITemplateMap" />
-          <NavigationProperty Name="onBoardingSSITemplateDocuments" Relationship="AdminModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingSSITemplateDocument" />
+          <NavigationProperty Name="onBoardingAccount" Relationship="AdminModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccountSSITemplateMap" ToRole="onBoardingAccount" />
         </EntityType>
         <EntityType Name="OnBoardingSSITemplateAccountType">
           <Key>
@@ -1760,18 +1664,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_onBoardingAccount_dmaAgreementOnBoardingId">
-          <End Type="AdminModel.dmaAgreementOnBoarding" Role="dmaAgreementOnBoarding" Multiplicity="0..1" />
-          <End Type="AdminModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="dmaAgreementOnBoarding">
-              <PropertyRef Name="dmaAgreementOnBoardingId" />
-            </Principal>
-            <Dependent Role="onBoardingAccount">
-              <PropertyRef Name="dmaAgreementOnBoardingId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId">
           <End Type="AdminModel.dmaAgreementOnBoardingAttribute" Role="dmaAgreementOnBoardingAttribute" Multiplicity="1" />
           <End Type="AdminModel.dmaAgreementOnBoardingChecklist" Role="dmaAgreementOnBoardingChecklist" Multiplicity="*" />
@@ -1796,18 +1688,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_onBoardingSSITemplate_dmaAgreementTypeId">
-          <End Type="AdminModel.dmaAgreementType" Role="dmaAgreementType" Multiplicity="1" />
-          <End Type="AdminModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="dmaAgreementType">
-              <PropertyRef Name="dmaAgreementTypeId" />
-            </Principal>
-            <Dependent Role="onBoardingSSITemplate">
-              <PropertyRef Name="dmaAgreementTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OnBoardingSSITemplateAccountType_dmaAgreementTypeId">
           <End Type="AdminModel.dmaAgreementType" Role="dmaAgreementType" Multiplicity="1" />
           <End Type="AdminModel.OnBoardingSSITemplateAccountType" Role="OnBoardingSSITemplateAccountType" Multiplicity="*" />
@@ -1817,54 +1697,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             </Principal>
             <Dependent Role="OnBoardingSSITemplateAccountType">
               <PropertyRef Name="dmaAgreementTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_onBoardingAccountDocument_onBoardingAccountId">
-          <End Type="AdminModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
-          <End Type="AdminModel.onBoardingAccountDocument" Role="onBoardingAccountDocument" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingAccount">
-              <PropertyRef Name="onBoardingAccountId" />
-            </Principal>
-            <Dependent Role="onBoardingAccountDocument">
-              <PropertyRef Name="onBoardingAccountId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_onBoardingAccountSSITemplateMap_AccountId">
-          <End Type="AdminModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
-          <End Type="AdminModel.onBoardingAccountSSITemplateMap" Role="onBoardingAccountSSITemplateMap" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingAccount">
-              <PropertyRef Name="onBoardingAccountId" />
-            </Principal>
-            <Dependent Role="onBoardingAccountSSITemplateMap">
-              <PropertyRef Name="onBoardingAccountId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId">
-          <End Type="AdminModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
-          <End Type="AdminModel.onBoardingAccountSSITemplateMap" Role="onBoardingAccountSSITemplateMap" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingSSITemplate">
-              <PropertyRef Name="onBoardingSSITemplateId" />
-            </Principal>
-            <Dependent Role="onBoardingAccountSSITemplateMap">
-              <PropertyRef Name="onBoardingSSITemplateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
-          <End Type="AdminModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
-          <End Type="AdminModel.onBoardingSSITemplateDocument" Role="onBoardingSSITemplateDocument" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingSSITemplate">
-              <PropertyRef Name="onBoardingSSITemplateId" />
-            </Principal>
-            <Dependent Role="onBoardingSSITemplateDocument">
-              <PropertyRef Name="onBoardingSSITemplateId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1895,6 +1727,153 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="onBoardingSSITemplate">
+          <Key>
+            <PropertyRef Name="onBoardingSSITemplateId" />
+          </Key>
+          <Property Name="onBoardingSSITemplateId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dmaAgreementTypeId" Type="Int32" Nullable="false" />
+          <Property Name="TemplateName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="TemplateTypeId" Type="Int32" Nullable="false" />
+          <Property Name="TemplateEntityId" Type="Int64" Nullable="false" />
+          <Property Name="SSITemplateType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ServiceProvider" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ReasonDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="OtherReason" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsBeneficiaryABA" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsIntermediaryABA" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsUltimateBeneficiaryABA" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="FFCName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FFCNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Reference" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SSITemplateStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StatusComments" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="MessageType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryAccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="dmaAgreementType" Relationship="AdminModel.FK_onBoardingSSITemplate_dmaAgreementTypeId" FromRole="onBoardingSSITemplate" ToRole="dmaAgreementType" />
+          <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="AdminModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountSSITemplateMap" />
+          <NavigationProperty Name="onBoardingSSITemplateDocuments" Relationship="AdminModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingSSITemplateDocument" />
+        </EntityType>
+        <Association Name="FK_onBoardingSSITemplate_dmaAgreementTypeId">
+          <End Type="AdminModel.dmaAgreementType" Role="dmaAgreementType" Multiplicity="1" />
+          <End Type="AdminModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dmaAgreementType">
+              <PropertyRef Name="dmaAgreementTypeId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplate">
+              <PropertyRef Name="dmaAgreementTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId">
+          <End Type="AdminModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
+          <End Type="AdminModel.onBoardingAccountSSITemplateMap" Role="onBoardingAccountSSITemplateMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="onBoardingAccountSSITemplateMap">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
+          <End Type="AdminModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
+          <End Type="AdminModel.onBoardingSSITemplateDocument" Role="onBoardingSSITemplateDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplateDocument">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="onBoardingAccount">
+          <Key>
+            <PropertyRef Name="onBoardingAccountId" />
+          </Key>
+          <Property Name="onBoardingAccountId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dmaFundOnBoardId" Type="Int64" Nullable="false" />
+          <Property Name="dmaAgreementOnBoardingId" Type="Int64" />
+          <Property Name="AccountName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AccountNumber" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsBeneficiaryABA" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsIntermediaryABA" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsUltimateBeneficiaryABA" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="FFCName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FFCNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Reference" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="AuthorizedParty" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CashInstruction" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CashSweep" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CashSweepTime" Type="Time" Precision="7" />
+          <Property Name="CashSweepTimeZone" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ContactType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ContactNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactEmail" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="onBoardingAccountStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StatusComments" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="CutoffTime" Type="Time" Precision="7" />
+          <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BrokerId" Type="Int64" />
+          <Property Name="DaystoWire" Type="Int32" />
+          <Property Name="SwiftGroup" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="SendersBIC" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="AccountPurpose" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AccountStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="HoldbackAmount" Type="Double" />
+          <Property Name="SweepComments" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="AssociatedCustodyAcct" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PortfolioSelection" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TickerorISIN" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SweepCurrency" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryAccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="dmaAgreementOnBoarding" Relationship="AdminModel.FK_onBoardingAccount_dmaAgreementOnBoardingId" FromRole="onBoardingAccount" ToRole="dmaAgreementOnBoarding" />
+          <NavigationProperty Name="onboardingFund" Relationship="AdminModel.FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId" FromRole="onBoardingAccount" ToRole="onboardingFund" />
+          <NavigationProperty Name="onBoardingAccountDocuments" Relationship="AdminModel.FK_onBoardingAccountDocument_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountDocument" />
+          <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="AdminModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
+        </EntityType>
         <EntityType Name="onboardingFund">
           <Key>
             <PropertyRef Name="dmaFundOnBoardId" />
@@ -2041,6 +2020,15 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <Property Name="ClientRiskCSSecondaryA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ClientRiskCSSecondaryB" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="FundChecklistView" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="AIFStatus" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="CPO" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="RegisterAddress" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="StructureChart" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessDay" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="MonthEndValuation" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CPONameText" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ConfirmwithOpsTeamthesweepisworkingproperly" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AMLDueDiligenceforHMSAccessPlatform" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="dmaAgreementOnBoardings" Relationship="AdminModel.FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId" FromRole="onboardingFund" ToRole="dmaAgreementOnBoarding" />
           <NavigationProperty Name="onBoardingAccounts" Relationship="AdminModel.FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId" FromRole="onboardingFund" ToRole="onBoardingAccount" />
         </EntityType>
@@ -2056,6 +2044,18 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_onBoardingAccount_dmaAgreementOnBoardingId">
+          <End Type="AdminModel.dmaAgreementOnBoarding" Role="dmaAgreementOnBoarding" Multiplicity="0..1" />
+          <End Type="AdminModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dmaAgreementOnBoarding">
+              <PropertyRef Name="dmaAgreementOnBoardingId" />
+            </Principal>
+            <Dependent Role="onBoardingAccount">
+              <PropertyRef Name="dmaAgreementOnBoardingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId">
           <End Type="AdminModel.onboardingFund" Role="onboardingFund" Multiplicity="1" />
           <End Type="AdminModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="*" />
@@ -2065,6 +2065,30 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             </Principal>
             <Dependent Role="onBoardingAccount">
               <PropertyRef Name="dmaFundOnBoardId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingAccountDocument_onBoardingAccountId">
+          <End Type="AdminModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
+          <End Type="AdminModel.onBoardingAccountDocument" Role="onBoardingAccountDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccount">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Principal>
+            <Dependent Role="onBoardingAccountDocument">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingAccountSSITemplateMap_AccountId">
+          <End Type="AdminModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
+          <End Type="AdminModel.onBoardingAccountSSITemplateMap" Role="onBoardingAccountSSITemplateMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccount">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Principal>
+            <Dependent Role="onBoardingAccountSSITemplateMap">
+              <PropertyRef Name="onBoardingAccountId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2166,6 +2190,10 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <EntitySetMapping Name="vw_HFund">
             <EntityTypeMapping TypeName="AdminModel.vw_HFund">
               <MappingFragment StoreEntitySet="vw_HFund">
+                <ScalarProperty Name="DataProviderName" ColumnName="DataProviderName" />
+                <ScalarProperty Name="DataProviderNameId" ColumnName="DataProviderNameId" />
+                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
+                <ScalarProperty Name="CreatedFor" ColumnName="CreatedFor" />
                 <ScalarProperty Name="intFundID" ColumnName="intFundID" />
                 <ScalarProperty Name="FundMapId" ColumnName="FundMapId" />
                 <ScalarProperty Name="varFundLongName" ColumnName="varFundLongName" />
@@ -2474,9 +2502,136 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="OnBoardingAccountDescriptions">
+            <EntityTypeMapping TypeName="AdminModel.OnBoardingAccountDescription">
+              <MappingFragment StoreEntitySet="OnBoardingAccountDescription">
+                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
+                <ScalarProperty Name="AccountDescription" ColumnName="AccountDescription" />
+                <ScalarProperty Name="OnBoardingAccountDescriptionId" ColumnName="OnBoardingAccountDescriptionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingAccountDocuments">
+            <EntityTypeMapping TypeName="AdminModel.onBoardingAccountDocument">
+              <MappingFragment StoreEntitySet="onBoardingAccountDocument">
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
+                <ScalarProperty Name="onBoardingAccountDocumentId" ColumnName="onBoardingAccountDocumentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingAccountSSITemplateMaps">
+            <EntityTypeMapping TypeName="AdminModel.onBoardingAccountSSITemplateMap">
+              <MappingFragment StoreEntitySet="onBoardingAccountSSITemplateMap">
+                <ScalarProperty Name="StatusComments" ColumnName="StatusComments" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Reference" ColumnName="Reference" />
+                <ScalarProperty Name="FFCNumber" ColumnName="FFCNumber" />
+                <ScalarProperty Name="FFCName" ColumnName="FFCName" />
+                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
+                <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
+                <ScalarProperty Name="onBoardingAccountSSITemplateMapId" ColumnName="onBoardingAccountSSITemplateMapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OnBoardingSSITemplateAccountTypes">
+            <EntityTypeMapping TypeName="AdminModel.OnBoardingSSITemplateAccountType">
+              <MappingFragment StoreEntitySet="OnBoardingSSITemplateAccountType">
+                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="OnBoardingSSITemplateAccountTypeId" ColumnName="OnBoardingSSITemplateAccountTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingSSITemplateDocuments">
+            <EntityTypeMapping TypeName="AdminModel.onBoardingSSITemplateDocument">
+              <MappingFragment StoreEntitySet="onBoardingSSITemplateDocument">
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
+                <ScalarProperty Name="onBoardingSSITemplateDocumentId" ColumnName="onBoardingSSITemplateDocumentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OnBoardingSSITemplateServiceProviders">
+            <EntityTypeMapping TypeName="AdminModel.OnBoardingSSITemplateServiceProvider">
+              <MappingFragment StoreEntitySet="OnBoardingSSITemplateServiceProvider">
+                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="OnBoardingSSITemplateServiceProviderId" ColumnName="OnBoardingSSITemplateServiceProviderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dmaCounterPartyOnBoardings">
+            <EntityTypeMapping TypeName="AdminModel.dmaCounterPartyOnBoarding">
+              <MappingFragment StoreEntitySet="dmaCounterPartyOnBoarding">
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="dmaCounterpartyFamilyId" ColumnName="dmaCounterpartyFamilyId" />
+                <ScalarProperty Name="CounterpartyName" ColumnName="CounterpartyName" />
+                <ScalarProperty Name="CounterpartyShortCode" ColumnName="CounterpartyShortCode" />
+                <ScalarProperty Name="dmaCounterPartyOnBoardId" ColumnName="dmaCounterPartyOnBoardId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingSSITemplates">
+            <EntityTypeMapping TypeName="AdminModel.onBoardingSSITemplate">
+              <MappingFragment StoreEntitySet="onBoardingSSITemplate">
+                <ScalarProperty Name="UltimateBeneficiaryAccountName" ColumnName="UltimateBeneficiaryAccountName" />
+                <ScalarProperty Name="MessageType" ColumnName="MessageType" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="StatusComments" ColumnName="StatusComments" />
+                <ScalarProperty Name="SSITemplateStatus" ColumnName="SSITemplateStatus" />
+                <ScalarProperty Name="Reference" ColumnName="Reference" />
+                <ScalarProperty Name="FFCNumber" ColumnName="FFCNumber" />
+                <ScalarProperty Name="FFCName" ColumnName="FFCName" />
+                <ScalarProperty Name="UltimateBeneficiaryBankAddress" ColumnName="UltimateBeneficiaryBankAddress" />
+                <ScalarProperty Name="UltimateBeneficiaryBankName" ColumnName="UltimateBeneficiaryBankName" />
+                <ScalarProperty Name="UltimateBeneficiaryBICorABA" ColumnName="UltimateBeneficiaryBICorABA" />
+                <ScalarProperty Name="IsUltimateBeneficiaryABA" ColumnName="IsUltimateBeneficiaryABA" />
+                <ScalarProperty Name="IntermediaryAccountNumber" ColumnName="IntermediaryAccountNumber" />
+                <ScalarProperty Name="IntermediaryBankAddress" ColumnName="IntermediaryBankAddress" />
+                <ScalarProperty Name="IntermediaryBankName" ColumnName="IntermediaryBankName" />
+                <ScalarProperty Name="IntermediaryBICorABA" ColumnName="IntermediaryBICorABA" />
+                <ScalarProperty Name="IsIntermediaryABA" ColumnName="IsIntermediaryABA" />
+                <ScalarProperty Name="BeneficiaryAccountNumber" ColumnName="BeneficiaryAccountNumber" />
+                <ScalarProperty Name="BeneficiaryBankAddress" ColumnName="BeneficiaryBankAddress" />
+                <ScalarProperty Name="BeneficiaryBankName" ColumnName="BeneficiaryBankName" />
+                <ScalarProperty Name="BeneficiaryBICorABA" ColumnName="BeneficiaryBICorABA" />
+                <ScalarProperty Name="IsBeneficiaryABA" ColumnName="IsBeneficiaryABA" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="OtherReason" ColumnName="OtherReason" />
+                <ScalarProperty Name="ReasonDetail" ColumnName="ReasonDetail" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
+                <ScalarProperty Name="SSITemplateType" ColumnName="SSITemplateType" />
+                <ScalarProperty Name="TemplateEntityId" ColumnName="TemplateEntityId" />
+                <ScalarProperty Name="TemplateTypeId" ColumnName="TemplateTypeId" />
+                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
+                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
+                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="onBoardingAccounts">
             <EntityTypeMapping TypeName="AdminModel.onBoardingAccount">
               <MappingFragment StoreEntitySet="onBoardingAccount">
+                <ScalarProperty Name="UltimateBeneficiaryAccountName" ColumnName="UltimateBeneficiaryAccountName" />
                 <ScalarProperty Name="SweepCurrency" ColumnName="SweepCurrency" />
                 <ScalarProperty Name="TickerorISIN" ColumnName="TickerorISIN" />
                 <ScalarProperty Name="PortfolioSelection" ColumnName="PortfolioSelection" />
@@ -2535,149 +2690,18 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="onBoardingAccountBICorABAs">
-            <EntityTypeMapping TypeName="AdminModel.onBoardingAccountBICorABA">
-              <MappingFragment StoreEntitySet="onBoardingAccountBICorABA">
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="BankAddress" ColumnName="BankAddress" />
-                <ScalarProperty Name="IsABA" ColumnName="IsABA" />
-                <ScalarProperty Name="BankName" ColumnName="BankName" />
-                <ScalarProperty Name="BICorABA" ColumnName="BICorABA" />
-                <ScalarProperty Name="onBoardingAccountBICorABAId" ColumnName="onBoardingAccountBICorABAId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OnBoardingAccountDescriptions">
-            <EntityTypeMapping TypeName="AdminModel.OnBoardingAccountDescription">
-              <MappingFragment StoreEntitySet="OnBoardingAccountDescription">
-                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
-                <ScalarProperty Name="AccountDescription" ColumnName="AccountDescription" />
-                <ScalarProperty Name="OnBoardingAccountDescriptionId" ColumnName="OnBoardingAccountDescriptionId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="onBoardingAccountDocuments">
-            <EntityTypeMapping TypeName="AdminModel.onBoardingAccountDocument">
-              <MappingFragment StoreEntitySet="onBoardingAccountDocument">
-                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
-                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
-                <ScalarProperty Name="onBoardingAccountDocumentId" ColumnName="onBoardingAccountDocumentId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="onBoardingAccountSSITemplateMaps">
-            <EntityTypeMapping TypeName="AdminModel.onBoardingAccountSSITemplateMap">
-              <MappingFragment StoreEntitySet="onBoardingAccountSSITemplateMap">
-                <ScalarProperty Name="StatusComments" ColumnName="StatusComments" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Reference" ColumnName="Reference" />
-                <ScalarProperty Name="FFCNumber" ColumnName="FFCNumber" />
-                <ScalarProperty Name="FFCName" ColumnName="FFCName" />
-                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
-                <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
-                <ScalarProperty Name="onBoardingAccountSSITemplateMapId" ColumnName="onBoardingAccountSSITemplateMapId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="onBoardingSSITemplates">
-            <EntityTypeMapping TypeName="AdminModel.onBoardingSSITemplate">
-              <MappingFragment StoreEntitySet="onBoardingSSITemplate">
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="StatusComments" ColumnName="StatusComments" />
-                <ScalarProperty Name="SSITemplateStatus" ColumnName="SSITemplateStatus" />
-                <ScalarProperty Name="Reference" ColumnName="Reference" />
-                <ScalarProperty Name="FFCNumber" ColumnName="FFCNumber" />
-                <ScalarProperty Name="FFCName" ColumnName="FFCName" />
-                <ScalarProperty Name="UltimateBeneficiaryBankAddress" ColumnName="UltimateBeneficiaryBankAddress" />
-                <ScalarProperty Name="UltimateBeneficiaryBankName" ColumnName="UltimateBeneficiaryBankName" />
-                <ScalarProperty Name="UltimateBeneficiaryBICorABA" ColumnName="UltimateBeneficiaryBICorABA" />
-                <ScalarProperty Name="IsUltimateBeneficiaryABA" ColumnName="IsUltimateBeneficiaryABA" />
-                <ScalarProperty Name="IntermediaryAccountNumber" ColumnName="IntermediaryAccountNumber" />
-                <ScalarProperty Name="IntermediaryBankAddress" ColumnName="IntermediaryBankAddress" />
-                <ScalarProperty Name="IntermediaryBankName" ColumnName="IntermediaryBankName" />
-                <ScalarProperty Name="IntermediaryBICorABA" ColumnName="IntermediaryBICorABA" />
-                <ScalarProperty Name="IsIntermediaryABA" ColumnName="IsIntermediaryABA" />
-                <ScalarProperty Name="BeneficiaryAccountNumber" ColumnName="BeneficiaryAccountNumber" />
-                <ScalarProperty Name="BeneficiaryBankAddress" ColumnName="BeneficiaryBankAddress" />
-                <ScalarProperty Name="BeneficiaryBankName" ColumnName="BeneficiaryBankName" />
-                <ScalarProperty Name="BeneficiaryBICorABA" ColumnName="BeneficiaryBICorABA" />
-                <ScalarProperty Name="IsBeneficiaryABA" ColumnName="IsBeneficiaryABA" />
-                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
-                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
-                <ScalarProperty Name="OtherReason" ColumnName="OtherReason" />
-                <ScalarProperty Name="ReasonDetail" ColumnName="ReasonDetail" />
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
-                <ScalarProperty Name="SSITemplateType" ColumnName="SSITemplateType" />
-                <ScalarProperty Name="TemplateEntityId" ColumnName="TemplateEntityId" />
-                <ScalarProperty Name="TemplateTypeId" ColumnName="TemplateTypeId" />
-                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
-                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
-                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OnBoardingSSITemplateAccountTypes">
-            <EntityTypeMapping TypeName="AdminModel.OnBoardingSSITemplateAccountType">
-              <MappingFragment StoreEntitySet="OnBoardingSSITemplateAccountType">
-                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
-                <ScalarProperty Name="Reason" ColumnName="Reason" />
-                <ScalarProperty Name="OnBoardingSSITemplateAccountTypeId" ColumnName="OnBoardingSSITemplateAccountTypeId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="onBoardingSSITemplateDocuments">
-            <EntityTypeMapping TypeName="AdminModel.onBoardingSSITemplateDocument">
-              <MappingFragment StoreEntitySet="onBoardingSSITemplateDocument">
-                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
-                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
-                <ScalarProperty Name="onBoardingSSITemplateDocumentId" ColumnName="onBoardingSSITemplateDocumentId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OnBoardingSSITemplateServiceProviders">
-            <EntityTypeMapping TypeName="AdminModel.OnBoardingSSITemplateServiceProvider">
-              <MappingFragment StoreEntitySet="OnBoardingSSITemplateServiceProvider">
-                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
-                <ScalarProperty Name="Reason" ColumnName="Reason" />
-                <ScalarProperty Name="OnBoardingSSITemplateServiceProviderId" ColumnName="OnBoardingSSITemplateServiceProviderId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="dmaCounterPartyOnBoardings">
-            <EntityTypeMapping TypeName="AdminModel.dmaCounterPartyOnBoarding">
-              <MappingFragment StoreEntitySet="dmaCounterPartyOnBoarding">
-                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="dmaCounterpartyFamilyId" ColumnName="dmaCounterpartyFamilyId" />
-                <ScalarProperty Name="CounterpartyName" ColumnName="CounterpartyName" />
-                <ScalarProperty Name="CounterpartyShortCode" ColumnName="CounterpartyShortCode" />
-                <ScalarProperty Name="dmaCounterPartyOnBoardId" ColumnName="dmaCounterPartyOnBoardId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="onboardingFunds">
             <EntityTypeMapping TypeName="AdminModel.onboardingFund">
               <MappingFragment StoreEntitySet="onboardingFund">
+                <ScalarProperty Name="AMLDueDiligenceforHMSAccessPlatform" ColumnName="AMLDueDiligenceforHMSAccessPlatform" />
+                <ScalarProperty Name="ConfirmwithOpsTeamthesweepisworkingproperly" ColumnName="ConfirmwithOpsTeamthesweepisworkingproperly" />
+                <ScalarProperty Name="CPONameText" ColumnName="CPONameText" />
+                <ScalarProperty Name="MonthEndValuation" ColumnName="MonthEndValuation" />
+                <ScalarProperty Name="BusinessDay" ColumnName="BusinessDay" />
+                <ScalarProperty Name="StructureChart" ColumnName="StructureChart" />
+                <ScalarProperty Name="RegisterAddress" ColumnName="RegisterAddress" />
+                <ScalarProperty Name="CPO" ColumnName="CPO" />
+                <ScalarProperty Name="AIFStatus" ColumnName="AIFStatus" />
                 <ScalarProperty Name="FundChecklistView" ColumnName="FundChecklistView" />
                 <ScalarProperty Name="ClientRiskCSSecondaryB" ColumnName="ClientRiskCSSecondaryB" />
                 <ScalarProperty Name="ClientRiskCSSecondaryA" ColumnName="ClientRiskCSSecondaryA" />

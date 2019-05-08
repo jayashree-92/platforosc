@@ -26,17 +26,17 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> dmaAgreementOnBoardingId { get; set; }
         public string AccountName { get; set; }
         public string AccountNumber { get; set; }
-        public bool IsBeneficiaryABA { get; set; }
+        public string IsBeneficiaryABA { get; set; }
         public string BeneficiaryBICorABA { get; set; }
         public string BeneficiaryBankName { get; set; }
         public string BeneficiaryBankAddress { get; set; }
         public string BeneficiaryAccountNumber { get; set; }
-        public bool IsIntermediaryABA { get; set; }
+        public string IsIntermediaryABA { get; set; }
         public string IntermediaryBICorABA { get; set; }
         public string IntermediaryBankName { get; set; }
         public string IntermediaryBankAddress { get; set; }
         public string IntermediaryAccountNumber { get; set; }
-        public bool IsUltimateBeneficiaryABA { get; set; }
+        public string IsUltimateBeneficiaryABA { get; set; }
         public string UltimateBeneficiaryBICorABA { get; set; }
         public string UltimateBeneficiaryBankName { get; set; }
         public string UltimateBeneficiaryBankAddress { get; set; }
@@ -76,12 +76,13 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string PortfolioSelection { get; set; }
         public string TickerorISIN { get; set; }
         public string SweepCurrency { get; set; }
+        public string UltimateBeneficiaryAccountName { get; set; }
     
         public virtual dmaAgreementOnBoarding dmaAgreementOnBoarding { get; set; }
+        public virtual onboardingFund onboardingFund { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountDocument> onBoardingAccountDocuments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
-        public virtual onboardingFund onboardingFund { get; set; }
     }
 }
