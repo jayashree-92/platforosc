@@ -269,13 +269,13 @@
                                 <label class="control-label" style="margin-left: 15px;">Type</label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" class="form-control" value="{{ accountDetail.IsIntermediaryABA ? 'ABA' : 'BIC' }}" readonly />
+                                <input type="text" class="form-control" ng-model="accountDetail.IntermediaryType" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" class="form-control" value="{{ accountDetail.IsBeneficiaryABA ? 'ABA' : 'BIC' }}" readonly />
+                                <input type="text" class="form-control" ng-model="accountDetail.BeneficiaryType" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" class="form-control" value="{{ accountDetail.IsUltimateBeneficiaryABA ? 'ABA' : 'BIC' }}" readonly />
+                                <input type="text" class="form-control" ng-model="accountDetail.IsUltimateBeneficiaryABA" readonly />
                             </div>
                         </div>
                         <p />
@@ -496,13 +496,13 @@
                                 <label class="control-label" style="margin-left:15px;">Type</label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" class="form-control" value="{{ receivingAccountDetail.IsIntermediaryABA ? 'ABA' : 'BIC' }}" readonly />
+                                <input type="text" class="form-control" ng-model="receivingAccountDetail.IntermediaryType" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" class="form-control" value="{{ receivingAccountDetail.IsBeneficiaryABA ? 'ABA' : 'BIC' }}" readonly />
+                                <input type="text" class="form-control" ng-model="receivingAccountDetail.BeneficiaryType" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" class="form-control" value="{{ receivingAccountDetail.IsUltimateBeneficiaryABA ? 'ABA' : 'BIC' }}" readonly />
+                                <input type="text" class="form-control" ng-model="receivingAccountDetail.IsUltimateBeneficiaryABA" readonly />
                             </div>
                         </div>
                         <p />
@@ -792,10 +792,10 @@
 
             <div class="modal-footer form-inline" style="padding: 8px 20px 8px 20px;position: sticky;bottom: 0;background: #F5F5F5;border-top: 1px solid lightgray;">
                 <textarea type="text" placeholder="Enter Comments" id="wireComment" ng-model="wireComments" class="form-control" rows="2" style="width:50%;float:left;"></textarea>
-                <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="WireTicket.WireStatusId == 2 || WireTicket.WireStatusId == 5" ng-click="fnUpdateWireWithStatus(1)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Reverting to Draft...</span>">
+                <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="isInitiationEnabled" ng-click="fnUpdateWireWithStatus(1)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Reverting to Draft...</span>">
                     <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save as Draft
                 </button>
-                <button id="initiateWire" type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="WireTicket.WireStatusId == 1" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Initiating...</span>">
+                <button id="initiateWire" type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="isDraftEnabled" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Initiating...</span>">
                     <i class="glyphicon glyphicon-plus"></i>&nbsp;Re-Initiate Wire
                 </button>
                 <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-disabled="isUserActionDone" ng-if="isAuthorizedUserToApprove" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">

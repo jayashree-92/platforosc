@@ -26,17 +26,17 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> dmaAgreementOnBoardingId { get; set; }
         public string AccountName { get; set; }
         public string AccountNumber { get; set; }
-        public string IsBeneficiaryABA { get; set; }
+        public string BeneficiaryType { get; set; }
         public string BeneficiaryBICorABA { get; set; }
         public string BeneficiaryBankName { get; set; }
         public string BeneficiaryBankAddress { get; set; }
         public string BeneficiaryAccountNumber { get; set; }
-        public string IsIntermediaryABA { get; set; }
+        public string IntermediaryType { get; set; }
         public string IntermediaryBICorABA { get; set; }
         public string IntermediaryBankName { get; set; }
         public string IntermediaryBankAddress { get; set; }
         public string IntermediaryAccountNumber { get; set; }
-        public string IsUltimateBeneficiaryABA { get; set; }
+        public string UltimateBeneficiaryType { get; set; }
         public string UltimateBeneficiaryBICorABA { get; set; }
         public string UltimateBeneficiaryBankName { get; set; }
         public string UltimateBeneficiaryBankAddress { get; set; }

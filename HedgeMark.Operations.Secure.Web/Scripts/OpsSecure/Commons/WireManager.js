@@ -132,6 +132,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
             $scope.isCancelEnabled = response.data.isCancelEnabled;
             $scope.isApprovedOrFailed = response.data.isApprovedOrFailed;
+            $scope.isInitiationEnabled = response.data.isInitiationEnabled;
+            $scope.IsDraftEnabled = response.data.isDraftEnabled;
             $scope.wireTicketObj.HMWire.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
             $scope.castToDate($scope.wireTicketObj.SendingAccount);

@@ -105,7 +105,8 @@ namespace HMOSecureWeb.Controllers
                     .Include("hmsWirePurposeLkup")
                     .Include("hmsWireStatusLkup")
                     .Include("hmsWireTransferTypeLKup")
-                    .Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (statusId == 0 || s.WireStatusId == statusId)).ToList();
+                    .Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && s.CreatedAt == s.ValueDate && (statusId == 0 || s.WireStatusId == statusId)
+                                                    || s.CreatedAt == endContextDate && (statusId == 0 || s.WireStatusId == statusId)).ToList();
             }
 
             List<dmaAgreementOnBoarding> wireAgreements;
@@ -209,17 +210,19 @@ namespace HMOSecureWeb.Controllers
                                      || (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
                                      || (int)WireDataManager.WireStatus.Failed == wireTicket.HMWire.WireStatusId;
 
-            var isCompletedOrFailed = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId
-                                      || (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
+            var isSwiftCancelDisabled = (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
+                                      || (int)WireDataManager.SwiftStatus.NegativeAcknowledged == wireTicket.HMWire.SwiftStatusId
                                       || (int)WireDataManager.WireStatus.Failed == wireTicket.HMWire.WireStatusId;
-
+                                            
+            var isCancelled = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId;
             var isApproved = (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId;
-
-            var isCancelEnabled = !isApproved && !isDeadlineCrossed || !isCompletedOrFailed;
+            var isCancelEnabled = (!isApproved && !isDeadlineCrossed || !isSwiftCancelDisabled) && !isCancelled;
+            var isInitiationEnabled = !isDeadlineCrossed && (WireDataManager.WireStatus.Drafted == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId);
+            var isDraftEnabled = !isDeadlineCrossed && (WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId || WireDataManager.WireStatus.Failed == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId);
             var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan());
             var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan());
             var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
-            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, deadlineToApprove });
+            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove });
         }
 
         public JsonResult IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId)

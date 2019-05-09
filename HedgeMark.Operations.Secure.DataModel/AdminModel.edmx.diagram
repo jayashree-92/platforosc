@@ -33,17 +33,17 @@
         <AssociationConnector Association="AdminModel.FK_OnBoardingSSITemplateAccountType_dmaAgreementTypeId" />
         <EntityTypeShape EntityType="AdminModel.dmaCounterPartyOnBoarding" Width="1.5" PointX="13.125" PointY="30.625" />
         <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_dmaCounterPartyOnBoardId" />
-        <EntityTypeShape EntityType="AdminModel.onBoardingSSITemplate" Width="1.5" PointX="10" PointY="31.25" />
-        <AssociationConnector Association="AdminModel.FK_onBoardingSSITemplate_dmaAgreementTypeId" />
-        <AssociationConnector Association="AdminModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" />
-        <AssociationConnector Association="AdminModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" />
-        <EntityTypeShape EntityType="AdminModel.onBoardingAccount" Width="1.5" PointX="23.25" PointY="29.75" />
         <EntityTypeShape EntityType="AdminModel.onboardingFund" Width="1.5" PointX="12.75" PointY="0.75" />
         <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId" />
+        <EntityTypeShape EntityType="AdminModel.onBoardingAccount" Width="1.5" PointX="20.25" PointY="12.125" />
+        <EntityTypeShape EntityType="AdminModel.onBoardingSSITemplate" Width="1.5" PointX="10" PointY="23.375" />
         <AssociationConnector Association="AdminModel.FK_onBoardingAccount_dmaAgreementOnBoardingId" />
+        <AssociationConnector Association="AdminModel.FK_onBoardingSSITemplate_dmaAgreementTypeId" />
         <AssociationConnector Association="AdminModel.FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId" />
         <AssociationConnector Association="AdminModel.FK_onBoardingAccountDocument_onBoardingAccountId" />
         <AssociationConnector Association="AdminModel.FK_onBoardingAccountSSITemplateMap_AccountId" />
+        <AssociationConnector Association="AdminModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" />
+        <AssociationConnector Association="AdminModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

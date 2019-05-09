@@ -331,18 +331,21 @@ namespace HMOSecureMiddleware
                 context.SaveChanges();
             }
 
-            wireTicket = GetWireData(wireTicket.HMWire.hmsWireId);
+            var existingWireTicket = GetWireData(wireTicket.HMWire.hmsWireId);
 
             if (wireStatus == WireStatus.Approved)
-                WireTransactionManager.ApproveAndInitiateWireTransfer(wireTicket, comment, userId);
+                WireTransactionManager.ApproveAndInitiateWireTransfer(existingWireTicket, comment, userId);
 
-            else if (wireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus == WireStatus.Cancelled)
-                WireTransactionManager.CancelWireTransfer(wireTicket, comment, userId);
+            else if (existingWireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus == WireStatus.Cancelled)
+                WireTransactionManager.CancelWireTransfer(existingWireTicket, comment, userId);
 
             else
+            {
+                wireTicket.HMWire.CreatedAt = existingWireTicket.HMWire.CreatedAt;
                 SetWireStatusAndWorkFlow(wireTicket.HMWire, wireStatus, SwiftStatus.NotInitiated, comment, userId);
+            }
 
-            return wireTicket;
+            return existingWireTicket;
         }
 
         public static bool IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId)
