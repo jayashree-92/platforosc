@@ -20,7 +20,8 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsNotificationStaging" Width="1.5" PointX="3.875" PointY="4.5" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWirePurposeLkup" Width="1.5" PointX="10.75" PointY="3.25" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireTransferTypeLKup" Width="1.5" PointX="0.75" PointY="3.5" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsWire" Width="1.5" PointX="14.125" PointY="0.5" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsMQLog" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsWire" Width="1.5" PointX="14" PointY="0.5" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" />
@@ -30,7 +31,6 @@
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsMQLog" Width="1.5" PointX="0.75" PointY="6.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

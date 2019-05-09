@@ -32,7 +32,7 @@
             <PropertyRef Name="hmsSwiftStatusId" />
           </Key>
           <Property Name="hmsSwiftStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Status" Type="varchar" MaxLength="20" />
+          <Property Name="Status" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsUserAuditLog">
           <Key>
@@ -129,7 +129,7 @@
           <Property Name="SendingPlatform" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="ReceivingAccountNumber" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Currency" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="OnBoardAccountId" Type="bigint" Nullable="false" />
           <Property Name="OnBoardSSITemplateId" Type="bigint" Nullable="false" />
           <Property Name="OnBoardAgreementId" Type="bigint" Nullable="false" />
@@ -423,6 +423,7 @@
           <EntitySet Name="hmsNotificationStagings" EntityType="OperationsSecureModel.hmsNotificationStaging" />
           <EntitySet Name="hmsWirePurposeLkups" EntityType="OperationsSecureModel.hmsWirePurposeLkup" />
           <EntitySet Name="hmsWireTransferTypeLKups" EntityType="OperationsSecureModel.hmsWireTransferTypeLKup" />
+          <EntitySet Name="hmsMQLogs" EntityType="OperationsSecureModel.hmsMQLog" />
           <EntitySet Name="hmsWires" EntityType="OperationsSecureModel.hmsWire" />
           <AssociationSet Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" Association="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
             <End Role="hmsSwiftStatusLkup" EntitySet="hmsSwiftStatusLkups" />
@@ -460,7 +461,6 @@
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
           </AssociationSet>
-          <EntitySet Name="hmsMQLogs" EntityType="OperationsSecureModel.hmsMQLog" />
           </EntityContainer>
         <EntityType Name="hmsUserAuditLog">
           <Key>
@@ -516,7 +516,7 @@
             <PropertyRef Name="hmsSwiftStatusId" />
           </Key>
           <Property Name="hmsSwiftStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsSwiftStatusLkup" ToRole="hmsWireWorkflowLog" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsSwiftStatusLkup" ToRole="hmsWire" />
         </EntityType>
@@ -650,6 +650,17 @@
           <Property Name="TransferType" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" FromRole="hmsWireTransferTypeLKup" ToRole="hmsWire" />
         </EntityType>
+        <EntityType Name="hmsMQLog">
+          <Key>
+            <PropertyRef Name="hmsMQLogsId" />
+          </Key>
+          <Property Name="hmsMQLogsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsOutBound" Type="Boolean" Nullable="false" />
+          <Property Name="QueueManager" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QueueName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Message" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         <EntityType Name="hmsWire">
           <Key>
             <PropertyRef Name="hmsWireId" />
@@ -666,7 +677,7 @@
           <Property Name="SendingPlatform" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ReceivingAccountNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Currency" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="OnBoardAccountId" Type="Int64" Nullable="false" />
           <Property Name="OnBoardSSITemplateId" Type="Int64" Nullable="false" />
           <Property Name="OnBoardAgreementId" Type="Int64" Nullable="false" />
@@ -796,17 +807,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="hmsMQLog">
-          <Key>
-            <PropertyRef Name="hmsMQLogsId" />
-          </Key>
-          <Property Name="hmsMQLogsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IsOutBound" Type="Boolean" Nullable="false" />
-          <Property Name="QueueManager" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="QueueName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Message" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -947,6 +947,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="hmsMQLogs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsMQLog">
+              <MappingFragment StoreEntitySet="hmsMQLogs">
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="QueueName" ColumnName="QueueName" />
+                <ScalarProperty Name="QueueManager" ColumnName="QueueManager" />
+                <ScalarProperty Name="IsOutBound" ColumnName="IsOutBound" />
+                <ScalarProperty Name="hmsMQLogsId" ColumnName="hmsMQLogsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="hmsWires">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsWire">
               <MappingFragment StoreEntitySet="hmsWires">
@@ -974,18 +986,6 @@
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="hmsMQLogs">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsMQLog">
-              <MappingFragment StoreEntitySet="hmsMQLogs">
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="QueueName" ColumnName="QueueName" />
-                <ScalarProperty Name="QueueManager" ColumnName="QueueManager" />
-                <ScalarProperty Name="IsOutBound" ColumnName="IsOutBound" />
-                <ScalarProperty Name="hmsMQLogsId" ColumnName="hmsMQLogsId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
