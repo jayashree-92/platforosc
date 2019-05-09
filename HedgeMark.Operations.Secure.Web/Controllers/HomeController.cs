@@ -105,7 +105,7 @@ namespace HMOSecureWeb.Controllers
                     .Include("hmsWirePurposeLkup")
                     .Include("hmsWireStatusLkup")
                     .Include("hmsWireTransferTypeLKup")
-                    .Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && s.CreatedAt == s.ValueDate && (statusId == 0 || s.WireStatusId == statusId)
+                    .Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (statusId == 0 || s.WireStatusId == statusId)
                                                     || s.CreatedAt == endContextDate && (statusId == 0 || s.WireStatusId == statusId)).ToList();
             }
 
