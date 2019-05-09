@@ -116,7 +116,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f50K = new Field50K()
                 .setAccount(!string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber)
-                .setNameAndAddress(wire.SendingAccount.AccountName);
+                .setNameAndAddress(wire.SendingAccount.UltimateBeneficiaryAccountName);
             return f50K;
         }
 
@@ -146,7 +146,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f52D = new Field52D()
                 .setAccount(wire.SendingAccount.AccountNumber)
-                .setNameAndAddressLine1(wire.SendingAccount.AccountName);
+                .setNameAndAddressLine1(wire.SendingAccount.UltimateBeneficiaryAccountName);
             return f52D;
         }
 
@@ -288,7 +288,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                     : wire.IsBookTransfer ? wire.ReceivingAccount.AccountNumber : wire.SSITemplate.AccountNumber);
 
             if (!isAbaAvailable)
-                f58D.setNameAndAddress(wire.IsBookTransfer ? wire.ReceivingAccount.Reference : wire.SSITemplate.Reference);
+                f58D.setNameAndAddress(wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountName : wire.SSITemplate.UltimateBeneficiaryAccountName);
 
             if (!isAbaAvailable)
                 return f58D;
@@ -306,7 +306,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f59 = new Field59()
                 .setAccount(wire.IsBookTransfer ? wire.ReceivingAccount.AccountNumber : wire.SSITemplate.AccountNumber)
-                .setNameAndAddressLine1(wire.IsBookTransfer ? wire.ReceivingAccount.Reference : wire.SSITemplate.Reference);
+                .setNameAndAddressLine1(wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountName : wire.SSITemplate.UltimateBeneficiaryAccountName);
 
             return f59;
         }
@@ -354,7 +354,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             //mt103.addField(GetField52A(wire));
 
             //Optional
-            // mt103.addField(GetField53A(wire));
+            mt103.addField(GetField53B(wire));
 
             //Optional
             SetField56X(mt103, wire);
