@@ -16,11 +16,6 @@ BEGIN
 	ALTER TABLE [dbo].[hmsWireStatusLkup]  WITH CHECK ADD CONSTRAINT [UK_hmsWireStatusLkup_Status] UNIQUE ([Status])
 END
 
-IF NOT EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME = 'UK_hmsSwiftStatusLkup_Status')
-BEGIN
-	ALTER TABLE [dbo].[hmsSwiftStatusLkup]  WITH CHECK ADD CONSTRAINT [UK_hmsSwiftStatusLkup_Status] UNIQUE ([Status])
-END
-
 
 IF NOT EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME = 'UK_hmsWireMessageType_MessageType')
 BEGIN

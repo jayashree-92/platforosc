@@ -99,7 +99,7 @@ namespace HMOSecureMiddleware
             try
             {
                 //Create Swift Message and send to EMX team
-                CreateAndSendMessageToMQ(wire, wire.HMWire.hmsWireMessageType);
+                CreateAndSendMessageToMQ(wire, wire.HMWire.hmsWireMessageType, null);
 
                 //Update the given wire Id to "processing" in workflow and wire table
                 WireDataManager.SetWireStatusAndWorkFlow(wire.HMWire, WireDataManager.WireStatus.Approved, WireDataManager.SwiftStatus.Processing, string.Empty, -1);
@@ -129,7 +129,7 @@ namespace HMOSecureMiddleware
                 }
 
                 //Create Swift Message and send to EMX team
-                CreateAndSendMessageToMQ(wire, cancellationMessageType);
+                CreateAndSendMessageToMQ(wire, cancellationMessageType, wire.HMWire.hmsWireMessageType);
 
                 //Update the given wire Id to "processing" in workflow and wire table
                 WireDataManager.SetWireStatusAndWorkFlow(wire.WireId, WireDataManager.WireStatus.Cancelled, WireDataManager.SwiftStatus.Processing, "Wire cancellation request sent and processing", -1);
@@ -143,7 +143,7 @@ namespace HMOSecureMiddleware
             }
         }
 
-        private static void CreateAndSendMessageToMQ(WireTicket wire, hmsWireMessageType messageType)
+        private static void CreateAndSendMessageToMQ(WireTicket wire, hmsWireMessageType messageType, hmsWireMessageType originalMessageType)
         {
             AbstractMT swiftMessage103 = null;
             var is202Cov = messageType.MessageType.Equals("MT202 COV") || messageType.MessageType.Equals("MT202COV");
@@ -151,14 +151,14 @@ namespace HMOSecureMiddleware
             if (is202Cov)
             {
                 //We need to create an MT 103 and use TransactionRef of 103 as Related Ref of MT 202 COV
-                swiftMessage103 = OutboundSwiftMsgCreator.CreateMessage(wire, "MT103", "COV");
+                swiftMessage103 = OutboundSwiftMsgCreator.CreateMessage(wire, "MT103", string.Empty, "COV");
 
                 //This has to be sent-out first
                 QueueSystemManager.SendMessage(swiftMessage103.GetMessage());
             }
 
             //Create Swift message
-            var swiftMessage = OutboundSwiftMsgCreator.CreateMessage(wire, messageType.MessageType);
+            var swiftMessage = OutboundSwiftMsgCreator.CreateMessage(wire, messageType.MessageType, originalMessageType == null ? string.Empty : originalMessageType.MessageType);
 
             if (is202Cov)
             {

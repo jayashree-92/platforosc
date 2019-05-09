@@ -15,7 +15,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
     {
         protected static readonly string HMBIC = ConfigurationManagerWrapper.StringSetting("HMBIC", "HMRKUS30");
         protected static readonly string HMBICSender = string.Format("{0}{1}", HMBIC, ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX"));
-        public static AbstractMT CreateMessage(WireTicket wire, string messageType, string referenceTag = "")
+        public static AbstractMT CreateMessage(WireTicket wire, string messageType, string originalMessageType, string referenceTag = "")
         {
             switch (messageType)
             {
@@ -34,10 +34,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                     return CreateMt210(wire);
                 //MT192 - request for cancellation
                 case "MT192":
-                    return CreateMt192(wire);
+                    return CreateMt192(wire, originalMessageType);
                 //MT292 - Request for Cancellation
                 case "MT292":
-                    return CreateMt292(wire);
+                    return CreateMt292(wire, originalMessageType);
                 //MT540 - Receive Free-- > To cancel, a new 540 with function code of CANC must be used.
                 case "MT540":
                     return CreateMt540(wire);
@@ -461,7 +461,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             return mt210;
         }
 
-        private static MT192 CreateMt192(WireTicket wire, string referenceTag = "")
+        private static MT192 CreateMt192(WireTicket wire, string originalMessageType)
         {
             var mt192 = new MT192();
             SetSenderAndReceiverFromHM(mt192, wire);
@@ -472,17 +472,18 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             mt192.addField(GetField11S(wire));
 
-            // We need the original M103 message 
-            var mt103 = CreateMt103(wire, referenceTag);
-            foreach (var mt103Field in mt103.Block4.GetFields())
+            // We need the original message 
+            var originalMessage = CreateMessage(wire, originalMessageType, string.Empty);
+
+            foreach (var originalField in originalMessage.Block4.GetFields())
             {
-                mt192.Block4.AddField(mt103Field);
+                mt192.Block4.AddField(originalField);
             }
 
             return mt192;
         }
 
-        private static MT292 CreateMt292(WireTicket wire)
+        private static MT292 CreateMt292(WireTicket wire, string originalMessageType)
         {
             var mt292 = new MT292();
             SetSenderAndReceiverFromHM(mt292, wire);
@@ -493,12 +494,14 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             mt292.addField(GetField11S(wire));
 
-            // We need the original M103 message 
-            var mt202 = CreateMt202(wire);
-            foreach (var mt103Field in mt202.Block4.GetFields())
+            // We need the original message 
+            var originalMessage = CreateMessage(wire, originalMessageType, string.Empty);
+
+            foreach (var originalField in originalMessage.Block4.GetFields())
             {
-                mt292.Block4.AddField(mt103Field);
+                mt292.Block4.AddField(originalField);
             }
+
 
             return mt292;
         }

@@ -330,7 +330,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }, function (response, status, headers) {
                 console.log(response, status, headers);
                 angular.element("#modalToRetrieveWires").modal("hide");
-                notifyError(response.statusText);
+                notifyError($(response.data).find("head > title").html());
             });
         }
     }
