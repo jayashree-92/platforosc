@@ -233,35 +233,44 @@ namespace HMOSecureWeb.Controllers
 
         public void SaveWire(WireTicket wireTicket, int statusId, string comment)
         {
-            wireTicket.HMWire.LastModifiedAt = DateTime.Now;
-            wireTicket.HMWire.LastUpdatedBy = UserDetails.Id;
-            wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
-
-            var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan());
-            var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan());
-            var deadlineToApprove = GetDeadlineToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
-            SaveWireScheduleInfo(wireTicket, (WireDataManager.WireStatus)statusId, UserDetails.Id, deadlineToApprove);
-            var tempFilePath = string.Format("Temp\\{0}", UserName);
-
-            foreach (var file in wireTicket.HMWire.hmsWireDocuments)
+            try
             {
-                var fileName = string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureWiresFilesPath, tempFilePath, file.FileName);
-                var fileInfo = new FileInfo(fileName);
+                wireTicket.HMWire.LastModifiedAt = DateTime.Now;
+                wireTicket.HMWire.LastUpdatedBy = UserDetails.Id;
+                wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
 
-                if (!System.IO.File.Exists(fileInfo.FullName))
-                    continue;
+                var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan());
+                var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan());
+                var deadlineToApprove = GetDeadlineToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
+                SaveWireScheduleInfo(wireTicket, (WireDataManager.WireStatus)statusId, UserDetails.Id, deadlineToApprove);
+                var tempFilePath = string.Format("Temp\\{0}", UserName);
 
-                var newFileName = string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureWiresFilesPath, wireTicket.WireId, file.FileName);
-                var newFileInfo = new FileInfo(newFileName);
+                foreach (var file in wireTicket.HMWire.hmsWireDocuments)
+                {
+                    var fileName = string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureWiresFilesPath, tempFilePath, file.FileName);
+                    var fileInfo = new FileInfo(fileName);
 
-                if (newFileInfo.Directory != null && !Directory.Exists(newFileInfo.Directory.FullName))
-                    Directory.CreateDirectory(newFileInfo.Directory.FullName);
+                    if (!System.IO.File.Exists(fileInfo.FullName))
+                        continue;
 
-                if (System.IO.File.Exists(newFileInfo.FullName))
-                    continue;
+                    var newFileName = string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureWiresFilesPath, wireTicket.WireId, file.FileName);
+                    var newFileInfo = new FileInfo(newFileName);
 
-                System.IO.File.Copy(fileName, newFileName);
-                System.IO.File.Delete(fileInfo.FullName);
+                    if (newFileInfo.Directory != null && !Directory.Exists(newFileInfo.Directory.FullName))
+                        Directory.CreateDirectory(newFileInfo.Directory.FullName);
+
+                    if (System.IO.File.Exists(newFileInfo.FullName))
+                        continue;
+
+                    System.IO.File.Copy(fileName, newFileName);
+                    System.IO.File.Delete(fileInfo.FullName);
+                }
+            }
+            catch (Exception ex)
+            {
+                //Response.Status = ex.Message; ;
+                Response.StatusCode = 500;
+                Response.StatusDescription = ex.Message;
             }
         }
 
