@@ -118,9 +118,24 @@ namespace HMOSecureWeb
             //}
 
             //Overriding Role - until LDAP groups can be identified
-            roles.Add(OpsSecureUserRoles.WireApprover);
 
-            //---------------------------
+             if (Utility.Util.IsLowerEnvironment)
+                roles.Add(OpsSecureUserRoles.WireApprover);
+
+            if (!(roles.Contains(OpsSecureUserRoles.WireApprover) || roles.Contains(OpsSecureUserRoles.WireInitiator)))
+            {
+                Logger.InfoFormat(string.Format("LDAP ID: {0}", userSso.LDAPUserID));
+
+                if (!string.IsNullOrWhiteSpace(userSso.LDAPUserID))
+                {
+                    var umsLib = new UmsLibrary();
+                    var ldapGroups = umsLib.GetLdapGroupsofLdapUser(userSso.LDAPUserID);
+                    if (ldapGroups.Contains(OpsSecureUserRoles.WireApprover))
+                        roles.Add(OpsSecureUserRoles.WireApprover);
+                    else if (ldapGroups.Contains(OpsSecureUserRoles.WireInitiator))
+                        roles.Add(OpsSecureUserRoles.WireInitiator);
+                }
+            }
 
             var webIdentity = new GenericIdentity(email, "SiteMinder");
             var principal = new GenericPrincipal(webIdentity, roles.ToArray());

@@ -61,7 +61,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -82,10 +85,17 @@
     <Compile Include="Models\WireTicket.cs" />
     <Compile Include="NotificationManager.cs" />
     <Compile Include="Queues\QueueSystemManager.cs" />
+    <Compile Include="Service References\UserManagementService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="SwiftMessageManager\OutboundSwiftMsgCreater.cs" />
     <Compile Include="SwiftMessageManager\InboundSwiftMsgParser.cs" />
-    <Compile Include="Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\SecurityHeader.cs" />
+    <Compile Include="Util\UmsLibrary.cs" />
+    <Compile Include="Util\Utility.cs" />
     <Compile Include="WireDataManager.cs" />
     <Compile Include="WireTransactionManager.cs" />
   </ItemGroup>
@@ -98,10 +108,107 @@
     <Content Include="ExternalLibraries\IBM-MQ\IBM.XMS.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.addUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.addUserSimplifiedResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.addUserToGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.AuditObject.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.lookupUserByUserIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.modifyUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.PasswordValidationStatus.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.preValidatePasswordResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.removeUserFromGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.renameUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.renameUserRSASyncResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.resetPasswordResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.searchByFilterResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.SearchResultUser.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.setAccountStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.terminateUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.terminateUserRSASyncResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\UserManagementService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\UserManagementService\configuration.svcinfo" />
+    <None Include="Service References\UserManagementService\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Service References\UserManagementService\LDAPServiceDelegate.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Commons\Commons.csproj">
@@ -117,7 +224,12 @@
       <Name>HedgeMark.SwiftMessageHandler</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\UserManagementService\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
