@@ -185,21 +185,32 @@ namespace HMOSecureMiddleware
 
             var lastMessageStatus = 0;
             var lastKey = string.Empty;
+            var lastMessageType = string.Empty;
             foreach (var log in wireLogs)
             {
+                lastMessageType = log.hmsWireMessageType.MessageType;
+
                 lastKey = !isMultiMessage
                     ? log.hmsWireLogTypeLkup.LogType
-                    : string.Format("{0}-{1}",log.hmsWireLogTypeLkup.LogType.Replace("Acknowledged", "Ack"), log.hmsWireMessageType.MessageType);
+                    : string.Format("{0}-{1}", log.hmsWireLogTypeLkup.LogType.Replace("Acknowledged", "Ack"), lastMessageType);
 
                 lastMessageStatus = log.hmsWireLogTypeId;
 
                 swiftMessages.Add(new KeyValuePair<string, string>(lastKey, SwiftMessageInterpreter.GetDetailedFormatted(log.SwiftMessage, true)));
             }
 
-            //Acknowledgment
-            if (lastMessageStatus == 2)
+            //Outbound
+            if (lastMessageStatus == 1)
             {
-                swiftMessages.Add(new KeyValuePair<string, string>(lastKey.Replace("Acknowledged", "Confirmation").Replace("Ack", "Confirmation"), string.Empty));
+                swiftMessages.Add(new KeyValuePair<string, string>(lastKey.Replace("Outbound", isMultiMessage ? "Ack" : "Acknowledged"), string.Empty));
+                swiftMessages.Add(new KeyValuePair<string, string>(lastKey.Replace("Outbound", "Confirmation"), string.Empty));
+            }
+
+
+            //Acknowledgment
+            else if (lastMessageStatus == 2)
+            {
+                swiftMessages.Add(new KeyValuePair<string, string>(lastKey.Replace(isMultiMessage ? "Ack" : "Acknowledged", "Confirmation"), string.Empty));
             }
 
             return swiftMessages;

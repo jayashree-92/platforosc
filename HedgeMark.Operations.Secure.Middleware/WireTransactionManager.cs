@@ -237,12 +237,15 @@ namespace HMOSecureMiddleware
                 //Get wire Details
                 var hmWire = context.hmsWires.First(s => s.hmsWireId == inBoundMsg.WireId);
 
+                var messageType = inBoundMsg.SwiftMessage.GetFullMessageType();
+                var wireTypeId = context.hmsWireMessageTypes.First(s => s.MessageType == messageType).hmsWireMessageTypeId;
+
                 //We need last or default - as same wireId can be approved and cancelled
                 var wireLog = new hmsWireLog()
                 {
                     hmsWireId = inBoundMsg.WireId,
                     hmsWireWorkflowLogId = workflowLogId,
-                    WireMessageTypeId = hmWire.WireMessageTypeId,
+                    WireMessageTypeId = wireTypeId,
                     SwiftMessage = inBoundMsg.OriginalFinMessage,
                     RecCreatedAt = DateTime.Now,
                 };
