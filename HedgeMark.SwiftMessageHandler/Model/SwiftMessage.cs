@@ -159,6 +159,11 @@ namespace HedgeMark.SwiftMessageHandler.Model
             return FieldDirectory.IsBlock3Field(fieldName) ? Block3.GetField(fieldName) : Block4.GetField(fieldName);
         }
 
+        public bool HasField(string fieldName)
+        {
+            return FieldDirectory.IsBlock3Field(fieldName) ? Block3.HasField(fieldName) : Block4.HasField(fieldName);
+        }
+
         public string GetMessage()
         {
             var swiftMsg = new StringBuilder();

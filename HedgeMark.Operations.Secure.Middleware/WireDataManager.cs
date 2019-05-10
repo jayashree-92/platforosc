@@ -167,14 +167,6 @@ namespace HMOSecureMiddleware
             };
         }
 
-        //private class SwiftFormattedMsg
-        //{
-        //    public string MessageType { get; set; }
-        //    public string Outbound { get; set; }
-        //    public string AckOrNack { get; set; }
-        //    public string Inbound { get; set; }
-        //}
-
         private static List<KeyValuePair<string, string>> GetFormattedSwiftMessages(long wireId)
         {
             var swiftMessages = new List<KeyValuePair<string, string>>();
