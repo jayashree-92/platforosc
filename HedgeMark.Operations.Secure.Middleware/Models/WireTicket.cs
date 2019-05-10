@@ -98,25 +98,29 @@ namespace HMOSecureMiddleware.Models
             //:32A: 180830USD367574,90
             else if (SwiftMessage.IsType(MTDirectory.MT_910))
             {
+                string currency;
+                decimal amount;
+                DateTime valueDate;
 
-                //var is32APresent = SwiftMessage.HasField(FieldDirectory.FIELD_32A);
+                var is32APresent = SwiftMessage.HasField(FieldDirectory.FIELD_32A);
 
-                //if (is32APresent)
-                //{
-                //    //get wire Id for the given combination
-                //    var field32A = (Field32A)SwiftMessage.GetField(FieldDirectory.FIELD_32A);
-                //    valueDate = field32A.GetComponentValue(FieldConstants.DATE).ToDateTime("MMM dd, yyyy");
-                //    currency = field32A.GetComponentValue(FieldConstants.CURRENCY);
-                //    amount = field32A.GetComponentValue(FieldConstants.AMOUNT).ToDecimal();
-                //}
+                if (is32APresent)
+                {
+                    //get wire Id for the given combination
+                    var field32A = (Field32A)SwiftMessage.GetField(FieldDirectory.FIELD_32A);
+                    valueDate = field32A.GetComponentValue(FieldConstants.DATE).ToDateTime("MMM dd, yyyy");
+                    currency = field32A.GetComponentValue(FieldConstants.CURRENCY);
+                    amount = field32A.GetComponentValue(FieldConstants.AMOUNT).ToDecimal();
+                }
+                else
+                {
+                    var field32B = (Field32B)SwiftMessage.GetField(FieldDirectory.FIELD_32B);
+                    currency = field32B.GetComponentValue(FieldConstants.CURRENCY);
+                    amount = field32B.GetComponentValue(FieldConstants.AMOUNT).ToDecimal();
 
-                var field32B = (Field32B)SwiftMessage.GetField(FieldDirectory.FIELD_32B);
-                var currency = field32B.GetComponentValue(FieldConstants.CURRENCY);
-                var amount = field32B.GetComponentValue(FieldConstants.AMOUNT).ToDecimal();
-
-                var field30 = (Field30)SwiftMessage.GetField(FieldDirectory.FIELD_30);
-                var valueDate = field30.DateString.ToDateTime("yyMMdd");
-
+                    var field30 = (Field30)SwiftMessage.GetField(FieldDirectory.FIELD_30);
+                    valueDate = field30.DateString.ToDateTime("yyMMdd");
+                }
 
                 using (var context = new OperationsSecureContext())
                 {
