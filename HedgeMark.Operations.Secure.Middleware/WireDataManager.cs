@@ -89,13 +89,13 @@ namespace HMOSecureMiddleware
             hmWire.hmsWireLogs.ForEach(s =>
             {
                 s.hmsWire = null;
-                s.hmsWireStatusLkup = null;
                 s.hmsWireMessageType = null;
+                s.hmsWireWorkflowLog = null;
+                s.hmsWireLogTypeLkup = null;
             });
 
             hmWire.hmsWireStatusLkup.hmsWires = null;
             hmWire.hmsWireStatusLkup.hmsWireWorkflowLogs = null;
-            hmWire.hmsWireStatusLkup.hmsWireLogs = null;
             hmWire.hmsWirePurposeLkup.hmsWires = null;
             hmWire.hmsWireMessageType.hmsWires = null;
             hmWire.hmsWireTransferTypeLKup.hmsWires = null;
@@ -167,98 +167,48 @@ namespace HMOSecureMiddleware
             };
         }
 
-        private class SwiftFormattedMsg
-        {
-            public string MessageType { get; set; }
-            public string Outbound { get; set; }
-            public string AckOrNack { get; set; }
-            public string Inbound { get; set; }
-        }
+        //private class SwiftFormattedMsg
+        //{
+        //    public string MessageType { get; set; }
+        //    public string Outbound { get; set; }
+        //    public string AckOrNack { get; set; }
+        //    public string Inbound { get; set; }
+        //}
 
-        private static Dictionary<string, string> GetFormattedSwiftMessages(long wireId)
+        private static List<KeyValuePair<string, string>> GetFormattedSwiftMessages(long wireId)
         {
-            var swiftMessages = new Dictionary<string, string>();
+            var swiftMessages = new List<KeyValuePair<string, string>>();
 
             List<hmsWireLog> wireLogs;
 
             using (var context = new OperationsSecureContext())
             {
-                wireLogs = context.hmsWireLogs.Include("hmsWireMessageType").Where(s => s.hmsWireId == wireId).OrderBy(s => s.hmsWireLogId).ToList();
+                wireLogs = context.hmsWireLogs.Include("hmsWireMessageType").Include("hmsWireLogTypeLkup").Where(s => s.hmsWireId == wireId).OrderBy(s => s.hmsWireLogId).ToList();
             }
 
             if (wireLogs.Count == 0)
                 return swiftMessages;
 
-            //Group the message by Message Type and allMessages
-            var swiftRawMessage = new Dictionary<int, SwiftFormattedMsg>();
+            var isMultiMessage = wireLogs.Select(s => s.WireMessageTypeId).Distinct().Count() > 1;
 
+            var lastMessageStatus = 0;
+            var lastKey = string.Empty;
             foreach (var log in wireLogs)
             {
-                SwiftFormattedMsg thisSwiftMsg;
+                lastKey = !isMultiMessage
+                    ? log.hmsWireLogTypeLkup.LogType
+                    : string.Format("{0}-{1}",log.hmsWireLogTypeLkup.LogType.Replace("Acknowledged", "Ack"), log.hmsWireMessageType.MessageType);
 
-                if (swiftRawMessage.ContainsKey(log.WireMessageTypeId))
-                    thisSwiftMsg = swiftRawMessage[log.WireMessageTypeId];
-                else
-                {
-                    thisSwiftMsg = new SwiftFormattedMsg()
-                    {
-                        MessageType = log.hmsWireMessageType.MessageType
-                    };
-                }
+                lastMessageStatus = log.hmsWireLogTypeId;
 
-                if (!string.IsNullOrWhiteSpace(log.OutBoundSwiftMessage))
-                    thisSwiftMsg.Outbound = log.OutBoundSwiftMessage;
-                if (!string.IsNullOrWhiteSpace(log.ServiceSwiftMessage))
-                    thisSwiftMsg.AckOrNack = log.ServiceSwiftMessage;
-                if (!string.IsNullOrWhiteSpace(log.InBoundSwiftMessage))
-                    thisSwiftMsg.Inbound = log.InBoundSwiftMessage;
-
-                if (swiftRawMessage.ContainsKey(log.WireMessageTypeId))
-                    swiftRawMessage[log.WireMessageTypeId] = thisSwiftMsg;
-                else
-                    swiftRawMessage.Add(log.WireMessageTypeId, thisSwiftMsg);
+                swiftMessages.Add(new KeyValuePair<string, string>(lastKey, SwiftMessageInterpreter.GetDetailedFormatted(log.SwiftMessage, true)));
             }
 
-            var isMultiMessage = swiftRawMessage.Count > 1;
-            var lastMessageTypeId = swiftRawMessage.Select(s => s.Key).Last();
-            foreach (var msg in swiftRawMessage)
+            //Acknowledgment
+            if (lastMessageStatus == 2)
             {
-                var messageType = isMultiMessage ? string.Format("-{0}", msg.Value.MessageType) : string.Empty;
-
-                //Outbound
-                var outboundStr = "Outbound" + messageType;
-                if (!string.IsNullOrWhiteSpace(msg.Value.Outbound) && !swiftMessages.ContainsKey(outboundStr))
-                    swiftMessages.Add(outboundStr, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Outbound, true));
-
-                var isThisMessageNacked = false;
-
-                //Ack or Nack
-                if (!isMultiMessage || !string.IsNullOrWhiteSpace(msg.Value.AckOrNack))
-                {
-                    var swiftMsg = SwiftMessage.Parse(msg.Value.AckOrNack);
-                    string ackLabel;
-                    if (string.IsNullOrWhiteSpace(msg.Value.AckOrNack))
-                        ackLabel = "Acknowledgement";
-                    else
-                    {
-                        ackLabel = string.Format("{0}{2}{1}", swiftMsg.IsNack() ? "N-" : string.Empty, messageType, isMultiMessage ? "Ack" : "Acknowledgement");
-                        isThisMessageNacked = swiftMsg.IsNack();
-                    }
-
-                    if (!isMultiMessage || !string.IsNullOrWhiteSpace(msg.Value.AckOrNack) && !swiftMessages.ContainsKey(ackLabel))
-                        swiftMessages.Add(ackLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.AckOrNack, true));
-                }
-
-                //When Nacked, we will not have any confirmation message
-                if (isThisMessageNacked)
-                    continue;
-
-                //InBound
-                var confirmationLabel = "Confirmation" + messageType;
-                if (!swiftMessages.ContainsKey(confirmationLabel) && (lastMessageTypeId == msg.Key || !string.IsNullOrWhiteSpace(msg.Value.Inbound)))
-                    swiftMessages.Add(confirmationLabel, SwiftMessageInterpreter.GetDetailedFormatted(msg.Value.Inbound, true));
+                swiftMessages.Add(new KeyValuePair<string, string>(lastKey.Replace("Acknowledged", "Confirmation").Replace("Ack", "Confirmation"), string.Empty));
             }
-
 
             return swiftMessages;
         }
@@ -287,24 +237,26 @@ namespace HMOSecureMiddleware
             return GetWireStatus(wireTicket);
         }
 
-        public static void SetWireStatusAndWorkFlow(long wireId, SwiftStatus swiftStatus, string comment)
+
+        public static hmsWireWorkflowLog SetWireStatusAndWorkFlow(long wireId, WireStatus wireStatus, WireDataManager.SwiftStatus swiftStatus, string comment, int userId)
         {
             var hmsWire = GetWire(wireId);
-            SetWireStatusAndWorkFlow(hmsWire, (WireStatus)hmsWire.WireStatusId, swiftStatus, comment, -1);
+            return SetWireStatusAndWorkFlow(hmsWire, wireStatus, swiftStatus, comment, userId);
         }
 
-        public static void SetWireStatusAndWorkFlow(long wireId, WireStatus wireStatus, WireDataManager.SwiftStatus swiftStatus, string comment, int userId)
-        {
-            var hmsWire = GetWire(wireId);
-            SetWireStatusAndWorkFlow(hmsWire, wireStatus, swiftStatus, comment, userId);
-        }
-
-        public static void SetWireStatusAndWorkFlow(hmsWire wire, WireDataManager.WireStatus wireStatus, WireDataManager.SwiftStatus swiftStatus, string comment, int userId)
+        public static hmsWireWorkflowLog SetWireStatusAndWorkFlow(hmsWire wire, WireStatus wireStatus, SwiftStatus swiftStatus, string comment, int userId)
         {
             using (var context = new OperationsSecureContext())
             {
                 wire.WireStatusId = (int)wireStatus;
                 wire.SwiftStatusId = (int)swiftStatus;
+
+                if (userId != -1)
+                {
+                    wire.LastUpdatedBy = userId;
+                    wire.LastModifiedAt = DateTime.Now;
+                }
+
                 context.hmsWires.AddOrUpdate(wire);
                 context.SaveChanges();
 
@@ -319,7 +271,11 @@ namespace HMOSecureMiddleware
                 };
                 context.hmsWireWorkflowLogs.AddOrUpdate(wireWorkFlowLog);
                 context.SaveChanges();
+
+                return wireWorkFlowLog;
+
             }
+
         }
 
 

@@ -12,25 +12,17 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class hmsWireWorkflowLog
+    public partial class hmsWireLogTypeLkup
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public hmsWireWorkflowLog()
+        public hmsWireLogTypeLkup()
         {
             this.hmsWireLogs = new HashSet<hmsWireLog>();
         }
     
-        public long hmsWireWorkflowLogId { get; set; }
-        public long hmsWireId { get; set; }
-        public int WireStatusId { get; set; }
-        public string Comment { get; set; }
-        public System.DateTime CreatedAt { get; set; }
-        public int CreatedBy { get; set; }
-        public int SwiftStatusId { get; set; }
+        public int hmsWireLogTypeId { get; set; }
+        public string LogType { get; set; }
     
-        public virtual hmsSwiftStatusLkup hmsSwiftStatusLkup { get; set; }
-        public virtual hmsWireStatusLkup hmsWireStatusLkup { get; set; }
-        public virtual hmsWire hmsWire { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireLog> hmsWireLogs { get; set; }
     }

@@ -15,7 +15,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             var inBoundWireMessage = new WireInBoundMessage().Parse(swiftMessage);
 
             if (inBoundWireMessage.WireId == 0)
-                throw new Exception(string.Format("System cannot find Transaction ref for MT {0}: {1}", inBoundWireMessage.SwiftMessage.GetMTType(), inBoundWireMessage.FinMessage));
+                throw new Exception(string.Format("System cannot find Transaction ref for MT {0}: {1}", inBoundWireMessage.SwiftMessage.GetMTType(), inBoundWireMessage.OriginalFinMessage));
 
             if (inBoundWireMessage.IsFeAck)
                 return inBoundWireMessage;

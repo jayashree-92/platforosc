@@ -235,8 +235,6 @@ namespace HMOSecureWeb.Controllers
         {
             try
             {
-                wireTicket.HMWire.LastModifiedAt = DateTime.Now;
-                wireTicket.HMWire.LastUpdatedBy = UserDetails.Id;
                 wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
 
                 var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan());

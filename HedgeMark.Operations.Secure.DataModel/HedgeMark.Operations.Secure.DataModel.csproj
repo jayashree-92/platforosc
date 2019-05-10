@@ -124,6 +124,9 @@
     <Compile Include="hmsWireLog.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsWireLogTypeLkup.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsWireMessageType.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

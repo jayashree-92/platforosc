@@ -31,12 +31,13 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsWireStatusLkup> hmsWireStatusLkups { get; set; }
         public virtual DbSet<hmsSwiftStatusLkup> hmsSwiftStatusLkups { get; set; }
         public virtual DbSet<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
-        public virtual DbSet<hmsWireLog> hmsWireLogs { get; set; }
         public virtual DbSet<hmsWireJobSchedule> hmsWireJobSchedules { get; set; }
         public virtual DbSet<hmsNotificationStaging> hmsNotificationStagings { get; set; }
         public virtual DbSet<hmsWirePurposeLkup> hmsWirePurposeLkups { get; set; }
         public virtual DbSet<hmsWireTransferTypeLKup> hmsWireTransferTypeLKups { get; set; }
         public virtual DbSet<hmsMQLog> hmsMQLogs { get; set; }
         public virtual DbSet<hmsWire> hmsWires { get; set; }
+        public virtual DbSet<hmsWireLog> hmsWireLogs { get; set; }
+        public virtual DbSet<hmsWireLogTypeLkup> hmsWireLogTypeLkups { get; set; }
     }
 }

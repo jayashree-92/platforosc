@@ -18,7 +18,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public hmsWireStatusLkup()
         {
             this.hmsWireWorkflowLogs = new HashSet<hmsWireWorkflowLog>();
-            this.hmsWireLogs = new HashSet<hmsWireLog>();
             this.hmsWires = new HashSet<hmsWire>();
         }
     
@@ -27,8 +26,6 @@ namespace HedgeMark.Operations.Secure.DataModel
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hmsWireLog> hmsWireLogs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWire> hmsWires { get; set; }
     }

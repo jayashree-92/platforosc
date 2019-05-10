@@ -146,6 +146,14 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.workflowUsers = $scope.wireTicketObj.WorkflowUsers;
             $scope.attachmentUsers = $scope.wireTicketObj.AttachmentUsers;
 
+
+            var keyValuePair = $scope.wireTicketObj.SwiftMessages;
+
+            $scope.wireTicketObj.SwiftMessages = {};
+            $(keyValuePair).each(function (i, v) {
+                $scope.wireTicketObj.SwiftMessages[v.Key] = v.Value;
+            });
+
             $scope.IsSwiftMessagesPresent = $scope.wireTicketObj.SwiftMessages != null && Object.keys($scope.wireTicketObj.SwiftMessages).length > 0;
 
             angular.forEach($scope.WireTicket.hmsWireDocuments, function (val, ind) {

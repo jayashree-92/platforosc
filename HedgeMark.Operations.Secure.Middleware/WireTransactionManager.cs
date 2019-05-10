@@ -35,7 +35,7 @@ namespace HMOSecureMiddleware
                 var currentStatus = WireDataManager.GetWireStatus(wire.WireId);
 
                 if (currentStatus.WireStatus == WireDataManager.WireStatus.Approved)
-                    throw new InvalidOperationException(string.Format("The selected wire ticket is already approved by {0}", wire.WireLastUpdatedBy));
+                    throw new InvalidOperationException("The selected wire ticket is already approved.");
 
                 if (currentStatus.WireStatus == WireDataManager.WireStatus.Drafted)
                     throw new InvalidOperationException("Cannot process un-initiated Wire ticket");
@@ -98,11 +98,12 @@ namespace HMOSecureMiddleware
         {
             try
             {
-                //Create Swift Message and send to EMX team
-                CreateAndSendMessageToMQ(wire, wire.HMWire.hmsWireMessageType, null);
-
                 //Update the given wire Id to "processing" in workflow and wire table
-                WireDataManager.SetWireStatusAndWorkFlow(wire.HMWire, WireDataManager.WireStatus.Approved, WireDataManager.SwiftStatus.Processing, string.Empty, -1);
+                var workflow = WireDataManager.SetWireStatusAndWorkFlow(wire.HMWire, WireDataManager.WireStatus.Approved, WireDataManager.SwiftStatus.Processing, string.Empty, -1);
+
+                //Create Swift Message and send to EMX team
+                CreateAndSendMessageToMQ(wire, wire.HMWire.hmsWireMessageType, null, workflow.hmsWireWorkflowLogId);
+
             }
             catch (Exception ex)
             {
@@ -128,11 +129,11 @@ namespace HMOSecureMiddleware
                     cancellationMessageType = context.hmsWireMessageTypes.First(s => s.MessageType == cancelMsgTypeStr);
                 }
 
-                //Create Swift Message and send to EMX team
-                CreateAndSendMessageToMQ(wire, cancellationMessageType, wire.HMWire.hmsWireMessageType);
-
                 //Update the given wire Id to "processing" in workflow and wire table
-                WireDataManager.SetWireStatusAndWorkFlow(wire.WireId, WireDataManager.WireStatus.Cancelled, WireDataManager.SwiftStatus.Processing, "Wire cancellation request sent and processing", -1);
+                var workflow = WireDataManager.SetWireStatusAndWorkFlow(wire.WireId, WireDataManager.WireStatus.Cancelled, WireDataManager.SwiftStatus.Processing, "Wire cancellation request sent and processing", -1);
+
+                //Create Swift Message and send to EMX team
+                CreateAndSendMessageToMQ(wire, cancellationMessageType, wire.HMWire.hmsWireMessageType, workflow.hmsWireWorkflowLogId);
             }
             catch (Exception ex)
             {
@@ -143,7 +144,7 @@ namespace HMOSecureMiddleware
             }
         }
 
-        private static void CreateAndSendMessageToMQ(WireTicket wire, hmsWireMessageType messageType, hmsWireMessageType originalMessageType)
+        private static void CreateAndSendMessageToMQ(WireTicket wire, hmsWireMessageType messageType, hmsWireMessageType originalMessageType, long workflowLogId)
         {
             AbstractMT swiftMessage103 = null;
             var is202Cov = messageType.MessageType.Equals("MT202 COV") || messageType.MessageType.Equals("MT202COV");
@@ -170,30 +171,10 @@ namespace HMOSecureMiddleware
             //SwiftMessageValidator.Validate(swiftMessage);
 
             //Put an entry to Wire Log table with the parameters used to create Swift Message
-            LogOutBoundWireTransaction(wire, messageType, swiftMessage.GetMessage());
+            LogOutBoundWireTransaction(wire, messageType, swiftMessage.GetMessage(), workflowLogId);
 
             //Send the message to MQ
             QueueSystemManager.SendMessage(swiftMessage.GetMessage());
-        }
-
-        public static void LogFrontEndAcknowledgment(long wireId, string fullMessageType)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                //Get wire Details
-                var hmWire = context.hmsWires.First(s => s.hmsWireId == wireId);
-                var msgType = context.hmsWireMessageTypes.FirstOrDefault(s => s.MessageType == fullMessageType);
-
-                var wireLog = context.hmsWireLogs.FirstOrDefault(s => s.hmsWireId == wireId && s.WireStatusId == hmWire.WireStatusId && s.WireMessageTypeId == msgType.hmsWireMessageTypeId);
-
-                if (wireLog == null)
-                    return;
-
-                wireLog.IsFrontEndAcknowleged = true;
-
-                context.hmsWireLogs.AddOrUpdate(h => new { h.hmsWireId, h.WireStatusId, h.WireMessageTypeId }, wireLog);
-                context.SaveChanges();
-            }
         }
 
         public static void ProcessInboundMessage(string swiftMessage)
@@ -206,42 +187,41 @@ namespace HMOSecureMiddleware
 
             if (confirmationData.IsFeAck)
             {
-                LogFrontEndAcknowledgment(confirmationData.WireId, confirmationData.SwiftMessage.GetFullMessageType());
+                //As of now we are not logging FEACK in wire logs, but are logged in MQLogs table
                 return;
             }
 
+            hmsWireWorkflowLog workflowLog = null;
             if (confirmationData.IsAckOrNack && confirmationData.IsAcknowledged)
-                WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, WireDataManager.WireStatus.Approved, WireDataManager.SwiftStatus.Acknowledged, string.Empty, -1);
+                workflowLog = WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, confirmationData.MessageType.EndsWith("192") || confirmationData.MessageType.EndsWith("292") ? WireDataManager.WireStatus.Cancelled : WireDataManager.WireStatus.Approved, WireDataManager.SwiftStatus.Acknowledged, string.Empty, -1);
 
             else if (confirmationData.IsAckOrNack && confirmationData.IsNegativeAcknowledged)
-                WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.NegativeAcknowledged, confirmationData.ExceptionMessage, -1);
+                workflowLog = WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.NegativeAcknowledged, confirmationData.ExceptionMessage, -1);
 
             //Update the given wire Id to "Completed" in workflow and wire table
             else if (confirmationData.IsConfirmed)
-                WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, WireDataManager.SwiftStatus.Completed, confirmationData.ConfirmationMessage);
+                workflowLog = WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, confirmationData.MessageType.EndsWith("192") || confirmationData.MessageType.EndsWith("292") ? WireDataManager.WireStatus.Cancelled : WireDataManager.WireStatus.Approved, WireDataManager.SwiftStatus.Completed, confirmationData.ConfirmationMessage, -1);
 
             else if (!string.IsNullOrWhiteSpace(confirmationData.ExceptionMessage))
-                WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.Failed, string.Format("Wire Transaction Failed with error: {0}", confirmationData.ExceptionMessage), -1);
+                workflowLog = WireDataManager.SetWireStatusAndWorkFlow(confirmationData.WireId, WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.Failed, string.Format("Wire Transaction Failed with error: {0}", confirmationData.ExceptionMessage), -1);
 
             //Put an entry to Wire Log table with the parameters used to create Swift Message
-            if (!confirmationData.IsFeAck)
-                LogInBoundWireTransaction(confirmationData, swiftMessage);
+            LogInBoundWireTransaction(confirmationData, workflowLog.hmsWireWorkflowLogId);
         }
 
-        private static void LogOutBoundWireTransaction(WireTicket wireTicket, hmsWireMessageType messageType, string swiftMessage)
+        private static void LogOutBoundWireTransaction(WireTicket wireTicket, hmsWireMessageType messageType, string swiftMessage, long workflowId)
         {
             using (var context = new OperationsSecureContext())
             {
-                var wireLog = context.hmsWireLogs.FirstOrDefault(s => s.hmsWireId == wireTicket.WireId && s.WireStatusId == wireTicket.HMWire.WireStatusId) ?? new hmsWireLog()
+                var wireLog = new hmsWireLog()
                 {
                     hmsWireId = wireTicket.WireId,
-                    WireStatusId = wireTicket.HMWire.WireStatusId,
+                    hmsWireWorkflowLogId = workflowId,
                     WireMessageTypeId = messageType.hmsWireMessageTypeId,
+                    SwiftMessage = swiftMessage,
+                    hmsWireLogTypeId = 1,
                     RecCreatedAt = DateTime.Now,
-                    IsFrontEndAcknowleged = false
                 };
-
-                wireLog.OutBoundSwiftMessage = swiftMessage;
 
                 context.hmsWireLogs.Add(wireLog);
                 context.SaveChanges();
@@ -250,7 +230,7 @@ namespace HMOSecureMiddleware
             NotificationManager.NotifyOpsUser(wireTicket);
         }
 
-        private static void LogInBoundWireTransaction(WireInBoundMessage inBoundMsg, string swiftMessage)
+        private static void LogInBoundWireTransaction(WireInBoundMessage inBoundMsg, long workflowLogId)
         {
             using (var context = new OperationsSecureContext())
             {
@@ -258,27 +238,29 @@ namespace HMOSecureMiddleware
                 var hmWire = context.hmsWires.First(s => s.hmsWireId == inBoundMsg.WireId);
 
                 //We need last or default - as same wireId can be approved and cancelled
-                var wireLog = context.hmsWireLogs.Where(s => s.hmsWireId == hmWire.hmsWireId && s.WireStatusId == hmWire.WireStatusId).OrderBy(s => s.RecCreatedAt).ToList().LastOrDefault() ?? new hmsWireLog()
+                var wireLog = new hmsWireLog()
                 {
                     hmsWireId = inBoundMsg.WireId,
-                    WireStatusId = hmWire.WireStatusId,
+                    hmsWireWorkflowLogId = workflowLogId,
                     WireMessageTypeId = hmWire.WireMessageTypeId,
+                    SwiftMessage = inBoundMsg.OriginalFinMessage,
                     RecCreatedAt = DateTime.Now,
-                    IsFrontEndAcknowleged = false
                 };
 
-                if (inBoundMsg.IsAckOrNack)
-                    wireLog.ServiceSwiftMessage = swiftMessage;
-                else
-                    wireLog.InBoundSwiftMessage = swiftMessage;
+                if (inBoundMsg.IsAcknowledged)
+                    wireLog.hmsWireLogTypeId = 2;
+                else if (inBoundMsg.IsNegativeAcknowledged)
+                    wireLog.hmsWireLogTypeId = 3;
+                else if (inBoundMsg.IsConfirmed)
+                    wireLog.hmsWireLogTypeId = 4;
 
                 if (!string.IsNullOrWhiteSpace(inBoundMsg.ExceptionMessage))
-                    wireLog.ExceptionDetails = inBoundMsg.ExceptionMessage;
+                    wireLog.AdditionalDetails = inBoundMsg.ExceptionMessage;
 
-                if (!string.IsNullOrWhiteSpace(inBoundMsg.ConfirmationMessage))
-                    wireLog.ConfirmationMessageDetails = inBoundMsg.ConfirmationMessage;
+                else if (!string.IsNullOrWhiteSpace(inBoundMsg.ConfirmationMessage))
+                    wireLog.AdditionalDetails = inBoundMsg.ConfirmationMessage;
 
-                context.hmsWireLogs.AddOrUpdate(h => new { h.hmsWireId, h.WireStatusId }, wireLog);
+                context.hmsWireLogs.Add(wireLog);
                 context.SaveChanges();
 
                 if (hmWire.SwiftStatusId != (int)WireDataManager.SwiftStatus.Acknowledged)

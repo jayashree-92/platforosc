@@ -16,18 +16,16 @@ namespace HedgeMark.Operations.Secure.DataModel
     {
         public long hmsWireLogId { get; set; }
         public long hmsWireId { get; set; }
-        public int WireStatusId { get; set; }
+        public long hmsWireWorkflowLogId { get; set; }
+        public int hmsWireLogTypeId { get; set; }
         public int WireMessageTypeId { get; set; }
-        public string OutBoundSwiftMessage { get; set; }
-        public string ServiceSwiftMessage { get; set; }
-        public string InBoundSwiftMessage { get; set; }
-        public string ConfirmationMessageDetails { get; set; }
-        public string ExceptionDetails { get; set; }
+        public string SwiftMessage { get; set; }
+        public string AdditionalDetails { get; set; }
         public System.DateTime RecCreatedAt { get; set; }
-        public bool IsFrontEndAcknowleged { get; set; }
     
+        public virtual hmsWireLogTypeLkup hmsWireLogTypeLkup { get; set; }
         public virtual hmsWireMessageType hmsWireMessageType { get; set; }
-        public virtual hmsWireStatusLkup hmsWireStatusLkup { get; set; }
         public virtual hmsWire hmsWire { get; set; }
+        public virtual hmsWireWorkflowLog hmsWireWorkflowLog { get; set; }
     }
 }

@@ -56,9 +56,9 @@
           </Key>
           <Property Name="hmsWireDocumentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hmsWireId" Type="bigint" Nullable="false" />
+          <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsWireJobSchedules">
           <Key>
@@ -74,21 +74,25 @@
           <Property Name="UpdatedBy" Type="int" Nullable="false" />
           <Property Name="LastModifiedAt" Type="datetime" Nullable="false" />
         </EntityType>
-        <EntityType Name="hmsWireLog">
+        <EntityType Name="hmsWireLogs">
           <Key>
             <PropertyRef Name="hmsWireLogId" />
           </Key>
           <Property Name="hmsWireLogId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hmsWireId" Type="bigint" Nullable="false" />
-          <Property Name="WireStatusId" Type="int" Nullable="false" />
+          <Property Name="hmsWireWorkflowLogId" Type="bigint" Nullable="false" />
+          <Property Name="hmsWireLogTypeId" Type="int" Nullable="false" />
           <Property Name="WireMessageTypeId" Type="int" Nullable="false" />
-          <Property Name="OutBoundSwiftMessage" Type="varchar(max)" />
-          <Property Name="ServiceSwiftMessage" Type="varchar(max)" />
-          <Property Name="InBoundSwiftMessage" Type="varchar(max)" />
-          <Property Name="ConfirmationMessageDetails" Type="varchar" MaxLength="1000" />
-          <Property Name="ExceptionDetails" Type="varchar" MaxLength="1000" />
+          <Property Name="SwiftMessage" Type="varchar(max)" />
+          <Property Name="AdditionalDetails" Type="varchar" MaxLength="1000" />
           <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
-          <Property Name="IsFrontEndAcknowleged" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="hmsWireLogTypeLkup">
+          <Key>
+            <PropertyRef Name="hmsWireLogTypeId" />
+          </Key>
+          <Property Name="hmsWireLogTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LogType" Type="varchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="hmsWireMessageType">
           <Key>
@@ -122,17 +126,17 @@
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="WirePurposeId" Type="int" Nullable="false" />
           <Property Name="ContextDate" Type="date" Nullable="false" />
+          <Property Name="OnBoardAccountId" Type="bigint" Nullable="false" />
+          <Property Name="OnBoardSSITemplateId" Type="bigint" Nullable="false" />
+          <Property Name="OnBoardAgreementId" Type="bigint" Nullable="false" />
+          <Property Name="hmFundId" Type="bigint" Nullable="false" />
           <Property Name="ValueDate" Type="date" Nullable="false" />
           <Property Name="PaymentOrReceipt" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="hmFundId" Type="bigint" Nullable="false" />
           <Property Name="SendingAccountNumber" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="SendingPlatform" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="ReceivingAccountNumber" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Currency" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="OnBoardAccountId" Type="bigint" Nullable="false" />
-          <Property Name="OnBoardSSITemplateId" Type="bigint" Nullable="false" />
-          <Property Name="OnBoardAgreementId" Type="bigint" Nullable="false" />
           <Property Name="WireMessageTypeId" Type="int" Nullable="false" />
           <Property Name="WireStatusId" Type="int" Nullable="false" />
           <Property Name="LastModifiedAt" Type="datetime" Nullable="false" />
@@ -192,39 +196,51 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_hmsWireLog_hmsWireMessageType_WireMessageTypeId">
+        <Association Name="FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId">
+          <End Role="hmsWireLogTypeLkup" Type="Self.hmsWireLogTypeLkup" Multiplicity="1" />
+          <End Role="hmsWireLogs" Type="Self.hmsWireLogs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireLogTypeLkup">
+              <PropertyRef Name="hmsWireLogTypeId" />
+            </Principal>
+            <Dependent Role="hmsWireLogs">
+              <PropertyRef Name="hmsWireLogTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId">
           <End Role="hmsWireMessageType" Type="Self.hmsWireMessageType" Multiplicity="1" />
-          <End Role="hmsWireLog" Type="Self.hmsWireLog" Multiplicity="*" />
+          <End Role="hmsWireLogs" Type="Self.hmsWireLogs" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="hmsWireMessageType">
               <PropertyRef Name="hmsWireMessageTypeId" />
             </Principal>
-            <Dependent Role="hmsWireLog">
+            <Dependent Role="hmsWireLogs">
               <PropertyRef Name="WireMessageTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_hmsWireLog_hmsWires_hmsWireId">
+        <Association Name="FK_hmsWireLogs_hmsWires_hmsWireId">
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
-          <End Role="hmsWireLog" Type="Self.hmsWireLog" Multiplicity="*" />
+          <End Role="hmsWireLogs" Type="Self.hmsWireLogs" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="hmsWires">
               <PropertyRef Name="hmsWireId" />
             </Principal>
-            <Dependent Role="hmsWireLog">
+            <Dependent Role="hmsWireLogs">
               <PropertyRef Name="hmsWireId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_hmsWireLog_hmsWireStatusLkup_WireStatusId">
-          <End Role="hmsWireStatusLkup" Type="Self.hmsWireStatusLkup" Multiplicity="1" />
-          <End Role="hmsWireLog" Type="Self.hmsWireLog" Multiplicity="*" />
+        <Association Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
+          <End Role="hmsWireWorkflowLog" Type="Self.hmsWireWorkflowLog" Multiplicity="1" />
+          <End Role="hmsWireLogs" Type="Self.hmsWireLogs" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="hmsWireStatusLkup">
-              <PropertyRef Name="hmsWireStatusId" />
+            <Principal Role="hmsWireWorkflowLog">
+              <PropertyRef Name="hmsWireWorkflowLogId" />
             </Principal>
-            <Dependent Role="hmsWireLog">
-              <PropertyRef Name="WireStatusId" />
+            <Dependent Role="hmsWireLogs">
+              <PropertyRef Name="hmsWireWorkflowLogId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -331,7 +347,8 @@
           <EntitySet Name="hmsUserAuditLog" EntityType="Self.hmsUserAuditLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireDocument" EntityType="Self.hmsWireDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireJobSchedules" EntityType="Self.hmsWireJobSchedules" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="hmsWireLog" EntityType="Self.hmsWireLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsWireLogs" EntityType="Self.hmsWireLogs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsWireLogTypeLkup" EntityType="Self.hmsWireLogTypeLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireMessageType" EntityType="Self.hmsWireMessageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWirePurposeLkup" EntityType="Self.hmsWirePurposeLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWires" EntityType="Self.hmsWires" Schema="dbo" store:Type="Tables" />
@@ -346,17 +363,21 @@
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsWireJobSchedules" EntitySet="hmsWireJobSchedules" />
           </AssociationSet>
-          <AssociationSet Name="FK_hmsWireLog_hmsWireMessageType_WireMessageTypeId" Association="Self.FK_hmsWireLog_hmsWireMessageType_WireMessageTypeId">
+          <AssociationSet Name="FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" Association="Self.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId">
+            <End Role="hmsWireLogTypeLkup" EntitySet="hmsWireLogTypeLkup" />
+            <End Role="hmsWireLogs" EntitySet="hmsWireLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" Association="Self.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId">
             <End Role="hmsWireMessageType" EntitySet="hmsWireMessageType" />
-            <End Role="hmsWireLog" EntitySet="hmsWireLog" />
+            <End Role="hmsWireLogs" EntitySet="hmsWireLogs" />
           </AssociationSet>
-          <AssociationSet Name="FK_hmsWireLog_hmsWires_hmsWireId" Association="Self.FK_hmsWireLog_hmsWires_hmsWireId">
+          <AssociationSet Name="FK_hmsWireLogs_hmsWires_hmsWireId" Association="Self.FK_hmsWireLogs_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
-            <End Role="hmsWireLog" EntitySet="hmsWireLog" />
+            <End Role="hmsWireLogs" EntitySet="hmsWireLogs" />
           </AssociationSet>
-          <AssociationSet Name="FK_hmsWireLog_hmsWireStatusLkup_WireStatusId" Association="Self.FK_hmsWireLog_hmsWireStatusLkup_WireStatusId">
-            <End Role="hmsWireStatusLkup" EntitySet="hmsWireStatusLkup" />
-            <End Role="hmsWireLog" EntitySet="hmsWireLog" />
+          <AssociationSet Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" Association="Self.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
+            <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLog" />
+            <End Role="hmsWireLogs" EntitySet="hmsWireLogs" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" Association="Self.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
             <End Role="hmsSwiftStatusLkup" EntitySet="hmsSwiftStatusLkup" />
@@ -410,15 +431,6 @@
             <End Role="hmsWireStatusLkup" EntitySet="hmsWireStatusLkups" />
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
           </AssociationSet>
-          <EntitySet Name="hmsWireLogs" EntityType="OperationsSecureModel.hmsWireLog" />
-          <AssociationSet Name="FK_hmsWireLog_hmsWireMessageType_WireMessageTypeId" Association="OperationsSecureModel.FK_hmsWireLog_hmsWireMessageType_WireMessageTypeId">
-            <End Role="hmsWireMessageType" EntitySet="hmsWireMessageTypes" />
-            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsWireLog_hmsWireStatusLkup_WireStatusId" Association="OperationsSecureModel.FK_hmsWireLog_hmsWireStatusLkup_WireStatusId">
-            <End Role="hmsWireStatusLkup" EntitySet="hmsWireStatusLkups" />
-            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
-          </AssociationSet>
           <EntitySet Name="hmsWireJobSchedules" EntityType="OperationsSecureModel.hmsWireJobSchedule" />
           <EntitySet Name="hmsNotificationStagings" EntityType="OperationsSecureModel.hmsNotificationStaging" />
           <EntitySet Name="hmsWirePurposeLkups" EntityType="OperationsSecureModel.hmsWirePurposeLkup" />
@@ -436,10 +448,6 @@
           <AssociationSet Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId">
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireJobSchedule" EntitySet="hmsWireJobSchedules" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsWireLog_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireLog_hmsWires_hmsWireId">
-            <End Role="hmsWire" EntitySet="hmsWires" />
-            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWires_hmsWireMessageType_WireMessageTypeId" Association="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId">
             <End Role="hmsWireMessageType" EntitySet="hmsWireMessageTypes" />
@@ -460,6 +468,24 @@
           <AssociationSet Name="FK_hmsWireWorkflowLog_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId">
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
+          </AssociationSet>
+          <EntitySet Name="hmsWireLogs" EntityType="OperationsSecureModel.hmsWireLog" />
+          <EntitySet Name="hmsWireLogTypeLkups" EntityType="OperationsSecureModel.hmsWireLogTypeLkup" />
+          <AssociationSet Name="FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId">
+            <End Role="hmsWireLogTypeLkup" EntitySet="hmsWireLogTypeLkups" />
+            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId">
+            <End Role="hmsWireMessageType" EntitySet="hmsWireMessageTypes" />
+            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWireLogs_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId">
+            <End Role="hmsWire" EntitySet="hmsWires" />
+            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
+            <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
+            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsUserAuditLog">
@@ -498,8 +524,8 @@
           <Property Name="Category" Type="Int32" Nullable="false" />
           <Property Name="IsOutbound" Type="Boolean" Nullable="false" />
           <Property Name="Description" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLog_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireMessageType" ToRole="hmsWireLog" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireMessageType" ToRole="hmsWire" />
+          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireMessageType" ToRole="hmsWireLog" />
         </EntityType>
         <EntityType Name="hmsWireStatusLkup">
           <Key>
@@ -508,7 +534,6 @@
           <Property Name="hmsWireStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireStatusLkup" ToRole="hmsWireWorkflowLog" />
-          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLog_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireStatusLkup" ToRole="hmsWireLog" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireStatusLkup" ToRole="hmsWire" />
         </EntityType>
         <EntityType Name="hmsSwiftStatusLkup">
@@ -534,6 +559,7 @@
           <NavigationProperty Name="hmsSwiftStatusLkup" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsWireWorkflowLog" ToRole="hmsSwiftStatusLkup" />
           <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireWorkflowLog" ToRole="hmsWireStatusLkup" />
           <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWireWorkflowLog" ToRole="hmsWire" />
+          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" FromRole="hmsWireWorkflowLog" ToRole="hmsWireLog" />
         </EntityType>
         <Association Name="FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId">
           <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
@@ -555,49 +581,6 @@
               <PropertyRef Name="hmsWireStatusId" />
             </Principal>
             <Dependent Role="hmsWireWorkflowLog">
-              <PropertyRef Name="WireStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="hmsWireLog">
-          <Key>
-            <PropertyRef Name="hmsWireLogId" />
-          </Key>
-          <Property Name="hmsWireLogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
-          <Property Name="WireStatusId" Type="Int32" Nullable="false" />
-          <Property Name="WireMessageTypeId" Type="Int32" Nullable="false" />
-          <Property Name="OutBoundSwiftMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="ServiceSwiftMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="InBoundSwiftMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="ConfirmationMessageDetails" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="ExceptionDetails" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWireLog_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireLog" ToRole="hmsWireMessageType" />
-          <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWireLog_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireLog" ToRole="hmsWireStatusLkup" />
-          <Property Name="IsFrontEndAcknowleged" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireLog_hmsWires_hmsWireId" FromRole="hmsWireLog" ToRole="hmsWire" />
-        </EntityType>
-        <Association Name="FK_hmsWireLog_hmsWireMessageType_WireMessageTypeId">
-          <End Type="OperationsSecureModel.hmsWireMessageType" Role="hmsWireMessageType" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireMessageType">
-              <PropertyRef Name="hmsWireMessageTypeId" />
-            </Principal>
-            <Dependent Role="hmsWireLog">
-              <PropertyRef Name="WireMessageTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireLog_hmsWireStatusLkup_WireStatusId">
-          <End Type="OperationsSecureModel.hmsWireStatusLkup" Role="hmsWireStatusLkup" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireStatusLkup">
-              <PropertyRef Name="hmsWireStatusId" />
-            </Principal>
-            <Dependent Role="hmsWireLog">
               <PropertyRef Name="WireStatusId" />
             </Dependent>
           </ReferentialConstraint>
@@ -692,12 +675,12 @@
           <NavigationProperty Name="hmsSwiftStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsSwiftStatusLkup" />
           <NavigationProperty Name="hmsWireDocuments" Relationship="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireDocument" />
           <NavigationProperty Name="hmsWireJobSchedules" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireJobSchedule" />
-          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireLog" />
           <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWire" ToRole="hmsWireMessageType" />
           <NavigationProperty Name="hmsWirePurposeLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" FromRole="hmsWire" ToRole="hmsWirePurposeLkup" />
           <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsWireStatusLkup" />
           <NavigationProperty Name="hmsWireTransferTypeLKup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" FromRole="hmsWire" ToRole="hmsWireTransferTypeLKup" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireWorkflowLog" />
+          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireLog" />
         </EntityType>
         <Association Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
           <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
@@ -731,18 +714,6 @@
               <PropertyRef Name="hmsWireId" />
             </Principal>
             <Dependent Role="hmsWireJobSchedule">
-              <PropertyRef Name="hmsWireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireLog_hmsWires_hmsWireId">
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWire">
-              <PropertyRef Name="hmsWireId" />
-            </Principal>
-            <Dependent Role="hmsWireLog">
               <PropertyRef Name="hmsWireId" />
             </Dependent>
           </ReferentialConstraint>
@@ -804,6 +775,79 @@
             </Principal>
             <Dependent Role="hmsWireWorkflowLog">
               <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsWireLog">
+          <Key>
+            <PropertyRef Name="hmsWireLogId" />
+          </Key>
+          <Property Name="hmsWireLogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
+          <Property Name="hmsWireWorkflowLogId" Type="Int64" Nullable="false" />
+          <Property Name="hmsWireLogTypeId" Type="Int32" Nullable="false" />
+          <Property Name="WireMessageTypeId" Type="Int32" Nullable="false" />
+          <Property Name="SwiftMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="AdditionalDetails" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="hmsWireLogTypeLkup" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" FromRole="hmsWireLog" ToRole="hmsWireLogTypeLkup" />
+          <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireLog" ToRole="hmsWireMessageType" />
+          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" FromRole="hmsWireLog" ToRole="hmsWire" />
+          <NavigationProperty Name="hmsWireWorkflowLog" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" FromRole="hmsWireLog" ToRole="hmsWireWorkflowLog" />
+        </EntityType>
+        <EntityType Name="hmsWireLogTypeLkup">
+          <Key>
+            <PropertyRef Name="hmsWireLogTypeId" />
+          </Key>
+          <Property Name="hmsWireLogTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LogType" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" FromRole="hmsWireLogTypeLkup" ToRole="hmsWireLog" />
+        </EntityType>
+        <Association Name="FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId">
+          <End Type="OperationsSecureModel.hmsWireLogTypeLkup" Role="hmsWireLogTypeLkup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireLogTypeLkup">
+              <PropertyRef Name="hmsWireLogTypeId" />
+            </Principal>
+            <Dependent Role="hmsWireLog">
+              <PropertyRef Name="hmsWireLogTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId">
+          <End Type="OperationsSecureModel.hmsWireMessageType" Role="hmsWireMessageType" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireMessageType">
+              <PropertyRef Name="hmsWireMessageTypeId" />
+            </Principal>
+            <Dependent Role="hmsWireLog">
+              <PropertyRef Name="WireMessageTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireLogs_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireLog">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
+          <End Type="OperationsSecureModel.hmsWireWorkflowLog" Role="hmsWireWorkflowLog" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireWorkflowLog">
+              <PropertyRef Name="hmsWireWorkflowLogId" />
+            </Principal>
+            <Dependent Role="hmsWireLog">
+              <PropertyRef Name="hmsWireWorkflowLogId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -878,23 +922,6 @@
                 <ScalarProperty Name="WireStatusId" ColumnName="WireStatusId" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
                 <ScalarProperty Name="hmsWireWorkflowLogId" ColumnName="hmsWireWorkflowLogId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="hmsWireLogs">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireLog">
-              <MappingFragment StoreEntitySet="hmsWireLog">
-                <ScalarProperty Name="IsFrontEndAcknowleged" ColumnName="IsFrontEndAcknowleged" />
-                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
-                <ScalarProperty Name="ExceptionDetails" ColumnName="ExceptionDetails" />
-                <ScalarProperty Name="ConfirmationMessageDetails" ColumnName="ConfirmationMessageDetails" />
-                <ScalarProperty Name="InBoundSwiftMessage" ColumnName="InBoundSwiftMessage" />
-                <ScalarProperty Name="ServiceSwiftMessage" ColumnName="ServiceSwiftMessage" />
-                <ScalarProperty Name="OutBoundSwiftMessage" ColumnName="OutBoundSwiftMessage" />
-                <ScalarProperty Name="WireMessageTypeId" ColumnName="WireMessageTypeId" />
-                <ScalarProperty Name="WireStatusId" ColumnName="WireStatusId" />
-                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
-                <ScalarProperty Name="hmsWireLogId" ColumnName="hmsWireLogId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -986,6 +1013,28 @@
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWireLogs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireLog">
+              <MappingFragment StoreEntitySet="hmsWireLogs">
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="AdditionalDetails" ColumnName="AdditionalDetails" />
+                <ScalarProperty Name="SwiftMessage" ColumnName="SwiftMessage" />
+                <ScalarProperty Name="WireMessageTypeId" ColumnName="WireMessageTypeId" />
+                <ScalarProperty Name="hmsWireLogTypeId" ColumnName="hmsWireLogTypeId" />
+                <ScalarProperty Name="hmsWireWorkflowLogId" ColumnName="hmsWireWorkflowLogId" />
+                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+                <ScalarProperty Name="hmsWireLogId" ColumnName="hmsWireLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWireLogTypeLkups">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireLogTypeLkup">
+              <MappingFragment StoreEntitySet="hmsWireLogTypeLkup">
+                <ScalarProperty Name="LogType" ColumnName="LogType" />
+                <ScalarProperty Name="hmsWireLogTypeId" ColumnName="hmsWireLogTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

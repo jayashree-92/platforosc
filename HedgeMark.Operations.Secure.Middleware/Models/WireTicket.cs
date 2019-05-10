@@ -53,7 +53,7 @@ namespace HMOSecureMiddleware.Models
                 return IsBookTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
             }
         }
-        public Dictionary<string, string> SwiftMessages { get; set; }
+        public List<KeyValuePair<string, string>> SwiftMessages { get; set; }
 
         public hmsWireMessageType CancellationWireMessageType { get; set; }
     }
@@ -64,13 +64,13 @@ namespace HMOSecureMiddleware.Models
         private static readonly List<string> MessageWithHMTransRefInField21 = new List<string>() { MTDirectory.MT_196, MTDirectory.MT_296, MTDirectory.MT_900 };
         public WireInBoundMessage Parse(string swiftMessage)
         {
-            FinMessage = swiftMessage;
+            OriginalFinMessage = swiftMessage;
             IsFeAck = swiftMessage.Trim().EndsWith(FEACK);
 
             if (IsFeAck)
-                FinMessage = FinMessage.Replace(FEACK, string.Empty);
+                OriginalFinMessage = OriginalFinMessage.Replace(FEACK, string.Empty);
 
-            SwiftMessage = SwiftMessage.Parse(FinMessage);
+            SwiftMessage = SwiftMessage.Parse(OriginalFinMessage);
             MessageType = SwiftMessage.MessageType;
             IsAckOrNack = SwiftMessage.IsAck() || SwiftMessage.IsNack();
 
@@ -137,7 +137,7 @@ namespace HMOSecureMiddleware.Models
 
         public bool IsFeAck { get; private set; }
         public bool IsAckOrNack { get; private set; }
-        public string FinMessage { get; private set; }
+        public string OriginalFinMessage { get; private set; }
         public SwiftMessage SwiftMessage { get; private set; }
         public long WireId { get; private set; }
         public string ReferenceTag { get; private set; }
