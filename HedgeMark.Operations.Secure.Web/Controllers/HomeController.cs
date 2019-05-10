@@ -206,17 +206,15 @@ namespace HMOSecureWeb.Controllers
             var isEditEnabled = WireDataManager.WireStatus.Drafted == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && !isDeadlineCrossed;
             var isApprovedOrFailed = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId
                                      || (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId
-                                     || (int)WireDataManager.SwiftStatus.Processing == wireTicket.HMWire.SwiftStatusId
-                                     || (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
                                      || (int)WireDataManager.WireStatus.Failed == wireTicket.HMWire.WireStatusId;
 
             var isSwiftCancelDisabled = (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
                                       || (int)WireDataManager.SwiftStatus.NegativeAcknowledged == wireTicket.HMWire.SwiftStatusId
-                                      || (int)WireDataManager.WireStatus.Failed == wireTicket.HMWire.WireStatusId;
+                                      || (int)WireDataManager.SwiftStatus.Failed == wireTicket.HMWire.SwiftStatusId;
                                             
             var isCancelled = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId;
-            var isApproved = (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId;
-            var isCancelEnabled = (!isApproved && !isDeadlineCrossed || !isSwiftCancelDisabled) && !isCancelled;
+            var isApprovalMet = (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId || wireTicket.HMWire.SwiftStatusId > 0;
+            var isCancelEnabled = (!isApprovalMet && !isDeadlineCrossed || !isSwiftCancelDisabled) && !isCancelled;
             var isInitiationEnabled = !isDeadlineCrossed && (WireDataManager.WireStatus.Drafted == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId);
             var isDraftEnabled = !isDeadlineCrossed && (WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId || WireDataManager.WireStatus.Failed == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId);
             var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan());

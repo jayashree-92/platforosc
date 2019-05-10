@@ -275,7 +275,7 @@
                                 <input type="text" class="form-control" ng-model="accountDetail.BeneficiaryType" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" class="form-control" ng-model="accountDetail.IsUltimateBeneficiaryABA" readonly />
+                                <input type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryType" readonly />
                             </div>
                         </div>
                         <p />
@@ -502,7 +502,7 @@
                                 <input type="text" class="form-control" ng-model="receivingAccountDetail.BeneficiaryType" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" class="form-control" ng-model="receivingAccountDetail.IsUltimateBeneficiaryABA" readonly />
+                                <input type="text" class="form-control" ng-model="receivingAccountDetail.UltimateBeneficiaryType" readonly />
                             </div>
                         </div>
                         <p />
@@ -679,6 +679,21 @@
                         <p />
                         <div class="row">
                             <div class="col-sm-6 col-md-3 col-lg-2">
+                                <label class="control-label" style="margin-left:15px;">Type</label>
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" ng-model="ssiTemplate.IntermediaryType" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" ng-model="ssiTemplate.BeneficiaryType" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" ng-model="ssiTemplate.UltimateBeneficiaryType" readonly />
+                            </div>
+                        </div>
+                        <p />
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-2">
                                 <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
@@ -773,7 +788,7 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default ng-show-hide" id="wireSwiftMessages" ng-show="IsSwiftMessagesPresent">
+                <div class="panel panel-default ng-show-hide" id="wireSwiftMessages" ng-show="IsSwiftMessagesPresent && WireTicket.SwiftStatusId > 0">
                     <div class="panel-body" style="cursor: pointer;padding:0px 15px 5px 15px;" ng-click="fnToggleCollapeSwiftMessagePanel()">
                         <span style="margin-top: 20px;position: fixed;text-transform: uppercase;">
                             Swift Messages :
