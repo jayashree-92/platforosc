@@ -55,9 +55,13 @@ namespace HMOSecureMiddleware
         public void SetSecurityHeader()
         {
             MessageHeaders messageHeadersElement = OperationContext.Current.OutgoingMessageHeaders;
-            var securityHeader = new SecurityHeader();
-            securityHeader.userName = ConfigurationManager.AppSettings["UMS_username"]; 
-            securityHeader.password = ConfigurationManager.AppSettings["UMS_password"]; 
+            var securityHeader = new SecurityHeader
+            {
+                userName = ConfigurationManager.AppSettings["UMS_username"],
+                password = ConfigurationManager.AppSettings["UMS_password"]
+            };
+
+
             messageHeadersElement.Add(securityHeader);
         }
 
@@ -98,61 +102,9 @@ namespace HMOSecureMiddleware
             }
             return result;
         }
+        
 
-        public void AddUserToLdapGroup(string userId, List<string> ldapGroups)
-        {
-            try
-            {
-                //Call UMS
-                List<string> successfulGroupAddition = new List<string>();
-                List<string> failedGroupAddition = new List<string>();
-                List<string> correctedGroupNameList = new List<string>();
-                List<string> availableCorrectedLdapGroups = new List<string>();
-                List<string> availableLdapGroups = new List<string>();
-
-                var service = new UserManagementService.LDAPServiceDelegateClient();
-                SearchResultUser userDetails = new SearchResultUser();
-                using (new OperationContextScope((IContextChannel)service.InnerChannel))
-                {
-                    SetSecurityHeader();
-
-                    availableLdapGroups = GetLdapGroupsofLdapUser(userId);
-                    /*appending " Users" because addUserToLDAPGroup method needs '<group name> Users' as parameter
-                    /*but lookupUserByUserId method will return '<group name>' alone
-                    /*We have only csv of <group name> in web config */
-                    availableCorrectedLdapGroups = availableLdapGroups.Select(x => { x = x + " Users"; return x; }).ToList();
-                    correctedGroupNameList = ldapGroups.Select(x => { x = x + " Users"; return x; }).ToList();
-                    List<string> requiredLdapGroups = correctedGroupNameList.Except(availableCorrectedLdapGroups).ToList();
-                    if (requiredLdapGroups.Count() > 0)
-                    {
-                        successfulGroupAddition = service.addUserToLDAPGroup(userId, requiredLdapGroups.ToArray()).ToList();
-                    }
-                }
-
-            }
-            catch (FaultException<UMSServiceFault> fex)
-            {
-                string errorMsg = fex.Detail.errorCode == 63 ? "Cannot assign user to given groups. Please contact system admin." : fex.Detail.errorMessage;
-                var ex = CreateException(errorMsg, Constants.LdapUserCreationErrorCode, fex.Detail.errorCode);
-                throw ex;
-            }
-            catch (FaultException<UMSSystemFault> fex)
-            {
-                var ex = CreateException(fex.Detail.errorMessage, Constants.LdapUserCreationErrorCode, fex.Detail.errorCode);
-                throw ex;
-            }
-            catch (FaultException<UMSServiceException> fex)
-            {
-                var ex = CreateException(fex.Detail.errorMessage, Constants.LdapUserCreationErrorCode, fex.Detail.errorCode);
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public List<string> GetLdapGroupsofLdapUser(string userName)
+        public List<string> GetLdapGroupsOfLdapUser(string userName)
         {
             SearchResultUser result = new SearchResultUser();
             List<string> attrbs = new List<string>() { "MELLONECOMMERCEAPPACCESS" };
@@ -160,84 +112,6 @@ namespace HMOSecureMiddleware
             List<string> groups = (result.userAttributes[0].value != null) ? result.userAttributes[0].value.ToList() : new List<string>();
             return groups;
         }
-
-        public void RemoveUserFromLdapGroups(string userId, List<string> ldapGroups)
-        {
-            try
-            {
-                //Call UMS
-                List<string> successfulGroupRemoval = new List<string>();
-                List<string> correctedGroupNameList = new List<string>();
-
-                var service = new UserManagementService.LDAPServiceDelegateClient();
-                SearchResultUser userDetails = new SearchResultUser();
-                using (new OperationContextScope((IContextChannel)service.InnerChannel))
-                {
-                    SetSecurityHeader();
-                    correctedGroupNameList = ldapGroups.Select(x => { x = x + " Users"; return x; }).ToList();
-                    successfulGroupRemoval = service.removeUserFromLDAPGroup(userId, correctedGroupNameList.ToArray()).ToList();
-                }
-
-            }
-            catch (FaultException<UMSServiceFault> fex)
-            {
-                var ex = CreateException(fex.Detail.errorMessage, Constants.OperationLdapGroupRemove, fex.Detail.errorCode);
-                throw ex;
-            }
-            catch (FaultException<UMSSystemFault> fex)
-            {
-                var ex = CreateException(fex.Detail.errorMessage, Constants.OperationLdapGroupRemove, fex.Detail.errorCode);
-                throw ex;
-            }
-            catch (FaultException<UMSServiceException> fex)
-            {
-                var ex = CreateException(fex.Detail.errorMessage, Constants.OperationLdapGroupRemove, fex.Detail.errorCode);
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public void ResetPassword(string userId, string newPassword, bool forcePasswordChange)
-        {
-            var service = new UserManagementService.LDAPServiceDelegateClient();
-
-            using (new OperationContextScope((IContextChannel)service.InnerChannel))
-            {
-                SetSecurityHeader();
-                try
-                {
-                    service.resetPassword(userId, newPassword, forcePasswordChange);
-                }
-                catch (FaultException<UMSServiceFault> ex)
-                {
-                    if (ex.Detail.errorCode == 9)
-                    {
-                        throw new Exception("Password in history. Please select new password.");
-                    }
-
-                    throw;
-                }
-            }
-        }
-
-        /// <summary>
-        /// SetAccountStatus
-        /// </summary>
-        /// <param name="userId">LDAP User Id</param>
-        /// <param name="statusFlag">"UNLOCK" or "LOCK</param>
-        public void SetAccountStatus(string userId, string statusFlag)
-        {
-            var service = new UserManagementService.LDAPServiceDelegateClient();
-
-            using (new OperationContextScope((IContextChannel)service.InnerChannel))
-            {
-                SetSecurityHeader();
-
-                service.setAccountStatus(userId, statusFlag);
-            }
-        }
+        
     }
 }
