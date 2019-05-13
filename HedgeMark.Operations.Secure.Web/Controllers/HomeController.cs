@@ -208,7 +208,8 @@ namespace HMOSecureWeb.Controllers
                                      || (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId
                                      || (int)WireDataManager.WireStatus.Failed == wireTicket.HMWire.WireStatusId;
 
-            var isSwiftCancelDisabled = (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
+            var isSwiftCancelDisabled = (int)WireDataManager.SwiftStatus.Processing == wireTicket.HMWire.SwiftStatusId
+                                      || (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
                                       || (int)WireDataManager.SwiftStatus.NegativeAcknowledged == wireTicket.HMWire.SwiftStatusId
                                       || (int)WireDataManager.SwiftStatus.Failed == wireTicket.HMWire.SwiftStatusId;
                                             
