@@ -242,6 +242,11 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public const string FIELD_72 = "72";
 
         /// <summary>
+        /// Remittance Information
+        /// </summary>
+        public const string FIELD_70 = "70";
+
+        /// <summary>
         /// Acknowledgement (ACK) or Negative Acknowledgement (NACK)
         /// ACK = 0
         /// NACK = 1
@@ -377,6 +382,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
             {FIELD_61,"Statement Line" },
 
+            {FIELD_70, "Remittance Information"},
             {FIELD_71A, "Details of Charges"},
             {FIELD_72, "Sender to Receiver Information"},
 

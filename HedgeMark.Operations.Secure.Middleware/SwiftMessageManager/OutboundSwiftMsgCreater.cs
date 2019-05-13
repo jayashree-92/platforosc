@@ -311,6 +311,13 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             return f59;
         }
 
+        private static Field70 GetField70(WireTicket wire)
+        {
+            var f70 = new Field70()
+                .setNarrativeLine1("/RFB/" + (wire.IsBookTransfer ? wire.ReceivingAccount.Description : wire.SSITemplate.ReasonDetail));
+            return f70;
+        }
+
         private static Field71A GetField71A(WireTicket wire)
         {
             return new Field71A("OUR");
@@ -363,6 +370,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             SetField57X(mt103, wire);
 
             mt103.addField(GetField59(wire));
+
+            mt103.addField(GetField70(wire));
 
             mt103.addField(GetField71A(wire));
 
