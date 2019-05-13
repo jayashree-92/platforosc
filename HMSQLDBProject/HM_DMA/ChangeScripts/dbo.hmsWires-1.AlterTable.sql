@@ -76,9 +76,3 @@ BEGIN
 	--inner join hmsWireWorkflowLog wfl on wl.WireStatusId = wfl.WireStatusId and wl.hmsWireId= wfl.hmsWireId  and wfl.SwiftStatusId in (3) and ServiceSwiftMessage is not null;
 
 END
-
-
-IF EXISTS(SELECT * FROM sys.objects WHERE type='U' AND name='hmsWireLog')
-BEGIN
-DROP TABLE hmsWireLog;
-END
