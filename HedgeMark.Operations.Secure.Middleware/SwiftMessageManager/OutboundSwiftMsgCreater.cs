@@ -375,6 +375,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             mt103.addField(GetField71A(wire));
 
+            mt103.addField(GetField72(wire));
+
             return mt103;
         }
 
