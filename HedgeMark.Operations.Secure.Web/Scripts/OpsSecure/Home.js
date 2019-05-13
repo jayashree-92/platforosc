@@ -25,7 +25,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
         format: "MM/dd/yyyy",
         daysOfWeekDisabled: [6, 0],
         autoclose: false,
-        endDate: "+1d",
+        endDate: "+7d",
         //minViewMode: "days",
         //daysOfWeekHighlighted: "0,6",
         //datesDisabled: JSON.parse($("#holidayDateList").val()),
@@ -94,7 +94,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
         }
 
         $scope.IsNextDateNotAvailable = false;
-        if (nextContextDate.diff(moment(), 'days') == 1) {
+        if (nextContextDate.diff(moment(), 'days') == 7) {
             $scope.IsNextDateNotAvailable = true;
             return;
         }
