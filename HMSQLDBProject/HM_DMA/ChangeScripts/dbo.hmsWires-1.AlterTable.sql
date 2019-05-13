@@ -78,7 +78,7 @@ BEGIN
 END
 
 
---IF EXISTS(SELECT * FROM sys.objects WHERE type='U' AND name='hmsWireLog')
---BEGIN
---DROP TABLE hmsWireLog;
---END
+IF EXISTS(SELECT * FROM sys.objects WHERE type='U' AND name='hmsWireLog')
+BEGIN
+DROP TABLE hmsWireLog;
+END

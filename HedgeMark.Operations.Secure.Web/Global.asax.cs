@@ -107,18 +107,6 @@ namespace HMOSecureWeb
                 return;
             }
 
-
-            //---------------------------
-            //Aspnet roles will be re-placed by LDAP roles
-            //if (AccountController.AllowedUserRoles.All(role => !Roles.IsUserInRole(email, role)))
-            //{
-            //    Logger.Error(string.Format("access denied to user '{0}', unauthorized", email));
-            //    SiteMinderLogOff("User not authorized");
-            //    return;
-            //}
-
-            //Overriding Role - until LDAP groups can be identified
-
              if (Utility.Util.IsLowerEnvironment)
                 roles.Add(OpsSecureUserRoles.WireApprover);
 

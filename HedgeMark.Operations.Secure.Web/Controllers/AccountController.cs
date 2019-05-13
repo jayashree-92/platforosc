@@ -15,8 +15,8 @@ namespace HMOSecureWeb.Controllers
 {
     public static class OpsSecureUserRoles
     {
-        public const string WireInitiator = "HM-Wire-Initiator";
-        public const string WireApprover = "HM-Wire-Approver";
+        public const string WireInitiator = "hm-wire-initiator";
+        public const string WireApprover = "hm-wire-approver";
     }
 
     public class AccountController : BaseController

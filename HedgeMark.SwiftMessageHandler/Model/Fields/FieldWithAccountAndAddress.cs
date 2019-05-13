@@ -55,6 +55,9 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public T setNameAndAddress<T>(T callingClass, string nameAndAddress)
         {
+            if (string.IsNullOrWhiteSpace(nameAndAddress))
+                return callingClass;
+
             nameAndAddress = Regex.Replace(nameAndAddress, @"\t|\r", "");
 
             var addressLines = nameAndAddress.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
