@@ -172,7 +172,7 @@ namespace HMOSecureWeb.Controllers
                 thisWire.WireCreatedBy = users.First(s => s.Key == thisWire.HMWire.CreatedBy).Value.HumanizeEmail();
                 thisWire.WireLastUpdatedBy = users.First(s => s.Key == thisWire.HMWire.LastUpdatedBy).Value.HumanizeEmail();
 
-                if (thisWire.WireLastUpdatedBy == thisWire.WireCreatedBy)
+                if (thisWire.HMWire.WireStatusId == 2 && thisWire.WireLastUpdatedBy == thisWire.WireCreatedBy)
                     thisWire.WireLastUpdatedBy = "-";
 
                 wireData.Add(thisWire);
@@ -212,7 +212,7 @@ namespace HMOSecureWeb.Controllers
                                       || (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
                                       || (int)WireDataManager.SwiftStatus.NegativeAcknowledged == wireTicket.HMWire.SwiftStatusId
                                       || (int)WireDataManager.SwiftStatus.Failed == wireTicket.HMWire.SwiftStatusId;
-                                            
+
             var isCancelled = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId;
             var isApprovalMet = (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId || wireTicket.HMWire.SwiftStatusId > 0;
             var isCancelEnabled = (!isApprovalMet && !isDeadlineCrossed || !isSwiftCancelDisabled) && !isCancelled;
