@@ -2,6 +2,7 @@
 using System.Security.Principal;
 using System.Web.Configuration;
 using Com.HedgeMark.Commons;
+using HMOSecureMiddleware;
 using HMOSecureWeb.Controllers;
 
 namespace HMOSecureWeb.Utility
@@ -38,8 +39,8 @@ namespace HMOSecureWeb.Utility
             if (principal == null)
                 return "Unknown";
 
-            if (principal.IsInRole(OpsSecureUserRoles.WireInitiator)) return OpsSecureUserRoles.WireInitiator;
-            if (principal.IsInRole(OpsSecureUserRoles.WireApprover)) return OpsSecureUserRoles.WireApprover;
+            if (principal.IsInRole(OpsSecureUserRoles.WireInitiator)) return OpsSecureUserRoles.WireInitiator.Titleize();
+            if (principal.IsInRole(OpsSecureUserRoles.WireApprover)) return OpsSecureUserRoles.WireApprover.Titleize();
 
             return "Unknown";
         }
