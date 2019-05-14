@@ -64,6 +64,7 @@ namespace HMOSecureMiddleware
 
         public static string Titleize(this string inputStr)
         {
+            inputStr = inputStr.Replace("-", string.Empty);
             return TextInfo.ToTitleCase(inputStr);
         }
     }
