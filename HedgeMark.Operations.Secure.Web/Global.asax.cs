@@ -107,8 +107,8 @@ namespace HMOSecureWeb
                 return;
             }
 
-             if (Utility.Util.IsLowerEnvironment)
-                roles.Add(OpsSecureUserRoles.WireApprover);
+             //if (Utility.Util.IsLowerEnvironment)
+             //   roles.Add(OpsSecureUserRoles.WireApprover);
 
             if (!(roles.Contains(OpsSecureUserRoles.WireApprover) || roles.Contains(OpsSecureUserRoles.WireInitiator)))
             {

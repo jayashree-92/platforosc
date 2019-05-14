@@ -257,7 +257,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
              */
             SwiftBlock5 block5 = new SwiftBlock5();
             block5.AddField(new Field("MAC").setValue("00000000"));
-            block5.AddField(new Field("PDE").setValue(""));
+            block5.AddField(new Field("PDE").setValue("1"));
 
             m.AddBlock(block5);
 
@@ -279,7 +279,7 @@ FOOBANKXXXXX
 :59:/12345678901234567890
 JOE DOE
 :71A:OUR
--}{5:{MAC:00000000}{PDE:}}{S:{SAC:1}{COP:P}}");
+-}{5:{MAC:00000000}{PDE:1}}{S:{SAC:1}{COP:P}}");
         }
     }
 }

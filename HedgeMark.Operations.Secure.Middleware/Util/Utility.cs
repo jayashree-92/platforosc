@@ -59,8 +59,13 @@ namespace HMOSecureMiddleware
             if (charIndex > 0)
                 emailId = emailId.Substring(0, charIndex);
 
-            var userName = emailId.Replace(".", " ");
-            return TextInfo.ToTitleCase(userName);
+            return emailId.Replace(".", " ").Titleize();
+        }
+
+        public static string Titleize(this string inputStr)
+        {
+            inputStr = inputStr.Replace("-", " ");
+            return TextInfo.ToTitleCase(inputStr);
         }
     }
 }

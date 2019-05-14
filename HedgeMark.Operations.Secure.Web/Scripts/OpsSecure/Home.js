@@ -73,7 +73,6 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
 
     $scope.fnSetContextDate(moment());
 
-
     $scope.fnSetNextContextDate = function (addDays) {
 
         var currentContextDate = moment($scope.ContextDate.Date);

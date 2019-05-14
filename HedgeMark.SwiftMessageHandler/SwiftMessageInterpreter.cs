@@ -72,7 +72,7 @@ namespace HedgeMark.SwiftMessageHandler
         {
             var builder = new StringBuilder();
 
-            builder.AppendLine("------------------------- Instance Type and Transmission ----------------------------");
+            builder.AppendLine("------------------------- Instance Type and Transmission -------------------------");
 
             if (swiftMsg.IsServiceMessage21() || swiftMsg.IsIncoming())
             {
