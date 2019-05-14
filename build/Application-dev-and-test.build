@@ -77,7 +77,7 @@
   <target name="UnitTestBuild"  depends="PostBuildCopy">
     <echo message="Current Directory= '${CurrentDir}'" />
     <exec program ="${MSTest}" basedir="."  verbose="true" failonerror="true" >	   
-     <arg value="/testcontainer:${UnitTestLocation}/QA/HedgeMark.SwiftMessageHandler.dll"/>
+     <arg value="/testcontainer:${UnitTestLocation}/QA/HedgeMark.SwiftMessageHandler.Tests.dll"/>
      <arg value="/resultsfile:${testResults}\TestResults.trx"/> 
     </exec>
   </target>
