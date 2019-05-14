@@ -49,14 +49,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     { "mData": "WireId", "sTitle": "Id"},
                     { "mData": "FundName", "sTitle": "Fund" },
                     {
-                        "mData": "", "sTitle": "CounterParty",
-                        "mRender": function (tdata, type, row) {
-                            if (row.IsBookTransfer)
-                                return "BNY";
-                            else
-                                return row.Agreement.dmaCounterPartyOnBoarding.CounterpartyName;
-                        }
-
+                      "mData": "Counterparty", "sTitle": "CounterParty"
                     },
                     {
                         "mData": "TransferType", "sTitle": "Transfer Type"

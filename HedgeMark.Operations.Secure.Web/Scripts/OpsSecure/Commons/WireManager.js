@@ -192,7 +192,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
 
     $("#wireAmount").numericEditor({
-        bAllowNegative: true,
+        bAllowNegative: false,
         fnFocusInCallback: function () {
             if ($(this).text() == "0")
                 $(this).html('');

@@ -29,6 +29,19 @@ namespace HMOSecureMiddleware.Models
             get { return HMWire.hmsWireTransferTypeLKup.TransferType; }
         }
 
+        public string Counterparty
+        {
+            get
+            {
+                switch (HMWire.WireTransferTypeId)
+                {
+                    case 1: return SSITemplate.ServiceProvider;
+                    case 2: return "BNY";
+                    default: return "";
+                }
+            }
+        }
+
         public hmsWire HMWire { get; set; }
         public string WireCreatedBy { get; set; }
         public string WireLastUpdatedBy { get; set; }

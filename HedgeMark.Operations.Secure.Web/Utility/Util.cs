@@ -43,5 +43,15 @@ namespace HMOSecureWeb.Utility
 
             return "Unknown";
         }
+
+        public static bool IsAuthorizedWireApprover(this IPrincipal principal)
+        {
+            return principal != null && principal.IsInRole(OpsSecureUserRoles.WireApprover);
+        }
+
+        public static bool IsAuthorizedWireInitiator(this IPrincipal principal)
+        {
+            return principal != null && principal.IsInRole(OpsSecureUserRoles.WireInitiator);
+        }
     }
 }
