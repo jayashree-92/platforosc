@@ -175,7 +175,7 @@
   </fileset>
 
   <!-- target for SQL Process, includes files in fileset deployFiles-->
-  <target name="SQLBuildTest" depends="SQLBuild">
+  <target name="SQLBuildTest" depends="CopyDevDeployServer2">
     <nant>
       <buildfiles refid="SQLFilesTest" />
     </nant>
