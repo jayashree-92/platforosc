@@ -198,8 +198,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $(this).html('');
         },
         fnFocusOutCallback: function () {
-            $scope.WireTicket.Amount = $.convertToNumber($(this).text(), true);
-            $(this).html($.convertToCurrency($(this).text(), 2));
+            $scope.WireTicket.Amount = Math.abs($.convertToNumber($(this).text(), true));
+            $(this).html($.convertToCurrency($scope.WireTicket.Amount, 2));
         }
     });
 
