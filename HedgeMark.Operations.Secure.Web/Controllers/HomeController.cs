@@ -10,6 +10,7 @@ using Hangfire;
 using HMOSecureWeb.Jobs;
 using log4net;
 using HMOSecureWeb.Utility;
+using System.Data.Entity;
 
 namespace HMOSecureWeb.Controllers
 {
@@ -107,7 +108,7 @@ namespace HMOSecureWeb.Controllers
                     .Include("hmsWireStatusLkup")
                     .Include("hmsWireTransferTypeLKup")
                     .Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (statusId == 0 || s.WireStatusId == statusId)
-                                                    || s.CreatedAt == endContextDate && (statusId == 0 || s.WireStatusId == statusId)).ToList();
+                                                    || DbFunctions.TruncateTime(s.CreatedAt) == DbFunctions.TruncateTime(endContextDate) && (statusId == 0 || s.WireStatusId == statusId)).ToList();
             }
 
            // List<dmaAgreementOnBoarding> wireAgreements;
