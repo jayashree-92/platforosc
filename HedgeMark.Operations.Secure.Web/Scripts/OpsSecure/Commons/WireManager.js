@@ -133,7 +133,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isCancelEnabled = response.data.isCancelEnabled;
             $scope.isApprovedOrFailed = response.data.isApprovedOrFailed;
             $scope.isInitiationEnabled = response.data.isInitiationEnabled;
-            $scope.IsDraftEnabled = response.data.isDraftEnabled;
+            $scope.isDraftEnabled = response.data.isDraftEnabled;
             $scope.wireTicketObj.HMWire.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
             $scope.castToDate($scope.wireTicketObj.SendingAccount);
@@ -399,27 +399,42 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.WireTicket.ValueDate = angular.element("#wireValueDate").text();
         $scope.WireTicket.PaymentOrReceipt = "Payment";
         $scope.WireTicket.SendingAccountNumber = angular.copy($scope.accountDetail.AccountNumber);
-        $scope.WireTicket.SendingPlatform = "SWIFT";
-        $scope.WireTicket.ReceivingAccountNumber = $scope.WireTicket.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.AccountNumber) : angular.copy($scope.ssiTemplate.AccountNumber);
-        $scope.WireTicket.Currency = $scope.WireTicket.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.Currency) : angular.copy($scope.ssiTemplate.Currency);
         $scope.WireTicket.OnBoardAccountId = angular.copy($scope.accountDetail.onBoardingAccountId);
-        $scope.WireTicket.OnBoardSSITemplateId = $scope.WireTicket.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : angular.copy($scope.ssiTemplate.onBoardingSSITemplateId);
-        $scope.WireTicket.WireMessageTypeId = angular.element("#liMessageType").select2("val");
-        $scope.WireTicket.DeliveryCharges = $scope.WireTicket.WireMessageTypeId == "1" ? angular.element("#liDeliveryCharges").select2("val") : null;
-
-        if ($scope.WireTicket.WireMessageTypeId != "" && ($scope.WireTicket.WireMessageTypeId != "1" || ($scope.WireTicket.WireMessageTypeId == "1" && $scope.WireTicket.DeliveryCharges != "")) && ($scope.WireTicket.Amount != 0)) {
-            $("#wireErrorStatus").collapse("hide");
-            $scope.validationMsg = "";
-            return true;
+        $scope.WireTicket.SendingPlatform = "SWIFT";
+        if ($scope.wireTicketObj.IsNotice) {
+            $scope.WireTicket.ReceivingAccountNumber = " ";
+            $scope.WireTicket.Currency = angular.copy($scope.accountDetail.Currency);
+            $scope.WireTicket.OnBoardSSITemplateId = 0;
         }
         else {
-            if ($scope.WireTicket.WireMessageTypeId == "1" && $scope.WireTicket.DeliveryCharges == "")
-                $scope.validationMsg = "Please select the delivery charges";
-            else
-                $scope.validationMsg = "Please fill the required details to initiate the wire";
-            $("#wireErrorStatus").collapse("show");
-            return false;
+            $scope.WireTicket.ReceivingAccountNumber = $scope.wireTicketObj.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.AccountNumber) : angular.copy($scope.ssiTemplate.AccountNumber);
+            $scope.WireTicket.Currency = $scope.wireTicketObj.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.Currency) : angular.copy($scope.ssiTemplate.Currency);
+            $scope.WireTicket.OnBoardSSITemplateId = $scope.wireTicketObj.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : angular.copy($scope.ssiTemplate.onBoardingSSITemplateId);
         }
+        //$scope.WireTicket.OnBoardAgreementId = !$scope.wireTicketObj.IsBookTransfer && $scope.wireObj.IsAdhocWire ? $("#liAgreement").select2('val') : angular.copy($scope.wireObj.AgreementId);
+        $scope.WireTicket.WireMessageTypeId = angular.element("#liMessageType").select2('val');
+        $scope.WireTicket.DeliveryCharges = $scope.WireTicket.WireMessageTypeId == "1" ? angular.element("#liDeliveryCharges").select2('val') : null;
+
+        if ($scope.WireTicket.WireStatusId == 0)
+            $scope.WireTicket.hmFundId = $scope.wireObj.IsAdhocWire ? $("#liFund").select2('val') : 0;
+
+            if ($scope.WireTicket.Amount != 0) {
+                if (!$scope.isDeadlineCrossed || $scope.wireComments.trim() != "") {
+                    $("#wireErrorStatus").collapse("hide");
+                    $scope.validationMsg = "";
+                    return true;
+                }
+                else {
+                    $("#wireErrorStatus").collapse("show");
+                    $scope.validationMsg = "Please enter the comments to initiate the wire as deadline is crossed.";
+                    return false;
+                }
+            }
+            else {
+                $("#wireErrorStatus").collapse("show");
+                $scope.validationMsg = "Please enter a non-zero amount to initiate the wire";
+                return false;
+            }
     }
 
     $scope.castToDate = function (account) {

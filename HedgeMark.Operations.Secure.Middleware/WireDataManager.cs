@@ -113,7 +113,7 @@ namespace HMOSecureMiddleware
                 hmWire.hmsSwiftStatusLkup.hmsWireWorkflowLogs = null;
             }
             hmWire.hmsWireWorkflowLogs = hmWire.hmsWireWorkflowLogs.OrderByDescending(s => s.CreatedAt).ToList();
-            dmaAgreementOnBoarding wireAgreement;
+            //dmaAgreementOnBoarding wireAgreement;
             onBoardingAccount wireSendingAccount;
             onBoardingAccount wireReceivingAccount;
             onBoardingSSITemplate wireSSITemplate;
@@ -125,9 +125,9 @@ namespace HMOSecureMiddleware
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
-                wireAgreement = context.dmaAgreementOnBoardings.Include("onboardingFund")
-                                                                .Include("dmaCounterPartyOnBoarding")
-                                                                .FirstOrDefault(s => hmWire.OnBoardAgreementId == s.dmaAgreementOnBoardingId) ?? new dmaAgreementOnBoarding();
+                //wireAgreement = context.dmaAgreementOnBoardings.Include("onboardingFund")
+                //                                                .Include("dmaCounterPartyOnBoarding")
+                //                                                .FirstOrDefault(s => hmWire.OnBoardAgreementId == s.dmaAgreementOnBoardingId) ?? new dmaAgreementOnBoarding();
 
                 var userIds = hmWire.hmsWireWorkflowLogs.Select(s => s.CreatedBy).ToList();
                 userIds.AddRange(hmWire.hmsWireDocuments.Select(s => s.CreatedBy).ToList());
@@ -142,22 +142,22 @@ namespace HMOSecureMiddleware
                 wireSSITemplate = context.onBoardingSSITemplates.FirstOrDefault(s => hmWire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate();
             }
 
-            wireAgreement.dmaAgreementDocuments = null;
-            wireAgreement.dmaAgreementSettlementInstructions = null;
-            wireAgreement.dmaAgreementOnBoardingChecklists = null;
-            wireAgreement.onBoardingAccounts = null;
-            if (wireAgreement.onboardingFund != null)
-            {
-                wireAgreement.onboardingFund.dmaAgreementOnBoardings = null;
-                wireAgreement.onboardingFund.onBoardingAccounts = null;
-            }
-            if (wireAgreement.dmaCounterPartyOnBoarding != null)
-                wireAgreement.dmaCounterPartyOnBoarding.dmaAgreementOnBoardings = null;
+            //wireAgreement.dmaAgreementDocuments = null;
+            //wireAgreement.dmaAgreementSettlementInstructions = null;
+            //wireAgreement.dmaAgreementOnBoardingChecklists = null;
+            //wireAgreement.onBoardingAccounts = null;
+            //if (wireAgreement.onboardingFund != null)
+            //{
+            //    wireAgreement.onboardingFund.dmaAgreementOnBoardings = null;
+            //    wireAgreement.onboardingFund.onBoardingAccounts = null;
+            //}
+            //if (wireAgreement.dmaCounterPartyOnBoarding != null)
+            //    wireAgreement.dmaCounterPartyOnBoarding.dmaAgreementOnBoardings = null;
 
             return new WireTicket()
             {
                 HMWire = hmWire,
-                Agreement = wireAgreement,
+                //Agreement = wireAgreement,
                 SendingAccount = wireSendingAccount,
                 ReceivingAccount = hmWire.WireTransferTypeId == 2 ? wireReceivingAccount : new onBoardingAccount(),
                 SSITemplate = wireSSITemplate,

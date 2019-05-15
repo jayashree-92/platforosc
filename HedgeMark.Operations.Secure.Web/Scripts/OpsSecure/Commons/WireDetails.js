@@ -11,7 +11,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
     $("#modalToRetrieveWires").on("show.bs.modal", function () {
     }).on("shown.bs.modal", function () {
         $scope.IsWireTicketModelOpen = true;
-        $opsSharedScopes.get("wireInitiationCtrl").fnLoadWireTicketDetails($scope.wireObj.WireId, $scope.wireObj.HMWire.hmsWirePurposeLkup.ReportName, $scope.wireObj.HMWire.hmsWirePurposeLkup.Purpose, $scope.wireObj.Agreement.AgreementShortName);
+        $opsSharedScopes.get("wireInitiationCtrl").fnLoadWireTicketDetails($scope.wireObj.WireId, $scope.wireObj.HMWire.hmsWirePurposeLkup.ReportName, $scope.wireObj.HMWire.hmsWirePurposeLkup.Purpose, "");
         $scope.$emit("wireTicketModelOpen");
     }).on("hidden.bs.modal", function () {
         $scope.IsWireTicketModelOpen = false;
@@ -54,12 +54,12 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     {
                         "mData": "TransferType", "sTitle": "Transfer Type"
                     },
-                    {
-                        "mData": "Agreement.AgreementShortName", "sTitle": "Agreement",
-                        "mRender": function (tdata) {
-                            return "<div>" + (tdata != null ? tdata : "N/A") + "</div>";
-                        }
-                    },
+                    //{
+                    //    "mData": "Agreement.AgreementShortName", "sTitle": "Agreement",
+                    //    "mRender": function (tdata) {
+                    //        return "<div>" + (tdata != null ? tdata : "N/A") + "</div>";
+                    //    }
+                    //},
                     {
                         "mData": "HMWire.ValueDate", "sTitle": "Value Date",
                         "type": "dotnet-date",
@@ -163,7 +163,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 //"scrollY": $("#pageMainContent").offset().top + 600,
                 //stateSave: true,
                 //"scrollX": true,
-                "order": [[17, "desc"]],
+                "order": [[16, "desc"]],
                 //"bSort": false,
                 "bPaginate": false,
                 iDisplayLength: -1,

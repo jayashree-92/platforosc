@@ -32,9 +32,10 @@ namespace HMOSecureMiddleware
 
             message.AppendFormat("{0}{1} Wire of {2} for ", wireTicket.IsBookTransfer ? "Book transfer -" : string.Empty, wireTicket.HMWire.hmsWireMessageType.MessageType, wireTicket.HMWire.Amount.ToCurrency());
 
-            message.Append(wireTicket.IsBookTransfer
-                ? wireTicket.FundName
-                : wireTicket.Agreement.AgreementShortName);
+            //message.Append(wireTicket.IsBookTransfer
+            //    ? wireTicket.FundName
+            //    : wireTicket.Agreement.AgreementShortName);
+            message.Append(wireTicket.FundName);
 
             message.AppendFormat(" is {0}", wireStatus);
 

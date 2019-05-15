@@ -18,31 +18,51 @@ namespace HMOSecureMiddleware.Models
                 return HMWire == null ? 0 : HMWire.hmsWireId;
             }
         }
-
         public bool IsBookTransfer
         {
-            get { return HMWire.WireTransferTypeId == 2; }
+            get { return HMWire.hmsWireTransferTypeLKup == null ? false : HMWire.hmsWireTransferTypeLKup.TransferType == "Book Transfer"; }
+        }
+
+        public bool IsNotice
+        {
+            get { return HMWire.hmsWireTransferTypeLKup == null ? false : HMWire.hmsWireTransferTypeLKup.TransferType == "Notice"; }
         }
 
         public string TransferType
         {
-            get { return HMWire.hmsWireTransferTypeLKup.TransferType; }
+            get { return HMWire.hmsWireTransferTypeLKup == null ? "Normal Transfer" : HMWire.hmsWireTransferTypeLKup.TransferType; }
         }
 
+        private string _counterparty;
         public string Counterparty
         {
             get
             {
-                switch (HMWire.WireTransferTypeId)
+                switch (TransferType)
                 {
-                    case 1: return SSITemplate.ServiceProvider;
-                    case 2: return "BNY";
-                    default: return "";
+                    case "Normal Transfer": return _counterparty;
+                    case "Book Transfer": return "BNY";
+                    case "Fee/Expense Payment": return SSITemplate.ServiceProvider;
+                    default: return _counterparty;
                 }
             }
+            set
+            {
+                _counterparty = value;
+            }
         }
-
-        public hmsWire HMWire { get; set; }
+        private hmsWire _hmWire;
+        public hmsWire HMWire
+        {
+            get
+            {
+                return _hmWire == null ? new hmsWire() : _hmWire;
+            }
+            set
+            {
+                _hmWire = value;
+            }
+        }
         public string WireCreatedBy { get; set; }
         public string WireLastUpdatedBy { get; set; }
         public List<string> AttachmentUsers { get; set; }
@@ -63,7 +83,7 @@ namespace HMOSecureMiddleware.Models
         {
             get
             {
-                return IsBookTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
+                return IsNotice ? SendingAccount.Currency : IsBookTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
             }
         }
         public List<KeyValuePair<string, string>> SwiftMessages { get; set; }
