@@ -117,6 +117,7 @@ namespace HMOSecureMiddleware
             onBoardingAccount wireSendingAccount;
             onBoardingAccount wireReceivingAccount;
             onBoardingSSITemplate wireSSITemplate;
+            dmaCounterPartyOnBoarding counterparty;
             List<string> workflowUsers;
             List<string> attachmentUsers;
 
@@ -140,6 +141,7 @@ namespace HMOSecureMiddleware
                 wireSendingAccount = context.onBoardingAccounts.FirstOrDefault(s => hmWire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount();
                 wireReceivingAccount = context.onBoardingAccounts.FirstOrDefault(s => hmWire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount();
                 wireSSITemplate = context.onBoardingSSITemplates.FirstOrDefault(s => hmWire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate();
+                counterparty = context.dmaCounterPartyOnBoardings.FirstOrDefault(s => wireSSITemplate.TemplateEntityId == s.dmaCounterPartyOnBoardId);
             }
 
             //wireAgreement.dmaAgreementDocuments = null;
@@ -163,6 +165,7 @@ namespace HMOSecureMiddleware
                 SSITemplate = wireSSITemplate,
                 AttachmentUsers = attachmentUsers,
                 WorkflowUsers = workflowUsers,
+                Counterparty = (counterparty ?? new dmaCounterPartyOnBoarding()).CounterpartyName,
                 SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireId),
             };
         }
