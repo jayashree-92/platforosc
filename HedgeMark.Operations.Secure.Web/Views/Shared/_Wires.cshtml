@@ -817,7 +817,7 @@
                     <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
                 </button>
                 <button id="cancelWire" type="button" class="btn btn-sm btn-info  ng-show-only" ng-disabled="isUserActionDone" ng-if="isCancelEnabled" ng-click="confirmCancellation()" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Cancelling...</span>">
-                    <i class="glyphicon glyphicon-repeat"></i>&nbsp;Cancel
+                    <i class="glyphicon glyphicon-repeat"></i>&nbsp;{{ WireTicket.SwiftStatusId == 1 ? "Reject" : "Cancel"  }}
                 </button>
                 <a href="#" class="btn btn-sm btn-default" style="vertical-align:-webkit-baseline-middle;" data-dismiss="modal">Dismiss</a>
                 <p />

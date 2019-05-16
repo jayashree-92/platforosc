@@ -239,7 +239,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case 3: angular.element("#workflowStatus_" + index).addClass("text-success");
                 return "Approved" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
             case 4: angular.element("#workflowStatus_" + index).addClass("text-blocked");
-                return "Cancelled" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);;
+                angular.element("#workflowStatus_" + index).addClass("text-blocked");
+                if($scope.WireTicket.SwiftStatusId == 1)
+                    return "Rejected";
+                else 
+                    return  "Cancelled" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
             case 5: angular.element("#workflowStatus_" + index).addClass("text-danger");
                 return "Failed";// + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
 
@@ -252,7 +256,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
             case 1: return "";
             case 2: if ($container != null) $container.addClass("text-warning");
-                return " & Processing";
+                return " & is Processing";
             case 3: if ($container != null) $container.addClass("text-info");
                 return " & Acknowledged";
             case 4: if ($container != null) $container.addClass("text-dander");
@@ -277,7 +281,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case 3: angular.element("#spnwireStatus").addClass("text-success");
                 return "Approved";
             case 4: angular.element("#spnwireStatus").addClass("text-blocked");
-                return "Cancelled";
+                return $scope.WireTicket.SwiftStatusId == 1 ? "Rejected" : "Cancelled";
             case 5: angular.element("#spnwireStatus").addClass("text-danger");
                 return "Failed";
         }
@@ -359,7 +363,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.confirmCancellation = function () {
         angular.element('#cancelWire').popover('destroy').popover({
             trigger: 'click',
-            title: "Are you sure to cancel this wire?",
+            title: "Are you sure to " + ($scope.WireTicket.SwiftStatusId == 1 ? "reject" : "cancel") + " this wire?",
             placement: 'top',
             container: 'body',
             content: function () {
