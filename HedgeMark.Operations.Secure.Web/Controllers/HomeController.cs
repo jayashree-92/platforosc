@@ -226,10 +226,11 @@ namespace HMOSecureWeb.Controllers
             var isInitiationEnabled = !isDeadlineCrossed && (WireDataManager.WireStatus.Drafted == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId);
             var isDraftEnabled = !isDeadlineCrossed && (WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId || WireDataManager.WireStatus.Failed == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId
                                                         || (WireDataManager.WireStatus.Cancelled == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId && WireDataManager.SwiftStatus.NotInitiated == (WireDataManager.SwiftStatus)wireTicket.HMWire.SwiftStatusId));
-            var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan());
-            var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan());
+            var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
+            var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
             var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
-            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove });
+            var isLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == UserDetails.Id;
+            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser });
         }
 
         public JsonResult IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId)
@@ -399,11 +400,11 @@ namespace HMOSecureWeb.Controllers
                 { "PDT", "Pacific Daylight Timee" },
                 { "GMT", "Greenwich Mean Time" }
         };
-        public JsonResult GetTimeToApproveTheWire(DateTime cashSweepOfAccount, DateTime cutOffTimeOfAccount, DateTime valueDate, string cashSweepTimeZone)
+        public JsonResult GetTimeToApproveTheWire(DateTime? cashSweepOfAccount, DateTime? cutOffTimeOfAccount, DateTime valueDate, string cashSweepTimeZone)
         {
-            cashSweepOfAccount = valueDate.Date.Add(cashSweepOfAccount.TimeOfDay);
-            cutOffTimeOfAccount = valueDate.Date.Add(cutOffTimeOfAccount.TimeOfDay);
-            var timeToApprove = GetTimeToApprove(cashSweepOfAccount, cutOffTimeOfAccount, cashSweepTimeZone);
+            var cashSweepAccount = valueDate.Date.Add(cashSweepOfAccount.HasValue ? cashSweepOfAccount.Value.TimeOfDay : new TimeSpan(23, 59, 00));
+            var cutOffTimeAccount = valueDate.Date.Add(cutOffTimeOfAccount.HasValue ? cutOffTimeOfAccount.Value.TimeOfDay : new TimeSpan(23, 59, 00));
+            var timeToApprove = GetTimeToApprove(cashSweepAccount, cutOffTimeAccount, cashSweepTimeZone);
             return Json(timeToApprove);
         }
 

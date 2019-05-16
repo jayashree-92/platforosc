@@ -133,6 +133,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isCancelEnabled = response.data.isCancelEnabled;
             $scope.isApprovedOrFailed = response.data.isApprovedOrFailed;
             $scope.isInitiationEnabled = response.data.isInitiationEnabled;
+            $scope.isLastModifiedUser = response.data.isLastModifiedUser;
             $scope.isDraftEnabled = response.data.isDraftEnabled;
             $scope.wireTicketObj.HMWire.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
@@ -275,7 +276,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         switch ($scope.WireTicket.WireStatusId) {
             case 1: angular.element("#spnwireStatus").addClass("text-info");
-                return "Drafted";
+                return $scope.isLastModifiedUser ? "Modified" : "Drafted";
             case 2: angular.element("#spnwireStatus").addClass("text-warning");
                 return "Initiated";
             case 3: angular.element("#spnwireStatus").addClass("text-success");

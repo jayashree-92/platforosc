@@ -151,7 +151,7 @@
                                     <input ng-model="accountDetail.CashSweep" class="form-control control-label" readonly />
                                 </div>
                             </div>
-                            <div class="col-sm-12 col-md-9 col-lg-6 cashSweepTimeDiv">
+                            <div class="col-sm-12 col-md-9 col-lg-6 cashSweepTimeDiv" ng-show="accountDetail.CashSweep == 'Yes'">
                                 <div class="col-sm-8 col-md-4 col-lg-4">
                                     <label class="control-label">Cash Sweep Time</label>
                                 </div>
@@ -284,13 +284,13 @@
                                 <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3 ">
-                                <input type="text" ng-model="accountDetail.IntermediaryBICorABA" ng-show="accountDetail.IntermediaryType != 'Account Name'" class="form-control control-label" readonly />
+                                <input type="text" ng-model="accountDetail.IntermediaryBICorABA" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="accountDetail.BeneficiaryBICorABA" ng-show="accountDetail.BeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
+                                <input type="text" ng-model="accountDetail.BeneficiaryBICorABA" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="accountDetail.UltimateBeneficiaryBICorABA" ng-show="accountDetail.IntermediaryType != 'Account Name'" class="form-control control-label" readonly />
+                                <input type="text" ng-model="accountDetail.UltimateBeneficiaryBICorABA" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
                             </div>
                         </div>
                         <p />
@@ -305,7 +305,8 @@
                                 <input type="text" ng-model="accountDetail.BeneficiaryBankName" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" name="BankName" ng-model="accountDetail.UltimateBeneficiaryBankName" class="form-control control-label" readonly />
+                                <input type="text" name="BankName" ng-model="accountDetail.UltimateBeneficiaryBankName" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
+                                <input type="text" ng-model="accountDetail.UltimateBeneficiaryAccountName" ng-show="accountDetail.UltimateBeneficiaryType == 'Account Name'" class="form-control control-label" readonly />
                             </div>
                         </div>
                         <p />
@@ -314,10 +315,10 @@
                                 <label class="control-label" style="margin-left: 15px;">Bank Address </label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control" rows="3" cols="10" ng-model="accountDetail.IntermediaryBankAddress" ng-show="accountDetail.IntermediaryType != 'Account Name'" readonly></textarea>
+                                <textarea class="form-control" rows="3" cols="10" ng-model="accountDetail.IntermediaryBankAddress" readonly></textarea>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control" rows="3" cols="10" ng-model="accountDetail.BeneficiaryBankAddress" ng-show="accountDetail.BeneficiaryType != 'Account Name'" readonly></textarea>
+                                <textarea class="form-control" rows="3" cols="10" ng-model="accountDetail.BeneficiaryBankAddress" readonly></textarea>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <textarea class="form-control modalInputWidth" rows="3" cols="10" ng-model="accountDetail.UltimateBeneficiaryBankAddress" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" readonly></textarea>
@@ -380,7 +381,7 @@
                                     <input ng-model="receivingAccountDetail.CashSweep" class="form-control control-label" readonly />
                                 </div>
                             </div>
-                            <div class="col-sm-12 col-md-9 col-lg-6 cashSweepTimeDiv">
+                            <div class="col-sm-12 col-md-9 col-lg-6 cashSweepTimeDiv" ng-show="receivingAccountDetail.CashSweep == 'Yes'">
                                 <div class="col-sm-8 col-md-4 col-lg-4">
                                     <label class="control-label">Cash Sweep Time</label>
                                 </div>
@@ -511,10 +512,10 @@
                                 <label class="control-label" style="margin-left:15px;">ABA/BIC</label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="receivingAccountDetail.IntermediaryBICorABA" ng-show="receivingAccountDetail.IntermediaryType != 'Account Name'" class="form-control control-label" readonly />
+                                <input type="text" ng-model="receivingAccountDetail.IntermediaryBICorABA" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="receivingAccountDetail.BeneficiaryBICorABA" ng-show="receivingAccountDetail.BeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
+                                <input type="text" ng-model="receivingAccountDetail.BeneficiaryBICorABA" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <input type="text" ng-model="receivingAccountDetail.UltimateBeneficiaryBICorABA" ng-show="receivingAccountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
@@ -532,7 +533,8 @@
                                 <input type="text" ng-model="receivingAccountDetail.BeneficiaryBankName" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" name="BankName" ng-model="receivingAccountDetail.UltimateBeneficiaryBankName" class="form-control control-label" readonly />
+                                <input type="text" name="BankName" ng-model="receivingAccountDetail.UltimateBeneficiaryBankName" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
+                                <input type="text" ng-model="receivingAccountDetail.UltimateBeneficiaryAccountName" ng-show="accountDetail.UltimateBeneficiaryType == 'Account Name'" class="form-control control-label" readonly />
                             </div>
                         </div>
                         <p />
@@ -541,10 +543,10 @@
                                 <label class="control-label" style="margin-left:15px;">Bank Address </label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control" rows="3" cols="10" ng-model="receivingAccountDetail.IntermediaryBankAddress" ng-show="receivingAccountDetail.IntermediaryType != 'Account Name'" readonly></textarea>
+                                <textarea class="form-control" rows="3" cols="10" ng-model="receivingAccountDetail.IntermediaryBankAddress" readonly></textarea>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control" rows="3" cols="10" ng-model="receivingAccountDetail.BeneficiaryBankAddress" ng-show="receivingAccountDetail.BeneficiaryType != 'Account Name'" readonly></textarea>
+                                <textarea class="form-control" rows="3" cols="10" ng-model="receivingAccountDetail.BeneficiaryBankAddress" readonly></textarea>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <textarea class="form-control modalInputWidth" rows="3" cols="10" ng-model="receivingAccountDetail.UltimateBeneficiaryBankAddress" ng-show="receivingAccountDetail.UltimateBeneficiaryType != 'Account Name'" readonly></textarea>
@@ -697,10 +699,10 @@
                                 <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="ssiTemplate.IntermediaryBICorABA" ng-show="ssiTemplate.IntermediaryType != 'Account Name'" class="form-control control-label" readonly />
+                                <input type="text" ng-model="ssiTemplate.IntermediaryBICorABA" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="ssiTemplate.BeneficiaryBICorABA" ng-show="ssiTemplate.BeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
+                                <input type="text" ng-model="ssiTemplate.BeneficiaryBICorABA" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <input type="text" ng-model="ssiTemplate.UltimateBeneficiaryBICorABA" ng-show="ssiTemplate.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
@@ -718,7 +720,10 @@
                                 <input type="text" ng-model="ssiTemplate.BeneficiaryBankName" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" name="BankName" ng-model="ssiTemplate.UltimateBeneficiaryBankName" class="form-control control-label" readonly />
+                                <div class="col-sm-6 col-md-3 col-lg-3">
+                                    <input type="text" name="BankName" ng-model="ssiTemplate.UltimateBeneficiaryBankName" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
+                                    <input type="text" ng-model="ssiTemplate.UltimateBeneficiaryAccountName" ng-show="accountDetail.UltimateBeneficiaryType == 'Account Name'" class="form-control control-label" readonly />
+                                </div>
                             </div>
                         </div>
                         <p />
@@ -727,10 +732,10 @@
                                 <label class="control-label" style="margin-left: 15px;">Bank Address </label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control" rows="3" cols="10" ng-model="ssiTemplate.IntermediaryBankAddress" ng-show="ssiTemplate.IntermediaryType != 'Account Name'" readonly></textarea>
+                                <textarea class="form-control" rows="3" cols="10" ng-model="ssiTemplate.IntermediaryBankAddress" readonly></textarea>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control" rows="3" cols="10" ng-model="ssiTemplate.BeneficiaryBankAddress" ng-show="ssiTemplate.BeneficiaryType != 'Account Name'" readonly></textarea>
+                                <textarea class="form-control" rows="3" cols="10" ng-model="ssiTemplate.BeneficiaryBankAddress" readonly></textarea>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <textarea class="form-control modalInputWidth" rows="3" cols="10" ng-model="ssiTemplate.UltimateBeneficiaryBankAddress" ng-show="ssiTemplate.UltimateBeneficiaryType != 'Account Name'" readonly></textarea>
@@ -807,8 +812,8 @@
 
             <div class="modal-footer form-inline" style="padding: 8px 20px 8px 20px;position: sticky;bottom: 0;background: #F5F5F5;border-top: 1px solid lightgray;">
                 <textarea type="text" placeholder="Enter Comments" id="wireComment" ng-model="wireComments" class="form-control" rows="2" style="width:50%;float:left;"></textarea>
-                <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="isDraftEnabled" ng-click="fnUpdateWireWithStatus(1)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Reverting to Draft...</span>">
-                    <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save as Draft
+                <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="isDraftEnabled" ng-click="fnUpdateWireWithStatus(1)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ isLastModifiedUser ?  'Modifying' : 'Reverting to Draft' }}...</span>">
+                    <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;{{ isLastModifiedUser ? "Modify" : "Save as Draft" }}
                 </button>
                 <button id="initiateWire" type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="isInitiationEnabled" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Initiating...</span>">
                     <i class="glyphicon glyphicon-plus"></i>&nbsp;Re-Initiate Wire
@@ -816,7 +821,7 @@
                 <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-disabled="isUserActionDone" ng-if="isAuthorizedUserToApprove" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
                     <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
                 </button>
-                <button id="cancelWire" type="button" class="btn btn-sm btn-info  ng-show-only" ng-disabled="isUserActionDone" ng-if="isCancelEnabled" ng-click="confirmCancellation()" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Cancelling...</span>">
+                <button id="cancelWire" type="button" class="btn btn-sm btn-info  ng-show-only" ng-disabled="isUserActionDone" ng-if="isCancelEnabled" ng-click="confirmCancellation()" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ WireTicket.SwiftStatusId == 1 ?  'Rejecting' : 'Cancelling' }}...</span>">
                     <i class="glyphicon glyphicon-repeat"></i>&nbsp;{{ WireTicket.SwiftStatusId == 1 ? "Reject" : "Cancel"  }}
                 </button>
                 <a href="#" class="btn btn-sm btn-default" style="vertical-align:-webkit-baseline-middle;" data-dismiss="modal">Dismiss</a>
