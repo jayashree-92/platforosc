@@ -304,9 +304,11 @@
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <input type="text" ng-model="accountDetail.BeneficiaryBankName" class="form-control control-label" readonly />
                             </div>
-                            <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" name="BankName" ng-model="accountDetail.UltimateBeneficiaryBankName" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
-                                <input type="text" ng-model="accountDetail.UltimateBeneficiaryAccountName" ng-show="accountDetail.UltimateBeneficiaryType == 'Account Name'" class="form-control control-label" readonly />
+                            <div class="col-sm-6 col-md-3 col-lg-3" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'">
+                                <input type="text" name="BankName" ng-model="accountDetail.UltimateBeneficiaryBankName" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3" ng-show="accountDetail.UltimateBeneficiaryType == 'Account Name'">
+                                <input type="text" ng-model="accountDetail.UltimateBeneficiaryAccountName" class="form-control control-label" readonly />
                             </div>
                         </div>
                         <p />
@@ -532,9 +534,11 @@
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <input type="text" ng-model="receivingAccountDetail.BeneficiaryBankName" class="form-control control-label" readonly />
                             </div>
-                            <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" name="BankName" ng-model="receivingAccountDetail.UltimateBeneficiaryBankName" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
-                                <input type="text" ng-model="receivingAccountDetail.UltimateBeneficiaryAccountName" ng-show="accountDetail.UltimateBeneficiaryType == 'Account Name'" class="form-control control-label" readonly />
+                            <div class="col-sm-6 col-md-3 col-lg-3" ng-show="receivingAccountDetail.UltimateBeneficiaryType != 'Account Name'">
+                                <input type="text" name="BankName" ng-model="receivingAccountDetail.UltimateBeneficiaryBankName" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3" ng-show="receivingAccountDetail.UltimateBeneficiaryType == 'Account Name'">
+                                <input type="text" ng-model="receivingAccountDetail.UltimateBeneficiaryAccountName" class="form-control control-label" readonly />
                             </div>
                         </div>
                         <p />
@@ -719,11 +723,11 @@
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <input type="text" ng-model="ssiTemplate.BeneficiaryBankName" class="form-control control-label" readonly />
                             </div>
-                            <div class="col-sm-6 col-md-3 col-lg-3">
-                                <div class="col-sm-6 col-md-3 col-lg-3">
-                                    <input type="text" name="BankName" ng-model="ssiTemplate.UltimateBeneficiaryBankName" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
-                                    <input type="text" ng-model="ssiTemplate.UltimateBeneficiaryAccountName" ng-show="accountDetail.UltimateBeneficiaryType == 'Account Name'" class="form-control control-label" readonly />
-                                </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3" ng-show="ssiTemplate.UltimateBeneficiaryType != 'Account Name'">
+                                <input type="text" name="BankName" ng-model="ssiTemplate.UltimateBeneficiaryBankName" class="form-control control-label" readonly />
+                            </div>
+                            <div class="col-sm-6 col-md-3 col-lg-3" ng-show="ssiTemplate.UltimateBeneficiaryType == 'Account Name'">
+                                <input type="text" ng-model="ssiTemplate.UltimateBeneficiaryAccountName" class="form-control control-label" readonly />
                             </div>
                         </div>
                         <p />
