@@ -106,6 +106,7 @@ namespace HMOSecureMiddleware
             {
                 s.hmsWire = null;
                 s.hmsWireStatusLkup = null;
+                s.hmsWireLogs = null;
             });
             if (hmWire.hmsSwiftStatusLkup != null)
             {
