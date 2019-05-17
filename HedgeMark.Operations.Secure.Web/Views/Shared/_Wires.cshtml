@@ -296,7 +296,7 @@
                         <p />
                         <div class="row">
                             <div class="col-sm-6 col-md-3 col-lg-2">
-                                <label class="control-label" style="margin-left: 15px;">Bank Name </label>
+                                <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <input type="text" ng-model="accountDetail.IntermediaryBankName" class="form-control control-label" readonly />
@@ -526,7 +526,7 @@
                         <p />
                         <div class="row">
                             <div class="col-sm-6 col-md-3 col-lg-2">
-                                <label class="control-label" style="margin-left:15px;">Bank Name </label>
+                                <label class="control-label" style="margin-left:15px;">Bank/Account Name </label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <input type="text" ng-model="receivingAccountDetail.IntermediaryBankName" class="form-control control-label" readonly />
@@ -586,7 +586,7 @@
                         </div>
                         <p />
                         <div class="row">
-                            <div class="col-sm-12 col-md-9 col-lg-6">
+                            <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Fee/Expense Payment'">
                                 <div class="col-sm-8 col-md-4 col-lg-4">
                                     <label class="control-label">Service Provider</label>
                                 </div>
@@ -715,7 +715,7 @@
                         <p />
                         <div class="row">
                             <div class="col-sm-6 col-md-3 col-lg-2">
-                                <label class="control-label" style="margin-left: 15px;">Bank Name </label>
+                                <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <input type="text" ng-model="ssiTemplate.IntermediaryBankName" class="form-control control-label" readonly />

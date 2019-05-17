@@ -51,7 +51,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     {
                       "mData": "Counterparty", "sTitle": "CounterParty",
                       "mRender": function (tdata) {
-                          return tdata == "" ? "N/A" : tdata;
+                          return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
                       }
                     },
                     {
@@ -75,7 +75,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     {
                         "mData": "ReceivingAccountName", "sTitle": "Receiving Account",
                         "mRender": function (tdata) {
-                            return tdata == "" ? "N/A" : tdata;
+                            return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
                         }
                     },
                     {
