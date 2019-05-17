@@ -41,7 +41,7 @@ namespace HMOSecureWeb
 
             app.UseHangfireDashboard("/jobs", options);
 
-            var queues = new List<string> { Environment.MachineName, HMOSecureMiddleware.Util.Utility.Environment }.Distinct().Select(s => s.ToLower()).ToArray();
+            var queues = new List<string> { Environment.MachineName, HMOSecureMiddleware.Util.Utility.Environment, "default" }.Distinct().Select(s => s.ToLower()).ToArray();
 
             app.UseHangfireServer(new BackgroundJobServerOptions { Queues = queues, WorkerCount = HangFireWorkerCount });
 
