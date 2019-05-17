@@ -85,7 +85,8 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                             switch (tdata) {
                                 case 1: return "<label class='label label-default'>Drafted</label>";
                                 case 2: return "<label class='label label-warning'>Pending</label>";
-                                case 3: return "<label class='label label-success'>" + ( row.HMWire.SwiftStatusId == 1 ? "Rejected" : "Cancelled" ) + "</label>";
+                                case 3: return "<label class='label label-success'>Approved</label>";
+                                case 4: return "<label class='label label-default'>" + (row.HMWire.SwiftStatusId == 1 ? "Rejected" : "Cancelled") + "</label>";
                                 case 5: return "<label class='label label-danger'>Failed</label>";
                             }
                         }
