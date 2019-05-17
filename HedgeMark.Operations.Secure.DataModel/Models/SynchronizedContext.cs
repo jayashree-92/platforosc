@@ -38,11 +38,11 @@ namespace HedgeMark.Operations.Secure.DataModel.Models
             return XElement.Load(typeof(OperationsSecureContext).Assembly.GetManifestResourceStream("Models.OperationsSecureModel.csdl"));
         }
     }
-    public class OperationsSettings
+    public class OperationsSecureSettings
     {
         private static readonly string connectionString;
 
-        static OperationsSettings()
+        static OperationsSecureSettings()
         {
             connectionString = new OperationsSecureContext().Database.Connection.ConnectionString;
         }

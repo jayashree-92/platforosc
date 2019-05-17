@@ -31,7 +31,7 @@ namespace HMOSecureWeb
         public void Configuration(IAppBuilder app)
         {
             var sqlOptions = new SqlServerStorageOptions { QueuePollInterval = TimeSpan.FromSeconds(HangFirePollingInterval) };
-            GlobalConfiguration.Configuration.UseSqlServerStorage(new OperationsSettings().ConnectionString, sqlOptions);
+            GlobalConfiguration.Configuration.UseSqlServerStorage(new OperationsSecureSettings().ConnectionString, sqlOptions);
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 5 });
 
             var options = new DashboardOptions
@@ -41,10 +41,7 @@ namespace HMOSecureWeb
 
             app.UseHangfireDashboard("/jobs", options);
 
-            // Multiple local machines for each developer. But DEV, QA & Prod have load balanced set up
-            var hostName = Environment.MachineName.ToLower();
-            var queueName = HMOSecureMiddleware.Utility.IsLocal() ? hostName : HMOSecureMiddleware.Utility.Environment;
-            var queues = new List<string> { hostName, queueName, "default" }.Distinct().ToArray();
+            var queues = new List<string> { Environment.MachineName, HMOSecureMiddleware.Util.Utility.Environment }.Distinct().Select(s => s.ToLower()).ToArray();
 
             app.UseHangfireServer(new BackgroundJobServerOptions { Queues = queues, WorkerCount = HangFireWorkerCount });
 

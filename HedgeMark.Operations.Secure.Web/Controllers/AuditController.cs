@@ -4,6 +4,7 @@ using HMOSecureMiddleware.Models;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using HMOSecureMiddleware.Util;
 
 namespace HMOSecureWeb.Controllers
 {

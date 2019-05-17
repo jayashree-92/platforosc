@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
 using HMOSecureMiddleware.Models;
@@ -325,8 +326,12 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field72 GetField72(WireTicket wire)
         {
-            var f72 = new Field72()
-                .setNarrativeLine1("/BNF/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SSITemplate.FFCNumber));
+            var f72 = new Field72();
+
+            if (wire.SendingAccount.SwiftGroup.StartsWith("BNY", StringComparison.InvariantCultureIgnoreCase))
+                f72.setNarrativeLine1("/FXS/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SSITemplate.FFCNumber));
+            else
+                f72.setNarrativeLine1("/BNF/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SSITemplate.FFCNumber));
 
             var fccName = wire.IsBookTransfer ? wire.ReceivingAccount.FFCName : wire.SSITemplate.FFCName;
             if (!string.IsNullOrWhiteSpace(fccName))

@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Com.HedgeMark.Commons;
 using HedgeMark.Operations.Secure.DataModel;
+using HMOSecureMiddleware.Util;
 using IBM.WMQ;
 using log4net;
 using MQC = IBM.WMQ.MQC;

@@ -1,8 +1,8 @@
-﻿using System.Globalization;
-using System;
+﻿using System;
+using System.Globalization;
 using Com.HedgeMark.Commons;
 
-namespace HMOSecureMiddleware
+namespace HMOSecureMiddleware.Util
 {
     public static class Utility
     {

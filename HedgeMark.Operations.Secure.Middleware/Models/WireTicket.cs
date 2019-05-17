@@ -6,6 +6,7 @@ using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler.Model;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT;
+using HMOSecureMiddleware.Util;
 
 namespace HMOSecureMiddleware.Models
 {

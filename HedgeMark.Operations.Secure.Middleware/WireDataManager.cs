@@ -7,6 +7,7 @@ using HMOSecureMiddleware.Models;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler;
 using HedgeMark.SwiftMessageHandler.Model;
+using HMOSecureMiddleware.Util;
 using log4net;
 
 namespace HMOSecureMiddleware

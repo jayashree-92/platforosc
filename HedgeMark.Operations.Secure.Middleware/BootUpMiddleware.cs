@@ -1,4 +1,5 @@
 ﻿using HMOSecureMiddleware.Queues;
+using HMOSecureMiddleware.Util;
 using log4net;
 
 namespace HMOSecureMiddleware
