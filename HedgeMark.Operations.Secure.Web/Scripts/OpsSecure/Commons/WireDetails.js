@@ -49,7 +49,10 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     { "mData": "WireId", "sTitle": "Id"},
                     { "mData": "FundName", "sTitle": "Fund" },
                     {
-                      "mData": "Counterparty", "sTitle": "CounterParty"
+                      "mData": "Counterparty", "sTitle": "CounterParty",
+                      "mRender": function (tdata) {
+                          return tdata == "" ? "N/A" : tdata;
+                      }
                     },
                     {
                         "mData": "TransferType", "sTitle": "Transfer Type"
@@ -69,7 +72,12 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     },
                     { "mData": "HMWire.hmsWirePurposeLkup.Purpose", "sTitle": "Wire Purpose" },
                     { "mData": "SendingAccount.AccountName", "sTitle": "Sending Account" },
-                    { "mData": "ReceivingAccountName", "sTitle": "Receiving Account" },
+                    {
+                        "mData": "ReceivingAccountName", "sTitle": "Receiving Account",
+                        "mRender": function (tdata) {
+                            return tdata == "" ? "N/A" : tdata;
+                        }
+                    },
                     {
                         "mData": "HMWire.Amount", "sTitle": "Amount",
                         "mRender": function (tdata, type, row) {
