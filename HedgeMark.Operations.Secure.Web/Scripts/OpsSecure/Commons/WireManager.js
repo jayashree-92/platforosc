@@ -170,11 +170,13 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
                 if (!$scope.isApprovedOrFailed) {
                     if ($scope.timeToApprove.Hours > 0) {
+                        $scope.isDeadlineCrossed = false;
                         $("#wireErrorStatus").collapse("hide");
                         $scope.validationMsg = "";
                     }
                     else {
                         $("#wireErrorStatus").collapse("show");
+                        $scope.isDeadlineCrossed = true;
                         $scope.validationMsg = "Note:Deadline crossed. Please select a future date for settlement.";
                     }
                 }
@@ -461,10 +463,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
             if ($scope.timeToApprove.Hours > 0) {
                 $("#wireErrorStatus").collapse("hide");
+                $scope.isDeadlineCrossed = false;
                 $scope.validationMsg = "";
             }
             else {
                 $("#wireErrorStatus").collapse("show");
+                $scope.isDeadlineCrossed = true;
                 $scope.validationMsg = "Deadline crossed. Please select a future date for settlement.";
             }
             $interval.cancel($scope.promise);

@@ -9,7 +9,7 @@
                         <span style="font-size: 15px;font-weight: bold">Wire Ticket Details  </span>
                         <span ng-if="!isApprovedOrFailed">
                             <span style="padding-top: 5px;font-size: 12px;">
-                                | &nbsp;Deadline To Approve:
+                                | &nbsp;<span ng-style="{'color': isDeadlineCrossed ? 'darkred' : 'black' }">Deadline To Approve:</span>
                             </span>
                             <i class="glyphicon glyphicon-time"></i>&nbsp;
                             <span style="position: absolute">
