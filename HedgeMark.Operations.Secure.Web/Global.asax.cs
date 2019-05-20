@@ -155,6 +155,21 @@ namespace HMOSecureWeb
             var encTicket = FormsAuthentication.Encrypt(ticket);
             var formCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket) { Domain = Utility.Util.Domain };
             Response.Cookies.Add(formCookie);
+
+
+            if (ActiveUsers.Contains(User.Identity.Name))
+                return;
+
+            ActiveUsers.Add(User.Identity.Name);
+            var auditData = new hmsUserAuditLog
+            {
+                Action = "Logged In",
+                Module = "Account",
+                Log = "Signed into Secure System",
+                CreatedAt = DateTime.Now,
+                UserName = User.Identity.Name
+            };
+            AuditManager.LogAudit(auditData);
         }
 
         private bool IsAlreadyAuthenticated()
@@ -186,20 +201,6 @@ namespace HMOSecureWeb
         {
             Session.Timeout = GlobalSessionTimeOut;
             Session["SessionStartTime"] = DateTime.Now;
-            //if (!ActiveUsers.Contains(User.Identity.Name))
-            //{
-            //    ActiveUsers.Add(User.Identity.Name);
-            //    hmsUserAuditLog auditData = new hmsUserAuditLog
-            //    {
-            //        Action = "Logged In",
-            //        Module = "Account",
-            //        Log = "Signed into Secure System",
-            //        CreatedAt = DateTime.Now,
-            //        UserName = User.Identity.Name
-            //    };
-            //    AuditManager.LogAudit(auditData);
-            //}
-
             Session["userName"] = User.Identity.Name;
         }
 
@@ -237,16 +238,15 @@ namespace HMOSecureWeb
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") { Expires = DateTime.Now.AddYears(-1) };
             Response.Cookies.Add(cookie);
 
-
-            //hmsUserAuditLog auditData = new hmsUserAuditLog
-            //{
-            //    Action = "Log Out",
-            //    Module = "Account",
-            //    Log = "Signed out from Secure System",
-            //    CreatedAt = DateTime.Now,
-            //    UserName = User.Identity.Name
-            //};
-            //AuditManager.LogAudit(auditData);
+            var auditData = new hmsUserAuditLog
+            {
+                Action = "Logged Out",
+                Module = "Account",
+                Log = "Signed out from Secure System",
+                CreatedAt = DateTime.Now,
+                UserName = User.Identity.Name
+            };
+            AuditManager.LogAudit(auditData);
 
         }
 
