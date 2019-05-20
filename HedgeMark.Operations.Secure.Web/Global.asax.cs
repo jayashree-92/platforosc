@@ -19,6 +19,7 @@ using log4net;
 using log4net.Config;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using HedgeMark.Operations.Secure.DataModel;
 
 namespace HMOSecureWeb
 {
@@ -107,8 +108,8 @@ namespace HMOSecureWeb
                 return;
             }
 
-             //if (Utility.Util.IsLowerEnvironment)
-             //   roles.Add(OpsSecureUserRoles.WireApprover);
+            //if (Utility.Util.IsLowerEnvironment)
+            //   roles.Add(OpsSecureUserRoles.WireApprover);
 
             if (!(roles.Contains(OpsSecureUserRoles.WireApprover) || roles.Contains(OpsSecureUserRoles.WireInitiator)))
             {
@@ -132,6 +133,18 @@ namespace HMOSecureWeb
                 return;
             }
 
+            //Add ASPNET Role for Entitlements - as they are currently assigned that way. We need to change it when Permission engine release is scheduled
+            using (var context = new AdminContext())
+            {
+                var userRole = (from aspUser in context.aspnet_Users
+                                join usr in context.hLoginRegistrations on aspUser.UserName equals usr.varLoginID
+                                where usr.intLoginID == userSso.intLoginID && aspUser.aspnet_Roles.Any(r => AuthorizationManager.AuthorizedDmaUserRoles.Contains(r.RoleName)) && !usr.isDeleted
+                                let role = aspUser.aspnet_Roles.Any(r => AuthorizationManager.AuthorizedDmaUserRoles.Contains(OpsSecureUserRoles.DMAAdmin)) ? OpsSecureUserRoles.DMAAdmin : OpsSecureUserRoles.DMAUser
+                                select role).FirstOrDefault() ?? string.Empty;
+
+                if (!string.IsNullOrWhiteSpace(userRole))
+                    roles.Add(userRole);
+            }
 
             var webIdentity = new GenericIdentity(email, "SiteMinder");
             var principal = new GenericPrincipal(webIdentity, roles.ToArray());

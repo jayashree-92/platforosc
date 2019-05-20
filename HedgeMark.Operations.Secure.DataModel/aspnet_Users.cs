@@ -14,6 +14,12 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class aspnet_Users
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public aspnet_Users()
+        {
+            this.aspnet_Roles = new HashSet<aspnet_Roles>();
+        }
+    
         public System.Guid ApplicationId { get; set; }
         public System.Guid UserId { get; set; }
         public string UserName { get; set; }
@@ -21,5 +27,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string MobileAlias { get; set; }
         public bool IsAnonymous { get; set; }
         public System.DateTime LastActivityDate { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<aspnet_Roles> aspnet_Roles { get; set; }
     }
 }

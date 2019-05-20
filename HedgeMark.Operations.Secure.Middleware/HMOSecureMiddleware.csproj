@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="AdminFundManager.cs" />
     <Compile Include="AuditManager.cs" />
+    <Compile Include="AuthorizationManager.cs" />
     <Compile Include="BootUpMiddleware.cs" />
     <Compile Include="FileSystemManager.cs" />
     <Compile Include="Models\AuditLogData.cs" />

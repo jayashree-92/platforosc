@@ -8,17 +8,11 @@ using System.Web.Security;
 using Com.HedgeMark.Commons;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.DataModel.Models;
+using HMOSecureMiddleware;
 using log4net;
-using log4net.Repository.Hierarchy;
 
 namespace HMOSecureWeb.Controllers
 {
-    public static class OpsSecureUserRoles
-    {
-        public const string WireInitiator = "hm-wire-initiator";
-        public const string WireApprover = "hm-wire-approver";
-    }
-
     public class AccountController : BaseController
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(AccountController));

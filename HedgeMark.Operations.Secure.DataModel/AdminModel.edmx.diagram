@@ -44,6 +44,9 @@
         <AssociationConnector Association="AdminModel.FK_onBoardingAccountSSITemplateMap_AccountId" />
         <AssociationConnector Association="AdminModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" />
         <AssociationConnector Association="AdminModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" />
+        <EntityTypeShape EntityType="AdminModel.dmaFundOnBoardPermission" Width="1.5" PointX="15" PointY="10.875" />
+        <AssociationConnector Association="AdminModel.FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId" />
+        <AssociationConnector Association="AdminModel.aspnet_UsersInRoles" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

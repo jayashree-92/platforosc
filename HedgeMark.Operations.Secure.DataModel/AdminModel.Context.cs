@@ -49,6 +49,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<onboardingFund> onboardingFunds { get; set; }
         public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
         public virtual DbSet<onBoardingSSITemplate> onBoardingSSITemplates { get; set; }
+        public virtual DbSet<dmaFundOnBoardPermission> dmaFundOnBoardPermissions { get; set; }
     
         public virtual ObjectResult<USP_NEXEN_GetUserDetails_Result> USP_NEXEN_GetUserDetails(string userID, string userType)
         {

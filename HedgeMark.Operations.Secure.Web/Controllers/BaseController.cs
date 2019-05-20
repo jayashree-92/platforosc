@@ -9,6 +9,12 @@ using HMOSecureMiddleware;
 
 namespace HMOSecureWeb.Controllers
 {
+
+    public enum OpsSecureSessionVars
+    {
+        AuthorizedUserData
+    }
+
     public class AuthorizedRolesAttribute : AuthorizeAttribute
     {
         public AuthorizedRolesAttribute(params string[] roles)
@@ -56,6 +62,26 @@ namespace HMOSecureWeb.Controllers
         {
             Session[key] = value;
         }
+
+        public AuthorizedData AuthorizedSessionData
+        {
+            get
+            {
+                var preferncesKey = string.Format("{0}{1}", UserName, OpsSecureSessionVars.AuthorizedUserData);
+                if (GetSessionValue(preferncesKey) != null)
+                    return (AuthorizedData)GetSessionValue(preferncesKey);
+
+                var authorizedData = AuthorizationManager.GetAuthorizedData(UserDetails.Id, UserName, User.IsInRole(OpsSecureUserRoles.DMAAdmin) ? OpsSecureUserRoles.DMAAdmin : User.IsInRole(OpsSecureUserRoles.DMAUser) ? OpsSecureUserRoles.DMAUser : string.Empty);
+                SetSessionValue(preferncesKey, authorizedData);
+                return authorizedData;
+            }
+            protected set
+            {
+                var preferncesKey = string.Format("{0}{1}", UserName, OpsSecureSessionVars.AuthorizedUserData);
+                SetSessionValue(preferncesKey, value);
+            }
+        }
+
 
         protected static readonly string JsonContentType = "application/json";
         protected static readonly Encoding JsonContentEncoding = Encoding.UTF8;

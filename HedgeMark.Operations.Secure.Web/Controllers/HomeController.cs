@@ -53,6 +53,7 @@ namespace HMOSecureWeb.Controllers
             using (var context = new OperationsSecureContext())
             {
                 var wireStatusCountMap = context.hmsWires.Where(s => s.WireStatusId == 2 || s.ValueDate == valueDate).Select(s => new { s.WireStatusId, s.SwiftStatusId }).ToList();
+
                 wireStatusCount = new WireStatusCount();
 
                 foreach (var statusCount in wireStatusCountMap)
@@ -112,12 +113,20 @@ namespace HMOSecureWeb.Controllers
                                                     || DbFunctions.TruncateTime(s.CreatedAt) == DbFunctions.TruncateTime(endContextDate) && (statusId == 0 || s.WireStatusId == statusId)).ToList();
             }
 
-           // List<dmaAgreementOnBoarding> wireAgreements;
+
+
+            var authorizedFundsIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 1).Select(s => s.Id).ToList();
+
+            if (!AuthorizedSessionData.IsPrivilegedUser)
+                wireStatusDetails = wireStatusDetails.Where(s => authorizedFundsIds.Contains(s.hmFundId)).ToList();
+
+            // List<dmaAgreementOnBoarding> wireAgreements;
             List<onBoardingAccount> wireAccounts;
             List<onBoardingSSITemplate> wireSSITemplates;
-            List<dmaCounterPartyOnBoarding> counterparties;
+            List<dmaCounterPartyOnBoarding> counterParties;
             Dictionary<int, string> users;
-            List<long> hFundIds = wireStatusDetails.Select(s => s.hmFundId).ToList();
+            var hFundIds = wireStatusDetails.Select(s => s.hmFundId).ToList();
+
 
             using (var context = new AdminContext())
             {
@@ -139,7 +148,7 @@ namespace HMOSecureWeb.Controllers
                 wireSSITemplates = context.onBoardingSSITemplates.Where(s => ssiTemplateIds.Contains(s.onBoardingSSITemplateId)).ToList();
                 users = context.hLoginRegistrations.Where(s => UserDetails.Id == s.intLoginID || userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
                 var counterpartyIds = wireSSITemplates.Select(s => s.TemplateEntityId).ToList();
-                counterparties = context.dmaCounterPartyOnBoardings.Where(s => counterpartyIds.Contains(s.dmaCounterPartyOnBoardId)).ToList();
+                counterParties = context.dmaCounterPartyOnBoardings.Where(s => counterpartyIds.Contains(s.dmaCounterPartyOnBoardId)).ToList();
             }
 
             var hFunds = AdminFundManager.GetHFundsCreatedForDMA(hFundIds, UserName);
@@ -163,7 +172,7 @@ namespace HMOSecureWeb.Controllers
                     ReceivingAccount = wire.WireTransferTypeId == 2 ? wireAccounts.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount() : new onBoardingAccount(),
                     SSITemplate = wire.WireTransferTypeId != 2 ? wireSSITemplates.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate() : new onBoardingSSITemplate(),
                     FundName = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) == null ? "" : hFunds.First(s => s.HFundId == wire.hmFundId).PerferredFundName,
-                    Counterparty = (counterparties.FirstOrDefault(s => counterpartyId == s.dmaCounterPartyOnBoardId) ?? new dmaCounterPartyOnBoarding()).CounterpartyName
+                    Counterparty = (counterParties.FirstOrDefault(s => counterpartyId == s.dmaCounterPartyOnBoardId) ?? new dmaCounterPartyOnBoarding()).CounterpartyName
                 };
 
                 //thisWire.Agreement.dmaAgreementDocuments = null;

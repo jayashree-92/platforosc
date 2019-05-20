@@ -27,6 +27,14 @@
           <Property Name="IsAnonymous" Type="bit" Nullable="false" />
           <Property Name="LastActivityDate" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="aspnet_UsersInRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RoleId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="hLoginRegistration">
           <Key>
             <PropertyRef Name="intLoginID" />
@@ -307,6 +315,17 @@
           <Property Name="CreatedAt" Type="datetime" />
           <Property Name="UpdatedBy" Type="varchar" MaxLength="100" />
           <Property Name="UpdatedAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="dmaFundOnBoardPermissions">
+          <Key>
+            <PropertyRef Name="dmaFundOnBoardPermissionsId" />
+          </Key>
+          <Property Name="dmaFundOnBoardPermissionsId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dmaFundOnBoardId" Type="bigint" Nullable="false" />
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="dmaPermissionLevelId" Type="int" Nullable="false" />
+          <Property Name="RecCreatedDt" Type="datetime" Nullable="false" />
+          <Property Name="RecCreatedBy" Type="varchar" MaxLength="1000" Nullable="false" />
         </EntityType>
         <EntityType Name="onBoardingAccount">
           <Key>
@@ -691,6 +710,30 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <Property Name="FundLegalStructure" Type="varchar" MaxLength="200" />
           <Property Name="AccountingMethod" Type="varchar" MaxLength="200" />
         </EntityType>
+        <Association Name="FK__aspnet_Us__RoleI__2DB1C7EE">
+          <End Role="aspnet_Roles" Type="Self.aspnet_Roles" Multiplicity="1" />
+          <End Role="aspnet_UsersInRoles" Type="Self.aspnet_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="aspnet_Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="aspnet_UsersInRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__aspnet_Us__UserI__2EA5EC27">
+          <End Role="aspnet_Users" Type="Self.aspnet_Users" Multiplicity="1" />
+          <End Role="aspnet_UsersInRoles" Type="Self.aspnet_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="aspnet_Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="aspnet_UsersInRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__dmaAgreem__dmaAg__28C44474">
           <End Role="dmaAgreementOnBoarding" Type="Self.dmaAgreementOnBoarding" Multiplicity="1" />
           <End Role="dmaAgreementSettlementInstructions" Type="Self.dmaAgreementSettlementInstructions" Multiplicity="*" />
@@ -784,6 +827,18 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
             </Principal>
             <Dependent Role="dmaAgreementOnBoardingChecklist">
               <PropertyRef Name="dmaAgreementOnBoardingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId">
+          <End Role="onboardingFund" Type="Self.onboardingFund" Multiplicity="1" />
+          <End Role="dmaFundOnBoardPermissions" Type="Self.dmaFundOnBoardPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onboardingFund">
+              <PropertyRef Name="dmaFundOnBoardId" />
+            </Principal>
+            <Dependent Role="dmaFundOnBoardPermissions">
+              <PropertyRef Name="dmaFundOnBoardId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -902,6 +957,7 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
         <EntityContainer Name="AdminModelStoreContainer">
           <EntitySet Name="aspnet_Roles" EntityType="Self.aspnet_Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="aspnet_Users" EntityType="Self.aspnet_Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="aspnet_UsersInRoles" EntityType="Self.aspnet_UsersInRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hLoginRegistration" EntityType="Self.hLoginRegistration" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaAgreementDocument" EntityType="Self.dmaAgreementDocument" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaAgreementOnBoarding" EntityType="Self.dmaAgreementOnBoarding" Schema="HMADMIN" store:Type="Tables" />
@@ -911,6 +967,7 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <EntitySet Name="dmaAgreementStatus" EntityType="Self.dmaAgreementStatus" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaAgreementTypes" EntityType="Self.dmaAgreementTypes" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaCounterPartyOnBoarding" EntityType="Self.dmaCounterPartyOnBoarding" Schema="HMADMIN" store:Type="Tables" />
+          <EntitySet Name="dmaFundOnBoardPermissions" EntityType="Self.dmaFundOnBoardPermissions" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="onBoardingAccount" EntityType="Self.onBoardingAccount" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="onBoardingAccountBICorABA" EntityType="Self.onBoardingAccountBICorABA" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="OnBoardingAccountDescription" EntityType="Self.OnBoardingAccountDescription" Schema="HMADMIN" store:Type="Tables" />
@@ -952,6 +1009,14 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
     [vw_HFundOps].[AccountingMethod] AS [AccountingMethod]
     FROM [dbo].[vw_HFundOps] AS [vw_HFundOps]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK__aspnet_Us__RoleI__2DB1C7EE" Association="Self.FK__aspnet_Us__RoleI__2DB1C7EE">
+            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+            <End Role="aspnet_UsersInRoles" EntitySet="aspnet_UsersInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__aspnet_Us__UserI__2EA5EC27" Association="Self.FK__aspnet_Us__UserI__2EA5EC27">
+            <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+            <End Role="aspnet_UsersInRoles" EntitySet="aspnet_UsersInRoles" />
+          </AssociationSet>
           <AssociationSet Name="FK__dmaAgreem__dmaAg__28C44474" Association="Self.FK__dmaAgreem__dmaAg__28C44474">
             <End Role="dmaAgreementOnBoarding" EntitySet="dmaAgreementOnBoarding" />
             <End Role="dmaAgreementSettlementInstructions" EntitySet="dmaAgreementSettlementInstructions" />
@@ -983,6 +1048,10 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <AssociationSet Name="FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingId" Association="Self.FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingId">
             <End Role="dmaAgreementOnBoarding" EntitySet="dmaAgreementOnBoarding" />
             <End Role="dmaAgreementOnBoardingChecklist" EntitySet="dmaAgreementOnBoardingChecklist" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId" Association="Self.FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId">
+            <End Role="onboardingFund" EntitySet="onboardingFund" />
+            <End Role="dmaFundOnBoardPermissions" EntitySet="dmaFundOnBoardPermissions" />
           </AssociationSet>
           <AssociationSet Name="FK_onBoardingAccount_dmaAgreementOnBoardingId" Association="Self.FK_onBoardingAccount_dmaAgreementOnBoardingId">
             <End Role="dmaAgreementOnBoarding" EntitySet="dmaAgreementOnBoarding" />
@@ -1034,6 +1103,7 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <Property Name="RoleName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="LoweredRoleName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="aspnet_Users" Relationship="AdminModel.aspnet_UsersInRoles" FromRole="aspnet_Roles" ToRole="aspnet_Users" />
         </EntityType>
         <EntityType Name="aspnet_Users">
           <Key>
@@ -1046,6 +1116,7 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <Property Name="MobileAlias" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Name="IsAnonymous" Type="Boolean" Nullable="false" />
           <Property Name="LastActivityDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="aspnet_Roles" Relationship="AdminModel.aspnet_UsersInRoles" FromRole="aspnet_Users" ToRole="aspnet_Roles" />
         </EntityType>
         <EntityType Name="hLoginRegistration">
           <Key>
@@ -1248,6 +1319,15 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <AssociationSet Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" Association="AdminModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
             <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
             <End Role="onBoardingSSITemplateDocument" EntitySet="onBoardingSSITemplateDocuments" />
+          </AssociationSet>
+          <EntitySet Name="dmaFundOnBoardPermissions" EntityType="AdminModel.dmaFundOnBoardPermission" />
+          <AssociationSet Name="FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId" Association="AdminModel.FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId">
+            <End Role="onboardingFund" EntitySet="onboardingFunds" />
+            <End Role="dmaFundOnBoardPermission" EntitySet="dmaFundOnBoardPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="aspnet_UsersInRoles" Association="AdminModel.aspnet_UsersInRoles">
+            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+            <End Role="aspnet_Users" EntitySet="aspnet_Users" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
@@ -1884,6 +1964,7 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
           <Property Name="AMLDueDiligenceforHMSAccessPlatform" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="dmaAgreementOnBoardings" Relationship="AdminModel.FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId" FromRole="onboardingFund" ToRole="dmaAgreementOnBoarding" />
           <NavigationProperty Name="onBoardingAccounts" Relationship="AdminModel.FK_onBoardingAccount_OnboardingFund_dmaFundOnBoardId" FromRole="onboardingFund" ToRole="onBoardingAccount" />
+          <NavigationProperty Name="dmaFundOnBoardPermissions" Relationship="AdminModel.FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId" FromRole="onboardingFund" ToRole="dmaFundOnBoardPermission" />
         </EntityType>
         <Association Name="FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId">
           <End Type="AdminModel.onboardingFund" Role="onboardingFund" Multiplicity="1" />
@@ -2091,6 +2172,34 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
               <PropertyRef Name="onBoardingSSITemplateId" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <EntityType Name="dmaFundOnBoardPermission">
+          <Key>
+            <PropertyRef Name="dmaFundOnBoardPermissionsId" />
+          </Key>
+          <Property Name="dmaFundOnBoardPermissionsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dmaFundOnBoardId" Type="Int64" Nullable="false" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <Property Name="dmaPermissionLevelId" Type="Int32" Nullable="false" />
+          <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RecCreatedBy" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="onboardingFund" Relationship="AdminModel.FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId" FromRole="dmaFundOnBoardPermission" ToRole="onboardingFund" />
+        </EntityType>
+        <Association Name="FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId">
+          <End Type="AdminModel.onboardingFund" Role="onboardingFund" Multiplicity="1" />
+          <End Type="AdminModel.dmaFundOnBoardPermission" Role="dmaFundOnBoardPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onboardingFund">
+              <PropertyRef Name="dmaFundOnBoardId" />
+            </Principal>
+            <Dependent Role="dmaFundOnBoardPermission">
+              <PropertyRef Name="dmaFundOnBoardId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="aspnet_UsersInRoles">
+          <End Type="AdminModel.aspnet_Roles" Role="aspnet_Roles" Multiplicity="*" />
+          <End Type="AdminModel.aspnet_Users" Role="aspnet_Users" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -2847,6 +2956,26 @@ warning 6002: The table/view 'HM.dbo.vw_HFundOps' does not have a primary key de
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="dmaFundOnBoardPermissions">
+            <EntityTypeMapping TypeName="AdminModel.dmaFundOnBoardPermission">
+              <MappingFragment StoreEntitySet="dmaFundOnBoardPermissions">
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="RecCreatedDt" ColumnName="RecCreatedDt" />
+                <ScalarProperty Name="dmaPermissionLevelId" ColumnName="dmaPermissionLevelId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
+                <ScalarProperty Name="dmaFundOnBoardPermissionsId" ColumnName="dmaFundOnBoardPermissionsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="aspnet_UsersInRoles" TypeName="AdminModel.aspnet_UsersInRoles" StoreEntitySet="aspnet_UsersInRoles">
+            <EndProperty Name="aspnet_Users">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="aspnet_Roles">
+              <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

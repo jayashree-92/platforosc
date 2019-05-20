@@ -97,6 +97,9 @@
     <Compile Include="dmaCounterPartyOnBoarding.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dmaFundOnBoardPermission.cs">
+      <DependentUpon>AdminModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hLoginRegistration.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>

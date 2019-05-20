@@ -19,6 +19,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         {
             this.dmaAgreementOnBoardings = new HashSet<dmaAgreementOnBoarding>();
             this.onBoardingAccounts = new HashSet<onBoardingAccount>();
+            this.dmaFundOnBoardPermissions = new HashSet<dmaFundOnBoardPermission>();
         }
     
         public long dmaFundOnBoardId { get; set; }
@@ -177,5 +178,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual ICollection<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccount> onBoardingAccounts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<dmaFundOnBoardPermission> dmaFundOnBoardPermissions { get; set; }
     }
 }
