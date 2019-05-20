@@ -126,8 +126,8 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     "mData": "PreviousStateValue",
                     "mRender": function (tdata, type, row) {
                         switch (row.Action) {
-                            case "Log In":
-                            case "Log Out":
+                            case "Logged In":
+                            case "Logged Out":
                             case "Added": return "";
                             case "Edited": if (row.Field == "Wire Status") {
                                 return $scope.getWireStatus(row.PreviousStateValue);
