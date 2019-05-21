@@ -156,7 +156,7 @@ namespace HMOSecureMiddleware
                 {
                     mt103MessageType = context.hmsWireMessageTypes.First(s => s.MessageType == "MT103");
                 }
-                
+
                 //We need to create an MT 103 and use TransactionRef of 103 as Related Ref of MT 202 COV
                 swiftMessage103 = OutboundSwiftMsgCreator.CreateMessage(wire, "MT103", string.Empty, "COV");
 
@@ -190,11 +190,9 @@ namespace HMOSecureMiddleware
             var confirmationData = InboundSwiftMsgParser.ParseMessage(swiftMessage);
 
             //When  reference tag has "COV", it means its a MT103 generated on behalf of MT202COV. We should skip tracking MT103 and track only original MT202COV
-            //if (confirmationData.ReferenceTag == "COV")
-            //{
-            //    return;
-            //}
-
+            if (confirmationData.ReferenceTag == "COV")
+                return;
+            
             if (confirmationData.IsFeAck)
             {
                 //As of now we are not logging FEACK in wire logs, but are logged in MQLogs table
