@@ -322,6 +322,14 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static bool IsNoticeWirePendingAcknowledgement(hmsWire wire)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                return context.hmsWires.Any(s => s.ValueDate == wire.ValueDate && s.Currency == wire.Currency && s.Amount == s.Amount && s.hmsWirePurposeLkup.Purpose == "Notice" && s.hmsWireId != wire.hmsWireId && (SwiftStatus)s.SwiftStatusId == SwiftStatus.Processing);
+            }
+        }
+
         public static void RemoveWireDocument(long documentId)
         {
             using (var context = new OperationsSecureContext())

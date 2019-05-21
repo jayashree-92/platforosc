@@ -218,8 +218,15 @@ namespace HMOSecureWeb.Controllers
         {
             var wireTicket = WireDataManager.GetWireData(wireId);
             var isDeadlineCrossed = DateTime.Now.Date > wireTicket.HMWire.ValueDate.Date;
-
-            var isAuthorizedUserToApprove = (WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && wireTicket.HMWire.LastUpdatedBy != UserDetails.Id) && !isDeadlineCrossed && User.IsAuthorizedWireApprover();
+            var isNoticePending = false;
+            var validationMsg = "";
+            if(wireTicket.IsNotice)
+            {
+                isNoticePending = WireDataManager.IsNoticeWirePendingAcknowledgement(wireTicket.HMWire);
+                if (isNoticePending)
+                    validationMsg = "The notice with same amount, value date and currency is already Processing.You cannot notice the same untill it gets an acknowledgement";
+            }
+            var isAuthorizedUserToApprove = (WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && wireTicket.HMWire.LastUpdatedBy != UserDetails.Id) && !isDeadlineCrossed && User.IsAuthorizedWireApprover() && !isNoticePending;
             var isEditEnabled = WireDataManager.WireStatus.Drafted == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && !isDeadlineCrossed;
             var isApprovedOrFailed = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId
                                      || (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId
@@ -241,7 +248,7 @@ namespace HMOSecureWeb.Controllers
             var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
             var isLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == UserDetails.Id;
             var isWirePurposeAdhoc = wireTicket.HMWire.hmsWirePurposeLkup.ReportName == "Adhoc Report";
-            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser, isWirePurposeAdhoc });
+            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser, isWirePurposeAdhoc, validationMsg });
         }
 
         public JsonResult IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId)

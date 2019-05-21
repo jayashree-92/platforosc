@@ -172,7 +172,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     if ($scope.timeToApprove.Hours > 0) {
                         $scope.isDeadlineCrossed = false;
                         $("#wireErrorStatus").collapse("hide");
-                        $scope.validationMsg = "";
+                        $scope.validationMsg = response.data.validationMsg;
                     }
                     else {
                         $("#wireErrorStatus").collapse("show");
