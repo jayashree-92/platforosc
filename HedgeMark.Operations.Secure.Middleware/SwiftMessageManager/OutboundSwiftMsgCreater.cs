@@ -167,9 +167,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field53B GetField53B(WireTicket wire)
         {
-            var ffcOrUltimateAccount = wire.IsBookTransfer
-                ? !string.IsNullOrWhiteSpace(wire.ReceivingAccount.FFCNumber) ? wire.ReceivingAccount.FFCNumber : string.Empty
-                : !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : string.Empty;
+            var ffcOrUltimateAccount = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : string.Empty;
 
             var f53B = new Field53B().setAccount(ffcOrUltimateAccount);
             return f53B;

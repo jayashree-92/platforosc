@@ -41,10 +41,7 @@ namespace HMOSecureMiddleware
 
         public static string GetAssociationToLog(AuditLogData auditData)
         {
-            var association = "";
-            association = !auditData.IsBookTransfer
-                ? string.Format("Purpose: <i>{0}</i><br/>Agreement Name: <i>{1}</i><br/>Sending Account: <i>{2}</i><br/>Receiving Account: <i>{3}</i><br/>Transfer Type:<i>{4}</i>", auditData.Purpose, auditData.AgreementName, auditData.SendingAccount, auditData.ReceivingAccount, auditData.TransferType)
-                : string.Format("Purpose: <i>{0}</i><br/>Sending Account: <i>{1}</i><br/>Receiving Account: <i>{2}</i><br/>Transfer Type:<i>{3}</i>", auditData.Purpose, auditData.SendingAccount, auditData.ReceivingAccount, auditData.TransferType);
+            var association = string.Format("Purpose: <i>{0}</i><br/>Sending Account: <i>{2}</i><br/>Receiving Account: <i>{3}</i><br/>Transfer Type:<i>{4}</i>", auditData.Purpose, auditData.SendingAccount, (string.IsNullOrWhiteSpace(auditData.ReceivingAccount) ? "N/A" : auditData.ReceivingAccount), auditData.TransferType);
 
             return association;
         }

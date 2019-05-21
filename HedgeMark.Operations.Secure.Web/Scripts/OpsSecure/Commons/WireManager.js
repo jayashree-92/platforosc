@@ -146,7 +146,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.ssiTemplate = angular.copy($scope.wireTicketObj.SSITemplate);
             $scope.workflowUsers = $scope.wireTicketObj.WorkflowUsers;
             $scope.attachmentUsers = $scope.wireTicketObj.AttachmentUsers;
-
+            $scope.isWirePurposeAdhoc = response.data.isWirePurposeAdhoc;
 
             var keyValuePair = $scope.wireTicketObj.SwiftMessages;
 
@@ -361,6 +361,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case 4: $("#cancelWire").button("loading");
                 break;
         }
+    }
+
+    $scope.getInitiateButtonText = function () {
+        if (!$scope.isWirePurposeAdhoc && $scope.wireObj.Purpose == "Send Call")
+            return "Pre Advise";
+        if ($scope.WireTicket.WireStatusId == 1)
+            return "Re-Initiate";
+        else
+            return "Initiate";
     }
 
     $scope.confirmCancellation = function () {
@@ -730,7 +739,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         auditdata.ModuleName = $scope.Module;
         auditdata.Action = action;
         auditdata.Changes = changes;
-        auditdata.AgreementName = $scope.AgreementName;
+        auditdata.AgreementName = "";
         auditdata.SendingAccount = $scope.accountDetail.AccountName;
         auditdata.IsBookTransfer = $scope.WireTicket.IsBookTransfer;
         auditdata.TransferType = $scope.WireTicket.TransferType;

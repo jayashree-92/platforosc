@@ -820,7 +820,7 @@
                     <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;{{ isLastModifiedUser ? "Modify" : "Save as Draft" }}
                 </button>
                 <button id="initiateWire" type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="isUserActionDone" ng-if="isInitiationEnabled" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Initiating...</span>">
-                    <i class="glyphicon glyphicon-plus"></i>&nbsp;Re-Initiate Wire
+                    <i class="glyphicon glyphicon-plus"></i>&nbsp;{{ getInitiateButtonText() }}
                 </button>
                 <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-disabled="isUserActionDone" ng-if="isAuthorizedUserToApprove" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
                     <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
