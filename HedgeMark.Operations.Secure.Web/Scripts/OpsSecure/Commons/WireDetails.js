@@ -49,7 +49,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     { "mData": "WireId", "sTitle": "Id"},
                     { "mData": "FundName", "sTitle": "Fund" },
                     {
-                      "mData": "Counterparty", "sTitle": "CounterParty",
+                      "mData": "Counterparty", "sTitle": "CounterParty/Service Provider",
                       "mRender": function (tdata) {
                           return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
                       }
