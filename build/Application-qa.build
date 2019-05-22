@@ -149,6 +149,8 @@
       <fileset basedir="${OutputFile2}">        
         <exclude name="***/web.Config" />
         <include name="***/*.*" />        
+		<exclude name="***/*.nlp" />
+		<exclude name="***/*.build" />
       </fileset>
     </copy>   
    </target>
@@ -159,6 +161,8 @@
       <fileset basedir="${OutputFile2}">        
         <exclude name="***/web.Config" />
         <include name="***/*.*" />        
+		<exclude name="***/*.nlp" />
+		<exclude name="***/*.build" />
       </fileset>
     </copy>   
    </target> 

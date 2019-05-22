@@ -131,12 +131,15 @@
     </fileset>
    </delete>
   </target>
-   
+  
+
   <!-- Target to Copy from Dev1 To Dev2 (to secondary server) -->
    <target name="CopyDevDeployServer1" depends="cleanDevDeployServer1">    
     <copy todir="${DevPathToCopyServer1}" includeemptydirs="false" overwrite="true">
       <fileset basedir="${OutputFile2}">        
         <exclude name="***/web.Config" />
+		<exclude name="***/*.nlp" />
+		<exclude name="***/*.build" />
         <include name="***/*.*" />        
       </fileset>
     </copy>   
@@ -162,6 +165,8 @@
     <copy todir="${DevPathToCopyServer2}" includeemptydirs="false" overwrite="true">
       <fileset basedir="${OutputFile2}">        
         <exclude name="***/web.Config" />
+		<exclude name="***/*.nlp" />
+		<exclude name="***/*.build" />
         <include name="***/*.*" />        
       </fileset>
     </copy>   
@@ -215,6 +220,8 @@
       <fileset basedir="${OutputFile2}">        
         <exclude name="***/web.Config" />
         <include name="***/*.*" />        
+		<exclude name="***/*.nlp" />
+		<exclude name="***/*.build" />
       </fileset>
     </copy>   
    </target>
@@ -224,7 +231,9 @@
      <copy todir="${TestPathToCopyServer1}" includeemptydirs="false" overwrite="true">
       <fileset basedir="${OutputFile2}">        
         <exclude name="***/web.Config" />
-        <include name="***/*.*" />        
+        <include name="***/*.*" />       
+        <exclude name="***/*.nlp" />
+		<exclude name="***/*.build" />		
       </fileset>
     </copy>   
    </target>   
@@ -277,7 +286,9 @@
      <copy todir="${QAPathToCopyServer2}" includeemptydirs="false" overwrite="true">
       <fileset basedir="${OutputFile2}">        
         <exclude name="***/web.Config" />
-        <include name="***/*.*" />        
+        <include name="***/*.*" />   
+        <exclude name="***/*.nlp" />
+		<exclude name="***/*.build" />		
       </fileset>
     </copy>   
    </target>
@@ -288,6 +299,8 @@
       <fileset basedir="${OutputFile2}">        
         <exclude name="***/web.Config" />
         <include name="***/*.*" />        
+		<exclude name="***/*.nlp" />
+		<exclude name="***/*.build" />
       </fileset>
     </copy>   
    </target> 
