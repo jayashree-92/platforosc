@@ -41,7 +41,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
 
             foreach (var field in Fields)
             {
-                if (field.Name != fieldValue)
+                if (field.Name != fieldName)
                     continue;
 
                 field.SetValue(fieldValue);

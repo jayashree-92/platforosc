@@ -25,7 +25,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
 
         $scope.SelectedStatusId = statusId;
 
-        $http.get("/Home/GetWireStatusDetails?startContextDate=" + startContextDate + "&endContextDate=" + endContextDate + "&statusId=" + statusId).then(function (response) {
+        $http.get("/Home/GetWireStatusDetails?startContextDate=" + startContextDate + "&endContextDate=" + endContextDate + "&statusIds=" + statusId).then(function (response) {
 
             //$scope.userDetails = response.data.userData;
             var wireDetails = response.data;

@@ -11,6 +11,7 @@ using HMOSecureWeb.Jobs;
 using log4net;
 using HMOSecureWeb.Utility;
 using System.Data.Entity;
+using Com.HedgeMark.Commons.Extensions;
 using HMOSecureMiddleware.Util;
 
 namespace HMOSecureWeb.Controllers
@@ -90,10 +91,12 @@ namespace HMOSecureWeb.Controllers
             return Json(wireStatusCount);
         }
 
-        public JsonResult GetWireStatusDetails(DateTime startContextDate, DateTime endContextDate, int statusId)
+        public JsonResult GetWireStatusDetails(DateTime startContextDate, DateTime endContextDate, string statusIds)
         {
             var wireData = new List<WireTicket>();
             List<hmsWire> wireStatusDetails;
+            var allStatusIds = statusIds.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(s=>s.ToInt()).ToList();
+
             using (var context = new OperationsSecureContext())
             {
                 //context.Database.Log = s =>
@@ -109,16 +112,15 @@ namespace HMOSecureWeb.Controllers
                     .Include("hmsWirePurposeLkup")
                     .Include("hmsWireStatusLkup")
                     .Include("hmsWireTransferTypeLKup")
-                    .Where(s => (statusId == 0 && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (statusId == 0 || s.WireStatusId == statusId)
-                                                    || DbFunctions.TruncateTime(s.CreatedAt) == DbFunctions.TruncateTime(endContextDate) && (statusId == 0 || s.WireStatusId == statusId)).ToList();
+                    .Where(s => ((allStatusIds.Contains(0) || allStatusIds.Contains(2)) && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (allStatusIds.Contains(0) || allStatusIds.Contains(s.WireStatusId))
+                                                    || DbFunctions.TruncateTime(s.CreatedAt) == DbFunctions.TruncateTime(endContextDate) && (allStatusIds.Contains(0) || allStatusIds.Contains(s.WireStatusId))).ToList();
             }
 
-
-
-            var authorizedFundsIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 1).Select(s => s.Id).ToList();
-
             if (!AuthorizedSessionData.IsPrivilegedUser)
+            {
+                var authorizedFundsIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 1).Select(s => s.Id).ToList();
                 wireStatusDetails = wireStatusDetails.Where(s => authorizedFundsIds.Contains(s.hmFundId)).ToList();
+            }
 
             // List<dmaAgreementOnBoarding> wireAgreements;
             List<onBoardingAccount> wireAccounts;
@@ -220,7 +222,7 @@ namespace HMOSecureWeb.Controllers
             var isDeadlineCrossed = DateTime.Now.Date > wireTicket.HMWire.ValueDate.Date;
             var isNoticePending = false;
             var validationMsg = "";
-            if(wireTicket.IsNotice)
+            if (wireTicket.IsNotice)
             {
                 isNoticePending = WireDataManager.IsNoticeWirePendingAcknowledgement(wireTicket.HMWire);
                 if (isNoticePending)
