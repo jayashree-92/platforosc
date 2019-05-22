@@ -160,7 +160,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     "sTitle": "Origin",
                     "mData": "IsLogFromOps",
                     "mRender": function (tdata, type, row) {
-                        return tdata == true || row.Action != "Edited" ? "Operations Secure" : "Operations";
+                        return !tdata ? "Operations Secure" : "Operations";
                     }
                 },
                 {
