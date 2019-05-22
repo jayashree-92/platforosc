@@ -265,6 +265,9 @@ namespace HMOSecureMiddleware
                     wire.LastModifiedAt = DateTime.Now;
                 }
 
+                if (wireStatus == WireStatus.Initiated)
+                    wire.CreatedBy = userId;
+
                 context.hmsWires.AddOrUpdate(wire);
                 context.SaveChanges();
 
