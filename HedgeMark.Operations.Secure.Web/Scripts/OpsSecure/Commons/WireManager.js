@@ -743,7 +743,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         auditdata.SendingAccount = $scope.accountDetail.AccountName;
         auditdata.IsBookTransfer = $scope.wireTicketObj.IsBookTransfer;
         auditdata.TransferType = $scope.wireTicketObj.TransferType;
-        auditdata.ReceivingAccount = $scope.WireTicketObj.IsNotice ? "" : auditdata.IsBookTransfer ? $scope.receivingAccountDetail.AccountName : $scope.ssiTemplate.TemplateName;
+        auditdata.ReceivingAccount = $scope.wireTicketObj.IsNotice ? "" : auditdata.IsBookTransfer ? $scope.receivingAccountDetail.AccountName : $scope.ssiTemplate.TemplateName;
         auditdata.Purpose = $scope.Purpose;
         auditdata.AssociationId = $scope.WireTicket.hmsWireId;
         return auditdata;
