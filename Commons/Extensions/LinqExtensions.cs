@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using Kent.Boogaart.KBCsv;
 
 namespace Com.HedgeMark.Commons.Extensions
 {
@@ -37,20 +35,6 @@ namespace Com.HedgeMark.Commons.Extensions
         public static string GetPropertyName<TE, TP>(this Expression<Func<TE, TP>> expression)
         {
             return ((MemberExpression)expression.Body).Member.Name;
-        }
-
-        //public static void DumpToFile<T>(this List<T> entities, string filePath)
-        //{
-        //    var dataTable = entities.ToDataTable();
-        //    DumpToFile(dataTable, filePath);
-        //}
-
-        public static void DumpToFile(this DataTable dataTable, string filePath)
-        {
-            using (var csv = new CsvWriter(filePath, false))
-            {
-                csv.WriteAll(dataTable);
-            }
         }
     }
 }

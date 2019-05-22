@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
-//TODO: Change namespace and fix references
-namespace DataTransfer
+
+namespace Com.HedgeMark.Commons
 {
     public enum StatusType { Success, Failure };
 
