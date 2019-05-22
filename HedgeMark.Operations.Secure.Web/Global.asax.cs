@@ -157,7 +157,7 @@ namespace HMOSecureWeb
             Response.Cookies.Add(formCookie);
 
 
-            if (ActiveUsers.Contains(User.Identity.Name))
+            if (ActiveUsers.Contains(User.Identity.Name) || HttpContext.Current.Request.IsLocal)
                 return;
 
             ActiveUsers.Add(User.Identity.Name);
