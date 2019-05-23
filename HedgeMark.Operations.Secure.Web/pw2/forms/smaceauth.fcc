@@ -879,7 +879,7 @@ function displayWindow(url, width, height)
 			        var smauthstatus = "$$smauthstatus$$";
 			        if (smauthstatus == 1) {
                                    document.write("<tr><td colspan='2' align='center' class='errormsg'>");
-                                   document.write("Invalid Credentials");
+                                   document.write("Additional credentials required");
                                    document.write("</td></tr>");
 			        }
 			        else if (smauthstatus == 2) {
@@ -988,7 +988,7 @@ function displayWindow(url, width, height)
 							
 							var smauthstatus = "$$smauthstatus$$";
 							if (smauthstatus == 1)
-                            	document.getElementById("errorMessage").innerHTML = "Invalid Credentials<br>";							
+                            	document.getElementById("errorMessage").innerHTML = "Additional credentials required<br>";							
 							else if (smauthstatus == 2)
                             	document.getElementById("errorMessage").innerHTML = "Unauthorized User<br>";
 							
