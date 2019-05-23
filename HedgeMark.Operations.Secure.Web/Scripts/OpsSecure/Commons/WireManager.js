@@ -230,6 +230,31 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         return " the wire at " + $.getPrettyDate(wireLog.CreatedAt);
     }
 
+
+    $scope.getWireLogStatusIcon = function (wireLog, index) {
+        if (wireLog == null)
+            return "";
+
+        switch (wireLog.WireStatusId) {
+        case 1:
+            return "glyphicon-pencil";
+        case 2:
+            return "glyphicon-list-alt";
+        case 3:
+            return "glyphicon-ok";
+        case 4:
+            
+            if ($scope.WireTicket.SwiftStatusId == 1)
+                return "glyphicon-ban-circle";
+            else
+                return "glyphicon-trash" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
+        case 5:
+            return "glyphicon-remove";
+
+        }
+        return "";
+    }
+
     $scope.getWireLogStatus = function (wireLog, index) {
 
         angular.element("#workflowStatus_" + index).removeClass("text-info text-warning text-success text-blocked text-danger");

@@ -26,7 +26,7 @@ namespace HMOSecureWeb.Jobs
                 return;
 
             var wireTicket = WireDataManager.GetWireData(wireId);
-            var workflowComment = "Auto Cancelled by System as deadline crossed.";
+            var workflowComment = "Auto Rejected by system as deadline crossed.";
             WireDataManager.SaveWireData(wireTicket, WireDataManager.WireStatus.Cancelled, workflowComment, -1);
             wireSchedule.IsJobCreated = true;
             WireDataManager.EditJobSchedule(wireSchedule);
