@@ -177,7 +177,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     else {
                         $("#wireErrorStatus").collapse("show");
                         $scope.isDeadlineCrossed = true;
-                        $scope.validationMsg = "Note:Deadline crossed. Please select a future date for settlement.";
+                        if(response.data.validationMsg == "")
+                            $scope.validationMsg = "Note:Deadline crossed. Please select a future date for settlement.";
+                        else
+                            $scope.validationMsg = response.data.validationMsg;
                     }
                 }
                 $interval.cancel($scope.promise);
