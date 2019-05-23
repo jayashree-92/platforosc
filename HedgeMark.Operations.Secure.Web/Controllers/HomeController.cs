@@ -76,7 +76,7 @@ namespace HMOSecureWeb.Controllers
                         wireStatusCount.Completed += 1;
 
                     //Cancelled and Completed
-                    if (statusCount.WireStatusId == 4 && statusCount.SwiftStatusId == 5)
+                    if (statusCount.WireStatusId == 4 && (statusCount.SwiftStatusId == 1 || statusCount.SwiftStatusId == 5))
                         wireStatusCount.Cancelled += 1;
 
                     //Failed
@@ -95,7 +95,7 @@ namespace HMOSecureWeb.Controllers
         {
             var wireData = new List<WireTicket>();
             List<hmsWire> wireStatusDetails;
-            var allStatusIds = statusIds.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(s=>s.ToInt()).ToList();
+            var allStatusIds = statusIds.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.ToInt()).ToList();
 
             using (var context = new OperationsSecureContext())
             {
