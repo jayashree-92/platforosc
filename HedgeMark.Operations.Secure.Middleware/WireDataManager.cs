@@ -329,7 +329,8 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                return context.hmsWires.Any(s => s.ValueDate == wire.ValueDate && s.Currency == wire.Currency && s.Amount == wire.Amount && s.hmsWirePurposeLkup.Purpose == "Notice" && s.hmsWireId != wire.hmsWireId && ((SwiftStatus)s.SwiftStatusId == SwiftStatus.Processing || (SwiftStatus)s.SwiftStatusId == SwiftStatus.Acknowledged));
+               var duplicateNotice = context.hmsWires.FirstOrDefault(s => s.ValueDate == wire.ValueDate && s.Currency == wire.Currency && s.hmsWirePurposeLkup.Purpose == "Notice" && s.hmsWireId != wire.hmsWireId && ((SwiftStatus)s.SwiftStatusId == SwiftStatus.Processing || (SwiftStatus)s.SwiftStatusId == SwiftStatus.Acknowledged)) ?? new hmsWire();
+               return duplicateNotice.Amount == wire.Amount;
             }
         }
 
