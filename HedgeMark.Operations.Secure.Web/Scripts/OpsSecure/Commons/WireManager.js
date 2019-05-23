@@ -367,7 +367,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.getInitiateButtonText = function () {
-        if (!$scope.isWirePurposeAdhoc && $scope.wireObj.Purpose == "Send Call")
+        if (!$scope.isWirePurposeAdhoc && $scope.Purpose == "Send Call")
             return "Pre Advise";
         if ($scope.WireTicket.WireStatusId == 1)
             return "Re-Initiate";
@@ -433,9 +433,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         //$scope.WireTicket.OnBoardAgreementId = !$scope.wireTicketObj.IsBookTransfer && $scope.wireObj.IsAdhocWire ? $("#liAgreement").select2('val') : angular.copy($scope.wireObj.AgreementId);
         $scope.WireTicket.WireMessageTypeId = angular.element("#liMessageType").select2('val');
         $scope.WireTicket.DeliveryCharges = $scope.WireTicket.WireMessageTypeId == "1" ? angular.element("#liDeliveryCharges").select2('val') : null;
-
-        if ($scope.WireTicket.WireStatusId == 0)
-            $scope.WireTicket.hmFundId = $scope.wireObj.IsAdhocWire ? $("#liFund").select2('val') : 0;
 
             if ($scope.WireTicket.Amount != 0) {
                 if (!$scope.isDeadlineCrossed || $scope.wireComments.trim() != "") {
