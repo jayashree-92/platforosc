@@ -9,6 +9,7 @@ using HedgeMark.SwiftMessageHandler;
 using HedgeMark.SwiftMessageHandler.Model;
 using HMOSecureMiddleware.Util;
 using log4net;
+using System.Data.Entity;
 
 namespace HMOSecureMiddleware
 {
@@ -329,7 +330,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-               var duplicateNotice = context.hmsWires.FirstOrDefault(s => s.ValueDate == wire.ValueDate && s.Currency == wire.Currency && s.hmsWirePurposeLkup.Purpose == "Notice" && s.hmsWireId != wire.hmsWireId && ((SwiftStatus)s.SwiftStatusId == SwiftStatus.Processing || (SwiftStatus)s.SwiftStatusId == SwiftStatus.Acknowledged)) ?? new hmsWire();
+               var duplicateNotice = context.hmsWires.FirstOrDefault(s => DbFunctions.TruncateTime(s.ValueDate) == DbFunctions.TruncateTime(wire.ValueDate) && s.Currency == wire.Currency && s.hmsWireTransferTypeLKup.TransferType == "Notice" && s.hmsWireId != wire.hmsWireId && ((SwiftStatus)s.SwiftStatusId == SwiftStatus.Processing || (SwiftStatus)s.SwiftStatusId == SwiftStatus.Acknowledged)) ?? new hmsWire();
                return duplicateNotice.Amount == wire.Amount;
             }
         }
