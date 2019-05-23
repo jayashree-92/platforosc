@@ -35,6 +35,14 @@ namespace HMOSecureWeb.Utility
             get { return !IsLowerEnvironment ? string.Empty : string.Format("| {0}", Environment); }
         }
 
+        public static string OnBoardingSubDomainPath
+        {
+            get
+            {
+                return ConfigurationManagerWrapper.StringSetting("OnBoardingSubDomainPath", "https://hm-admin-test01.bnymellon.com/onboard/");
+            }
+        }
+
         public static string GetRole(this IPrincipal principal)
         {
             if (principal == null)
