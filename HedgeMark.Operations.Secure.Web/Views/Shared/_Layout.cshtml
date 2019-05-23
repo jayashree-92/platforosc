@@ -32,25 +32,18 @@
                 <ul class="nav navbar-nav"></ul>
                 <ul class="nav navbar-nav navbar-right">
 
-                    @*<li id="liLogs">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Logs <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
-                                <li>@Html.ActionLink("Inbound MQ Logs", "InboundLogs", "Audit")</li>
-                            </ul>
-                        </li>*@
-
+                    <li id="liAccounts">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accounts <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@string.Format("{0}Account/AccountList", onboardingSubDomainPath)" target="_blank">Fund Accounts</a></li>
+                            <li><a href="@string.Format("{0}Account/SsiTemplateList", onboardingSubDomainPath)" target="_blank">SSI Templates</a></li>
+                        </ul>
+                    </li>
                     <li>@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
                     <li>@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
                     <li>@Html.ActionLink("User Audits", "Index", "Audit")</li>
                     <li>@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</li>
-                    <li id="liAccounts">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="@string.Format("{0}Account/AccountList", onboardingSubDomainPath)" target="_blank">Account</a></li>
-                            <li><a href="@string.Format("{0}Account/SsiTemplateList", onboardingSubDomainPath)" target="_blank">SSI Template</a></li>
-                        </ul>
-                    </li>
+
                     <li style="padding-top: 12px;" title="@User.Identity.Name"><label style="color:inherit;padding: 5px 3px!important;" class="label label-default" href="#"><i class="glyphicon glyphicon-user"></i> @userRole</label></li>
                     <li title="Hangfire Jobs"><a href="/jobs" target="_blank"><i class="glyphicon glyphicon-stats"></i></a></li>
                     <li title="Logout" class="navbar-right"><a id="btnLogOff" class="navbar-icon" href=@Url.Action("LogOff", "Account")><i class="glyphicon glyphicon-log-out"></i></a></li>
