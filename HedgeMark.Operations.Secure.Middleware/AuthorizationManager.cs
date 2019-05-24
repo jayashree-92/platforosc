@@ -36,6 +36,7 @@ namespace HMOSecureMiddleware
         public AuthorizedData(List<AuthorizedEntity> hmFundIds)
         {
             HMFundIds = hmFundIds;
+            IsPrivilegedUser = false;
         }
 
         private AuthorizedData(bool isPrivilegedUser)
