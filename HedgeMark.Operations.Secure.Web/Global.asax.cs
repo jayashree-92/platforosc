@@ -139,7 +139,7 @@ namespace HMOSecureWeb
                 var userRole = (from aspUser in context.aspnet_Users
                                 join usr in context.hLoginRegistrations on aspUser.UserName equals usr.varLoginID
                                 where usr.intLoginID == userSso.intLoginID && aspUser.aspnet_Roles.Any(r => AuthorizationManager.AuthorizedDmaUserRoles.Contains(r.RoleName)) && !usr.isDeleted
-                                let role = aspUser.aspnet_Roles.Any(r => AuthorizationManager.AuthorizedDmaUserRoles.Contains(OpsSecureUserRoles.DMAAdmin)) ? OpsSecureUserRoles.DMAAdmin : OpsSecureUserRoles.DMAUser
+                                let role = aspUser.aspnet_Roles.Any(r => r.RoleName == OpsSecureUserRoles.DMAAdmin) ? OpsSecureUserRoles.DMAAdmin : OpsSecureUserRoles.DMAUser
                                 select role).FirstOrDefault() ?? string.Empty;
 
                 if (!string.IsNullOrWhiteSpace(userRole))
