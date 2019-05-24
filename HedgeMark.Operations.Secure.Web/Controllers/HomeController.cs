@@ -195,7 +195,7 @@ namespace HMOSecureWeb.Controllers
 
                 wireData.Add(thisWire);
             }
-            return Json(wireData);
+            return Json(new { wireData, AuthorizedSessionData.IsPrivilegedUser });
         }
 
         public JsonResult GetWireMessageTypeDetails(string module)
