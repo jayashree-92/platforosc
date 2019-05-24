@@ -195,7 +195,7 @@ namespace HMOSecureWeb.Controllers
 
                 wireData.Add(thisWire);
             }
-            return Json(new { wireData, AuthorizedSessionData.IsPrivilegedUser });
+            return Json(new { wireData, AuthorizedSessionData.IsPrivilegedUser, isAdmin = User.IsInRole(OpsSecureUserRoles.DMAAdmin) });
         }
 
         public JsonResult GetWireMessageTypeDetails(string module)

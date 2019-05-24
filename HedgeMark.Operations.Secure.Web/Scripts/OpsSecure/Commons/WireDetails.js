@@ -28,7 +28,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
         $http.get("/Home/GetWireStatusDetails?startContextDate=" + startContextDate + "&endContextDate=" + endContextDate + "&statusIds=" + statusId).then(function (response) {
 
             //$scope.userDetails = response.data.userData;
-            var wireDetails = response.data;
+            var wireDetails = response.data.wireData;
 
             tblWireStatusDetails = $("#tblWireStatusDetails").DataTable({
                 aaData: wireDetails,
