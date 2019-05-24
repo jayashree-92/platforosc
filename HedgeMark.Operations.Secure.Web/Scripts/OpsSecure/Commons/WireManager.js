@@ -340,7 +340,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         angular.element("#wireEntryDate").html(getFormattedUIDate(moment($scope.WireTicket.ContextDate)._d));
         if ($scope.isEditEnabled) {
             $scope.initializeDatePicker();
-            angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditable', true);
+            if ($scope.isWirePurposeAdhoc)
+                angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditable', true);
+            else
+                angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditable', false);
             angular.element("#wireValueDate").datepicker("setDate", moment(getDateForDisplay($scope.WireTicket.ValueDate))._d);
         }
         else {
