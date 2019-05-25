@@ -53,7 +53,7 @@ namespace HMOSecureWeb.Controllers
             WireStatusCount wireStatusCount;
             using (var context = new OperationsSecureContext())
             {
-                var wireStatusCountMap = context.hmsWires.Where(s => s.WireStatusId == 2 || s.ValueDate == valueDate).Select(s => new { s.hmFundId, s.WireStatusId, s.SwiftStatusId }).ToList();
+                var wireStatusCountMap = context.hmsWires.Where(s => s.WireStatusId == 2 || s.ValueDate == valueDate || DbFunctions.TruncateTime(s.CreatedAt) == DbFunctions.TruncateTime(valueDate)).Select(s => new { s.hmFundId, s.WireStatusId, s.SwiftStatusId }).ToList();
 
                 if (!AuthorizedSessionData.IsPrivilegedUser)
                 {
