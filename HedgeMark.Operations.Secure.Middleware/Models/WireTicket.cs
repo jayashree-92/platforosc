@@ -175,7 +175,7 @@ namespace HMOSecureMiddleware.Models
 
         private long GetWireIdFromTransaction(string fieldValue, out string referenceTag)
         {
-            var wireIdString = fieldValue.Replace(string.Format("{0}DMO", Utility.Environment.ToUpper()[0].ToString()), string.Empty);
+            var wireIdString = fieldValue.Replace("DMO", string.Empty).Replace(Utility.Environment.ToUpper()[0].ToString(), string.Empty);
             var referenceStrSplits = wireIdString.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
             referenceTag = string.Empty;
 
