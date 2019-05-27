@@ -20,7 +20,7 @@ HmOpsApp.controller("WireLogsCtrl", function ($scope, $http, $timeout) {
         "startDate": moment().subtract(1, "days"),
         "endDate": moment(),
         "autoApply": true,
-        "maxDate": moment(),
+        "maxDate": moment().add(7, "days"),
         ranges: {
             'Today and Yesterday': [moment().subtract(1, "days"), moment()],
             'Last 7 Days': [moment().subtract(6, "days"), moment()],
