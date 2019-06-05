@@ -168,5 +168,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual onboardingFund onboardingFund { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccount> onBoardingAccounts { get; set; }
+        public virtual dmaCounterpartyFamily dmaCounterpartyFamily { get; set; }
+        public virtual onboardingClient onboardingClient { get; set; }
     }
 }

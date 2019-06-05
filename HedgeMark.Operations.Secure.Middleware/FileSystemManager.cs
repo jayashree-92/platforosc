@@ -33,6 +33,24 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static string OpsSecureAccountsFileUploads
+        {
+            get
+            {
+                var configPath = ConfigurationManagerWrapper.StringSetting("OpsSecureAccountsFileUploads", string.Format(@"{0}AccountsFileUploads\", OpsSecureRootDirectory));
+                return GetValidatedConfigPath(configPath);
+            }
+        }
+
+        public static string OpsSecureSSITemplateFileUploads
+        {
+            get
+            {
+                var configPath = ConfigurationManagerWrapper.StringSetting("OpsSecureSSITemplateFileUploads", string.Format(@"{0}SSITemplateFileUploads\", OpsSecureRootDirectory));
+                return GetValidatedConfigPath(configPath);
+            }
+        }
+
         public static string DefaultTimeZone
         {
             get
@@ -48,6 +66,9 @@ namespace HMOSecureMiddleware
 
             if (!Directory.Exists(OpsSecureWiresFilesPath))
                 Directory.CreateDirectory(OpsSecureWiresFilesPath);
+
+            if (!Directory.Exists(OpsSecureSSITemplateFileUploads))
+                Directory.CreateDirectory(OpsSecureSSITemplateFileUploads);
         }
 
 

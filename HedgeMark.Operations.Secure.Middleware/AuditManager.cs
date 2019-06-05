@@ -66,6 +66,35 @@ namespace HMOSecureMiddleware
                     }).ToList();
         }
 
+        public static hmsUserAuditLog BuildOnboardingAuditLog(string onboardingType, string onboardingName, string field, string action,
+                 string previousStateValue, string modifiedStateValue, string username)
+        {
+            var auditLog = new hmsUserAuditLog();
+
+            auditLog.CreatedAt = DateTime.Now;
+            auditLog.UserName = username;
+            auditLog.Module = onboardingType;
+            auditLog.PreviousStateValue = previousStateValue;
+            auditLog.ModifiedStateValue = modifiedStateValue;
+            auditLog.Action = action;
+            auditLog.Field = field;
+            switch (onboardingType)
+            {
+                case "Account":
+                    auditLog.Log = String.Format("Onboarding Name: <i>{0}</i><br/>Account Name: <i>{1}</i>", onboardingType, onboardingName);
+                    break;
+                case "SSITemplate":
+                    auditLog.Log = String.Format("Onboarding Name: <i>{0}</i><br/>SSI Template Name: <i>{1}</i>", onboardingType, onboardingName);
+                    break;
+
+            }
+            //auditLog.Association = ((onboardingType == "Client") ?
+            //                       String.Format("Onboarding Name: <i>{0}</i><br/>Client Name: <i>{1}</i>", onboardingType, onboardingName) :
+            //                       String.Format("Onboarding Name: <i>{0}</i><br/>Fund Name: <i>{1}</i>", onboardingType, onboardingName));
+
+            return auditLog;
+        }
+
         public static void Log(List<hmsUserAuditLog> auditLogs)
         {
             if (auditLogs.Count == 0)

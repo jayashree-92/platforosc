@@ -12,26 +12,24 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class dmaCounterPartyOnBoarding
+    public partial class dmaCounterpartyFamily
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public dmaCounterPartyOnBoarding()
+        public dmaCounterpartyFamily()
         {
             this.dmaAgreementOnBoardings = new HashSet<dmaAgreementOnBoarding>();
+            this.dmaCounterPartyOnBoardings = new HashSet<dmaCounterPartyOnBoarding>();
+            this.onBoardingAccounts = new HashSet<onBoardingAccount>();
         }
     
-        public long dmaCounterPartyOnBoardId { get; set; }
-        public string CounterpartyShortCode { get; set; }
-        public string CounterpartyName { get; set; }
-        public Nullable<long> dmaCounterpartyFamilyId { get; set; }
-        public bool IsDeleted { get; set; }
-        public string CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedAt { get; set; }
-        public string UpdatedBy { get; set; }
-        public Nullable<System.DateTime> UpdatedAt { get; set; }
+        public long dmaCounterpartyFamilyId { get; set; }
+        public string CounterpartyFamily { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }
-        public virtual dmaCounterpartyFamily dmaCounterpartyFamily { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<dmaCounterPartyOnBoarding> dmaCounterPartyOnBoardings { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<onBoardingAccount> onBoardingAccounts { get; set; }
     }
 }

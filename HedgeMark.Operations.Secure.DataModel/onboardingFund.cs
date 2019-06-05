@@ -173,6 +173,10 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string CPONameText { get; set; }
         public string ConfirmwithOpsTeamthesweepisworkingproperly { get; set; }
         public string AMLDueDiligenceforHMSAccessPlatform { get; set; }
+        public string DealingDay { get; set; }
+        public string PerformanceAllocation { get; set; }
+        public string SpecialLimitedPartner { get; set; }
+        public string FileForm1099MISC { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }
@@ -180,5 +184,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual ICollection<onBoardingAccount> onBoardingAccounts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaFundOnBoardPermission> dmaFundOnBoardPermissions { get; set; }
+        public virtual onboardingClient onboardingClient { get; set; }
     }
 }

@@ -144,6 +144,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -1472,6 +1473,10 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\OpsSecure\Accounts\Account.js" />
+    <Content Include="Scripts\OpsSecure\Accounts\AccountList.js" />
+    <Content Include="Scripts\OpsSecure\Accounts\SSITemplate.js" />
+    <Content Include="Scripts\OpsSecure\Accounts\SSITemplateList.js" />
     <Content Include="Scripts\OpsSecure\Commons\WireDetails.js" />
     <Content Include="Scripts\OpsSecure\Commons\WireManager.js" />
     <Content Include="Scripts\OpsSecure\Home.js" />
@@ -1554,6 +1559,10 @@
     <Content Include="Views\WireLog\Index.cshtml" />
     <Content Include="Views\Audit\MqLogs.cshtml" />
     <Content Include="Views\Home\WirePurpose.cshtml" />
+    <Content Include="Views\Accounts\Account.cshtml" />
+    <Content Include="Views\Accounts\Index.cshtml" />
+    <Content Include="Views\Accounts\SSITemplateList.cshtml" />
+    <Content Include="Views\Accounts\SSITemplate.cshtml" />
     <None Include="Web.Local.config">
       <SubType>Designer</SubType>
     </None>

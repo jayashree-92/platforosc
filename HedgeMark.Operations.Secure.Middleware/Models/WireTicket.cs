@@ -21,12 +21,12 @@ namespace HMOSecureMiddleware.Models
         }
         public bool IsBookTransfer
         {
-            get { return HMWire.hmsWireTransferTypeLKup == null ? false : HMWire.hmsWireTransferTypeLKup.TransferType == "Book Transfer"; }
+            get { return HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.TransferType == "Book Transfer"; }
         }
 
         public bool IsNotice
         {
-            get { return HMWire.hmsWireTransferTypeLKup == null ? false : HMWire.hmsWireTransferTypeLKup.TransferType == "Notice"; }
+            get { return HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.TransferType == "Notice"; }
         }
 
         public string TransferType

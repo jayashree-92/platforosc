@@ -6,7 +6,6 @@
 
 @{
     var userRole = @Util.GetRole(User).Replace("-", " ").Replace("Hm ", string.Empty);
-    var onboardingSubDomainPath = Util.OnBoardingSubDomainPath;
 }
 <body ng-app="HmOperationsSecureApp" style="background: #F5F5F5">
 
@@ -35,8 +34,8 @@
                     <li id="liAccounts">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accounts <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="@string.Format("{0}Account/AccountList", onboardingSubDomainPath)" target="_blank">Fund Accounts</a></li>
-                            <li><a href="@string.Format("{0}Account/SsiTemplateList", onboardingSubDomainPath)" target="_blank">SSI Templates</a></li>
+                            <li>@Html.ActionLink("Fund Accounts", "Index", "Accounts")</li>
+                            <li>@Html.ActionLink("SSI Templates", "SSITemplateList", "Accounts")</li>
                         </ul>
                     </li>
                     <li>@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>

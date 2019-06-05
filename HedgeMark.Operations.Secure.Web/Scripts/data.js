@@ -523,6 +523,11 @@ function getDateForToolTip(dateTime) {
     return moment(dateTime).format("lll");
 }
 
+function getFormattedFileName(fileName) {
+    return escape(fileName).split('+').join('%2B');
+};
+
+
 function getDateForDisplay(dateTime) {
     if (dateTime == null)
         return '';

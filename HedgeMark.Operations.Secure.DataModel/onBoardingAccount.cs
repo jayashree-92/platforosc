@@ -84,5 +84,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual ICollection<onBoardingAccountDocument> onBoardingAccountDocuments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
+        public virtual dmaCounterpartyFamily dmaCounterpartyFamily { get; set; }
     }
 }

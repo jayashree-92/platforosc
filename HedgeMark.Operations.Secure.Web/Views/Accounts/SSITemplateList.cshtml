@@ -1,0 +1,99 @@
+﻿@using System.Activities.Expressions
+@using HMOSecureWeb.Utility
+
+@{
+    ViewBag.Title = "OnBoarding - SSITemplate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<legend>SSI Templates</legend>
+
+
+<div id="ssiTemplateListDiv" ng-controller="SSITemplateListController">
+    <input type="hidden" id="userName" value=@User.Identity.Name>
+    <form name="ssiTemplateForm">
+        <div class="well well-sm sticky-header" style="min-height: 50px;">
+            @if (User.IsWireUser())
+            {
+                <button ng-click="fnCreateSSITemplate()" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-phone"></i>&nbsp; Add SSI Template</button>
+                <div class="pull-right btn-group" id="btnSSITemplateStatusButtons" style="display: none;">
+                    <button id="requestForApproval" title="Request for Approval" class="btn btn-warning btn-sm" ng-click="fnUpdateSSITemplateStatus('Pending Approval','Request for Approval')" ng-disabled="!(listSSITemplateStatus == 'Saved As Draft')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
+                    @if (User.IsWireApprover())
+                    {
+                        <button id="approve" title="Approve" class="btn btn-success btn-sm" ng-click="fnUpdateSSITemplateStatus('Approved','Approve')" ng-disabled="!(listSSITemplateStatus == 'Pending Approval') || updatedBy=='@User.Identity.Name'"><i class="glyphicon glyphicon-ok"></i> Approve</button>
+                    }
+                    <button id="revert" title="Revert" class="btn btn-info btn-sm" ng-click="fnUpdateSSITemplateStatus('Saved As Draft','Revert')" ng-disabled="(listSSITemplateStatus == 'Saved As Draft')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</button>
+                </div>
+            }
+            <div class="pull-right btn-group">
+                <button class=" btn btn-primary btn-sm" id="btnEdit" disabled ng-click="fnEditSSITemplate()">
+                    <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
+                </button>
+                @if (User.IsWireApprover())
+                {
+                    <button class="btn btn-danger btn-sm" id="btnDel" disabled ng-click="fnDeleteSSITemplate()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>
+                }
+            </div>
+            <div class="pull-right btn-group" style="padding-right: 2px;">
+                @*<span class="btn-group">
+                    <a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportAllSSITemplate()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
+                </span>*@
+            </div>
+            @if (User.IsWireUser())
+            {
+                <div class="pull-right btn-group" style="padding-right: 2px;">
+                    @*<button id="btnUploadSource" class="btn btn-default btn-sm editableTool" data-toggle="collapse" data-target="#divUploadSource" aria-expanded="false" aria-controls="divUploadSource"><i class="glyphicon glyphicon-upload"></i>&nbsp;Bulk Upload</button>*@
+                    @*<button id="btnUploadSource" class="btn btn-default btn-sm editableTool dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-upload"></i>&nbsp;Bulk Upload</button>
+                    <ul class="dropdown-menu dropdown-menu-right" id="ulBulkUpload">
+                        <li><a href="#" ng-click="downloadSSITemplateSample()" id="sampleExportHeaders">Download Sample</a></li>
+                        <li><a href="#" data-toggle="collapse" data-target="#divUploadSource" aria-expanded="false" aria-controls="divUploadSource">Upload</a></li>
+                    </ul>*@
+                </div>
+            }
+        </div>
+        <div class=" collapse row" id="divUploadSource">
+            @*<div class="col-sm-12 col-md-12 col-lg-12" style="margin-bottom: 20px">
+                    <a href="/Account/ExportSampleSsiTemplatelist" class="btn btn-sm btn-default pull-right" id="sampleExportHeaders">Download Sample</a>
+                </div>
+                <br />*@
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <div id="dropZoneDiv">
+                    @* ReSharper disable once Html.TagNotResolved *@
+                    <ng-form class="dropzone" enctype="multipart/form-data" id="uploadFiles" method="post" novalidate />
+                </div>
+            </div>
+        </div>
+        <br />
+        <div id="loading" style="display: none; text-align: center;">
+            @*<img id="loading-image" src="/img/Onboarding-loading.gif" alt="Loading..." />*@
+        </div>
+        <table id="ssiTemplateTable" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
+    </form>
+
+    <div class="modal fade" id="updateSSITemplateModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="UpdateSSITemplateModal" aria-hidden="true" style="width:100%">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Comments</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-left" id="pMsg"></p>
+                    <textarea placeholder="Enter Comments" id="ssiTemplateCommentTextArea" style="width: 90%;max-width:none;" class="form-control"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSaveCommentAgreements" class="btn btn-sm" ng-class="{'btn-warning': ssiTemplate.SSITemplateStatus == 'Saved As Draft','btn-success': ssiTemplate.SSITemplateStatus == 'Pending Approval','btn-primary': ssiTemplate.SSITemplateStatus == 'Approved' }" ng-click="fnSaveSSITemplateStatus()"><i class="glyphicon glyphicon-flag"></i>&nbsp;Proceed</button>
+                    <button id="btnSendApproval" class="btn btn-sm btn-warning" ng-click="fnSendApprovalSSITemplateStatus()" style="display: none;"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
+                    <a href="#" class="btn btn-default btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section javascript
+{
+    <script src="~/Scripts/OpsSecure/Accounts/SSITemplateList.js"></script>
+}
+

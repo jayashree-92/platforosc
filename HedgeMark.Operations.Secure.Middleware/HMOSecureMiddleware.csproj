@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountsManager.cs" />
     <Compile Include="AdminFundManager.cs" />
     <Compile Include="AuditManager.cs" />
     <Compile Include="AuthorizationManager.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Models\AuditLogData.cs" />
     <Compile Include="Models\WireTicket.cs" />
     <Compile Include="NotificationManager.cs" />
+    <Compile Include="OnBoardingDataManager.cs" />
     <Compile Include="Queues\QueueSystemManager.cs" />
     <Compile Include="Service References\UserManagementService\Reference.cs">
       <AutoGen>True</AutoGen>

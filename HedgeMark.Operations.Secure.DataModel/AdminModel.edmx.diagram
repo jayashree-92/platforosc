@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="414b691953974c01be2844de38379599" Name="Diagram1">
+      <Diagram DiagramId="414b691953974c01be2844de38379599" Name="Diagram1" ZoomLevel="74">
         <EntityTypeShape EntityType="AdminModel.aspnet_Roles" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.aspnet_Users" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.hLoginRegistration" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
@@ -47,6 +47,20 @@
         <EntityTypeShape EntityType="AdminModel.dmaFundOnBoardPermission" Width="1.5" PointX="15" PointY="10.875" />
         <AssociationConnector Association="AdminModel.FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId" />
         <AssociationConnector Association="AdminModel.aspnet_UsersInRoles" />
+        <EntityTypeShape EntityType="AdminModel.onBoardingAuthorizedParty" Width="1.5" PointX="7.375" PointY="4.75" />
+        <EntityTypeShape EntityType="AdminModel.onBoardingCashInstruction" Width="1.5" PointX="7.375" PointY="7.75" />
+        <EntityTypeShape EntityType="AdminModel.onBoardingCurrency" Width="1.5" PointX="9.375" PointY="0.75" />
+        <EntityTypeShape EntityType="AdminModel.onBoardingWirePortalCutoff" Width="1.5" PointX="9.375" PointY="3.75" />
+        <EntityTypeShape EntityType="AdminModel.onBoardingSwiftGroup" Width="1.5" PointX="9.375" PointY="6.75" />
+        <EntityTypeShape EntityType="AdminModel.dmaCounterpartyFamily" Width="1.5" PointX="6.875" PointY="23.25" />
+        <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_dmaCounterPartyFamilyId" />
+        <AssociationConnector Association="AdminModel.FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId" />
+        <AssociationConnector Association="AdminModel.FK_onBoardingAccount_dmaCounterpartyFamilyId" />
+        <EntityTypeShape EntityType="AdminModel.onBoardingAccountBICorABA" Width="1.5" PointX="9.375" PointY="9.75" />
+        <EntityTypeShape EntityType="AdminModel.dmaOnBoardingContactDetail" Width="1.5" PointX="17.375" PointY="0.75" />
+        <EntityTypeShape EntityType="AdminModel.onboardingClient" Width="1.5" PointX="2.5" PointY="11.25" />
+        <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_OnboardingClient_dmaClientOnBoardId" />
+        <AssociationConnector Association="AdminModel.FK_onboardingFund_dmaClientOnBoardId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

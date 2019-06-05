@@ -107,11 +107,11 @@
         /*position: fixed;*/
     }
 
-    .dashDatepicker > #contextDate {
+    .dashDatepicker > span {
         display: inline-block;
     }
 
-        .dashDatepicker > #contextDate > h3 {
+        .dashDatepicker > span > h3 {
             margin-top: 3px;
             margin-bottom: 3px;
             cursor: pointer;
@@ -298,9 +298,29 @@ div.dataTables_info {
     font-style: italic;
 }
 
-table th.reconStatus {
-    background-color: #f8ede5;
+.form-control {
+    font-size: 12px;
 }
+
+.well,
+table {
+    background-color: #ffffff;
+}
+
+table.dataTable thead th {
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: top;
+    text-overflow: ellipsis;
+}
+
+table.dataTable tbody td {
+    padding: 5px 5px 5px 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 
 .dataTables_empty {
     text-align: center !important;
@@ -2208,6 +2228,19 @@ div.DTCR_pointer {
     padding-top: 50px;
 }
 
+[id^='tblWireStatusDetails'] table.dataTable thead th {
+    overflow: hidden;
+    white-space: normal;
+    vertical-align: top;
+    text-overflow: ellipsis;
+}
+
+[id^='tblWireStatusDetails'] table.dataTable tbody td {
+    padding: 5px 5px 5px 5px;
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: ellipsis;
+}
 
 .font-primary {
     color: #a29060;

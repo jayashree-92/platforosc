@@ -139,7 +139,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
             $scope.castToDate($scope.wireTicketObj.SendingAccount);
             $scope.accountDetail = angular.copy($scope.wireTicketObj.SendingAccount);
-            if ($scope.WireTicket.IsBookTransfer) {
+            if ($scope.wireTicketObj.IsBookTransfer) {
                 $scope.castToDate($scope.wireTicketObj.ReceivingAccount);
                 $scope.receivingAccountDetail = angular.copy($scope.wireTicketObj.ReceivingAccount);
             }

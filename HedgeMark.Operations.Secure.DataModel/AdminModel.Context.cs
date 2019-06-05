@@ -50,6 +50,15 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
         public virtual DbSet<onBoardingSSITemplate> onBoardingSSITemplates { get; set; }
         public virtual DbSet<dmaFundOnBoardPermission> dmaFundOnBoardPermissions { get; set; }
+        public virtual DbSet<onBoardingAuthorizedParty> onBoardingAuthorizedParties { get; set; }
+        public virtual DbSet<onBoardingCashInstruction> onBoardingCashInstructions { get; set; }
+        public virtual DbSet<onBoardingCurrency> onBoardingCurrencies { get; set; }
+        public virtual DbSet<onBoardingWirePortalCutoff> onBoardingWirePortalCutoffs { get; set; }
+        public virtual DbSet<onBoardingSwiftGroup> onBoardingSwiftGroups { get; set; }
+        public virtual DbSet<dmaCounterpartyFamily> dmaCounterpartyFamilies { get; set; }
+        public virtual DbSet<onBoardingAccountBICorABA> onBoardingAccountBICorABAs { get; set; }
+        public virtual DbSet<dmaOnBoardingContactDetail> dmaOnBoardingContactDetails { get; set; }
+        public virtual DbSet<onboardingClient> onboardingClients { get; set; }
     
         public virtual ObjectResult<USP_NEXEN_GetUserDetails_Result> USP_NEXEN_GetUserDetails(string userID, string userType)
         {
