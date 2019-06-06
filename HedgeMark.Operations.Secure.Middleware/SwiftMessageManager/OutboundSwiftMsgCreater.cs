@@ -167,7 +167,9 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field53B GetField53B(WireTicket wire)
         {
-            var ffcOrUltimateAccount = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : string.Empty;
+            var ffcOrUltimateAccount = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber)
+                ? wire.SendingAccount.FFCNumber
+                : !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiaryAccountName) ? wire.SendingAccount.UltimateBeneficiaryAccountName : string.Empty;
 
             var f53B = new Field53B().setAccount(ffcOrUltimateAccount);
             return f53B;
@@ -442,7 +444,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             //Optional
             SetField58X(mt202Cov, wire);
 
-            mt202Cov.addField(GetField50K(wire));            
+            mt202Cov.addField(GetField50K(wire));
 
             mt202Cov.addField(GetField59(wire));
 
