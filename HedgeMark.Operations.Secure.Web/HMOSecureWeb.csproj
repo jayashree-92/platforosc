@@ -49,6 +49,9 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ExcelUtility.Operations">
+      <HintPath>..\HedgeMark.Operations.Secure.Middleware\ExternalLibraries\HM-Ops-Utils\ExcelUtility.Operations.dll</HintPath>
+    </Reference>
     <Reference Include="Hangfire.Core, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.Core.1.7.2\lib\net46\Hangfire.Core.dll</HintPath>
       <Private>True</Private>
@@ -56,6 +59,9 @@
     <Reference Include="Hangfire.SqlServer, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.SqlServer.1.7.2\lib\net45\Hangfire.SqlServer.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="HedgeMark.Operations.FileParseEngine">
+      <HintPath>..\HedgeMark.Operations.Secure.Middleware\ExternalLibraries\HM-Ops-Utils\HedgeMark.Operations.FileParseEngine.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -388,6 +394,8 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="ExternalLibraries\Disclosure.txt" />
+    <Content Include="ExternalLibraries\HedgeMarkAddress.txt" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

@@ -559,13 +559,17 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         hmsWireId: 0
     }
 
+
+    Dropzone.options.myAwesomeDropzone = false;
+    Dropzone.autoDiscover = false;
+
     angular.element("#uploadWireFiles").dropzone({
         url: "/Home/UploadWireFiles?wireId=" + $scope.WireTicket.hmsWireId,
-        dictDefaultMessage: "<span style='font-size:15px;font-weight:normal;font-style:italic'>Drag/Drop wire documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
+        dictDefaultMessage: "<span>Drag/Drop wire documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
         autoDiscover: false,
         acceptedFiles: ".csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
         maxFiles: 3,
-        previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-sm'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
+        previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-dz'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
             "</div> <div class='panel-body'> <span class='dz-upload' data-dz-uploadprogress></span>" +
             "<div class='progress'><div data-dz-uploadprogress class='progress-bar progress-bar-warning progress-bar-striped active dzFileProgress' style='width: 0%'></div>" +
             "</div></div></div></div>",
@@ -633,7 +637,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     }
                 },
                 {
-                    "sTitle": "Uploded At",
+                    "sTitle": "Uploaded At",
                     "mData": "CreatedAt",
                     "type": "dotnet-date",
                     "mRender": function (tdata) {

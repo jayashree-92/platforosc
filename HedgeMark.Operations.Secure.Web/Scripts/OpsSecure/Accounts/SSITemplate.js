@@ -1,4 +1,5 @@
-﻿HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filter, $q) {
+﻿$("#liAccounts").addClass("active");
+HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filter, $q) {
     $("#onboardingMenu").addClass("active");
     $scope.ssiTemplate = {};
     $scope.ssiTemplates = [];
@@ -34,11 +35,14 @@
                     "mData": "FileName"
                 },
                 {
-                    "sTitle": "Uploded By",
-                    "mData": "RecCreatedBy"
+                    "sTitle": "Uploaded By",
+                    "mData": "RecCreatedBy",
+                    "mRender": function (data) {
+                        return humanizeEmail(data);
+                    }
                 },
                 {
-                    "sTitle": "Uploded At",
+                    "sTitle": "Uploaded At",
                     "mData": "RecCreatedAt",
                     "type": "dotnet-date",
                     "mRender": function (tdata) {
@@ -720,8 +724,10 @@
     }
     $scope.SaveSSITemplate = function (isValid) {
 
-        if (!isValid)
+        if (!isValid) {
+            notifyWarning("Please fill-in the mandatory fields and try again");
             return;
+        }
 
         var isSsiExits = false;
         var ssiName = $scope.ssiTemplate.TemplateName;
@@ -836,11 +842,11 @@
 
         $("#uploadFiles").dropzone({
             url: "/Accounts/UploadSsiTemplateFiles?ssiTemplateId=" + ssiTemplateId,
-            dictDefaultMessage: "<span style='font-size:20px;font-weight:normal;font-style:italic'>Drag/Drop SSI template files here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
+            dictDefaultMessage: "<span>Drag/Drop SSI template files here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
             autoDiscover: false,
             acceptedFiles: ".csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
             maxFiles: 6,
-            previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-sm'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
+            previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-dz'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
                 "</div> <div class='panel-body'> <span class='dz-upload' data-dz-uploadprogress></span>" +
                 "<div class='progress'><div data-dz-uploadprogress class='progress-bar progress-bar-warning progress-bar-striped active dzFileProgress' style='width: 0%'></div>" +
                 "</div></div></div></div>",

@@ -43,6 +43,18 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ExcelUtility.Operations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExternalLibraries\HM-Ops-Utils\ExcelUtility.Operations.dll</HintPath>
+    </Reference>
+    <Reference Include="HedgeMark.Operations.FileParseEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExternalLibraries\HM-Ops-Utils\HedgeMark.Operations.FileParseEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="HedgeMark.Stats.DataContracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExternalLibraries\HM-Ops-Utils\HedgeMark.Stats.DataContracts.dll</HintPath>
+    </Reference>
     <Reference Include="IBM.XMS, Version=9.0.0.5, Culture=neutral, PublicKeyToken=d2666ab12fca862b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalLibraries\IBM-MQ\IBM.XMS.dll</HintPath>
@@ -50,6 +62,10 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="PDFUtility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExternalLibraries\HM-Ops-Utils\PDFUtility.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -93,12 +109,20 @@
   <ItemGroup>
     <Content Include="ExternalLibraries\Disclosure.txt" />
     <Content Include="ExternalLibraries\HedgeMarkAddress.txt" />
+    <Content Include="ExternalLibraries\HM-Ops-Utils\Aspose.Cells.dll" />
+    <Content Include="ExternalLibraries\HM-Ops-Utils\Aspose.Pdf.dll" />
+    <Content Include="ExternalLibraries\HM-Ops-Utils\ExcelUtility.Operations.dll" />
+    <Content Include="ExternalLibraries\HM-Ops-Utils\HedgeMark.Operations.FileParseEngine.dll" />
+    <Content Include="ExternalLibraries\HM-Ops-Utils\HedgeMark.Stats.DataContracts.dll" />
+    <Content Include="ExternalLibraries\HM-Ops-Utils\PDFUtility.dll" />
     <Content Include="ExternalLibraries\IBM-MQ\amqmdnet.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ExternalLibraries\IBM-MQ\IBM.XMS.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="ExternalLibraries\HM-Ops-Utils\Aspose.Cells.lic" />
+    <None Include="ExternalLibraries\HM-Ops-Utils\Aspose.Pdf.lic" />
     <None Include="Service References\UserManagementService\HMOSecureMiddleware.UserManagementService.addUserResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

@@ -15,8 +15,15 @@
         <div class="well well-sm sticky-header" style="min-height: 50px;">
             @if (User.IsWireUser())
             {
-                <button ng-click="fnCreateSSITemplate()" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-phone"></i>&nbsp; Add SSI Template</button>
+                <button ng-click="fnCreateSSITemplate()" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-plus"></i>&nbsp; Add SSI Template</button>
                 <div class="pull-right btn-group" id="btnSSITemplateStatusButtons" style="display: none;">
+                    <div class="pull-right btn-group" style="padding-right: 2px;">
+                        <button id="btnUploadSource" class="btn btn-default btn-sm editableTool dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-upload"></i>&nbsp;Bulk Upload <b class="caret"></b></button>
+                        <ul class="dropdown-menu dropdown-menu-right" id="ulBulkUpload">
+                            <li><a href="#" ng-click="downloadSSITemplateSample()" id="sampleExportHeaders">Download Sample</a></li>
+                            <li><a href="#" data-toggle="collapse" data-target="#divUploadSource" aria-expanded="false" aria-controls="divUploadSource">Upload</a></li>
+                        </ul>
+                    </div>&nbsp;&nbsp;
                     <button id="requestForApproval" title="Request for Approval" class="btn btn-warning btn-sm" ng-click="fnUpdateSSITemplateStatus('Pending Approval','Request for Approval')" ng-disabled="!(listSSITemplateStatus == 'Saved As Draft')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
                     @if (User.IsWireApprover())
                     {
@@ -26,7 +33,7 @@
                 </div>
             }
             <div class="pull-right btn-group">
-                <button class=" btn btn-primary btn-sm" id="btnEdit" disabled ng-click="fnEditSSITemplate()">
+                &nbsp;&nbsp;<button class=" btn btn-primary btn-sm" id="btnEdit" disabled ng-click="fnEditSSITemplate()">
                     <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
                 </button>
                 @if (User.IsWireApprover())
@@ -35,20 +42,13 @@
                 }
             </div>
             <div class="pull-right btn-group" style="padding-right: 2px;">
-                @*<span class="btn-group">
-                    <a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportAllSSITemplate()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
-                </span>*@
+
+                &nbsp;&nbsp; <a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportAllSSITemplate()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
+
             </div>
             @if (User.IsWireUser())
             {
-                <div class="pull-right btn-group" style="padding-right: 2px;">
-                    @*<button id="btnUploadSource" class="btn btn-default btn-sm editableTool" data-toggle="collapse" data-target="#divUploadSource" aria-expanded="false" aria-controls="divUploadSource"><i class="glyphicon glyphicon-upload"></i>&nbsp;Bulk Upload</button>*@
-                    @*<button id="btnUploadSource" class="btn btn-default btn-sm editableTool dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-upload"></i>&nbsp;Bulk Upload</button>
-                    <ul class="dropdown-menu dropdown-menu-right" id="ulBulkUpload">
-                        <li><a href="#" ng-click="downloadSSITemplateSample()" id="sampleExportHeaders">Download Sample</a></li>
-                        <li><a href="#" data-toggle="collapse" data-target="#divUploadSource" aria-expanded="false" aria-controls="divUploadSource">Upload</a></li>
-                    </ul>*@
-                </div>
+
             }
         </div>
         <div class=" collapse row" id="divUploadSource">
@@ -63,11 +63,10 @@
                 </div>
             </div>
         </div>
-        <br />
         <div id="loading" style="display: none; text-align: center;">
             @*<img id="loading-image" src="/img/Onboarding-loading.gif" alt="Loading..." />*@
         </div>
-        <table id="ssiTemplateTable" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
+        <table id="ssiTemplateTable" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
     </form>
 
     <div class="modal fade" id="updateSSITemplateModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="UpdateSSITemplateModal" aria-hidden="true" style="width:100%">

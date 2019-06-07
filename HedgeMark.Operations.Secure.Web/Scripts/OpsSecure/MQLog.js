@@ -1,5 +1,5 @@
 ﻿
-
+$("#liMQLogs").addClass("active");
 var tblAuditLogsDetails;
 
 HmOpsApp.controller("MQLogsCtrl", function ($scope, $http, $timeout, $filter) {

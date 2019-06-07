@@ -1,6 +1,7 @@
 ﻿
 
 var tblAuditLogsDetails;
+$("#liUserLogs").addClass("active");
 
 HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $filter) {
 
@@ -70,7 +71,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                             if (action == "Deleted") {
                                 actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-danger\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
                             }
-                            else if (action == "Edited") {
+                            else if (action == "Edited" || action == "Updated") {
                                 actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-warning\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
                             }
                             else if (action == "Added") {
@@ -101,6 +102,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                                 case "Logged Out":
                                     return "<span class=\"label label-default ignoreMark\"> " + tdata + "</span>";
                                 case "Edited":
+                                case "Updated":
                                     return "<span class=\"label label-warning ignoreMark\"> " + tdata + "</span>";
                                 case "Added":
                                     return "<span class=\"label label-success ignoreMark\"> " + tdata + "</span>";
@@ -129,12 +131,14 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                             case "Logged In":
                             case "Logged Out":
                             case "Added": return "";
-                            case "Edited": if (row.Field == "Wire Status") {
-                                return $scope.getWireStatus(row.PreviousStateValue);
-                            }
-                            else {
-                                return "<b>" + $scope.getFieldValue(row.Field, row.PreviousStateValue) + "</b>";
-                            }
+                            case "Edited":
+                            case "Updated":
+                                if (row.Field == "Wire Status") {
+                                    return $scope.getWireStatus(row.PreviousStateValue);
+                                }
+                                else {
+                                    return $scope.getFieldValue(row.Field, row.PreviousStateValue);
+                                }
                         }
                     }
                 },
@@ -147,12 +151,14 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                             case "Logged Out":
                                 return "";
                             case "Edited":
-                            case "Added": if (row.Field == "Wire Status") {
-                                return $scope.getWireStatus(row.ModifiedStateValue);
-                            }
-                            else {
-                                return "<b>" + $scope.getFieldValue(row.Field, row.ModifiedStateValue) + "</b>";
-                            }
+                            case "Updated":
+                            case "Added":
+                                if (row.Field == "Wire Status") {
+                                    return $scope.getWireStatus(row.ModifiedStateValue);
+                                }
+                                else {
+                                    return "<b>" + $scope.getFieldValue(row.Field, row.ModifiedStateValue) + "</b>";
+                                }
                         }
                     }
                 },
@@ -205,10 +211,11 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
     $scope.getFieldValue = function (field, value) {
         switch (field) {
             case "Value Date": return value;
-            case "Amount": return $.convertToCurrency(value, 2);
-            case "Wire Message Type": return $filter('filter')($scope.MessageTypes, { id: parseInt(value) }, true)[0].text;
-            case "Delivery Charges": return $filter('filter')($scope.DeliveryCharges, { id: value }, true)[0].text;
+            case "Amount": return "<b>" + $.convertToCurrency(value, 2) + "</b>";
+            case "Wire Message Type": return "<b>" + $filter('filter')($scope.MessageTypes, { id: parseInt(value) }, true)[0].text + "</b>";
+            case "Delivery Charges": return "<b>" + $filter('filter')($scope.DeliveryCharges, { id: value }, true)[0].text + "</b>";
         }
+        return value;
     }
 
     $scope.DeliveryCharges = [{ id: "BEN", text: "Beneficiary" }, { id: "OUR", text: "Our customer charged" }, { id: "SHA", text: " Shared charges" }];

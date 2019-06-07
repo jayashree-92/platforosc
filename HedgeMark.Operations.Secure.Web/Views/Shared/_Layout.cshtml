@@ -38,10 +38,10 @@
                             <li>@Html.ActionLink("SSI Templates", "SSITemplateList", "Accounts")</li>
                         </ul>
                     </li>
-                    <li>@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
-                    <li>@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
-                    <li>@Html.ActionLink("User Audits", "Index", "Audit")</li>
-                    <li>@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</li>
+                    <li id="liWirePurpose">@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
+                    <li id="liWireLogs">@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
+                    <li id="liUserLogs">@Html.ActionLink("User Audits", "Index", "Audit")</li>
+                    <li id="liMQLogs">@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</liid="liUserLogs">
 
                     <li style="padding-top: 12px;" title="@User.Identity.Name"><label style="color:inherit;padding: 5px 3px!important;" class="label label-default" href="#"><i class="glyphicon glyphicon-user"></i> @userRole</label></li>
                     <li title="Hangfire Jobs"><a href="/jobs" target="_blank"><i class="glyphicon glyphicon-stats"></i></a></li>

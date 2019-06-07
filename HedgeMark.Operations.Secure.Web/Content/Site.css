@@ -307,6 +307,10 @@ table {
     background-color: #ffffff;
 }
 
+.table-bordered {
+    border: 1px solid #dddddd;
+}
+
 table.dataTable thead th {
     overflow: hidden;
     white-space: nowrap;
@@ -579,6 +583,23 @@ table td.error {
     color: lightgray;
 }
 
+
+.dz-message span {
+    font-size: 15px;
+    font-weight: normal;
+    font-style: italic;
+}
+
+ng-form.dropzone {
+    display: block;
+    min-height: 1px;
+    padding: 3px 15px;
+}
+
+.panel-dz {
+    width: 200px;
+}
+
 /*table.dataTable th:active {
     outline: none;
 }
@@ -586,6 +607,8 @@ table td.error {
 table.dataTable thead th {
     border-bottom: 0px;
 }*/
+
+
 
 
 
@@ -1635,23 +1658,12 @@ div.alert {
     /*overflow-y: visible !important;*/
 }
 
-#dtNavTable-1_wrapper .DTFC_LeftBodyLiner {
-    background-color: transparent;
-}
 
 .violationsWarnings {
     cursor: pointer;
     font-style: italic;
     font-size: 10px;
 }
-/*#dtNavTable-1_wrapper .DTFC_Cloned td {
-    border-right: 1px solid #DDDDDD !important;
-}*/
-
-/*#dtNavTable-1_wrapper .DTFC_LeftBodyWrapper {
-    border-right: 0px !important;
-    background-color: red  !important;
-}*/
 
 .text-danger {
     font-weight: normal;
@@ -1744,11 +1756,6 @@ div.slider {
     cursor: pointer;
     font-size: 12px;
     color: #d9534f;
-}
-
-
-table#mergemap td {
-    border-top: 0;
 }
 
 .seeFullText {
@@ -2186,19 +2193,23 @@ div.DTCR_pointer {
 }
 
 .swap-animation.ng-enter, .swap-animation.ng-leave {
-    transition:0.5s linear all;
+    transition: 0.5s linear all;
 }
+
 .swap-animation.ng-enter {
-    top:-250px;
+    top: -250px;
 }
+
 .swap-animation.ng-enter-active {
-    top:0px;
+    top: 0px;
 }
+
 .swap-animation.ng-leave {
-    top:0px;
+    top: 0px;
 }
+
 .swap-animation.ng-leave-active {
-    top:250px;
+    top: 250px;
 }
 
 .number-counter {
@@ -2285,15 +2296,33 @@ div.DTCR_pointer {
     margin: 0px;
 }
 
+.paddingleft {
+    padding-left: 20px;
+}
 
-#modalToRetrieveWires [data-toggle='collapse'] {
+#accountOnBoardContainer .input-group[class*="col-"], #contactOnBoardContainer .input-group[class*="col-"], #contactListDiv .input-group[class*="col-"] {
+    float: none;
+    padding-right: 0;
+    padding-left: 15px;
+}
+
+#accountOnBoardContainer .liAgreement .select2-container {
+    width: 500px !important;
+}
+
+#accountOnBoardContainer .AdjustDropDownWidth .select2-container, #ssiTemplateOnBoardContainer .AdjustDropDownWidth .select2-container, #contactListDiv .AdjustDropDownWidth .select2-container, #contactOnBoardContainer .AdjustDropDownWidth .select2-container {
+    width: 100% !important;
+}
+
+
+[data-toggle='collapse'] {
     position: -webkit-sticky;
     position: sticky;
     top: 40px;
     z-index: 1;
 }
 
-#modalToRetrieveWires .modal-footer {
+.modal-footer {
     padding: 8px 20px 8px 20px;
     position: -webkit-sticky;
     position: sticky;
@@ -2309,4 +2338,20 @@ div.DTCR_pointer {
     border-left: 3px solid #A29060 !important;
     border: 1px solid lightgray;
     background-color: #f6f6f6;
+}
+
+.table-highlighted tr > th {
+    border: 1px solid #d5d5d5 !important;
+    background-color: #ebebeb !important;
+}
+
+.table-highlighted tr > td {
+    border: 1px solid #d5d5d5 !important;
+}
+
+table.DTFC_Cloned tr > td {
+    border-right: 1px !important;
+    border-right: gray solid 1px !important;
+    border-collapse:inherit;
+    /*border-left:1px solid #d6d4d4 !important;*/
 }

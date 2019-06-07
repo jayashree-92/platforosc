@@ -32,6 +32,27 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static Dictionary<long, string> GetAllFunds()
+        {
+            using (var context = new AdminContext())
+            {
+                return context.onboardingFunds.Where(f => !f.IsDeleted).ToDictionary(s => s.dmaFundOnBoardId, s => s.LegalFundName);
+            }
+        }
+
+        public static List<dmaAgreementOnBoarding> GetAllAgreements()
+        {
+            using (var context = new AdminContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.dmaAgreementOnBoardings
+                    .Include(x => x.onboardingFund)
+                    .Include(x => x.dmaCounterPartyOnBoarding)
+                    .Include(x => x.dmaAgreementType)
+                    .Where(a => !a.IsDeleted).AsNoTracking().ToList();
+            }
+        }
 
         public static List<dmaCounterpartyFamily> GetAllCounterpartyFamilies()
         {

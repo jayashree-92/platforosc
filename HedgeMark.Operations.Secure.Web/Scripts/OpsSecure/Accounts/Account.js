@@ -1,4 +1,5 @@
-﻿HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $q) {
+﻿$("#liAccounts").addClass("active");
+HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $q) {
     $("#onboardingMenu").addClass("active");
     $scope.$on("onRepeatLast", function (scope, element, attrs) {
         $timeout(function () {
@@ -70,11 +71,14 @@
                     "mData": "FileName"
                 },
                 {
-                    "sTitle": "Uploded By",
-                    "mData": "RecCreatedBy"
+                    "sTitle": "Uploaded By",
+                    "mData": "RecCreatedBy",
+                    "mRender": function (data) {
+                        return humanizeEmail(data);
+                    }
                 },
                 {
-                    "sTitle": "Uploded At",
+                    "sTitle": "Uploaded At",
                     "mData": "RecCreatedAt",
                     "type": "dotnet-date",
                     "mRender": function (tdata) {
@@ -102,7 +106,7 @@
 
             "fnRowCallback": function (nRow, aData) {
                 if (aData.FileName != "") {
-                    $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/Accounts/DownloadAccountFile?fileName=" + getFormatedFileName(aData.FileName) + "&accountId=" + $scope.onBoardingAccountDetails[key].onBoardingAccountId + "'>" + aData.FileName + "</a>");
+                    $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/Accounts/DownloadAccountFile?fileName=" + getFormattedFileName(aData.FileName) + "&accountId=" + $scope.onBoardingAccountDetails[key].onBoardingAccountId + "'>" + aData.FileName + "</a>");
                 }
             },
             "oLanguage": {
@@ -504,61 +508,61 @@
         $("#liBeneficiaryType" + key).select2({
             placeholder: "Select a BIC or ABA",
             allowClear: true,
-            data: $scope.beneficiaryType
+            data: $scope.beneficiaryType == undefined ? [] : $scope.beneficiaryType
         });
 
         $("#liIntermediaryType" + key).select2({
             placeholder: "Select a BIC or ABA",
             allowClear: true,
-            data: $scope.beneficiaryType
+            data: $scope.beneficiaryType == undefined ? [] : $scope.beneficiaryType
         });
 
         $("#liUltimateBeneficiaryType" + key).select2({
             placeholder: "Select a BIC or ABA",
             allowClear: true,
-            data: $scope.ultimateBeneficiaryType
+            data: $scope.ultimateBeneficiaryType == undefined ? [] : $scope.ultimateBeneficiaryType
         });
 
         $("#liAuthorizedParty" + key).select2({
             placeholder: "Select Authorized Party",
             allowClear: true,
-            data: $scope.authorizedPartyData
+            data: $scope.authorizedPartyData == undefined ? [] : $scope.authorizedPartyData
         });
         $("#cashSweep" + key).select2({
             placeholder: "Select Cash Sweep",
             allowClear: true,
-            data: $scope.cashSweepData
+            data: $scope.cashSweepData == undefined ? [] : $scope.cashSweepData
         });
         $("#cashSweepTimeZone" + key).select2({
             placeholder: "Zone",
             allowClear: true,
-            data: $scope.cashSweepTimeZoneData
+            data: $scope.cashSweepTimeZoneData == undefined ? [] : $scope.cashSweepTimeZoneData
         });
         $("#contactType" + key).select2({
             placeholder: "Contact Type",
             allowClear: true,
-            data: $scope.ContactType
+            data: $scope.ContactType == undefined ? [] : $scope.ContactType
         });
         $("#liCurrency" + key).select2({
             placeholder: "Select a Currency",
             allowClear: true,
-            data: $scope.currencies
+            data: $scope.currencies == undefined ? [] : $scope.currencies
         });
         $("#liSweepCurrency" + key).select2({
             placeholder: "Select a Sweep Currency",
             allowClear: true,
-            data: $scope.currencies
+            data: $scope.currencies == undefined ? [] : $scope.currencies
         });
         $("#liCashInstruction" + key).select2({
             placeholder: "select a Cash Instruction",
             allowClear: true,
-            data: $scope.cashInstructions
+            data: $scope.cashInstructions == undefined ? [] : $scope.cashInstructions
         });
 
         $("#liAccountDescriptions" + key).select2({
             placeholder: "Select Description",
             allowClear: true,
-            data: $scope.accountDescriptions
+            data: $scope.accountDescriptions == undefined ? [] : $scope.accountDescriptions
         });
 
         $("#liContacts" + key).select2({
@@ -566,28 +570,28 @@
             multiple: true,
             //templateResult: groupNameFormat,
             //templateSelection: groupNameFormat,
-            data: $scope.contactNames
+            data: $scope.contactNames == undefined ? [] : $scope.contactNames
         });
 
         $("#liAccountPurpose" + key).select2({
             placeholder: "Select Account Type",
             allowClear: true,
-            data: $scope.accountPurpose
+            data: $scope.accountPurpose == undefined ? [] : $scope.accountPurpose
         });
         $("#liAccountStatus" + key).select2({
             placeholder: "Select Account Status",
             allowClear: true,
-            data: $scope.accountStatus
+            data: $scope.accountStatus == undefined ? [] : $scope.accountStatus
         });
         $("#liSwiftGroup" + key).select2({
             placeholder: "Select Swift Group",
             allowClear: true,
-            data: $scope.SwiftGroupData
+            data: $scope.SwiftGroupData == undefined ? [] : $scope.SwiftGroupData
         });
         $("#liCustodyAcct" + key).select2({
             placeholder: "Select a Associated Custody Account",
             allowClear: true,
-            data: $scope.cusodyAccountData
+            data: $scope.cusodyAccountData == undefined ? [] : $scope.cusodyAccountData
         });
     }
 
@@ -1059,11 +1063,11 @@
         if (!($("#uploadFiles" + key).hasClass("dz-clickable"))) {
             $("#uploadFiles" + key).dropzone({
                 url: "/Accounts/UploadAccountFiles?accountId=" + $scope.onBoardingAccountDetails[key].onBoardingAccountId,
-                dictDefaultMessage: "<span style='font-size:20px;font-weight:normal;font-style:italic'>Drag/Drop account documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
+                dictDefaultMessage: "<span>Drag/Drop account documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
                 autoDiscover: false,
                 acceptedFiles: ".csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
                 maxFiles: 5,
-                previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-sm'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
+                previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-dz'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
                     "</div> <div class='panel-body'> <span class='dz-upload' data-dz-uploadprogress></span>" +
                     "<div class='progress'><div data-dz-uploadprogress class='progress-bar progress-bar-warning progress-bar-striped active dzFileProgress' style='width: 0%'></div>" +
                     "</div></div></div></div>",

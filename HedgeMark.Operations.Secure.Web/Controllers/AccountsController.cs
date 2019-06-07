@@ -6,6 +6,9 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
+using ExcelUtility.Operations.ManagedAccounts;
+using HedgeMark.Operations.FileParseEngine.Models;
+using HedgeMark.Operations.FileParseEngine.Parser;
 using HedgeMark.Operations.Secure.DataModel;
 using HMOSecureMiddleware;
 using HMOSecureMiddleware.Util;
@@ -840,685 +843,669 @@ namespace HMOSecureWeb.Controllers
 
         #region Export and Upload
 
-        //public void ExportAllAccountlist()
-        //{
-        //    var authorizeData = OnBoardingManager.GetAuthorizedData(User.GetUserName(), User.GetRole());
-        //    var fundOnBoardIds = authorizeData.FundOnBoardingIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
-        //    var onBoardingAccounts = AccountManager.GetAllOnBoardingAccounts(fundOnBoardIds, authorizeData.IsPrivilegedUser).OrderByDescending(x => x.UpdatedAt).ToList();
-        //    var contentToExport = new Dictionary<string, List<Row>>();
-        //    var accountListRows = BuildAccountRows(onBoardingAccounts);
-        //    //File name and path
-        //    var fileName = string.Format("{0}_{1}", "AccountList", DateTime.Now.ToString("yyyyMMdd"));
-        //    var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", UtilityExtensions.TempAppDirectory, fileName, Format));
-        //    contentToExport.Add("List of Accounts", accountListRows);
-        //    //Export the checklist file
-        //    Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
-        //    ExportFile(exportFileInfo);
-        //    //Delete the checklist file
-        //    if (System.IO.File.Exists(exportFileInfo.FullName))
-        //        System.IO.File.Delete(exportFileInfo.FullName);
-        //}
-
-        // Build Account Rows
-        // ReSharper disable once FunctionComplexityOverflow
-        //private List<Row> BuildAccountRows(List<onBoardingAccount> onBoardingAccounts)
-        //{
-        //    var accountListRows = new List<Row>();
-
-        //    foreach (var account in onBoardingAccounts)
-        //    {
-        //        var row = new Row();
-        //        row["Account Id"] = account.onBoardingAccountId.ToString();
-        //        row["Entity Type"] = account.AccountType;
-        //        row["Fund Name"] = (account.onboardingFund != null) ? account.onboardingFund.LegalFundName : string.Empty;
-        //        row["Agreement Name"] = (account.dmaAgreementOnBoarding != null) ? account.dmaAgreementOnBoarding.AgreementShortName : string.Empty;
-        //        row["Broker"] = (account.dmaCounterpartyFamily != null) ? account.dmaCounterpartyFamily.CounterpartyFamily : string.Empty;
-        //        row["Account Name"] = account.AccountName;
-        //        row["Account Number"] = account.AccountNumber;
-        //        row["Account Type"] = account.AccountPurpose;
-        //        row["Account Status"] = account.AccountStatus;
-        //        row["Currency"] = account.Currency;
-        //        row["Description"] = account.Description;
-        //        row["Notes"] = account.Notes;
-        //        row["Authorized Party"] = account.AuthorizedParty;
-        //        row["Cash Instruction Mechanism"] = account.CashInstruction;
-        //        row["Swift Group"] = account.SwiftGroup;
-        //        row["Senders BIC"] = account.SendersBIC;
-        //        row["Cash Sweep"] = account.CashSweep;
-
-        //        if (account.CashSweepTime != null)
-        //        {
-        //            var dateTime = DateTime.Today.AddHours(account.CashSweepTime.Value.Hours).AddMinutes(account.CashSweepTime.Value.Minutes);
-        //            var stringTime = dateTime.ToString("hh:mm tt");
-
-        //            row["Cash Sweep Time"] = stringTime;
-        //        }
-        //        else
-        //        {
-        //            row["Cash Sweep Time"] = string.Empty;
-        //        }
-
-        //        row["Cash Sweep Time Zone"] = account.CashSweepTimeZone;
-
-        //        if (account.CutoffTime != null)
-        //        {
-        //            var dateTime = DateTime.Today.AddHours(account.CutoffTime.Value.Hours).AddMinutes(account.CutoffTime.Value.Minutes);
-        //            var stringTime = dateTime.ToString("hh:mm tt");
-
-        //            row["Cutoff Time"] = stringTime;
-        //        }
-        //        else
-        //        {
-        //            row["Cutoff Time"] = string.Empty;
-        //        }
-
-        //        row["Days to wire per V.D"] = account.DaystoWire != null ? account.DaystoWire.ToString() + (account.DaystoWire.Value > 1 ? " Days" : " Day") : string.Empty;
-
-        //        row["Holdback Amount"] = account.HoldbackAmount.HasValue ? account.HoldbackAmount.ToString() : string.Empty;
-        //        row["Sweep Comments"] = account.SweepComments;
-        //        row["Associated Custody Acct"] = account.AssociatedCustodyAcct;
-        //        row["Portfolio Selection"] = account.PortfolioSelection;
-        //        row["Ticker/ISIN"] = account.TickerorISIN;
-        //        row["Sweep Currency"] = account.SweepCurrency;
-
-        //        row["Contact Type"] = account.ContactType;
-        //        //row["Contact Name"] = account.ContactName;
-        //        //row["Contact Email"] = account.ContactEmail;
-        //        //row["Contact Number"] = account.ContactNumber;
-        //        row["Beneficiary Type"] = account.BeneficiaryType;
-        //        row["Beneficiary BIC or ABA"] = account.BeneficiaryBICorABA;
-        //        row["Beneficiary Bank Name"] = account.BeneficiaryBankName;
-        //        row["Beneficiary Bank Address"] = account.BeneficiaryBankAddress;
-        //        row["Beneficiary Account Number"] = account.BeneficiaryAccountNumber;
-        //        row["Intermediary Beneficiary Type"] = account.IntermediaryType;
-        //        row["Intermediary BIC or ABA"] = account.IntermediaryBICorABA;
-        //        row["Intermediary Bank Name"] = account.IntermediaryBankName;
-        //        row["Intermediary Bank Address"] = account.IntermediaryBankAddress;
-        //        row["Intermediary Account Number"] = account.IntermediaryAccountNumber;
-        //        row["Ultimate Beneficiary Type"] = account.UltimateBeneficiaryType;
-        //        row["Ultimate Beneficiary BIC or ABA"] = account.UltimateBeneficiaryBICorABA;
-        //        row["Ultimate Beneficiary Bank Name"] = account.UltimateBeneficiaryBankName;
-        //        row["Ultimate Beneficiary Bank Address"] = account.UltimateBeneficiaryBankAddress;
-        //        row["Ultimate Beneficiary Account Name"] = account.UltimateBeneficiaryAccountName;
-        //        row["FFC Name"] = account.FFCName;
-        //        row["FFC Number"] = account.FFCNumber;
-        //        row["Reference"] = account.Reference;
-        //        row["Status"] = account.onBoardingAccountStatus;
-        //        row["Comments"] = account.StatusComments;
-        //        row["CreatedBy"] = account.CreatedBy;
-        //        row["CreatedDate"] = account.CreatedAt + "";
-        //        row["UpdatedBy"] = account.UpdatedBy;
-        //        row["ModifiedDate"] = account.UpdatedAt + "";
-        //        switch (account.onBoardingAccountStatus)
-        //        {
-        //            case "Approved":
-        //                row.RowHighlight = Row.Highlight.Success;
-        //                break;
-        //            case "Pending Approval":
-        //                row.RowHighlight = Row.Highlight.Warning;
-        //                break;
-        //            default:
-        //                row.RowHighlight = Row.Highlight.None;
-        //                break;
-        //        }
-        //        accountListRows.Add(row);
-        //    }
-
-        //    return accountListRows;
-        //}
-
-        //public void ExportAllSsiTemplatelist()
-        //{
-        //    //var authorizeData = OnBoardingManager.GetAuthorizedData(User.GetUserName(), User.GetRole());
-        //    //var fundOnBoardIds = authorizeData.FundOnBoardingIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
-        //    var ssiTemplates = AccountManager.GetAllBrokerSsiTemplates().OrderByDescending(x => x.UpdatedAt).ToList();
-        //    var contentToExport = new Dictionary<string, List<Row>>();
-        //    var accountListRows = BuildSsiTemplateRows(ssiTemplates);
-        //    //File name and path
-        //    var fileName = string.Format("{0}_{1}", "SSITemplateList", DateTime.Now.ToString("yyyyMMdd"));
-        //    var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", UtilityExtensions.TempAppDirectory, fileName, Format));
-        //    contentToExport.Add("List of SSI Template", accountListRows);
-        //    //Export the checklist file
-        //    Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
-        //    ExportFile(exportFileInfo);
-        //    //Delete the checklist file
-        //    if (System.IO.File.Exists(exportFileInfo.FullName))
-        //        System.IO.File.Delete(exportFileInfo.FullName);
-        //}
-
-        //// Build SSI Template Rows
-        //private List<Row> BuildSsiTemplateRows(List<onBoardingSSITemplate> ssiTemplates)
-        //{
-        //    var templateListRows = new List<Row>();
-        //    var counterParties = CounterpartyManager.GetAllOnBoardedCounterparties().ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
-
-        //    foreach (var template in ssiTemplates)
-        //    {
-        //        var row = new Row();
-        //        row["SSI Template Id"] = template.onBoardingSSITemplateId.ToString();
-        //        row["Template Name"] = template.TemplateName;
-        //        row["SSI Template Type"] = template.SSITemplateType;
-        //        row["Legal Entity"] = counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty;
-        //        row["Account Type"] = (template.dmaAgreementType != null && string.IsNullOrEmpty(template.ServiceProvider)) ? template.dmaAgreementType.AgreementType : string.Empty;
-        //        row["Service Provider"] = template.ServiceProvider;
-        //        row["Currency"] = template.Currency;
-        //        row["Payment/Receipt Reason Detail"] = template.ReasonDetail;
-        //        row["Other Reason"] = template.OtherReason;
-        //        row["Message Type"] = template.MessageType;
-        //        row["Beneficiary Type"] = template.BeneficiaryType;
-        //        row["Beneficiary BIC or ABA"] = template.BeneficiaryBICorABA;
-        //        row["Beneficiary Bank Name"] = template.BeneficiaryBankName;
-        //        row["Beneficiary Bank Address"] = template.BeneficiaryBankAddress;
-        //        row["Beneficiary Account Number"] = template.BeneficiaryAccountNumber;
-        //        row["Intermediary Beneficiary Type"] = template.IntermediaryType;
-        //        row["Intermediary BIC or ABA"] = template.IntermediaryBICorABA;
-        //        row["Intermediary Bank Name"] = template.IntermediaryBankName;
-        //        row["Intermediary Bank Address"] = template.IntermediaryBankAddress;
-        //        row["Intermediary Account Number"] = template.IntermediaryAccountNumber;
-        //        row["Ultimate Beneficiary Type"] = template.UltimateBeneficiaryType;
-        //        row["Ultimate Beneficiary BIC or ABA"] = template.UltimateBeneficiaryBICorABA;
-        //        row["Ultimate Beneficiary Bank Name"] = template.UltimateBeneficiaryBankName;
-        //        row["Ultimate Beneficiary Bank Address"] = template.UltimateBeneficiaryBankAddress;
-        //        row["Ultimate Beneficiary Account Name"] = template.UltimateBeneficiaryAccountName;
-        //        row["Ultimate Beneficiary Account Number"] = template.AccountNumber;
-        //        row["FFC Name"] = template.FFCName;
-        //        row["FFC Number"] = template.FFCNumber;
-        //        row["Reference"] = template.Reference;
-        //        row["SSI Template Status"] = template.SSITemplateStatus;
-        //        row["Comments"] = template.StatusComments;
-        //        row["CreatedBy"] = template.CreatedBy;
-        //        row["CreatedDate"] = template.CreatedAt + "";
-        //        row["UpdatedBy"] = template.UpdatedBy;
-        //        row["ModifiedDate"] = template.UpdatedAt + "";
-        //        switch (template.SSITemplateStatus)
-        //        {
-        //            case "Approved":
-        //                row.RowHighlight = Row.Highlight.Success;
-        //                break;
-        //            case "Pending Approval":
-        //                row.RowHighlight = Row.Highlight.Warning;
-        //                break;
-        //            default:
-        //                row.RowHighlight = Row.Highlight.None;
-        //                break;
-        //        }
-        //        templateListRows.Add(row);
-        //    }
-
-        //    return templateListRows;
-        //}
-
-        // ReSharper disable once FunctionComplexityOverflow
-        //public string UploadAccount()
-        //{
-        //    var onboardingAccounts = AccountManager.GetAllOnBoardingAccounts(new List<long>(), true);
-        //    var counterpartyFamilies = OnBoardingDataManager.GetAllCounterpartyFamilies().ToDictionary(x => x.dmaCounterpartyFamilyId, x => x.CounterpartyFamily);
-        //    var funds = Middleware.Managers.FundManager.GetAllFunds();
-        //    // var agreementTypes = OnBoardingManager.GetAllAgreementTypes();
-        //    var agreementList = AgreementManager.GetAllAgreements();
-        //    var accountBicorAba = AccountManager.GetAllAccountBicorAba();
-        //    var swiftgroups = AccountManager.GetAllSwiftGroup();
-        //    var agreements = agreementList.ToDictionary(s => s.dmaAgreementOnBoardingId, s => s.dmaAgreementType.AgreementType + " - " + s.onboardingFund.LegalFundName + " - " + (s.dmaCounterPartyOnBoarding != null ? s.dmaCounterPartyOnBoarding.CounterpartyShortCode : string.Empty));
-        //    for (var i = 0; i < Request.Files.Count; i++)
-        //    {
-        //        var file = Request.Files[i];
-
-        //        if (file == null)
-        //            throw new Exception("unable to retrive file information");
-
-        //        var fileinfo = new FileInfo(FileSystemManager.OnboardingAgreementFilesPath + file.FileName);
-
-        //        if (fileinfo.Directory != null && !Directory.Exists(fileinfo.Directory.FullName))
-        //            Directory.CreateDirectory(fileinfo.Directory.FullName);
-
-        //        if (System.IO.File.Exists(fileinfo.FullName))
-        //            System.IO.File.Delete(fileinfo.FullName);
-
-        //        file.SaveAs(fileinfo.FullName);
-        //        var accountRows = new ExcelFileParser(fileinfo, "List of Accounts", string.Empty).Parse(true, false);
-
-        //        if (accountRows.Count > 0)
-        //        {
-        //            foreach (var account in accountRows)
-        //            {
-        //                var accountDetail = new onBoardingAccount();
-        //                accountDetail.onBoardingAccountId = string.IsNullOrWhiteSpace(account["Account Id"]) ? 0 : long.Parse(account["Account Id"]);
-        //                accountDetail.AccountNumber = account["Account Number"];
-        //                accountDetail.AccountType = account["Entity Type"];
-
-        //                if (account["Entity Type"] == "Agreement")
-        //                {
-        //                    accountDetail.dmaAgreementOnBoardingId = agreements.FirstOrDefault(x => x.Value == account["Agreement Name"]).Key;
-        //                    accountDetail.dmaFundOnBoardId = funds.FirstOrDefault(x => x.Value == account["Fund Name"]).Key;
-        //                    var counterPartyByAgreement = onboardingAccounts.FirstOrDefault(s => s.dmaAgreementOnBoardingId == accountDetail.dmaAgreementOnBoardingId);
-        //                    if (counterPartyByAgreement != null)
-        //                    {
-        //                        accountDetail.BrokerId = counterPartyByAgreement.dmaAgreementOnBoarding.dmaCounterPartyFamilyId.ToLong();
-        //                    }
-
-        //                    if (accountDetail.onBoardingAccountId == 0)
-        //                    {
-        //                        var existsAccount = onboardingAccounts.FirstOrDefault(x =>
-        //                            x.dmaAgreementOnBoardingId == accountDetail.dmaAgreementOnBoardingId &&
-        //                            x.dmaFundOnBoardId == accountDetail.dmaFundOnBoardId &&
-        //                            x.AccountNumber == accountDetail.AccountNumber);
-        //                        if (existsAccount != null) continue;
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    accountDetail.dmaFundOnBoardId = funds.FirstOrDefault(x => x.Value == account["Fund Name"]).Key;
-        //                    accountDetail.BrokerId = counterpartyFamilies.FirstOrDefault(x => x.Value == account["Broker"]).Key;
-        //                    if (accountDetail.onBoardingAccountId == 0)
-        //                    {
-        //                        var existsAccount = onboardingAccounts.FirstOrDefault(x => x.dmaFundOnBoardId == accountDetail.dmaFundOnBoardId &&
-        //                            x.BrokerId == accountDetail.BrokerId && x.AccountNumber == accountDetail.AccountNumber);
-        //                        if (existsAccount != null) continue;
-        //                    }
-        //                }
-        //                accountDetail.AccountName = account["Account Name"];
-        //                accountDetail.AccountPurpose = account["Account Type"];
-        //                accountDetail.AccountStatus = account["Account Status"];
-        //                accountDetail.Currency = account["Currency"];
-        //                accountDetail.Description = account["Description"];
-        //                accountDetail.Notes = account["Notes"];
-        //                accountDetail.AuthorizedParty = account["Authorized Party"];
-        //                accountDetail.CashInstruction = account["Cash Instruction Mechanism"];
-        //                accountDetail.SwiftGroup = account["Swift Group"];
-        //                if (!string.IsNullOrWhiteSpace(accountDetail.SwiftGroup))
-        //                {
-        //                    var swiftGroup = swiftgroups.FirstOrDefault(x => x.SwiftGroup == accountDetail.SwiftGroup);
-        //                    accountDetail.SendersBIC = (swiftGroup != null) ? swiftGroup.SendersBIC : string.Empty;
-        //                }
-
-        //                accountDetail.CashSweep = account["Cash Sweep"];
-
-        //                if (!string.IsNullOrWhiteSpace(account["Cash Sweep Time"]))
-        //                {
-        //                    var cashSweepTime = account["Cash Sweep Time"];
-        //                    var increment = (cashSweepTime.Contains("PM") ? 12 : 0);
-        //                    cashSweepTime = cashSweepTime.Replace("PM", "").Replace("AM", "").Trim();
-        //                    var splitCashSweep = cashSweepTime.Split(':');
-        //                    if (splitCashSweep.Length > 1)
-        //                    {
-        //                        var hours = Convert.ToInt32(splitCashSweep[0]);
-        //                        hours = hours >= 12 ? hours % 12 : hours;
-        //                        cashSweepTime = (hours + increment).ToString() + ":" + splitCashSweep[1];
-        //                        accountDetail.CashSweepTime = TimeSpan.Parse(cashSweepTime);
-        //                    }
-        //                    accountDetail.CashSweepTimeZone = account["Cash Sweep Time Zone"];
-        //                }
-
-        //                if (!string.IsNullOrWhiteSpace(account["Cutoff Time"]))
-        //                {
-        //                    var cutoffTime = account["Cutoff Time"];
-        //                    var increment = (cutoffTime.Contains("PM") ? 12 : 0);
-        //                    cutoffTime = cutoffTime.Replace("PM", "").Replace("AM", "").Trim();
-        //                    var splitCutoffTime = cutoffTime.Split(':');
-        //                    if (splitCutoffTime.Length > 1)
-        //                    {
-        //                        var hours = Convert.ToInt32(splitCutoffTime[0]);
-        //                        hours = hours >= 12 ? hours % 12 : hours;
-        //                        cutoffTime = (hours + increment).ToString() + ":" + splitCutoffTime[1];
-        //                        accountDetail.CutoffTime = TimeSpan.Parse(cutoffTime);
-        //                    }
-
-        //                }
-        //                if (!string.IsNullOrWhiteSpace(account["Days to wire per V.D"]))
-        //                {
-        //                    var wirePerDays = account["Days to wire per V.D"].Replace(" Days", "").Replace(" Day", "").Trim();
-        //                    accountDetail.DaystoWire = Convert.ToInt32(wirePerDays);
-        //                }
-
-        //                if (!string.IsNullOrWhiteSpace(account["Cash Sweep"]) && account["Cash Sweep"] == "Yes")
-        //                {
-        //                    if (!string.IsNullOrWhiteSpace(account["Holdback Amount"]))
-        //                        accountDetail.HoldbackAmount = Convert.ToDouble(account["Holdback Amount"]);
-
-        //                    accountDetail.SweepComments = account["Sweep Comments"];
-        //                    accountDetail.AssociatedCustodyAcct = account["Associated Custody Acct"];
-        //                    accountDetail.PortfolioSelection = account["Portfolio Selection"];
-        //                    accountDetail.TickerorISIN = account["Ticker/ISIN"];
-        //                    accountDetail.SweepCurrency = account["Sweep Currency"];
-        //                }
-
-        //                accountDetail.ContactType = account["Contact Type"];
-
-        //                //if (accountDetail.BrokerId > 0 && accountDetail.BrokerId.HasValue)
-        //                //{
-        //                //    var onBoardingContacts = ContactManager.GetAllOnBoardingContacts(ContactManager.CounterpartyTypeId, accountDetail.BrokerId.ToLong());
-        //                //    var contactDetail = onBoardingContacts.FirstOrDefault(x => (GetContactName(x.LastName, x.FirstName) == account["Contact Name"]));
-        //                //    if (contactDetail != null)
-        //                //    {
-        //                //        accountDetail.ContactName = GetContactName(contactDetail.LastName, contactDetail.FirstName);
-        //                //        //accountDetail.ContactEmail = contactDetail.Email;
-        //                //       // accountDetail.ContactNumber = contactDetail.BusinessPhone;
-        //                //    }
-        //                //}
-        //                accountDetail.BeneficiaryType = account["Beneficiary Type"];
-        //                accountDetail.BeneficiaryBICorABA = account["Beneficiary BIC or ABA"];
-        //                var beneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.BeneficiaryType == "ABA") && x.BICorABA == accountDetail.BeneficiaryBICorABA);
-        //                if (beneficiaryBiCorAba != null)
-        //                {
-        //                    accountDetail.BeneficiaryBankName = beneficiaryBiCorAba.BankName;
-        //                    accountDetail.BeneficiaryBankAddress = beneficiaryBiCorAba.BankAddress;
-        //                }
-        //                else
-        //                {
-        //                    accountDetail.BeneficiaryBankName = string.Empty;
-        //                    accountDetail.BeneficiaryBankAddress = string.Empty;
-        //                }
-
-        //                accountDetail.BeneficiaryAccountNumber = account["Beneficiary Account Number"];
-        //                accountDetail.IntermediaryType = account["Intermediary Beneficiary Type"];
-        //                accountDetail.IntermediaryBICorABA = account["Intermediary BIC or ABA"];
-        //                var intermediaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.IntermediaryType == "ABA") && x.BICorABA == accountDetail.IntermediaryBICorABA);
-        //                if (intermediaryBiCorAba != null)
-        //                {
-        //                    accountDetail.IntermediaryBankName = intermediaryBiCorAba.BankName;
-        //                    accountDetail.IntermediaryBankAddress = intermediaryBiCorAba.BankAddress;
-        //                }
-        //                else
-        //                {
-        //                    accountDetail.IntermediaryBankName = string.Empty;
-        //                    accountDetail.IntermediaryBankAddress = string.Empty;
-        //                }
-
-        //                accountDetail.IntermediaryAccountNumber = account["Intermediary Account Number"];
-        //                accountDetail.UltimateBeneficiaryAccountName = account["Ultimate Beneficiary Account Name"];
-        //                accountDetail.UltimateBeneficiaryType = account["Ultimate Beneficiary Type"];
-        //                accountDetail.UltimateBeneficiaryBICorABA = account["Ultimate Beneficiary BIC or ABA"];
-        //                var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == accountDetail.UltimateBeneficiaryBICorABA);
-        //                if (ultimateBeneficiaryBiCorAba != null)
-        //                {
-        //                    accountDetail.UltimateBeneficiaryBankName = ultimateBeneficiaryBiCorAba.BankName;
-        //                    accountDetail.UltimateBeneficiaryBankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
-        //                }
-        //                else
-        //                {
-        //                    accountDetail.UltimateBeneficiaryBankName = string.Empty;
-        //                    accountDetail.UltimateBeneficiaryBankAddress = string.Empty;
-        //                }
-
-        //                accountDetail.FFCName = account["FFC Name"];
-        //                accountDetail.FFCNumber = account["FFC Number"];
-        //                accountDetail.Reference = account["Reference"];
-        //                accountDetail.onBoardingAccountStatus = account["Status"];
-        //                accountDetail.StatusComments = account["Comments"];
-        //                accountDetail.CreatedBy = account["CreatedBy"];
-        //                accountDetail.UpdatedBy = account["UpdatedBy"];
-        //                accountDetail.CreatedAt = !string.IsNullOrWhiteSpace(account["CreatedDate"])
-        //                    ? DateTime.Parse(account["CreatedDate"])
-        //                    : DateTime.Now;
-        //                accountDetail.UpdatedAt = !string.IsNullOrWhiteSpace(account["ModifiedDate"])
-        //                    ? DateTime.Parse(account["ModifiedDate"])
-        //                    : DateTime.Now;
-        //                accountDetail.IsDeleted = false;
-        //                AccountManager.AddAccount(accountDetail, UserName);
-        //            }
-        //        }
-
-        //        if (System.IO.File.Exists(fileinfo.FullName))
-        //            System.IO.File.Delete(fileinfo.FullName);
-        //    }
-        //    return "";
-        //}
-
-        //public void ExportSampleAccountlist()
-        //{
-        //    var contentToExport = new Dictionary<string, List<Row>>();
-
-        //    var row = new Row();
-        //    //row["Account Id"] = String.Empty;
-        //    row["Entity Type"] = String.Empty;
-        //    row["Fund Name"] = String.Empty;
-        //    row["Agreement Name"] = String.Empty;
-        //    row["Broker"] = String.Empty;
-        //    row["Account Name"] = String.Empty;
-        //    row["Account Number"] = String.Empty;
-        //    row["Account Type"] = String.Empty;
-        //    row["Account Status"] = String.Empty;
-        //    row["Currency"] = String.Empty;
-        //    row["Description"] = String.Empty;
-        //    row["Notes"] = String.Empty;
-        //    row["Authorized Party"] = String.Empty;
-        //    row["Cash Instruction Mechanism"] = String.Empty;
-        //    row["Swift Group"] = String.Empty;
-        //    row["Senders BIC"] = String.Empty;
-        //    row["Cash Sweep"] = String.Empty;
-        //    row["Cash Sweep Time"] = String.Empty;
-        //    row["Cash Sweep Time Zone"] = String.Empty;
-        //    row["Cutoff Time"] = String.Empty;
-        //    row["Days to wire per V.D"] = String.Empty;
-        //    row["Holdback Amount"] = String.Empty;
-        //    row["Sweep Comments"] = String.Empty;
-        //    row["Associated Custody Acct"] = String.Empty;
-        //    row["Portfolio Selection"] = String.Empty;
-        //    row["Ticker/ISIN"] = String.Empty;
-        //    row["Sweep Currency"] = String.Empty;
-        //    row["Contact Type"] = String.Empty;
-        //    //row["Contact Name"] = String.Empty;
-        //    //row["Contact Email"] = String.Empty;
-        //    // row["Contact Number"] = String.Empty;
-        //    row["Beneficiary Type"] = "ABA/BIC";
-        //    row["Beneficiary BIC or ABA"] = String.Empty;
-        //    row["Beneficiary Account Number"] = String.Empty;
-        //    row["Intermediary Beneficiary Type"] = "ABA/BIC";
-        //    row["Intermediary BIC or ABA"] = String.Empty;
-        //    row["Intermediary Account Number"] = String.Empty;
-        //    row["Ultimate Beneficiary Account Name"] = String.Empty;
-        //    row["Ultimate Beneficiary Type"] = "ABA/BIC";
-        //    row["Ultimate Beneficiary BIC or ABA"] = String.Empty;
-        //    row["FFC Name"] = String.Empty;
-        //    row["FFC Number"] = String.Empty;
-        //    row["Reference"] = String.Empty;
-        //    row["Status"] = String.Empty;
-        //    row["Comments"] = String.Empty;
-
-        //    row["CreatedBy"] = String.Empty;
-        //    row["CreatedDate"] = String.Empty;
-        //    row["UpdatedBy"] = String.Empty;
-        //    row["ModifiedDate"] = String.Empty;
-
-        //    var accountListRows = new List<Row> { row };
-
-        //    //File name and path
-        //    var fileName = string.Format("{0}_{1}", "AccountList", DateTime.Now.ToString("yyyyMMdd"));
-        //    var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", UtilityExtensions.TempAppDirectory, fileName, Format));
-        //    contentToExport.Add("List of Accounts", accountListRows);
-
-        //    //Export the account file
-        //    Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
-        //    ExportFile(exportFileInfo);
-
-        //    //Delete the account file
-        //    if (System.IO.File.Exists(exportFileInfo.FullName))
-        //        System.IO.File.Delete(exportFileInfo.FullName);
-        //}
-
-        // ReSharper disable once FunctionComplexityOverflow
-        //public string UploadSsiTemplate()
-        //{
-        //    var onboardingSsiTemplate = AccountManager.GetAllBrokerSsiTemplates();
-        //    var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties().ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
-        //    var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
-        //    var accountBicorAba = AccountManager.GetAllAccountBicorAba();
-
-
-        //    for (var i = 0; i < Request.Files.Count; i++)
-        //    {
-        //        var file = Request.Files[i];
-
-        //        if (file == null)
-        //            throw new Exception("unable to retrive file information");
-
-        //        var fileinfo = new FileInfo(FileSystemManager.UploadTemporaryFilesPath + file.FileName);
-
-        //        if (fileinfo.Directory != null && !Directory.Exists(fileinfo.Directory.FullName))
-        //            Directory.CreateDirectory(fileinfo.Directory.FullName);
-
-        //        if (System.IO.File.Exists(fileinfo.FullName))
-        //            System.IO.File.Delete(fileinfo.FullName);
-
-        //        file.SaveAs(fileinfo.FullName);
-        //        var templateListRows = new ExcelFileParser(fileinfo, "List of SSI Template", string.Empty).Parse(true, false);
-
-        //        if (templateListRows.Count > 0)
-        //        {
-        //            foreach (var template in templateListRows)
-        //            {
-        //                var templateDetail = new onBoardingSSITemplate();
-        //                templateDetail.onBoardingSSITemplateId = string.IsNullOrWhiteSpace(template["SSI Template Id"]) ? 0 : long.Parse(template["SSI Template Id"]);
-        //                templateDetail.TemplateTypeId = AccountManager.BrokerTemplateTypeId;
-        //                templateDetail.TemplateEntityId = counterParties.FirstOrDefault(x => x.Value == template["Legal Entity"]).Key;
-        //                templateDetail.dmaAgreementTypeId = agreementTypes.FirstOrDefault(x => x.Value == template["Account Type"]).Key;
-        //                templateDetail.ServiceProvider = template["Service Provider"];
-        //                templateDetail.Currency = template["Currency"];
-        //                templateDetail.ReasonDetail = template["Payment/Receipt Reason Detail"];
-        //                templateDetail.OtherReason = template["Other Reason"];
-        //                templateDetail.MessageType = template["Message Type"];
-        //                templateDetail.TemplateName = template["SSI Template Type"] == "Broker" ? template["Legal Entity"] + " - " + template["Account Type"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : (!string.IsNullOrWhiteSpace(template["SSI Template Type"]) ? template["Service Provider"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : template["Template Name"]);
-        //                if (templateDetail.onBoardingSSITemplateId == 0)
-        //                {
-        //                    var existsTemplate = onboardingSsiTemplate.FirstOrDefault(x => x.TemplateName == templateDetail.TemplateName);
-        //                    if (existsTemplate != null) continue;
-        //                }
-        //                templateDetail.BeneficiaryType = template["Beneficiary Type"];
-        //                templateDetail.BeneficiaryBICorABA = template["Beneficiary BIC or ABA"];
-        //                var beneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.BeneficiaryType == "ABA") && x.BICorABA == templateDetail.BeneficiaryBICorABA);
-        //                if (beneficiaryBiCorAba != null)
-        //                {
-        //                    templateDetail.BeneficiaryBankName = beneficiaryBiCorAba.BankName;
-        //                    templateDetail.BeneficiaryBankAddress = beneficiaryBiCorAba.BankAddress;
-        //                }
-        //                else
-        //                {
-        //                    templateDetail.BeneficiaryBankName = string.Empty;
-        //                    templateDetail.BeneficiaryBankAddress = string.Empty;
-        //                }
-
-        //                templateDetail.BeneficiaryAccountNumber = template["Beneficiary Account Number"];
-        //                templateDetail.IntermediaryType = template["Intermediary Beneficiary Type"];
-        //                templateDetail.IntermediaryBICorABA = template["Intermediary BIC or ABA"];
-        //                var intermediaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.IntermediaryType == "ABA") && x.BICorABA == templateDetail.IntermediaryBICorABA);
-        //                if (intermediaryBiCorAba != null)
-        //                {
-        //                    templateDetail.IntermediaryBankName = intermediaryBiCorAba.BankName;
-        //                    templateDetail.IntermediaryBankAddress = intermediaryBiCorAba.BankAddress;
-        //                }
-        //                else
-        //                {
-        //                    templateDetail.IntermediaryBankName = string.Empty;
-        //                    templateDetail.IntermediaryBankAddress = string.Empty;
-        //                }
-
-        //                templateDetail.IntermediaryAccountNumber = template["Intermediary Account Number"];
-
-        //                templateDetail.UltimateBeneficiaryType = template["Ultimate Beneficiary Type"];
-        //                templateDetail.UltimateBeneficiaryBICorABA = template["Ultimate Beneficiary BIC or ABA"];
-        //                var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == templateDetail.UltimateBeneficiaryBICorABA);
-        //                if (ultimateBeneficiaryBiCorAba != null)
-        //                {
-        //                    templateDetail.UltimateBeneficiaryBankName = ultimateBeneficiaryBiCorAba.BankName;
-        //                    templateDetail.UltimateBeneficiaryBankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
-        //                }
-        //                else
-        //                {
-        //                    templateDetail.UltimateBeneficiaryBankName = string.Empty;
-        //                    templateDetail.UltimateBeneficiaryBankAddress = string.Empty;
-        //                }
-
-        //                templateDetail.UltimateBeneficiaryAccountName = template["Ultimate Beneficiary Account Name"];
-        //                templateDetail.AccountNumber = template["Ultimate Beneficiary Account Number"];
-        //                templateDetail.FFCName = template["FFC Name"];
-        //                templateDetail.FFCNumber = template["FFC Number"];
-        //                templateDetail.Reference = template["Reference"];
-        //                templateDetail.SSITemplateType = template["SSI Template Type"];
-        //                if (templateDetail.onBoardingSSITemplateId == 0)
-        //                {
-        //                    templateDetail.SSITemplateStatus = "Saved As Draft";
-        //                    templateDetail.StatusComments = "Manually Uploaded";
-        //                }
-        //                else
-        //                {
-
-        //                    templateDetail.SSITemplateStatus = template["SSI Template Status"];
-        //                    templateDetail.StatusComments = template["Comments"];
-        //                }
-        //                templateDetail.CreatedBy = template["CreatedBy"];
-        //                templateDetail.UpdatedBy = template["UpdatedBy"];
-        //                templateDetail.CreatedAt = !string.IsNullOrWhiteSpace(template["CreatedDate"])
-        //                    ? DateTime.Parse(template["CreatedDate"])
-        //                    : DateTime.Now;
-        //                templateDetail.UpdatedAt = !string.IsNullOrWhiteSpace(template["ModifiedDate"])
-        //                    ? DateTime.Parse(template["ModifiedDate"])
-        //                    : DateTime.Now;
-        //                templateDetail.IsDeleted = false;
-        //                //templateDetail.TemplateName = template["SSI Template Type"] == "Broker" ? template["Broker"] + " - " + template["Account Type"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : (!string.IsNullOrWhiteSpace(template["SSI Template Type"]) ? template["Service Provider"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : template["Template Name"]);
-        //                AccountManager.AddSsiTemplate(templateDetail, UserName);
-        //            }
-        //        }
-
-        //        if (System.IO.File.Exists(fileinfo.FullName))
-        //            System.IO.File.Delete(fileinfo.FullName);
-        //    }
-        //    return "";
-        //}
-
-        //public void ExportSampleSsiTemplatelist()
-        //{
-        //    var contentToExport = new Dictionary<string, List<Row>>();
-
-        //    var row = new Row();
-        //    //row["SSI Template Id"] = string.Empty;
-        //    row["Template Name"] = string.Empty;
-        //    row["SSI Template Type"] = string.Empty;
-        //    row["Legal Entity"] = string.Empty;
-        //    row["Account Type"] = string.Empty;
-        //    row["Service Provider"] = string.Empty;
-        //    row["Currency"] = string.Empty;
-        //    row["Payment/Receipt Reason Detail"] = string.Empty;
-        //    row["Other Reason"] = string.Empty;
-        //    row["Message Type"] = string.Empty;
-        //    row["Beneficiary Type"] = "ABA/BIC";
-        //    row["Beneficiary BIC or ABA"] = String.Empty;
-        //    //row["Beneficiary Bank Name"] = String.Empty;
-        //    //row["Beneficiary Bank Address"] = String.Empty;
-        //    row["Beneficiary Account Number"] = String.Empty;
-        //    row["Intermediary Beneficiary Type"] = "ABA/BIC";
-        //    row["Intermediary BIC or ABA"] = String.Empty;
-        //    //row["Intermediary Bank Name"] = String.Empty;
-        //    //row["Intermediary Bank Address"] = String.Empty;
-        //    row["Intermediary Account Number"] = String.Empty;
-        //    row["Ultimate Beneficiary Type"] = "ABA/BIC";
-        //    row["Ultimate Beneficiary BIC or ABA"] = String.Empty;
-        //    // row["Ultimate Beneficiary Bank Name"] = String.Empty;
-        //    //row["Ultimate Beneficiary Bank Address"] = String.Empty;
-        //    row["Ultimate Beneficiary Account Name"] = string.Empty;
-        //    row["Ultimate Beneficiary Account Number"] = string.Empty;
-        //    row["FFC Name"] = String.Empty;
-        //    row["FFC Number"] = String.Empty;
-        //    row["Reference"] = String.Empty;
-        //    row["CreatedBy"] = string.Empty;
-        //    row["CreatedDate"] = string.Empty;
-        //    row["UpdatedBy"] = string.Empty;
-        //    row["ModifiedDate"] = string.Empty;
-
-        //    var templateListRows = new List<Row> { row };
-
-        //    //File name and path
-        //    var fileName = string.Format("{0}_{1}", "SSITemplateList", DateTime.Now.ToString("yyyyMMdd"));
-        //    var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", UtilityExtensions.TempAppDirectory, fileName, Format));
-        //    contentToExport.Add("List of SSI Template", templateListRows);
-
-        //    //Export the account file
-        //    Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
-        //    ExportFile(exportFileInfo);
-
-        //    //Delete the account file
-        //    if (System.IO.File.Exists(exportFileInfo.FullName))
-        //        System.IO.File.Delete(exportFileInfo.FullName);
-        //}
+        public FileResult ExportAllAccountlist()
+        {
+
+            var fundOnBoardIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
+            var onBoardingAccounts = AccountManager.GetAllOnBoardingAccounts(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser).OrderByDescending(x => x.UpdatedAt).ToList();
+            var contentToExport = new Dictionary<string, List<Row>>();
+            var accountListRows = BuildAccountRows(onBoardingAccounts);
+            //File name and path
+            var fileName = string.Format("{0}_{1:yyyyMMdd}", "AccountList", DateTime.Now);
+            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+            contentToExport.Add("List of Accounts", accountListRows);
+            //Export the checklist file
+            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            return DownloadAndDeleteFile(exportFileInfo);
+        }
+
+        //Build Account Rows
+        private List<Row> BuildAccountRows(List<onBoardingAccount> onBoardingAccounts)
+        {
+            var accountListRows = new List<Row>();
+
+            foreach (var account in onBoardingAccounts)
+            {
+                var row = new Row();
+                row["Account Id"] = account.onBoardingAccountId.ToString();
+                row["Entity Type"] = account.AccountType;
+                row["Fund Name"] = (account.onboardingFund != null) ? account.onboardingFund.LegalFundName : string.Empty;
+                row["Agreement Name"] = (account.dmaAgreementOnBoarding != null) ? account.dmaAgreementOnBoarding.AgreementShortName : string.Empty;
+                row["Broker"] = (account.dmaCounterpartyFamily != null) ? account.dmaCounterpartyFamily.CounterpartyFamily : string.Empty;
+                row["Account Name"] = account.AccountName;
+                row["Account Number"] = account.AccountNumber;
+                row["Account Type"] = account.AccountPurpose;
+                row["Account Status"] = account.AccountStatus;
+                row["Currency"] = account.Currency;
+                row["Description"] = account.Description;
+                row["Notes"] = account.Notes;
+                row["Authorized Party"] = account.AuthorizedParty;
+                row["Cash Instruction Mechanism"] = account.CashInstruction;
+                row["Swift Group"] = account.SwiftGroup;
+                row["Senders BIC"] = account.SendersBIC;
+                row["Cash Sweep"] = account.CashSweep;
+
+                if (account.CashSweepTime != null)
+                {
+                    var dateTime = DateTime.Today.AddHours(account.CashSweepTime.Value.Hours).AddMinutes(account.CashSweepTime.Value.Minutes);
+                    var stringTime = dateTime.ToString("hh:mm tt");
+
+                    row["Cash Sweep Time"] = stringTime;
+                }
+                else
+                {
+                    row["Cash Sweep Time"] = string.Empty;
+                }
+
+                row["Cash Sweep Time Zone"] = account.CashSweepTimeZone;
+
+                if (account.CutoffTime != null)
+                {
+                    var dateTime = DateTime.Today.AddHours(account.CutoffTime.Value.Hours).AddMinutes(account.CutoffTime.Value.Minutes);
+                    var stringTime = dateTime.ToString("hh:mm tt");
+
+                    row["Cutoff Time"] = stringTime;
+                }
+                else
+                {
+                    row["Cutoff Time"] = string.Empty;
+                }
+
+                row["Days to wire per V.D"] = account.DaystoWire != null ? account.DaystoWire.ToString() + (account.DaystoWire.Value > 1 ? " Days" : " Day") : string.Empty;
+
+                row["Holdback Amount"] = account.HoldbackAmount.HasValue ? account.HoldbackAmount.ToString() : string.Empty;
+                row["Sweep Comments"] = account.SweepComments;
+                row["Associated Custody Acct"] = account.AssociatedCustodyAcct;
+                row["Portfolio Selection"] = account.PortfolioSelection;
+                row["Ticker/ISIN"] = account.TickerorISIN;
+                row["Sweep Currency"] = account.SweepCurrency;
+
+                row["Contact Type"] = account.ContactType;
+                //row["Contact Name"] = account.ContactName;
+                //row["Contact Email"] = account.ContactEmail;
+                //row["Contact Number"] = account.ContactNumber;
+                row["Beneficiary Type"] = account.BeneficiaryType;
+                row["Beneficiary BIC or ABA"] = account.BeneficiaryBICorABA;
+                row["Beneficiary Bank Name"] = account.BeneficiaryBankName;
+                row["Beneficiary Bank Address"] = account.BeneficiaryBankAddress;
+                row["Beneficiary Account Number"] = account.BeneficiaryAccountNumber;
+                row["Intermediary Beneficiary Type"] = account.IntermediaryType;
+                row["Intermediary BIC or ABA"] = account.IntermediaryBICorABA;
+                row["Intermediary Bank Name"] = account.IntermediaryBankName;
+                row["Intermediary Bank Address"] = account.IntermediaryBankAddress;
+                row["Intermediary Account Number"] = account.IntermediaryAccountNumber;
+                row["Ultimate Beneficiary Type"] = account.UltimateBeneficiaryType;
+                row["Ultimate Beneficiary BIC or ABA"] = account.UltimateBeneficiaryBICorABA;
+                row["Ultimate Beneficiary Bank Name"] = account.UltimateBeneficiaryBankName;
+                row["Ultimate Beneficiary Bank Address"] = account.UltimateBeneficiaryBankAddress;
+                row["Ultimate Beneficiary Account Name"] = account.UltimateBeneficiaryAccountName;
+                row["FFC Name"] = account.FFCName;
+                row["FFC Number"] = account.FFCNumber;
+                row["Reference"] = account.Reference;
+                row["Status"] = account.onBoardingAccountStatus;
+                row["Comments"] = account.StatusComments;
+                row["CreatedBy"] = account.CreatedBy;
+                row["CreatedDate"] = account.CreatedAt + "";
+                row["UpdatedBy"] = account.UpdatedBy;
+                row["ModifiedDate"] = account.UpdatedAt + "";
+                switch (account.onBoardingAccountStatus)
+                {
+                    case "Approved":
+                        row.RowHighlight = Row.Highlight.Success;
+                        break;
+                    case "Pending Approval":
+                        row.RowHighlight = Row.Highlight.Warning;
+                        break;
+                    default:
+                        row.RowHighlight = Row.Highlight.None;
+                        break;
+                }
+                accountListRows.Add(row);
+            }
+
+            return accountListRows;
+        }
+
+        public FileResult ExportAllSsiTemplatelist()
+        {
+            //var authorizeData = OnBoardingManager.GetAuthorizedData(User.GetUserName(), User.GetRole());
+            //var fundOnBoardIds = authorizeData.FundOnBoardingIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
+            var ssiTemplates = AccountManager.GetAllBrokerSsiTemplates().OrderByDescending(x => x.UpdatedAt).ToList();
+            var contentToExport = new Dictionary<string, List<Row>>();
+            var accountListRows = BuildSsiTemplateRows(ssiTemplates);
+            //File name and path
+            var fileName = string.Format("{0}_{1:yyyyMMdd}", "SSITemplateList", DateTime.Now);
+            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+            contentToExport.Add("List of SSI Template", accountListRows);
+            //Export the checklist file
+            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            return DownloadAndDeleteFile(exportFileInfo);
+        }
+
+        // Build SSI Template Rows
+        private List<Row> BuildSsiTemplateRows(List<onBoardingSSITemplate> ssiTemplates)
+        {
+            var templateListRows = new List<Row>();
+            var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties().ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
+
+            foreach (var template in ssiTemplates)
+            {
+                var row = new Row();
+                row["SSI Template Id"] = template.onBoardingSSITemplateId.ToString();
+                row["Template Name"] = template.TemplateName;
+                row["SSI Template Type"] = template.SSITemplateType;
+                row["Legal Entity"] = counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty;
+                row["Account Type"] = (template.dmaAgreementType != null && string.IsNullOrEmpty(template.ServiceProvider)) ? template.dmaAgreementType.AgreementType : string.Empty;
+                row["Service Provider"] = template.ServiceProvider;
+                row["Currency"] = template.Currency;
+                row["Payment/Receipt Reason Detail"] = template.ReasonDetail;
+                row["Other Reason"] = template.OtherReason;
+                row["Message Type"] = template.MessageType;
+                row["Beneficiary Type"] = template.BeneficiaryType;
+                row["Beneficiary BIC or ABA"] = template.BeneficiaryBICorABA;
+                row["Beneficiary Bank Name"] = template.BeneficiaryBankName;
+                row["Beneficiary Bank Address"] = template.BeneficiaryBankAddress;
+                row["Beneficiary Account Number"] = template.BeneficiaryAccountNumber;
+                row["Intermediary Beneficiary Type"] = template.IntermediaryType;
+                row["Intermediary BIC or ABA"] = template.IntermediaryBICorABA;
+                row["Intermediary Bank Name"] = template.IntermediaryBankName;
+                row["Intermediary Bank Address"] = template.IntermediaryBankAddress;
+                row["Intermediary Account Number"] = template.IntermediaryAccountNumber;
+                row["Ultimate Beneficiary Type"] = template.UltimateBeneficiaryType;
+                row["Ultimate Beneficiary BIC or ABA"] = template.UltimateBeneficiaryBICorABA;
+                row["Ultimate Beneficiary Bank Name"] = template.UltimateBeneficiaryBankName;
+                row["Ultimate Beneficiary Bank Address"] = template.UltimateBeneficiaryBankAddress;
+                row["Ultimate Beneficiary Account Name"] = template.UltimateBeneficiaryAccountName;
+                row["Ultimate Beneficiary Account Number"] = template.AccountNumber;
+                row["FFC Name"] = template.FFCName;
+                row["FFC Number"] = template.FFCNumber;
+                row["Reference"] = template.Reference;
+                row["SSI Template Status"] = template.SSITemplateStatus;
+                row["Comments"] = template.StatusComments;
+                row["CreatedBy"] = template.CreatedBy;
+                row["CreatedDate"] = template.CreatedAt + "";
+                row["UpdatedBy"] = template.UpdatedBy;
+                row["ModifiedDate"] = template.UpdatedAt + "";
+                switch (template.SSITemplateStatus)
+                {
+                    case "Approved":
+                        row.RowHighlight = Row.Highlight.Success;
+                        break;
+                    case "Pending Approval":
+                        row.RowHighlight = Row.Highlight.Warning;
+                        break;
+                    default:
+                        row.RowHighlight = Row.Highlight.None;
+                        break;
+                }
+                templateListRows.Add(row);
+            }
+
+            return templateListRows;
+        }
+
+        public string UploadAccount()
+        {
+            var onboardingAccounts = AccountManager.GetAllOnBoardingAccounts(new List<long>(), true);
+            var counterpartyFamilies = OnBoardingDataManager.GetAllCounterpartyFamilies().ToDictionary(x => x.dmaCounterpartyFamilyId, x => x.CounterpartyFamily);
+            var funds = OnBoardingDataManager.GetAllFunds();
+            // var agreementTypes = OnBoardingManager.GetAllAgreementTypes();
+            var agreementList = OnBoardingDataManager.GetAllAgreements();
+            var accountBicorAba = AccountManager.GetAllAccountBicorAba();
+            var swiftgroups = AccountManager.GetAllSwiftGroup();
+            var agreements = agreementList.ToDictionary(s => s.dmaAgreementOnBoardingId, s => s.dmaAgreementType.AgreementType + " - " + s.onboardingFund.LegalFundName + " - " + (s.dmaCounterPartyOnBoarding != null ? s.dmaCounterPartyOnBoarding.CounterpartyShortCode : string.Empty));
+            for (var i = 0; i < Request.Files.Count; i++)
+            {
+                var file = Request.Files[i];
+
+                if (file == null)
+                    throw new Exception("unable to retrive file information");
+
+                var fileinfo = new FileInfo(FileSystemManager.UploadTemporaryFilesPath + file.FileName);
+
+                if (fileinfo.Directory != null && !Directory.Exists(fileinfo.Directory.FullName))
+                    Directory.CreateDirectory(fileinfo.Directory.FullName);
+
+                if (System.IO.File.Exists(fileinfo.FullName))
+                    System.IO.File.Delete(fileinfo.FullName);
+
+                file.SaveAs(fileinfo.FullName);
+                var accountRows = new ExcelFileParser(fileinfo, "List of Accounts", string.Empty).Parse(true, false);
+
+                if (accountRows.Count > 0)
+                {
+                    foreach (var account in accountRows)
+                    {
+                        var accountDetail = new onBoardingAccount();
+                        accountDetail.onBoardingAccountId = string.IsNullOrWhiteSpace(account["Account Id"]) ? 0 : long.Parse(account["Account Id"]);
+                        accountDetail.AccountNumber = account["Account Number"];
+                        accountDetail.AccountType = account["Entity Type"];
+
+                        if (account["Entity Type"] == "Agreement")
+                        {
+                            accountDetail.dmaAgreementOnBoardingId = agreements.FirstOrDefault(x => x.Value == account["Agreement Name"]).Key;
+                            accountDetail.dmaFundOnBoardId = funds.FirstOrDefault(x => x.Value == account["Fund Name"]).Key;
+                            var counterPartyByAgreement = onboardingAccounts.FirstOrDefault(s => s.dmaAgreementOnBoardingId == accountDetail.dmaAgreementOnBoardingId);
+                            if (counterPartyByAgreement != null)
+                            {
+                                accountDetail.BrokerId = counterPartyByAgreement.dmaAgreementOnBoarding.dmaCounterPartyFamilyId.ToLong();
+                            }
+
+                            if (accountDetail.onBoardingAccountId == 0)
+                            {
+                                var existsAccount = onboardingAccounts.FirstOrDefault(x =>
+                                    x.dmaAgreementOnBoardingId == accountDetail.dmaAgreementOnBoardingId &&
+                                    x.dmaFundOnBoardId == accountDetail.dmaFundOnBoardId &&
+                                    x.AccountNumber == accountDetail.AccountNumber);
+                                if (existsAccount != null) continue;
+                            }
+                        }
+                        else
+                        {
+                            accountDetail.dmaFundOnBoardId = funds.FirstOrDefault(x => x.Value == account["Fund Name"]).Key;
+                            accountDetail.BrokerId = counterpartyFamilies.FirstOrDefault(x => x.Value == account["Broker"]).Key;
+                            if (accountDetail.onBoardingAccountId == 0)
+                            {
+                                var existsAccount = onboardingAccounts.FirstOrDefault(x => x.dmaFundOnBoardId == accountDetail.dmaFundOnBoardId &&
+                                    x.BrokerId == accountDetail.BrokerId && x.AccountNumber == accountDetail.AccountNumber);
+                                if (existsAccount != null) continue;
+                            }
+                        }
+                        accountDetail.AccountName = account["Account Name"];
+                        accountDetail.AccountPurpose = account["Account Type"];
+                        accountDetail.AccountStatus = account["Account Status"];
+                        accountDetail.Currency = account["Currency"];
+                        accountDetail.Description = account["Description"];
+                        accountDetail.Notes = account["Notes"];
+                        accountDetail.AuthorizedParty = account["Authorized Party"];
+                        accountDetail.CashInstruction = account["Cash Instruction Mechanism"];
+                        accountDetail.SwiftGroup = account["Swift Group"];
+                        if (!string.IsNullOrWhiteSpace(accountDetail.SwiftGroup))
+                        {
+                            var swiftGroup = swiftgroups.FirstOrDefault(x => x.SwiftGroup == accountDetail.SwiftGroup);
+                            accountDetail.SendersBIC = (swiftGroup != null) ? swiftGroup.SendersBIC : string.Empty;
+                        }
+
+                        accountDetail.CashSweep = account["Cash Sweep"];
+
+                        if (!string.IsNullOrWhiteSpace(account["Cash Sweep Time"]))
+                        {
+                            var cashSweepTime = account["Cash Sweep Time"];
+                            var increment = (cashSweepTime.Contains("PM") ? 12 : 0);
+                            cashSweepTime = cashSweepTime.Replace("PM", "").Replace("AM", "").Trim();
+                            var splitCashSweep = cashSweepTime.Split(':');
+                            if (splitCashSweep.Length > 1)
+                            {
+                                var hours = Convert.ToInt32(splitCashSweep[0]);
+                                hours = hours >= 12 ? hours % 12 : hours;
+                                cashSweepTime = (hours + increment).ToString() + ":" + splitCashSweep[1];
+                                accountDetail.CashSweepTime = TimeSpan.Parse(cashSweepTime);
+                            }
+                            accountDetail.CashSweepTimeZone = account["Cash Sweep Time Zone"];
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(account["Cutoff Time"]))
+                        {
+                            var cutoffTime = account["Cutoff Time"];
+                            var increment = (cutoffTime.Contains("PM") ? 12 : 0);
+                            cutoffTime = cutoffTime.Replace("PM", "").Replace("AM", "").Trim();
+                            var splitCutoffTime = cutoffTime.Split(':');
+                            if (splitCutoffTime.Length > 1)
+                            {
+                                var hours = Convert.ToInt32(splitCutoffTime[0]);
+                                hours = hours >= 12 ? hours % 12 : hours;
+                                cutoffTime = (hours + increment).ToString() + ":" + splitCutoffTime[1];
+                                accountDetail.CutoffTime = TimeSpan.Parse(cutoffTime);
+                            }
+
+                        }
+                        if (!string.IsNullOrWhiteSpace(account["Days to wire per V.D"]))
+                        {
+                            var wirePerDays = account["Days to wire per V.D"].Replace(" Days", "").Replace(" Day", "").Trim();
+                            accountDetail.DaystoWire = Convert.ToInt32(wirePerDays);
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(account["Cash Sweep"]) && account["Cash Sweep"] == "Yes")
+                        {
+                            if (!string.IsNullOrWhiteSpace(account["Holdback Amount"]))
+                                accountDetail.HoldbackAmount = Convert.ToDouble(account["Holdback Amount"]);
+
+                            accountDetail.SweepComments = account["Sweep Comments"];
+                            accountDetail.AssociatedCustodyAcct = account["Associated Custody Acct"];
+                            accountDetail.PortfolioSelection = account["Portfolio Selection"];
+                            accountDetail.TickerorISIN = account["Ticker/ISIN"];
+                            accountDetail.SweepCurrency = account["Sweep Currency"];
+                        }
+
+                        accountDetail.ContactType = account["Contact Type"];
+
+                        //if (accountDetail.BrokerId > 0 && accountDetail.BrokerId.HasValue)
+                        //{
+                        //    var onBoardingContacts = ContactManager.GetAllOnBoardingContacts(ContactManager.CounterpartyTypeId, accountDetail.BrokerId.ToLong());
+                        //    var contactDetail = onBoardingContacts.FirstOrDefault(x => (GetContactName(x.LastName, x.FirstName) == account["Contact Name"]));
+                        //    if (contactDetail != null)
+                        //    {
+                        //        accountDetail.ContactName = GetContactName(contactDetail.LastName, contactDetail.FirstName);
+                        //        //accountDetail.ContactEmail = contactDetail.Email;
+                        //       // accountDetail.ContactNumber = contactDetail.BusinessPhone;
+                        //    }
+                        //}
+                        accountDetail.BeneficiaryType = account["Beneficiary Type"];
+                        accountDetail.BeneficiaryBICorABA = account["Beneficiary BIC or ABA"];
+                        var beneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.BeneficiaryType == "ABA") && x.BICorABA == accountDetail.BeneficiaryBICorABA);
+                        if (beneficiaryBiCorAba != null)
+                        {
+                            accountDetail.BeneficiaryBankName = beneficiaryBiCorAba.BankName;
+                            accountDetail.BeneficiaryBankAddress = beneficiaryBiCorAba.BankAddress;
+                        }
+                        else
+                        {
+                            accountDetail.BeneficiaryBankName = string.Empty;
+                            accountDetail.BeneficiaryBankAddress = string.Empty;
+                        }
+
+                        accountDetail.BeneficiaryAccountNumber = account["Beneficiary Account Number"];
+                        accountDetail.IntermediaryType = account["Intermediary Beneficiary Type"];
+                        accountDetail.IntermediaryBICorABA = account["Intermediary BIC or ABA"];
+                        var intermediaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.IntermediaryType == "ABA") && x.BICorABA == accountDetail.IntermediaryBICorABA);
+                        if (intermediaryBiCorAba != null)
+                        {
+                            accountDetail.IntermediaryBankName = intermediaryBiCorAba.BankName;
+                            accountDetail.IntermediaryBankAddress = intermediaryBiCorAba.BankAddress;
+                        }
+                        else
+                        {
+                            accountDetail.IntermediaryBankName = string.Empty;
+                            accountDetail.IntermediaryBankAddress = string.Empty;
+                        }
+
+                        accountDetail.IntermediaryAccountNumber = account["Intermediary Account Number"];
+                        accountDetail.UltimateBeneficiaryAccountName = account["Ultimate Beneficiary Account Name"];
+                        accountDetail.UltimateBeneficiaryType = account["Ultimate Beneficiary Type"];
+                        accountDetail.UltimateBeneficiaryBICorABA = account["Ultimate Beneficiary BIC or ABA"];
+                        var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == accountDetail.UltimateBeneficiaryBICorABA);
+                        if (ultimateBeneficiaryBiCorAba != null)
+                        {
+                            accountDetail.UltimateBeneficiaryBankName = ultimateBeneficiaryBiCorAba.BankName;
+                            accountDetail.UltimateBeneficiaryBankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
+                        }
+                        else
+                        {
+                            accountDetail.UltimateBeneficiaryBankName = string.Empty;
+                            accountDetail.UltimateBeneficiaryBankAddress = string.Empty;
+                        }
+
+                        accountDetail.FFCName = account["FFC Name"];
+                        accountDetail.FFCNumber = account["FFC Number"];
+                        accountDetail.Reference = account["Reference"];
+                        accountDetail.onBoardingAccountStatus = account["Status"];
+                        accountDetail.StatusComments = account["Comments"];
+                        accountDetail.CreatedBy = account["CreatedBy"];
+                        accountDetail.UpdatedBy = account["UpdatedBy"];
+                        accountDetail.CreatedAt = !string.IsNullOrWhiteSpace(account["CreatedDate"])
+                            ? DateTime.Parse(account["CreatedDate"])
+                            : DateTime.Now;
+                        accountDetail.UpdatedAt = !string.IsNullOrWhiteSpace(account["ModifiedDate"])
+                            ? DateTime.Parse(account["ModifiedDate"])
+                            : DateTime.Now;
+                        accountDetail.IsDeleted = false;
+                        AccountManager.AddAccount(accountDetail, UserName);
+                    }
+                }
+
+                if (System.IO.File.Exists(fileinfo.FullName))
+                    System.IO.File.Delete(fileinfo.FullName);
+            }
+            return "";
+        }
+
+        public FileResult ExportSampleAccountlist()
+        {
+            var contentToExport = new Dictionary<string, List<Row>>();
+
+            var row = new Row();
+            //row["Account Id"] = String.Empty;
+            row["Entity Type"] = String.Empty;
+            row["Fund Name"] = String.Empty;
+            row["Agreement Name"] = String.Empty;
+            row["Broker"] = String.Empty;
+            row["Account Name"] = String.Empty;
+            row["Account Number"] = String.Empty;
+            row["Account Type"] = String.Empty;
+            row["Account Status"] = String.Empty;
+            row["Currency"] = String.Empty;
+            row["Description"] = String.Empty;
+            row["Notes"] = String.Empty;
+            row["Authorized Party"] = String.Empty;
+            row["Cash Instruction Mechanism"] = String.Empty;
+            row["Swift Group"] = String.Empty;
+            row["Senders BIC"] = String.Empty;
+            row["Cash Sweep"] = String.Empty;
+            row["Cash Sweep Time"] = String.Empty;
+            row["Cash Sweep Time Zone"] = String.Empty;
+            row["Cutoff Time"] = String.Empty;
+            row["Days to wire per V.D"] = String.Empty;
+            row["Holdback Amount"] = String.Empty;
+            row["Sweep Comments"] = String.Empty;
+            row["Associated Custody Acct"] = String.Empty;
+            row["Portfolio Selection"] = String.Empty;
+            row["Ticker/ISIN"] = String.Empty;
+            row["Sweep Currency"] = String.Empty;
+            row["Contact Type"] = String.Empty;
+            //row["Contact Name"] = String.Empty;
+            //row["Contact Email"] = String.Empty;
+            // row["Contact Number"] = String.Empty;
+            row["Beneficiary Type"] = "ABA/BIC";
+            row["Beneficiary BIC or ABA"] = String.Empty;
+            row["Beneficiary Account Number"] = String.Empty;
+            row["Intermediary Beneficiary Type"] = "ABA/BIC";
+            row["Intermediary BIC or ABA"] = String.Empty;
+            row["Intermediary Account Number"] = String.Empty;
+            row["Ultimate Beneficiary Account Name"] = String.Empty;
+            row["Ultimate Beneficiary Type"] = "ABA/BIC";
+            row["Ultimate Beneficiary BIC or ABA"] = String.Empty;
+            row["FFC Name"] = String.Empty;
+            row["FFC Number"] = String.Empty;
+            row["Reference"] = String.Empty;
+            row["Status"] = String.Empty;
+            row["Comments"] = String.Empty;
+
+            row["CreatedBy"] = String.Empty;
+            row["CreatedDate"] = String.Empty;
+            row["UpdatedBy"] = String.Empty;
+            row["ModifiedDate"] = String.Empty;
+
+            var accountListRows = new List<Row> { row };
+
+            //File name and path
+            var fileName = string.Format("{0}_{1:yyyyMMdd}", "AccountList", DateTime.Now);
+            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+            contentToExport.Add("List of Accounts", accountListRows);
+
+            //Export the account file
+            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            return DownloadAndDeleteFile(exportFileInfo);
+        }
+
+        public string UploadSsiTemplate()
+        {
+            var onboardingSsiTemplate = AccountManager.GetAllBrokerSsiTemplates();
+            var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties().ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
+            var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
+            var accountBicorAba = AccountManager.GetAllAccountBicorAba();
+
+
+            for (var i = 0; i < Request.Files.Count; i++)
+            {
+                var file = Request.Files[i];
+
+                if (file == null)
+                    throw new Exception("unable to retrive file information");
+
+                var fileinfo = new FileInfo(FileSystemManager.UploadTemporaryFilesPath + file.FileName);
+
+                if (fileinfo.Directory != null && !Directory.Exists(fileinfo.Directory.FullName))
+                    Directory.CreateDirectory(fileinfo.Directory.FullName);
+
+                if (System.IO.File.Exists(fileinfo.FullName))
+                    System.IO.File.Delete(fileinfo.FullName);
+
+                file.SaveAs(fileinfo.FullName);
+                var templateListRows = new ExcelFileParser(fileinfo, "List of SSI Template", string.Empty).Parse(true, false);
+
+                if (templateListRows.Count > 0)
+                {
+                    foreach (var template in templateListRows)
+                    {
+                        var templateDetail = new onBoardingSSITemplate();
+                        templateDetail.onBoardingSSITemplateId = string.IsNullOrWhiteSpace(template["SSI Template Id"]) ? 0 : long.Parse(template["SSI Template Id"]);
+                        templateDetail.TemplateTypeId = AccountManager.BrokerTemplateTypeId;
+                        templateDetail.TemplateEntityId = counterParties.FirstOrDefault(x => x.Value == template["Legal Entity"]).Key;
+                        templateDetail.dmaAgreementTypeId = agreementTypes.FirstOrDefault(x => x.Value == template["Account Type"]).Key;
+                        templateDetail.ServiceProvider = template["Service Provider"];
+                        templateDetail.Currency = template["Currency"];
+                        templateDetail.ReasonDetail = template["Payment/Receipt Reason Detail"];
+                        templateDetail.OtherReason = template["Other Reason"];
+                        templateDetail.MessageType = template["Message Type"];
+                        templateDetail.TemplateName = template["SSI Template Type"] == "Broker" ? template["Legal Entity"] + " - " + template["Account Type"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : (!string.IsNullOrWhiteSpace(template["SSI Template Type"]) ? template["Service Provider"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : template["Template Name"]);
+                        if (templateDetail.onBoardingSSITemplateId == 0)
+                        {
+                            var existsTemplate = onboardingSsiTemplate.FirstOrDefault(x => x.TemplateName == templateDetail.TemplateName);
+                            if (existsTemplate != null) continue;
+                        }
+                        templateDetail.BeneficiaryType = template["Beneficiary Type"];
+                        templateDetail.BeneficiaryBICorABA = template["Beneficiary BIC or ABA"];
+                        var beneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.BeneficiaryType == "ABA") && x.BICorABA == templateDetail.BeneficiaryBICorABA);
+                        if (beneficiaryBiCorAba != null)
+                        {
+                            templateDetail.BeneficiaryBankName = beneficiaryBiCorAba.BankName;
+                            templateDetail.BeneficiaryBankAddress = beneficiaryBiCorAba.BankAddress;
+                        }
+                        else
+                        {
+                            templateDetail.BeneficiaryBankName = string.Empty;
+                            templateDetail.BeneficiaryBankAddress = string.Empty;
+                        }
+
+                        templateDetail.BeneficiaryAccountNumber = template["Beneficiary Account Number"];
+                        templateDetail.IntermediaryType = template["Intermediary Beneficiary Type"];
+                        templateDetail.IntermediaryBICorABA = template["Intermediary BIC or ABA"];
+                        var intermediaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.IntermediaryType == "ABA") && x.BICorABA == templateDetail.IntermediaryBICorABA);
+                        if (intermediaryBiCorAba != null)
+                        {
+                            templateDetail.IntermediaryBankName = intermediaryBiCorAba.BankName;
+                            templateDetail.IntermediaryBankAddress = intermediaryBiCorAba.BankAddress;
+                        }
+                        else
+                        {
+                            templateDetail.IntermediaryBankName = string.Empty;
+                            templateDetail.IntermediaryBankAddress = string.Empty;
+                        }
+
+                        templateDetail.IntermediaryAccountNumber = template["Intermediary Account Number"];
+
+                        templateDetail.UltimateBeneficiaryType = template["Ultimate Beneficiary Type"];
+                        templateDetail.UltimateBeneficiaryBICorABA = template["Ultimate Beneficiary BIC or ABA"];
+                        var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == templateDetail.UltimateBeneficiaryBICorABA);
+                        if (ultimateBeneficiaryBiCorAba != null)
+                        {
+                            templateDetail.UltimateBeneficiaryBankName = ultimateBeneficiaryBiCorAba.BankName;
+                            templateDetail.UltimateBeneficiaryBankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
+                        }
+                        else
+                        {
+                            templateDetail.UltimateBeneficiaryBankName = string.Empty;
+                            templateDetail.UltimateBeneficiaryBankAddress = string.Empty;
+                        }
+
+                        templateDetail.UltimateBeneficiaryAccountName = template["Ultimate Beneficiary Account Name"];
+                        templateDetail.AccountNumber = template["Ultimate Beneficiary Account Number"];
+                        templateDetail.FFCName = template["FFC Name"];
+                        templateDetail.FFCNumber = template["FFC Number"];
+                        templateDetail.Reference = template["Reference"];
+                        templateDetail.SSITemplateType = template["SSI Template Type"];
+                        if (templateDetail.onBoardingSSITemplateId == 0)
+                        {
+                            templateDetail.SSITemplateStatus = "Saved As Draft";
+                            templateDetail.StatusComments = "Manually Uploaded";
+                        }
+                        else
+                        {
+
+                            templateDetail.SSITemplateStatus = template["SSI Template Status"];
+                            templateDetail.StatusComments = template["Comments"];
+                        }
+                        templateDetail.CreatedBy = template["CreatedBy"];
+                        templateDetail.UpdatedBy = template["UpdatedBy"];
+                        templateDetail.CreatedAt = !string.IsNullOrWhiteSpace(template["CreatedDate"])
+                            ? DateTime.Parse(template["CreatedDate"])
+                            : DateTime.Now;
+                        templateDetail.UpdatedAt = !string.IsNullOrWhiteSpace(template["ModifiedDate"])
+                            ? DateTime.Parse(template["ModifiedDate"])
+                            : DateTime.Now;
+                        templateDetail.IsDeleted = false;
+                        //templateDetail.TemplateName = template["SSI Template Type"] == "Broker" ? template["Broker"] + " - " + template["Account Type"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : (!string.IsNullOrWhiteSpace(template["SSI Template Type"]) ? template["Service Provider"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : template["Template Name"]);
+                        AccountManager.AddSsiTemplate(templateDetail, UserName);
+                    }
+                }
+
+                if (System.IO.File.Exists(fileinfo.FullName))
+                    System.IO.File.Delete(fileinfo.FullName);
+            }
+            return "";
+        }
+
+        private const string DefaultExportFileFormat = ".xlsx";
+        public FileResult ExportSampleSsiTemplatelist()
+        {
+            var contentToExport = new Dictionary<string, List<Row>>();
+
+            var row = new Row();
+            //row["SSI Template Id"] = string.Empty;
+            row["Template Name"] = string.Empty;
+            row["SSI Template Type"] = string.Empty;
+            row["Legal Entity"] = string.Empty;
+            row["Account Type"] = string.Empty;
+            row["Service Provider"] = string.Empty;
+            row["Currency"] = string.Empty;
+            row["Payment/Receipt Reason Detail"] = string.Empty;
+            row["Other Reason"] = string.Empty;
+            row["Message Type"] = string.Empty;
+            row["Beneficiary Type"] = "ABA/BIC";
+            row["Beneficiary BIC or ABA"] = string.Empty;
+            //row["Beneficiary Bank Name"] = String.Empty;
+            //row["Beneficiary Bank Address"] = String.Empty;
+            row["Beneficiary Account Number"] = string.Empty;
+            row["Intermediary Beneficiary Type"] = "ABA/BIC";
+            row["Intermediary BIC or ABA"] = string.Empty;
+            //row["Intermediary Bank Name"] = String.Empty;
+            //row["Intermediary Bank Address"] = String.Empty;
+            row["Intermediary Account Number"] = string.Empty;
+            row["Ultimate Beneficiary Type"] = "ABA/BIC";
+            row["Ultimate Beneficiary BIC or ABA"] = String.Empty;
+            // row["Ultimate Beneficiary Bank Name"] = String.Empty;
+            //row["Ultimate Beneficiary Bank Address"] = String.Empty;
+            row["Ultimate Beneficiary Account Name"] = string.Empty;
+            row["Ultimate Beneficiary Account Number"] = string.Empty;
+            row["FFC Name"] = string.Empty;
+            row["FFC Number"] = string.Empty;
+            row["Reference"] = string.Empty;
+            row["CreatedBy"] = string.Empty;
+            row["CreatedDate"] = string.Empty;
+            row["UpdatedBy"] = string.Empty;
+            row["ModifiedDate"] = string.Empty;
+
+            var templateListRows = new List<Row> { row };
+
+            //File name and path
+            var fileName = string.Format("{0}_{1:yyyyMMdd}", "SSITemplateList", DateTime.Now);
+            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+            contentToExport.Add("List of SSI Template", templateListRows);
+
+            //Export the account file
+            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            return DownloadAndDeleteFile(exportFileInfo);
+        }
 
         public FileResult DownloadAccountFile(string fileName, long accountId)
         {
@@ -1678,13 +1665,13 @@ namespace HMOSecureWeb.Controllers
                     ModifiedStateValue = propertyVal,
                     Action = "Added",
                     Field = propertyInfo.Name,
-                    Log = string.Format("Onboarding Name: <i>{0}</i><br/>SSI Template Name: <i>{1}</i>", "Account",account.AccountName)
+                    Log = string.Format("Onboarding Name: <i>{0}</i><br/>SSI Template Name: <i>{1}</i>", "Account", account.AccountName)
                 };
 
                 auditLogList.Add(auditLog);
             }
-            
-       
+
+
             //if (!string.IsNullOrWhiteSpace(account.AccountType))
             //    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Account Type", "Added", "", account.AccountType, UserName));
 
@@ -1811,126 +1798,126 @@ namespace HMOSecureWeb.Controllers
             var nonUpdatedAccount = AccountManager.GetOnBoardingAccount(account.onBoardingAccountId);
 
             if (account.AccountNumber != nonUpdatedAccount.AccountNumber)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Account Number", "Updated", nonUpdatedAccount.AccountNumber, account.AccountNumber, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Account Number", "Edited", nonUpdatedAccount.AccountNumber, account.AccountNumber, UserName));
 
             if (account.Currency != nonUpdatedAccount.Currency)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Currency", "Updated", nonUpdatedAccount.Currency, account.Currency, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Currency", "Edited", nonUpdatedAccount.Currency, account.Currency, UserName));
 
             if (account.Description != nonUpdatedAccount.Description)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Description", "Updated", nonUpdatedAccount.Description, account.Description, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Description", "Edited", nonUpdatedAccount.Description, account.Description, UserName));
 
             if (account.AccountPurpose != nonUpdatedAccount.AccountPurpose)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Account Type", "Updated", nonUpdatedAccount.AccountPurpose, account.AccountPurpose, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Account Type", "Edited", nonUpdatedAccount.AccountPurpose, account.AccountPurpose, UserName));
 
             if (account.AccountStatus != nonUpdatedAccount.AccountStatus)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Account Status", "Updated", nonUpdatedAccount.AccountStatus, account.AccountStatus, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Account Status", "Edited", nonUpdatedAccount.AccountStatus, account.AccountStatus, UserName));
 
             if (account.Notes != nonUpdatedAccount.Notes)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Notes", "Updated", nonUpdatedAccount.Notes, account.Notes, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Notes", "Edited", nonUpdatedAccount.Notes, account.Notes, UserName));
 
             if (account.AuthorizedParty != nonUpdatedAccount.AuthorizedParty)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "AuthorizedParty", "Updated", nonUpdatedAccount.AuthorizedParty, account.AuthorizedParty, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "AuthorizedParty", "Edited", nonUpdatedAccount.AuthorizedParty, account.AuthorizedParty, UserName));
 
             if (account.CashInstruction != nonUpdatedAccount.CashInstruction)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cash Instruction", "Updated", nonUpdatedAccount.CashInstruction, account.CashInstruction, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cash Instruction", "Edited", nonUpdatedAccount.CashInstruction, account.CashInstruction, UserName));
 
             if (account.CashSweep != nonUpdatedAccount.CashSweep)
             {
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cash Sweep", "Updated", nonUpdatedAccount.CashSweep, account.CashSweep, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cash Sweep", "Edited", nonUpdatedAccount.CashSweep, account.CashSweep, UserName));
             }
             if (account.CashSweep == "Yes")
             {
                 if (account.CashSweepTime != nonUpdatedAccount.CashSweepTime)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cash Sweep", "Updated", (nonUpdatedAccount.CashSweepTime != null ? nonUpdatedAccount.CashSweepTime.Value.ToString() : string.Empty), (account.CashSweepTime != null ? account.CashSweepTime.Value.ToString() : string.Empty), UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cash Sweep", "Edited", (nonUpdatedAccount.CashSweepTime != null ? nonUpdatedAccount.CashSweepTime.Value.ToString() : string.Empty), (account.CashSweepTime != null ? account.CashSweepTime.Value.ToString() : string.Empty), UserName));
                 if (account.CashSweepTimeZone != nonUpdatedAccount.CashSweepTimeZone)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cash Sweep Time Zone", "Updated", nonUpdatedAccount.CashSweepTimeZone, account.CashSweepTimeZone, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cash Sweep Time Zone", "Edited", nonUpdatedAccount.CashSweepTimeZone, account.CashSweepTimeZone, UserName));
                 if (account.HoldbackAmount != nonUpdatedAccount.HoldbackAmount)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Holdback Amount", "Updated", (nonUpdatedAccount.HoldbackAmount.HasValue ? nonUpdatedAccount.HoldbackAmount.ToString() : string.Empty), (account.HoldbackAmount.HasValue ? account.HoldbackAmount.ToString() : string.Empty), UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Holdback Amount", "Edited", (nonUpdatedAccount.HoldbackAmount.HasValue ? nonUpdatedAccount.HoldbackAmount.ToString() : string.Empty), (account.HoldbackAmount.HasValue ? account.HoldbackAmount.ToString() : string.Empty), UserName));
                 if (account.SweepComments != nonUpdatedAccount.SweepComments)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Sweep Comments", "Updated", nonUpdatedAccount.SweepComments, account.SweepComments, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Sweep Comments", "Edited", nonUpdatedAccount.SweepComments, account.SweepComments, UserName));
                 if (account.AssociatedCustodyAcct != nonUpdatedAccount.AssociatedCustodyAcct)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Associated Custody Acct", "Updated", nonUpdatedAccount.AssociatedCustodyAcct, account.AssociatedCustodyAcct, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Associated Custody Acct", "Edited", nonUpdatedAccount.AssociatedCustodyAcct, account.AssociatedCustodyAcct, UserName));
                 if (account.PortfolioSelection != nonUpdatedAccount.PortfolioSelection)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Portfolio Selection", "Updated", nonUpdatedAccount.PortfolioSelection, account.PortfolioSelection, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Portfolio Selection", "Edited", nonUpdatedAccount.PortfolioSelection, account.PortfolioSelection, UserName));
                 if (account.TickerorISIN != nonUpdatedAccount.TickerorISIN)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ticker/ISIN", "Updated", nonUpdatedAccount.TickerorISIN, account.TickerorISIN, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ticker/ISIN", "Edited", nonUpdatedAccount.TickerorISIN, account.TickerorISIN, UserName));
                 if (account.SweepCurrency != nonUpdatedAccount.SweepCurrency)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Sweep Currency", "Updated", nonUpdatedAccount.SweepCurrency, account.SweepCurrency, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Sweep Currency", "Edited", nonUpdatedAccount.SweepCurrency, account.SweepCurrency, UserName));
             }
             if (account.CutoffTime != nonUpdatedAccount.CutoffTime)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cutoff Time", "Updated", nonUpdatedAccount.CutoffTime.ToString(), account.CutoffTime.ToString(), UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cutoff Time", "Edited", nonUpdatedAccount.CutoffTime.ToString(), account.CutoffTime.ToString(), UserName));
 
             if (account.ContactType != nonUpdatedAccount.ContactType)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Contact Type", "Updated", nonUpdatedAccount.ContactType, account.ContactType, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Contact Type", "Edited", nonUpdatedAccount.ContactType, account.ContactType, UserName));
 
             //if (account.ContactName != nonUpdatedAccount.ContactName)
             //{
-            //    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Contact Name", "Updated", nonUpdatedAccount.ContactName, account.ContactName, UserName));
+            //    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Contact Name", "Edited", nonUpdatedAccount.ContactName, account.ContactName, UserName));
             //}
 
             //if (account.ContactEmail != nonUpdatedAccount.ContactEmail)
-            //    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Contact Email", "Updated", nonUpdatedAccount.ContactEmail, account.ContactEmail, UserName));
+            //    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Contact Email", "Edited", nonUpdatedAccount.ContactEmail, account.ContactEmail, UserName));
 
             //if (account.ContactNumber != nonUpdatedAccount.ContactNumber)
-            //    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Contact Number", "Updated", nonUpdatedAccount.ContactNumber, account.ContactNumber, UserName));
+            //    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Contact Number", "Edited", nonUpdatedAccount.ContactNumber, account.ContactNumber, UserName));
 
             if (account.BeneficiaryBICorABA != nonUpdatedAccount.BeneficiaryBICorABA)
             {
                 if (account.BeneficiaryType != nonUpdatedAccount.BeneficiaryType)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Type", "Updated", nonUpdatedAccount.BeneficiaryType, account.BeneficiaryType, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Type", "Edited", nonUpdatedAccount.BeneficiaryType, account.BeneficiaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary BIC or ABA", "Updated", nonUpdatedAccount.BeneficiaryBICorABA, account.BeneficiaryBICorABA, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary BIC or ABA", "Edited", nonUpdatedAccount.BeneficiaryBICorABA, account.BeneficiaryBICorABA, UserName));
 
                 if (account.BeneficiaryBankName != nonUpdatedAccount.BeneficiaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Bank Name", "Updated", nonUpdatedAccount.BeneficiaryBankName, account.BeneficiaryBankName, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Bank Name", "Edited", nonUpdatedAccount.BeneficiaryBankName, account.BeneficiaryBankName, UserName));
                 if (account.BeneficiaryBankAddress != nonUpdatedAccount.BeneficiaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Bank Address", "Updated", nonUpdatedAccount.BeneficiaryBankAddress, account.BeneficiaryBankAddress, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Bank Address", "Edited", nonUpdatedAccount.BeneficiaryBankAddress, account.BeneficiaryBankAddress, UserName));
             }
 
             if (account.BeneficiaryAccountNumber != nonUpdatedAccount.BeneficiaryAccountNumber)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Account Number", "Updated", nonUpdatedAccount.BeneficiaryAccountNumber, account.BeneficiaryAccountNumber, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Account Number", "Edited", nonUpdatedAccount.BeneficiaryAccountNumber, account.BeneficiaryAccountNumber, UserName));
 
             if (account.IntermediaryBICorABA != nonUpdatedAccount.IntermediaryBICorABA)
             {
                 if (account.IntermediaryType != nonUpdatedAccount.IntermediaryType)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Type", "Updated", nonUpdatedAccount.IntermediaryType, account.IntermediaryType, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Type", "Edited", nonUpdatedAccount.IntermediaryType, account.IntermediaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary BIC or ABA", "Updated", nonUpdatedAccount.IntermediaryBICorABA, account.IntermediaryBICorABA, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary BIC or ABA", "Edited", nonUpdatedAccount.IntermediaryBICorABA, account.IntermediaryBICorABA, UserName));
                 if (account.IntermediaryBankName != nonUpdatedAccount.IntermediaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Bank Name", "Updated", nonUpdatedAccount.IntermediaryBankName, account.IntermediaryBankName, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Bank Name", "Edited", nonUpdatedAccount.IntermediaryBankName, account.IntermediaryBankName, UserName));
                 if (account.IntermediaryBankAddress != nonUpdatedAccount.IntermediaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Bank Address", "Updated", nonUpdatedAccount.IntermediaryBankAddress, account.IntermediaryBankAddress, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Bank Address", "Edited", nonUpdatedAccount.IntermediaryBankAddress, account.IntermediaryBankAddress, UserName));
             }
 
             if (account.IntermediaryAccountNumber != nonUpdatedAccount.IntermediaryAccountNumber)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Account Number", "Updated", nonUpdatedAccount.IntermediaryAccountNumber, account.IntermediaryAccountNumber, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Account Number", "Edited", nonUpdatedAccount.IntermediaryAccountNumber, account.IntermediaryAccountNumber, UserName));
 
             if (account.UltimateBeneficiaryBICorABA != nonUpdatedAccount.UltimateBeneficiaryBICorABA)
             {
                 if (nonUpdatedAccount.UltimateBeneficiaryType != account.UltimateBeneficiaryType)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Type", "Updated", nonUpdatedAccount.UltimateBeneficiaryType, account.UltimateBeneficiaryType, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Type", "Edited", nonUpdatedAccount.UltimateBeneficiaryType, account.UltimateBeneficiaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary BIC or ABA", "Updated", nonUpdatedAccount.UltimateBeneficiaryBICorABA, account.UltimateBeneficiaryBICorABA, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary BIC or ABA", "Edited", nonUpdatedAccount.UltimateBeneficiaryBICorABA, account.UltimateBeneficiaryBICorABA, UserName));
 
                 if (account.UltimateBeneficiaryBankName != nonUpdatedAccount.UltimateBeneficiaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Bank Name", "Updated", nonUpdatedAccount.UltimateBeneficiaryBankName, account.UltimateBeneficiaryBankName, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Bank Name", "Edited", nonUpdatedAccount.UltimateBeneficiaryBankName, account.UltimateBeneficiaryBankName, UserName));
 
                 if (account.UltimateBeneficiaryBankAddress != nonUpdatedAccount.UltimateBeneficiaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Bank Address", "Updated", nonUpdatedAccount.UltimateBeneficiaryBankAddress, account.UltimateBeneficiaryBankAddress, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Bank Address", "Edited", nonUpdatedAccount.UltimateBeneficiaryBankAddress, account.UltimateBeneficiaryBankAddress, UserName));
             }
 
             if (account.UltimateBeneficiaryAccountName != nonUpdatedAccount.UltimateBeneficiaryAccountName)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Account Name", "Updated", nonUpdatedAccount.UltimateBeneficiaryAccountName, account.UltimateBeneficiaryAccountName, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Account Name", "Edited", nonUpdatedAccount.UltimateBeneficiaryAccountName, account.UltimateBeneficiaryAccountName, UserName));
 
             if (account.FFCName != nonUpdatedAccount.FFCName)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "FFC Name", "Updated", nonUpdatedAccount.FFCName, account.FFCName, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "FFC Name", "Edited", nonUpdatedAccount.FFCName, account.FFCName, UserName));
             if (account.FFCNumber != nonUpdatedAccount.FFCNumber)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "FFC Number", "Updated", nonUpdatedAccount.FFCNumber, account.FFCNumber, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "FFC Number", "Edited", nonUpdatedAccount.FFCNumber, account.FFCNumber, UserName));
             if (account.Reference != nonUpdatedAccount.Reference)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Reference", "Updated", nonUpdatedAccount.Reference, account.Reference, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Reference", "Edited", nonUpdatedAccount.Reference, account.Reference, UserName));
 
             if (account.onBoardingAccountStatus != nonUpdatedAccount.onBoardingAccountStatus)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Status", "Updated", "", "Created", UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Status", "Edited", "", "Created", UserName));
             return auditLogList;
         }
 
@@ -2026,89 +2013,89 @@ namespace HMOSecureWeb.Controllers
             if (!string.IsNullOrWhiteSpace(broker) && ssiTemplate.TemplateEntityId != nonUpdatedSsiTemplate.TemplateEntityId)
             {
                 var nonUpdatedBroker = OnBoardingDataManager.GetCounterpartyFamilyName(nonUpdatedSsiTemplate.TemplateEntityId);
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Broker", "Updated", nonUpdatedBroker, broker, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Broker", "Edited", nonUpdatedBroker, broker, UserName));
             }
 
             if (!string.IsNullOrWhiteSpace(accountType) && ssiTemplate.dmaAgreementTypeId != nonUpdatedSsiTemplate.dmaAgreementTypeId)
             {
                 var nonUpdatedAccountType = OnBoardingDataManager.GetAllAgreementTypes().FirstOrDefault(x => x.Key == nonUpdatedSsiTemplate.dmaAgreementTypeId);
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Account Type", "Updated", nonUpdatedAccountType.Value, accountType, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Account Type", "Edited", nonUpdatedAccountType.Value, accountType, UserName));
             }
 
             if (!string.IsNullOrWhiteSpace(ssiTemplate.ServiceProvider) && ssiTemplate.ServiceProvider != nonUpdatedSsiTemplate.ServiceProvider)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Service Provider", "Updated", nonUpdatedSsiTemplate.ServiceProvider, ssiTemplate.ServiceProvider, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Service Provider", "Edited", nonUpdatedSsiTemplate.ServiceProvider, ssiTemplate.ServiceProvider, UserName));
 
             if (ssiTemplate.Currency != nonUpdatedSsiTemplate.Currency)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.AccountName, "Currency", "Updated", nonUpdatedSsiTemplate.Currency, ssiTemplate.Currency, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.AccountName, "Currency", "Edited", nonUpdatedSsiTemplate.Currency, ssiTemplate.Currency, UserName));
 
             if (ssiTemplate.ReasonDetail != nonUpdatedSsiTemplate.ReasonDetail)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Reason Detail", "Updated", nonUpdatedSsiTemplate.ReasonDetail, ssiTemplate.ReasonDetail, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Reason Detail", "Edited", nonUpdatedSsiTemplate.ReasonDetail, ssiTemplate.ReasonDetail, UserName));
 
             if (!string.IsNullOrWhiteSpace(ssiTemplate.OtherReason) && ssiTemplate.OtherReason != nonUpdatedSsiTemplate.OtherReason)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Other Reason", "Updated", nonUpdatedSsiTemplate.OtherReason, ssiTemplate.OtherReason, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Other Reason", "Edited", nonUpdatedSsiTemplate.OtherReason, ssiTemplate.OtherReason, UserName));
 
 
 
             if (ssiTemplate.BeneficiaryBICorABA != nonUpdatedSsiTemplate.BeneficiaryBICorABA)
             {
                 if (nonUpdatedSsiTemplate.BeneficiaryType != ssiTemplate.BeneficiaryType)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Type", "Updated", nonUpdatedSsiTemplate.BeneficiaryType, ssiTemplate.BeneficiaryType, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Type", "Edited", nonUpdatedSsiTemplate.BeneficiaryType, ssiTemplate.BeneficiaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary BIC or ABA", "Updated", nonUpdatedSsiTemplate.BeneficiaryBICorABA, ssiTemplate.BeneficiaryBICorABA, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary BIC or ABA", "Edited", nonUpdatedSsiTemplate.BeneficiaryBICorABA, ssiTemplate.BeneficiaryBICorABA, UserName));
 
                 if (ssiTemplate.BeneficiaryBankName != nonUpdatedSsiTemplate.BeneficiaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Name", "Updated", nonUpdatedSsiTemplate.BeneficiaryBankName, ssiTemplate.BeneficiaryBankName, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Name", "Edited", nonUpdatedSsiTemplate.BeneficiaryBankName, ssiTemplate.BeneficiaryBankName, UserName));
                 if (ssiTemplate.BeneficiaryBankAddress != nonUpdatedSsiTemplate.BeneficiaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Address", "Updated", nonUpdatedSsiTemplate.BeneficiaryBankAddress, ssiTemplate.BeneficiaryBankAddress, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Address", "Edited", nonUpdatedSsiTemplate.BeneficiaryBankAddress, ssiTemplate.BeneficiaryBankAddress, UserName));
             }
 
             if (ssiTemplate.BeneficiaryAccountNumber != nonUpdatedSsiTemplate.BeneficiaryAccountNumber)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Account Number", "Updated", nonUpdatedSsiTemplate.BeneficiaryAccountNumber, ssiTemplate.BeneficiaryAccountNumber, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Account Number", "Edited", nonUpdatedSsiTemplate.BeneficiaryAccountNumber, ssiTemplate.BeneficiaryAccountNumber, UserName));
 
             if (ssiTemplate.IntermediaryBICorABA != nonUpdatedSsiTemplate.IntermediaryBICorABA)
             {
                 if (nonUpdatedSsiTemplate.IntermediaryType != ssiTemplate.IntermediaryType)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Type", "Updated", nonUpdatedSsiTemplate.IntermediaryType, ssiTemplate.IntermediaryType, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Type", "Edited", nonUpdatedSsiTemplate.IntermediaryType, ssiTemplate.IntermediaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary BIC or ABA", "Updated", nonUpdatedSsiTemplate.IntermediaryBICorABA, ssiTemplate.IntermediaryBICorABA, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary BIC or ABA", "Edited", nonUpdatedSsiTemplate.IntermediaryBICorABA, ssiTemplate.IntermediaryBICorABA, UserName));
                 if (ssiTemplate.IntermediaryBankName != nonUpdatedSsiTemplate.IntermediaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Name", "Updated", nonUpdatedSsiTemplate.IntermediaryBankName, ssiTemplate.IntermediaryBankName, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Name", "Edited", nonUpdatedSsiTemplate.IntermediaryBankName, ssiTemplate.IntermediaryBankName, UserName));
                 if (ssiTemplate.IntermediaryBankAddress != nonUpdatedSsiTemplate.IntermediaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Address", "Updated", nonUpdatedSsiTemplate.IntermediaryBankAddress, ssiTemplate.IntermediaryBankAddress, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Address", "Edited", nonUpdatedSsiTemplate.IntermediaryBankAddress, ssiTemplate.IntermediaryBankAddress, UserName));
             }
 
             if (ssiTemplate.IntermediaryAccountNumber != nonUpdatedSsiTemplate.IntermediaryAccountNumber)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Account Number", "Updated", nonUpdatedSsiTemplate.IntermediaryAccountNumber, ssiTemplate.IntermediaryAccountNumber, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Account Number", "Edited", nonUpdatedSsiTemplate.IntermediaryAccountNumber, ssiTemplate.IntermediaryAccountNumber, UserName));
 
             if (ssiTemplate.UltimateBeneficiaryBICorABA != nonUpdatedSsiTemplate.UltimateBeneficiaryBICorABA)
             {
                 if (nonUpdatedSsiTemplate.UltimateBeneficiaryType != ssiTemplate.UltimateBeneficiaryType)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Type", "Updated", nonUpdatedSsiTemplate.UltimateBeneficiaryType, ssiTemplate.UltimateBeneficiaryType, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Type", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiaryType, ssiTemplate.UltimateBeneficiaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary BIC or ABA", "Updated", nonUpdatedSsiTemplate.UltimateBeneficiaryBICorABA, ssiTemplate.UltimateBeneficiaryBICorABA, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary BIC or ABA", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiaryBICorABA, ssiTemplate.UltimateBeneficiaryBICorABA, UserName));
 
                 if (ssiTemplate.UltimateBeneficiaryBankName != nonUpdatedSsiTemplate.UltimateBeneficiaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Name", "Updated", nonUpdatedSsiTemplate.UltimateBeneficiaryBankName, ssiTemplate.UltimateBeneficiaryBankName, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Name", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiaryBankName, ssiTemplate.UltimateBeneficiaryBankName, UserName));
 
                 if (ssiTemplate.UltimateBeneficiaryBankAddress != nonUpdatedSsiTemplate.UltimateBeneficiaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Address", "Updated", nonUpdatedSsiTemplate.UltimateBeneficiaryBankAddress, ssiTemplate.UltimateBeneficiaryBankAddress, UserName));
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Address", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiaryBankAddress, ssiTemplate.UltimateBeneficiaryBankAddress, UserName));
             }
 
             if (ssiTemplate.AccountNumber != nonUpdatedSsiTemplate.AccountNumber)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Account Number", "Updated", nonUpdatedSsiTemplate.AccountNumber, ssiTemplate.AccountNumber, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Account Number", "Edited", nonUpdatedSsiTemplate.AccountNumber, ssiTemplate.AccountNumber, UserName));
 
             if (ssiTemplate.UltimateBeneficiaryAccountName != nonUpdatedSsiTemplate.UltimateBeneficiaryAccountName)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.AccountName, "Ultimate Beneficiary Account Name", "Updated", nonUpdatedSsiTemplate.UltimateBeneficiaryAccountName, ssiTemplate.UltimateBeneficiaryAccountName, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.AccountName, "Ultimate Beneficiary Account Name", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiaryAccountName, ssiTemplate.UltimateBeneficiaryAccountName, UserName));
 
             if (ssiTemplate.FFCName != nonUpdatedSsiTemplate.FFCName)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "FFC Name", "Updated", nonUpdatedSsiTemplate.FFCName, ssiTemplate.FFCName, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "FFC Name", "Edited", nonUpdatedSsiTemplate.FFCName, ssiTemplate.FFCName, UserName));
             if (ssiTemplate.FFCNumber != nonUpdatedSsiTemplate.FFCNumber)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "FFC Number", "Updated", nonUpdatedSsiTemplate.FFCNumber, ssiTemplate.FFCNumber, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "FFC Number", "Edited", nonUpdatedSsiTemplate.FFCNumber, ssiTemplate.FFCNumber, UserName));
             if (ssiTemplate.Reference != nonUpdatedSsiTemplate.Reference)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Reference", "Updated", nonUpdatedSsiTemplate.Reference, ssiTemplate.Reference, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Reference", "Edited", nonUpdatedSsiTemplate.Reference, ssiTemplate.Reference, UserName));
 
             if (ssiTemplate.SSITemplateStatus != nonUpdatedSsiTemplate.SSITemplateStatus)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Status", "Updated", "", "Created", UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Status", "Edited", "", "Created", UserName));
             return auditLogList;
         }
 

@@ -1,4 +1,5 @@
-﻿HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, $filter) {
+﻿$("#liAccounts").addClass("active");
+HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, $filter) {
     $("#onboardingMenu").addClass("active");
     $("#loading").show();
     var accountTable, accountSsiTemplateTable, tblSsiTemplateRow;
@@ -45,13 +46,13 @@
                     "mData": "FileName"
                 },
                 {
-                    "sTitle": "Uploded By",
+                    "sTitle": "Uploaded By",
                     "mData": "RecCreatedBy", "mRender":function(data) {
                         return humanizeEmail(data);
                     }
                 },
                 {
-                    "sTitle": "Uploded At",
+                    "sTitle": "Uploaded At",
                     "mData": "RecCreatedAt",
                     "type": "dotnet-date",
                     "mRender": function (tdata) {
@@ -1177,11 +1178,11 @@
 
         $("#uploadFiles" + key).dropzone({
             url: "/Accounts/UploadAccountFiles?accountId=" + $scope.onBoardingAccountId,
-            dictDefaultMessage: "<span style='font-size:20px;font-weight:normal;font-style:italic'>Drag/Drop account documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
+            dictDefaultMessage: "<span>Drag/Drop account documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
             autoDiscover: false,
             acceptedFiles: ".csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
             maxFiles: 5,
-            previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-sm'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
+            previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-dz'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
                 "</div> <div class='panel-body'> <span class='dz-upload' data-dz-uploadprogress></span>" +
                 "<div class='progress'><div data-dz-uploadprogress class='progress-bar progress-bar-warning progress-bar-striped active dzFileProgress' style='width: 0%'></div>" +
                 "</div></div></div></div>",
@@ -1197,7 +1198,7 @@
                 //});
             },
             processing: function (file, result) {
-                $("#uploadFiles" + key).animate({ "min-height": "140px" });
+                $("#uploadFiles" + key).animate({ "min-height": "120px" });
             },
             success: function (file, result) {
                 $(".dzFileProgress").removeClass("progress-bar-striped").removeClass("active").removeClass("progress-bar-warning").addClass("progress-bar-success");
@@ -1496,11 +1497,11 @@
 
     $("#uploadFiles").dropzone({
         url: "/Accounts/UploadAccount",
-        dictDefaultMessage: "<span style='font-size:20px;font-weight:normal;font-style:italic'>Drag/Drop account files to add/update here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
+        dictDefaultMessage: "<span>Drag/Drop account files to add/update here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
         autoDiscover: false,
         acceptedFiles: ".csv,.xls,.xlsx",
         maxFiles: 6,
-        previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-sm'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
+        previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-dz'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
             "</div> <div class='panel-body'> <span class='dz-upload' data-dz-uploadprogress></span>" +
             "<div class='progress'><div data-dz-uploadprogress class='progress-bar progress-bar-warning progress-bar-striped active dzFileProgress' style='width: 0%'></div>" +
             "</div></div></div></div>",

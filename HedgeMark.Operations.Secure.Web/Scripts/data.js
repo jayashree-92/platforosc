@@ -767,7 +767,13 @@ var getFormattedUIDate = function (date) {
     return "" + y + "-" + (m <= 9 ? "0" + m : m) + "-" + (d <= 9 ? "0" + d : d);
 };
 
+
+/*************************************/
+Dropzone.options.myAwesomeDropzone = false;
 Dropzone.autoDiscover = false;
+/*************************************/
+
+
 //initiateNumberCounter();
 
 function PrintSwiftMessage(htmlContent) {

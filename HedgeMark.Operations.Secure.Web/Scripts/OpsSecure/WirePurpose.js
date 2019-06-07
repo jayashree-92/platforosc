@@ -1,4 +1,4 @@
-﻿
+﻿$("#liWirePurpose").addClass("active");
 var tblWirePurpose;
 
 HmOpsApp.controller("WirePurposeMgmtCtrl", function ($scope, $http, $timeout) {

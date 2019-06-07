@@ -38,4 +38,4 @@ HmOpsApp.controller("WireLogsCtrl", function ($scope, $http, $timeout) {
 
 });
 
-$("#liLogs").addClass("active");
+$("#liWireLogs").addClass("active");

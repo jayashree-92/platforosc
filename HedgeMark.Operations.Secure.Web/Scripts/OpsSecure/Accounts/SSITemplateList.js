@@ -1,4 +1,5 @@
-﻿HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeout) {
+﻿$("#liAccounts").addClass("active");
+HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeout) {
     $("#onboardingMenu").addClass("active");
     $("#loading").show();
     var ssiTemplateTable;
@@ -19,6 +20,9 @@
            {
                aaData: response.data.BrokerSsiTemplates,
                "bDestroy": true,
+               "fixedColumns": {
+                   leftColumns: 2
+               },
                "columns": [
                   { "mData": "onBoardingSSITemplateId", "sTitle": "onBoardingSSITemplateId", visible: false },
                   { "mData": "TemplateName", "sTitle": "Template Name" },
@@ -86,7 +90,12 @@
                       }
                   },
                   { "mData": "StatusComments", "sTitle": "Comments" },
-                  { "mData": "CreatedBy", "sTitle": "Created By" },
+                  {
+                      "mData": "CreatedBy", "sTitle": "Created By",
+                      "mRender": function (data) {
+                          return humanizeEmail(data);
+                      }
+                  },
                  {
                      "mData": "CreatedAt",
                      "sTitle": "Created Date",
@@ -95,7 +104,12 @@
                          return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
                      }
                  },
-                 { "mData": "UpdatedBy", "sTitle": "Last Modified By" },
+                 {
+                     "mData": "UpdatedBy", "sTitle": "Last Modified By",
+                     "mRender": function (data) {
+                         return humanizeEmail(data);
+                     }
+                 },
                  {
                      "mData": "UpdatedAt",
                      "sTitle": "Last Modified",
@@ -134,7 +148,7 @@
                //"bPaginate": false,
                iDisplayLength: -1
            });
-           
+
             var searchText = decodeURI(getUrlParameter("searchText"));
 
             if (searchText != "" && searchText != undefined && searchText != 'undefined') {
@@ -174,11 +188,11 @@
         //if (rowElement.SSITemplateStatus != createdStatus) {
         //    $("#btnSSITemplateStatusButtons button[id='revert']").removeClass("disabled");
         //}
-        
+
         $http.get("/Accounts/IsSsiTemplateDocumentExists?ssiTemplateId=" + $scope.onBoardingSSITemplateId).then(function (response) {
             $scope.isExistsDocument = response.data;
         });
-        
+
 
         $("#btnDel").prop("disabled", false);
     });
@@ -282,11 +296,11 @@
 
     $("#uploadFiles").dropzone({
         url: "/Accounts/UploadSsiTemplate",
-        dictDefaultMessage: "<span style='font-size:20px;font-weight:normal;font-style:italic'>Drag/Drop SSI template files to add/update here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
+        dictDefaultMessage: "<span>Drag/Drop SSI template files to add/update here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
         autoDiscover: false,
         acceptedFiles: ".csv,.xls,.xlsx",
         maxFiles: 6,
-        previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-sm'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
+        previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-dz'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
             "</div> <div class='panel-body'> <span class='dz-upload' data-dz-uploadprogress></span>" +
             "<div class='progress'><div data-dz-uploadprogress class='progress-bar progress-bar-warning progress-bar-striped active dzFileProgress' style='width: 0%'></div>" +
             "</div></div></div></div>",

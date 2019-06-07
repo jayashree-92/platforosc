@@ -33,9 +33,17 @@
                 <div class="well well-sm sticky-header" style="min-height: 50px;">
                     @if (User.IsWireUser())
                     {
-                        <button ng-click="fnCreateAccount()" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-phone"></i>&nbsp; Add Account</button>
+                        <button ng-click="fnCreateAccount()" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Account</button>
+                        <div class="pull-right btn-group" style="padding-right: 2px;">
+                            &nbsp;&nbsp;<button id="btnUploadSource" class="btn btn-default btn-sm editableTool dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-upload"></i>&nbsp;Bulk Upload <b class="caret"></b></button>
+                            <ul class="dropdown-menu dropdown-menu-right" id="ulBulkUpload">
+                                <li><a href="#" ng-click="downloadAccountSample()" id="sampleExportHeaders">Download Sample</a></li>
+                                <li><a href="#" data-toggle="collapse" data-target="#divUploadSource" aria-expanded="false" aria-controls="divUploadSource">Upload</a></li>
+                            </ul>
+                        </div>
+
                         <div class="pull-right btn-group" id="btnAccountStatusButtons" style="display: none;">
-                            <button id="requestForApproval" title="Request for Approval" class="btn btn-warning btn-sm disabled" ng-click="fnUpdateAccountStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
+                            &nbsp;&nbsp;<button id="requestForApproval" title="Request for Approval" class="btn btn-warning btn-sm disabled" ng-click="fnUpdateAccountStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
                             @if (User.IsWireApprover())
                             {
                                 <button id="approve" title="Approve" class="btn btn-success btn-sm disabled" ng-click="fnUpdateAccountStatus('Approved','Approve')"><i class="glyphicon glyphicon-ok"></i> Approve</button>
@@ -45,7 +53,7 @@
                         </div>
                     }
                     <div class="pull-right btn-group">
-                        <button class=" btn btn-primary btn-sm" id="btnEdit" disabled ng-click="fnEditAccount()">
+                        &nbsp;&nbsp; <button class=" btn btn-primary btn-sm" id="btnEdit" disabled ng-click="fnEditAccount()">
                             <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
                         </button>
                         @if (User.IsWireApprover())
@@ -54,19 +62,11 @@
                         }
                     </div>
                     <div class="pull-right btn-group" style="padding-right: 2px;">
-                        @*<span class="btn-group">
-                            <a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportAllAccountlist()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
-                        </span>*@
+                        &nbsp;&nbsp;<a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportAllAccountlist()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
                     </div>
                     @if (User.IsWireUser())
                     {
-                        <div class="pull-right btn-group" style="padding-right: 2px;">
-                            @*<button id="btnUploadSource" class="btn btn-default btn-sm editableTool dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-upload"></i>&nbsp;Bulk Upload <b class="caret"></b></button>*@
-                            @*<ul class="dropdown-menu dropdown-menu-right" id="ulBulkUpload">
-                                <li><a href="#" ng-click="downloadAccountSample()" id="sampleExportHeaders">Download Sample</a></li>
-                                <li><a href="#" data-toggle="collapse" data-target="#divUploadSource" aria-expanded="false" aria-controls="divUploadSource">Upload</a></li>
-                            </ul>*@
-                        </div>
+
                     }
                 </div>
                 <div class=" collapse row" id="divUploadSource">
@@ -84,10 +84,10 @@
                 <div id="loading" style="display: none; text-align: center;">
                     @*<img id="loading-image" src="/img/Onboarding-loading.gif" alt="Loading..." />*@
                 </div>
-                <table id="accountTable" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
+                <table id="accountTable" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
 
                 <div class="modal fade" id="accountModal" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog modal-mlg2" role="document">
+                    <div class="modal-dialog modal-mlg3" role="document">
                         <div id="accountDetailCP" class="modal-content" ng-repeat="accountDetail in onBoardingAccountDetails track by $index" on-last-repeat>
                             <div class="row" style="position: sticky; top: 0; z-index: 2;">
                                 <span class="col-md-12" style="margin-bottom: 10px;">
@@ -486,13 +486,13 @@
                                                     <p></p>
                                                     <div class="row">
                                                         <div class="col-sm-12 col-md-12 col-lg-12 paddingleft">
-                                                            <div class="col-sm-8 col-md-2 col-lg-2">
+                                                            <div class="col-sm-8 col-md-2 col-lg-2" style="text-align: right">
                                                                 <label class="control-label">Contact Type</label>
                                                             </div>
-                                                            <div class="col-sm-8 col-md-2 col-lg-2 AdjustDropDownWidth">
+                                                            <div class="col-sm-8 col-md-3 col-lg-3 AdjustDropDownWidth">
                                                                 <input ng-model="accountDetail.ContactType" class="form-control control-label" id="contactType{{$index}}">
                                                             </div>
-                                                            <div class="col-sm-8 col-md-1 col-lg-1">
+                                                            <div class="col-sm-8 col-md-2 col-lg-2" style="text-align: right">
                                                                 <label class="control-label">Contacts</label>
                                                             </div>
                                                             <div class="col-sm-8 col-md-3 col-lg-3 AdjustDropDownWidth liHMUsers">
@@ -503,7 +503,7 @@
                                                     <p></p>
                                                     <div class="row">
                                                         <div class="col-sm-12 col-md-12 col-lg-12">
-                                                            <table id="contactTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
+                                                            <table id="contactTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -534,7 +534,7 @@
                                                     <p></p>
                                                     <div class="row">
                                                         <div class="col-sm-12 col-md-12 col-lg-12">
-                                                            <table id="documentTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
+                                                            <table id="documentTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -568,7 +568,7 @@
                                                     <p></p>
                                                     <div class="row">
                                                         <div class="col-sm-12 col-md-12 col-lg-12">
-                                                            <table id="ssiTemplateTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover ssiTemplate" tindex="{{$index}}"><tfoot></tfoot></table>
+                                                            <table id="ssiTemplateTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover ssiTemplate table-highlighted" tindex="{{$index}}"><tfoot></tfoot></table>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -926,8 +926,8 @@
                 <table id="accountSSITemplateTable" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
             </div>
             @*<div class="panel panel-default container-fluid" id="plnAccountAssociation" style="border-color: #dddddd; border-top: 3px solid #A29060;">
-                
-            </div>*@
+
+                </div>*@
         </div>
     </div>
 </div>
