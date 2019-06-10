@@ -169,7 +169,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var ffcOrUltimateAccount = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber)
                 ? wire.SendingAccount.FFCNumber
-                : !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiaryAccountName) ? wire.SendingAccount.UltimateBeneficiaryAccountName : string.Empty;
+                : !string.IsNullOrWhiteSpace(wire.SendingAccount.AccountNumber) ? wire.SendingAccount.AccountNumber : string.Empty;
 
             var f53B = new Field53B().setAccount(ffcOrUltimateAccount);
             return f53B;
