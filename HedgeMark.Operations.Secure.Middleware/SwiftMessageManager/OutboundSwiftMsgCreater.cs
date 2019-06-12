@@ -22,10 +22,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             {
                 //MT103 - Single customer credit transfer
                 case "MT103":
-                    return CreateMt103(wire, referenceTag);
+                    return CreateMt103(wire, messageType, referenceTag);
                 //MT202 - General Financial inst Transfer
                 case "MT202":
-                    return CreateMt202(wire);
+                    return CreateMt202(wire, messageType);
                 //MT202 COV - General Financial inst Transfer
                 case "MT202 COV":
                 case "MT202COV":
@@ -324,11 +324,11 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             return new Field71A("OUR");
         }
 
-        private static Field72 GetField72(WireTicket wire)
+        private static Field72 GetField72(WireTicket wire, string messageType)
         {
             var f72 = new Field72();
 
-            if (wire.SendingAccount.SwiftGroup.StartsWith("BNY", StringComparison.InvariantCultureIgnoreCase))
+            if (messageType == "MT103" && wire.SendingAccount.SwiftGroup.StartsWith("BNY", StringComparison.InvariantCultureIgnoreCase))
                 f72.setNarrativeLine1("/FXS/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SSITemplate.FFCNumber));
             else
                 f72.setNarrativeLine1("/BNF/" + (wire.IsBookTransfer ? wire.ReceivingAccount.FFCNumber : wire.SSITemplate.FFCNumber));
@@ -349,7 +349,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             callingMethod.setSenderAndReceiver(HMBICSender, wire.SendingAccount.SendersBIC);
         }
 
-        private static MT103 CreateMt103(WireTicket wire, string referenceTag)
+        private static MT103 CreateMt103(WireTicket wire, string messageType, string referenceTag)
         {
             var mt103 = new MT103();
             SetSenderAndReceiverFromHM(mt103, wire);
@@ -380,12 +380,12 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             mt103.addField(GetField71A(wire));
 
-            mt103.addField(GetField72(wire));
+            mt103.addField(GetField72(wire, messageType));
 
             return mt103;
         }
 
-        private static MT202 CreateMt202(WireTicket wire)
+        private static MT202 CreateMt202(WireTicket wire, string messageType)
         {
             var mt202 = new MT202();
 
@@ -412,7 +412,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             SetField58X(mt202, wire);
 
             //Optional
-            mt202.addField(GetField72(wire));
+            mt202.addField(GetField72(wire, messageType));
 
             return mt202;
         }
