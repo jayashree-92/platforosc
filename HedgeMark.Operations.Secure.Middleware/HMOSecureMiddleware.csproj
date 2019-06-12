@@ -107,8 +107,6 @@
     <Compile Include="WireTransactionManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ExternalLibraries\Disclosure.txt" />
-    <Content Include="ExternalLibraries\HedgeMarkAddress.txt" />
     <Content Include="ExternalLibraries\HM-Ops-Utils\Aspose.Cells.dll" />
     <Content Include="ExternalLibraries\HM-Ops-Utils\Aspose.Pdf.dll" />
     <Content Include="ExternalLibraries\HM-Ops-Utils\ExcelUtility.Operations.dll" />
