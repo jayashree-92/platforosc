@@ -66,8 +66,7 @@ namespace HMOSecureMiddleware
                     }).ToList();
         }
 
-        public static hmsUserAuditLog BuildOnboardingAuditLog(string onboardingType, string onboardingName, string field, string action,
-                 string previousStateValue, string modifiedStateValue, string username)
+        public static hmsUserAuditLog BuildOnboardingAuditLog(string onboardingType, string onboardingName, string field, string action, string previousStateValue, string modifiedStateValue, string username)
         {
             var auditLog = new hmsUserAuditLog();
 

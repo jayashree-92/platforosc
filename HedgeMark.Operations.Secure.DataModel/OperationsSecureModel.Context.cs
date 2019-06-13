@@ -25,7 +25,6 @@ namespace HedgeMark.Operations.Secure.DataModel
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<hmsUserAuditLog> hmsUserAuditLogs { get; set; }
         public virtual DbSet<hmsWireDocument> hmsWireDocuments { get; set; }
         public virtual DbSet<hmsWireMessageType> hmsWireMessageTypes { get; set; }
         public virtual DbSet<hmsWireStatusLkup> hmsWireStatusLkups { get; set; }
@@ -39,5 +38,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsWire> hmsWires { get; set; }
         public virtual DbSet<hmsWireLog> hmsWireLogs { get; set; }
         public virtual DbSet<hmsWireLogTypeLkup> hmsWireLogTypeLkups { get; set; }
+        public virtual DbSet<hmsUserAuditLog> hmsUserAuditLogs { get; set; }
     }
 }

@@ -5,7 +5,6 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="21922e52691542eda2a5b6d3ddb68a43" Name="Diagram1" ZoomLevel="84">
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsUserAuditLog" Width="1.5" PointX="3.875" PointY="1" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireDocument" Width="1.5" PointX="11.875" PointY="6.375" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireMessageType" Width="1.5" PointX="8.25" PointY="7.5" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireStatusLkup" Width="1.5" PointX="5.625" PointY="1" />
@@ -33,6 +32,7 @@
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsUserAuditLog" Width="1.5" PointX="3.375" PointY="7.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

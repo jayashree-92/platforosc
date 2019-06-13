@@ -45,9 +45,9 @@
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
           <Property Name="Log" Type="varchar" MaxLength="8000" />
           <Property Name="AssociationId" Type="bigint" />
-          <Property Name="Field" Type="varchar" MaxLength="30" />
-          <Property Name="PreviousStateValue" Type="varchar" MaxLength="50" />
-          <Property Name="ModifiedStateValue" Type="varchar" MaxLength="50" />
+          <Property Name="Field" Type="varchar" MaxLength="300" />
+          <Property Name="PreviousStateValue" Type="varchar" MaxLength="300" />
+          <Property Name="ModifiedStateValue" Type="varchar" MaxLength="300" />
           <Property Name="IsLogFromOps" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsWireDocument">
@@ -56,9 +56,9 @@
           </Key>
           <Property Name="hmsWireDocumentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hmsWireId" Type="bigint" Nullable="false" />
-          <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsWireJobSchedules">
           <Key>
@@ -126,17 +126,17 @@
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="WirePurposeId" Type="int" Nullable="false" />
           <Property Name="ContextDate" Type="date" Nullable="false" />
-          <Property Name="OnBoardAccountId" Type="bigint" Nullable="false" />
-          <Property Name="OnBoardSSITemplateId" Type="bigint" Nullable="false" />
-          <Property Name="OnBoardAgreementId" Type="bigint" Nullable="false" />
-          <Property Name="hmFundId" Type="bigint" Nullable="false" />
           <Property Name="ValueDate" Type="date" Nullable="false" />
           <Property Name="PaymentOrReceipt" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="hmFundId" Type="bigint" Nullable="false" />
           <Property Name="SendingAccountNumber" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="SendingPlatform" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="ReceivingAccountNumber" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Currency" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="OnBoardAccountId" Type="bigint" Nullable="false" />
+          <Property Name="OnBoardSSITemplateId" Type="bigint" Nullable="false" />
+          <Property Name="OnBoardAgreementId" Type="bigint" Nullable="false" />
           <Property Name="WireMessageTypeId" Type="int" Nullable="false" />
           <Property Name="WireStatusId" Type="int" Nullable="false" />
           <Property Name="LastModifiedAt" Type="datetime" Nullable="false" />
@@ -417,7 +417,6 @@
     <edmx:ConceptualModels>
       <Schema Namespace="OperationsSecureModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="OperationsSecureContext" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="hmsUserAuditLogs" EntityType="OperationsSecureModel.hmsUserAuditLog" />
           <EntitySet Name="hmsWireDocuments" EntityType="OperationsSecureModel.hmsWireDocument" />
           <EntitySet Name="hmsWireMessageTypes" EntityType="OperationsSecureModel.hmsWireMessageType" />
           <EntitySet Name="hmsWireStatusLkups" EntityType="OperationsSecureModel.hmsWireStatusLkup" />
@@ -487,23 +486,8 @@
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
             <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
           </AssociationSet>
+          <EntitySet Name="hmsUserAuditLogs" EntityType="OperationsSecureModel.hmsUserAuditLog" />
           </EntityContainer>
-        <EntityType Name="hmsUserAuditLog">
-          <Key>
-            <PropertyRef Name="hmsUserAuditLogId" />
-          </Key>
-          <Property Name="hmsUserAuditLogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Module" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Action" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Log" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
-          <Property Name="AssociationId" Type="Int64" />
-          <Property Name="Field" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="PreviousStateValue" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ModifiedStateValue" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="IsLogFromOps" Type="Boolean" Nullable="false" />
-        </EntityType>
         <EntityType Name="hmsWireDocument">
           <Key>
             <PropertyRef Name="hmsWireDocumentId" />
@@ -851,29 +835,28 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="hmsUserAuditLog">
+          <Key>
+            <PropertyRef Name="hmsUserAuditLogId" />
+          </Key>
+          <Property Name="hmsUserAuditLogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Module" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Action" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Log" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="AssociationId" Type="Int64" />
+          <Property Name="Field" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PreviousStateValue" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="ModifiedStateValue" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="IsLogFromOps" Type="Boolean" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="OperationsSecureModelStoreContainer" CdmEntityContainer="OperationsSecureContext">
-          <EntitySetMapping Name="hmsUserAuditLogs">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsUserAuditLog">
-              <MappingFragment StoreEntitySet="hmsUserAuditLog">
-                <ScalarProperty Name="IsLogFromOps" ColumnName="IsLogFromOps" />
-                <ScalarProperty Name="ModifiedStateValue" ColumnName="ModifiedStateValue" />
-                <ScalarProperty Name="PreviousStateValue" ColumnName="PreviousStateValue" />
-                <ScalarProperty Name="Field" ColumnName="Field" />
-                <ScalarProperty Name="AssociationId" ColumnName="AssociationId" />
-                <ScalarProperty Name="Log" ColumnName="Log" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="Action" ColumnName="Action" />
-                <ScalarProperty Name="Module" ColumnName="Module" />
-                <ScalarProperty Name="hmsUserAuditLogId" ColumnName="hmsUserAuditLogId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="hmsWireDocuments">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireDocument">
               <MappingFragment StoreEntitySet="hmsWireDocument">
@@ -1035,6 +1018,23 @@
               <MappingFragment StoreEntitySet="hmsWireLogTypeLkup">
                 <ScalarProperty Name="LogType" ColumnName="LogType" />
                 <ScalarProperty Name="hmsWireLogTypeId" ColumnName="hmsWireLogTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsUserAuditLogs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsUserAuditLog">
+              <MappingFragment StoreEntitySet="hmsUserAuditLog">
+                <ScalarProperty Name="IsLogFromOps" ColumnName="IsLogFromOps" />
+                <ScalarProperty Name="ModifiedStateValue" ColumnName="ModifiedStateValue" />
+                <ScalarProperty Name="PreviousStateValue" ColumnName="PreviousStateValue" />
+                <ScalarProperty Name="Field" ColumnName="Field" />
+                <ScalarProperty Name="AssociationId" ColumnName="AssociationId" />
+                <ScalarProperty Name="Log" ColumnName="Log" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Module" ColumnName="Module" />
+                <ScalarProperty Name="hmsUserAuditLogId" ColumnName="hmsUserAuditLogId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
