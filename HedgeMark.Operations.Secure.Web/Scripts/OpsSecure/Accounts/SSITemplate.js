@@ -324,13 +324,13 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $("#liBroker").change(function () {
         if ($scope.SSITemplateType == "Broker") {
-            $scope.broker = ($(this).val() > 0) ? $("#liBroker").select2("data")[0].text : "";
+            $scope.broker = ($(this).val() > 0) ? $("#liBroker").select2("data").text : "";
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
         }
     });
     $("#liAccountType").change(function () {
         if ($scope.SSITemplateType == "Broker") {
-            $scope.accountType = ($(this).val() > 0) ? $("#liAccountType").select2("data")[0].text : "";
+            $scope.accountType = ($(this).val() > 0) ? $("#liAccountType").select2("data").text : "";
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
             $scope.fnPaymentOrReceiptReason();
         }
