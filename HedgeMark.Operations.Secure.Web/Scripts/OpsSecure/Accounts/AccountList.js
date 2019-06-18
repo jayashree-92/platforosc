@@ -246,6 +246,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                   { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
                   { "mData": "BrokerId", "sTitle": "BrokerId", visible: false },
                   //{ "mData": "AccountType", "sTitle": "Account Type" },
+                  { "mData": "onBoardingAccountId", "sTitle": "SSI Association Status" },
                   {
                       "mData": "AccountType", "sTitle": "Entity Type",
                       "mRender": function (tdata) {
@@ -390,6 +391,32 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                "sScrollXInner": "100%",
                "bScrollCollapse": true,
                "order": [[53, "desc"]],
+               "rowCallback": function (row, data) {
+
+                   var totalTemplateMaps = data.PendingApprovalMaps + data.ApprovedMaps;
+                   if (totalTemplateMaps == 0) {
+                       $("td:eq(0)", row).html("");
+                       return;
+                   }
+
+                   var totalApproved = (data.ApprovedMaps / totalTemplateMaps) * 100;
+                   var totalPending = (data.PendingApprovalMaps / totalTemplateMaps) * 100;
+
+
+                   var taskProgress = "<div class=\"progress\" style=\"margin-bottom: 0px;\">"
+                       + "<div class=\"progress-bar progress-bar-success\"  aria-value=\"" + totalApproved + "\">"
+                       + "<span class=\"checklistProgressText\">" + (data.ApprovedMaps == "0" ? "" : data.ApprovedMaps) + " </span>"
+                       + "</div>"
+                       + "<div class=\"progress-bar progress-bar-warning progress-bar-striped\" aria-value=\"" + totalPending + "\">"
+                       + "<span class=\"checklistProgressText\">" + (data.PendingApprovalMaps == "0" ? "" : data.PendingApprovalMaps) + " </span>"
+                       + "</div>"
+                       + "</div>";
+
+                   $("td:eq(0)", row).html(taskProgress);
+               },
+               "drawCallback": function (settings) {
+                   $scope.fnLoadProgress();
+               },
                //"bPaginate": false,
                iDisplayLength: -1
            });
@@ -408,6 +435,18 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#loading").hide();
         });
     }
+
+    $scope.fnLoadProgress = function () {
+
+        $timeout(function () {
+            $(".progress-bar").each(function () {
+                var now = $(this).attr("aria-value");
+                var siz = (now) * 100 / (100);
+                $(this).css("width", siz + "%");
+            });
+        }, 300);
+
+    };
 
     $(document).on("click", "#accountTable tbody tr ", function () {
         $("#accountTable tbody tr").removeClass("info");

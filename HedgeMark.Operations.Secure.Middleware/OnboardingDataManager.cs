@@ -121,7 +121,7 @@ namespace HMOSecureMiddleware
             using (var context = new AdminContext())
             {
 
-                return context.dmaAgreementOnBoardings.Where(x => x.dmaFundOnBoardId == fundId && !x.IsDeleted && x.dmaCounterPartyOnBoardId.HasValue)
+                return context.dmaAgreementOnBoardings.Where(x => x.dmaFundOnBoardId == fundId && !x.IsDeleted && x.dmaCounterPartyOnBoardId.HasValue && x.HMOpsStatus == "Approved")
                 .Select(x => x.dmaCounterPartyOnBoardId.Value)
                 .Distinct()
                 .ToList();
