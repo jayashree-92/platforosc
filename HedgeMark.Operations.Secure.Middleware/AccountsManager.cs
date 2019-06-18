@@ -76,10 +76,10 @@ namespace HMOSecureMiddleware
                 context.Configuration.ProxyCreationEnabled = false;
 
                 if (isPreviledgedUser)
-                    return context.onBoardingAccounts.Include(x => x.onboardingFund).Include(x => x.dmaAgreementOnBoarding)
+                    return context.onBoardingAccounts.Include(x => x.onboardingFund).Include(x => x.dmaAgreementOnBoarding).Include(x => x.onBoardingAccountSSITemplateMaps)
                         .Include(x => x.dmaCounterpartyFamily).Where(x => !x.IsDeleted).AsNoTracking().ToList();
 
-                return context.onBoardingAccounts.Include(x => x.onboardingFund).Include(x => x.dmaAgreementOnBoarding)
+                return context.onBoardingAccounts.Include(x => x.onboardingFund).Include(x => x.dmaAgreementOnBoarding).Include(x=> x.onBoardingAccountSSITemplateMaps)
                     .Include(x => x.dmaCounterpartyFamily).Where(x => !x.IsDeleted && onBoardFundIds.Contains(x.dmaFundOnBoardId)).AsNoTracking().ToList();
             }
 
@@ -391,6 +391,16 @@ namespace HMOSecureMiddleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
                 return context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved" && (counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType == "Fee/Expense Payment")).ToList();
+            }
+        }
+
+        public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates()
+        {
+            using (var context = new AdminContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved").ToList();
             }
         }
 

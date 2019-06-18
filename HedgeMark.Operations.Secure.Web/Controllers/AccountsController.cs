@@ -375,6 +375,7 @@ namespace HMOSecureWeb.Controllers
             var onBoardingAccounts = AccountManager.GetAllOnBoardingAccounts(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser);
 
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
+            var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates().Select(s => s.onBoardingSSITemplateId).ToList();
 
             return Json(new
             {
@@ -388,6 +389,8 @@ namespace HMOSecureWeb.Controllers
 
                     Broker = (x.dmaCounterpartyFamily != null) ? x.dmaCounterpartyFamily.CounterpartyFamily : string.Empty,
                     FundName = (x.onboardingFund != null) ? x.onboardingFund.LegalFundName : string.Empty,
+                    ApprovedMaps = x.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Approved" && ssiTemplates.Contains(s.onBoardingSSITemplateId)),
+                    PendingApprovalMaps = x.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Pending Approval" && ssiTemplates.Contains(s.onBoardingSSITemplateId)),
                     x.onBoardingAccountId,
                     x.dmaAgreementOnBoardingId,
                     x.AccountType,
