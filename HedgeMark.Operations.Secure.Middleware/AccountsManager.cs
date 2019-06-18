@@ -492,11 +492,7 @@ namespace HMOSecureMiddleware
 
                         if (ssiTemplate.onBoardingSSITemplateDocuments != null && ssiTemplate.onBoardingSSITemplateDocuments.Count > 0)
                         {
-                            var documentToBeDeleted = context.onBoardingSSITemplateDocuments.Where(x => x.onBoardingSSITemplateId == ssiTemplate.onBoardingSSITemplateId).ToList();
-                            context.onBoardingSSITemplateDocuments.RemoveRange(documentToBeDeleted);
-                            context.onBoardingSSITemplateDocuments.AddRange(ssiTemplate.onBoardingSSITemplateDocuments);
-                            context.SaveChanges();
-
+                            context.onBoardingSSITemplateDocuments.AddRange(ssiTemplate.onBoardingSSITemplateDocuments.Where(s => s.onBoardingSSITemplateDocumentId == 0));
                             //new Repository<onBoardingSSITemplateDocument>().BulkInsert(, dbSchemaName: "HMADMIN.");
                         }
                     }
