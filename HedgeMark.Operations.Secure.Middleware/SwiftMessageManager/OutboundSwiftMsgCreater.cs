@@ -420,7 +420,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             SetField58X(mt202, wire);
 
             //Optional
-            mt202.addField(GetField72(wire, messageType));
+            //mt202.addField(GetField72(wire, messageType));
 
             return mt202;
         }
