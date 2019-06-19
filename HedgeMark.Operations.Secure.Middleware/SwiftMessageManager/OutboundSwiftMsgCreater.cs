@@ -328,18 +328,18 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f72 = new Field72();
 
-            var ffcOrUltimateAccount = wire.IsBookTransfer
+            var ffcNumber = wire.IsBookTransfer
                     ? !string.IsNullOrWhiteSpace(wire.ReceivingAccount.FFCNumber)
                         ? wire.ReceivingAccount.FFCNumber
-                        : wire.ReceivingAccount.AccountNumber
+                        : string.Empty
                     : !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber)
                         ? wire.SendingAccount.FFCNumber
-                        : wire.SendingAccount.AccountNumber;
-            
-            if (messageType == "MT103" && wire.SendingAccount.SwiftGroup.StartsWith("BNY", StringComparison.InvariantCultureIgnoreCase))
-                f72.setNarrativeLine1("/FXS/" + ffcOrUltimateAccount);
-            else
-                f72.setNarrativeLine1("/BNF/" + ffcOrUltimateAccount);
+                        : string.Empty;
+
+            if (string.IsNullOrWhiteSpace(ffcNumber))
+                return f72;
+
+            f72.setNarrativeLine1("/BNF/" + ffcNumber);
 
             var fccName = wire.IsBookTransfer ? wire.ReceivingAccount.FFCName : wire.SSITemplate.FFCName;
             if (!string.IsNullOrWhiteSpace(fccName))
@@ -420,7 +420,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             SetField58X(mt202, wire);
 
             //Optional
-            //mt202.addField(GetField72(wire, messageType));
+            mt202.addField(GetField72(wire, messageType));
 
             return mt202;
         }
