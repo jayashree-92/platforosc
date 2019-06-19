@@ -74,7 +74,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAccountPreloadData()
         {
-            var fundOnBoardIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
+            var fundOnBoardIds = AuthorizedSessionData.OnBoardFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
             var onboardedFunds = OnBoardingDataManager.GetAllOnBoardedFunds(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser);
             var funds = onboardedFunds.Select(x => new { id = x.dmaFundOnBoardId, text = x.LegalFundName }).OrderBy(x => x.text).ToList();
 
@@ -92,7 +92,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAccountAssociationPreloadData()
         {
-            var fundOnBoardIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
+            var fundOnBoardIds = AuthorizedSessionData.OnBoardFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
             var onboardedFunds = OnBoardingDataManager.GetAllOnBoardedFunds(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser);
             var funds = onboardedFunds.Select(x => new { id = x.dmaFundOnBoardId, text = x.LegalFundName }).OrderBy(x => x.text).ToList();
 
@@ -371,7 +371,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAllOnBoardingAccount()
         {
-            var fundOnBoardIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
+            var fundOnBoardIds = AuthorizedSessionData.OnBoardFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
             var onBoardingAccounts = AccountManager.GetAllOnBoardingAccounts(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser);
 
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
@@ -849,7 +849,7 @@ namespace HMOSecureWeb.Controllers
         public FileResult ExportAllAccountlist()
         {
 
-            var fundOnBoardIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
+            var fundOnBoardIds = AuthorizedSessionData.OnBoardFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
             var onBoardingAccounts = AccountManager.GetAllOnBoardingAccounts(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser).OrderByDescending(x => x.UpdatedAt).ToList();
             var contentToExport = new Dictionary<string, List<Row>>();
             var accountListRows = BuildAccountRows(onBoardingAccounts);

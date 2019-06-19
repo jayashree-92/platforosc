@@ -33,8 +33,9 @@ namespace HMOSecureMiddleware
 
     public class AuthorizedData
     {
-        public AuthorizedData(List<AuthorizedEntity> hmFundIds)
+        public AuthorizedData(List<AuthorizedEntity> onBoardFundIds, List<AuthorizedEntity> hmFundIds)
         {
+            OnBoardFundIds = onBoardFundIds;
             HMFundIds = hmFundIds;
             IsPrivilegedUser = false;
         }
@@ -45,6 +46,7 @@ namespace HMOSecureMiddleware
             IsPrivilegedUser = isPrivilegedUser;
         }
         public List<AuthorizedEntity> HMFundIds { get; private set; }
+        public List<AuthorizedEntity> OnBoardFundIds { get; private set; }
         public string UserName { get; set; }
         public bool IsPrivilegedUser { get; private set; }
 
@@ -75,13 +77,14 @@ namespace HMOSecureMiddleware
             if (string.IsNullOrWhiteSpace(userName))
                 throw new UnauthorizedAccessException("Unknown User");
             if (string.IsNullOrWhiteSpace(userRole))
-                return new AuthorizedData(new List<AuthorizedEntity>()) { UserName = userName };
+                return new AuthorizedData(new List<AuthorizedEntity>(), new List<AuthorizedEntity>()) { UserName = userName };
 
             if (userRole == OpsSecureUserRoles.DMAAdmin)
                 return AuthorizedData.GetPrivilegedAccess(userName);
 
-            var authfundOnBoarding = GetAuthorizedHMFundsEntities(userId).Where(up => up.Level > 0).ToList();
-            return new AuthorizedData(authfundOnBoarding) { UserName = userName };
+            var authHMfund = GetAuthorizedHMFundsEntities(userId).Where(up => up.Level > 0).ToList();
+            var authOnBoardfund = GetAuthorizedOnboardingFundsEntities(userId).Where(up => up.Level > 0).ToList();
+            return new AuthorizedData(authOnBoardfund, authHMfund) { UserName = userName };
         }
 
         private static List<AuthorizedEntity> GetAuthorizedHMFundsEntities(int userId)
@@ -96,6 +99,22 @@ namespace HMOSecureMiddleware
                                select new AuthorizedEntity()
                                {
                                    Id = vf.intFundID,
+                                   Level = obP.dmaPermissionLevelId
+                               }).ToList();
+                return hmFunds;
+            }
+        }
+
+        private static List<AuthorizedEntity> GetAuthorizedOnboardingFundsEntities(int userId)
+        {
+            using (var context = new AdminContext())
+            {
+                var hmFunds = (from obFid in context.onboardingFunds
+                               join obP in context.dmaFundOnBoardPermissions on obFid.dmaFundOnBoardId equals obP.dmaFundOnBoardId
+                               where obP.userId == userId
+                               select new AuthorizedEntity()
+                               {
+                                   Id = obP.dmaFundOnBoardId,
                                    Level = obP.dmaPermissionLevelId
                                }).ToList();
                 return hmFunds;
