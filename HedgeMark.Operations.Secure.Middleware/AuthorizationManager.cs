@@ -43,6 +43,7 @@ namespace HMOSecureMiddleware
         private AuthorizedData(bool isPrivilegedUser)
         {
             HMFundIds = new List<AuthorizedEntity>();
+            OnBoardFundIds = new List<AuthorizedEntity>();
             IsPrivilegedUser = isPrivilegedUser;
         }
         public List<AuthorizedEntity> HMFundIds { get; private set; }
