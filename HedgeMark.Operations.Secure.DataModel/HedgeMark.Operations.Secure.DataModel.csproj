@@ -223,9 +223,6 @@
     <Compile Include="vw_HFund.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="vw_HFundOps.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="AdminModel.edmx">

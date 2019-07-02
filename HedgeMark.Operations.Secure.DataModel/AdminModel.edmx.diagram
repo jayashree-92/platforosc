@@ -8,8 +8,6 @@
         <EntityTypeShape EntityType="AdminModel.aspnet_Roles" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.aspnet_Users" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.hLoginRegistration" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminModel.vw_HFund" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminModel.vw_HFundOps" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.dmaAgreementDocument" Width="1.5" PointX="17.25" PointY="26.875" />
         <EntityTypeShape EntityType="AdminModel.dmaAgreementOnBoarding" Width="1.5" PointX="15" PointY="14.125" />
         <EntityTypeShape EntityType="AdminModel.dmaAgreementOnBoardingAttribute" Width="1.5" PointX="18" PointY="15.625" />
@@ -61,6 +59,7 @@
         <EntityTypeShape EntityType="AdminModel.onboardingClient" Width="1.5" PointX="2.5" PointY="11.25" />
         <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_OnboardingClient_dmaClientOnBoardId" />
         <AssociationConnector Association="AdminModel.FK_onboardingFund_dmaClientOnBoardId" />
+        <EntityTypeShape EntityType="AdminModel.vw_HFund" Width="1.5" PointX="7.375" PointY="13.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

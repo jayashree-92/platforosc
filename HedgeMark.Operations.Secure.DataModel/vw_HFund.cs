@@ -16,16 +16,20 @@ namespace HedgeMark.Operations.Secure.DataModel
     {
         public int intFundID { get; set; }
         public int FundMapId { get; set; }
-        public string varFundLongName { get; set; }
-        public string varFundShortName { get; set; }
-        public string varMRDBName { get; set; }
-        public string varPositionFrequency { get; set; }
-        public string FiscalYearEnd { get; set; }
-        public string varCurrencyISO { get; set; }
-        public string subFunds { get; set; }
+        public string ClientFundName { get; set; }
+        public string ShortFundName { get; set; }
+        public string LegalFundName { get; set; }
+        public string HMRAName { get; set; }
         public string CreatedFor { get; set; }
         public string FundStatus { get; set; }
         public Nullable<int> DataProviderNameId { get; set; }
         public string DataProviderName { get; set; }
+        public string varPositionFrequency { get; set; }
+        public string NAVFrequency { get; set; }
+        public string FundLegalStructure { get; set; }
+        public string BaseCurrencyShareclass { get; set; }
+        public string AccountingMethod { get; set; }
+        public string FiscalYearEnd { get; set; }
+        public string subFunds { get; set; }
     }
 }

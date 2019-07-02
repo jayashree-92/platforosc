@@ -30,8 +30,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<aspnet_Roles> aspnet_Roles { get; set; }
         public virtual DbSet<aspnet_Users> aspnet_Users { get; set; }
         public virtual DbSet<hLoginRegistration> hLoginRegistrations { get; set; }
-        public virtual DbSet<vw_HFund> vw_HFund { get; set; }
-        public virtual DbSet<vw_HFundOps> vw_HFundOps { get; set; }
         public virtual DbSet<dmaAgreementDocument> dmaAgreementDocuments { get; set; }
         public virtual DbSet<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }
         public virtual DbSet<dmaAgreementOnBoardingAttribute> dmaAgreementOnBoardingAttributes { get; set; }
@@ -59,6 +57,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<onBoardingAccountBICorABA> onBoardingAccountBICorABAs { get; set; }
         public virtual DbSet<dmaOnBoardingContactDetail> dmaOnBoardingContactDetails { get; set; }
         public virtual DbSet<onboardingClient> onboardingClients { get; set; }
+        public virtual DbSet<vw_HFund> vw_HFund { get; set; }
     
         public virtual ObjectResult<USP_NEXEN_GetUserDetails_Result> USP_NEXEN_GetUserDetails(string userID, string userType)
         {

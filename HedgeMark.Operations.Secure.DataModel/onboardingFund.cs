@@ -177,6 +177,33 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string PerformanceAllocation { get; set; }
         public string SpecialLimitedPartner { get; set; }
         public string FileForm1099MISC { get; set; }
+        public Nullable<int> onboardHolidayCalendarId { get; set; }
+        public string AUMNotes { get; set; }
+        public string IntroductoryCall { get; set; }
+        public string RegisteredwithSEC { get; set; }
+        public string RegisteredwithNFA { get; set; }
+        public string ManagerERISAStatus { get; set; }
+        public string ManagerJurisdiction { get; set; }
+        public string ManagerPrinicpalPlaceofBusiness { get; set; }
+        public string b2letter { get; set; }
+        public string ManagerNDAwithHedgeMark { get; set; }
+        public string AuthorizedSignatoryList { get; set; }
+        public string TaxDoc { get; set; }
+        public string SamplePortfolio { get; set; }
+        public string ReferenceFundPPM { get; set; }
+        public string AllocationPolicy { get; set; }
+        public string Other { get; set; }
+        public string DoddFrankReport { get; set; }
+        public string TradeFileforAdmin { get; set; }
+        public string SFTPSetupwithAdmin { get; set; }
+        public string HoldingsReportincludingestimatedmarketvaluesFrequency { get; set; }
+        public string HoldingsReportincludingestimatedmarketvaluesDeliveryMethod { get; set; }
+        public string GROSSRateofReturnFrequency { get; set; }
+        public string GROSSRateofReturnDeliveryMethod { get; set; }
+        public string PLReportReflectingFrequency { get; set; }
+        public string PLReportReflectingFrequencyDeliveryMethod { get; set; }
+        public string RegisteredwithSECNumber { get; set; }
+        public string RegisteredwithNFANumber { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }
