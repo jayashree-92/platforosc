@@ -390,7 +390,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                "sScrollY": $("#accountListDiv").offset().top + 350,
                "sScrollXInner": "100%",
                "bScrollCollapse": true,
-               "order": [[53, "desc"]],
+               "order": [[54, "desc"]],
                "rowCallback": function (row, data) {
 
                    var totalTemplateMaps = data.PendingApprovalMaps + data.ApprovedMaps;
