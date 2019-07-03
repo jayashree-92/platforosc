@@ -32,15 +32,12 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string OnboardingCallsDays { get; set; }
         public Nullable<System.TimeSpan> OnboardingCallsTime { get; set; }
         public string IsClientCurrentCustodyClientofBNYM { get; set; }
-        public string CustodyClientNotes { get; set; }
         public string IsHegdeMarkAccessPlatformClient { get; set; }
-        public string IsHegdeMarkAccessPlatformClientNotes { get; set; }
         public string FormDResponsibility { get; set; }
         public string FATCAResponsibility { get; set; }
         public string FATCAResponsibilityNotes { get; set; }
         public string HedgeMarkVolckerSponsorshipStatus { get; set; }
         public string CoveredFundStatus { get; set; }
-        public string NonBankAffiliateStatus { get; set; }
         public string AMLROorMLROorDeputy { get; set; }
         public string PPOCorPPOCChangeNotifier { get; set; }
         public string Notes { get; set; }
@@ -73,15 +70,11 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string ERISAFunds { get; set; }
         public string OfferingDocumentsRequired { get; set; }
         public string FundRegisterwithCIMA { get; set; }
-        public string FundRegisterwithCIMANotes { get; set; }
         public string NumberofCashAccountsNeededforeachFund { get; set; }
-        public string NumberofCashAccountsNotes { get; set; }
         public string ShareClasses { get; set; }
         public string PerformanceFees { get; set; }
         public Nullable<long> AccountingMethodologyId { get; set; }
         public string ResponsiblePartyforCashManagement { get; set; }
-        public string FundlevelDiscussionWithManager { get; set; }
-        public string PlatformAgreementsforCashManagementAgreement { get; set; }
         public string CashManagementApproachforExcessCashBrokers { get; set; }
         public string CashManagementApproachLevel { get; set; }
         public string CashManagementApproachMarginRule { get; set; }
@@ -92,7 +85,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string ClassActionThirdPartyCompanyName { get; set; }
         public string IsTaxlotAccountingMethodPlatformorFundSpecific { get; set; }
         public Nullable<long> TaxlotAccountingMethodId { get; set; }
-        public Nullable<long> FundHolidayScheduleId { get; set; }
         public string ResponsiblePartySendingNAV { get; set; }
         public string ResponsiblePartySendingNAVAdmin { get; set; }
         public string FileForm1099MISC { get; set; }
@@ -129,8 +121,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string DetermineRiskReportingInvestors { get; set; }
         public string ClientUsersTraining { get; set; }
         public string SetupTimeTrainingSystem { get; set; }
-        public string OtherDocument { get; set; }
-        public string OtherDocumentDescription { get; set; }
         public string Status { get; set; }
         public string Comments { get; set; }
         public Nullable<int> CompanyId { get; set; }
@@ -143,8 +133,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string RiskCSPrimary { get; set; }
         public string RiskCSSecondaryA { get; set; }
         public string RiskCSSecondaryB { get; set; }
-        public string AdminServiceLevelDescription { get; set; }
-        public string WorkWithAdminOnRiskFileHMNeedsToReceive { get; set; }
         public string NoOfFeeders { get; set; }
         public string GeneralPartnerFeeder1 { get; set; }
         public string GeneralPartnerFeeder2 { get; set; }
@@ -168,15 +156,12 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string ResponsiblePartySendingNAVHM { get; set; }
         public string FieldBusinessDay { get; set; }
         public string MonthEndValuation { get; set; }
-        public string WorkWithAdminFileNotes { get; set; }
-        public string ProtocolForNotifyingMangerNotes { get; set; }
         public string ClientChecklistView { get; set; }
         public string AgreementTemplateRelationship { get; set; }
         public string SweepAtCustodian { get; set; }
         public string EstimatesRequiredInvestorDeliveryDate { get; set; }
         public string FinanicalYearEndPlatformDate { get; set; }
         public string FinanicalYearEndFundDate { get; set; }
-        public string StructureChart { get; set; }
         public string OtherDocumentNotes { get; set; }
         public string CashAccountForMasterFund { get; set; }
         public string CashAccountForFeeder1Fund { get; set; }

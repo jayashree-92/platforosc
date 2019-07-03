@@ -117,7 +117,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f50K = new Field50K()
                 .setAccount(!string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber)
-                .setNameAndAddress(wire.SendingAccount.UltimateBeneficiaryAccountName);
+                .setNameAndAddressLine1(wire.SendingAccount.UltimateBeneficiaryBankName)
+                .setNameAndAddressLine2(wire.SendingAccount.UltimateBeneficiaryBankAddress);
             return f50K;
         }
 

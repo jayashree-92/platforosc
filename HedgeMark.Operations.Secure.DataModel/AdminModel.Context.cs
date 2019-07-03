@@ -56,8 +56,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<dmaCounterpartyFamily> dmaCounterpartyFamilies { get; set; }
         public virtual DbSet<onBoardingAccountBICorABA> onBoardingAccountBICorABAs { get; set; }
         public virtual DbSet<dmaOnBoardingContactDetail> dmaOnBoardingContactDetails { get; set; }
-        public virtual DbSet<onboardingClient> onboardingClients { get; set; }
         public virtual DbSet<vw_HFund> vw_HFund { get; set; }
+        public virtual DbSet<onboardingClient> onboardingClients { get; set; }
     
         public virtual ObjectResult<USP_NEXEN_GetUserDetails_Result> USP_NEXEN_GetUserDetails(string userID, string userType)
         {

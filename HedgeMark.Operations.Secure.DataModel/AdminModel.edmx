@@ -530,15 +530,12 @@
           <Property Name="OnboardingCallsDays" Type="varchar" MaxLength="50" />
           <Property Name="OnboardingCallsTime" Type="time" Precision="7" />
           <Property Name="IsClientCurrentCustodyClientofBNYM" Type="varchar" MaxLength="5" />
-          <Property Name="CustodyClientNotes" Type="varchar" MaxLength="3000" />
           <Property Name="IsHegdeMarkAccessPlatformClient" Type="varchar" MaxLength="5" />
-          <Property Name="IsHegdeMarkAccessPlatformClientNotes" Type="varchar" MaxLength="3000" />
           <Property Name="FormDResponsibility" Type="varchar" MaxLength="5" />
           <Property Name="FATCAResponsibility" Type="varchar" MaxLength="5" />
           <Property Name="FATCAResponsibilityNotes" Type="varchar" MaxLength="3000" />
           <Property Name="HedgeMarkVolckerSponsorshipStatus" Type="varchar" MaxLength="5" />
           <Property Name="CoveredFundStatus" Type="varchar" MaxLength="50" />
-          <Property Name="NonBankAffiliateStatus" Type="varchar" MaxLength="50" />
           <Property Name="AMLROorMLROorDeputy" Type="varchar" MaxLength="100" />
           <Property Name="PPOCorPPOCChangeNotifier" Type="varchar" MaxLength="100" />
           <Property Name="Notes" Type="varchar" MaxLength="3000" />
@@ -571,15 +568,11 @@
           <Property Name="ERISAFunds" Type="varchar" MaxLength="100" />
           <Property Name="OfferingDocumentsRequired" Type="varchar" MaxLength="5" />
           <Property Name="FundRegisterwithCIMA" Type="varchar" MaxLength="10" />
-          <Property Name="FundRegisterwithCIMANotes" Type="varchar" MaxLength="3000" />
           <Property Name="NumberofCashAccountsNeededforeachFund" Type="varchar" MaxLength="3000" />
-          <Property Name="NumberofCashAccountsNotes" Type="varchar" MaxLength="100" />
           <Property Name="ShareClasses" Type="varchar" MaxLength="500" />
           <Property Name="PerformanceFees" Type="varchar" MaxLength="5" />
           <Property Name="AccountingMethodologyId" Type="bigint" />
           <Property Name="ResponsiblePartyforCashManagement" Type="varchar" MaxLength="100" />
-          <Property Name="FundlevelDiscussionWithManager" Type="varchar" MaxLength="1000" />
-          <Property Name="PlatformAgreementsforCashManagementAgreement" Type="varchar" MaxLength="1000" />
           <Property Name="CashManagementApproachforExcessCashBrokers" Type="varchar" MaxLength="5" />
           <Property Name="CashManagementApproachLevel" Type="varchar" MaxLength="100" />
           <Property Name="CashManagementApproachMarginRule" Type="varchar" MaxLength="10" />
@@ -590,7 +583,6 @@
           <Property Name="ClassActionThirdPartyCompanyName" Type="varchar" MaxLength="100" />
           <Property Name="IsTaxlotAccountingMethodPlatformorFundSpecific" Type="varchar" MaxLength="50" />
           <Property Name="TaxlotAccountingMethodId" Type="bigint" />
-          <Property Name="FundHolidayScheduleId" Type="bigint" />
           <Property Name="ResponsiblePartySendingNAV" Type="varchar" MaxLength="50" />
           <Property Name="ResponsiblePartySendingNAVAdmin" Type="varchar" MaxLength="100" />
           <Property Name="FileForm1099MISC" Type="varchar" MaxLength="5" />
@@ -627,8 +619,6 @@
           <Property Name="DetermineRiskReportingInvestors" Type="varchar" MaxLength="100" />
           <Property Name="ClientUsersTraining" Type="varchar" MaxLength="100" />
           <Property Name="SetupTimeTrainingSystem" Type="varchar" MaxLength="100" />
-          <Property Name="OtherDocument" Type="varchar" MaxLength="100" />
-          <Property Name="OtherDocumentDescription" Type="varchar" MaxLength="1000" />
           <Property Name="Status" Type="varchar" MaxLength="50" />
           <Property Name="Comments" Type="varchar" MaxLength="3000" />
           <Property Name="CompanyId" Type="int" />
@@ -641,8 +631,6 @@
           <Property Name="RiskCSPrimary" Type="varchar" MaxLength="200" />
           <Property Name="RiskCSSecondaryA" Type="varchar" MaxLength="200" />
           <Property Name="RiskCSSecondaryB" Type="varchar" MaxLength="200" />
-          <Property Name="AdminServiceLevelDescription" Type="varchar" MaxLength="20" />
-          <Property Name="WorkWithAdminOnRiskFileHMNeedsToReceive" Type="varchar" MaxLength="20" />
           <Property Name="NoOfFeeders" Type="varchar" MaxLength="20" />
           <Property Name="GeneralPartnerFeeder1" Type="varchar" MaxLength="100" />
           <Property Name="GeneralPartnerFeeder2" Type="varchar" MaxLength="100" />
@@ -666,15 +654,12 @@
           <Property Name="ResponsiblePartySendingNAVHM" Type="varchar" MaxLength="100" />
           <Property Name="FieldBusinessDay" Type="varchar" MaxLength="100" />
           <Property Name="MonthEndValuation" Type="varchar" MaxLength="100" />
-          <Property Name="WorkWithAdminFileNotes" Type="varchar" MaxLength="100" />
-          <Property Name="ProtocolForNotifyingMangerNotes" Type="varchar" MaxLength="100" />
           <Property Name="ClientChecklistView" Type="varchar" MaxLength="1000" />
           <Property Name="AgreementTemplateRelationship" Type="varchar" MaxLength="100" />
           <Property Name="SweepAtCustodian" Type="varchar" MaxLength="100" />
           <Property Name="EstimatesRequiredInvestorDeliveryDate" Type="varchar" MaxLength="100" />
           <Property Name="FinanicalYearEndPlatformDate" Type="varchar" MaxLength="100" />
           <Property Name="FinanicalYearEndFundDate" Type="varchar" MaxLength="100" />
-          <Property Name="StructureChart" Type="varchar" MaxLength="100" />
           <Property Name="OtherDocumentNotes" Type="varchar" MaxLength="100" />
           <Property Name="CashAccountForMasterFund" Type="varchar" MaxLength="100" />
           <Property Name="CashAccountForFeeder1Fund" Type="varchar" MaxLength="100" />
@@ -1670,6 +1655,7 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           </AssociationSet>
           <EntitySet Name="onBoardingAccountBICorABAs" EntityType="AdminModel.onBoardingAccountBICorABA" />
           <EntitySet Name="dmaOnBoardingContactDetails" EntityType="AdminModel.dmaOnBoardingContactDetail" />
+          <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
           <EntitySet Name="onboardingClients" EntityType="AdminModel.onboardingClient" />
           <AssociationSet Name="FK_dmaAgreementOnBoarding_OnboardingClient_dmaClientOnBoardId" Association="AdminModel.FK_dmaAgreementOnBoarding_OnboardingClient_dmaClientOnBoardId">
             <End Role="onboardingClient" EntitySet="onboardingClients" />
@@ -1679,7 +1665,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
             <End Role="onboardingClient" EntitySet="onboardingClients" />
             <End Role="onboardingFund" EntitySet="onboardingFunds" />
           </AssociationSet>
-          <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -2323,7 +2308,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="PerformanceAllocation" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SpecialLimitedPartner" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="FileForm1099MISC" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="onboardingClient" Relationship="AdminModel.FK_onboardingFund_dmaClientOnBoardId" FromRole="onboardingFund" ToRole="onboardingClient" />
           <Property Name="onboardHolidayCalendarId" Type="Int32" />
           <Property Name="AUMNotes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IntroductoryCall" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
@@ -2351,6 +2335,7 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="PLReportReflectingFrequencyDeliveryMethod" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="RegisteredwithSECNumber" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="RegisteredwithNFANumber" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="onboardingClient" Relationship="AdminModel.FK_onboardingFund_dmaClientOnBoardId" FromRole="onboardingFund" ToRole="onboardingClient" />
         </EntityType>
         <Association Name="FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId">
           <End Type="AdminModel.onboardingFund" Role="onboardingFund" Multiplicity="1" />
@@ -2748,6 +2733,34 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="ClientSubCategory" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ComplainceCert" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="vw_HFund">
+          <Key>
+            <PropertyRef Name="intFundID" />
+            <PropertyRef Name="FundMapId" />
+            <PropertyRef Name="ClientFundName" />
+            <PropertyRef Name="LegalFundName" />
+            <PropertyRef Name="HMRAName" />
+            <PropertyRef Name="CreatedFor" />
+            <PropertyRef Name="FundStatus" />
+          </Key>
+          <Property Name="intFundID" Type="Int32" Nullable="false" />
+          <Property Name="FundMapId" Type="Int32" Nullable="false" />
+          <Property Name="ClientFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LegalFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HMRAName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedFor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FundStatus" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="DataProviderNameId" Type="Int32" />
+          <Property Name="DataProviderName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="varPositionFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="NAVFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FundLegalStructure" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="BaseCurrencyShareclass" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="AccountingMethod" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FiscalYearEnd" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="subFunds" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="onboardingClient">
           <Key>
             <PropertyRef Name="dmaClientOnBoardId" />
@@ -2763,15 +2776,12 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="OnboardingCallsDays" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="OnboardingCallsTime" Type="Time" Precision="7" />
           <Property Name="IsClientCurrentCustodyClientofBNYM" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="CustodyClientNotes" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
           <Property Name="IsHegdeMarkAccessPlatformClient" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="IsHegdeMarkAccessPlatformClientNotes" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
           <Property Name="FormDResponsibility" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="FATCAResponsibility" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="FATCAResponsibilityNotes" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
           <Property Name="HedgeMarkVolckerSponsorshipStatus" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="CoveredFundStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="NonBankAffiliateStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="AMLROorMLROorDeputy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="PPOCorPPOCChangeNotifier" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Notes" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
@@ -2804,15 +2814,11 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="ERISAFunds" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OfferingDocumentsRequired" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="FundRegisterwithCIMA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="FundRegisterwithCIMANotes" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
           <Property Name="NumberofCashAccountsNeededforeachFund" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="NumberofCashAccountsNotes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ShareClasses" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="PerformanceFees" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="AccountingMethodologyId" Type="Int64" />
           <Property Name="ResponsiblePartyforCashManagement" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FundlevelDiscussionWithManager" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="PlatformAgreementsforCashManagementAgreement" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="CashManagementApproachforExcessCashBrokers" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="CashManagementApproachLevel" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="CashManagementApproachMarginRule" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
@@ -2823,7 +2829,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="ClassActionThirdPartyCompanyName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IsTaxlotAccountingMethodPlatformorFundSpecific" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="TaxlotAccountingMethodId" Type="Int64" />
-          <Property Name="FundHolidayScheduleId" Type="Int64" />
           <Property Name="ResponsiblePartySendingNAV" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ResponsiblePartySendingNAVAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FileForm1099MISC" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
@@ -2860,8 +2865,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="DetermineRiskReportingInvestors" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ClientUsersTraining" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SetupTimeTrainingSystem" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="OtherDocument" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="OtherDocumentDescription" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Comments" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
           <Property Name="CompanyId" Type="Int32" />
@@ -2874,8 +2877,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="RiskCSPrimary" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="RiskCSSecondaryA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="RiskCSSecondaryB" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="AdminServiceLevelDescription" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="WorkWithAdminOnRiskFileHMNeedsToReceive" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="NoOfFeeders" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="GeneralPartnerFeeder1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="GeneralPartnerFeeder2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -2899,15 +2900,12 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="ResponsiblePartySendingNAVHM" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FieldBusinessDay" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="MonthEndValuation" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="WorkWithAdminFileNotes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ProtocolForNotifyingMangerNotes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ClientChecklistView" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="AgreementTemplateRelationship" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SweepAtCustodian" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="EstimatesRequiredInvestorDeliveryDate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FinanicalYearEndPlatformDate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FinanicalYearEndFundDate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="StructureChart" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OtherDocumentNotes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="CashAccountForMasterFund" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="CashAccountForFeeder1Fund" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -2942,34 +2940,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="vw_HFund">
-          <Key>
-            <PropertyRef Name="intFundID" />
-            <PropertyRef Name="FundMapId" />
-            <PropertyRef Name="ClientFundName" />
-            <PropertyRef Name="LegalFundName" />
-            <PropertyRef Name="HMRAName" />
-            <PropertyRef Name="CreatedFor" />
-            <PropertyRef Name="FundStatus" />
-          </Key>
-          <Property Name="intFundID" Type="Int32" Nullable="false" />
-          <Property Name="FundMapId" Type="Int32" Nullable="false" />
-          <Property Name="ClientFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="LegalFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="HMRAName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedFor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FundStatus" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
-          <Property Name="DataProviderNameId" Type="Int32" />
-          <Property Name="DataProviderName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="varPositionFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="NAVFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FundLegalStructure" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="BaseCurrencyShareclass" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
-          <Property Name="AccountingMethod" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FiscalYearEnd" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="subFunds" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3870,6 +3840,29 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="vw_HFund">
+            <EntityTypeMapping TypeName="AdminModel.vw_HFund">
+              <MappingFragment StoreEntitySet="vw_HFund">
+                <ScalarProperty Name="subFunds" ColumnName="subFunds" />
+                <ScalarProperty Name="FiscalYearEnd" ColumnName="FiscalYearEnd" />
+                <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
+                <ScalarProperty Name="BaseCurrencyShareclass" ColumnName="BaseCurrencyShareclass" />
+                <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
+                <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />
+                <ScalarProperty Name="varPositionFrequency" ColumnName="varPositionFrequency" />
+                <ScalarProperty Name="DataProviderName" ColumnName="DataProviderName" />
+                <ScalarProperty Name="DataProviderNameId" ColumnName="DataProviderNameId" />
+                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
+                <ScalarProperty Name="CreatedFor" ColumnName="CreatedFor" />
+                <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
+                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
+                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
+                <ScalarProperty Name="ClientFundName" ColumnName="ClientFundName" />
+                <ScalarProperty Name="FundMapId" ColumnName="FundMapId" />
+                <ScalarProperty Name="intFundID" ColumnName="intFundID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="onboardingClients">
             <EntityTypeMapping TypeName="AdminModel.onboardingClient">
               <MappingFragment StoreEntitySet="onboardingClient">
@@ -3880,15 +3873,12 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
                 <ScalarProperty Name="CashAccountForFeeder1Fund" ColumnName="CashAccountForFeeder1Fund" />
                 <ScalarProperty Name="CashAccountForMasterFund" ColumnName="CashAccountForMasterFund" />
                 <ScalarProperty Name="OtherDocumentNotes" ColumnName="OtherDocumentNotes" />
-                <ScalarProperty Name="StructureChart" ColumnName="StructureChart" />
                 <ScalarProperty Name="FinanicalYearEndFundDate" ColumnName="FinanicalYearEndFundDate" />
                 <ScalarProperty Name="FinanicalYearEndPlatformDate" ColumnName="FinanicalYearEndPlatformDate" />
                 <ScalarProperty Name="EstimatesRequiredInvestorDeliveryDate" ColumnName="EstimatesRequiredInvestorDeliveryDate" />
                 <ScalarProperty Name="SweepAtCustodian" ColumnName="SweepAtCustodian" />
                 <ScalarProperty Name="AgreementTemplateRelationship" ColumnName="AgreementTemplateRelationship" />
                 <ScalarProperty Name="ClientChecklistView" ColumnName="ClientChecklistView" />
-                <ScalarProperty Name="ProtocolForNotifyingMangerNotes" ColumnName="ProtocolForNotifyingMangerNotes" />
-                <ScalarProperty Name="WorkWithAdminFileNotes" ColumnName="WorkWithAdminFileNotes" />
                 <ScalarProperty Name="MonthEndValuation" ColumnName="MonthEndValuation" />
                 <ScalarProperty Name="FieldBusinessDay" ColumnName="FieldBusinessDay" />
                 <ScalarProperty Name="ResponsiblePartySendingNAVHM" ColumnName="ResponsiblePartySendingNAVHM" />
@@ -3912,8 +3902,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
                 <ScalarProperty Name="GeneralPartnerFeeder2" ColumnName="GeneralPartnerFeeder2" />
                 <ScalarProperty Name="GeneralPartnerFeeder1" ColumnName="GeneralPartnerFeeder1" />
                 <ScalarProperty Name="NoOfFeeders" ColumnName="NoOfFeeders" />
-                <ScalarProperty Name="WorkWithAdminOnRiskFileHMNeedsToReceive" ColumnName="WorkWithAdminOnRiskFileHMNeedsToReceive" />
-                <ScalarProperty Name="AdminServiceLevelDescription" ColumnName="AdminServiceLevelDescription" />
                 <ScalarProperty Name="RiskCSSecondaryB" ColumnName="RiskCSSecondaryB" />
                 <ScalarProperty Name="RiskCSSecondaryA" ColumnName="RiskCSSecondaryA" />
                 <ScalarProperty Name="RiskCSPrimary" ColumnName="RiskCSPrimary" />
@@ -3926,8 +3914,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
                 <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
                 <ScalarProperty Name="Comments" ColumnName="Comments" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="OtherDocumentDescription" ColumnName="OtherDocumentDescription" />
-                <ScalarProperty Name="OtherDocument" ColumnName="OtherDocument" />
                 <ScalarProperty Name="SetupTimeTrainingSystem" ColumnName="SetupTimeTrainingSystem" />
                 <ScalarProperty Name="ClientUsersTraining" ColumnName="ClientUsersTraining" />
                 <ScalarProperty Name="DetermineRiskReportingInvestors" ColumnName="DetermineRiskReportingInvestors" />
@@ -3964,7 +3950,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
                 <ScalarProperty Name="FileForm1099MISC" ColumnName="FileForm1099MISC" />
                 <ScalarProperty Name="ResponsiblePartySendingNAVAdmin" ColumnName="ResponsiblePartySendingNAVAdmin" />
                 <ScalarProperty Name="ResponsiblePartySendingNAV" ColumnName="ResponsiblePartySendingNAV" />
-                <ScalarProperty Name="FundHolidayScheduleId" ColumnName="FundHolidayScheduleId" />
                 <ScalarProperty Name="TaxlotAccountingMethodId" ColumnName="TaxlotAccountingMethodId" />
                 <ScalarProperty Name="IsTaxlotAccountingMethodPlatformorFundSpecific" ColumnName="IsTaxlotAccountingMethodPlatformorFundSpecific" />
                 <ScalarProperty Name="ClassActionThirdPartyCompanyName" ColumnName="ClassActionThirdPartyCompanyName" />
@@ -3975,15 +3960,11 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
                 <ScalarProperty Name="CashManagementApproachMarginRule" ColumnName="CashManagementApproachMarginRule" />
                 <ScalarProperty Name="CashManagementApproachLevel" ColumnName="CashManagementApproachLevel" />
                 <ScalarProperty Name="CashManagementApproachforExcessCashBrokers" ColumnName="CashManagementApproachforExcessCashBrokers" />
-                <ScalarProperty Name="PlatformAgreementsforCashManagementAgreement" ColumnName="PlatformAgreementsforCashManagementAgreement" />
-                <ScalarProperty Name="FundlevelDiscussionWithManager" ColumnName="FundlevelDiscussionWithManager" />
                 <ScalarProperty Name="ResponsiblePartyforCashManagement" ColumnName="ResponsiblePartyforCashManagement" />
                 <ScalarProperty Name="AccountingMethodologyId" ColumnName="AccountingMethodologyId" />
                 <ScalarProperty Name="PerformanceFees" ColumnName="PerformanceFees" />
                 <ScalarProperty Name="ShareClasses" ColumnName="ShareClasses" />
-                <ScalarProperty Name="NumberofCashAccountsNotes" ColumnName="NumberofCashAccountsNotes" />
                 <ScalarProperty Name="NumberofCashAccountsNeededforeachFund" ColumnName="NumberofCashAccountsNeededforeachFund" />
-                <ScalarProperty Name="FundRegisterwithCIMANotes" ColumnName="FundRegisterwithCIMANotes" />
                 <ScalarProperty Name="FundRegisterwithCIMA" ColumnName="FundRegisterwithCIMA" />
                 <ScalarProperty Name="OfferingDocumentsRequired" ColumnName="OfferingDocumentsRequired" />
                 <ScalarProperty Name="ERISAFunds" ColumnName="ERISAFunds" />
@@ -4016,15 +3997,12 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="PPOCorPPOCChangeNotifier" ColumnName="PPOCorPPOCChangeNotifier" />
                 <ScalarProperty Name="AMLROorMLROorDeputy" ColumnName="AMLROorMLROorDeputy" />
-                <ScalarProperty Name="NonBankAffiliateStatus" ColumnName="NonBankAffiliateStatus" />
                 <ScalarProperty Name="CoveredFundStatus" ColumnName="CoveredFundStatus" />
                 <ScalarProperty Name="HedgeMarkVolckerSponsorshipStatus" ColumnName="HedgeMarkVolckerSponsorshipStatus" />
                 <ScalarProperty Name="FATCAResponsibilityNotes" ColumnName="FATCAResponsibilityNotes" />
                 <ScalarProperty Name="FATCAResponsibility" ColumnName="FATCAResponsibility" />
                 <ScalarProperty Name="FormDResponsibility" ColumnName="FormDResponsibility" />
-                <ScalarProperty Name="IsHegdeMarkAccessPlatformClientNotes" ColumnName="IsHegdeMarkAccessPlatformClientNotes" />
                 <ScalarProperty Name="IsHegdeMarkAccessPlatformClient" ColumnName="IsHegdeMarkAccessPlatformClient" />
-                <ScalarProperty Name="CustodyClientNotes" ColumnName="CustodyClientNotes" />
                 <ScalarProperty Name="IsClientCurrentCustodyClientofBNYM" ColumnName="IsClientCurrentCustodyClientofBNYM" />
                 <ScalarProperty Name="OnboardingCallsTime" ColumnName="OnboardingCallsTime" />
                 <ScalarProperty Name="OnboardingCallsDays" ColumnName="OnboardingCallsDays" />
@@ -4036,29 +4014,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
                 <ScalarProperty Name="ClientShortName" ColumnName="ClientShortName" />
                 <ScalarProperty Name="ClientLegalEntityName" ColumnName="ClientLegalEntityName" />
                 <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="vw_HFund">
-            <EntityTypeMapping TypeName="AdminModel.vw_HFund">
-              <MappingFragment StoreEntitySet="vw_HFund">
-                <ScalarProperty Name="subFunds" ColumnName="subFunds" />
-                <ScalarProperty Name="FiscalYearEnd" ColumnName="FiscalYearEnd" />
-                <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
-                <ScalarProperty Name="BaseCurrencyShareclass" ColumnName="BaseCurrencyShareclass" />
-                <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
-                <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />
-                <ScalarProperty Name="varPositionFrequency" ColumnName="varPositionFrequency" />
-                <ScalarProperty Name="DataProviderName" ColumnName="DataProviderName" />
-                <ScalarProperty Name="DataProviderNameId" ColumnName="DataProviderNameId" />
-                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
-                <ScalarProperty Name="CreatedFor" ColumnName="CreatedFor" />
-                <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
-                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
-                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
-                <ScalarProperty Name="ClientFundName" ColumnName="ClientFundName" />
-                <ScalarProperty Name="FundMapId" ColumnName="FundMapId" />
-                <ScalarProperty Name="intFundID" ColumnName="intFundID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
