@@ -340,7 +340,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             if (string.IsNullOrWhiteSpace(ffcNumber))
                 return f72;
 
-            f72.setNarrativeLine1("/BNF/" + ffcNumber);
+            if (messageType == "MT103")
+                f72.setNarrativeLine1("/ACC/" + ffcNumber);
+            else
+                f72.setNarrativeLine1("/BNF/" + ffcNumber);
 
             var fccName = wire.IsBookTransfer ? wire.ReceivingAccount.FFCName : wire.SSITemplate.FFCName;
             if (!string.IsNullOrWhiteSpace(fccName))
