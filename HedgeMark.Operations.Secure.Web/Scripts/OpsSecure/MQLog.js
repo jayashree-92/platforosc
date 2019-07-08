@@ -54,7 +54,7 @@ HmOpsApp.controller("MQLogsCtrl", function ($scope, $http, $timeout, $filter) {
                 "bDestroy": true,
                 "order": [[4, "desc"]],
                 "scrollX": true,
-                "scrollY": $("#tblInboundLogsDetails").offset().top + 550,
+                "scrollY": window.innerHeight - 350,
                 "aoColumns": [
                     {
                         "mData": "IsOutBound", "sTitle": "Inbound/Outbound",

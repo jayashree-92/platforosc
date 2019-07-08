@@ -1063,7 +1063,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         if (!($("#uploadFiles" + key).hasClass("dz-clickable"))) {
             $("#uploadFiles" + key).dropzone({
                 url: "/Accounts/UploadAccountFiles?accountId=" + $scope.onBoardingAccountDetails[key].onBoardingAccountId,
-                dictDefaultMessage: "<span>Drag/Drop account documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
+                dictDefaultMessage: "<span><span style=\"color: red\"> * </span>Drag/Drop account documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
                 autoDiscover: false,
                 acceptedFiles: ".csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
                 maxFiles: 5,

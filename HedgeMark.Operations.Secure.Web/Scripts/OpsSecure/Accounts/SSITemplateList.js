@@ -141,7 +141,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                //"scrollX": false,
                "sScrollX": "100%",
                //sDom: "ift",
-               "sScrollY": $("#ssiTemplateListDiv").offset().top + 350,
+               "scrollY": window.innerHeight - 350,
                "sScrollXInner": "100%",
                "bScrollCollapse": true,
                "order": [[33, "desc"]],
@@ -164,11 +164,30 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         });
     }
 
-    $(document).on("click", "#ssiTemplateTable tbody tr ", function () {
-        $("#ssiTemplateTable tbody tr").removeClass("info");
-        if (!$(this).hasClass("info")) {
-            $(this).addClass("info");
-        }
+
+
+    //Toggle Selection
+    $(document).on("click", "#ssiTemplateTable tbody tr,.DTFC_Cloned tbody tr", function () {
+
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        event.preventDefault();
+
+
+        $("#ssiTemplateTable tbody tr,.DTFC_Cloned tbody tr").removeClass("info");
+
+        var $tr = $(this);
+        var rowIndx = $tr.index() - $tr.prevAll(":not([role='row'])").length;
+
+        //var groupIndex = $tr.prevAll(".navParent").length - 1;
+        //var row = ssiTemplateTable.row(rowIndx);
+        var row1 = $("#ssiTemplateTable").find("tr:eq(" + (rowIndx + 1) + ")");
+        var row2 = $("table.DTFC_Cloned:eq(1)").find("tr:eq(" + (rowIndx + 1) + ")");
+
+        $(row1).addClass("info");
+        $(row2).addClass("info");
+
+
         $("#btnSSITemplateStatusButtons button").removeClass("disabled");
         var rowElement = ssiTemplateTable.row(this).data();
         $scope.onBoardingSSITemplateId = rowElement.onBoardingSSITemplateId;
@@ -178,26 +197,17 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         // $("#btnSSITemplateStatusButtons button").addClass("disabled");
         $("#btnEdit").prop("disabled", false);
 
-        //var selectedRow = agreementTable.row('.info').data();
-        //if (rowElement.SSITemplateStatus == pendingStatus && rowElement.UpdatedBy != $("#userName").val()) {
-        //    $("#btnSSITemplateStatusButtons button[id='approve']").removeClass("disabled");
-        //}
-        //if (rowElement.SSITemplateStatus == createdStatus) {
-        //    $("#btnSSITemplateStatusButtons button[id='requestForApproval']").removeClass("disabled");
-        //}
-        //if (rowElement.SSITemplateStatus != createdStatus) {
-        //    $("#btnSSITemplateStatusButtons button[id='revert']").removeClass("disabled");
-        //}
-
         $http.get("/Accounts/IsSsiTemplateDocumentExists?ssiTemplateId=" + $scope.onBoardingSSITemplateId).then(function (response) {
             $scope.isExistsDocument = response.data;
         });
 
 
         $("#btnDel").prop("disabled", false);
+
     });
 
-    $(document).on("dblclick", "#ssiTemplateTable tbody tr", function () {
+
+    $(document).on("dblclick", "#ssiTemplateTable tbody tr,.DTFC_Cloned tbody tr", function () {
 
         var rowElement = ssiTemplateTable.row(this).data();
         $scope.onBoardingSSITemplateId = rowElement.onBoardingSSITemplateId;

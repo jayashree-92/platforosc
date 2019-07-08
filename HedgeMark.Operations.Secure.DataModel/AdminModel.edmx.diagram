@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="414b691953974c01be2844de38379599" Name="Diagram1" ZoomLevel="24">
+      <Diagram DiagramId="414b691953974c01be2844de38379599" Name="Diagram1" ZoomLevel="67">
         <EntityTypeShape EntityType="AdminModel.aspnet_Roles" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.aspnet_Users" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.hLoginRegistration" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
@@ -33,7 +33,7 @@
         <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_dmaCounterPartyOnBoardId" />
         <EntityTypeShape EntityType="AdminModel.onboardingFund" Width="1.5" PointX="12.75" PointY="0.75" />
         <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId" />
-        <EntityTypeShape EntityType="AdminModel.onBoardingAccount" Width="1.5" PointX="20.25" PointY="12.125" />
+        <EntityTypeShape EntityType="AdminModel.onBoardingAccount" Width="2.5" PointX="20.25" PointY="12.125" />
         <EntityTypeShape EntityType="AdminModel.onBoardingSSITemplate" Width="1.5" PointX="10" PointY="23.375" />
         <AssociationConnector Association="AdminModel.FK_onBoardingAccount_dmaAgreementOnBoardingId" />
         <AssociationConnector Association="AdminModel.FK_onBoardingSSITemplate_dmaAgreementTypeId" />

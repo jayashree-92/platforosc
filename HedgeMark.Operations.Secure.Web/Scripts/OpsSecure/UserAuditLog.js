@@ -63,7 +63,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                 "bDestroy": true,
                 "order": [[7, "desc"]],
                 "scrollX": true,
-                "scrollY": $("#tblAuditLogsDetails").offset().top + 450,
+                "scrollY": window.innerHeight - 350,
                 "initComplete": function (settings, json) {
                     var actionsMessage = "";
                     if (actions.length > 1) {

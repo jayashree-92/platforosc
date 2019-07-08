@@ -842,7 +842,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
         $("#uploadFiles").dropzone({
             url: "/Accounts/UploadSsiTemplateFiles?ssiTemplateId=" + ssiTemplateId,
-            dictDefaultMessage: "<span>Drag/Drop SSI template files here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
+            dictDefaultMessage: "<span><span style=\"color: red\"> * </span>Drag/Drop SSI template files here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
             autoDiscover: false,
             acceptedFiles: ".csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
             maxFiles: 6,

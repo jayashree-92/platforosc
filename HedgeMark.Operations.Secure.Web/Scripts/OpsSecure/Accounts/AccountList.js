@@ -1,7 +1,6 @@
 ﻿$("#liAccounts").addClass("active");
 HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, $filter) {
     $("#onboardingMenu").addClass("active");
-    $("#loading").show();
     var accountTable, accountSsiTemplateTable, tblSsiTemplateRow;
     var myDropZone;
 
@@ -47,7 +46,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 },
                 {
                     "sTitle": "Uploaded By",
-                    "mData": "RecCreatedBy", "mRender":function(data) {
+                    "mData": "RecCreatedBy", "mRender": function (data) {
                         return humanizeEmail(data);
                     }
                 },
@@ -230,197 +229,210 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     });
 
     $scope.fnGetAccounts = function () {
+
+        $("#btnAddNewAccount").button("loading");
+
         $http.get("/Accounts/GetAllOnBoardingAccount").then(function (response) {
 
             $scope.agreementTypes = response.data.accountTypes;
             if (response.data.OnBoardingAccounts.length > 0)
                 $("#btnAccountStatusButtons").show();
             $scope.allAccountList = response.data.OnBoardingAccounts;
-            accountTable = $("#accountTable").DataTable(
-           {
-               aaData: response.data.OnBoardingAccounts,
-               "bDestroy": true,
-               "columns": [
-                  { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
-                  { "mData": "dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
-                  { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
-                  { "mData": "BrokerId", "sTitle": "BrokerId", visible: false },
-                  //{ "mData": "AccountType", "sTitle": "Account Type" },
-                  { "mData": "onBoardingAccountId", "sTitle": "SSI Association Status" },
-                  {
-                      "mData": "AccountType", "sTitle": "Entity Type",
-                      "mRender": function (tdata) {
-                          if (tdata != null && tdata != "undefinied") {
-                              switch (tdata) {
-                                  case "Agreement": return "<label class='label label-success'>" + tdata + "</label>";
-                                  case "DDA": return "<label class='label label-warning'>" + tdata + "</label>";
-                                  case "Custody": return "<label class='label label-info'>" + tdata + "</label>";
-                              }
-                              return "<label class='label label-default'>" + tdata + "</label>";
+
+
+
+            if ($("#accountTable").hasClass("initialized")) {
+                accountTable.clear();
+                accountTable.rows.add($scope.allAccountList);
+                accountTable.draw();
+
+            } else {
+                accountTable = $("#accountTable").not(".initialized").addClass("initialized").DataTable({
+                    aaData: response.data.OnBoardingAccounts,
+                    "bDestroy": true,
+                    "columns": [
+                       { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
+                       { "mData": "dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
+                       { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
+                       { "mData": "BrokerId", "sTitle": "BrokerId", visible: false },
+                       //{ "mData": "AccountType", "sTitle": "Account Type" },
+                       { "mData": "onBoardingAccountId", "sTitle": "SSI Association Status" },
+                       {
+                           "mData": "AccountType", "sTitle": "Entity Type",
+                           "mRender": function (tdata) {
+                               if (tdata != null && tdata != "undefinied") {
+                                   switch (tdata) {
+                                       case "Agreement": return "<label class='label label-success'>" + tdata + "</label>";
+                                       case "DDA": return "<label class='label label-warning'>" + tdata + "</label>";
+                                       case "Custody": return "<label class='label label-info'>" + tdata + "</label>";
+                                   }
+                                   return "<label class='label label-default'>" + tdata + "</label>";
+                               }
+                               return "";
+                           }
+                       },
+                       {
+                           "mData": "FundName", "sTitle": "Fund Name"
+                       },
+                       { "mData": "AgreementName", "sTitle": "Agreement Name" },
+                       { "mData": "Broker", "sTitle": "Broker" },
+                       { "mData": "AccountName", "sTitle": "Account Name" },
+                       { "mData": "AccountNumber", "sTitle": "Account Number" },
+                       { "mData": "AccountPurpose", "sTitle": "Account Type" },
+                       { "mData": "AccountStatus", "sTitle": "Account Status" },
+                       { "mData": "Currency", "sTitle": "Currency" },
+                       { "mData": "Description", "sTitle": "Description" },
+                       { "mData": "Notes", "sTitle": "Notes" },
+                       { "mData": "AuthorizedParty", "sTitle": "Authorized Party" },
+                       { "mData": "CashInstruction", "sTitle": "Cash Instruction Mechanism" },
+                       { "mData": "SwiftGroup", "sTitle": "Swift Group" },
+                       { "mData": "SendersBIC", "sTitle": "Senders BIC" },
+                       { "mData": "CashSweep", "sTitle": "Cash Sweep" },
+                       {
+                           "mData": "CashSweepTime", "sTitle": "Cash Sweep Time",
+                           "mRender": function (tdata) {
+                               if (tdata == "" || tdata == null)
+                                   return "";
+
+                               return moment(tdata).format("LT");
+                           }
+                       },
+                       { "mData": "CashSweepTimeZone", "sTitle": "Cash Sweep Time Zone" },
+                       {
+                           "mData": "CutoffTime", "sTitle": "Cutoff Time",
+                           "mRender": function (tdata) {
+                               if (tdata == "" || tdata == null)
+                                   return "";
+                               return moment(tdata).format("LT");
+                           }
+                       },
+                       { "mData": "DaystoWire", "sTitle": "Days to wire per V.D" },
+                       { "mData": "HoldbackAmount", "sTitle": "Holdback Amount" },
+                       { "mData": "SweepComments", "sTitle": "Sweep Comments" },
+                       { "mData": "AssociatedCustodyAcct", "sTitle": "Associated Custody Acct" },
+                       { "mData": "PortfolioSelection", "sTitle": "Portfolio Selection" },
+                       { "mData": "TickerorISIN", "sTitle": "Ticker/ISIN" },
+                       { "mData": "SweepCurrency", "sTitle": "Sweep Currency" },
+                       //{ "mData": "ContactType", "sTitle": "Contact Type" },
+                       //{ "mData": "ContactName", "sTitle": "Contact Name" },
+                       //{ "mData": "ContactEmail", "sTitle": "Contact Email" },
+                       //{ "mData": "ContactNumber", "sTitle": "Contact Number" },
+                       { "mData": "BeneficiaryType", "sTitle": "Beneficiary Type" },
+                       { "mData": "BeneficiaryBICorABA", "sTitle": "Beneficiary BIC or ABA" },
+                       { "mData": "BeneficiaryBankName", "sTitle": "Beneficiary Bank/Account Name" },
+                       { "mData": "BeneficiaryBankAddress", "sTitle": "Beneficiary Bank Address" },
+                       { "mData": "BeneficiaryAccountNumber", "sTitle": "Beneficiary Account Number" },
+                       { "mData": "IntermediaryType", "sTitle": "Intermediary Beneficiary Type" },
+                       { "mData": "IntermediaryBICorABA", "sTitle": "Intermediary BIC or ABA" },
+                       { "mData": "IntermediaryBankName", "sTitle": "Intermediary Bank/Account Name" },
+                       { "mData": "IntermediaryBankAddress", "sTitle": "Intermediary Bank Address" },
+                       { "mData": "IntermediaryAccountNumber", "sTitle": "Intermediary Account Number" },
+                       { "mData": "UltimateBeneficiaryType", "sTitle": "Ultimate Beneficiary Type" },
+                       { "mData": "UltimateBeneficiaryBICorABA", "sTitle": "Ultimate Beneficiary BIC or ABA" },
+                       { "mData": "UltimateBeneficiaryBankName", "sTitle": "Ultimate Beneficiary Bank Name" },
+                       { "mData": "UltimateBeneficiaryBankAddress", "sTitle": "Ultimate Beneficiary Bank Address" },
+                       { "mData": "UltimateBeneficiaryAccountName", "sTitle": "Ultimate Beneficiary Account Name" },
+                       { "mData": "FFCName", "sTitle": "FFC Name" },
+                       { "mData": "FFCNumber", "sTitle": "FFC Number" },
+                       { "mData": "Reference", "sTitle": "Reference" },
+                       {
+                           "mData": "onBoardingAccountStatus", "sTitle": "Status",
+                           "mRender": function (tdata) {
+                               if (tdata != null && tdata != "undefined") {
+                                   switch (tdata) {
+                                       case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
+                                       case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
+                                       case "Created": return "<label class='label label-default'>" + "Saved As Draft" + "</label>";
+                                   }
+                                   return "<label class='label label-default'>" + tdata + "</label>";
+                               }
+                               return "";
+                           }
+                       },
+                       { "mData": "StatusComments", "sTitle": "Comments" },
+                       {
+                           "mData": "CreatedBy", "sTitle": "Created By", "mRender": function (data) {
+                               return humanizeEmail(data);
+                           }
+                       },
+                      {
+                          "mData": "CreatedAt",
+                          "sTitle": "Created Date",
+                          "type": "dotnet-date",
+                          "mRender": function (tdata) {
+                              return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
                           }
-                          return "";
-                      }
-                  },
-                  {
-                      "mData": "FundName", "sTitle": "Fund Name"
-                  },
-                  { "mData": "AgreementName", "sTitle": "Agreement Name" },
-                  { "mData": "Broker", "sTitle": "Broker" },
-                  { "mData": "AccountName", "sTitle": "Account Name" },
-                  { "mData": "AccountNumber", "sTitle": "Account Number" },
-                  { "mData": "AccountPurpose", "sTitle": "Account Type" },
-                  { "mData": "AccountStatus", "sTitle": "Account Status" },
-                  { "mData": "Currency", "sTitle": "Currency" },
-                  { "mData": "Description", "sTitle": "Description" },
-                  { "mData": "Notes", "sTitle": "Notes" },
-                  { "mData": "AuthorizedParty", "sTitle": "Authorized Party" },
-                  { "mData": "CashInstruction", "sTitle": "Cash Instruction Mechanism" },
-                  { "mData": "SwiftGroup", "sTitle": "Swift Group" },
-                  { "mData": "SendersBIC", "sTitle": "Senders BIC" },
-                  { "mData": "CashSweep", "sTitle": "Cash Sweep" },
-                  {
-                      "mData": "CashSweepTime", "sTitle": "Cash Sweep Time",
-                      "mRender": function (tdata) {
-                          if (tdata == "" || tdata == null)
-                              return "";
-
-                          return moment(tdata).format("LT");
-                      }
-                  },
-                  { "mData": "CashSweepTimeZone", "sTitle": "Cash Sweep Time Zone" },
-                  {
-                      "mData": "CutoffTime", "sTitle": "Cutoff Time",
-                      "mRender": function (tdata) {
-                          if (tdata == "" || tdata == null)
-                              return "";
-                          return moment(tdata).format("LT");
-                      }
-                  },
-                  { "mData": "DaystoWire", "sTitle": "Days to wire per V.D" },
-                  { "mData": "HoldbackAmount", "sTitle": "Holdback Amount" },
-                  { "mData": "SweepComments", "sTitle": "Sweep Comments" },
-                  { "mData": "AssociatedCustodyAcct", "sTitle": "Associated Custody Acct" },
-                  { "mData": "PortfolioSelection", "sTitle": "Portfolio Selection" },
-                  { "mData": "TickerorISIN", "sTitle": "Ticker/ISIN" },
-                  { "mData": "SweepCurrency", "sTitle": "Sweep Currency" },
-                  //{ "mData": "ContactType", "sTitle": "Contact Type" },
-                  //{ "mData": "ContactName", "sTitle": "Contact Name" },
-                  //{ "mData": "ContactEmail", "sTitle": "Contact Email" },
-                  //{ "mData": "ContactNumber", "sTitle": "Contact Number" },
-                  { "mData": "BeneficiaryType", "sTitle": "Beneficiary Type" },
-                  { "mData": "BeneficiaryBICorABA", "sTitle": "Beneficiary BIC or ABA" },
-                  { "mData": "BeneficiaryBankName", "sTitle": "Beneficiary Bank/Account Name" },
-                  { "mData": "BeneficiaryBankAddress", "sTitle": "Beneficiary Bank Address" },
-                  { "mData": "BeneficiaryAccountNumber", "sTitle": "Beneficiary Account Number" },
-                  { "mData": "IntermediaryType", "sTitle": "Intermediary Beneficiary Type" },
-                  { "mData": "IntermediaryBICorABA", "sTitle": "Intermediary BIC or ABA" },
-                  { "mData": "IntermediaryBankName", "sTitle": "Intermediary Bank/Account Name" },
-                  { "mData": "IntermediaryBankAddress", "sTitle": "Intermediary Bank Address" },
-                  { "mData": "IntermediaryAccountNumber", "sTitle": "Intermediary Account Number" },
-                  { "mData": "UltimateBeneficiaryType", "sTitle": "Ultimate Beneficiary Type" },
-                  { "mData": "UltimateBeneficiaryBICorABA", "sTitle": "Ultimate Beneficiary BIC or ABA" },
-                  { "mData": "UltimateBeneficiaryBankName", "sTitle": "Ultimate Beneficiary Bank Name" },
-                  { "mData": "UltimateBeneficiaryBankAddress", "sTitle": "Ultimate Beneficiary Bank Address" },
-                  { "mData": "UltimateBeneficiaryAccountName", "sTitle": "Ultimate Beneficiary Account Name" },
-                  { "mData": "FFCName", "sTitle": "FFC Name" },
-                  { "mData": "FFCNumber", "sTitle": "FFC Number" },
-                  { "mData": "Reference", "sTitle": "Reference" },
-                  {
-                      "mData": "onBoardingAccountStatus", "sTitle": "Status",
-                      "mRender": function (tdata) {
-                          if (tdata != null && tdata != "undefined") {
-                              switch (tdata) {
-                                  case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
-                                  case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
-                                  case "Created": return "<label class='label label-default'>" + "Saved As Draft" + "</label>";
-                              }
-                              return "<label class='label label-default'>" + tdata + "</label>";
+                      },
+                      {
+                          "mData": "UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
+                              return humanizeEmail(data);
                           }
-                          return "";
+                      },
+                      {
+                          "mData": "UpdatedAt",
+                          "sTitle": "Last Modified",
+                          "type": "dotnet-date",
+                          "mRender": function (tdata) {
+                              return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                          }
                       }
-                  },
-                  { "mData": "StatusComments", "sTitle": "Comments" },
-                  { "mData": "CreatedBy", "sTitle": "Created By", "mRender":function(data) {
-                      return humanizeEmail(data);
-                  } },
-                 {
-                     "mData": "CreatedAt",
-                     "sTitle": "Created Date",
-                     "type": "dotnet-date",
-                     "mRender": function (tdata) {
-                         return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
-                     }
-                 },
-                 {
-                     "mData": "UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
-                         return humanizeEmail(data);
-                     }
-                 },
-                 {
-                     "mData": "UpdatedAt",
-                     "sTitle": "Last Modified",
-                     "type": "dotnet-date",
-                     "mRender": function (tdata) {
-                         return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
-                     }
-                 }
-               ],
-               "oLanguage": {
-                   "sSearch": "",
-                   "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Onboarded Accounts",
-                   "sInfoFiltered": " - filtering from _MAX_ Onboarded Accounts"
-               },
-               "createdRow": function (row, data) {
-                   switch (data.onBoardingAccountStatus) {
-                       case "Approved":
-                           $(row).addClass("success");
-                           break;
-                       case "Pending Approval":
-                           $(row).addClass("warning");
-                           break;
-                   }
+                    ],
+                    "oLanguage": {
+                        "sSearch": "",
+                        "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Onboarded Accounts",
+                        "sInfoFiltered": " - filtering from _MAX_ Onboarded Accounts"
+                    },
+                    "createdRow": function (row, data) {
+                        switch (data.onBoardingAccountStatus) {
+                            case "Approved":
+                                $(row).addClass("success");
+                                break;
+                            case "Pending Approval":
+                                $(row).addClass("warning");
+                                break;
+                        }
 
-               },
-               //"scrollX": false,
-               "deferRender": true,
-               "scroller": true,
-               "orderClasses": false,
-               "sScrollX": "100%",
-               //sDom: "ift",
-               "sScrollY": $("#accountListDiv").offset().top + 350,
-               "sScrollXInner": "100%",
-               "bScrollCollapse": true,
-               "order": [[54, "desc"]],
-               "rowCallback": function (row, data) {
+                    },
+                    //"scrollX": false,
+                    "deferRender": true,
+                    "scroller": true,
+                    "orderClasses": false,
+                    "sScrollX": "100%",
+                    //sDom: "ift",
+                    "scrollY": window.innerHeight - 400,
+                    "sScrollXInner": "100%",
+                    "bScrollCollapse": true,
+                    "order": [[54, "desc"]],
+                    "rowCallback": function (row, data) {
 
-                   var totalTemplateMaps = data.PendingApprovalMaps + data.ApprovedMaps;
-                   if (totalTemplateMaps == 0) {
-                       $("td:eq(0)", row).html("");
-                       return;
-                   }
+                        var totalTemplateMaps = data.PendingApprovalMaps + data.ApprovedMaps;
+                        if (totalTemplateMaps == 0) {
+                            $("td:eq(0)", row).html("");
+                            return;
+                        }
 
-                   var totalApproved = (data.ApprovedMaps / totalTemplateMaps) * 100;
-                   var totalPending = (data.PendingApprovalMaps / totalTemplateMaps) * 100;
+                        var totalApproved = (data.ApprovedMaps / totalTemplateMaps) * 100;
+                        var totalPending = (data.PendingApprovalMaps / totalTemplateMaps) * 100;
 
 
-                   var taskProgress = "<div class=\"progress\" style=\"margin-bottom: 0px;\">"
-                       + "<div class=\"progress-bar progress-bar-success\"  aria-value=\"" + totalApproved + "\">"
-                       + "<span class=\"checklistProgressText\">" + (data.ApprovedMaps == "0" ? "" : data.ApprovedMaps) + " </span>"
-                       + "</div>"
-                       + "<div class=\"progress-bar progress-bar-warning progress-bar-striped\" aria-value=\"" + totalPending + "\">"
-                       + "<span class=\"checklistProgressText\">" + (data.PendingApprovalMaps == "0" ? "" : data.PendingApprovalMaps) + " </span>"
-                       + "</div>"
-                       + "</div>";
+                        var taskProgress = "<div class=\"progress\" style=\"margin-bottom: 0px;\">"
+                            + "<div class=\"progress-bar progress-bar-success\"  aria-value=\"" + totalApproved + "\">"
+                            + "<span class=\"checklistProgressText\">" + (data.ApprovedMaps == "0" ? "" : data.ApprovedMaps) + " </span>"
+                            + "</div>"
+                            + "<div class=\"progress-bar progress-bar-warning progress-bar-striped\" aria-value=\"" + totalPending + "\">"
+                            + "<span class=\"checklistProgressText\">" + (data.PendingApprovalMaps == "0" ? "" : data.PendingApprovalMaps) + " </span>"
+                            + "</div>"
+                            + "</div>";
 
-                   $("td:eq(0)", row).html(taskProgress);
-               },
-               "drawCallback": function (settings) {
-                   $scope.fnLoadProgress();
-               },
-               //"bPaginate": false,
-               iDisplayLength: -1
-           });
-
+                        $("td:eq(0)", row).html(taskProgress);
+                    },
+                    "drawCallback": function (settings) {
+                        $scope.fnLoadProgress();
+                    },
+                    //"bPaginate": false,
+                    iDisplayLength: -1
+                });
+            }
             var searchText = decodeURI(getUrlParameter("searchText"));
 
             if (searchText != "" && searchText != undefined && searchText != 'undefined') {
@@ -432,7 +444,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     accountTable.columns.adjust().draw(true);
                 }, 100);
             }
-            $("#loading").hide();
+
+            $("#btnAddNewAccount").button("reset");
         });
     }
 
@@ -531,9 +544,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             $scope.onBoardingAccountDetails = [];
             $scope.accountDetail = {};
-            $scope.fnGetAccounts();
-            var searchText = $('#accountListDiv input[type="search"]').val();
-            window.location.href = "/Accounts/Index?searchText=" + searchText;
+            //$scope.fnGetAccounts();
+            //var searchText = $('#accountListDiv input[type="search"]').val();
+            //window.location.href = "/Accounts/Index?searchText=" + searchText;
 
         }).off("shown.bs.modal").on("shown.bs.modal", function () {
 
@@ -663,6 +676,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $http.post("/Accounts/AddAccounts", { onBoardingAccounts: $scope.onBoardingAccountDetails }).then(function () {
             notifySuccess("Account Saved successfully");
+
+            $scope.onBoardingAccountDetails = [];
+            $scope.accountDetail = {};
+            $scope.fnGetAccounts();
+
             $("#accountModal").modal("hide");
         });
     }
@@ -1217,7 +1235,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $("#uploadFiles" + key).dropzone({
             url: "/Accounts/UploadAccountFiles?accountId=" + $scope.onBoardingAccountId,
-            dictDefaultMessage: "<span>Drag/Drop account documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
+            dictDefaultMessage: "<span><span style=\"color: red\"> * </span>Drag/Drop account documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
             autoDiscover: false,
             acceptedFiles: ".csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
             maxFiles: 5,
@@ -1536,7 +1554,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $("#uploadFiles").dropzone({
         url: "/Accounts/UploadAccount",
-        dictDefaultMessage: "<span>Drag/Drop account files to add/update here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
+        dictDefaultMessage: "<span><span style=\"color: red\"> * </span>Drag/Drop account files to add/update here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
         autoDiscover: false,
         acceptedFiles: ".csv,.xls,.xlsx",
         maxFiles: 6,
@@ -1561,7 +1579,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         success: function (file, result) {
             $(".dzFileProgress").removeClass("progress-bar-striped").removeClass("active").removeClass("progress-bar-warning").addClass("progress-bar-success");
             $(".dzFileProgress").html("Upload Successful");
-            $("#loading").show();
             fnDestroyDataTable("#accountTable");
             $scope.fnGetAccounts();
         },
@@ -2259,13 +2276,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                             },
                             {
                                 "sTitle": "Created By",
-                                "mData": "CreatedBy", "mRender":function(data) {
+                                "mData": "CreatedBy", "mRender": function (data) {
                                     return humanizeEmail(data);
                                 }
                             },
                             {
                                 "sTitle": "Updated By",
-                                "mData": "UpdatedBy", "mRender":function(data) {
+                                "mData": "UpdatedBy", "mRender": function (data) {
                                     return humanizeEmail(data);
                                 }
                             },

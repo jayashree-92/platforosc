@@ -25,6 +25,8 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
 
         $scope.SelectedStatusId = statusId;
 
+        $("#btnGetWireLogs").button("loading");
+
         $http.get("/Home/GetWireStatusDetails?startContextDate=" + startContextDate + "&endContextDate=" + endContextDate + "&statusIds=" + statusId).then(function (response) {
 
             //$scope.userDetails = response.data.userData;
@@ -46,13 +48,13 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 //"dom": "trI",
                 "bDestroy": true,
                 "columns": [
-                    { "mData": "WireId", "sTitle": "Id"},
+                    { "mData": "WireId", "sTitle": "Id" },
                     { "mData": "FundName", "sTitle": "Fund" },
                     {
-                      "mData": "Counterparty", "sTitle": "Counterparty/Service Provider",
-                      "mRender": function (tdata) {
-                          return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
-                      }
+                        "mData": "Counterparty", "sTitle": "Counterparty/Service Provider",
+                        "mRender": function (tdata) {
+                            return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
+                        }
                     },
                     {
                         "mData": "TransferType", "sTitle": "Transfer Type"
@@ -79,7 +81,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         }
                     },
                     {
-                        "mData": "HMWire.Amount", "sTitle": "Amount",
+                        "mData": "HMWire.Amount", "sTitle": "Amount", "type": "currency",
                         "mRender": function (tdata, type, row) {
                             return $.convertToCurrency(tdata.toString(), 2);
                         }
@@ -199,6 +201,8 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
 
                 angular.element("#modalToRetrieveWires").modal({ backdrop: 'static', keyboard: true, show: true });
             });
+
+            $("#btnGetWireLogs").button("reset");
         });
     }
 
