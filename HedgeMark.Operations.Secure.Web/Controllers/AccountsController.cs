@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
 using ExcelUtility.Operations.ManagedAccounts;
@@ -12,8 +11,6 @@ using HedgeMark.Operations.FileParseEngine.Parser;
 using HedgeMark.Operations.Secure.DataModel;
 using HMOSecureMiddleware;
 using HMOSecureMiddleware.Util;
-using HMOSecureWeb.Utility;
-using Microsoft.SqlServer.Server;
 using Newtonsoft.Json;
 
 namespace HMOSecureWeb.Controllers
