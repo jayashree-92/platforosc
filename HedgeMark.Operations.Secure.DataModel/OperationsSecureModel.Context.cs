@@ -35,9 +35,23 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsWirePurposeLkup> hmsWirePurposeLkups { get; set; }
         public virtual DbSet<hmsWireTransferTypeLKup> hmsWireTransferTypeLKups { get; set; }
         public virtual DbSet<hmsMQLog> hmsMQLogs { get; set; }
-        public virtual DbSet<hmsWire> hmsWires { get; set; }
         public virtual DbSet<hmsWireLog> hmsWireLogs { get; set; }
         public virtual DbSet<hmsWireLogTypeLkup> hmsWireLogTypeLkups { get; set; }
         public virtual DbSet<hmsUserAuditLog> hmsUserAuditLogs { get; set; }
+        public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
+        public virtual DbSet<onBoardingAccountBICorABA> onBoardingAccountBICorABAs { get; set; }
+        public virtual DbSet<OnBoardingAccountDescription> OnBoardingAccountDescriptions { get; set; }
+        public virtual DbSet<onBoardingAccountDocument> onBoardingAccountDocuments { get; set; }
+        public virtual DbSet<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
+        public virtual DbSet<onBoardingAuthorizedParty> onBoardingAuthorizedParties { get; set; }
+        public virtual DbSet<onBoardingCashInstruction> onBoardingCashInstructions { get; set; }
+        public virtual DbSet<onBoardingCurrency> onBoardingCurrencies { get; set; }
+        public virtual DbSet<onBoardingSSITemplate> onBoardingSSITemplates { get; set; }
+        public virtual DbSet<OnBoardingSSITemplateAccountType> OnBoardingSSITemplateAccountTypes { get; set; }
+        public virtual DbSet<onBoardingSSITemplateDocument> onBoardingSSITemplateDocuments { get; set; }
+        public virtual DbSet<OnBoardingSSITemplateServiceProvider> OnBoardingSSITemplateServiceProviders { get; set; }
+        public virtual DbSet<onBoardingSwiftGroup> onBoardingSwiftGroups { get; set; }
+        public virtual DbSet<onBoardingWirePortalCutoff> onBoardingWirePortalCutoffs { get; set; }
+        public virtual DbSet<hmsWire> hmsWires { get; set; }
     }
 }

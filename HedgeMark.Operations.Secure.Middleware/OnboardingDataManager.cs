@@ -159,13 +159,13 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<dmaCounterPartyOnBoarding> GetAllOnBoardedCounterparties()
+        public static Dictionary<long, string> GetAllOnBoardedCounterparties()
         {
             using (var context = new AdminContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.dmaCounterPartyOnBoardings.Where(c => !c.IsDeleted).Include(x => x.dmaCounterpartyFamily).ToList();
+                return context.dmaCounterPartyOnBoardings.Where(c => !c.IsDeleted).Include(x => x.dmaCounterpartyFamily).ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
             }
         }
     }

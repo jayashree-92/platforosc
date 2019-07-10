@@ -18,9 +18,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public dmaAgreementType()
         {
             this.dmaAgreementOnBoardings = new HashSet<dmaAgreementOnBoarding>();
-            this.OnBoardingAccountDescriptions = new HashSet<OnBoardingAccountDescription>();
-            this.OnBoardingSSITemplateAccountTypes = new HashSet<OnBoardingSSITemplateAccountType>();
-            this.onBoardingSSITemplates = new HashSet<onBoardingSSITemplate>();
         }
     
         public int dmaAgreementTypeId { get; set; }
@@ -28,11 +25,5 @@ namespace HedgeMark.Operations.Secure.DataModel
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OnBoardingAccountDescription> OnBoardingAccountDescriptions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OnBoardingSSITemplateAccountType> OnBoardingSSITemplateAccountTypes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<onBoardingSSITemplate> onBoardingSSITemplates { get; set; }
     }
 }

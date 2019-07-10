@@ -24,7 +24,7 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingAccount> GetAllAccounts()
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 return context.onBoardingAccounts.Where(a => !a.IsDeleted).AsNoTracking().ToList();
             }
@@ -33,23 +33,23 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingAccount> GetAllOnBoardingAccounts(long agreementId = 0, long fundId = 0, long brokerId = 0)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
                 if (agreementId > 0)
-                    return context.onBoardingAccounts.Include(x => x.dmaAgreementOnBoarding).Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments).Include(x => x.dmaCounterpartyFamily)
+                    return context.onBoardingAccounts.Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
                         .Where(account => account.dmaAgreementOnBoardingId == agreementId && !account.IsDeleted).ToList();
 
-                return context.onBoardingAccounts.Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.dmaCounterpartyFamily).Include(x => x.onBoardingAccountDocuments)
+                return context.onBoardingAccounts.Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
                     .Where(account => account.BrokerId == brokerId && account.dmaFundOnBoardId == fundId && account.AccountType != AgreementAccountType && !account.IsDeleted).ToList();
             }
         }
 
         public static onBoardingAccount GetOnBoardingAccount(long accountId)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -60,7 +60,7 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingAccountSSITemplateMap> GetAccountSsiTemplateMap(long accountId)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -70,24 +70,19 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingAccount> GetAllOnBoardingAccounts(List<long> onBoardFundIds, bool isPreviledgedUser)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                if (isPreviledgedUser)
-                    return context.onBoardingAccounts.Include(x => x.onboardingFund).Include(x => x.dmaAgreementOnBoarding).Include(x => x.onBoardingAccountSSITemplateMaps)
-                        .Include(x => x.dmaCounterpartyFamily).Where(x => !x.IsDeleted).AsNoTracking().ToList();
-
-                return context.onBoardingAccounts.Include(x => x.onboardingFund).Include(x => x.dmaAgreementOnBoarding).Include(x=> x.onBoardingAccountSSITemplateMaps)
-                    .Include(x => x.dmaCounterpartyFamily).Where(x => !x.IsDeleted && onBoardFundIds.Contains(x.dmaFundOnBoardId)).AsNoTracking().ToList();
+                return context.onBoardingAccounts.Include(x => x.onBoardingAccountSSITemplateMaps).Where(x => !x.IsDeleted).Where(s => isPreviledgedUser || onBoardFundIds.Contains(s.dmaFundOnBoardId)).AsNoTracking().ToList();
             }
 
         }
 
         public static List<OnBoardingAccountDescription> GetAccountDescriptionsByAgreementTypeId(long agreementTypeId)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -103,7 +98,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to create the Onboarding Account Description", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     var onBoardingAccountDescription = new OnBoardingAccountDescription();
                     onBoardingAccountDescription.AccountDescription = accountDescription;
@@ -121,7 +116,7 @@ namespace HMOSecureMiddleware
 
         public static void UpdateAccountStatus(string accountStatus, long accountId, string comments, string userName)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 var account = context.onBoardingAccounts.FirstOrDefault(a => a.onBoardingAccountId == accountId);
                 if (account != null)
@@ -154,7 +149,7 @@ namespace HMOSecureMiddleware
 
         public static void UpdateAccountMapStatus(string status, long accountMapId, string comments, string userName)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 var accountSsiTemplateMap = context.onBoardingAccountSSITemplateMaps.FirstOrDefault(a => a.onBoardingAccountSSITemplateMapId == accountMapId);
                 if (accountSsiTemplateMap != null)
@@ -174,7 +169,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to create the onboarding account", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     if (account.onBoardingAccountId == 0)
                     {
@@ -219,7 +214,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to create the onboarding account ssi map", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     if (accountSsiTemplateMap.onBoardingAccountSSITemplateMapId == 0)
                     {
@@ -252,7 +247,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to delete the onboarding account", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     var accountToBeDeleted = context.onBoardingAccounts.FirstOrDefault(account => account.onBoardingAccountId == onBoardingAccountId);
                     if (accountToBeDeleted != null)
@@ -291,7 +286,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to delete the onboarding account document", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     var document = context.onBoardingAccountDocuments.FirstOrDefault(x => x.onBoardingAccountDocumentId == documentId);
                     if (document == null)
@@ -321,7 +316,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to delete the onboarding account document", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     var document = context.onBoardingAccountDocuments.FirstOrDefault(x => x.onBoardingAccountId == accountId && x.FileName == fileName);
                     if (document != null)
@@ -339,7 +334,7 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingAccountDocument> GetAccountDocuments(long accountId)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -354,7 +349,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to add the onboarding account document", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     context.onBoardingAccountDocuments.Add(document);
                     context.SaveChanges();
@@ -368,7 +363,7 @@ namespace HMOSecureMiddleware
 
         public static Dictionary<long, string> GetAllSsiTemplates()
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 return context.onBoardingSSITemplates.Where(f => !f.IsDeleted).ToDictionary(s => s.onBoardingSSITemplateId, s => s.TemplateName);
             }
@@ -376,7 +371,7 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingSSITemplate> GetAllSsiTemplates(int templateTypeId, long templateEntityId)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -386,7 +381,7 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates(List<long> counterpartyIds)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -396,7 +391,7 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates()
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -406,17 +401,17 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingSSITemplate> GetAllBrokerSsiTemplates()
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingSSITemplates.Include(x => x.dmaAgreementType).Where(template => template.TemplateTypeId == BrokerTemplateTypeId && !template.IsDeleted).ToList();
+                return context.onBoardingSSITemplates.Where(template => template.TemplateTypeId == BrokerTemplateTypeId && !template.IsDeleted).ToList();
             }
         }
 
         public static onBoardingSSITemplate GetSsiTemplate(long templateId)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -426,7 +421,7 @@ namespace HMOSecureMiddleware
 
         public static List<OnBoardingSSITemplateServiceProvider> GetAllServiceProviderList()
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -436,7 +431,7 @@ namespace HMOSecureMiddleware
 
         public static void RemoveSsiTemplateMap(long ssiTemplateMapId)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 var ssiTemplateMap = context.onBoardingAccountSSITemplateMaps.FirstOrDefault(x => x.onBoardingAccountSSITemplateMapId == ssiTemplateMapId);
                 context.onBoardingAccountSSITemplateMaps.Remove(ssiTemplateMap);
@@ -446,7 +441,7 @@ namespace HMOSecureMiddleware
 
         public static List<OnBoardingSSITemplateAccountType> GetAllSsiTemplateAccountTypes(int? agreementTypeId)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -456,7 +451,7 @@ namespace HMOSecureMiddleware
 
         public static List<OnBoardingSSITemplateServiceProvider> GetAllSsiTemplateServiceProviders(string serviceProviderName)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -471,7 +466,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to create the onboarding SSI Template", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     ssiTemplate.dmaAgreementTypeId = !string.IsNullOrEmpty(ssiTemplate.ServiceProvider) ? 1 : ssiTemplate.dmaAgreementTypeId;
 
@@ -513,7 +508,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to create the Onboarding SSI Template Reason", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     if (templateType == "Broker")
                     {
@@ -545,7 +540,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to delete the onboarding SSI Template", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     var ssiTemplateToBeDeleted = context.onBoardingSSITemplates.FirstOrDefault(template => template.onBoardingSSITemplateId == ssiTemplateId);
                     if (ssiTemplateToBeDeleted != null)
@@ -578,7 +573,7 @@ namespace HMOSecureMiddleware
 
         public static void UpdateSsiTemplateStatus(string ssiTemplateStatus, long ssiTemplateId, string comments, string userName)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 var ssiTemplate = context.onBoardingSSITemplates.FirstOrDefault(template => template.onBoardingSSITemplateId == ssiTemplateId);
                 if (ssiTemplate != null)
@@ -611,7 +606,7 @@ namespace HMOSecureMiddleware
 
         public static void RemoveSsiTemplateDocument(long documentId)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 var document = context.onBoardingSSITemplateDocuments.FirstOrDefault(x => x.onBoardingSSITemplateDocumentId == documentId);
                 if (document != null)
@@ -630,7 +625,7 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingCurrency> GetAllCurrencies()
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -645,7 +640,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to create the Onboarding Currency", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     var onBoardingCurrency = new onBoardingCurrency();
                     onBoardingCurrency.Currency = currency;
@@ -661,7 +656,7 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingCashInstruction> GetAllCashInstruction()
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -676,7 +671,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to create the Onboarding Cash Instruction", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     var onboardingCashInstruction = new onBoardingCashInstruction();
                     onboardingCashInstruction.CashInstruction = cashInstruction;
@@ -692,7 +687,7 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingAccountBICorABA> GetAllAccountBicorAba()
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -707,7 +702,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to create the Onboarding Account BIC or ABA", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     context.onBoardingAccountBICorABAs.Add(accountBiCorAba);
                     context.SaveChanges();
@@ -721,7 +716,7 @@ namespace HMOSecureMiddleware
 
         public static onBoardingWirePortalCutoff GetCutoffTime(string cashInstruction, string currency)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -737,7 +732,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to delete the onboarding ssi template document", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     var document = context.onBoardingSSITemplateDocuments.FirstOrDefault(x => x.onBoardingSSITemplateId == ssiTemplateId && x.FileName == fileName);
                     if (document != null)
@@ -760,7 +755,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to add the onboarding ssi template document", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     context.onBoardingSSITemplateDocuments.Add(document);
                     context.SaveChanges();
@@ -774,7 +769,7 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingAuthorizedParty> GetAllAuthorizedParty()
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -789,7 +784,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to create the Onboarding Authorized Party", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     var onboardingauthorizedParty = new onBoardingAuthorizedParty
                     {
@@ -810,7 +805,7 @@ namespace HMOSecureMiddleware
 
         public static List<onBoardingSwiftGroup> GetAllSwiftGroup()
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -825,7 +820,7 @@ namespace HMOSecureMiddleware
             Logger.InfoFormat("{0} - calling to create the Onboarding Swift Group", methodName);
             try
             {
-                using (var context = new AdminContext())
+                using (var context = new OperationsSecureContext())
                 {
                     var onboardingSwiftGroup = new onBoardingSwiftGroup
                     {
@@ -847,7 +842,7 @@ namespace HMOSecureMiddleware
 
         public static bool IsAccountDocumentExists(long accountId)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -857,7 +852,7 @@ namespace HMOSecureMiddleware
         }
         public static bool IsSsiTemplateDocumentExists(long ssiTemplateId)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;

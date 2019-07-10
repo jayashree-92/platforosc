@@ -30,8 +30,8 @@ namespace HedgeMark.Operations.Secure.DataModel
     
         public virtual hmsSwiftStatusLkup hmsSwiftStatusLkup { get; set; }
         public virtual hmsWireStatusLkup hmsWireStatusLkup { get; set; }
-        public virtual hmsWire hmsWire { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireLog> hmsWireLogs { get; set; }
+        public virtual hmsWire hmsWire { get; set; }
     }
 }

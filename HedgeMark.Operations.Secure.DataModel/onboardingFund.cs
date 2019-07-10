@@ -18,7 +18,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public onboardingFund()
         {
             this.dmaAgreementOnBoardings = new HashSet<dmaAgreementOnBoarding>();
-            this.onBoardingAccounts = new HashSet<onBoardingAccount>();
             this.dmaFundOnBoardPermissions = new HashSet<dmaFundOnBoardPermission>();
         }
     
@@ -207,8 +206,6 @@ namespace HedgeMark.Operations.Secure.DataModel
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<onBoardingAccount> onBoardingAccounts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaFundOnBoardPermission> dmaFundOnBoardPermissions { get; set; }
         public virtual onboardingClient onboardingClient { get; set; }

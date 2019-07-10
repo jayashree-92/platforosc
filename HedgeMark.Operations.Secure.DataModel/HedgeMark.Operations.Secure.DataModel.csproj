@@ -154,52 +154,52 @@
     <Compile Include="Models\SynchronizedContext.cs" />
     <Compile Include="Models\UserAccountDetails.cs" />
     <Compile Include="onBoardingAccount.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingAccountBICorABA.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="OnBoardingAccountDescription.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingAccountDocument.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingAccountSSITemplateMap.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingAuthorizedParty.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingCashInstruction.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onboardingClient.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingCurrency.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onboardingFund.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingSSITemplate.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="OnBoardingSSITemplateAccountType.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingSSITemplateDocument.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="OnBoardingSSITemplateServiceProvider.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingSwiftGroup.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingWirePortalCutoff.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="OperationsSecureModel.Context.cs">
       <AutoGen>True</AutoGen>

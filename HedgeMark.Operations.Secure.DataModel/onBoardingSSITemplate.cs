@@ -60,7 +60,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string MessageType { get; set; }
         public string UltimateBeneficiaryAccountName { get; set; }
     
-        public virtual dmaAgreementType dmaAgreementType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

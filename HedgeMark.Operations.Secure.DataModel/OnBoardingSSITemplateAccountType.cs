@@ -17,7 +17,5 @@ namespace HedgeMark.Operations.Secure.DataModel
         public long OnBoardingSSITemplateAccountTypeId { get; set; }
         public string Reason { get; set; }
         public int dmaAgreementTypeId { get; set; }
-    
-        public virtual dmaAgreementType dmaAgreementType { get; set; }
     }
 }

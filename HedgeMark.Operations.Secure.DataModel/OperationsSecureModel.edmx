@@ -172,6 +172,232 @@
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="SwiftStatusId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="onBoardingAccount">
+          <Key>
+            <PropertyRef Name="onBoardingAccountId" />
+          </Key>
+          <Property Name="onBoardingAccountId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dmaFundOnBoardId" Type="bigint" Nullable="false" />
+          <Property Name="dmaAgreementOnBoardingId" Type="bigint" />
+          <Property Name="AccountName" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="AccountNumber" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="BeneficiaryType" Type="varchar" MaxLength="50" />
+          <Property Name="BeneficiaryBICorABA" Type="varchar" MaxLength="100" />
+          <Property Name="BeneficiaryBankName" Type="varchar" MaxLength="500" />
+          <Property Name="BeneficiaryBankAddress" Type="varchar" MaxLength="3000" />
+          <Property Name="BeneficiaryAccountNumber" Type="varchar" MaxLength="100" />
+          <Property Name="IntermediaryType" Type="varchar" MaxLength="50" />
+          <Property Name="IntermediaryBICorABA" Type="varchar" MaxLength="100" />
+          <Property Name="IntermediaryBankName" Type="varchar" MaxLength="500" />
+          <Property Name="IntermediaryBankAddress" Type="varchar" MaxLength="3000" />
+          <Property Name="IntermediaryAccountNumber" Type="varchar" MaxLength="100" />
+          <Property Name="UltimateBeneficiaryType" Type="varchar" MaxLength="50" />
+          <Property Name="UltimateBeneficiaryBICorABA" Type="varchar" MaxLength="100" />
+          <Property Name="UltimateBeneficiaryBankName" Type="varchar" MaxLength="500" />
+          <Property Name="UltimateBeneficiaryBankAddress" Type="varchar" MaxLength="3000" />
+          <Property Name="FFCName" Type="varchar" MaxLength="500" />
+          <Property Name="FFCNumber" Type="varchar" MaxLength="100" />
+          <Property Name="Reference" Type="varchar" MaxLength="500" />
+          <Property Name="Currency" Type="varchar" MaxLength="50" />
+          <Property Name="Description" Type="varchar" MaxLength="8000" />
+          <Property Name="Notes" Type="varchar" MaxLength="8000" />
+          <Property Name="AuthorizedParty" Type="varchar" MaxLength="500" />
+          <Property Name="CashInstruction" Type="varchar" MaxLength="500" />
+          <Property Name="CashSweep" Type="varchar" MaxLength="100" />
+          <Property Name="CashSweepTime" Type="time" Precision="7" />
+          <Property Name="CashSweepTimeZone" Type="varchar" MaxLength="10" />
+          <Property Name="ContactType" Type="varchar" MaxLength="100" />
+          <Property Name="ContactName" Type="varchar" MaxLength="500" />
+          <Property Name="ContactNumber" Type="varchar" MaxLength="100" />
+          <Property Name="ContactEmail" Type="varchar" MaxLength="500" />
+          <Property Name="onBoardingAccountStatus" Type="varchar" MaxLength="50" />
+          <Property Name="StatusComments" Type="nvarchar" MaxLength="3000" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="CutoffTime" Type="time" Precision="7" />
+          <Property Name="AccountType" Type="varchar" MaxLength="50" />
+          <Property Name="BrokerId" Type="bigint" />
+          <Property Name="DaystoWire" Type="int" />
+          <Property Name="SwiftGroup" Type="varchar" MaxLength="30" />
+          <Property Name="SendersBIC" Type="varchar" MaxLength="30" />
+          <Property Name="AccountPurpose" Type="varchar" MaxLength="50" />
+          <Property Name="AccountStatus" Type="varchar" MaxLength="50" />
+          <Property Name="HoldbackAmount" Type="float" />
+          <Property Name="SweepComments" Type="varchar" MaxLength="1000" />
+          <Property Name="AssociatedCustodyAcct" Type="varchar" MaxLength="200" />
+          <Property Name="PortfolioSelection" Type="varchar" MaxLength="200" />
+          <Property Name="TickerorISIN" Type="varchar" MaxLength="200" />
+          <Property Name="SweepCurrency" Type="varchar" MaxLength="10" />
+          <Property Name="UltimateBeneficiaryAccountName" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="onBoardingAccountBICorABA">
+          <Key>
+            <PropertyRef Name="onBoardingAccountBICorABAId" />
+          </Key>
+          <Property Name="onBoardingAccountBICorABAId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BICorABA" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="BankName" Type="varchar" MaxLength="500" />
+          <Property Name="IsABA" Type="bit" Nullable="false" />
+          <Property Name="BankAddress" Type="varchar" MaxLength="3000" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OnBoardingAccountDescription">
+          <Key>
+            <PropertyRef Name="OnBoardingAccountDescriptionId" />
+          </Key>
+          <Property Name="OnBoardingAccountDescriptionId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountDescription" Type="varchar" MaxLength="200" />
+          <Property Name="dmaAgreementTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingAccountDocument">
+          <Key>
+            <PropertyRef Name="onBoardingAccountDocumentId" />
+          </Key>
+          <Property Name="onBoardingAccountDocumentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="onBoardingAccountId" Type="bigint" Nullable="false" />
+          <Property Name="FileName" Type="varchar" MaxLength="300" />
+          <Property Name="RecCreatedBy" Type="varchar" MaxLength="100" />
+          <Property Name="RecCreatedAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="onBoardingAccountSSITemplateMap">
+          <Key>
+            <PropertyRef Name="onBoardingAccountSSITemplateMapId" />
+          </Key>
+          <Property Name="onBoardingAccountSSITemplateMapId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="onBoardingAccountId" Type="bigint" Nullable="false" />
+          <Property Name="onBoardingSSITemplateId" Type="bigint" Nullable="false" />
+          <Property Name="FFCName" Type="varchar" MaxLength="500" />
+          <Property Name="FFCNumber" Type="varchar" MaxLength="100" />
+          <Property Name="Reference" Type="varchar" MaxLength="500" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="varchar" MaxLength="50" />
+          <Property Name="StatusComments" Type="varchar" MaxLength="1000" />
+        </EntityType>
+        <EntityType Name="onBoardingAuthorizedParty">
+          <Key>
+            <PropertyRef Name="onBoardingAuthorizedPartyId" />
+          </Key>
+          <Property Name="onBoardingAuthorizedPartyId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AuthorizedParty" Type="varchar" MaxLength="100" />
+          <Property Name="RecCreatedBy" Type="varchar" MaxLength="100" />
+          <Property Name="RecCreatedAt" Type="datetime" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingCashInstruction">
+          <Key>
+            <PropertyRef Name="onBoardingCashInstructionId" />
+          </Key>
+          <Property Name="onBoardingCashInstructionId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CashInstruction" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingCurrency">
+          <Key>
+            <PropertyRef Name="onBoardingCurrencyId" />
+          </Key>
+          <Property Name="onBoardingCurrencyId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Currency" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingSSITemplate">
+          <Key>
+            <PropertyRef Name="onBoardingSSITemplateId" />
+          </Key>
+          <Property Name="onBoardingSSITemplateId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dmaAgreementTypeId" Type="int" Nullable="false" />
+          <Property Name="TemplateName" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="TemplateTypeId" Type="int" Nullable="false" />
+          <Property Name="TemplateEntityId" Type="bigint" Nullable="false" />
+          <Property Name="SSITemplateType" Type="varchar" MaxLength="50" />
+          <Property Name="ServiceProvider" Type="varchar" MaxLength="200" />
+          <Property Name="Currency" Type="varchar" MaxLength="50" />
+          <Property Name="ReasonDetail" Type="varchar" MaxLength="500" />
+          <Property Name="OtherReason" Type="varchar" MaxLength="500" />
+          <Property Name="AccountName" Type="varchar" MaxLength="500" />
+          <Property Name="AccountNumber" Type="varchar" MaxLength="100" />
+          <Property Name="BeneficiaryType" Type="varchar" MaxLength="50" />
+          <Property Name="BeneficiaryBICorABA" Type="varchar" MaxLength="100" />
+          <Property Name="BeneficiaryBankName" Type="varchar" MaxLength="500" />
+          <Property Name="BeneficiaryBankAddress" Type="varchar" MaxLength="3000" />
+          <Property Name="BeneficiaryAccountNumber" Type="varchar" MaxLength="100" />
+          <Property Name="IntermediaryType" Type="varchar" MaxLength="50" />
+          <Property Name="IntermediaryBICorABA" Type="varchar" MaxLength="100" />
+          <Property Name="IntermediaryBankName" Type="varchar" MaxLength="500" />
+          <Property Name="IntermediaryBankAddress" Type="varchar" MaxLength="3000" />
+          <Property Name="IntermediaryAccountNumber" Type="varchar" MaxLength="100" />
+          <Property Name="UltimateBeneficiaryType" Type="varchar" MaxLength="50" />
+          <Property Name="UltimateBeneficiaryBICorABA" Type="varchar" MaxLength="100" />
+          <Property Name="UltimateBeneficiaryBankName" Type="varchar" MaxLength="500" />
+          <Property Name="UltimateBeneficiaryBankAddress" Type="varchar" MaxLength="3000" />
+          <Property Name="FFCName" Type="varchar" MaxLength="500" />
+          <Property Name="FFCNumber" Type="varchar" MaxLength="100" />
+          <Property Name="Reference" Type="varchar" MaxLength="500" />
+          <Property Name="SSITemplateStatus" Type="varchar" MaxLength="50" />
+          <Property Name="StatusComments" Type="nvarchar" MaxLength="3000" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="MessageType" Type="varchar" MaxLength="100" />
+          <Property Name="UltimateBeneficiaryAccountName" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="OnBoardingSSITemplateAccountType">
+          <Key>
+            <PropertyRef Name="OnBoardingSSITemplateAccountTypeId" />
+          </Key>
+          <Property Name="OnBoardingSSITemplateAccountTypeId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Reason" Type="varchar" MaxLength="200" />
+          <Property Name="dmaAgreementTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingSSITemplateDocument">
+          <Key>
+            <PropertyRef Name="onBoardingSSITemplateDocumentId" />
+          </Key>
+          <Property Name="onBoardingSSITemplateDocumentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="onBoardingSSITemplateId" Type="bigint" Nullable="false" />
+          <Property Name="FileName" Type="varchar" MaxLength="300" />
+          <Property Name="RecCreatedBy" Type="varchar" MaxLength="100" />
+          <Property Name="RecCreatedAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="OnBoardingSSITemplateServiceProvider">
+          <Key>
+            <PropertyRef Name="OnBoardingSSITemplateServiceProviderId" />
+          </Key>
+          <Property Name="OnBoardingSSITemplateServiceProviderId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Reason" Type="varchar" MaxLength="200" />
+          <Property Name="ServiceProvider" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="onBoardingSwiftGroup">
+          <Key>
+            <PropertyRef Name="onBoardingSwiftGroupId" />
+          </Key>
+          <Property Name="onBoardingSwiftGroupId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SwiftGroup" Type="varchar" MaxLength="30" />
+          <Property Name="SendersBIC" Type="varchar" MaxLength="30" />
+          <Property Name="RecCreatedBy" Type="varchar" MaxLength="100" />
+          <Property Name="RecCreatedAt" Type="datetime" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingWirePortalCutoff">
+          <Key>
+            <PropertyRef Name="onBoardingWirePortalCutoffId" />
+          </Key>
+          <Property Name="onBoardingWirePortalCutoffId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CashInstruction" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Country" Type="varchar" MaxLength="100" />
+          <Property Name="Currency" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="CutoffTime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="DaystoWire" Type="int" Nullable="false" />
+        </EntityType>
         <Association Name="FK_hmsWireDocument_hmsWires_hmsWireId">
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
           <End Role="hmsWireDocument" Type="Self.hmsWireDocument" Multiplicity="*" />
@@ -340,6 +566,54 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_onBoardingAccountDocument_onBoardingAccountId">
+          <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
+          <End Role="onBoardingAccountDocument" Type="Self.onBoardingAccountDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccount">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Principal>
+            <Dependent Role="onBoardingAccountDocument">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingAccountSSITemplateMap_AccountId">
+          <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
+          <End Role="onBoardingAccountSSITemplateMap" Type="Self.onBoardingAccountSSITemplateMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccount">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Principal>
+            <Dependent Role="onBoardingAccountSSITemplateMap">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId">
+          <End Role="onBoardingSSITemplate" Type="Self.onBoardingSSITemplate" Multiplicity="1" />
+          <End Role="onBoardingAccountSSITemplateMap" Type="Self.onBoardingAccountSSITemplateMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="onBoardingAccountSSITemplateMap">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
+          <End Role="onBoardingSSITemplate" Type="Self.onBoardingSSITemplate" Multiplicity="1" />
+          <End Role="onBoardingSSITemplateDocument" Type="Self.onBoardingSSITemplateDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplateDocument">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="OperationsSecureModelStoreContainer">
           <EntitySet Name="hmsMQLogs" EntityType="Self.hmsMQLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsNotificationStaging" EntityType="Self.hmsNotificationStaging" Schema="dbo" store:Type="Tables" />
@@ -355,6 +629,20 @@
           <EntitySet Name="hmsWireStatusLkup" EntityType="Self.hmsWireStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireTransferTypeLKup" EntityType="Self.hmsWireTransferTypeLKup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireWorkflowLog" EntityType="Self.hmsWireWorkflowLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onBoardingAccount" EntityType="Self.onBoardingAccount" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onBoardingAccountBICorABA" EntityType="Self.onBoardingAccountBICorABA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OnBoardingAccountDescription" EntityType="Self.OnBoardingAccountDescription" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onBoardingAccountDocument" EntityType="Self.onBoardingAccountDocument" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onBoardingAccountSSITemplateMap" EntityType="Self.onBoardingAccountSSITemplateMap" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onBoardingAuthorizedParty" EntityType="Self.onBoardingAuthorizedParty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onBoardingCashInstruction" EntityType="Self.onBoardingCashInstruction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onBoardingCurrency" EntityType="Self.onBoardingCurrency" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onBoardingSSITemplate" EntityType="Self.onBoardingSSITemplate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OnBoardingSSITemplateAccountType" EntityType="Self.OnBoardingSSITemplateAccountType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onBoardingSSITemplateDocument" EntityType="Self.onBoardingSSITemplateDocument" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OnBoardingSSITemplateServiceProvider" EntityType="Self.OnBoardingSSITemplateServiceProvider" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onBoardingSwiftGroup" EntityType="Self.onBoardingSwiftGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onBoardingWirePortalCutoff" EntityType="Self.onBoardingWirePortalCutoff" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_hmsWireDocument_hmsWires_hmsWireId" Association="Self.FK_hmsWireDocument_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsWireDocument" EntitySet="hmsWireDocument" />
@@ -411,6 +699,22 @@
             <End Role="hmsWireStatusLkup" EntitySet="hmsWireStatusLkup" />
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLog" />
           </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccountDocument_onBoardingAccountId" Association="Self.FK_onBoardingAccountDocument_onBoardingAccountId">
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccount" />
+            <End Role="onBoardingAccountDocument" EntitySet="onBoardingAccountDocument" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_AccountId" Association="Self.FK_onBoardingAccountSSITemplateMap_AccountId">
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccount" />
+            <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMap" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" Association="Self.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId">
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplate" />
+            <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMap" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" Association="Self.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplate" />
+            <End Role="onBoardingSSITemplateDocument" EntitySet="onBoardingSSITemplateDocument" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -435,6 +739,51 @@
           <EntitySet Name="hmsWirePurposeLkups" EntityType="OperationsSecureModel.hmsWirePurposeLkup" />
           <EntitySet Name="hmsWireTransferTypeLKups" EntityType="OperationsSecureModel.hmsWireTransferTypeLKup" />
           <EntitySet Name="hmsMQLogs" EntityType="OperationsSecureModel.hmsMQLog" />
+          <EntitySet Name="hmsWireLogs" EntityType="OperationsSecureModel.hmsWireLog" />
+          <EntitySet Name="hmsWireLogTypeLkups" EntityType="OperationsSecureModel.hmsWireLogTypeLkup" />
+          <AssociationSet Name="FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId">
+            <End Role="hmsWireLogTypeLkup" EntitySet="hmsWireLogTypeLkups" />
+            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId">
+            <End Role="hmsWireMessageType" EntitySet="hmsWireMessageTypes" />
+            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
+            <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
+            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
+          </AssociationSet>
+          <EntitySet Name="hmsUserAuditLogs" EntityType="OperationsSecureModel.hmsUserAuditLog" />
+          <EntitySet Name="onBoardingAccounts" EntityType="OperationsSecureModel.onBoardingAccount" />
+          <EntitySet Name="onBoardingAccountBICorABAs" EntityType="OperationsSecureModel.onBoardingAccountBICorABA" />
+          <EntitySet Name="OnBoardingAccountDescriptions" EntityType="OperationsSecureModel.OnBoardingAccountDescription" />
+          <EntitySet Name="onBoardingAccountDocuments" EntityType="OperationsSecureModel.onBoardingAccountDocument" />
+          <EntitySet Name="onBoardingAccountSSITemplateMaps" EntityType="OperationsSecureModel.onBoardingAccountSSITemplateMap" />
+          <EntitySet Name="onBoardingAuthorizedParties" EntityType="OperationsSecureModel.onBoardingAuthorizedParty" />
+          <EntitySet Name="onBoardingCashInstructions" EntityType="OperationsSecureModel.onBoardingCashInstruction" />
+          <EntitySet Name="onBoardingCurrencies" EntityType="OperationsSecureModel.onBoardingCurrency" />
+          <EntitySet Name="onBoardingSSITemplates" EntityType="OperationsSecureModel.onBoardingSSITemplate" />
+          <EntitySet Name="OnBoardingSSITemplateAccountTypes" EntityType="OperationsSecureModel.OnBoardingSSITemplateAccountType" />
+          <EntitySet Name="onBoardingSSITemplateDocuments" EntityType="OperationsSecureModel.onBoardingSSITemplateDocument" />
+          <EntitySet Name="OnBoardingSSITemplateServiceProviders" EntityType="OperationsSecureModel.OnBoardingSSITemplateServiceProvider" />
+          <EntitySet Name="onBoardingSwiftGroups" EntityType="OperationsSecureModel.onBoardingSwiftGroup" />
+          <EntitySet Name="onBoardingWirePortalCutoffs" EntityType="OperationsSecureModel.onBoardingWirePortalCutoff" />
+          <AssociationSet Name="FK_onBoardingAccountDocument_onBoardingAccountId" Association="OperationsSecureModel.FK_onBoardingAccountDocument_onBoardingAccountId">
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+            <End Role="onBoardingAccountDocument" EntitySet="onBoardingAccountDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_AccountId" Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId">
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+            <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMaps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId">
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+            <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMaps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" Association="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+            <End Role="onBoardingSSITemplateDocument" EntitySet="onBoardingSSITemplateDocuments" />
+          </AssociationSet>
           <EntitySet Name="hmsWires" EntityType="OperationsSecureModel.hmsWire" />
           <AssociationSet Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" Association="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
             <End Role="hmsSwiftStatusLkup" EntitySet="hmsSwiftStatusLkups" />
@@ -447,6 +796,10 @@
           <AssociationSet Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId">
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireJobSchedule" EntitySet="hmsWireJobSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWireLogs_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId">
+            <End Role="hmsWire" EntitySet="hmsWires" />
+            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWires_hmsWireMessageType_WireMessageTypeId" Association="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId">
             <End Role="hmsWireMessageType" EntitySet="hmsWireMessageTypes" />
@@ -468,25 +821,6 @@
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
           </AssociationSet>
-          <EntitySet Name="hmsWireLogs" EntityType="OperationsSecureModel.hmsWireLog" />
-          <EntitySet Name="hmsWireLogTypeLkups" EntityType="OperationsSecureModel.hmsWireLogTypeLkup" />
-          <AssociationSet Name="FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId">
-            <End Role="hmsWireLogTypeLkup" EntitySet="hmsWireLogTypeLkups" />
-            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId">
-            <End Role="hmsWireMessageType" EntitySet="hmsWireMessageTypes" />
-            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsWireLogs_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId">
-            <End Role="hmsWire" EntitySet="hmsWires" />
-            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
-            <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
-            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
-          </AssociationSet>
-          <EntitySet Name="hmsUserAuditLogs" EntityType="OperationsSecureModel.hmsUserAuditLog" />
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -508,8 +842,8 @@
           <Property Name="Category" Type="Int32" Nullable="false" />
           <Property Name="IsOutbound" Type="Boolean" Nullable="false" />
           <Property Name="Description" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireMessageType" ToRole="hmsWire" />
           <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireMessageType" ToRole="hmsWireLog" />
+          <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireMessageType" ToRole="hmsWire" />
         </EntityType>
         <EntityType Name="hmsWireStatusLkup">
           <Key>
@@ -542,8 +876,8 @@
           <Property Name="SwiftStatusId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="hmsSwiftStatusLkup" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsWireWorkflowLog" ToRole="hmsSwiftStatusLkup" />
           <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireWorkflowLog" ToRole="hmsWireStatusLkup" />
-          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWireWorkflowLog" ToRole="hmsWire" />
           <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" FromRole="hmsWireWorkflowLog" ToRole="hmsWireLog" />
+          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWireWorkflowLog" ToRole="hmsWire" />
         </EntityType>
         <Association Name="FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId">
           <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
@@ -628,6 +962,365 @@
           <Property Name="Message" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="hmsWireLog">
+          <Key>
+            <PropertyRef Name="hmsWireLogId" />
+          </Key>
+          <Property Name="hmsWireLogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
+          <Property Name="hmsWireWorkflowLogId" Type="Int64" Nullable="false" />
+          <Property Name="hmsWireLogTypeId" Type="Int32" Nullable="false" />
+          <Property Name="WireMessageTypeId" Type="Int32" Nullable="false" />
+          <Property Name="SwiftMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="AdditionalDetails" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="hmsWireLogTypeLkup" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" FromRole="hmsWireLog" ToRole="hmsWireLogTypeLkup" />
+          <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireLog" ToRole="hmsWireMessageType" />
+          <NavigationProperty Name="hmsWireWorkflowLog" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" FromRole="hmsWireLog" ToRole="hmsWireWorkflowLog" />
+          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" FromRole="hmsWireLog" ToRole="hmsWire" />
+        </EntityType>
+        <EntityType Name="hmsWireLogTypeLkup">
+          <Key>
+            <PropertyRef Name="hmsWireLogTypeId" />
+          </Key>
+          <Property Name="hmsWireLogTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LogType" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" FromRole="hmsWireLogTypeLkup" ToRole="hmsWireLog" />
+        </EntityType>
+        <Association Name="FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId">
+          <End Type="OperationsSecureModel.hmsWireLogTypeLkup" Role="hmsWireLogTypeLkup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireLogTypeLkup">
+              <PropertyRef Name="hmsWireLogTypeId" />
+            </Principal>
+            <Dependent Role="hmsWireLog">
+              <PropertyRef Name="hmsWireLogTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId">
+          <End Type="OperationsSecureModel.hmsWireMessageType" Role="hmsWireMessageType" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireMessageType">
+              <PropertyRef Name="hmsWireMessageTypeId" />
+            </Principal>
+            <Dependent Role="hmsWireLog">
+              <PropertyRef Name="WireMessageTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
+          <End Type="OperationsSecureModel.hmsWireWorkflowLog" Role="hmsWireWorkflowLog" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireWorkflowLog">
+              <PropertyRef Name="hmsWireWorkflowLogId" />
+            </Principal>
+            <Dependent Role="hmsWireLog">
+              <PropertyRef Name="hmsWireWorkflowLogId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsUserAuditLog">
+          <Key>
+            <PropertyRef Name="hmsUserAuditLogId" />
+          </Key>
+          <Property Name="hmsUserAuditLogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Module" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Action" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Log" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="AssociationId" Type="Int64" />
+          <Property Name="Field" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PreviousStateValue" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="ModifiedStateValue" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="IsLogFromOps" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingAccount">
+          <Key>
+            <PropertyRef Name="onBoardingAccountId" />
+          </Key>
+          <Property Name="onBoardingAccountId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dmaFundOnBoardId" Type="Int64" Nullable="false" />
+          <Property Name="dmaAgreementOnBoardingId" Type="Int64" />
+          <Property Name="AccountName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AccountNumber" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="FFCName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FFCNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Reference" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="AuthorizedParty" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CashInstruction" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CashSweep" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CashSweepTime" Type="Time" Precision="7" />
+          <Property Name="CashSweepTimeZone" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ContactType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ContactNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactEmail" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="onBoardingAccountStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StatusComments" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="CutoffTime" Type="Time" Precision="7" />
+          <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BrokerId" Type="Int64" />
+          <Property Name="DaystoWire" Type="Int32" />
+          <Property Name="SwiftGroup" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="SendersBIC" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="AccountPurpose" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AccountStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="HoldbackAmount" Type="Double" />
+          <Property Name="SweepComments" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="AssociatedCustodyAcct" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PortfolioSelection" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TickerorISIN" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SweepCurrency" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryAccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="onBoardingAccountDocuments" Relationship="OperationsSecureModel.FK_onBoardingAccountDocument_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountDocument" />
+          <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
+        </EntityType>
+        <EntityType Name="onBoardingAccountBICorABA">
+          <Key>
+            <PropertyRef Name="onBoardingAccountBICorABAId" />
+          </Key>
+          <Property Name="onBoardingAccountBICorABAId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BICorABA" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IsABA" Type="Boolean" Nullable="false" />
+          <Property Name="BankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OnBoardingAccountDescription">
+          <Key>
+            <PropertyRef Name="OnBoardingAccountDescriptionId" />
+          </Key>
+          <Property Name="OnBoardingAccountDescriptionId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="dmaAgreementTypeId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingAccountDocument">
+          <Key>
+            <PropertyRef Name="onBoardingAccountDocumentId" />
+          </Key>
+          <Property Name="onBoardingAccountDocumentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="onBoardingAccountId" Type="Int64" Nullable="false" />
+          <Property Name="FileName" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="onBoardingAccount" Relationship="OperationsSecureModel.FK_onBoardingAccountDocument_onBoardingAccountId" FromRole="onBoardingAccountDocument" ToRole="onBoardingAccount" />
+        </EntityType>
+        <EntityType Name="onBoardingAccountSSITemplateMap">
+          <Key>
+            <PropertyRef Name="onBoardingAccountSSITemplateMapId" />
+          </Key>
+          <Property Name="onBoardingAccountSSITemplateMapId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="onBoardingAccountId" Type="Int64" Nullable="false" />
+          <Property Name="onBoardingSSITemplateId" Type="Int64" Nullable="false" />
+          <Property Name="FFCName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FFCNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Reference" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StatusComments" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="onBoardingAccount" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccountSSITemplateMap" ToRole="onBoardingAccount" />
+          <NavigationProperty Name="onBoardingSSITemplate" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingAccountSSITemplateMap" ToRole="onBoardingSSITemplate" />
+        </EntityType>
+        <EntityType Name="onBoardingAuthorizedParty">
+          <Key>
+            <PropertyRef Name="onBoardingAuthorizedPartyId" />
+          </Key>
+          <Property Name="onBoardingAuthorizedPartyId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AuthorizedParty" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingCashInstruction">
+          <Key>
+            <PropertyRef Name="onBoardingCashInstructionId" />
+          </Key>
+          <Property Name="onBoardingCashInstructionId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CashInstruction" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="onBoardingCurrency">
+          <Key>
+            <PropertyRef Name="onBoardingCurrencyId" />
+          </Key>
+          <Property Name="onBoardingCurrencyId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="onBoardingSSITemplate">
+          <Key>
+            <PropertyRef Name="onBoardingSSITemplateId" />
+          </Key>
+          <Property Name="onBoardingSSITemplateId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dmaAgreementTypeId" Type="Int32" Nullable="false" />
+          <Property Name="TemplateName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="TemplateTypeId" Type="Int32" Nullable="false" />
+          <Property Name="TemplateEntityId" Type="Int64" Nullable="false" />
+          <Property Name="SSITemplateType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ServiceProvider" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ReasonDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="OtherReason" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBICorABA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBankName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryBankAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="FFCName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FFCNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Reference" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SSITemplateStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StatusComments" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="MessageType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryAccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountSSITemplateMap" />
+          <NavigationProperty Name="onBoardingSSITemplateDocuments" Relationship="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingSSITemplateDocument" />
+        </EntityType>
+        <EntityType Name="OnBoardingSSITemplateAccountType">
+          <Key>
+            <PropertyRef Name="OnBoardingSSITemplateAccountTypeId" />
+          </Key>
+          <Property Name="OnBoardingSSITemplateAccountTypeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Reason" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="dmaAgreementTypeId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingSSITemplateDocument">
+          <Key>
+            <PropertyRef Name="onBoardingSSITemplateDocumentId" />
+          </Key>
+          <Property Name="onBoardingSSITemplateDocumentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="onBoardingSSITemplateId" Type="Int64" Nullable="false" />
+          <Property Name="FileName" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="onBoardingSSITemplate" Relationship="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplateDocument" ToRole="onBoardingSSITemplate" />
+        </EntityType>
+        <EntityType Name="OnBoardingSSITemplateServiceProvider">
+          <Key>
+            <PropertyRef Name="OnBoardingSSITemplateServiceProviderId" />
+          </Key>
+          <Property Name="OnBoardingSSITemplateServiceProviderId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Reason" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ServiceProvider" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="onBoardingSwiftGroup">
+          <Key>
+            <PropertyRef Name="onBoardingSwiftGroupId" />
+          </Key>
+          <Property Name="onBoardingSwiftGroupId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SwiftGroup" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="SendersBIC" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingWirePortalCutoff">
+          <Key>
+            <PropertyRef Name="onBoardingWirePortalCutoffId" />
+          </Key>
+          <Property Name="onBoardingWirePortalCutoffId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CashInstruction" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Currency" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CutoffTime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="DaystoWire" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_onBoardingAccountDocument_onBoardingAccountId">
+          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
+          <End Type="OperationsSecureModel.onBoardingAccountDocument" Role="onBoardingAccountDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccount">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Principal>
+            <Dependent Role="onBoardingAccountDocument">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingAccountSSITemplateMap_AccountId">
+          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
+          <End Type="OperationsSecureModel.onBoardingAccountSSITemplateMap" Role="onBoardingAccountSSITemplateMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccount">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Principal>
+            <Dependent Role="onBoardingAccountSSITemplateMap">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId">
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
+          <End Type="OperationsSecureModel.onBoardingAccountSSITemplateMap" Role="onBoardingAccountSSITemplateMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="onBoardingAccountSSITemplateMap">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
+          <End Type="OperationsSecureModel.onBoardingSSITemplateDocument" Role="onBoardingSSITemplateDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplateDocument">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="hmsWire">
           <Key>
             <PropertyRef Name="hmsWireId" />
@@ -659,12 +1352,12 @@
           <NavigationProperty Name="hmsSwiftStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsSwiftStatusLkup" />
           <NavigationProperty Name="hmsWireDocuments" Relationship="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireDocument" />
           <NavigationProperty Name="hmsWireJobSchedules" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireJobSchedule" />
+          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireLog" />
           <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWire" ToRole="hmsWireMessageType" />
           <NavigationProperty Name="hmsWirePurposeLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" FromRole="hmsWire" ToRole="hmsWirePurposeLkup" />
           <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsWireStatusLkup" />
           <NavigationProperty Name="hmsWireTransferTypeLKup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" FromRole="hmsWire" ToRole="hmsWireTransferTypeLKup" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireWorkflowLog" />
-          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireLog" />
         </EntityType>
         <Association Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
           <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
@@ -698,6 +1391,18 @@
               <PropertyRef Name="hmsWireId" />
             </Principal>
             <Dependent Role="hmsWireJobSchedule">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireLogs_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireLog">
               <PropertyRef Name="hmsWireId" />
             </Dependent>
           </ReferentialConstraint>
@@ -762,95 +1467,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="hmsWireLog">
-          <Key>
-            <PropertyRef Name="hmsWireLogId" />
-          </Key>
-          <Property Name="hmsWireLogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
-          <Property Name="hmsWireWorkflowLogId" Type="Int64" Nullable="false" />
-          <Property Name="hmsWireLogTypeId" Type="Int32" Nullable="false" />
-          <Property Name="WireMessageTypeId" Type="Int32" Nullable="false" />
-          <Property Name="SwiftMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="AdditionalDetails" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="hmsWireLogTypeLkup" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" FromRole="hmsWireLog" ToRole="hmsWireLogTypeLkup" />
-          <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireLog" ToRole="hmsWireMessageType" />
-          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" FromRole="hmsWireLog" ToRole="hmsWire" />
-          <NavigationProperty Name="hmsWireWorkflowLog" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" FromRole="hmsWireLog" ToRole="hmsWireWorkflowLog" />
-        </EntityType>
-        <EntityType Name="hmsWireLogTypeLkup">
-          <Key>
-            <PropertyRef Name="hmsWireLogTypeId" />
-          </Key>
-          <Property Name="hmsWireLogTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="LogType" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" FromRole="hmsWireLogTypeLkup" ToRole="hmsWireLog" />
-        </EntityType>
-        <Association Name="FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId">
-          <End Type="OperationsSecureModel.hmsWireLogTypeLkup" Role="hmsWireLogTypeLkup" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireLogTypeLkup">
-              <PropertyRef Name="hmsWireLogTypeId" />
-            </Principal>
-            <Dependent Role="hmsWireLog">
-              <PropertyRef Name="hmsWireLogTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId">
-          <End Type="OperationsSecureModel.hmsWireMessageType" Role="hmsWireMessageType" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireMessageType">
-              <PropertyRef Name="hmsWireMessageTypeId" />
-            </Principal>
-            <Dependent Role="hmsWireLog">
-              <PropertyRef Name="WireMessageTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireLogs_hmsWires_hmsWireId">
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWire">
-              <PropertyRef Name="hmsWireId" />
-            </Principal>
-            <Dependent Role="hmsWireLog">
-              <PropertyRef Name="hmsWireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
-          <End Type="OperationsSecureModel.hmsWireWorkflowLog" Role="hmsWireWorkflowLog" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireWorkflowLog">
-              <PropertyRef Name="hmsWireWorkflowLogId" />
-            </Principal>
-            <Dependent Role="hmsWireLog">
-              <PropertyRef Name="hmsWireWorkflowLogId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="hmsUserAuditLog">
-          <Key>
-            <PropertyRef Name="hmsUserAuditLogId" />
-          </Key>
-          <Property Name="hmsUserAuditLogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Module" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Action" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Log" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
-          <Property Name="AssociationId" Type="Int64" />
-          <Property Name="Field" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="PreviousStateValue" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="ModifiedStateValue" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="IsLogFromOps" Type="Boolean" Nullable="false" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -969,36 +1585,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="hmsWires">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWire">
-              <MappingFragment StoreEntitySet="hmsWires">
-                <ScalarProperty Name="NotesToApprover" ColumnName="NotesToApprover" />
-                <ScalarProperty Name="WireTransferTypeId" ColumnName="WireTransferTypeId" />
-                <ScalarProperty Name="SwiftStatusId" ColumnName="SwiftStatusId" />
-                <ScalarProperty Name="DeliveryCharges" ColumnName="DeliveryCharges" />
-                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
-                <ScalarProperty Name="LastModifiedAt" ColumnName="LastModifiedAt" />
-                <ScalarProperty Name="WireStatusId" ColumnName="WireStatusId" />
-                <ScalarProperty Name="WireMessageTypeId" ColumnName="WireMessageTypeId" />
-                <ScalarProperty Name="OnBoardAgreementId" ColumnName="OnBoardAgreementId" />
-                <ScalarProperty Name="OnBoardSSITemplateId" ColumnName="OnBoardSSITemplateId" />
-                <ScalarProperty Name="OnBoardAccountId" ColumnName="OnBoardAccountId" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="ReceivingAccountNumber" ColumnName="ReceivingAccountNumber" />
-                <ScalarProperty Name="SendingPlatform" ColumnName="SendingPlatform" />
-                <ScalarProperty Name="SendingAccountNumber" ColumnName="SendingAccountNumber" />
-                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
-                <ScalarProperty Name="PaymentOrReceipt" ColumnName="PaymentOrReceipt" />
-                <ScalarProperty Name="ValueDate" ColumnName="ValueDate" />
-                <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
-                <ScalarProperty Name="WirePurposeId" ColumnName="WirePurposeId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="hmsWireLogs">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireLog">
               <MappingFragment StoreEntitySet="hmsWireLogs">
@@ -1035,6 +1621,276 @@
                 <ScalarProperty Name="Action" ColumnName="Action" />
                 <ScalarProperty Name="Module" ColumnName="Module" />
                 <ScalarProperty Name="hmsUserAuditLogId" ColumnName="hmsUserAuditLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingAccounts">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccount">
+              <MappingFragment StoreEntitySet="onBoardingAccount">
+                <ScalarProperty Name="UltimateBeneficiaryAccountName" ColumnName="UltimateBeneficiaryAccountName" />
+                <ScalarProperty Name="SweepCurrency" ColumnName="SweepCurrency" />
+                <ScalarProperty Name="TickerorISIN" ColumnName="TickerorISIN" />
+                <ScalarProperty Name="PortfolioSelection" ColumnName="PortfolioSelection" />
+                <ScalarProperty Name="AssociatedCustodyAcct" ColumnName="AssociatedCustodyAcct" />
+                <ScalarProperty Name="SweepComments" ColumnName="SweepComments" />
+                <ScalarProperty Name="HoldbackAmount" ColumnName="HoldbackAmount" />
+                <ScalarProperty Name="AccountStatus" ColumnName="AccountStatus" />
+                <ScalarProperty Name="AccountPurpose" ColumnName="AccountPurpose" />
+                <ScalarProperty Name="SendersBIC" ColumnName="SendersBIC" />
+                <ScalarProperty Name="SwiftGroup" ColumnName="SwiftGroup" />
+                <ScalarProperty Name="DaystoWire" ColumnName="DaystoWire" />
+                <ScalarProperty Name="BrokerId" ColumnName="BrokerId" />
+                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+                <ScalarProperty Name="CutoffTime" ColumnName="CutoffTime" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="StatusComments" ColumnName="StatusComments" />
+                <ScalarProperty Name="onBoardingAccountStatus" ColumnName="onBoardingAccountStatus" />
+                <ScalarProperty Name="ContactEmail" ColumnName="ContactEmail" />
+                <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="ContactType" ColumnName="ContactType" />
+                <ScalarProperty Name="CashSweepTimeZone" ColumnName="CashSweepTimeZone" />
+                <ScalarProperty Name="CashSweepTime" ColumnName="CashSweepTime" />
+                <ScalarProperty Name="CashSweep" ColumnName="CashSweep" />
+                <ScalarProperty Name="CashInstruction" ColumnName="CashInstruction" />
+                <ScalarProperty Name="AuthorizedParty" ColumnName="AuthorizedParty" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="Reference" ColumnName="Reference" />
+                <ScalarProperty Name="FFCNumber" ColumnName="FFCNumber" />
+                <ScalarProperty Name="FFCName" ColumnName="FFCName" />
+                <ScalarProperty Name="UltimateBeneficiaryBankAddress" ColumnName="UltimateBeneficiaryBankAddress" />
+                <ScalarProperty Name="UltimateBeneficiaryBankName" ColumnName="UltimateBeneficiaryBankName" />
+                <ScalarProperty Name="UltimateBeneficiaryBICorABA" ColumnName="UltimateBeneficiaryBICorABA" />
+                <ScalarProperty Name="UltimateBeneficiaryType" ColumnName="UltimateBeneficiaryType" />
+                <ScalarProperty Name="IntermediaryAccountNumber" ColumnName="IntermediaryAccountNumber" />
+                <ScalarProperty Name="IntermediaryBankAddress" ColumnName="IntermediaryBankAddress" />
+                <ScalarProperty Name="IntermediaryBankName" ColumnName="IntermediaryBankName" />
+                <ScalarProperty Name="IntermediaryBICorABA" ColumnName="IntermediaryBICorABA" />
+                <ScalarProperty Name="IntermediaryType" ColumnName="IntermediaryType" />
+                <ScalarProperty Name="BeneficiaryAccountNumber" ColumnName="BeneficiaryAccountNumber" />
+                <ScalarProperty Name="BeneficiaryBankAddress" ColumnName="BeneficiaryBankAddress" />
+                <ScalarProperty Name="BeneficiaryBankName" ColumnName="BeneficiaryBankName" />
+                <ScalarProperty Name="BeneficiaryBICorABA" ColumnName="BeneficiaryBICorABA" />
+                <ScalarProperty Name="BeneficiaryType" ColumnName="BeneficiaryType" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
+                <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
+                <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingAccountBICorABAs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccountBICorABA">
+              <MappingFragment StoreEntitySet="onBoardingAccountBICorABA">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="BankAddress" ColumnName="BankAddress" />
+                <ScalarProperty Name="IsABA" ColumnName="IsABA" />
+                <ScalarProperty Name="BankName" ColumnName="BankName" />
+                <ScalarProperty Name="BICorABA" ColumnName="BICorABA" />
+                <ScalarProperty Name="onBoardingAccountBICorABAId" ColumnName="onBoardingAccountBICorABAId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OnBoardingAccountDescriptions">
+            <EntityTypeMapping TypeName="OperationsSecureModel.OnBoardingAccountDescription">
+              <MappingFragment StoreEntitySet="OnBoardingAccountDescription">
+                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
+                <ScalarProperty Name="AccountDescription" ColumnName="AccountDescription" />
+                <ScalarProperty Name="OnBoardingAccountDescriptionId" ColumnName="OnBoardingAccountDescriptionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingAccountDocuments">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccountDocument">
+              <MappingFragment StoreEntitySet="onBoardingAccountDocument">
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
+                <ScalarProperty Name="onBoardingAccountDocumentId" ColumnName="onBoardingAccountDocumentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingAccountSSITemplateMaps">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccountSSITemplateMap">
+              <MappingFragment StoreEntitySet="onBoardingAccountSSITemplateMap">
+                <ScalarProperty Name="StatusComments" ColumnName="StatusComments" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Reference" ColumnName="Reference" />
+                <ScalarProperty Name="FFCNumber" ColumnName="FFCNumber" />
+                <ScalarProperty Name="FFCName" ColumnName="FFCName" />
+                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
+                <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
+                <ScalarProperty Name="onBoardingAccountSSITemplateMapId" ColumnName="onBoardingAccountSSITemplateMapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingAuthorizedParties">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAuthorizedParty">
+              <MappingFragment StoreEntitySet="onBoardingAuthorizedParty">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="AuthorizedParty" ColumnName="AuthorizedParty" />
+                <ScalarProperty Name="onBoardingAuthorizedPartyId" ColumnName="onBoardingAuthorizedPartyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingCashInstructions">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingCashInstruction">
+              <MappingFragment StoreEntitySet="onBoardingCashInstruction">
+                <ScalarProperty Name="CashInstruction" ColumnName="CashInstruction" />
+                <ScalarProperty Name="onBoardingCashInstructionId" ColumnName="onBoardingCashInstructionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingCurrencies">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingCurrency">
+              <MappingFragment StoreEntitySet="onBoardingCurrency">
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="onBoardingCurrencyId" ColumnName="onBoardingCurrencyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingSSITemplates">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingSSITemplate">
+              <MappingFragment StoreEntitySet="onBoardingSSITemplate">
+                <ScalarProperty Name="UltimateBeneficiaryAccountName" ColumnName="UltimateBeneficiaryAccountName" />
+                <ScalarProperty Name="MessageType" ColumnName="MessageType" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="StatusComments" ColumnName="StatusComments" />
+                <ScalarProperty Name="SSITemplateStatus" ColumnName="SSITemplateStatus" />
+                <ScalarProperty Name="Reference" ColumnName="Reference" />
+                <ScalarProperty Name="FFCNumber" ColumnName="FFCNumber" />
+                <ScalarProperty Name="FFCName" ColumnName="FFCName" />
+                <ScalarProperty Name="UltimateBeneficiaryBankAddress" ColumnName="UltimateBeneficiaryBankAddress" />
+                <ScalarProperty Name="UltimateBeneficiaryBankName" ColumnName="UltimateBeneficiaryBankName" />
+                <ScalarProperty Name="UltimateBeneficiaryBICorABA" ColumnName="UltimateBeneficiaryBICorABA" />
+                <ScalarProperty Name="UltimateBeneficiaryType" ColumnName="UltimateBeneficiaryType" />
+                <ScalarProperty Name="IntermediaryAccountNumber" ColumnName="IntermediaryAccountNumber" />
+                <ScalarProperty Name="IntermediaryBankAddress" ColumnName="IntermediaryBankAddress" />
+                <ScalarProperty Name="IntermediaryBankName" ColumnName="IntermediaryBankName" />
+                <ScalarProperty Name="IntermediaryBICorABA" ColumnName="IntermediaryBICorABA" />
+                <ScalarProperty Name="IntermediaryType" ColumnName="IntermediaryType" />
+                <ScalarProperty Name="BeneficiaryAccountNumber" ColumnName="BeneficiaryAccountNumber" />
+                <ScalarProperty Name="BeneficiaryBankAddress" ColumnName="BeneficiaryBankAddress" />
+                <ScalarProperty Name="BeneficiaryBankName" ColumnName="BeneficiaryBankName" />
+                <ScalarProperty Name="BeneficiaryBICorABA" ColumnName="BeneficiaryBICorABA" />
+                <ScalarProperty Name="BeneficiaryType" ColumnName="BeneficiaryType" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="OtherReason" ColumnName="OtherReason" />
+                <ScalarProperty Name="ReasonDetail" ColumnName="ReasonDetail" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
+                <ScalarProperty Name="SSITemplateType" ColumnName="SSITemplateType" />
+                <ScalarProperty Name="TemplateEntityId" ColumnName="TemplateEntityId" />
+                <ScalarProperty Name="TemplateTypeId" ColumnName="TemplateTypeId" />
+                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
+                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
+                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OnBoardingSSITemplateAccountTypes">
+            <EntityTypeMapping TypeName="OperationsSecureModel.OnBoardingSSITemplateAccountType">
+              <MappingFragment StoreEntitySet="OnBoardingSSITemplateAccountType">
+                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="OnBoardingSSITemplateAccountTypeId" ColumnName="OnBoardingSSITemplateAccountTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingSSITemplateDocuments">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingSSITemplateDocument">
+              <MappingFragment StoreEntitySet="onBoardingSSITemplateDocument">
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
+                <ScalarProperty Name="onBoardingSSITemplateDocumentId" ColumnName="onBoardingSSITemplateDocumentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OnBoardingSSITemplateServiceProviders">
+            <EntityTypeMapping TypeName="OperationsSecureModel.OnBoardingSSITemplateServiceProvider">
+              <MappingFragment StoreEntitySet="OnBoardingSSITemplateServiceProvider">
+                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="OnBoardingSSITemplateServiceProviderId" ColumnName="OnBoardingSSITemplateServiceProviderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingSwiftGroups">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingSwiftGroup">
+              <MappingFragment StoreEntitySet="onBoardingSwiftGroup">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="SendersBIC" ColumnName="SendersBIC" />
+                <ScalarProperty Name="SwiftGroup" ColumnName="SwiftGroup" />
+                <ScalarProperty Name="onBoardingSwiftGroupId" ColumnName="onBoardingSwiftGroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingWirePortalCutoffs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingWirePortalCutoff">
+              <MappingFragment StoreEntitySet="onBoardingWirePortalCutoff">
+                <ScalarProperty Name="DaystoWire" ColumnName="DaystoWire" />
+                <ScalarProperty Name="CutoffTime" ColumnName="CutoffTime" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="CashInstruction" ColumnName="CashInstruction" />
+                <ScalarProperty Name="onBoardingWirePortalCutoffId" ColumnName="onBoardingWirePortalCutoffId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWires">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWire">
+              <MappingFragment StoreEntitySet="hmsWires">
+                <ScalarProperty Name="NotesToApprover" ColumnName="NotesToApprover" />
+                <ScalarProperty Name="WireTransferTypeId" ColumnName="WireTransferTypeId" />
+                <ScalarProperty Name="SwiftStatusId" ColumnName="SwiftStatusId" />
+                <ScalarProperty Name="DeliveryCharges" ColumnName="DeliveryCharges" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="LastModifiedAt" ColumnName="LastModifiedAt" />
+                <ScalarProperty Name="WireStatusId" ColumnName="WireStatusId" />
+                <ScalarProperty Name="WireMessageTypeId" ColumnName="WireMessageTypeId" />
+                <ScalarProperty Name="OnBoardAgreementId" ColumnName="OnBoardAgreementId" />
+                <ScalarProperty Name="OnBoardSSITemplateId" ColumnName="OnBoardSSITemplateId" />
+                <ScalarProperty Name="OnBoardAccountId" ColumnName="OnBoardAccountId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="ReceivingAccountNumber" ColumnName="ReceivingAccountNumber" />
+                <ScalarProperty Name="SendingPlatform" ColumnName="SendingPlatform" />
+                <ScalarProperty Name="SendingAccountNumber" ColumnName="SendingAccountNumber" />
+                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
+                <ScalarProperty Name="PaymentOrReceipt" ColumnName="PaymentOrReceipt" />
+                <ScalarProperty Name="ValueDate" ColumnName="ValueDate" />
+                <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
+                <ScalarProperty Name="WirePurposeId" ColumnName="WirePurposeId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

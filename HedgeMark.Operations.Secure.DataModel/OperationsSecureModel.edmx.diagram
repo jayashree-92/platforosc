@@ -17,22 +17,40 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWirePurposeLkup" Width="1.5" PointX="10.75" PointY="3.25" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireTransferTypeLKup" Width="1.5" PointX="0.75" PointY="3.5" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsMQLog" Width="1.5" PointX="0.75" PointY="6.75" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsWire" Width="1.5" PointX="14" PointY="0.5" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsWireLog" Width="1.5" PointX="19.25" PointY="2.875" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsWireLogTypeLkup" Width="1.5" PointX="17" PointY="0.75" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsUserAuditLog" Width="1.5" PointX="3.375" PointY="7.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAccount" Width="1.5" PointX="5.75" PointY="21.5" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAccountBICorABA" Width="1.5" PointX="0.75" PointY="9.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.OnBoardingAccountDescription" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAccountDocument" Width="1.5" PointX="8" PointY="26.5" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAccountSSITemplateMap" Width="1.5" PointX="8" PointY="13.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAuthorizedParty" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingCashInstruction" Width="1.5" PointX="5.75" PointY="7.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingCurrency" Width="1.5" PointX="7.75" PointY="10.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingSSITemplate" Width="1.5" PointX="5.75" PointY="11.25" />
+        <EntityTypeShape EntityType="OperationsSecureModel.OnBoardingSSITemplateAccountType" Width="1.5" PointX="10.75" PointY="9.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingSSITemplateDocument" Width="1.5" PointX="8" PointY="19" />
+        <EntityTypeShape EntityType="OperationsSecureModel.OnBoardingSSITemplateServiceProvider" Width="1.5" PointX="2.75" PointY="11.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingSwiftGroup" Width="1.5" PointX="12.75" PointY="9.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingWirePortalCutoff" Width="1.5" PointX="10.75" PointY="12.75" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountDocument_onBoardingAccountId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsWire" Width="1.5" PointX="14" PointY="0.75" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsWireLog" Width="1.5" PointX="19.25" PointY="2.875" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsWireLogTypeLkup" Width="1.5" PointX="17" PointY="0.75" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsUserAuditLog" Width="1.5" PointX="3.375" PointY="7.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

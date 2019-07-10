@@ -120,7 +120,14 @@ namespace HMOSecureWeb.Controllers
             AccountManager.AddAccountDescription(accountDescription, agreementTypeId);
         }
 
-        // ReSharper disable once FunctionComplexityOverflow
+
+        private class AgreementBaseDetails
+        {
+            public long AgreementOnboardingId { get; set; }
+            public string AgreementShortName { get; set; }
+            public int AgreementTypeId { get; set; }
+        }
+
         public string GetAllOnBoardingAccounts(string accountType, long agreementId, long fundId, long brokerId)
         {
             var counterpartyFamilyId = brokerId;
@@ -144,20 +151,30 @@ namespace HMOSecureWeb.Controllers
 
 
             var onBoardingContacts = OnBoardingDataManager.GetAllOnBoardingContacts(ContactManager.CounterpartyTypeId, counterpartyFamilyId);
-
             var accountDescriptionChoices = AccountManager.GetAccountDescriptionsByAgreementTypeId(agreementTypeId);
-
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
-
             var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds);
 
-
             var broker = OnBoardingDataManager.GetCounterpartyFamilyName(counterpartyFamilyId);
-
             var legalFundName = OnBoardingDataManager.GetOnBoardedFundName(fundId);
 
             var swiftGroups = AccountManager.GetAllSwiftGroup();
             var authorizedParty = AccountManager.GetAllAuthorizedParty();
+
+            Dictionary<long, string> counterparties;
+            Dictionary<long, AgreementBaseDetails> agreements;
+            var allAgreementIds = onBoardingAccounts.Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
+            var allCounterpartyFamilyIds = onBoardingAccounts.Select(s => s.BrokerId).Distinct().ToList();
+
+            using (var context = new AdminContext())
+            {
+                agreements = context.dmaAgreementOnBoardings.AsNoTracking()
+                    .Where(s => allAgreementIds.Contains(s.dmaAgreementOnBoardingId))
+                    .Select(s => new AgreementBaseDetails { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId })
+                    .ToDictionary(s => s.AgreementOnboardingId, v => v);
+
+                counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
+            }
 
             return JsonConvert.SerializeObject(new
             {
@@ -170,9 +187,9 @@ namespace HMOSecureWeb.Controllers
                 agreementType,
                 OnBoardingAccounts = onBoardingAccounts.Select(x => new
                 {
-                    AgreementName = (x.dmaAgreementOnBoarding != null) ? x.dmaAgreementOnBoarding.AgreementShortName : string.Empty,
-                    AgreementTypeId = (x.dmaAgreementOnBoarding != null) ? x.dmaAgreementOnBoarding.AgreementTypeId : 0,
-                    Broker = (x.dmaCounterpartyFamily != null) ? x.dmaCounterpartyFamily.CounterpartyFamily : string.Empty,
+                    AgreementName = x.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)x.dmaAgreementOnBoardingId) ? agreements[(long)x.dmaAgreementOnBoardingId].AgreementShortName : string.Empty,
+                    AgreementTypeId = x.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)x.dmaAgreementOnBoardingId) ? agreements[(long)x.dmaAgreementOnBoardingId].AgreementTypeId : 0,
+                    Broker = x.BrokerId != null && counterparties.ContainsKey((long)x.BrokerId) ? counterparties[(long)x.BrokerId] : string.Empty,
                     x.onBoardingAccountId,
                     x.dmaAgreementOnBoardingId,
                     x.AccountType,
@@ -369,6 +386,9 @@ namespace HMOSecureWeb.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
+
+
+
         public JsonResult GetAllOnBoardingAccount()
         {
             var fundOnBoardIds = AuthorizedSessionData.OnBoardFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
@@ -377,18 +397,38 @@ namespace HMOSecureWeb.Controllers
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
             var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates().Select(s => s.onBoardingSSITemplateId).ToList();
 
+
+            Dictionary<long, string> counterparties;
+            Dictionary<long, string> funds;
+            Dictionary<long, AgreementBaseDetails> agreements;
+            var allAgreementIds = onBoardingAccounts.Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
+            var allCounterpartyFamilyIds = onBoardingAccounts.Select(s => s.BrokerId).Distinct().ToList();
+            var allFundIds = onBoardingAccounts.Select(s => s.dmaFundOnBoardId).Distinct().ToList();
+
+            using (var context = new AdminContext())
+            {
+                agreements = context.dmaAgreementOnBoardings.AsNoTracking()
+                    .Where(s => allAgreementIds.Contains(s.dmaAgreementOnBoardingId))
+                    .Select(s => new AgreementBaseDetails { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId })
+                    .ToDictionary(s => s.AgreementOnboardingId, v => v);
+
+                counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
+                funds = context.onboardingFunds.AsNoTracking().Where(s => allFundIds.Contains(s.dmaFundOnBoardId)).ToDictionary(s => s.dmaFundOnBoardId, v => v.LegalFundName);
+            }
+
+
             return Json(new
             {
                 accountTypes = accountTypes.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
                 OnBoardingAccounts = onBoardingAccounts.Select(x => new
                 {
-                    AgreementName = (x.dmaAgreementOnBoarding != null) ? x.dmaAgreementOnBoarding.AgreementShortName : string.Empty,
+                    AgreementName = x.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)x.dmaAgreementOnBoardingId) ? agreements[(long)x.dmaAgreementOnBoardingId].AgreementShortName : string.Empty,
 
-                    AgreementTypeId = (x.dmaAgreementOnBoarding != null) ? x.dmaAgreementOnBoarding.AgreementTypeId :
+                    AgreementTypeId = x.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)x.dmaAgreementOnBoardingId) ? agreements[(long)x.dmaAgreementOnBoardingId].AgreementTypeId :
                                       (accountTypes.ContainsValue(x.AccountType) ? accountTypes.FirstOrDefault(y => y.Value == x.AccountType).Key : 0),
 
-                    Broker = (x.dmaCounterpartyFamily != null) ? x.dmaCounterpartyFamily.CounterpartyFamily : string.Empty,
-                    FundName = (x.onboardingFund != null) ? x.onboardingFund.LegalFundName : string.Empty,
+                    Broker = x.BrokerId != null && counterparties.ContainsKey((long)x.BrokerId) ? counterparties[(long)x.BrokerId] : string.Empty,
+                    FundName = funds.ContainsKey(x.dmaFundOnBoardId) ? funds[x.dmaFundOnBoardId] : string.Empty,
                     ApprovedMaps = x.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Approved" && ssiTemplates.Contains(s.onBoardingSSITemplateId)),
                     PendingApprovalMaps = x.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Pending Approval" && ssiTemplates.Contains(s.onBoardingSSITemplateId)),
                     x.onBoardingAccountId,
@@ -690,7 +730,8 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetAllBrokerSsiTemplates()
         {
             var brokerSsiTemplates = AccountManager.GetAllBrokerSsiTemplates();
-            var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties().ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
+            var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties();
+            var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
 
             return Json(new
             {
@@ -733,7 +774,7 @@ namespace HMOSecureWeb.Controllers
                     template.FFCName,
                     template.FFCNumber,
                     template.Reference,
-                    AgreementType = (template.dmaAgreementType != null && string.IsNullOrEmpty(template.ServiceProvider)) ? template.dmaAgreementType.AgreementType : string.Empty,
+                    AgreementType = (agreementTypes.ContainsKey(template.dmaAgreementTypeId) && string.IsNullOrEmpty(template.ServiceProvider)) ? agreementTypes[template.dmaAgreementTypeId] : string.Empty,
                     Broker = (counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty)
                 }).ToList()
             }, JsonContentType, JsonContentEncoding);
@@ -765,7 +806,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetSsiTemplatePreloadData()
         {
-            var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties().Select(x => new { id = x.dmaCounterPartyOnBoardId, text = x.CounterpartyName }).OrderBy(x => x.text).ToList();
+            var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties().Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList();
             var templates = AccountManager.GetAllSsiTemplates().Select(x => new { id = x.Key, text = x.Value }).ToList();
             var permittedAgreementTypes = new List<string>() { "ISDA", "PB", "FCM", "CDA", "FXPB", "GMRA", "MSLA", "MRA", "MSFTA", "Listed Options", "Non-US Listed Options" };
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes().Where(x => permittedAgreementTypes.Contains(x.Value)).Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList();
@@ -867,14 +908,33 @@ namespace HMOSecureWeb.Controllers
         {
             var accountListRows = new List<Row>();
 
+
+            Dictionary<long, string> counterparties;
+            Dictionary<long, string> funds;
+            Dictionary<long, AgreementBaseDetails> agreements;
+            var allAgreementIds = onBoardingAccounts.Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
+            var allCounterpartyFamilyIds = onBoardingAccounts.Select(s => s.BrokerId).Distinct().ToList();
+            var allFundIds = onBoardingAccounts.Select(s => s.dmaFundOnBoardId).Distinct().ToList();
+
+            using (var context = new AdminContext())
+            {
+                agreements = context.dmaAgreementOnBoardings.AsNoTracking()
+                    .Where(s => allAgreementIds.Contains(s.dmaAgreementOnBoardingId))
+                    .Select(s => new AgreementBaseDetails { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId })
+                    .ToDictionary(s => s.AgreementOnboardingId, v => v);
+
+                counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
+                funds = context.onboardingFunds.AsNoTracking().Where(s => allFundIds.Contains(s.dmaFundOnBoardId)).ToDictionary(s => s.dmaFundOnBoardId, v => v.LegalFundName);
+            }
+
             foreach (var account in onBoardingAccounts)
             {
                 var row = new Row();
                 row["Account Id"] = account.onBoardingAccountId.ToString();
                 row["Entity Type"] = account.AccountType;
-                row["Fund Name"] = (account.onboardingFund != null) ? account.onboardingFund.LegalFundName : string.Empty;
-                row["Agreement Name"] = (account.dmaAgreementOnBoarding != null) ? account.dmaAgreementOnBoarding.AgreementShortName : string.Empty;
-                row["Broker"] = (account.dmaCounterpartyFamily != null) ? account.dmaCounterpartyFamily.CounterpartyFamily : string.Empty;
+                row["Fund Name"] = funds.ContainsKey(account.dmaFundOnBoardId) ? funds[account.dmaFundOnBoardId] : string.Empty;
+                row["Agreement Name"] = account.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)account.dmaAgreementOnBoardingId) ? agreements[(long)account.dmaAgreementOnBoardingId].AgreementShortName : string.Empty;
+                row["Broker"] = account.BrokerId != null && counterparties.ContainsKey((long)account.BrokerId) ? counterparties[(long)account.BrokerId] : string.Empty;
                 row["Account Name"] = account.AccountName;
                 row["Account Number"] = account.AccountNumber;
                 row["Account Type"] = account.AccountPurpose;
@@ -989,7 +1049,8 @@ namespace HMOSecureWeb.Controllers
         private List<Row> BuildSsiTemplateRows(List<onBoardingSSITemplate> ssiTemplates)
         {
             var templateListRows = new List<Row>();
-            var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties().ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
+            var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties();
+            var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
 
             foreach (var template in ssiTemplates)
             {
@@ -998,7 +1059,7 @@ namespace HMOSecureWeb.Controllers
                 row["Template Name"] = template.TemplateName;
                 row["SSI Template Type"] = template.SSITemplateType;
                 row["Legal Entity"] = counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty;
-                row["Account Type"] = (template.dmaAgreementType != null && string.IsNullOrEmpty(template.ServiceProvider)) ? template.dmaAgreementType.AgreementType : string.Empty;
+                row["Account Type"] = (agreementTypes.ContainsKey(template.dmaAgreementTypeId) && string.IsNullOrEmpty(template.ServiceProvider)) ? agreementTypes[template.dmaAgreementTypeId] : string.Empty;
                 row["Service Provider"] = template.ServiceProvider;
                 row["Currency"] = template.Currency;
                 row["Payment/Receipt Reason Detail"] = template.ReasonDetail;
@@ -1091,7 +1152,7 @@ namespace HMOSecureWeb.Controllers
                             var counterPartyByAgreement = onboardingAccounts.FirstOrDefault(s => s.dmaAgreementOnBoardingId == accountDetail.dmaAgreementOnBoardingId);
                             if (counterPartyByAgreement != null)
                             {
-                                accountDetail.BrokerId = counterPartyByAgreement.dmaAgreementOnBoarding.dmaCounterPartyFamilyId.ToLong();
+                                accountDetail.BrokerId = counterPartyByAgreement.BrokerId;
                             }
 
                             if (accountDetail.onBoardingAccountId == 0)
@@ -1333,7 +1394,7 @@ namespace HMOSecureWeb.Controllers
         public string UploadSsiTemplate()
         {
             var onboardingSsiTemplate = AccountManager.GetAllBrokerSsiTemplates();
-            var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties().ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
+            var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties();
             var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
             var accountBicorAba = AccountManager.GetAllAccountBicorAba();
 

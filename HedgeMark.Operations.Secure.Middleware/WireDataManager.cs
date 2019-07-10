@@ -60,6 +60,10 @@ namespace HMOSecureMiddleware
         public static WireTicket GetWireData(long wireId)
         {
             hmsWire hmWire;
+            onBoardingAccount wireSendingAccount;
+            onBoardingAccount wireReceivingAccount;
+            onBoardingSSITemplate wireSSITemplate;
+
 
             using (var context = new OperationsSecureContext())
             {
@@ -83,6 +87,10 @@ namespace HMOSecureMiddleware
                 hmWire.hmsWireDocuments = context.hmsWireDocuments.Where(s => s.hmsWireId == wireId).ToList();
                 hmWire.hmsWireWorkflowLogs = context.hmsWireWorkflowLogs.Where(s => s.hmsWireId == wireId).ToList();
                 hmWire.hmsWireLogs = context.hmsWireLogs.Where(s => s.hmsWireId == wireId).ToList();
+
+                wireSendingAccount = context.onBoardingAccounts.FirstOrDefault(s => hmWire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount();
+                wireReceivingAccount = context.onBoardingAccounts.FirstOrDefault(s => hmWire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount();
+                wireSSITemplate = context.onBoardingSSITemplates.FirstOrDefault(s => hmWire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate();
             }
 
             //if (hmWire == null)
@@ -117,9 +125,6 @@ namespace HMOSecureMiddleware
             }
             hmWire.hmsWireWorkflowLogs = hmWire.hmsWireWorkflowLogs.OrderByDescending(s => s.CreatedAt).ToList();
             //dmaAgreementOnBoarding wireAgreement;
-            onBoardingAccount wireSendingAccount;
-            onBoardingAccount wireReceivingAccount;
-            onBoardingSSITemplate wireSSITemplate;
             dmaCounterPartyOnBoarding counterparty;
             List<string> workflowUsers;
             List<string> attachmentUsers;
@@ -140,10 +145,7 @@ namespace HMOSecureMiddleware
 
                 workflowUsers = hmWire.hmsWireWorkflowLogs.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
                 attachmentUsers = hmWire.hmsWireDocuments.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
-
-                wireSendingAccount = context.onBoardingAccounts.FirstOrDefault(s => hmWire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount();
-                wireReceivingAccount = context.onBoardingAccounts.FirstOrDefault(s => hmWire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount();
-                wireSSITemplate = context.onBoardingSSITemplates.FirstOrDefault(s => hmWire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate();
+                
                 counterparty = context.dmaCounterPartyOnBoardings.FirstOrDefault(s => wireSSITemplate.TemplateEntityId == s.dmaCounterPartyOnBoardId);
             }
 
