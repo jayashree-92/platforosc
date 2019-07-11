@@ -1131,7 +1131,8 @@ namespace HMOSecureWeb.Controllers
                     System.IO.File.Delete(fileinfo.FullName);
 
                 file.SaveAs(fileinfo.FullName);
-                var accountRows = new ExcelFileParser(fileinfo, "List of Accounts", string.Empty).Parse(true, false);
+
+                var accountRows = new Parser().ParseAsRows(fileinfo, "List of Accounts", string.Empty, true);
 
                 if (accountRows.Count > 0)
                 {
@@ -1412,7 +1413,7 @@ namespace HMOSecureWeb.Controllers
                     System.IO.File.Delete(fileinfo.FullName);
 
                 file.SaveAs(fileinfo.FullName);
-                var templateListRows = new ExcelFileParser(fileinfo, "List of SSI Template", string.Empty).Parse(true, false);
+                var templateListRows = new Parser().ParseAsRows(fileinfo, "List of SSI Template", string.Empty, true);
 
                 if (templateListRows.Count > 0)
                 {
