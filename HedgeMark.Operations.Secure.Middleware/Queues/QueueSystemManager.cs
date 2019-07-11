@@ -73,14 +73,14 @@ namespace HMOSecureMiddleware.Queues
             //Send this Swift Message
             SendMessageInQueue(swiftMessage);
 
-            //sleep for a second
-            Thread.Sleep(1000 * 1);
+            //sleep for 2 second
+            Thread.Sleep(1000 * 2);
 
             //Look out for FEACK or ACK
             GetAndProcessAcknowledgement();
         }
 
-        private static void SendMessageInQueue(string swiftMessage)
+        private static void SendMessageInQueue(string swiftMessage, bool isRetry = false)
         {
             try
             {
@@ -104,6 +104,14 @@ namespace HMOSecureMiddleware.Queues
 
             catch (MQException ex)
             {
+                //Retry once to fix the Broken connection - will fail on the second retry
+                if (!isRetry && ex.Message == "MQRC_CONNECTION_BROKEN")
+                {
+                    //sleep for 2 second
+                    Thread.Sleep(1000 * 2);
+                    SendMessageInQueue(swiftMessage, true);
+                }
+
                 Logger.Error("Sending MQ Message Failed: " + ex.Message, ex);
                 throw;
             }
