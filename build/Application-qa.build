@@ -17,8 +17,8 @@
   <property name="UnitTestLocation" value="../HedgeMark.Operations.Secure.Middleware.Tests/bin" />  
   <property name="MSTest" value="C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\MSTest.exe"/>
   <property name="testResults" value="${CurrentDir}\TestResults"/>  
-  <property name="QAPathToCopyServer1" value="\\wc08a10003pv00\OPS_Secure_QA01"/>
-  <property name="QAPathToCopyServer2" value="\\wc08a10004pv00\OPS_Secure_QA01"/>
+  <property name="QAPathToCopyServer1" value="\\wc08a10003pv00\d$\OPS_Secure_QA01"/>
+  <property name="QAPathToCopyServer2" value="\\wc08a10004pv00\d$\OPS_Secure_QA01"/>
 
 
 <!-- <property name="msbuild-VS2013" value="C:\Program Files (x86)\MSBuild\12.0\Bin\msbuild.exe" unless="${property::exists('msbuild-VS2013')}"/> -->
