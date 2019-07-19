@@ -115,12 +115,24 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         /// <returns></returns>
         private static Field50K GetField50K(WireTicket wire)
         {
+            var isFFCAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber);
+
             var f50K = new Field50K()
-                .setAccount(!string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber)
-                .setNameAndAddressLine1(wire.SendingAccount.UltimateBeneficiaryBankName)
+                .setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber)
+                .setNameAndAddressLine1(isFFCAvailable ? wire.SendingAccount.AccountName : wire.SendingAccount.UltimateBeneficiaryBankName)
                 .setNameAndAddressLine2(wire.SendingAccount.UltimateBeneficiaryBankAddress);
             return f50K;
         }
+
+
+        private static void SetField52X(AbstractMT mtMessage, WireTicket wire)
+        {
+            if (wire.SendingAccount.UltimateBeneficiaryType != "ABA" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiaryBICorABA))
+                mtMessage.addField(GetField52A(wire));
+            else
+                mtMessage.addField(GetField52D(wire));
+        }
+
 
         /// <summary>
         /// "Ordering Customer"
@@ -174,15 +186,6 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             var f53B = new Field53B().setAccount(ffcOrUltimateAccount);
             return f53B;
-        }
-
-
-        private static void SetField52X(AbstractMT mtMessage, WireTicket wire)
-        {
-            if (wire.SendingAccount.UltimateBeneficiaryType != "ABA" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiaryBICorABA))
-                mtMessage.addField(GetField52A(wire));
-            else
-                mtMessage.addField(GetField52D(wire));
         }
 
         private static void SetField56X(AbstractMT mtMessage, WireTicket wire)
