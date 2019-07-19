@@ -486,10 +486,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         var cutOffTime = angular.copy(account.CutoffTime);
         var date = new Date();
         if (cashSweepTime != null && cashSweepTime != "" && cashSweepTime != undefined) {
-            account.CashSweepTime = new Date(date.getYear(), date.getMonth(), date.getDay(), cashSweepTime.Hours, cashSweepTime.Minutes, cashSweepTime.Seconds);
+            account.CashSweepTime = new Date(date.getYear(), date.getMonth(), date.getDate(), cashSweepTime.Hours, cashSweepTime.Minutes, cashSweepTime.Seconds);
         }
         if (cutOffTime != null && cutOffTime != "" && cutOffTime != undefined) {
-            account.CutoffTime = new Date(date.getYear(), date.getMonth(), date.getDay(), cutOffTime.Hours, cutOffTime.Minutes, cutOffTime.Seconds);
+            account.CutoffTime = new Date(date.getYear(), date.getMonth(), date.getDate(), cutOffTime.Hours, cutOffTime.Minutes, cutOffTime.Seconds);
         }
     }
 

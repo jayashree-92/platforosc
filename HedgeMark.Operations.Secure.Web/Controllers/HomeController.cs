@@ -435,7 +435,8 @@ namespace HMOSecureWeb.Controllers
                 { "MDT", "Mountain Daylight Time" },
                 { "PST", "Pacific Standard Time" },
                 { "PDT", "Pacific Daylight Timee" },
-                { "GMT", "Greenwich Mean Time" }
+                { "CET", "Central European Standard Time"},
+                { "GMT", "GMT Standard Time" }
         };
         public JsonResult GetTimeToApproveTheWire(DateTime? cashSweepOfAccount, DateTime? cutOffTimeOfAccount, DateTime valueDate, string cashSweepTimeZone)
         {
@@ -450,17 +451,19 @@ namespace HMOSecureWeb.Controllers
             try
             {
                 cashSweepTimeZone = cashSweepTimeZone ?? "";
-                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones.ContainsKey(cashSweepTimeZone) ? TimeZones[cashSweepTimeZone] : TimeZones[FileSystemManager.DefaultTimeZone]);
                 var cashSweepTime = new DateTime();
-                if (cashSweepTimeZone != "EST")
+                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones.ContainsKey(cashSweepTimeZone) ? TimeZones[cashSweepTimeZone] : TimeZones[FileSystemManager.DefaultTimeZone]);
+                TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones[FileSystemManager.DefaultTimeZone]);
+                if (customTimeZone.Id != "Eastern Standard Time")
                 {
-                    var actualTime = TimeZoneInfo.ConvertTime(cashSweep, customTimeZone);
-                    cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(actualTime, "Eastern Standard Time");
+                    cashSweepTime = TimeZoneInfo.ConvertTime(cashSweep, customTimeZone, destinationTimeZone);
                 }
                 else
                     cashSweepTime = cashSweep;
                 var cutOffTime = cutOff;
-                var currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
+                var currentTime = DateTime.Now;
+                if (TimeZoneInfo.Local.Id != "Eastern Standard Time")
+                    currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
 
                 TimeSpan offSetTime;
                 if (cashSweepTime < cutOffTime)
@@ -472,7 +475,6 @@ namespace HMOSecureWeb.Controllers
             }
             catch (TimeZoneNotFoundException e)
             {
-                Logger.Error(e.Message, e);
                 return new TimeSpan();
             }
         }
