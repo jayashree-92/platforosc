@@ -117,10 +117,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var isFFCAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber);
 
-            var f50K = new Field50K()
-                .setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber)
-                .setNameAndAddressLine1(isFFCAvailable ? wire.SendingAccount.AccountName : wire.SendingAccount.UltimateBeneficiaryBankName)
+            var f50K = new Field50K().setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber)
+                .setNameAndAddressLine1(isFFCAvailable ? wire.SendingAccount.UltimateBeneficiaryAccountName : wire.SendingAccount.UltimateBeneficiaryBankName)
                 .setNameAndAddressLine2(wire.SendingAccount.UltimateBeneficiaryBankAddress);
+
             return f50K;
         }
 
