@@ -284,7 +284,7 @@ namespace HMOSecureWeb.Controllers
 
                 var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan());
                 var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan());
-                var deadlineToApprove = GetDeadlineToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
+                var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
                 SaveWireScheduleInfo(wireTicket, (WireDataManager.WireStatus)statusId, UserDetails.Id, deadlineToApprove);
                 var tempFilePath = string.Format("Temp\\{0}", UserName);
 

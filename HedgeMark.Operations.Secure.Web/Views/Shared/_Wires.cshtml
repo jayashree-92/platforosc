@@ -19,9 +19,6 @@
                         <span ng-style="{'margin-left': isApprovedOrFailed ? '0px' : '55px' }">|&nbsp;Wire Status: <span id="spnwireStatus"><b>{{ getWireStatus() }}</b></span></span>
                         <span ng-style="{'margin-left': isApprovedOrFailed ? '0px' : '55px' }" ng-show="WireTicket.SwiftStatusId > 1">|&nbsp;Swift Status: <span id="spnswiftStatus"><b>{{ getSwiftStatus() }}</b></span></span>
                     </p>
-                    <div class="panel panel-heading collapse" id="wireErrorStatus" style="background: #F5F5F5;text-transform: inherit; font-size:13px;">
-                        <p style="color: darkred; font-weight:bold;"> {{ validationMsg }}</p>
-                    </div>
                 </span>
                 <span class="pull-right" style="padding: 5px; position: absolute; margin: 5px 0px 0px -50px">
                     <button title="close this log" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -811,6 +808,10 @@
                     <div class="panel-body collapse" id="wireSwiftMessagesDiv" style="padding: 2px 15px 0px 15px; overflow-y: scroll; max-height: 270px; margin-bottom: 2px;">
                         <p class="ng-show-hide swiftMessgeBlock" ng-animate-swap="TrustedSwiftMessage">{{TrustedSwiftMessage}} </p>
                     </div>
+                </div>
+
+                <div class="panel panel-heading collapse" data-toggle="collapse" id="wireErrorStatus" style="background: #F5F5F5;text-transform: inherit; font-size:13px;">
+                    <p style="color: darkred; font-weight:bold;"> {{ validationMsg }}</p>
                 </div>
             </div>
 
