@@ -87,6 +87,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="SwiftMT094MessageParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SwiftMTMessageCreationTest.cs" />
     <Compile Include="SwiftMTMessageFormatterTest.cs" />

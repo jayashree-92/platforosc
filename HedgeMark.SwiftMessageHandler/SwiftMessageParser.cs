@@ -57,7 +57,8 @@ namespace HedgeMark.SwiftMessageHandler
                 }
                 else if (qualifiedBlock.Key == "4")
                 {
-                    var block4 = blockConstruct.IsServiceMessage ? ConstructBlock4OfServiceId21(qualifiedBlock.Value) : ConstructBlock4(qualifiedBlock.Value);
+                    var hasFieldsWithTwoLevels = qualifiedBlock.Value.StartsWith("{");
+                    var block4 = blockConstruct.IsServiceMessage || hasFieldsWithTwoLevels ? ConstructBlock4With2Levels(qualifiedBlock.Value) : ConstructBlock4(qualifiedBlock.Value);
                     swiftMessage.AddBlock(block4);
                 }
                 else if (qualifiedBlock.Key == "5")
@@ -170,7 +171,7 @@ namespace HedgeMark.SwiftMessageHandler
             return swiftblock3;
         }
 
-        private static SwiftBlock4 ConstructBlock4OfServiceId21(string block3)
+        private static SwiftBlock4 ConstructBlock4With2Levels(string block3)
         {
             var swiftblock4 = new SwiftBlock4();
 
