@@ -175,9 +175,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         $scope.validationMsg = response.data.validationMsg;
                     }
                     else {
-                        $("#wireErrorStatus").collapse("show");
+                        $("#wireErrorStatus").collapse("show").pulse({ times: 3 });;
                         $scope.isDeadlineCrossed = true;
-                        if(response.data.validationMsg == "")
+                        if (response.data.validationMsg == "")
                             $scope.validationMsg = "Note:Deadline crossed. Please select a future date for settlement.";
                         else
                             $scope.validationMsg = response.data.validationMsg;
@@ -217,7 +217,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 if (!$scope.isWireCreated)
                     $("#wireErrorStatus").collapse("hide");
                 else {
-                    $("#wireErrorStatus").collapse("show");
+                    $("#wireErrorStatus").collapse("show").pulse({ times: 3 });;
                     $scope.validationMsg = "Note:An Initiated wire exists for the same value date, purpose, sending and receiving account.";
                 }
             });
@@ -236,20 +236,20 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return "";
 
         switch (wireLog.WireStatusId) {
-        case 1:
-            return "glyphicon-pencil";
-        case 2:
-            return "glyphicon-list-alt";
-        case 3:
-            return "glyphicon-ok";
-        case 4:
-            
-            if ($scope.WireTicket.SwiftStatusId == 1)
-                return "glyphicon-ban-circle";
-            else
-                return "glyphicon-trash" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
-        case 5:
-            return "glyphicon-remove";
+            case 1:
+                return "glyphicon-pencil";
+            case 2:
+                return "glyphicon-list-alt";
+            case 3:
+                return "glyphicon-ok";
+            case 4:
+
+                if ($scope.WireTicket.SwiftStatusId == 1)
+                    return "glyphicon-ban-circle";
+                else
+                    return "glyphicon-trash" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
+            case 5:
+                return "glyphicon-remove";
 
         }
         return "";
@@ -271,10 +271,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 return "Approved" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
             case 4: angular.element("#workflowStatus_" + index).addClass("text-blocked");
                 angular.element("#workflowStatus_" + index).addClass("text-blocked");
-                if($scope.WireTicket.SwiftStatusId == 1)
+                if ($scope.WireTicket.SwiftStatusId == 1)
                     return "Rejected";
-                else 
-                    return  "Cancelled" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
+                else
+                    return "Cancelled" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
             case 5: angular.element("#workflowStatus_" + index).addClass("text-danger");
                 return "Failed";// + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
 
@@ -462,23 +462,24 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.WireTicket.WireMessageTypeId = angular.element("#liMessageType").select2('val');
         $scope.WireTicket.DeliveryCharges = $scope.WireTicket.WireMessageTypeId == "1" ? angular.element("#liDeliveryCharges").select2('val') : null;
 
-            if ($scope.WireTicket.Amount != 0) {
-                if (!$scope.isDeadlineCrossed || $scope.wireComments.trim() != "") {
-                    $("#wireErrorStatus").collapse("hide");
-                    $scope.validationMsg = "";
-                    return true;
-                }
-                else {
-                    $("#wireErrorStatus").collapse("show");
-                    $scope.validationMsg = "Please enter the comments to initiate the wire as deadline is crossed.";
-                    return false;
-                }
+        if ($scope.WireTicket.Amount != 0) {
+            $("#wireErrorStatus").collapse("hide");
+            $scope.validationMsg = "";
+            if (!$scope.isDeadlineCrossed || $scope.wireComments.trim() != "") {
+                angular.element('#wireComment').popover("hide");
+                return true;
             }
             else {
-                $("#wireErrorStatus").collapse("show");
-                $scope.validationMsg = "Please enter a non-zero amount to initiate the wire";
+                $("#wireErrorStatus").collapse("show").pulse({ times: 3 });;
+                $scope.validationMsg = "Please enter the comments to approve the wire as deadline is crossed.";
                 return false;
             }
+        }
+        else {
+            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });;
+            $scope.validationMsg = "Please enter a non-zero amount to initiate the wire";
+            return false;
+        }
     }
 
     $scope.castToDate = function (account) {
@@ -504,7 +505,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.validationMsg = "";
             }
             else {
-                $("#wireErrorStatus").collapse("show");
+                $("#wireErrorStatus").collapse("show").pulse({ times: 3 });;
                 $scope.isDeadlineCrossed = true;
                 $scope.validationMsg = "Deadline crossed. Please select a future date for settlement.";
             }
