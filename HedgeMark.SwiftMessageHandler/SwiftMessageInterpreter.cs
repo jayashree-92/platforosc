@@ -86,11 +86,7 @@ namespace HedgeMark.SwiftMessageHandler
             if (swiftMsg.IsServiceMessage21())
             {
                 builder.Append("Message format : Service message for ");
-
-                if (swiftMsg.IsAck())
-                    builder.Append("Acknowledgement");
-                else
-                    builder.Append("N-Acknowledgement");
+                builder.Append(swiftMsg.IsAck() ? "Acknowledgement" : "N-Acknowledgement");
             }
 
             else if (swiftMsg.Block2.Priority != null)
@@ -117,7 +113,8 @@ namespace HedgeMark.SwiftMessageHandler
             builder.AppendLine("------------------------- Message Header -----------------------------------------");
             builder.AppendLine(string.Format("Swift    : MT {0}", swiftMsg.MessageType));
             builder.AppendLine(string.Format("Sender   : {0}", swiftMsg.GetSender()));
-            builder.AppendLine(string.Format("Receiver : {0}", swiftMsg.GetReceiver()));
+            builder.AppendLine(string.Format("Receiver : {0}", swiftMsg.IsServiceMessage21() ? swiftMsg.UnderlyingOriginalSwiftMessage.GetReceiver() : swiftMsg.GetReceiver()));
+
             if (!string.IsNullOrWhiteSpace(swiftMsg.GetMUR()))
             {
                 builder.AppendLine(string.Format("MUR      : {0}", swiftMsg.GetMUR()));
