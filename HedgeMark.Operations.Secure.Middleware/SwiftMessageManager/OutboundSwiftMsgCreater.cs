@@ -336,8 +336,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                     ? !string.IsNullOrWhiteSpace(wire.ReceivingAccount.FFCNumber)
                         ? wire.ReceivingAccount.FFCNumber
                         : string.Empty
-                    : !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber)
-                        ? wire.SendingAccount.FFCNumber
+                    : !string.IsNullOrWhiteSpace(wire.SSITemplate.FFCNumber)
+                        ? wire.SSITemplate.FFCNumber
                         : string.Empty;
 
             if (string.IsNullOrWhiteSpace(ffcNumber))

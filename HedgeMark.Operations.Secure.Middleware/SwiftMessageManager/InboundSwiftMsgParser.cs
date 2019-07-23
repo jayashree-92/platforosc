@@ -8,7 +8,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 {
     public class InboundSwiftMsgParser
     {
-        private static readonly List<string> HandledMTMessages = new List<string>() { MTDirectory.MT_196, MTDirectory.MT_296, MTDirectory.MT_900, MTDirectory.MT_910, MTDirectory.MT_548 };
+        private static readonly List<string> HandledMTMessageConfirmationList = new List<string>() { MTDirectory.MT_196, MTDirectory.MT_296, MTDirectory.MT_900, MTDirectory.MT_910, MTDirectory.MT_548 };
+        public static readonly List<string> MTMessageTypesToIgnore = new List<string>() { MTDirectory.MT_094 };
 
         public static WireInBoundMessage ParseMessage(string swiftMessage)
         {
@@ -20,6 +21,9 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             if (inBoundWireMessage.IsFeAck)
                 return inBoundWireMessage;
 
+            if (MTMessageTypesToIgnore.Any(s => s.Equals(inBoundWireMessage.SwiftMessage.GetMTType())))
+                return inBoundWireMessage;
+
             if (inBoundWireMessage.IsAckOrNack)
                 return ParseServiceMessage(inBoundWireMessage);
 
@@ -28,7 +32,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                 return Parse548(inBoundWireMessage);
 
             //MT196 and 296 and 900, 910- confirmation of Cancellation
-            if (HandledMTMessages.Any(s => s.Equals(inBoundWireMessage.SwiftMessage.GetMTType())))
+            if (HandledMTMessageConfirmationList.Any(s => s.Equals(inBoundWireMessage.SwiftMessage.GetMTType())))
                 return ParseGeneralConfirmation(inBoundWireMessage);
 
             return ParseUnHandled(inBoundWireMessage);

@@ -25,6 +25,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.MT
         public const string MT_910 = "910";
         public const string MT_196 = "196";
         public const string MT_296 = "296";
+        public const string MT_094 = "094";
 
 
         public static readonly List<string> InBoundMessageTypes = new List<string>()
@@ -54,7 +55,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.MT
             {MT_900,"Confirmation of Debit"},
             {MT_910,"Confirmation of Credit"},
             {MT_196,"Confirmation of Cancellation"},
-            {MT_296,"Confirmation of Cancellation"}
+            {MT_296,"Confirmation of Cancellation"},
+            {MT_094,"Broadcast"}
         };
     }
 }

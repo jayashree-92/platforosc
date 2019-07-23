@@ -189,17 +189,19 @@ namespace HMOSecureMiddleware
         {
             var confirmationData = InboundSwiftMsgParser.ParseMessage(swiftMessage);
 
+            //As of now we are not logging FEACK in wire logs, but are logged in MQLogs table
+            if (confirmationData.IsFeAck)
+                return;
+
             //When  reference tag has "COV", it means its a MT103 generated on behalf of MT202COV. We should skip tracking MT103 and track only original MT202COV
             if (confirmationData.ReferenceTag == "COV")
                 return;
-            
-            if (confirmationData.IsFeAck)
-            {
-                //As of now we are not logging FEACK in wire logs, but are logged in MQLogs table
-                return;
-            }
 
-            bool isCancellationMessage = confirmationData.MessageType.EndsWith("192") || confirmationData.MessageType.EndsWith("292");
+            //Ignore messges from the ignore list Eg. MT 094 - Broadcast messages
+            if (InboundSwiftMsgParser.MTMessageTypesToIgnore.Any(s => s.Equals(confirmationData.SwiftMessage.GetMTType())))
+                return;
+
+            var isCancellationMessage = confirmationData.MessageType.EndsWith("192") || confirmationData.MessageType.EndsWith("292");
 
             hmsWireWorkflowLog workflowLog = null;
             if (confirmationData.IsAckOrNack && confirmationData.IsAcknowledged)
