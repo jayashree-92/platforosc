@@ -59,7 +59,7 @@ namespace HMOSecureWeb.Controllers
                 accounts = accounts.Select(choice => new
                 {
                     id = choice.onBoardingAccountId,
-                    text = choice.AccountNumber
+                    text = string.Join("{0}|{1}", choice.AccountNumber, choice.FFCNumber ?? string.Empty), 
                 }).OrderBy(x => x.text).ToList(),
                 custodyAccounts = custodyAccounts.Select(choice => new
                 {

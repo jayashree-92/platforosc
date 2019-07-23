@@ -684,13 +684,13 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         var accountList = [];
         $($scope.onBoardingAccountDetails).each(function (i, v) {
             if (v.onBoardingAccountId == 0) {
-                accountList.push(v.AccountNumber);
+                accountList.push(v.AccountNumber + "|" + (v.FFCNumber == null ? "" : v.FFCNumber));
             }
         });
         $($scope.allAccounts).each(function (i, v) {
             if (accountList.indexOf(v.text) > -1) {
                 isAccountExits = true;
-                existAccount = v.text;
+                existAccount = v.text.split("|");
                 return false;
             }
         });
@@ -698,7 +698,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         if (isAccountExits) {
             bootbox.confirm(
                 {
-                    "message": existAccount + " already exists. Still do you want to add the account?",
+                    "message": "Account Number: " + existAccount[0]  + " and FFC Number: " + existAccount[1] + " combination already exists. Do you wish to add the account?",
                     buttons: {
                         cancel: {
                             label: "No"
