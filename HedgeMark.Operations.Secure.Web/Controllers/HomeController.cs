@@ -284,7 +284,7 @@ namespace HMOSecureWeb.Controllers
 
                 var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan());
                 var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan());
-                var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
+                var deadlineToApprove = GetDeadlineToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
                 SaveWireScheduleInfo(wireTicket, (WireDataManager.WireStatus)statusId, UserDetails.Id, deadlineToApprove);
                 var tempFilePath = string.Format("Temp\\{0}", UserName);
 
@@ -485,9 +485,10 @@ namespace HMOSecureWeb.Controllers
             {
                 cashSweepTimeZone = cashSweepTimeZone ?? "";
                 TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones.ContainsKey(cashSweepTimeZone) ? TimeZones[cashSweepTimeZone] : TimeZones[FileSystemManager.DefaultTimeZone]);
-                var actualTime = TimeZoneInfo.ConvertTime(cashSweep, customTimeZone);
+                TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones[FileSystemManager.DefaultTimeZone]);
+                var actualTime = TimeZoneInfo.ConvertTime(cashSweep, customTimeZone, destinationTimeZone);
                 var cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(actualTime, "Eastern Standard Time");
-                var cutOffTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(cutOff, "Eastern Standard Time");
+                var cutOffTime = cutOff;
                 var currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
 
                 return cashSweepTime < cutOffTime ? cashSweepTime.TimeOfDay : cutOffTime.TimeOfDay;
