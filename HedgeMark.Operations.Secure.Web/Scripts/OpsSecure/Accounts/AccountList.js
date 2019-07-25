@@ -913,6 +913,98 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
+    $scope.fnGetAccountModules = function (panelIndex) {
+        $http.get("/Accounts/GetAccountModules").then(function (response) {
+            $scope.accountModules = response.data.accountModules;
+            $("#liAccountModule_" + panelIndex).select2({
+                placeholder: "Select Modules",
+                multiple: true,
+                allowClear: true,
+                data: response.data.accountModules
+            });
+            $("#liAccountModule_" + panelIndex).val($scope.onBoardingAccountDetails[panelIndex].AccountModule);
+        });
+    }
+
+    $scope.addAccountDetail = function () {
+        if ($('#txtDetail').val() == undefined || $('#txtDetail').val() == "") {
+            //pop-up    
+            $("#txtDetail").popover({
+                placement: "right",
+                trigger: "manual",
+                container: "body",
+                content: $scope.detail + " cannot be empty. Please add a valid " + $scope.detail,
+                html: true,
+                width: "250px"
+            });
+
+            $("#txtDetail").popover("show");
+            return;
+        }
+
+        $("#txtDetail").popover("hide");
+        var isExists = false;
+        if ($scope.detail == "Description") {
+            $($scope.AccountDescriptions).each(function (i, v) {
+                if ($("#txtDetail").val() == v.text) {
+                    isExists = true;
+                    return false;
+                }
+            });
+        }
+        else {
+            $($scope.AccountModules).each(function (i, v) {
+                if ($("#txtDetail").val() == v.text) {
+                    isExists = true;
+                    return false;
+                }
+            });
+        }
+        if (isExists) {
+            $("#txtDetail").popover({
+                placement: "right",
+                trigger: "manual",
+                container: "body",
+                content: $scope.detail + " is already exists. Please enter a valid " + $scope.detail,
+                html: true,
+                width: "250px"
+            });
+            //notifyWarning("Governing Law is already exists. Please enter a valid governing law");
+            $("#txtDetail").popover("show");
+            return;
+        }
+        if ($scope.detail == "Description") {
+            $http.post("/Accounts/AddAccountDescriptions", { accountDescription: $("#txtDetail").val(), agreementTypeId: $scope.agreementTypeId }).then(function (response) {
+                notifySuccess("Description added successfully");
+                $scope.onBoardingAccountDetails[$scope.PanelIndex].Description = $("#txtDetail").val();
+                $scope.fnGetAccountDescriptions($scope.PanelIndex);
+            });
+        }
+        else {
+            $http.post("/Accounts/AddAccountModule", { accountModule: $("#txtDetail").val() }).then(function (response) {
+                notifySuccess("Module added successfully");
+                $scope.fnGetAccountModules($scope.PanelIndex);
+            });
+        }
+
+        $("#accountDetailModal").modal("hide");
+    }
+
+    $scope.fnAddAccountDetailModal = function (panelIndex, detail) {
+        $scope.PanelIndex = panelIndex;
+        $scope.detail = detail;
+        //$scope.scrollPosition = $(window).scrollTop();
+        //$("#txtGoverningLaw").prop("placeholder", "Enter a governing law");
+        $('#accountDetailModal').modal({
+            show: true,
+            keyboard: true
+        }).on("hidden.bs.modal", function () {
+            $("#txtDetail").popover("hide").val("");
+            // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
+        });
+    }
+    angular.element("#txtDetail").on("focusin", function () { angular.element("#txtDetail").popover("hide"); });
+
     $scope.fnLoadContactDetails = function (brokerId, contactName, index) {
         $http.get("/Accounts/GetAllOnBoardingAccountContacts?entityId=" + brokerId).then(function (response) {
             $scope.contactNames = [];
@@ -1316,6 +1408,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $.each($scope.onBoardingAccountDetails, function (key, value) {
 
             $scope.fnGetAccountDescriptions(key);
+            $scope.fnGetAccountModules(key);
             $scope.fnLoadContactDetails($scope.BrokerId, value.ContactName, key);
             $scope.fnLoadDefaultDropDowns(key);
             $scope.fnGetAuthorizedParty(key);
@@ -1609,69 +1702,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnCreateContact = function () {
         window.open("/" + subDomain + "Contact/OnboardContact?onBoardingTypeId=3&entityId=" + $scope.BrokerId + "&contactId=0", "_blank");
     }
-
-    $scope.fnAddAccountDescription = function () {
-        if ($('#txtDescription').val() == undefined || $('#txtDescription').val() == "") {
-            //pop-up    
-            $("#txtDescription").popover({
-                placement: "right",
-                trigger: "manual",
-                container: "body",
-                content: "Description cannot be empty. Please add a valid Description",
-                html: true,
-                width: "250px"
-            });
-
-            $("#txtDescription").popover("show");
-            return;
-        }
-
-        $("#txtDescription").popover("hide");
-        var isExists = false;
-        $($scope.AccountDescriptions).each(function (i, v) {
-            if ($("#txtDescription").val() == v.text) {
-                isExists = true;
-                return false;
-            }
-        });
-        if (isExists) {
-            $("#txtDescription").popover({
-                placement: "right",
-                trigger: "manual",
-                container: "body",
-                content: "Description is already exists. Please enter a valid Description",
-                html: true,
-                width: "250px"
-            });
-            //notifyWarning("Governing Law is already exists. Please enter a valid governing law");
-            $("#txtDescription").popover("show");
-            return;
-        }
-
-        $http.post("/Accounts/AddAccountDescriptions", { accountDescription: $("#txtDescription").val(), agreementTypeId: $scope.AgreementTypeId }).then(function (response) {
-            notifySuccess("Description added successfully");
-            $scope.onBoardingAccountDetails[$scope.PanelIndex].Description = $("#txtDescription").val();
-            $scope.fnGetAccountDescriptions($scope.PanelIndex);
-            $("#txtDescription").val("");
-        });
-
-
-        $('#accountDescriptionModal').modal('hide');
-    }
-
-    $scope.fnAddAccountDescriptionModal = function (panelIndex) {
-        $scope.PanelIndex = panelIndex;
-        //$scope.scrollPosition = $(window).scrollTop();
-        //$("#txtGoverningLaw").prop("placeholder", "Enter a governing law");
-        $('#accountDescriptionModal').modal({
-            show: true,
-            keyboard: true
-        }).on("hidden.bs.modal", function () {
-            $("#txtDescription").popover("hide");
-            // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
-        });
-    }
-    angular.element("#txtDescription").on("focusin", function () { angular.element("#txtDescription").popover("hide"); });
 
     $scope.fnAddCurrency = function () {
         if ($("#txtCurrency").val() == undefined || $("#txtCurrency").val() == "") {

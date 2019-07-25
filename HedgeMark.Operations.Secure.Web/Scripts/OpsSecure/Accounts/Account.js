@@ -310,6 +310,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             $scope.fundName = response.data.legalFundName;
             $scope.counterpartyFamilyId = response.data.counterpartyFamilyId;
             $scope.accountDescriptions = response.data.accountDescriptions;
+            $scope.accountModules = response.data.accountModules;
             $scope.ssiTemplates = response.data.ssiTemplates;
             $scope.agreementTypeId = response.data.agreementTypeId;
             $scope.broker = response.data.broker;
@@ -564,6 +565,13 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             allowClear: true,
             data: $scope.accountDescriptions == undefined ? [] : $scope.accountDescriptions
         });
+        $("#liAccountModule_" + key).select2({
+            placeholder: "Select Module",
+            multiple: true,
+            allowClear: true,
+            data: $scope.accountModules == undefined ? [] : $scope.accountModules
+        });
+
 
         $("#liContacts" + key).select2({
             placeholder: "Select Contacts",
@@ -1308,75 +1316,104 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             $("#liAccountDescriptions" + panelIndex).select2({
                 placeholder: "Select Description",
                 allowClear: true,
+                multiple: true,
                 data: response.data.accountDescriptions
             });
-
             if ($scope.agreementTypeId > 0)
-                $("#liAccountDescriptions" + panelIndex).val($scope.onBoardingAccountDetails[panelIndex].Description);
+                $("#liAccountDescriptions" + panelIndex).val($scope.onBoardingAccountDetails[panelIndex].Description);    
         });
     }
 
-    $scope.fnAddAccountDescription = function () {
-        if ($('#txtDescription').val() == undefined || $('#txtDescription').val() == "") {
+    $scope.fnGetAccountModules = function (panelIndex) {
+        $http.get("/Accounts/GetAccountModules").then(function (response) {
+            $scope.accountModules = response.data.accountModules;
+            $("#liAccountModule_" + panelIndex).select2({
+                placeholder: "Select Modules",
+                allowClear: true,
+                data: response.data.accountModules
+            });
+            $("#liAccountModule_" + panelIndex).val($scope.onBoardingAccountDetails[panelIndex].AccountModule);
+        });
+    }
+
+    $scope.addAccountDetail = function () {
+        if ($('#txtDetail').val() == undefined || $('#txtDetail').val() == "") {
             //pop-up    
-            $("#txtDescription").popover({
+            $("#txtDetail").popover({
                 placement: "right",
                 trigger: "manual",
                 container: "body",
-                content: "Description cannot be empty. Please add a valid Description",
+                content: $scope.detail + " cannot be empty. Please add a valid " + $scope.detail,
                 html: true,
                 width: "250px"
             });
 
-            $("#txtDescription").popover("show");
+            $("#txtDetail").popover("show");
             return;
         }
 
-        $("#txtDescription").popover("hide");
+        $("#txtDetail").popover("hide");
         var isExists = false;
-        $($scope.AccountDescriptions).each(function (i, v) {
-            if ($("#txtDescription").val() == v.text) {
-                isExists = true;
-                return false;
-            }
-        });
+        if ($scope.detail == "Description") {
+            $($scope.AccountDescriptions).each(function (i, v) {
+                if ($("#txtDetail").val() == v.text) {
+                    isExists = true;
+                    return false;
+                }
+            });
+        }
+        else {
+            $($scope.AccountModules).each(function (i, v) {
+                if ($("#txtDetail").val() == v.text) {
+                    isExists = true;
+                    return false;
+                }
+            });
+        }
         if (isExists) {
-            $("#txtDescription").popover({
+            $("#txtDetail").popover({
                 placement: "right",
                 trigger: "manual",
                 container: "body",
-                content: "Description is already exists. Please enter a valid Description",
+                content: $scope.detail + " is already exists. Please enter a valid " + $scope.detail,
                 html: true,
                 width: "250px"
             });
             //notifyWarning("Governing Law is already exists. Please enter a valid governing law");
-            $("#txtDescription").popover("show");
+            $("#txtDetail").popover("show");
             return;
         }
+        if ($scope.detail == "Description") {
+            $http.post("/Accounts/AddAccountDescriptions", { accountDescription: $("#txtDetail").val(), agreementTypeId: $scope.agreementTypeId }).then(function (response) {
+                notifySuccess("Description added successfully");
+                $scope.onBoardingAccountDetails[$scope.PanelIndex].Description = $("#txtDetail").val();
+                $scope.fnGetAccountDescriptions($scope.PanelIndex);
+            });
+        }
+        else {
+            $http.post("/Accounts/AddAccountModule", { accountModule: $("#txtDetail").val() }).then(function (response) {
+                notifySuccess("Module added successfully");
+                $scope.fnGetAccountModules($scope.PanelIndex);
+            });
+        }
 
-        $http.post("/Accounts/AddAccountDescriptions", { accountDescription: $("#txtDescription").val(), agreementTypeId: $scope.agreementTypeId }).then(function (response) {
-            notifySuccess("Description added successfully");
-            $scope.onBoardingAccountDetails[$scope.PanelIndex].Description = $("#txtDescription").val();
-            $scope.fnGetAccountDescriptions($scope.PanelIndex);
-            $("#txtDescription").val("");
-        });
-
-        $("#accountDescriptionModal").modal("hide");
+        $("#accountDetailModal").modal("hide");
     }
 
-    $scope.fnAddAccountDescriptionModal = function (panelIndex) {
+    $scope.fnAddAccountDetailModal = function (panelIndex, detail) {
         $scope.PanelIndex = panelIndex;
+        $scope.detail = detail;
         //$scope.scrollPosition = $(window).scrollTop();
         //$("#txtGoverningLaw").prop("placeholder", "Enter a governing law");
-        $('#accountDescriptionModal').modal({
+        $('#accountDetailModal').modal({
             show: true,
             keyboard: true
         }).on("hidden.bs.modal", function () {
-            $("#txtDescription").popover("hide");
+            $("#txtDetail").popover("hide").val("");
             // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
         });
     }
-    angular.element("#txtDescription").on("focusin", function () { angular.element("#txtDescription").popover("hide"); });
+    angular.element("#txtDetail").on("focusin", function () { angular.element("#txtDetail").popover("hide"); });
 
     $scope.fnAddCurrency = function () {
         if ($("#txtCurrency").val() == undefined || $("#txtCurrency").val() == "") {

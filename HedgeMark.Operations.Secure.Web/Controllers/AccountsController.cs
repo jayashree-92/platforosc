@@ -112,9 +112,27 @@ namespace HMOSecureWeb.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
+        public JsonResult GetAccountModules()
+        {
+            var accountModules = AccountManager.GetAccountModules();
+            return Json(new
+            {
+                accountModules = accountModules.Select(choice => new
+                {
+                    id = choice.Module,
+                    text = choice.Module
+                }).OrderBy(x => x.text).ToList()
+            }, JsonContentType, JsonContentEncoding);
+        }
+
         public void AddAccountDescriptions(string accountDescription, int agreementTypeId)
         {
             AccountManager.AddAccountDescription(accountDescription, agreementTypeId);
+        }
+
+        public void AddAccountModule(string accountModule)
+        {
+            AccountManager.AddAccountModule(accountModule, UserName);
         }
 
 
@@ -149,6 +167,7 @@ namespace HMOSecureWeb.Controllers
 
             var onBoardingContacts = OnBoardingDataManager.GetAllOnBoardingContacts(ContactManager.CounterpartyTypeId, counterpartyFamilyId);
             var accountDescriptionChoices = AccountManager.GetAccountDescriptionsByAgreementTypeId(agreementTypeId);
+            var accountModules = AccountManager.GetAccountModules();
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
             var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds);
 
@@ -299,7 +318,11 @@ namespace HMOSecureWeb.Controllers
                     id = choice.AccountDescription,
                     text = choice.AccountDescription
                 }).OrderBy(x => x.text).ToList(),
-
+                accountModules = accountModules.Select(choice => new
+                {
+                    id = choice.Module,
+                    text = choice.Module
+                }).OrderBy(x => x.text).ToList(),
                 ssiTemplates
 
             }, Formatting.None, new JsonSerializerSettings()

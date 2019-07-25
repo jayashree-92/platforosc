@@ -232,6 +232,7 @@
           <Property Name="TickerorISIN" Type="varchar" MaxLength="200" />
           <Property Name="SweepCurrency" Type="varchar" MaxLength="10" />
           <Property Name="UltimateBeneficiaryAccountName" Type="varchar" MaxLength="500" />
+          <Property Name="AccountModule" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -265,6 +266,15 @@
           <Property Name="FileName" Type="varchar" MaxLength="300" />
           <Property Name="RecCreatedBy" Type="varchar" MaxLength="100" />
           <Property Name="RecCreatedAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="onboardingAccountModule">
+          <Key>
+            <PropertyRef Name="onboardingAccountModuleId" />
+          </Key>
+          <Property Name="onboardingAccountModuleId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Module" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="onBoardingAccountSSITemplateMap">
           <Key>
@@ -633,6 +643,7 @@
           <EntitySet Name="onBoardingAccountBICorABA" EntityType="Self.onBoardingAccountBICorABA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OnBoardingAccountDescription" EntityType="Self.OnBoardingAccountDescription" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingAccountDocument" EntityType="Self.onBoardingAccountDocument" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="onboardingAccountModule" EntityType="Self.onboardingAccountModule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingAccountSSITemplateMap" EntityType="Self.onBoardingAccountSSITemplateMap" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingAuthorizedParty" EntityType="Self.onBoardingAuthorizedParty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingCashInstruction" EntityType="Self.onBoardingCashInstruction" Schema="dbo" store:Type="Tables" />
@@ -821,6 +832,7 @@
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
           </AssociationSet>
+          <EntitySet Name="onboardingAccountModules" EntityType="OperationsSecureModel.onboardingAccountModule" />
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -1101,6 +1113,7 @@
           <Property Name="UltimateBeneficiaryAccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="onBoardingAccountDocuments" Relationship="OperationsSecureModel.FK_onBoardingAccountDocument_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountDocument" />
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
+          <Property Name="AccountModule" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -1467,6 +1480,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="onboardingAccountModule">
+          <Key>
+            <PropertyRef Name="onboardingAccountModuleId" />
+          </Key>
+          <Property Name="onboardingAccountModuleId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Module" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1627,6 +1649,7 @@
           <EntitySetMapping Name="onBoardingAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccount">
               <MappingFragment StoreEntitySet="onBoardingAccount">
+                <ScalarProperty Name="AccountModule" ColumnName="AccountModule" />
                 <ScalarProperty Name="UltimateBeneficiaryAccountName" ColumnName="UltimateBeneficiaryAccountName" />
                 <ScalarProperty Name="SweepCurrency" ColumnName="SweepCurrency" />
                 <ScalarProperty Name="TickerorISIN" ColumnName="TickerorISIN" />
@@ -1891,6 +1914,16 @@
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onboardingAccountModules">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onboardingAccountModule">
+              <MappingFragment StoreEntitySet="onboardingAccountModule">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Module" ColumnName="Module" />
+                <ScalarProperty Name="onboardingAccountModuleId" ColumnName="onboardingAccountModuleId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

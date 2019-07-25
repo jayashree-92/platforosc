@@ -165,6 +165,9 @@
     <Compile Include="onBoardingAccountDocument.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="onboardingAccountModule.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="onBoardingAccountSSITemplateMap.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

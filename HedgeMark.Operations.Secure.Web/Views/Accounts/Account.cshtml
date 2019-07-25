@@ -136,7 +136,7 @@
                                                 <input ng-model="accountDetail.Description" class="form-control control-label" id="liAccountDescriptions{{$index}}">
                                             </div>
                                             <div class="col-sm-8 col-md-3 col-lg-3">
-                                                <a id="btnAccountDescription" class="btn btn-sm btn-info" ng-click="fnAddAccountDescriptionModal($index)" title="Add Description"><i class="glyphicon glyphicon-plus"></i></a>
+                                                <a id="btnAccountDescription" class="btn btn-sm btn-info" ng-click="fnAddAccountDetailModal($index, 'Description')" title="Add Description"><i class="glyphicon glyphicon-plus"></i></a>
                                             </div>
                                         </div>
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
@@ -150,6 +150,17 @@
                                     </div>
                                     <p></p>
                                     <div class="row">
+                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                            <div class="col-sm-8 col-md-4 col-lg-4">
+                                                <label class="control-label">Module </label>
+                                            </div>
+                                            <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                <input ng-model="accountDetail.AccountModule" class="form-control control-label" id="liAccountModule_{{$index}}">
+                                            </div>
+                                            <div class="col-sm-8 col-md-3 col-lg-3">
+                                                <a id="btnAccountModule" class="btn btn-sm btn-info" ng-click="fnAddAccountDetailModal($index, 'Module')" title="Add Module"><i class="glyphicon glyphicon-plus"></i></a>
+                                            </div>
+                                        </div>
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
                                                 <label class="control-label">Account Number </label>
@@ -560,20 +571,20 @@
                 </form>
             </div>
         </div>
-        <div class="modal fade" id="accountDescriptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="accountDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Add Description</h4>
+                        <h4>Add {{ detail }}</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-sm-8 col-md-4 col-lg-4">
-                                <label for="txtDescription" class="control-label">Description:</label>
+                                <label for="txtDetail" class="control-label">{{ detail }}:</label>
                             </div>
                             <div class="col-sm-8 col-md-8 col-lg-8">
-                                <input type="text" id="txtDescription" class="modalInputWidth form-control" placeholder="Description" />
+                                <input type="text" id="txtDetail" class="modalInputWidth form-control" placeholder="{{ detail }}" />
                             </div>
                         </div>
                         @*<div class="row" style="margin-top: 10px;">
@@ -585,8 +596,8 @@
                             </div>*@
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddAccountDescription()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Description
+                        <button type="button" class="btn btn-sm btn-primary" ng-click="addAccountDetail()">
+                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add {{ detail }}
                         </button>
                         <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                     </div>

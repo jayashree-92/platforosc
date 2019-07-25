@@ -91,6 +91,15 @@ namespace HMOSecureMiddleware
 
         }
 
+        public static List<onboardingAccountModule> GetAccountModules()
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                return context.onboardingAccountModules.Where(s => s.CreatedBy != null).ToList();
+            }
+
+        }
+
         public static void AddAccountDescription(string accountDescription, int agreementTypeId)
         {
 
@@ -107,6 +116,30 @@ namespace HMOSecureMiddleware
                     context.SaveChanges();
                 }
 
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+            }
+        }
+
+        public static void AddAccountModule(string accountModule, string userName)
+        {
+            var methodName = MethodBase.GetCurrentMethod();
+            Logger.InfoFormat("{0} - calling to create the Onboarding Account Module", methodName);
+            try
+            {
+                using (var context = new OperationsSecureContext())
+                {
+                    var onBoardingAccountModule = new onboardingAccountModule()
+                    {
+                        Module = accountModule,
+                        CreatedBy = userName,
+                        CreatedAt = DateTime.Now
+                    };
+                    context.onboardingAccountModules.Add(onBoardingAccountModule);
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
