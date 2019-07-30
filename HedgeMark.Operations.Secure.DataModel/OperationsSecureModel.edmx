@@ -145,6 +145,16 @@
           <Property Name="SwiftStatusId" Type="int" Nullable="false" />
           <Property Name="WireTransferTypeId" Type="int" Nullable="false" />
           <Property Name="NotesToApprover" Type="varchar" MaxLength="1000" />
+          <Property Name="SenderInformationId" Type="int" />
+          <Property Name="SenderDescription" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="hmsWireSenderInformation">
+          <Key>
+            <PropertyRef Name="hmsWireSenderInformationId" />
+          </Key>
+          <Property Name="hmsWireSenderInformationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SenderInformation" Type="varchar" MaxLength="30" />
+          <Property Name="Description" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="hmsWireStatusLkup">
           <Key>
@@ -516,6 +526,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_hmsWires_hmsWireSenderInformation_SenderInformationId">
+          <End Role="hmsWireSenderInformation" Type="Self.hmsWireSenderInformation" Multiplicity="0..1" />
+          <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireSenderInformation">
+              <PropertyRef Name="hmsWireSenderInformationId" />
+            </Principal>
+            <Dependent Role="hmsWires">
+              <PropertyRef Name="SenderInformationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_hmsWires_hmsWireStatusLkup_WireStatusId">
           <End Role="hmsWireStatusLkup" Type="Self.hmsWireStatusLkup" Multiplicity="1" />
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="*" />
@@ -636,6 +658,7 @@
           <EntitySet Name="hmsWireMessageType" EntityType="Self.hmsWireMessageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWirePurposeLkup" EntityType="Self.hmsWirePurposeLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWires" EntityType="Self.hmsWires" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsWireSenderInformation" EntityType="Self.hmsWireSenderInformation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireStatusLkup" EntityType="Self.hmsWireStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireTransferTypeLKup" EntityType="Self.hmsWireTransferTypeLKup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireWorkflowLog" EntityType="Self.hmsWireWorkflowLog" Schema="dbo" store:Type="Tables" />
@@ -688,6 +711,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" Association="Self.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID">
             <End Role="hmsWirePurposeLkup" EntitySet="hmsWirePurposeLkup" />
+            <End Role="hmsWires" EntitySet="hmsWires" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWires_hmsWireSenderInformation_SenderInformationId" Association="Self.FK_hmsWires_hmsWireSenderInformation_SenderInformationId">
+            <End Role="hmsWireSenderInformation" EntitySet="hmsWireSenderInformation" />
             <End Role="hmsWires" EntitySet="hmsWires" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWires_hmsWireStatusLkup_WireStatusId" Association="Self.FK_hmsWires_hmsWireStatusLkup_WireStatusId">
@@ -833,6 +860,11 @@
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
           </AssociationSet>
           <EntitySet Name="onboardingAccountModules" EntityType="OperationsSecureModel.onboardingAccountModule" />
+          <EntitySet Name="hmsWireSenderInformations" EntityType="OperationsSecureModel.hmsWireSenderInformation" />
+          <AssociationSet Name="FK_hmsWires_hmsWireSenderInformation_SenderInformationId" Association="OperationsSecureModel.FK_hmsWires_hmsWireSenderInformation_SenderInformationId">
+            <End Role="hmsWireSenderInformation" EntitySet="hmsWireSenderInformations" />
+            <End Role="hmsWire" EntitySet="hmsWires" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -1371,6 +1403,9 @@
           <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsWireStatusLkup" />
           <NavigationProperty Name="hmsWireTransferTypeLKup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" FromRole="hmsWire" ToRole="hmsWireTransferTypeLKup" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireWorkflowLog" />
+          <Property Name="SenderInformationId" Type="Int32" />
+          <Property Name="SenderDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hmsWireSenderInformation" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireSenderInformation_SenderInformationId" FromRole="hmsWire" ToRole="hmsWireSenderInformation" />
         </EntityType>
         <Association Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
           <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
@@ -1489,6 +1524,27 @@
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="hmsWireSenderInformation">
+          <Key>
+            <PropertyRef Name="hmsWireSenderInformationId" />
+          </Key>
+          <Property Name="hmsWireSenderInformationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SenderInformation" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireSenderInformation_SenderInformationId" FromRole="hmsWireSenderInformation" ToRole="hmsWire" />
+        </EntityType>
+        <Association Name="FK_hmsWires_hmsWireSenderInformation_SenderInformationId">
+          <End Type="OperationsSecureModel.hmsWireSenderInformation" Role="hmsWireSenderInformation" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireSenderInformation">
+              <PropertyRef Name="hmsWireSenderInformationId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="SenderInformationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1890,6 +1946,8 @@
           <EntitySetMapping Name="hmsWires">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsWire">
               <MappingFragment StoreEntitySet="hmsWires">
+                <ScalarProperty Name="SenderDescription" ColumnName="SenderDescription" />
+                <ScalarProperty Name="SenderInformationId" ColumnName="SenderInformationId" />
                 <ScalarProperty Name="NotesToApprover" ColumnName="NotesToApprover" />
                 <ScalarProperty Name="WireTransferTypeId" ColumnName="WireTransferTypeId" />
                 <ScalarProperty Name="SwiftStatusId" ColumnName="SwiftStatusId" />
@@ -1924,6 +1982,15 @@
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="Module" ColumnName="Module" />
                 <ScalarProperty Name="onboardingAccountModuleId" ColumnName="onboardingAccountModuleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWireSenderInformations">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireSenderInformation">
+              <MappingFragment StoreEntitySet="hmsWireSenderInformation">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="SenderInformation" ColumnName="SenderInformation" />
+                <ScalarProperty Name="hmsWireSenderInformationId" ColumnName="hmsWireSenderInformationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

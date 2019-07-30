@@ -142,6 +142,9 @@
     <Compile Include="hmsWirePurposeLkup.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsWireSenderInformation.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsWireStatusLkup.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

@@ -34,6 +34,15 @@ namespace HMOSecureMiddleware.Models
             get { return HMWire.hmsWireTransferTypeLKup == null ? "Normal Transfer" : HMWire.hmsWireTransferTypeLKup.TransferType; }
         }
 
+        public bool IsSenderInformationRequired
+        {
+            get
+            {
+                var senderInvolvedMessageTypes = new List<string> { "MT103", "MT202" };
+                return HMWire.hmsWireMessageType != null ? senderInvolvedMessageTypes.Contains(HMWire.hmsWireMessageType.MessageType) : false;
+            }
+        }
+
         private string _counterparty;
         public string Counterparty
         {

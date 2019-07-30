@@ -222,8 +222,8 @@ namespace HMOSecureWeb.Controllers
                 var wireMessageTypes = context.hmsWireMessageTypes.ToList();
                 var thisModuleMessageTypes = MessageTypes.ContainsKey(module) ? MessageTypes[module] : new List<string>();
                 wireMessageTypes = MessageTypes.ContainsKey(module) ? wireMessageTypes.Where(s => thisModuleMessageTypes.Contains(s.MessageType)).ToList() : wireMessageTypes.Where(s => s.IsOutbound).ToList();
-
-                return Json(wireMessageTypes.Select(s => new { id = s.hmsWireMessageTypeId, text = s.MessageType }).ToList());
+                var wireSenderInformation = context.hmsWireSenderInformations.ToList();
+                return Json(new { wireMessageTypes, wireSenderInformation = wireSenderInformation.Select(s => new { id = s.hmsWireSenderInformationId, text = string.Format("{0}-{1}", s.SenderInformation, s.Description), value = s.SenderInformation }).ToList() });
             }
         }
 

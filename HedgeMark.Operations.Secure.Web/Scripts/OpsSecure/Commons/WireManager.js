@@ -58,13 +58,14 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.getWireMessageTypes = function (module) {
         return $http.get("/Home/GetWireMessageTypeDetails?module=" + module).then(function (response) {
             if (module == "Adhoc Report")
-                $scope.MessageTypes = response.data;
+                $scope.MessageTypes = response.data.wireMessageTypes;
             else {
                 if ($scope.Purpose == "Respond to Broker Call")
-                    $scope.MessageTypes = $filter('filter')(response.data, function (type) { return type.text != "MT210" }, true);
+                    $scope.MessageTypes = $filter('filter')(response.data.wireMessageTypes, function (type) { return type.text != "MT210" }, true);
                 else
-                    $scope.MessageTypes = $filter('filter')(response.data, { text: 'MT210' }, true);
+                    $scope.MessageTypes = $filter('filter')(response.data.wireMessageTypes, { text: 'MT210' }, true);
             }
+            $scope.SenderInformation = response.data.wireSenderInformation;
         });
     }
 
@@ -194,7 +195,23 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     angular.element(document).on("change", "#liMessageType", function () {
         $timeout(function () {
             $scope.WireTicket.WireMessageTypeId = $("#liMessageType").select2("val");
-        }, 50);
+            var messageType = $("#liMessageType").select2('data').text;
+            if (messageType.indexOf('MT103') > -1 || messageType.indexOf('MT202') > -1) {
+                $scope.wireTicketObj.IsSenderInformationRequired = true;
+                angular.element("#liSenderInformation").select2('val', $scope.WireTicket.SenderInformationId).trigger('change');
+            }
+            else {
+                $scope.wireTicketObj.IsSenderInformationRequired = false;
+                angular.element("#liSenderInformation").select2('val', '').trigger('change');
+                $scope.WireTicket.SenderDescription = "";
+            }
+         }, 50);
+    });
+
+    angular.element(document).on('change', "#liSenderInformation", function () {
+    $timeout(function () {
+        $scope.WireTicket.SenderInformationId = $("#liSenderInformation").select2('val');
+     }, 50);
     });
 
     $("#wireAmount").numericEditor({
@@ -551,6 +568,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             closeOnSelect: false,
             height: "30px"
         });
+
+        angular.element("#liSenderInformation").select2("destroy").val('');
+        angular.element("#liSenderInformation").select2({
+            placeholder: "Select Sender Information",
+            data: $scope.SenderInformation,
+            allowClear: true,
+            closeOnSelect: false
+        });
+
         $scope.bindValues();
         $scope.isWireLoadingInProgress = false;
         $scope.isUserActionDone = false;

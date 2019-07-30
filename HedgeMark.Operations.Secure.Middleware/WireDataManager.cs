@@ -81,6 +81,7 @@ namespace HMOSecureMiddleware
                                          .Include("hmsWireStatusLkup")
                                          .Include("hmsWirePurposeLkup")
                                          .Include("hmsWireTransferTypeLKup")
+                                         .Include("hmsWireSenderInformation")
                                          //.Include("hmsWireLogs")
                                          .First(s => s.hmsWireId == wireId);
 
@@ -123,6 +124,8 @@ namespace HMOSecureMiddleware
                 hmWire.hmsSwiftStatusLkup.hmsWires = null;
                 hmWire.hmsSwiftStatusLkup.hmsWireWorkflowLogs = null;
             }
+            if (hmWire.hmsWireSenderInformation != null)
+                hmWire.hmsWireSenderInformation.hmsWires = null;
             hmWire.hmsWireWorkflowLogs = hmWire.hmsWireWorkflowLogs.OrderByDescending(s => s.CreatedAt).ToList();
             //dmaAgreementOnBoarding wireAgreement;
             dmaCounterPartyOnBoarding counterparty;

@@ -9,6 +9,7 @@ using HedgeMark.SwiftMessageHandler.Model.MT;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT1XX;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT2XX;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT5XX;
+using System.Linq;
 
 namespace HMOSecureMiddleware.SwiftMessageManager
 {
@@ -332,29 +333,63 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var f72 = new Field72();
 
-            var ffcNumber = wire.IsBookTransfer
-                    ? !string.IsNullOrWhiteSpace(wire.ReceivingAccount.FFCNumber)
-                        ? wire.ReceivingAccount.FFCNumber
-                        : string.Empty
-                    : !string.IsNullOrWhiteSpace(wire.SSITemplate.FFCNumber)
-                        ? wire.SSITemplate.FFCNumber
-                        : string.Empty;
+            //var ffcNumber = wire.IsBookTransfer
+            //        ? !string.IsNullOrWhiteSpace(wire.ReceivingAccount.FFCNumber)
+            //            ? wire.ReceivingAccount.FFCNumber
+            //            : string.Empty
+            //        : !string.IsNullOrWhiteSpace(wire.SSITemplate.FFCNumber)
+            //            ? wire.SSITemplate.FFCNumber
+            //            : string.Empty;
 
-            if (string.IsNullOrWhiteSpace(ffcNumber))
-                return f72;
+            //if (string.IsNullOrWhiteSpace(ffcNumber))
+            //    return f72;
 
-            if (messageType == "MT103")
-                f72.setNarrativeLine1("/ACC/" + ffcNumber);
-            else
-                f72.setNarrativeLine1("/BNF/" + ffcNumber);
+            //if (messageType == "MT103")
+            //    f72.setNarrativeLine1("/ACC/" + ffcNumber);
+            //else
+            //    f72.setNarrativeLine1("/BNF/" + ffcNumber);
 
-            var fccName = wire.IsBookTransfer ? wire.ReceivingAccount.FFCName : wire.SSITemplate.FFCName;
-            if (!string.IsNullOrWhiteSpace(fccName))
-                f72.setNarrativeLine2("//" + fccName);
+            //var fccName = wire.IsBookTransfer ? wire.ReceivingAccount.FFCName : wire.SSITemplate.FFCName;
+            //if (!string.IsNullOrWhiteSpace(fccName))
+            //    f72.setNarrativeLine2("//" + fccName);
 
-            var reference = wire.IsBookTransfer ? wire.ReceivingAccount.Reference : wire.SSITemplate.Reference;
-            if (!string.IsNullOrWhiteSpace(reference))
-                f72.setNarrativeLine3("//" + reference);
+            //var reference = wire.IsBookTransfer ? wire.ReceivingAccount.Reference : wire.SSITemplate.Reference;
+            //if (!string.IsNullOrWhiteSpace(reference))
+            //    f72.setNarrativeLine3("//" + reference);
+
+            //var noOfNarrativeLinesRequired = wire.HMWire.SenderDescription.Length / 30;
+            //if (noOfNarrativeLinesRequired == 0)
+            //{
+            //    f72.setNarrativeLine1(wire.HMWire.hmsWireSenderInformation.SenderInformation + "//" + wire.HMWire.SenderDescription);
+            //    return f72;
+            //}
+
+            var senderDescriptionInfo = Enumerable.Range(0, wire.HMWire.SenderDescription.Length / 30).Select(s => wire.HMWire.SenderDescription.Substring(s * 30, 30)).ToList();
+            for (int i = 0; i < senderDescriptionInfo.Count(); i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        f72.setNarrativeLine1(wire.HMWire.hmsWireSenderInformation.SenderInformation + "//" + senderDescriptionInfo[i]);
+                        break;
+                    case 1:
+                        f72.setNarrativeLine2(senderDescriptionInfo[i]);
+                        break;
+                    case 2:
+                        f72.setNarrativeLine3(senderDescriptionInfo[i]);
+                        break;
+                    case 3:
+                        f72.setNarrativeLine4(senderDescriptionInfo[i]);
+                        break;
+                    case 4:
+                        f72.setNarrativeLine5(senderDescriptionInfo[i]);
+                        break;
+                    case 5:
+                        f72.setNarrativeLine6(senderDescriptionInfo[i]);
+                        break;
+                    default: break;
+                }
+            }
 
             return f72;
         }
