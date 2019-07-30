@@ -363,8 +363,11 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             //    f72.setNarrativeLine1(wire.HMWire.hmsWireSenderInformation.SenderInformation + "//" + wire.HMWire.SenderDescription);
             //    return f72;
             //}
+            var noOfNarrativeLinesRequired = wire.HMWire.SenderDescription.Length / 30;
+            var senderDescriptionInfo = Enumerable.Range(0, noOfNarrativeLinesRequired).Select(s => wire.HMWire.SenderDescription.Substring(s * 30, 30)).ToList();
+            if ((noOfNarrativeLinesRequired * 30) < wire.HMWire.SenderDescription.Length)
+                senderDescriptionInfo.Add(wire.HMWire.SenderDescription.Substring(noOfNarrativeLinesRequired * 30));
 
-            var senderDescriptionInfo = Enumerable.Range(0, wire.HMWire.SenderDescription.Length / 30).Select(s => wire.HMWire.SenderDescription.Substring(s * 30, 30)).ToList();
             for (int i = 0; i < senderDescriptionInfo.Count(); i++)
             {
                 switch (i)
