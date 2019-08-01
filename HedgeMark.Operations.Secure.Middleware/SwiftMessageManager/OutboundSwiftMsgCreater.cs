@@ -376,19 +376,19 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                         f72.setNarrativeLine1("/" + wire.HMWire.hmsWireSenderInformation.SenderInformation + "/" + senderDescriptionInfo[i]);
                         break;
                     case 1:
-                        f72.setNarrativeLine2(senderDescriptionInfo[i]);
+                        f72.setNarrativeLine2("//" + senderDescriptionInfo[i]);
                         break;
                     case 2:
-                        f72.setNarrativeLine3(senderDescriptionInfo[i]);
+                        f72.setNarrativeLine3("//" + senderDescriptionInfo[i]);
                         break;
                     case 3:
-                        f72.setNarrativeLine4(senderDescriptionInfo[i]);
+                        f72.setNarrativeLine4("//" + senderDescriptionInfo[i]);
                         break;
                     case 4:
-                        f72.setNarrativeLine5(senderDescriptionInfo[i]);
+                        f72.setNarrativeLine5("//" + senderDescriptionInfo[i]);
                         break;
                     case 5:
-                        f72.setNarrativeLine6(senderDescriptionInfo[i]);
+                        f72.setNarrativeLine6("//" + senderDescriptionInfo[i]);
                         break;
                     default: break;
                 }
