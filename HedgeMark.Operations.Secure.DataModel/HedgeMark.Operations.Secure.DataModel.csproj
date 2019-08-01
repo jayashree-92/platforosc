@@ -106,6 +106,9 @@
     <Compile Include="dmaOnBoardingContactDetail.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dmaUserPreference.cs">
+      <DependentUpon>OperationsContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="hLoginRegistration.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
@@ -207,6 +210,21 @@
     <Compile Include="onBoardingWirePortalCutoff.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="OperationsContext.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OperationsContext.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OperationsContext.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OperationsContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OperationsContext.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OperationsContext.edmx</DependentUpon>
+    </Compile>
     <Compile Include="OperationsSecureModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -229,6 +247,9 @@
     <Compile Include="vw_HFund.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="vw_HFundOps.cs">
+      <DependentUpon>OperationsContext.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="AdminModel.edmx">
@@ -245,6 +266,13 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>OperationsSecureModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <EntityDeploy Include="OperationsContext.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>OperationsContext.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="OperationsContext.edmx.diagram">
+      <DependentUpon>OperationsContext.edmx</DependentUpon>
+    </None>
     <None Include="OperationsSecureModel.edmx.diagram">
       <DependentUpon>OperationsSecureModel.edmx</DependentUpon>
     </None>
@@ -262,6 +290,16 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>AdminModel.edmx</DependentUpon>
       <LastGenOutput>AdminModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="OperationsContext.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>OperationsContext.edmx</DependentUpon>
+      <LastGenOutput>OperationsContext.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="OperationsContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>OperationsContext.edmx</DependentUpon>
+      <LastGenOutput>OperationsContext.cs</LastGenOutput>
     </Content>
     <Content Include="OperationsSecureModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
