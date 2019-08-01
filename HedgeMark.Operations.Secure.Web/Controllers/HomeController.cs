@@ -589,7 +589,7 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetAuthorizedFunds()
         {
             var hFunds = new Dictionary<long, string>();
-            var hFundDetails = AuthorizationManager.GetAuthorizedHMFunds(UserDetails.Id);
+            var hFundDetails = AuthorizationManager.GetAuthorizedHMFunds(UserDetails.Id, AuthorizedSessionData.IsPrivilegedUser);
             foreach (var data in hFundDetails)
             {
                 if (hFunds.ContainsKey(data.intFundId)) continue;
