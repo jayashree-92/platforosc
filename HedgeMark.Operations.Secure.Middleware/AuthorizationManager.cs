@@ -30,6 +30,14 @@ namespace HMOSecureMiddleware
             }
         }
     }
+    public class AuthorizedHFund
+    {
+        public long intFundId { get; set; }
+        public string ShortFundName { get; set; }
+        public string LegalFundName { get; set; }
+        public string ClientFundName { get; set; }
+        public string HMRAFundName { get; set; }
+    }
 
     public class AuthorizedData
     {
@@ -101,6 +109,27 @@ namespace HMOSecureMiddleware
                                {
                                    Id = vf.intFundID,
                                    Level = obP.dmaPermissionLevelId
+                               }).ToList();
+                return hmFunds;
+            }
+        }
+
+        public static List<AuthorizedHFund> GetAuthorizedHMFunds(int userId)
+        {
+
+            using (var context = new AdminContext())
+            {
+                var hmFunds = (from obFid in context.onboardingFunds
+                               join vf in context.vw_HFund on obFid.FundMapId equals vf.FundMapId
+                               join obP in context.dmaFundOnBoardPermissions on obFid.dmaFundOnBoardId equals obP.dmaFundOnBoardId
+                               where obP.userId == userId
+                               select new AuthorizedHFund
+                               {
+                                   intFundId = vf.intFundID,
+                                   ClientFundName = vf.ClientFundName,
+                                   ShortFundName = vf.ShortFundName,
+                                   LegalFundName = vf.LegalFundName,
+                                   HMRAFundName = vf.HMRAName                                   
                                }).ToList();
                 return hmFunds;
             }

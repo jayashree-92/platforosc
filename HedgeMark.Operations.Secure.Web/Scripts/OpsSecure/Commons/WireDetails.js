@@ -11,7 +11,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
     $("#modalToRetrieveWires").on("show.bs.modal", function () {
     }).on("shown.bs.modal", function () {
         $scope.IsWireTicketModelOpen = true;
-        $opsSharedScopes.get("wireInitiationCtrl").fnLoadWireTicketDetails($scope.wireObj.WireId, $scope.wireObj.HMWire.hmsWirePurposeLkup.ReportName, $scope.wireObj.HMWire.hmsWirePurposeLkup.Purpose, "");
+        $opsSharedScopes.get("wireInitiationCtrl").fnLoadWireTicketDetails($scope.wireObj);
         $scope.$emit("wireTicketModelOpen");
     }).on("hidden.bs.modal", function () {
         $scope.IsWireTicketModelOpen = false;
@@ -193,17 +193,53 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
             });
 
 
-            $("#tblWireStatusDetails").off("dblclick", "tbody tr").on("dblclick", "tbody tr", function (event) {
-                $scope.wireObj = tblWireStatusDetails.row($(this)).data();
+            //$("#tblWireStatusDetails").off("dblclick", "tbody tr").on("dblclick", "tbody tr", function (event) {
+            //    $scope.wireObj = tblWireStatusDetails.row($(this)).data();
 
-                if ($scope.wireObj == undefined)
+            //    if ($scope.wireObj == undefined)
+            //        return;
+
+            //    angular.element("#modalToRetrieveWires").modal({ backdrop: 'static', keyboard: true, show: true });
+            //});
+
+            $("#tblWireStatusDetails").off("dblclick", "tbody tr").on("dblclick", "tbody tr", function (event) {
+                var wireData = tblWireStatusDetails.row($(this)).data();
+                if (wireData == undefined)
                     return;
 
+                $scope.wireObj = {
+                    WireId: wireData.WireId,
+                    AgreementId: 0,
+                    AgreementName: "",
+                    FundId: wireData.HMWire.hmFundId,
+                    ContextDate: $scope.contextDate,
+                    Purpose: wireData.HMWire.hmsWirePurposeLkup.Purpose,
+                    Report: wireData.HMWire.hmsWirePurposeLkup.ReportName,
+                    IsAdhocWire: false,
+                    ReportMapId: 0,
+                    IsAdhocPage: true
+                };
                 angular.element("#modalToRetrieveWires").modal({ backdrop: 'static', keyboard: true, show: true });
             });
 
+
             $("#btnGetWireLogs").button("reset");
         });
+    }
+
+    $scope.initiateWireModal = function () {
+        $scope.wireObj = {
+            AgreementId: 0,
+            ContextDate: $scope.contextDate,
+            Purpose: "",
+            Report: "Adhoc Report",
+            IsAdhocWire: true,
+            ReportMapId: 0,
+            IsBookTransfer: false,
+            AgreementName: "",
+            IsAdhocPage: true
+        };
+        angular.element("#modalToRetrieveWires").modal({ backdrop: 'static', keyboard: true, show: true });
     }
 
     //$("#modalToRetrieveWires").on("scroll", function () {

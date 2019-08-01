@@ -13,6 +13,22 @@ using System.Data.Entity;
 
 namespace HMOSecureMiddleware
 {
+
+    public class WireAccountBaseData
+    {
+        public long OnBoardAccountId { get; set; }
+        public string AccountNumber { get; set; }
+        public string AccountName { get; set; }
+
+        public string AccountNameAndNumber
+        {
+            get
+            {
+                return string.Format("{0}-{1}", AccountNumber, AccountName);
+            }
+        }
+    }
+
     public class WireDataManager
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(WireDataManager));
@@ -178,6 +194,54 @@ namespace HMOSecureMiddleware
             };
         }
 
+        public static onBoardingAccount GetBoardingAccount(long onBoardingAccountId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+
+                return context.onBoardingAccounts.AsNoTracking().FirstOrDefault(s => s.onBoardingAccountId == onBoardingAccountId) ?? new onBoardingAccount();
+            }
+        }
+
+
+        public static List<WireAccountBaseData> GetApprovedFundAccounts(long fundId, bool isBookTransfer)
+        {
+            long qualifiedOnBoardFundId;
+            var allPBAgreementIds = AllPBAgreementIds(fundId, out qualifiedOnBoardFundId);
+
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                var sendingAccounts = (from oAccnt in context.onBoardingAccounts
+                                       where oAccnt.dmaFundOnBoardId == qualifiedOnBoardFundId && oAccnt.onBoardingAccountStatus == "Approved" && oAccnt.AuthorizedParty == "HedgeMark"
+                                       && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allPBAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
+                                       select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber }).Distinct().ToList();
+                return sendingAccounts;
+            }
+        }
+
+        private static List<long> AllPBAgreementIds(long fundId, out long qualifiedOnBoardFundId)
+        {
+            List<long> allPBAgreementIds;
+            qualifiedOnBoardFundId = 0;
+
+
+            using (var context = new AdminContext())
+            {
+                allPBAgreementIds = context.dmaAgreementOnBoardings.Where(s => s.dmaAgreementType.AgreementType == "PB").Select(s => s.dmaAgreementOnBoardingId).ToList();
+
+                qualifiedOnBoardFundId = (from hFndOps in context.vw_HFund
+                                          join onBoardFnd in context.onboardingFunds on hFndOps.FundMapId equals onBoardFnd.FundMapId
+                                          where hFndOps.intFundID == fundId
+                                          select onBoardFnd.dmaFundOnBoardId).FirstOrDefault();
+            }
+
+            return allPBAgreementIds;
+        }
+
         private static List<KeyValuePair<string, string>> GetFormattedSwiftMessages(long wireId)
         {
             var swiftMessages = new List<KeyValuePair<string, string>>();
@@ -316,6 +380,8 @@ namespace HMOSecureMiddleware
             {
                 wireTicket.HMWire.CreatedAt = existingWireTicket.HMWire.CreatedAt;
                 SetWireStatusAndWorkFlow(wireTicket.HMWire, wireStatus, SwiftStatus.NotInitiated, comment, userId);
+                if (wireTicket.IsNotice && wireStatus == WireStatus.Initiated)
+                    SaveWireData(wireTicket, WireStatus.Approved, comment, userId);
             }
 
             return existingWireTicket;

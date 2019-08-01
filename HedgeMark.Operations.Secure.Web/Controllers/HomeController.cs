@@ -221,9 +221,10 @@ namespace HMOSecureWeb.Controllers
             {
                 var wireMessageTypes = context.hmsWireMessageTypes.ToList();
                 var thisModuleMessageTypes = MessageTypes.ContainsKey(module) ? MessageTypes[module] : new List<string>();
-                wireMessageTypes = MessageTypes.ContainsKey(module) ? wireMessageTypes.Where(s => thisModuleMessageTypes.Contains(s.MessageType)).ToList() : wireMessageTypes.Where(s => s.IsOutbound).ToList();
+                var wireMessages = wireMessageTypes.Select(s => new { id = s.hmsWireMessageTypeId, text = s.MessageType }).ToList();
+                var wireTransferTypes = context.hmsWireTransferTypeLKups.Select(s => new { id = s.WireTransferTypeId, text = s.TransferType }).ToList();
                 var wireSenderInformation = context.hmsWireSenderInformations.ToList();
-                return Json(new { wireMessageTypes, wireSenderInformation = wireSenderInformation.Select(s => new { id = s.hmsWireSenderInformationId, text = string.Format("{0}-{1}", s.SenderInformation, s.Description), value = s.SenderInformation }).ToList() });
+                return Json(new { wireMessages, wireTransferTypes, wireSenderInformation = wireSenderInformation.Select(s => new { id = s.hmsWireSenderInformationId, text = string.Format("{0}-{1}", s.SenderInformation, s.Description), value = s.SenderInformation }).ToList() });
             }
         }
 
@@ -565,5 +566,191 @@ namespace HMOSecureWeb.Controllers
                 context.SaveChanges();
             }
         }
+
+        #region Adhoc Wires
+
+        public JsonResult GetAdhocWireAssociations()
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                var adhocWirePurposes = context.hmsWirePurposeLkups.Where(s => s.ReportName == "Adhoc Report" && s.IsApproved).ToList();
+                var wirePurposes = adhocWirePurposes.Select(s => new { id = s.hmsWirePurposeId, text = s.Purpose }).ToList();
+                return Json(wirePurposes);
+            }
+        }
+        private class AgreementBaseDetails
+        {
+            public long AgreementId { get; set; }
+            public string AgreementShortName { get; set; }
+        }
+
+        public JsonResult GetAuthorizedFunds()
+        {
+            var hFunds = new Dictionary<long, string>();
+            var hFundDetails = AuthorizationManager.GetAuthorizedHMFunds(UserDetails.Id);
+            foreach (var data in hFundDetails)
+            {
+                if (hFunds.ContainsKey(data.intFundId)) continue;
+                hFunds.Add(data.intFundId, data.ShortFundName);
+            }
+
+            var hFundSelect = new List<object>();
+            foreach (var pair in hFunds.OrderBy(s => s.Value))
+            {
+                hFundSelect.Add(new { id = pair.Key, text = pair.Value });
+            }
+            return Json(hFundSelect, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetApprovedAgreementsForFund(long fundId)
+        {
+            List<AgreementBaseDetails> onBoardedAgreements;
+            using (var context = new AdminContext())
+            {
+                onBoardedAgreements = (from hFndOps in context.vw_HFund
+                                       join onBoardFnd in context.onboardingFunds on hFndOps.FundMapId equals onBoardFnd.FundMapId
+                                       join oAgreement in context.dmaAgreementOnBoardings on onBoardFnd.dmaFundOnBoardId equals oAgreement.dmaFundOnBoardId
+                                       where hFndOps.intFundID == fundId && oAgreement.HMOpsStatus == "Approved"
+                                       select new AgreementBaseDetails { AgreementId = oAgreement.dmaAgreementOnBoardingId, AgreementShortName = oAgreement.AgreementShortName }).ToList();
+            }
+
+            using (var context = new OperationsSecureContext())
+            {
+                var qualifiedData = (from agr in onBoardedAgreements
+                                     join oAcc in context.onBoardingAccounts on agr.AgreementId equals oAcc.dmaAgreementOnBoardingId
+                                     select new { id = agr.AgreementId, text = agr.AgreementShortName }).ToList();
+
+                return Json(qualifiedData);
+            }
+        }
+
+        public JsonResult GetApprovedAccountsForFund(long fundId, bool isBookTransfer)
+        {
+            var sendingAccounts = WireDataManager.GetApprovedFundAccounts(fundId, isBookTransfer);
+            var sendingAccountsList = sendingAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
+            return Json(new { sendingAccounts, sendingAccountsList });
+        }
+
+        //public JsonResult GetApprovedAccountsForAgreement(long agreementId)
+        //{
+        //    using (var context = new OperationsSecureContext())
+        //    {
+        //        context.Configuration.LazyLoadingEnabled = false;
+        //        context.Configuration.ProxyCreationEnabled = false;
+        //        var sendingAccounts = context.onBoardingAccounts.Where(s => s.onBoardingAccountStatus == "Approved" && s.dmaAgreementOnBoardingId == agreementId).ToList();
+        //        var sendingAccountList = sendingAccounts.Select(s => new { id = s.onBoardingAccountId, text = string.Format("{0}-{1}", s.AccountNumber, s.AccountName) }).ToList();
+        //        return Json(new { sendingAccounts, sendingAccountList });
+        //    }
+        //}
+
+        public JsonResult GetApprovedSSITemplatesForAccount(long accountId, bool isNormalTransfer)
+        {
+            List<onBoardingSSITemplate> receivingAccounts;
+            using (var context = new OperationsSecureContext())
+            {
+                var templateType = isNormalTransfer ? "Broker" : "Fee/Expense Payment";
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                receivingAccounts = (from oTemplate in context.onBoardingSSITemplates
+                                     join oMap in context.onBoardingAccountSSITemplateMaps on oTemplate.onBoardingSSITemplateId equals oMap.onBoardingSSITemplateId
+                                     where oMap.onBoardingAccountId == accountId && oMap.Status == "Approved" && oTemplate.SSITemplateType == templateType
+                                     select oTemplate).ToList();
+            }
+
+            using (var context = new AdminContext())
+            {
+                var entityIds = receivingAccounts.Select(s => s.TemplateEntityId).Distinct().ToList();
+                var counterparties = context.dmaCounterPartyOnBoardings.Where(s => entityIds.Contains(s.dmaCounterPartyOnBoardId)).ToDictionary(s => s.dmaCounterPartyOnBoardId.ToString(), v => v.CounterpartyName);
+                var receivingAccountList = receivingAccounts.Select(s => new { id = s.onBoardingSSITemplateId, text = string.Format("{0}-{1}", s.AccountNumber, s.TemplateName) }).ToList();
+                return Json(new { receivingAccounts, receivingAccountList, counterparties });
+            }
+        }
+
+        public void AddWirePurpose(hmsWirePurposeLkup purpose)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.hmsWirePurposeLkups.Add(purpose);
+                context.SaveChanges();
+            }
+        }
+
+        public JsonResult GetNewWireDetails()
+        {
+            var wireTicket = new WireTicket()
+            {
+                HMWire = new hmsWire(),
+                SendingAccount = new onBoardingAccount(),
+                ReceivingAccount = new onBoardingAccount(),
+                SSITemplate = new onBoardingSSITemplate(),
+                Counterparty = "",
+                AttachmentUsers = new List<string>(),
+                WorkflowUsers = new List<string>()
+            };
+
+            return Json(new
+            {
+                wireTicket,
+                isEditEnabled = true,
+                isAuthorizedUserToInitiate = true,
+                isAuthorizedUserToDraft = false,
+                isAuthorizedUserToCancel = false,
+                isApprovedOrFailed = false,
+                isWireCreated = false,
+                isLastModifiedUser = false,
+                isWirePurposeAdhoc = true
+            });
+        }
+
+        public JsonResult GetBoardingAccount(long onBoardingAccountId)
+        {
+            return Json(WireDataManager.GetBoardingAccount(onBoardingAccountId));
+        }
+
+        public JsonResult ValidateAccountDetails(string wireMessageType, onBoardingAccount account, onBoardingAccount receivingAccount, onBoardingSSITemplate ssiTemplate, bool isBookTransfer)
+        {
+            bool isMandatoryFieldsMissing = false;
+            string validationMsg = string.Empty;
+            switch (wireMessageType)
+            {
+                case "MT103":
+                    if (isBookTransfer)
+                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
+                                                   string.IsNullOrWhiteSpace(receivingAccount.Currency) || string.IsNullOrWhiteSpace(receivingAccount.AccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.Description) || string.IsNullOrWhiteSpace(receivingAccount.UltimateBeneficiaryAccountName) ||
+                                                   string.IsNullOrWhiteSpace(receivingAccount.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBICorABA) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBankName) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBankAddress) ||
+                                                   string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBICorABA) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBankName) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBankAddress));
+                    else
+                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
+                                                   string.IsNullOrWhiteSpace(ssiTemplate.Currency) || string.IsNullOrWhiteSpace(ssiTemplate.AccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.ReasonDetail) || string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryAccountName) ||
+                                                   string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankAddress) ||
+                                                   string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankAddress));
+                    validationMsg = "Sender's Account Institution, BIC & Receiver's  Account Institution, Intermediary Institution, Benificiary Institution, Currency fields and Description are required to initiate this wire";
+                    break;
+                case "MT202":
+                case "MT202 COV":
+                    if (isBookTransfer)
+                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
+                                                   string.IsNullOrWhiteSpace(receivingAccount.Currency) || string.IsNullOrWhiteSpace(receivingAccount.AccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.UltimateBeneficiaryAccountName) ||
+                                                   string.IsNullOrWhiteSpace(receivingAccount.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBICorABA) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBankName) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBankAddress) ||
+                                                   string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBICorABA) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBankName) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBankAddress));
+
+                    else
+                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
+                                                   string.IsNullOrWhiteSpace(ssiTemplate.Currency) || string.IsNullOrWhiteSpace(ssiTemplate.AccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryAccountName) ||
+                                                   string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankAddress) ||
+                                                   string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankAddress));
+                    validationMsg = "Sender's Account Institution, BIC & Receiver's Account Institution, Intermediary Institution, Benificiary Institution and Currency fields are required to initiate this wire";
+                    break;
+                case "MT210":
+                    isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) || string.IsNullOrWhiteSpace(account.Currency));
+                    validationMsg = "Sender's Account Institution, BIC and Currency fields are required to initiate this wire";
+                    break;
+                case "MT540":
+                case "MT542": break;
+            }
+            return Json(new { isMandatoryFieldsMissing, validationMsg });
+        }
+        #endregion
     }
 }
