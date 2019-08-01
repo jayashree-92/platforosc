@@ -106,6 +106,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.wireTicketObj.IsBookTransfer = $scope.wireObj.IsBookTransfer;
             $scope.WireTicket.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.isEditEnabled = response.data.isEditEnabled;
+            $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
             $scope.isAuthorizedUserToInitiate = response.data.isAuthorizedUserToInitiate;
             $scope.isAuthorizedUserToDraft = response.data.isAuthorizedUserToDraft;
             $scope.isAuthorizedUserToCancel = response.data.isAuthorizedUserToCancel;
@@ -136,6 +137,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isAuthorizedUserToCancel = response.data.isAuthorizedUserToCancel;
             $scope.isLastModifiedUser = response.data.isLastModifiedUser;
             $scope.isApprovedOrFailed = response.data.isApprovedOrFailed;
+            $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
             $scope.isWireCreated = response.data.isWireCreated;
             $scope.wireTicketObj.HMWire.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
