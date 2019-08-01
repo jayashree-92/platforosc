@@ -114,7 +114,7 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<AuthorizedHFund> GetAuthorizedHMFunds(int userId)
+        public static List<AuthorizedHFund> GetAuthorizedHMFunds(int userId, bool isPrivilegedUser)
         {
 
             using (var context = new AdminContext())
