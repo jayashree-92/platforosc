@@ -756,7 +756,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             placeholder: "Select Sender Information",
             data: $scope.SenderInformation,
             allowClear: true,
-            formatResult: formatSelect,
+            formatSelection: formatSelect,
             closeOnSelect: false
         });
 

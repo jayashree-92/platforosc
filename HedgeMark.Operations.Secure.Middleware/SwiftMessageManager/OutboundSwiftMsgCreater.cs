@@ -373,7 +373,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                 switch (i)
                 {
                     case 0:
-                        f72.setNarrativeLine1(wire.HMWire.hmsWireSenderInformation.SenderInformation + "//" + senderDescriptionInfo[i]);
+                        f72.setNarrativeLine1("/" + wire.HMWire.hmsWireSenderInformation.SenderInformation + "/" + senderDescriptionInfo[i]);
                         break;
                     case 1:
                         f72.setNarrativeLine2(senderDescriptionInfo[i]);
