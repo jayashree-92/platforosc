@@ -360,10 +360,21 @@ namespace HMOSecureMiddleware
         }
 
 
-        public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus wireStatus, string comment, int userId)
+        public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus wireStatus, string comment, int userId, string purpose = null, string reportName = "Adhoc Report")
         {
             using (var context = new OperationsSecureContext())
             {
+                if (wireTicket.HMWire.hmsWireId == 0)
+                {
+                    wireTicket.HMWire.WireStatusId = (int)wireStatus;
+                    wireTicket.HMWire.SwiftStatusId = (int)SwiftStatus.NotInitiated;
+                    wireTicket.HMWire.CreatedBy = userId;
+                    wireTicket.HMWire.CreatedAt = DateTime.Now;
+                    wireTicket.HMWire.LastModifiedAt = DateTime.Now;
+                    wireTicket.HMWire.LastUpdatedBy = userId;
+                    context.hmsWires.AddOrUpdate(wireTicket.HMWire);
+                    context.SaveChanges();
+                }
                 context.hmsWireDocuments.AddRange(wireTicket.HMWire.hmsWireDocuments.Where(s => s.hmsWireDocumentId == 0));
                 context.SaveChanges();
             }
@@ -375,7 +386,6 @@ namespace HMOSecureMiddleware
 
             else if (existingWireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus == WireStatus.Cancelled)
                 WireTransactionManager.CancelWireTransfer(existingWireTicket, comment, userId);
-
             else
             {
                 wireTicket.HMWire.CreatedAt = existingWireTicket.HMWire.CreatedAt;

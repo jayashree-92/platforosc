@@ -320,7 +320,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field70 GetField70(WireTicket wire)
         {
             var f70 = new Field70()
-                .setNarrativeLine1("/RFB/" + (wire.HMWire.hmsWirePurposeLkup.Purpose));
+                .setNarrativeLine1("/RFB/" + (wire.SendingAccount.Description));
             return f70;
         }
 

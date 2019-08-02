@@ -439,11 +439,12 @@ namespace HMOSecureWeb.Controllers
                 { "CET", "Central European Standard Time"},
                 { "GMT", "GMT Standard Time" }
         };
-        public JsonResult GetTimeToApproveTheWire(DateTime? cashSweepOfAccount, DateTime? cutOffTimeOfAccount, DateTime valueDate, string cashSweepTimeZone)
+        public JsonResult GetTimeToApproveTheWire(long onboardingAccountId, DateTime valueDate, string cashSweepTimeZone)
         {
-            var cashSweepAccount = valueDate.Date.Add(cashSweepOfAccount.HasValue ? cashSweepOfAccount.Value.TimeOfDay : new TimeSpan(23, 59, 00));
-            var cutOffTimeAccount = valueDate.Date.Add(cutOffTimeOfAccount.HasValue ? cutOffTimeOfAccount.Value.TimeOfDay : new TimeSpan(23, 59, 00));
-            var timeToApprove = GetTimeToApprove(cashSweepAccount, cutOffTimeAccount, cashSweepTimeZone);
+            var onboardAccount = WireDataManager.GetBoardingAccount(onboardingAccountId);
+            var cashSweep = valueDate.Date.Add(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
+            var cutOff = valueDate.Date.Add(onboardAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
+            var timeToApprove = GetTimeToApprove(cashSweep, cutOff, onboardAccount.CashSweepTimeZone);
             return Json(timeToApprove);
         }
 
@@ -589,11 +590,11 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetAuthorizedFunds()
         {
             var hFunds = new Dictionary<long, string>();
-            var hFundDetails = AuthorizationManager.GetAuthorizedHMFunds(UserDetails.Id, AuthorizedSessionData.IsPrivilegedUser);
+            var hFundDetails = AuthorizationManager.GetAuthorizedHMFunds(UserDetails.Id, UserName, AuthorizedSessionData.IsPrivilegedUser);
             foreach (var data in hFundDetails)
             {
                 if (hFunds.ContainsKey(data.intFundId)) continue;
-                hFunds.Add(data.intFundId, data.ShortFundName);
+                hFunds.Add(data.intFundId, data.PreferredFundName);
             }
 
             var hFundSelect = new List<object>();
@@ -696,6 +697,7 @@ namespace HMOSecureWeb.Controllers
                 isAuthorizedUserToInitiate = true,
                 isAuthorizedUserToDraft = false,
                 isAuthorizedUserToCancel = false,
+                isAuthorizedUserToApprove = false,
                 isApprovedOrFailed = false,
                 isWireCreated = false,
                 isLastModifiedUser = false,
@@ -703,9 +705,13 @@ namespace HMOSecureWeb.Controllers
             });
         }
 
-        public JsonResult GetBoardingAccount(long onBoardingAccountId)
+        public JsonResult GetBoardingAccount(long onBoardingAccountId, DateTime valueDate)
         {
-            return Json(WireDataManager.GetBoardingAccount(onBoardingAccountId));
+            var onboardAccount = WireDataManager.GetBoardingAccount(onBoardingAccountId);
+            var cashSweep = valueDate.Date.Add(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
+            var cutOff = valueDate.Date.Add(onboardAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
+            var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, onboardAccount.CashSweepTimeZone);
+            return Json(new { onboardAccount, deadlineToApprove });
         }
 
         public JsonResult ValidateAccountDetails(string wireMessageType, onBoardingAccount account, onBoardingAccount receivingAccount, onBoardingSSITemplate ssiTemplate, bool isBookTransfer)

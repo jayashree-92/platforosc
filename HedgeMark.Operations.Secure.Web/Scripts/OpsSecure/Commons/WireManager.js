@@ -113,6 +113,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isLastModifiedUser = response.data.isLastModifiedUser;
             $scope.isApprovedOrFailed = response.data.isApprovedOrFailed;
             $scope.isWireCreated = response.data.isWireCreated;
+            $scope.isCancelEnabled = response.data.IsCancelEnabled;
             $scope.isWirePurposeAdhoc = response.data.isWirePurposeAdhoc;
             angular.forEach($scope.WireTicket.hmsWireDocuments, function (val, ind) {
                 val.CreatedAt = moment(val.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
@@ -139,6 +140,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isApprovedOrFailed = response.data.isApprovedOrFailed;
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
             $scope.isWireCreated = response.data.isWireCreated;
+            $scope.isCancelEnabled = response.data.IsCancelEnabled;
             $scope.wireTicketObj.HMWire.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
             $scope.castToDate($scope.wireTicketObj.SendingAccount);
@@ -591,6 +593,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.getInitiateButtonText = function () {
         if (!$scope.isWirePurposeAdhoc && $scope.wireObj.Purpose == "Send Call")
             return "Pre Advise";
+        if ($scope.wireTicketObj.IsNotice)
+            return "Initiate & Approve";
         if ($scope.WireTicket.WireStatusId == 1)
             return "Re-Initiate";
         else
@@ -680,7 +684,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.getApprovalTime = function (account) {
-        $http.post("/Home/GetTimeToApproveTheWire", JSON.stringify({ cashSweepOfAccount: account.CashSweepTime, cutOffTimeOfAccount: account.CutoffTime, valueDate: $("#wireValueDate").text(), cashSweepTimeZone: account.CashSweepTimeZone }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
+        $http.post("/Home/GetTimeToApproveTheWire", ({ onBoardingAccountId: account.onBoardAccountId, valueDate: $("#wireValueDate").text() }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
             $scope.timeToApprove = response.data;
             $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
             if ($scope.timeToApprove.Hours > 0) {
@@ -1069,6 +1073,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $timeout(function () {
             if ($("#liWiresPurpose").select2('val') != "")
                 $scope.wireObj.Purpose = angular.copy($("#liWiresPurpose").select2('data').text);
+            $scope.WireTicket.WirePurposeId = angular.copy($("#liWiresPurpose").select2('val'));
             $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
             if (!$scope.isWireLoadingInProgress)
                 $scope.checkForCreatedWires();
@@ -1184,12 +1189,30 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 //    return account.onBoardingAccountId == $scope.WireTicket.OnBoardAccountId;
                 //}, true)[0];
 
-                $http.get("/Home/GetBoardingAccount?onBoardingAccountId=" + $scope.WireTicket.OnBoardAccountId).then(function (response) {
+                $http.get("/Home/GetBoardingAccount?onBoardingAccountId=" + $scope.WireTicket.OnBoardAccountId + "&valueDate=" + $("#wireValueDate").text()).then(function (response) {
 
-                    var account = response.data;
+                    var account = response.data.onboardAccount;
+                    $timeout(function () {
+                        $scope.timeToApprove = angular.copy(response.data.deadlineToApprove);
+                        $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
+                            if ($scope.timeToApprove.Hours > 0) {
+                                $scope.isDeadlineCrossed = false;
+                                if (!$scope.isWireCreated && !$scope.isMandatoryFieldsMissing) {
+                                    $("#wireErrorStatus").collapse("hide");
+                                    $scope.validationMsg = "";
+                                }
+                            }
+                            else {
+                                $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
+                                $scope.isDeadlineCrossed = true;
+                                $scope.validationMsg = "Note: Deadline crossed. Please select a future date for settlement.";
+                            }
+                        $interval.cancel($scope.promise);
+                        $scope.promise = $interval(timer, 1000);
+                    }, 50);
 
                     $scope.castToDate(account);
-                    $scope.getApprovalTime(account);
+                    //$scope.getApprovalTime(account);
                     $scope.accountDetail = account;
                     if ($scope.wireTicketObj.IsNotice) {
                         $scope.wireTicketObj.ReceivingAccountCurrency = $scope.accountDetail.Currency;
@@ -1222,9 +1245,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
 
 
-                    $http.get("/Home/GetBoardingAccount?onBoardingAccountId=" + $scope.WireTicket.OnBoardSSITemplateId).then(function (response) {
+                    $http.get("/Home/GetBoardingAccount?onBoardingAccountId=" + $scope.WireTicket.OnBoardSSITemplateId + "&valueDate=" + $("#wireValueDate").text()).then(function (response) {
 
-                        var receivingAccount = response.data;
+                        var receivingAccount = response.data.onboardAccount;
 
                         //var receivingAccount = $filter('filter')(angular.copy($scope.sendingAccounts), function (template) {
                         //    return template.onBoardingAccountId == $scope.WireTicket.OnBoardSSITemplateId;
