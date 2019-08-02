@@ -107,11 +107,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.WireTicket.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.isEditEnabled = response.data.isEditEnabled;
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
-            $scope.isAuthorizedUserToInitiate = response.data.isAuthorizedUserToInitiate;
-            $scope.isAuthorizedUserToDraft = response.data.isAuthorizedUserToDraft;
-            $scope.isAuthorizedUserToCancel = response.data.isAuthorizedUserToCancel;
-            $scope.isLastModifiedUser = response.data.isLastModifiedUser;
+            $scope.isCancelEnabled = response.data.isCancelEnabled;
             $scope.isApprovedOrFailed = response.data.isApprovedOrFailed;
+            $scope.isInitiationEnabled = response.data.isInitiationEnabled;
+            $scope.isLastModifiedUser = response.data.isLastModifiedUser;
+            $scope.isDraftEnabled = response.data.isDraftEnabled;
             $scope.isWireCreated = response.data.isWireCreated;
             $scope.isCancelEnabled = response.data.IsCancelEnabled;
             $scope.isWirePurposeAdhoc = response.data.isWirePurposeAdhoc;
@@ -133,19 +133,25 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         return $http.get("/Home/GetWireDetails?wireId=" + wireId).then(function (response) {
             $scope.wireTicketObj = response.data.wireTicket;
             $scope.isEditEnabled = response.data.isEditEnabled;
-            $scope.isAuthorizedUserToInitiate = response.data.isAuthorizedUserToInitiate;
-            $scope.isAuthorizedUserToDraft = response.data.isAuthorizedUserToDraft;
-            $scope.isAuthorizedUserToCancel = response.data.isAuthorizedUserToCancel;
-            $scope.isLastModifiedUser = response.data.isLastModifiedUser;
-            $scope.isApprovedOrFailed = response.data.isApprovedOrFailed;
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
-            $scope.isWireCreated = response.data.isWireCreated;
-            $scope.isCancelEnabled = response.data.IsCancelEnabled;
+            $scope.isCancelEnabled = response.data.isCancelEnabled;
+            $scope.isApprovedOrFailed = response.data.isApprovedOrFailed;
+            $scope.isInitiationEnabled = response.data.isInitiationEnabled;
+            $scope.isLastModifiedUser = response.data.isLastModifiedUser;
+            $scope.isDraftEnabled = response.data.isDraftEnabled;
             $scope.wireTicketObj.HMWire.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
             $scope.castToDate($scope.wireTicketObj.SendingAccount);
-            $scope.wireTicketObj.IsBookTransfer = $scope.wireTicketObj.IsBookTransfer;
             $scope.accountDetail = angular.copy($scope.wireTicketObj.SendingAccount);
+            if ($scope.wireTicketObj.IsBookTransfer) {
+                $scope.castToDate($scope.wireTicketObj.ReceivingAccount);
+                $scope.receivingAccountDetail = angular.copy($scope.wireTicketObj.ReceivingAccount);
+            }
+            $scope.ssiTemplate = angular.copy($scope.wireTicketObj.SSITemplate);
+            $scope.workflowUsers = $scope.wireTicketObj.WorkflowUsers;
+            $scope.attachmentUsers = $scope.wireTicketObj.AttachmentUsers;
+            $scope.isWirePurposeAdhoc = response.data.isWirePurposeAdhoc;
+
             var keyValuePair = $scope.wireTicketObj.SwiftMessages;
 
             $scope.wireTicketObj.SwiftMessages = {};
@@ -154,43 +160,38 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             });
 
             $scope.IsSwiftMessagesPresent = $scope.wireTicketObj.SwiftMessages != null && Object.keys($scope.wireTicketObj.SwiftMessages).length > 0;
-            $scope.sendingAccountsList = response.data.sendingAccountsList;
-            $scope.isWirePurposeAdhoc = response.data.isWirePurposeAdhoc;
-            $scope.IsNormalTransfer = $scope.WireTicket.WireTransferTypeId == 1;
-            if ($scope.wireTicketObj.IsBookTransfer) {
-                $scope.castToDate($scope.wireTicketObj.ReceivingAccount);
-                $scope.receivingAccountDetail = angular.copy($scope.wireTicketObj.ReceivingAccount);
-            }
-            $scope.ssiTemplate = angular.copy($scope.wireTicketObj.SSITemplate);
+
             angular.forEach($scope.WireTicket.hmsWireDocuments, function (val, ind) {
                 val.CreatedAt = moment(val.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
+                val.hmsWire = null;
             });
             angular.forEach($scope.WireTicket.hmsWireWorkflowLogs, function (val, ind) {
                 val.CreatedAt = moment(val.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
+                val.hmsWire = null;
             });
-            $scope.workflowUsers = $scope.wireTicketObj.WorkflowUsers;
-            $scope.attachmentUsers = $scope.wireTicketObj.AttachmentUsers;
-            $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
             $timeout(function () {
                 $scope.timeToApprove = angular.copy(response.data.deadlineToApprove);
                 $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
                 if (!$scope.isApprovedOrFailed) {
                     if ($scope.timeToApprove.Hours > 0) {
                         $scope.isDeadlineCrossed = false;
-                        if (!$scope.isWireCreated && !$scope.isMandatoryFieldsMissing) {
-                            $("#wireErrorStatus").collapse("hide");
-                            $scope.validationMsg = "";
-                        }
+                        $("#wireErrorStatus").collapse("hide");
+                        $scope.validationMsg = response.data.validationMsg;
                     }
                     else {
-                        $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
+                        $("#wireErrorStatus").collapse("show").pulse({ times: 3 });;
                         $scope.isDeadlineCrossed = true;
-                        $scope.validationMsg = "Note: Deadline crossed. Please select a future date for settlement.";
+                        if (response.data.validationMsg == "")
+                            $scope.validationMsg = "Note:Deadline crossed. Please select a future date for settlement.";
+                        else
+                            $scope.validationMsg = response.data.validationMsg;
                     }
                 }
                 $interval.cancel($scope.promise);
                 $scope.promise = $interval(timer, 1000);
             }, 50);
+
+            $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
         });
     }
 

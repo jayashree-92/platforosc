@@ -694,9 +694,9 @@ namespace HMOSecureWeb.Controllers
             {
                 wireTicket,
                 isEditEnabled = true,
-                isAuthorizedUserToInitiate = true,
-                isAuthorizedUserToDraft = false,
-                isAuthorizedUserToCancel = false,
+                isInitiationEnabled = true,
+                isDraftEnabled = false,
+                isCancelEnabled = false,
                 isAuthorizedUserToApprove = false,
                 isApprovedOrFailed = false,
                 isWireCreated = false,
