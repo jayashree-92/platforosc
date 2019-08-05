@@ -311,6 +311,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             $scope.counterpartyFamilyId = response.data.counterpartyFamilyId;
             $scope.accountDescriptions = response.data.accountDescriptions;
             $scope.accountModules = response.data.accountModules;
+            $scope.accountReports = response.data.accountReports;
             $scope.ssiTemplates = response.data.ssiTemplates;
             $scope.agreementTypeId = response.data.agreementTypeId;
             $scope.broker = response.data.broker;
@@ -1336,6 +1337,17 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         });
     }
 
+    $scope.fnGetAccountReports = function (panelIndex) {
+        $http.get("/Accounts/GetAccountReports").then(function (response) {
+            $scope.accountReports = response.data.accountReports;
+            $("#liAccountReport").select2({
+                placeholder: "Select Modules",
+                data: response.data.accountReports
+            });
+            $("#liAccountReport").select2('val', $scope.accountReports[0].id);
+        });
+    }
+
     $scope.addAccountDetail = function () {
         if ($('#txtDetail').val() == undefined || $('#txtDetail').val() == "") {
             //pop-up    
@@ -1391,7 +1403,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             });
         }
         else {
-            $http.post("/Accounts/AddAccountModule", { accountModule: $("#txtDetail").val() }).then(function (response) {
+            $http.post("/Accounts/AddAccountModule", { reportId: $("#liAccountReport").select2('val'), accountModule: $("#txtDetail").val() }).then(function (response) {
                 notifySuccess("Module added successfully");
                 $scope.fnGetAccountModules($scope.PanelIndex);
             });
@@ -1410,6 +1422,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             keyboard: true
         }).on("hidden.bs.modal", function () {
             $("#txtDetail").popover("hide").val("");
+            $("#liAccountReport").select2('val', $scope.accountReports[0].id);
             // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
         });
     }

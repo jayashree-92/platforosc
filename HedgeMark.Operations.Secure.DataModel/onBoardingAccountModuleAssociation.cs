@@ -12,11 +12,15 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class onboardingAccountModule
+    public partial class onBoardingAccountModuleAssociation
     {
-        public long onboardingAccountModuleId { get; set; }
-        public string Module { get; set; }
+        public long onBoardingAccountModuleAssociationId { get; set; }
+        public long onBoardingAccountId { get; set; }
+        public long onBoardingModuleId { get; set; }
         public System.DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
+    
+        public virtual onBoardingAccount onBoardingAccount { get; set; }
+        public virtual onBoardingModule onBoardingModule { get; set; }
     }
 }

@@ -7,6 +7,7 @@
       <Diagram DiagramId="4ced318b7151474c8d7ef5909aa07011" Name="Diagram1">
         <EntityTypeShape EntityType="OperationsModel.dmaUserPreference" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="OperationsModel.vw_HFundOps" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OperationsModel.dmaReport" Width="1.5" PointX="5.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -106,6 +106,9 @@
     <Compile Include="dmaOnBoardingContactDetail.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dmaReport.cs">
+      <DependentUpon>OperationsContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="dmaUserPreference.cs">
       <DependentUpon>OperationsContext.tt</DependentUpon>
     </Compile>
@@ -171,7 +174,7 @@
     <Compile Include="onBoardingAccountDocument.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="onboardingAccountModule.cs">
+    <Compile Include="onBoardingAccountModuleAssociation.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingAccountSSITemplateMap.cs">
@@ -191,6 +194,9 @@
     </Compile>
     <Compile Include="onboardingFund.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="onBoardingModule.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingSSITemplate.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>

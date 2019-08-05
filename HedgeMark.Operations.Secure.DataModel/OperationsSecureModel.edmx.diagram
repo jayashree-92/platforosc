@@ -51,9 +51,12 @@
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" />
-        <EntityTypeShape EntityType="OperationsSecureModel.onboardingAccountModule" Width="1.5" PointX="13.375" PointY="12.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireSenderInformation" Width="1.5" PointX="0.75" PointY="15.125" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireSenderInformation_SenderInformationId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAccountModuleAssociation" Width="1.5" PointX="8" PointY="29.625" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingModule" Width="1.5" PointX="5.75" PointY="35.75" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingModule_onBoardingModuleId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

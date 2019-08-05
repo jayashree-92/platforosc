@@ -114,13 +114,26 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAccountModules()
         {
-            var accountModules = AccountManager.GetAccountModules();
+            var accountModules = AccountManager.GetOnBoardingModules();
             return Json(new
             {
                 accountModules = accountModules.Select(choice => new
                 {
-                    id = choice.Module,
-                    text = choice.Module
+                    id = choice.onBoardingModuleId,
+                    text = choice.ModuleName
+                }).OrderBy(x => x.text).ToList()
+            }, JsonContentType, JsonContentEncoding);
+        }
+
+        public JsonResult GetAccountReports()
+        {
+            var accountReports = AccountManager.GetAccountReports();
+            return Json(new
+            {
+                accountReports = accountReports.Select(choice => new
+                {
+                    id = choice.dmaReportsId,
+                    text = choice.ReportName
                 }).OrderBy(x => x.text).ToList()
             }, JsonContentType, JsonContentEncoding);
         }
@@ -130,9 +143,9 @@ namespace HMOSecureWeb.Controllers
             AccountManager.AddAccountDescription(accountDescription, agreementTypeId);
         }
 
-        public void AddAccountModule(string accountModule)
+        public void AddAccountModule(long reportId, string accountModule)
         {
-            AccountManager.AddAccountModule(accountModule, UserName);
+            AccountManager.AddOnboardingModule(reportId, accountModule, UserName);
         }
 
 
@@ -167,7 +180,8 @@ namespace HMOSecureWeb.Controllers
 
             var onBoardingContacts = OnBoardingDataManager.GetAllOnBoardingContacts(ContactManager.CounterpartyTypeId, counterpartyFamilyId);
             var accountDescriptionChoices = AccountManager.GetAccountDescriptionsByAgreementTypeId(agreementTypeId);
-            var accountModules = AccountManager.GetAccountModules();
+            var accountModules = AccountManager.GetOnBoardingModules();
+            var accountReports = AccountManager.GetAccountReports();
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
             var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds);
 
@@ -320,9 +334,14 @@ namespace HMOSecureWeb.Controllers
                 }).OrderBy(x => x.text).ToList(),
                 accountModules = accountModules.Select(choice => new
                 {
-                    id = choice.Module,
-                    text = choice.Module
+                    id = choice.onBoardingModuleId,
+                    text = choice.ModuleName,
                 }).OrderBy(x => x.text).ToList(),
+                accountReports = accountReports.Select(choice => new
+                {
+                    id = choice.dmaReportsId,
+                    text = choice.ReportName,
+                }).OrderBy(x => x.id).ToList(),
                 ssiTemplates
 
             }, Formatting.None, new JsonSerializerSettings()
@@ -542,6 +561,22 @@ namespace HMOSecureWeb.Controllers
                         });
 
                     account.onBoardingAccountSSITemplateMaps = ssiTemplates;
+                }
+                if (!string.IsNullOrEmpty(account.AccountModule))
+                {
+                    var onboardModuleAssociations = new List<onBoardingAccountModuleAssociation>();
+                    foreach (var module in account.AccountModule.Split(',').Where(s => s != "").Select(s => long.Parse(s)))
+                    {
+                        var moduleMap = new onBoardingAccountModuleAssociation()
+                        {
+                            onBoardingAccountId = account.onBoardingAccountId,
+                            onBoardingModuleId = module,
+                            CreatedAt = DateTime.Now,
+                            CreatedBy = UserName
+                        };
+                        onboardModuleAssociations.Add(moduleMap);
+                    }
+                    account.onBoardingAccountModuleAssociations = onboardModuleAssociations;
                 }
 
                 auditLogList = account.onBoardingAccountId > 0 ? UpdateAccountAuditLog(account) : AddAccountAuditLog(account, fundName, agreement, broker);

@@ -926,6 +926,17 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
+    $scope.fnGetAccountReports = function (panelIndex) {
+        $http.get("/Accounts/GetAccountReports").then(function (response) {
+            $scope.accountReports = response.data.accountReports;
+            $("#liAccountReport").select2({
+                placeholder: "Select Modules",
+                data: response.data.accountReports
+            });
+            $("#liAccountReport").select2('val', $scope.accountReports[0].id);
+        });
+    }
+
     $scope.addAccountDetail = function () {
         if ($('#txtDetail').val() == undefined || $('#txtDetail').val() == "") {
             //pop-up    
@@ -981,7 +992,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             });
         }
         else {
-            $http.post("/Accounts/AddAccountModule", { accountModule: $("#txtDetail").val() }).then(function (response) {
+            $http.post("/Accounts/AddAccountModule", { reportId:$("#liAccountReport").select2('val'),  accountModule: $("#txtDetail").val() }).then(function (response) {
                 notifySuccess("Module added successfully");
                 $scope.fnGetAccountModules($scope.PanelIndex);
             });
@@ -1000,6 +1011,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             keyboard: true
         }).on("hidden.bs.modal", function () {
             $("#txtDetail").popover("hide").val("");
+            $("#liAccountReport").select2('val', $scope.accountReports[0].id);
             // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
         });
     }
@@ -1404,7 +1416,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.cusodyAccountData.push({ "id": value.AccountName, "text": value.AccountName });
         });
 
-
+        $scope.fnGetAccountReports();
         $.each($scope.onBoardingAccountDetails, function (key, value) {
 
             $scope.fnGetAccountDescriptions(key);

@@ -91,13 +91,22 @@ namespace HMOSecureMiddleware
 
         }
 
-        public static List<onboardingAccountModule> GetAccountModules()
+        public static List<onBoardingModule> GetOnBoardingModules()
         {
             using (var context = new OperationsSecureContext())
             {
-                return context.onboardingAccountModules.Where(s => s.CreatedBy != null).ToList();
+                return context.onBoardingModules.Where(s => s.CreatedBy != null).ToList();
             }
 
+        }
+
+        public static List<long> ReportList = new List<long>() { 4, 11 };
+        public static List<dmaReport> GetAccountReports()
+        {
+            using (var context = new OperationsContext())
+            {
+                return context.dmaReports.Where(s => ReportList.Contains(s.dmaReportsId)).ToList();
+            }
         }
 
         public static void AddAccountDescription(string accountDescription, int agreementTypeId)
@@ -123,7 +132,7 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static void AddAccountModule(string accountModule, string userName)
+        public static void AddOnboardingModule(long reportId, string accountModule, string userName)
         {
             var methodName = MethodBase.GetCurrentMethod();
             Logger.InfoFormat("{0} - calling to create the Onboarding Account Module", methodName);
@@ -131,13 +140,14 @@ namespace HMOSecureMiddleware
             {
                 using (var context = new OperationsSecureContext())
                 {
-                    var onBoardingAccountModule = new onboardingAccountModule()
+                    var onBoardingModule = new onBoardingModule()
                     {
-                        Module = accountModule,
+                        dmaReportsId = reportId,
+                        ModuleName = accountModule,
                         CreatedBy = userName,
                         CreatedAt = DateTime.Now
                     };
-                    context.onboardingAccountModules.Add(onBoardingAccountModule);
+                    context.onBoardingModules.Add(onBoardingModule);
                     context.SaveChanges();
                 }
             }
@@ -218,17 +228,24 @@ namespace HMOSecureMiddleware
                         account.UpdatedAt = DateTime.Now;
                         account.UpdatedBy = userName;
                         context.onBoardingAccounts.AddOrUpdate(account);
+                        if (account.onBoardingAccountModuleAssociations != null && account.onBoardingAccountModuleAssociations.Count > 0)
+                        {
+                            var accountToBeDeleted = context.onBoardingAccountModuleAssociations.Where(x => x.onBoardingAccountId == account.onBoardingAccountId).ToList();
+                            context.onBoardingAccountModuleAssociations.RemoveRange(accountToBeDeleted);
+                            context.onBoardingAccountModuleAssociations.AddRange(account.onBoardingAccountModuleAssociations);
+
+                            //new Repository<onBoardingAccountSSITemplateMap>().BulkInsert(account.onBoardingAccountSSITemplateMaps, dbSchemaName: "HMADMIN.");
+                        }
+
                         if (account.onBoardingAccountSSITemplateMaps != null && account.onBoardingAccountSSITemplateMaps.Count > 0)
                         {
                             var ssiTemplateMapToBeDeleted = context.onBoardingAccountSSITemplateMaps.Where(x => x.onBoardingAccountId == account.onBoardingAccountId).ToList();
                             context.onBoardingAccountSSITemplateMaps.RemoveRange(ssiTemplateMapToBeDeleted);
                             context.onBoardingAccountSSITemplateMaps.AddRange(account.onBoardingAccountSSITemplateMaps);
-                            context.SaveChanges();
 
                             //new Repository<onBoardingAccountSSITemplateMap>().BulkInsert(account.onBoardingAccountSSITemplateMaps, dbSchemaName: "HMADMIN.");
                         }
                     }
-
                     context.SaveChanges();
                 }
 

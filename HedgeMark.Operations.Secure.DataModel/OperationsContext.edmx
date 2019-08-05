@@ -4,7 +4,16 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DMA_HMModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DMA_HMModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="dmaReports">
+          <Key>
+            <PropertyRef Name="dmaReportsId" />
+          </Key>
+          <Property Name="dmaReportsId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReportName" Type="varchar" MaxLength="100" />
+          <Property Name="DisplayOrder" Type="int" Nullable="false" />
+          <Property Name="IsFundPrimaryReport" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="dmaUserPreference">
           <Key>
             <PropertyRef Name="dmaUserPreferenceId" />
@@ -41,6 +50,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="CalendarId" Type="int" />
         </EntityType>
         <EntityContainer Name="DMA_HMModelStoreContainer">
+          <EntitySet Name="dmaReports" EntityType="Self.dmaReports" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaUserPreference" EntityType="Self.dmaUserPreference" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="vw_HFundOps" EntityType="Self.vw_HFundOps" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -60,8 +70,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
     FROM [dbo].[vw_HFundOps] AS [vw_HFundOps]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="OperationsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -101,7 +110,17 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
         <EntityContainer Name="OperationsContext" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="dmaUserPreferences" EntityType="Self.dmaUserPreference" />
           <EntitySet Name="vw_HFundOps" EntityType="Self.vw_HFundOps" />
+          <EntitySet Name="dmaReports" EntityType="OperationsModel.dmaReport" />
         </EntityContainer>
+        <EntityType Name="dmaReport">
+          <Key>
+            <PropertyRef Name="dmaReportsId" />
+          </Key>
+          <Property Name="dmaReportsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReportName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DisplayOrder" Type="Int32" Nullable="false" />
+          <Property Name="IsFundPrimaryReport" Type="Boolean" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -134,6 +153,16 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
                 <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
                 <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
                 <ScalarProperty Name="CalendarId" ColumnName="CalendarId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dmaReports">
+            <EntityTypeMapping TypeName="OperationsModel.dmaReport">
+              <MappingFragment StoreEntitySet="dmaReports">
+                <ScalarProperty Name="IsFundPrimaryReport" ColumnName="IsFundPrimaryReport" />
+                <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
+                <ScalarProperty Name="ReportName" ColumnName="ReportName" />
+                <ScalarProperty Name="dmaReportsId" ColumnName="dmaReportsId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

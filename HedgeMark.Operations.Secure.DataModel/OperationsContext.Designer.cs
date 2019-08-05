@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\HM-Projects\HedgeMark.Operations.Secure GIT\HedgeMark.Operations.Secure.DataModel\OperationsContext.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\Ops_Secure_LatestCodeBase_GIT\HedgeMark.Operations.Secure.DataModel\OperationsContext.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
