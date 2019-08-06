@@ -223,6 +223,27 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static List<WireAccountBaseData> GetApprovedFundAccountsForModule(long hmFundId, long onBoardSSITemplateId)
+        {
+            long qualifiedOnBoardFundId;
+            var allPBAgreementIds = AllPBAgreementIds(hmFundId, out qualifiedOnBoardFundId);
+
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+
+                var sendingAccounts = (from oAccnt in context.onBoardingAccounts
+                                       join oMap in context.onBoardingAccountSSITemplateMaps on oAccnt.onBoardingAccountId equals oMap.onBoardingAccountId
+                                       where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved"
+                                                                                                  && oAccnt.dmaFundOnBoardId == qualifiedOnBoardFundId && oAccnt.onBoardingAccountStatus == "Approved" && oAccnt.AuthorizedParty == "HedgeMark"
+                                                                                                  && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allPBAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
+                                       select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber }).ToList();
+
+                return sendingAccounts;
+            }
+        }
+
         private static List<long> AllPBAgreementIds(long fundId, out long qualifiedOnBoardFundId)
         {
             List<long> allPBAgreementIds;

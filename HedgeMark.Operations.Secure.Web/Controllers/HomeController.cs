@@ -268,7 +268,16 @@ namespace HMOSecureWeb.Controllers
             var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
             var isLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == UserDetails.Id;
             var isWirePurposeAdhoc = wireTicket.HMWire.hmsWirePurposeLkup.ReportName == "Adhoc Report";
-            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser, isWirePurposeAdhoc, validationMsg });
+            var sendingAccounts = new List<WireAccountBaseData>();
+
+            if (isEditEnabled)
+            {
+                sendingAccounts = isWirePurposeAdhoc
+                    ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, wireTicket.IsBookTransfer)
+                    : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId);
+            }
+            var sendingAccountsList = sendingAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
+            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser, isWirePurposeAdhoc, validationMsg, sendingAccountsList });
         }
 
         public JsonResult IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId)
