@@ -30,15 +30,6 @@ namespace HMOSecureMiddleware
             }
         }
     }
-    public class AuthorizedHFund
-    {
-        public long intFundId { get; set; }
-        public string ShortFundName { get; set; }
-        public string LegalFundName { get; set; }
-        public string ClientFundName { get; set; }
-        public string HMRAFundName { get; set; }
-        public string PreferredFundName { get; set; }
-    }
 
     public class AuthorizedData
     {

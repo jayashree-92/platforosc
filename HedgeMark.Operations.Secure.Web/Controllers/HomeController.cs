@@ -187,7 +187,7 @@ namespace HMOSecureWeb.Controllers
                     //    onboardingFund = new onboardingFund() { FundShortName = string.Format("unknown agrId {0}", wire.OnBoardAgreementId) },
                     //    dmaCounterPartyOnBoarding = new dmaCounterPartyOnBoarding() { CounterpartyName = string.Format("unknown agrId {0}", wire.OnBoardAgreementId) },
                     //},
-                    SendingAccount =  wireAccounts.FirstOrDefault(s => wire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount(),  //wire.onBoardingAccount
+                    SendingAccount = wireAccounts.FirstOrDefault(s => wire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount(),  //wire.onBoardingAccount
                     ReceivingAccount = wire.WireTransferTypeId == 2 ? wireAccounts.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount() : new onBoardingAccount(),
                     SSITemplate = wire.WireTransferTypeId != 2 && wire.hmsWireTransferTypeLKup.TransferType != "Notice" ? wireSSITemplates.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate() : new onBoardingSSITemplate(),
                     FundName = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) == null ? "" : hFunds.First(s => s.HFundId == wire.hmFundId).PerferredFundName,
@@ -598,20 +598,15 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAuthorizedFunds()
         {
-            Dictionary<int, string> hFunds;
-
-            using(var context = new OperationsContext())
+            using (var context = new OperationsContext())
             {
                 var authorizedFundIds = AuthorizedSessionData.HMFundIds.Select(s => s.Id).ToList();
-                hFunds = AdminFundManager.GetUniversalDMAFundListQuery(context, UserName).Where(s=>AuthorizedSessionData.IsPrivilegedUser || authorizedFundIds.Contains(s.hmFundId)).ToDictionary(s=>s.hmFundId,v=>v.PreferredFundName);
-            }
+                var hFunds = AdminFundManager.GetUniversalDMAFundListQuery(context, UserName)
+                    .Where(s => AuthorizedSessionData.IsPrivilegedUser || authorizedFundIds.Contains(s.hmFundId)).OrderBy(s => s.PreferredFundName)
+                    .Select(s => new { id = s.hmFundId, text = s.PreferredFundName }).ToList();
 
-            var hFundSelect = new List<object>();
-            foreach (var pair in hFunds.OrderBy(s => s.Value))
-            {
-                hFundSelect.Add(new { id = pair.Key, text = pair.Value });
+                return Json(hFunds, JsonRequestBehavior.AllowGet);
             }
-            return Json(hFundSelect, JsonRequestBehavior.AllowGet);
         }
         public JsonResult GetApprovedAgreementsForFund(long fundId)
         {
