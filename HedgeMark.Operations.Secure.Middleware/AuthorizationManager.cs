@@ -117,10 +117,10 @@ namespace HMOSecureMiddleware
 
         public static List<AuthorizedHFund> GetAuthorizedHMFunds(int userId, string userName, bool isPrivilegedUser)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsContext())
             {
                 var preferredFundName = GetPreferredFundName(userName);
-                var hmFunds = (from fund in context.vw_HFund
+                var hmFunds = (from fund in context.vw_HFundOps
                     where fund.CreatedFor.Contains("DMA")
                     let prefName = preferredFundName == FundNameInDropDown.ClientFundName ? fund.ClientFundName
                         : preferredFundName == FundNameInDropDown.HMRAName ? fund.HMRAName
@@ -129,13 +129,19 @@ namespace HMOSecureMiddleware
                         : fund.ClientFundName
                         select new AuthorizedHFund()
                                {
-                                   intFundId = fund.intFundID,
+                                   intFundId = fund.intFundId,
                                    ClientFundName = fund.ClientFundName,
                                    ShortFundName = fund.ShortFundName,
                                    LegalFundName = fund.LegalFundName,
                                    HMRAFundName = fund.HMRAName,
                                    PreferredFundName = prefName.Replace("\t", ""),
                                }).OrderBy(s => s.PreferredFundName).ToList();
+
+                if(!isPrivilegedUser)
+                {
+                    var hFundIds = GetAuthorizedOnboardingFundsEntities(userId).Select(s => s.Id).ToList();
+                    hmFunds = hmFunds.Where(s => hFundIds.Contains(s.intFundId)).ToList();
+                }
                 return hmFunds;
             }
         }

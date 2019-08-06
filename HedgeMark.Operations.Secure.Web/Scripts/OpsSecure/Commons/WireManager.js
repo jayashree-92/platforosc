@@ -296,7 +296,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case 2: angular.element("#workflowStatus_" + index).addClass("text-warning");
                 return "Initiated";
             case 3: angular.element("#workflowStatus_" + index).addClass("text-success");
-                return "Approved" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
+                return wireLog.SwiftStatusId == 1 ? "Approved" : $scope.getSwiftStatusString(wireLog.SwiftStatusId);
             case 4: angular.element("#workflowStatus_" + index).addClass("text-blocked");
                 if ($scope.WireTicket.SwiftStatusId == 1)
                     return "Rejected";
@@ -313,15 +313,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
             case 1: return "";
             case 2: if ($container != null) $container.addClass("text-warning");
-                return " & is Processing";
+                return " started Processing";
             case 3: if ($container != null) $container.addClass("text-info");
-                return " & Acknowledged";
+                return " Acknowledged";
             case 4: if ($container != null) $container.addClass("text-dander");
-                return " & N-Acknowledged";
+                return " N-Acknowledged";
             case 5: if ($container != null) $container.addClass("text-success");
-                return " & Completed";
+                return " Completed";
             case 6: if ($container != null) $container.addClass("text-dander");
-                return " & Failed";
+                return " Failed";
         }
         return "";
     }
@@ -746,6 +746,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         return selectData.text;
     }
 
+    function formatSelect(selectData) {
+        var stat = $filter('filter')($scope.SenderInformation, { 'id': selectData.id }, true)[0];
+        return stat.text;
+    }
+
     $scope.initializeControls = function () {
 
         angular.element("#liDeliveryCharges").select2({
@@ -768,6 +773,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             data: $scope.SenderInformation,
             allowClear: true,
             formatSelection: formatSelect,
+            formatResult: formatResult,
             closeOnSelect: false
         });
 
