@@ -687,7 +687,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.getApprovalTime = function (account) {
-        $http.post("/Home/GetTimeToApproveTheWire", ({ onBoardingAccountId: account.onBoardAccountId, valueDate: $("#wireValueDate").text() }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
+        $http.post("/Home/GetTimeToApproveTheWire", ({ onBoardingAccountId: account.onBoardingAccountId, valueDate: $("#wireValueDate").text() }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
             $scope.timeToApprove = response.data;
             $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
             if ($scope.timeToApprove.Hours > 0) {
