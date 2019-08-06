@@ -746,7 +746,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         return selectData.text;
     }
 
-    function formatSelect(selectData) {
+    function formatResult(selectData) {
         var stat = $filter('filter')($scope.SenderInformation, { 'id': selectData.id }, true)[0];
         return stat.text;
     }
