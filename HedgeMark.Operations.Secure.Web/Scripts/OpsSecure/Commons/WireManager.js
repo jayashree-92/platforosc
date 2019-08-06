@@ -588,6 +588,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 break;
             case 2: $("#initiateWire").button("loading");
                 break;
+            case 3: $("#approveWire").button("loading");
+                break;
             case 4: $("#cancelWire").button("loading");
                 break;
         }
