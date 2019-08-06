@@ -598,12 +598,12 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAuthorizedFunds()
         {
-            var hFunds = new Dictionary<long, string>();
-            var hFundDetails = AuthorizationManager.GetAuthorizedHMFunds(UserDetails.Id, UserName, AuthorizedSessionData.IsPrivilegedUser);
-            foreach (var data in hFundDetails)
+            Dictionary<int, string> hFunds;
+
+            using(var context = new OperationsContext())
             {
-                if (hFunds.ContainsKey(data.intFundId)) continue;
-                hFunds.Add(data.intFundId, data.PreferredFundName);
+                var authorizedFundIds = AuthorizedSessionData.HMFundIds.Select(s => s.Id).ToList();
+                hFunds = AdminFundManager.GetUniversalDMAFundListQuery(context, UserName).Where(s=>AuthorizedSessionData.IsPrivilegedUser || authorizedFundIds.Contains(s.hmFundId)).ToDictionary(s=>s.hmFundId,v=>v.PreferredFundName);
             }
 
             var hFundSelect = new List<object>();

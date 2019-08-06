@@ -91,6 +91,7 @@
     <Compile Include="Models\WireTicket.cs" />
     <Compile Include="NotificationManager.cs" />
     <Compile Include="OnBoardingDataManager.cs" />
+    <Compile Include="PreferencesManager.cs" />
     <Compile Include="Queues\QueueSystemManager.cs" />
     <Compile Include="Service References\UserManagementService\Reference.cs">
       <AutoGen>True</AutoGen>

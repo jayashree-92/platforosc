@@ -10,12 +10,12 @@ namespace HMOSecureMiddleware
         {
             public int hmFundId { get; set; }
             public string PreferredFundName { get; set; }
-            public vw_HFund HFund { get; set; }
+            public vw_HFundOps HFund { get; set; }
         }
 
         public static List<HFund> GetHFundsCreatedForDMA(List<long> hFundIds, string userName, string preferredCode = null)
         {
-            using (var context = new AdminContext())
+            using (var context = new OperationsContext())
             {
                 return GetUniversalDMAFundListQuery(context, userName, preferredCode).Where(s => hFundIds.Contains(s.hmFundId)).Select(s => new HFund
                 {
@@ -30,20 +30,19 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static IQueryable<QueryableHFund> GetUniversalDMAFundListQuery(AdminContext context, string userName, string defaultPreferredCode = null)
+        public static IQueryable<QueryableHFund> GetUniversalDMAFundListQuery(OperationsContext context, string userName, string defaultPreferredCode = null)
         {
-            return (from fund in context.vw_HFund
-                    where fund.CreatedFor.Contains("DMA")
-                    //let prefName = preferredFundName == PreferencesManager.FundNameInDropDown.RiskLongFundName ? fund.varFundLongName
-                    //    : preferredFundName == PreferencesManager.FundNameInDropDown.HMRAName ? fund.varMRDBName
-                    //    : fundOps == null ? fund.varFundLongName
-                    //    : preferredFundName == PreferencesManager.FundNameInDropDown.OpsShortName ? fundOps.ShortFundName
-                    //    : fundOps.LegalFundName
-                    let prefName = fund.ShortFundName
-
+            var preferredFundName = PreferencesManager.GetPreferredFundName(userName);
+            return (from fund in context.vw_HFundOps
+                let prefName = preferredFundName == PreferencesManager.FundNameInDropDown.ClientFundName ? fund.ClientFundName
+                    : preferredFundName == PreferencesManager.FundNameInDropDown.HMRAName ? fund.HMRAName
+                    : preferredFundName == PreferencesManager.FundNameInDropDown.LegalFundName ? fund.LegalFundName
+                    : preferredFundName == PreferencesManager.FundNameInDropDown.OpsShortName && fund.ShortFundName != null ? fund.ShortFundName
+                    : fund.ClientFundName
+                    
                     select new QueryableHFund()
                     {
-                        hmFundId = fund.intFundID,
+                        hmFundId = fund.intFundId,
                         HFund = fund,
                         PreferredFundName = prefName.Replace("\t", "")
                     }).OrderBy(s => s.PreferredFundName);

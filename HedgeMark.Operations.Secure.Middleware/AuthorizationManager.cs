@@ -81,7 +81,7 @@ namespace HMOSecureMiddleware
     public class AuthorizationManager
     {
         public static readonly List<string> AuthorizedDmaUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedDmaUserRoles", "DMAUser,DMAAdmin");
-        public static readonly string ShowRiskOrShortFundNames = "CONFIG:ShowRiskOrShortFundNames";
+        
         public static AuthorizedData GetAuthorizedData(int userId, string userName, string userRole)
         {
             if (string.IsNullOrWhiteSpace(userName))
@@ -99,7 +99,6 @@ namespace HMOSecureMiddleware
 
         private static List<AuthorizedEntity> GetAuthorizedHMFundsEntities(int userId)
         {
-
             using (var context = new AdminContext())
             {
                 var hmFunds = (from obFid in context.onboardingFunds
@@ -112,52 +111,6 @@ namespace HMOSecureMiddleware
                                    Level = obP.dmaPermissionLevelId
                                }).ToList();
                 return hmFunds;
-            }
-        }
-
-        public static List<AuthorizedHFund> GetAuthorizedHMFunds(int userId, string userName, bool isPrivilegedUser)
-        {
-            using (var context = new OperationsContext())
-            {
-                var preferredFundName = GetPreferredFundName(userName);
-                var hmFunds = (from fund in context.vw_HFundOps
-                    where fund.CreatedFor.Contains("DMA")
-                    let prefName = preferredFundName == FundNameInDropDown.ClientFundName ? fund.ClientFundName
-                        : preferredFundName == FundNameInDropDown.HMRAName ? fund.HMRAName
-                        : preferredFundName == FundNameInDropDown.LegalFundName ? fund.LegalFundName
-                        : preferredFundName == FundNameInDropDown.OpsShortName && fund.ShortFundName != null ? fund.ShortFundName
-                        : fund.ClientFundName
-                        select new AuthorizedHFund()
-                               {
-                                   intFundId = fund.intFundId,
-                                   ClientFundName = fund.ClientFundName,
-                                   ShortFundName = fund.ShortFundName,
-                                   LegalFundName = fund.LegalFundName,
-                                   HMRAFundName = fund.HMRAName,
-                                   PreferredFundName = prefName.Replace("\t", ""),
-                               }).OrderBy(s => s.PreferredFundName).ToList();
-
-                if(!isPrivilegedUser)
-                {
-                    var hFundIds = GetAuthorizedOnboardingFundsEntities(userId).Select(s => s.Id).ToList();
-                    hmFunds = hmFunds.Where(s => hFundIds.Contains(s.intFundId)).ToList();
-                }
-                return hmFunds;
-            }
-        }
-
-        public enum FundNameInDropDown
-        {
-            OpsShortName = 0, LegalFundName = 1, ClientFundName = 2, HMRAName = 3
-        }
-
-        public static FundNameInDropDown GetPreferredFundName(string userName)
-        {
-            var key = ShowRiskOrShortFundNames;
-            using (var context = new OperationsContext())
-            {
-                var preferredFundName = context.dmaUserPreferences.Where(up => up.UserId == userName && up.Key == key).Select(s => s.Value).FirstOrDefault() ?? "0";
-                return (FundNameInDropDown)Convert.ToInt32(preferredFundName);
             }
         }
 
