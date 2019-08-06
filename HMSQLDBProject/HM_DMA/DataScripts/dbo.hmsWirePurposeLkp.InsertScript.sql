@@ -190,3 +190,8 @@ INSERT INTO [hmsWirePurposeLkup] ([ReportName], [Purpose],[CreatedAt],[CreatedBy
 END 
 GO
 
+IF NOT EXISTS(SELECT 8 FROM hmsWirePurposeLkup WHERE ReportName = 'Invoices' AND Purpose = 'Invoice Payment')
+BEGIN
+INSERT INTO [hmsWirePurposeLkup] ([ReportName], [Purpose],[CreatedAt],[CreatedBy],[ModifiedBy],[ModifiedAt],[IsApproved]) VALUES('Invoices', 'Invoice Payment',GETDATE(),-1, NULL, NULL, 1)
+END 
+GO
