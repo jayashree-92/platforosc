@@ -390,7 +390,7 @@ namespace HMOSecureMiddleware
             {
                 wireTicket.HMWire.CreatedAt = existingWireTicket.HMWire.CreatedAt;
                 SetWireStatusAndWorkFlow(wireTicket.HMWire, wireStatus, SwiftStatus.NotInitiated, comment, userId);
-                if (wireTicket.IsNotice && wireStatus == WireStatus.Initiated)
+                if (existingWireTicket.IsNotice && wireStatus == WireStatus.Initiated)
                     SaveWireData(wireTicket, WireStatus.Approved, comment, userId);
             }
 
