@@ -620,6 +620,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             },
             html: true
         }).popover("show");
+        $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
+                    + "<button class=\"btn btn-sm btn-success confirmCancellation\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
+                    + "<button class=\"btn btn-sm btn-default dismissCancellation\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
+                    + "</div>");
     }
 
     $(document).on('click', ".confirmCancellation", function () {
