@@ -120,7 +120,8 @@ namespace HMOSecureWeb.Controllers
                 accountModules = accountModules.Select(choice => new
                 {
                     id = choice.onBoardingModuleId,
-                    text = choice.ModuleName
+                    text = choice.ModuleName,
+                    report = choice.dmaReportsId == 4 ? "Collateral" : "Invoices"
                 }).OrderBy(x => x.text).ToList()
             }, JsonContentType, JsonContentEncoding);
         }

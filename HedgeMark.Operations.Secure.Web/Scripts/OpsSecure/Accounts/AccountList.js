@@ -920,10 +920,18 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 placeholder: "Select Modules",
                 multiple: true,
                 allowClear: true,
-                data: response.data.accountModules
+                data: response.data.accountModules,
+                formatResult: formatResult,
+                formatSelection: formatResult
             });
             $("#liAccountModule_" + panelIndex).val($scope.onBoardingAccountDetails[panelIndex].AccountModule);
         });
+    }
+
+    function formatResult(selectData) {
+        var stat = $filter('filter')($scope.accountModules, { 'id': selectData.id }, true)[0];
+        selectData.text = selectData.text + "&nbsp;&nbsp;<label class='label " + (selectData.report == "Collateral" ? " label-info" : "label-default") + " shadowBox'>" + selectData.report + "</label>";
+        return selectData.text;
     }
 
     $scope.fnGetAccountReports = function (panelIndex) {
@@ -964,7 +972,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             });
         }
         else {
-            $($scope.AccountModules).each(function (i, v) {
+            $($scope.accountModules).each(function (i, v) {
                 if ($("#txtDetail").val() == v.text) {
                     isExists = true;
                     return false;
