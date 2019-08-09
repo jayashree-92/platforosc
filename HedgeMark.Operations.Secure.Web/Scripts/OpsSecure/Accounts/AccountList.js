@@ -930,8 +930,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     function formatResult(selectData) {
         var stat = $filter('filter')($scope.accountModules, { 'id': selectData.id }, true)[0];
-        selectData.text = selectData.text + "&nbsp;&nbsp;<label class='label " + (selectData.report == "Collateral" ? " label-info" : "label-default") + " shadowBox'>" + selectData.report + "</label>";
-        return selectData.text;
+        return selectData.text + "&nbsp;&nbsp;<label class='label " + (selectData.report == "Collateral" ? " label-info" : "label-default") + " shadowBox'>" + selectData.report + "</label>";
     }
 
     $scope.fnGetAccountReports = function (panelIndex) {

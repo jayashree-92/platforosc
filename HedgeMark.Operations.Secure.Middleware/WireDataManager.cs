@@ -223,7 +223,7 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<WireAccountBaseData> GetApprovedFundAccountsForModule(long hmFundId, long onBoardSSITemplateId)
+        public static List<WireAccountBaseData> GetApprovedFundAccountsForModule(long hmFundId, long onBoardSSITemplateId, long reportId)
         {
             long qualifiedOnBoardFundId;
             var allPBAgreementIds = AllPBAgreementIds(hmFundId, out qualifiedOnBoardFundId);
@@ -235,9 +235,11 @@ namespace HMOSecureMiddleware
 
                 var sendingAccounts = (from oAccnt in context.onBoardingAccounts
                                        join oMap in context.onBoardingAccountSSITemplateMaps on oAccnt.onBoardingAccountId equals oMap.onBoardingAccountId
+                                       let dmaReports = oAccnt.onBoardingAccountModuleAssociations.Select(s => s.onBoardingModule).Select(s => s.dmaReportsId)
                                        where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved"
                                                                                                   && oAccnt.dmaFundOnBoardId == qualifiedOnBoardFundId && oAccnt.onBoardingAccountStatus == "Approved" && oAccnt.AuthorizedParty == "HedgeMark"
                                                                                                   && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allPBAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
+                                                                                                  && dmaReports.Contains(reportId)
                                        select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber }).ToList();
 
                 return sendingAccounts;

@@ -366,7 +366,11 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             //if (accountType == "DDA")
             //    $scope.accountPurpose = [{ id: "Cash", text: "Cash" }, { id: "Margin", text: "Margin" }];
 
-
+            $("#liAccountReport").select2({
+                placeholder: "Select Modules",
+                data: $scope.accountReports
+            });
+            $("#liAccountReport").select2('val', $scope.accountReports[0].id);
 
             $scope.fnIntialize();
         });
@@ -505,6 +509,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         else $("#plnAddAccount").hide();
     });
 
+
     $scope.fnLoadDefaultDropDowns = function (key) {
 
         $("#liBeneficiaryType" + key).select2({
@@ -570,7 +575,9 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             placeholder: "Select Module",
             multiple: true,
             allowClear: true,
-            data: $scope.accountModules == undefined ? [] : $scope.accountModules
+            data: $scope.accountModules == undefined ? [] : $scope.accountModules,
+            formatResult: formatResult,
+            formatSelection: formatResult
         });
 
 
@@ -1342,8 +1349,8 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
 
     function formatResult(selectData) {
         var stat = $filter('filter')($scope.accountModules, { 'id': selectData.id }, true)[0];
-        selectData.text = selectData.text + "&nbsp;&nbsp;<label class='label " + (selectData.report == "Collateral" ? " label-info" : "label-default") + " shadowBox'>" + selectData.report + "</label>";
-        return selectData.text;
+        return selectData.text + "&nbsp;&nbsp;<label class='label " + (selectData.report == "Collateral" ? " label-info" : "label-default") + " shadowBox'>" + selectData.report + "</label>";
+        //return selectData.text;
     }
 
     $scope.fnGetAccountReports = function (panelIndex) {
@@ -1377,7 +1384,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         var isExists = false;
         if ($scope.detail == "Description") {
             $($scope.AccountDescriptions).each(function (i, v) {
-                if ($("#txtDetail").val() == v.text) {
+                if ($("#txtDetail").val().trim() == v.text) {
                     isExists = true;
                     return false;
                 }
@@ -1385,7 +1392,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         }
         else {
             $($scope.accountModules).each(function (i, v) {
-                if ($("#txtDetail").val() == v.text) {
+                if ($("#txtDetail").val().trim() == v.text) {
                     isExists = true;
                     return false;
                 }

@@ -269,12 +269,15 @@ namespace HMOSecureWeb.Controllers
             var isLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == UserDetails.Id;
             var isWirePurposeAdhoc = wireTicket.HMWire.hmsWirePurposeLkup.ReportName == "Adhoc Report";
             var sendingAccounts = new List<WireAccountBaseData>();
-
+            long reportId = 0;
             if (isEditEnabled)
             {
+                if (!isWirePurposeAdhoc)
+                    reportId = FileSystemManager.GetReportId(wireTicket.HMWire.hmsWirePurposeLkup.ReportName);
+
                 sendingAccounts = isWirePurposeAdhoc
                     ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, wireTicket.IsBookTransfer)
-                    : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId);
+                    : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId, reportId);
             }
             var sendingAccountsList = sendingAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
             return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser, isWirePurposeAdhoc, validationMsg, sendingAccountsList });

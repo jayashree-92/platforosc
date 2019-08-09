@@ -1,5 +1,8 @@
 ﻿using System.IO;
 using Com.HedgeMark.Commons;
+using System.Collections.Generic;
+using HedgeMark.Operations.Secure.DataModel;
+using System.Linq;
 
 namespace HMOSecureMiddleware
 {
@@ -58,9 +61,13 @@ namespace HMOSecureMiddleware
                 return ConfigurationManagerWrapper.StringSetting("DefaultTimeZone", "EST");
             }
         }
+        private static readonly object InitialiseLock;
 
         static FileSystemManager()
         {
+            InitialiseLock = new object();
+            Initialise();
+
             if (!Directory.Exists(UploadTemporaryFilesPath))
                 Directory.CreateDirectory(UploadTemporaryFilesPath);
 
@@ -69,6 +76,42 @@ namespace HMOSecureMiddleware
 
             if (!Directory.Exists(OpsSecureSSITemplateFileUploads))
                 Directory.CreateDirectory(OpsSecureSSITemplateFileUploads);
+        }
+
+        private static void Initialise()
+        {
+            lock (InitialiseLock)
+            {
+                DmaReports = GetAllReports();
+                //InitializeManagedAccounts();
+            }
+        }
+
+        public static List<dmaReport> DmaReports { get; set; }
+        public static Dictionary<long, string> AllReports
+        {
+            get
+            {
+                return DmaReports.OrderBy(s => s.DisplayOrder).ToDictionary(s => s.dmaReportsId, v => v.ReportName);
+            }
+        }
+
+        private static List<dmaReport> GetAllReports()
+        {
+            using (var context = new OperationsContext())
+            {
+                return context.dmaReports.OrderBy(s => s.DisplayOrder).ToList();
+            }
+        }
+
+        public static string GetReportName(long reportId)
+        {
+            return AllReports.FirstOrDefault(k => k.Key == reportId).Value;
+        }
+
+        public static long GetReportId(string reportName)
+        {
+            return AllReports.FirstOrDefault(v => v.Value == reportName).Key;
         }
 
 

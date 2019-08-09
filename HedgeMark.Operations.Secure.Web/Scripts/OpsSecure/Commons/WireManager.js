@@ -745,7 +745,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         var stat = $filter('filter')($scope.SenderInformation, { 'id': selectData.id }, true)[0];
         if (stat.text.indexOf('-') != -1) {
             var split = stat.text.split('-');
-            selectData.text = split[0];
+            return split[0];
         }
         return selectData.text;
     }

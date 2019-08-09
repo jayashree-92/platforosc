@@ -337,6 +337,7 @@ namespace HMOSecureWeb.Controllers
                 {
                     id = choice.onBoardingModuleId,
                     text = choice.ModuleName,
+                    report = choice.dmaReportsId == 4 ? "Collateral" : "Invoices"
                 }).OrderBy(x => x.text).ToList(),
                 accountReports = accountReports.Select(choice => new
                 {
