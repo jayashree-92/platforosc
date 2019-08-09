@@ -1403,11 +1403,11 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
                 placement: "right",
                 trigger: "manual",
                 container: "body",
-                content: $scope.detail + " is already exists. Please enter a valid " + $scope.detail,
+                content: $scope.detail + " already exists. Please enter a valid " + $scope.detail,
                 html: true,
                 width: "250px"
             });
-            //notifyWarning("Governing Law is already exists. Please enter a valid governing law");
+            //notifyWarning("Governing Law already exists. Please enter a valid governing law");
             $("#txtDetail").popover("show");
             return;
         }
