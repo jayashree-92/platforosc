@@ -918,7 +918,9 @@
                         <p class="ng-show-hide swiftMessgeBlock" ng-animate-swap="TrustedSwiftMessage">{{TrustedSwiftMessage}}</p>
                     </div>
                 </div>
+            </div>
 
+            <div class="modal-footer form-inline" style="padding: 8px 20px 20px; ">
                 <div class="panel panel-heading collapse wireError" id="wireErrorStatus" data-toggle='collapse' style="background: #F5F5F5;text-transform: inherit; font-size:13px;">
                     <p style="color: darkred; font-weight:bold;"> {{ validationMsg }}</p>
                     <div class='active' data-toggle='buttons' id="wireCreationDiv" ng-show="isWireCreated">
@@ -926,9 +928,6 @@
                         &nbsp;<span>I understand and wish to initiate this wire.</span>
                     </div>
                 </div>
-            </div>
-
-            <div class="modal-footer form-inline" style="padding: 8px 20px 20px; ">
                 <textarea type="text" placeholder="Enter Comments" id="wireComment" ng-model="wireComments" class="form-control" rows="2" style="width:50%;float:left;"></textarea>
                 <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save" ng-disabled="isMandatoryFieldsMissing || !isWireRequirementsFilled || isUserActionDone" ng-if="isDraftEnabled" ng-click="fnUpdateWireWithStatus(1)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ isLastModifiedUser ?  'Modifying' : 'Reverting to Draft' }}...</span>">
                     <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;{{ isLastModifiedUser ? "Modify" : "Save as Draft" }}
