@@ -83,7 +83,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.getWireMessageTypes = function (module) {
         return $http.get("/Home/GetWireMessageTypeDetails?module=" + module).then(function (response) {
-            if (module == "Adhoc Report")
+            if (module == "Adhoc Report" || module == "Invoices")
                 $scope.MessageTypes = response.data.wireMessages;
             else {
                 if ($scope.wireObj.Purpose == "Respond to Broker Call")
