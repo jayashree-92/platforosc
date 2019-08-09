@@ -296,12 +296,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case 2: angular.element("#workflowStatus_" + index).addClass("text-warning");
                 return "Initiated";
             case 3: angular.element("#workflowStatus_" + index).addClass("text-success");
-                return wireLog.SwiftStatusId == 1 ? "Approved" : $scope.getSwiftStatusString(wireLog.SwiftStatusId);
+                return $scope.getSwiftStatusString(wireLog.SwiftStatusId) + " the Approved";
             case 4: angular.element("#workflowStatus_" + index).addClass("text-blocked");
                 if ($scope.WireTicket.SwiftStatusId == 1)
                     return "Rejected";
                 else
-                    return "Cancelled" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
+                    return $scope.getSwiftStatusString(wireLog.SwiftStatusId) + " the Cancelled";
             case 5: angular.element("#workflowStatus_" + index).addClass("text-danger");
                 return "Failed";
         }
