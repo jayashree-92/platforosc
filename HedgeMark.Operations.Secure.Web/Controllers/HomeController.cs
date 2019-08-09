@@ -231,7 +231,8 @@ namespace HMOSecureWeb.Controllers
         public Dictionary<string, List<string>> MessageTypes = new Dictionary<string, List<string>>()
         {
             { "Adhoc Report" , new List<string>() { "MT103", "MT202", "MT202 COV", "MT210", "MT540", "MT542" } },
-            { "Collateral", new List<string>() { "MT103", "MT202", "MT202 COV", "MT210" } }
+            { "Collateral", new List<string>() { "MT103", "MT202", "MT202 COV", "MT210" } },
+            { "Invoices", new List<string>() { "MT103", "MT202", "MT202 COV" } }
         };
 
         public JsonResult GetWireDetails(long wireId)
