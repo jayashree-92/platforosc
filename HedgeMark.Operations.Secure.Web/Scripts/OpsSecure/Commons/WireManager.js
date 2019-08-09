@@ -570,6 +570,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 angular.element("#modalToRetrieveWires").modal("hide");
                 if ($scope.WireTicket.WireStatusId == 0)
                     notifySuccess("Wire initiated successfully");
+                else if (statusId == 3)
+                    notifySuccess("Wire approved successfully");
                 else if (statusId == 4)
                     notifySuccess("Wire cancelled successfully");
                 else
@@ -654,9 +656,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         //$scope.WireTicket.OnBoardAgreementId = !$scope.wireTicketObj.IsBookTransfer && $scope.wireObj.IsAdhocWire ? $("#liAgreement").select2('val') : angular.copy($scope.wireObj.AgreementId);
         $scope.WireTicket.WireMessageTypeId = angular.element("#liMessageType").select2('val');
         $scope.WireTicket.DeliveryCharges = $scope.WireTicket.WireMessageTypeId == "1" ? angular.element("#liDeliveryCharges").select2('val') : null;
-
-        if ($scope.WireTicket.WireStatusId == 0)
-            $scope.WireTicket.hmFundId = $scope.wireObj.IsAdhocWire ? $("#liFund").select2('val') : 0;
+        if ($scope.wireTicketObj.IsSenderInformationRequired) {
+            $scope.WireTicket.SenderInformationId = angular.element("#liSenderInformation").select2('val');
+            $scope.WireTicket.SenderDescription = angular.element("#wireSenderDescription").val();
+        }
 
         if ($scope.WireTicket.WireStatusId == 0)
             $scope.WireTicket.hmFundId = $scope.wireObj.IsAdhocWire ? $("#liFund").select2('val') : 0;
