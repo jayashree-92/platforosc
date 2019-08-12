@@ -133,6 +133,9 @@
     <Compile Include="hmsWireDocument.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsWireInvoiceAssociation.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsWireJobSchedule.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

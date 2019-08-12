@@ -230,9 +230,9 @@ namespace HMOSecureWeb.Controllers
 
         public Dictionary<string, List<string>> MessageTypes = new Dictionary<string, List<string>>()
         {
-            { "Adhoc Report" , new List<string>() { "MT103", "MT202", "MT202 COV", "MT210", "MT540", "MT542" } },
-            { "Collateral", new List<string>() { "MT103", "MT202", "MT202 COV", "MT210" } },
-            { "Invoices", new List<string>() { "MT103", "MT202", "MT202 COV" } }
+            { ReportName.AdhocReport , new List<string>() { "MT103", "MT202", "MT202 COV", "MT210", "MT540", "MT542" } },
+            { ReportName.Collateral, new List<string>() { "MT103", "MT202", "MT202 COV", "MT210" } },
+            { ReportName.Invoices, new List<string>() { "MT103", "MT202", "MT202 COV" } }
         };
 
         public JsonResult GetWireDetails(long wireId)
@@ -268,7 +268,7 @@ namespace HMOSecureWeb.Controllers
             var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
             var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
             var isLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == UserDetails.Id;
-            var isWirePurposeAdhoc = wireTicket.HMWire.hmsWirePurposeLkup.ReportName == "Adhoc Report";
+            var isWirePurposeAdhoc = wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocReport;
             var sendingAccounts = new List<WireAccountBaseData>();
             long reportId = 0;
             if (isEditEnabled)
@@ -589,7 +589,7 @@ namespace HMOSecureWeb.Controllers
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                var adhocWirePurposes = context.hmsWirePurposeLkups.Where(s => s.ReportName == "Adhoc Report" && s.IsApproved).ToList();
+                var adhocWirePurposes = context.hmsWirePurposeLkups.Where(s => s.ReportName == ReportName.AdhocReport && s.IsApproved).ToList();
                 var wirePurposes = adhocWirePurposes.Select(s => new { id = s.hmsWirePurposeId, text = s.Purpose }).ToList();
                 return Json(wirePurposes);
             }

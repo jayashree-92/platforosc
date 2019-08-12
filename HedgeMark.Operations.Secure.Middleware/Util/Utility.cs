@@ -68,4 +68,28 @@ namespace HMOSecureMiddleware.Util
             return TextInfo.ToTitleCase(inputStr);
         }
     }
+    public static class ReportName
+    {
+        public static readonly string PositionReconciliation = "2-way Position Rec";
+        public static readonly string MultiWayRec = "Multi-way Rec";
+        public static readonly string CashReconciliation = "2-way Cash Rec";
+        public static readonly string AdhocReconciliation = "Ad-hoc 2-way Rec";
+        public static readonly string IndpAmount = "Indp.Amount";
+        public static readonly string Collateral = "Collateral";
+        public static readonly string Cash = "Cash";
+        public static readonly string Margin = "Margin";
+        public static readonly string NAV = "NAV Report";
+        public static readonly string CapitalActivity = "Capital Activity";
+        public static readonly string Loader = "Loader";
+        public static readonly string InterestReport = "Interest Report";
+        public static readonly string Invoices = "Invoices";
+        public static readonly string Expenses = "Expenses";
+        public static readonly string NavReview = "NAV Review";
+        public static readonly string ManagerReturns = "Manager Returns";
+        public static readonly string CashAndMargin = "Cash & Margin";
+        public static readonly string RepoCollateral = "Repo Collateral";
+
+        //Wires Report
+        public static readonly string AdhocReport = "Adhoc Report";
+    }
 }

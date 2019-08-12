@@ -10,6 +10,7 @@ using HedgeMark.SwiftMessageHandler.Model.MT.MT1XX;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT2XX;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT5XX;
 using System.Linq;
+using HMOSecureMiddleware.Util;
 
 namespace HMOSecureMiddleware.SwiftMessageManager
 {
@@ -320,7 +321,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field70 GetField70(WireTicket wire)
         {
             var f70 = new Field70()
-                .setNarrativeLine1("/RFB/" + (wire.HMWire.hmsWirePurposeLkup.ReportName == "Collateral" ? "Collateral Payment" : wire.HMWire.hmsWirePurposeLkup.Purpose));
+                .setNarrativeLine1("/RFB/" + (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral ? "Collateral Payment" : wire.HMWire.hmsWirePurposeLkup.Purpose));
             return f70;
         }
 

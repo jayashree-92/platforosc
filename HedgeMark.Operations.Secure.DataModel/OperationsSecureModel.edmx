@@ -60,6 +60,14 @@
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsWireInvoiceAssociation">
+          <Key>
+            <PropertyRef Name="hmsWireInvoiceAssociationId" />
+          </Key>
+          <Property Name="hmsWireInvoiceAssociationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="hmsWireId" Type="bigint" Nullable="false" />
+          <Property Name="InvoiceId" Type="bigint" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsWireJobSchedules">
           <Key>
             <PropertyRef Name="hmsWireJobSchedulerId" />
@@ -441,6 +449,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
+          <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
+          <End Role="hmsWireInvoiceAssociation" Type="Self.hmsWireInvoiceAssociation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWires">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireInvoiceAssociation">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId">
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
           <End Role="hmsWireJobSchedules" Type="Self.hmsWireJobSchedules" Multiplicity="*" />
@@ -687,6 +707,7 @@
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUserAuditLog" EntityType="Self.hmsUserAuditLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireDocument" EntityType="Self.hmsWireDocument" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsWireInvoiceAssociation" EntityType="Self.hmsWireInvoiceAssociation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireJobSchedules" EntityType="Self.hmsWireJobSchedules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireLogs" EntityType="Self.hmsWireLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireLogTypeLkup" EntityType="Self.hmsWireLogTypeLkup" Schema="dbo" store:Type="Tables" />
@@ -716,6 +737,10 @@
           <AssociationSet Name="FK_hmsWireDocument_hmsWires_hmsWireId" Association="Self.FK_hmsWireDocument_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsWireDocument" EntitySet="hmsWireDocument" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" Association="Self.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
+            <End Role="hmsWires" EntitySet="hmsWires" />
+            <End Role="hmsWireInvoiceAssociation" EntitySet="hmsWireInvoiceAssociation" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId" Association="Self.FK_hmsWireJobScheduler_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
@@ -917,6 +942,11 @@
           <AssociationSet Name="FK_onBoardingAccountModuleAssociation_onBoardingModule_onBoardingModuleId" Association="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingModule_onBoardingModuleId">
             <End Role="onBoardingModule" EntitySet="onBoardingModules" />
             <End Role="onBoardingAccountModuleAssociation" EntitySet="onBoardingAccountModuleAssociations" />
+          </AssociationSet>
+          <EntitySet Name="hmsWireInvoiceAssociations" EntityType="OperationsSecureModel.hmsWireInvoiceAssociation" />
+          <AssociationSet Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
+            <End Role="hmsWire" EntitySet="hmsWires" />
+            <End Role="hmsWireInvoiceAssociation" EntitySet="hmsWireInvoiceAssociations" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
@@ -1460,6 +1490,7 @@
           <Property Name="SenderInformationId" Type="Int32" />
           <Property Name="SenderDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsWireSenderInformation" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireSenderInformation_SenderInformationId" FromRole="hmsWire" ToRole="hmsWireSenderInformation" />
+          <NavigationProperty Name="hmsWireInvoiceAssociations" Relationship="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireInvoiceAssociation" />
         </EntityType>
         <Association Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
           <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
@@ -1634,6 +1665,27 @@
             </Principal>
             <Dependent Role="onBoardingAccountModuleAssociation">
               <PropertyRef Name="onBoardingModuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsWireInvoiceAssociation">
+          <Key>
+            <PropertyRef Name="hmsWireInvoiceAssociationId" />
+          </Key>
+          <Property Name="hmsWireInvoiceAssociationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
+          <Property Name="InvoiceId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" FromRole="hmsWireInvoiceAssociation" ToRole="hmsWire" />
+        </EntityType>
+        <Association Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireInvoiceAssociation" Role="hmsWireInvoiceAssociation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireInvoiceAssociation">
+              <PropertyRef Name="hmsWireId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2095,6 +2147,15 @@
                 <ScalarProperty Name="ModuleName" ColumnName="ModuleName" />
                 <ScalarProperty Name="dmaReportsId" ColumnName="dmaReportsId" />
                 <ScalarProperty Name="onBoardingModuleId" ColumnName="onBoardingModuleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWireInvoiceAssociations">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireInvoiceAssociation">
+              <MappingFragment StoreEntitySet="hmsWireInvoiceAssociation">
+                <ScalarProperty Name="InvoiceId" ColumnName="InvoiceId" />
+                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+                <ScalarProperty Name="hmsWireInvoiceAssociationId" ColumnName="hmsWireInvoiceAssociationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
