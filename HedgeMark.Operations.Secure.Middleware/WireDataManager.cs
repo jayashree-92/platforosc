@@ -98,7 +98,7 @@ namespace HMOSecureMiddleware
                                          .Include("hmsWirePurposeLkup")
                                          .Include("hmsWireTransferTypeLKup")
                                          .Include("hmsWireSenderInformation")
-                                         .Include("hmsWireInvoiceAssociation")
+                                         .Include("hmsWireInvoiceAssociations")
                                          //.Include("hmsWireLogs")
                                          .First(s => s.hmsWireId == wireId);
 
