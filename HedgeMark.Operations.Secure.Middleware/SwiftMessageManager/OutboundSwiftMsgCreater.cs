@@ -369,13 +369,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             //if ((noOfNarrativeLinesRequired * 30) < wire.HMWire.SenderDescription.Length)
             //    senderDescriptionInfo.Add(wire.HMWire.SenderDescription.Substring(noOfNarrativeLinesRequired * 30));
             var senderDescriptionInfo = wire.HMWire.SenderDescription.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            if (senderDescriptionInfo[0].Length > 30)
+                senderDescriptionInfo[0] = senderDescriptionInfo[0].Substring(0, 30); 
             for (int i = 0; i < senderDescriptionInfo.Count(); i++)
             {
-                if (i == 0 && senderDescriptionInfo[i].Length > 30)
-                    senderDescriptionInfo[i] = senderDescriptionInfo[i].Substring(0, 30);
-                else if (senderDescriptionInfo[i].Length > 33)
-                    senderDescriptionInfo[i] = senderDescriptionInfo[i].Substring(0, 33);
-
                 switch (i)
                 {
                     case 0:
