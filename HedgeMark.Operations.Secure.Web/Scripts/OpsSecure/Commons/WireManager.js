@@ -663,24 +663,41 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         if ($scope.WireTicket.WireStatusId == 0)
             $scope.WireTicket.hmFundId = $scope.wireObj.IsAdhocWire ? $("#liFund").select2('val') : 0;
-
-        if ($scope.WireTicket.Amount != 0) {
-            if (!$scope.isDeadlineCrossed || $scope.wireComments.trim() != "") {
-                $("#wireErrorStatus").collapse("hide");
-                $scope.validationMsg = "";
-                return true;
+        
+        if (!$scope.wireTicketObj.IsSenderInformationRequired || $scope.validateSenderDescription()) {
+            if ($scope.WireTicket.Amount != 0) {
+                if (!$scope.isDeadlineCrossed || $scope.wireComments.trim() != "") {
+                    $("#wireErrorStatus").collapse("hide");
+                    $scope.validationMsg = "";
+                    return true;
+                }
+                else {
+                    $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
+                    $scope.validationMsg = "Please enter the comments to initiate the wire as deadline is crossed.";
+                    return false;
+                }
             }
             else {
                 $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-                $scope.validationMsg = "Please enter the comments to initiate the wire as deadline is crossed.";
+                $scope.validationMsg = "Please enter a non-zero amount to initiate the wire";
                 return false;
             }
         }
-        else {
+    }
+
+    $scope.validateSenderDescription = function () {
+        var splittedInfo = $scope.WireTicket.SenderDescription.split("\n");
+        if (splittedInfo.length > 6) {
             $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-            $scope.validationMsg = "Please enter a non-zero amount to initiate the wire";
+            $scope.validationMsg = "Sender Description cannot exceed 6 lines";
             return false;
         }
+        var isInvalid = $filter('filter')(splittedInfo, function (split) { return split != undefined && split.length > 33 }, true)[0] != undefined;
+        if (isInvalid) {
+            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
+            $scope.validationMsg = "Sender Description character length cannot exceed 33 in each line";
+        }
+        return !isInvalid;
     }
 
     $scope.castToDate = function (account) {
