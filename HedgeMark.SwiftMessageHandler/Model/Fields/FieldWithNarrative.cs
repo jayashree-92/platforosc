@@ -72,8 +72,10 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public T setNarrative<T>(T callingMethod, string narrative)
         {
-            narrative = Regex.Replace(narrative, @"\t|\r", "");
+            if (string.IsNullOrWhiteSpace(narrative))
+                return callingMethod;
 
+            narrative = Regex.Replace(narrative, @"\t|\r", string.Empty);
             var narrativeLines = narrative.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             if (narrativeLines.Length > 0)
@@ -94,31 +96,52 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public T setNarrativeLine1<T>(T callingMethod, string narrativeLine1)
         {
+            if (!string.IsNullOrWhiteSpace(narrativeLine1))
+                narrativeLine1 = RemoveInvalidXCharacterSet(narrativeLine1);
+
             NarrativeLine1 = narrativeLine1;
             return callingMethod;
         }
+
         public T setNarrativeLine2<T>(T callingMethod, string narrativeLine2)
         {
+            if (!string.IsNullOrWhiteSpace(narrativeLine2))
+                narrativeLine2 = RemoveInvalidXCharacterSet(narrativeLine2);
+
             NarrativeLine2 = narrativeLine2;
             return callingMethod;
         }
+
         public T setNarrativeLine3<T>(T callingMethod, string narrativeLine3)
         {
+            if (!string.IsNullOrWhiteSpace(narrativeLine3))
+                narrativeLine3 = RemoveInvalidXCharacterSet(narrativeLine3);
+
             NarrativeLine3 = narrativeLine3;
             return callingMethod;
         }
+
         public T setNarrativeLine4<T>(T callingMethod, string narrativeLine4)
         {
+            if (!string.IsNullOrWhiteSpace(narrativeLine4))
+                narrativeLine4 = RemoveInvalidXCharacterSet(narrativeLine4);
+
             NarrativeLine4 = narrativeLine4;
             return callingMethod;
         }
         public T setNarrativeLine5<T>(T callingMethod, string narrativeLine5)
         {
+            if (!string.IsNullOrWhiteSpace(narrativeLine5))
+                narrativeLine5 = RemoveInvalidXCharacterSet(narrativeLine5);
+
             NarrativeLine5 = narrativeLine5;
             return callingMethod;
         }
         public T setNarrativeLine6<T>(T callingMethod, string narrativeLine6)
         {
+            if (!string.IsNullOrWhiteSpace(narrativeLine6))
+                narrativeLine6 = RemoveInvalidXCharacterSet(narrativeLine6);
+
             NarrativeLine6 = narrativeLine6;
             return callingMethod;
         }

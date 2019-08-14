@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using HedgeMark.SwiftMessageHandler.Utils;
 
 namespace HedgeMark.SwiftMessageHandler.Model.Fields
@@ -12,6 +13,11 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         private static readonly List<char> InvalidFieldValues = new List<char>() { ':', '{', '}' };
 
+        /// <summary>
+        /// https://www2.swift.com/knowledgecentre/publications/usgi/1.0?topic=con_31519.htm
+        /// </summary>
+        protected static readonly string RegexNotAllowedSwiftXCharacterSet = @"[^a-zA-Z\d\s\/\-\?\:\(\)\.\,\'\+]";
+        
         public Field(string name)
         {
             Name = name;
@@ -63,6 +69,16 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         {
             Value = newValue;
             return this;
+        }
+
+        protected static string RemoveInvalidXCharacterSet(string inputLine)
+        {
+            if (string.IsNullOrWhiteSpace(inputLine))
+                return inputLine;
+
+            inputLine = Regex.Replace(inputLine, RegexNotAllowedSwiftXCharacterSet, string.Empty);
+            inputLine = Regex.Replace(inputLine, @"\t|\n|\r", string.Empty);
+            return inputLine;
         }
     }
 }

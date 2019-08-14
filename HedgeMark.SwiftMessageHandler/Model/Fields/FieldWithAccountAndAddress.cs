@@ -59,7 +59,6 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
                 return callingClass;
 
             nameAndAddress = Regex.Replace(nameAndAddress, @"\t|\r", "");
-
             var addressLines = nameAndAddress.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             if (addressLines.Length > 0)
@@ -77,7 +76,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public T setNameAndAddressLine1<T>(T callingClass, string nameAndAddressLine1)
         {
             if (!string.IsNullOrWhiteSpace(nameAndAddressLine1))
-                nameAndAddressLine1 = Regex.Replace(nameAndAddressLine1, @"\t|\n|\r", string.Empty);
+                nameAndAddressLine1 = RemoveInvalidXCharacterSet(nameAndAddressLine1);
+
             NameAndAddressLine1 = nameAndAddressLine1;
             return callingClass;
         }
@@ -85,7 +85,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public T setNameAndAddressLine2<T>(T callingClass, string nameAndAddressLine2)
         {
             if (!string.IsNullOrWhiteSpace(nameAndAddressLine2))
-                nameAndAddressLine2 = Regex.Replace(nameAndAddressLine2, @"\t|\n|\r", string.Empty);
+                nameAndAddressLine2 = RemoveInvalidXCharacterSet(nameAndAddressLine2);
+
             NameAndAddressLine2 = nameAndAddressLine2;
             return callingClass;
         }
@@ -93,7 +94,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public T setNameAndAddressLine3<T>(T callingClass, string nameAndAddressLine3)
         {
             if (!string.IsNullOrWhiteSpace(nameAndAddressLine3))
-                nameAndAddressLine3 = Regex.Replace(nameAndAddressLine3, @"\t|\n|\r", string.Empty);
+                nameAndAddressLine3 = RemoveInvalidXCharacterSet(nameAndAddressLine3);
+
             NameAndAddressLine3 = nameAndAddressLine3;
             return callingClass;
         }
@@ -101,7 +103,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public T setNameAndAddressLine4<T>(T callingClass, string nameAndAddressLine4)
         {
             if (!string.IsNullOrWhiteSpace(nameAndAddressLine4))
-                nameAndAddressLine4 = Regex.Replace(nameAndAddressLine4, @"\t|\n|\r", string.Empty);
+                nameAndAddressLine4 = RemoveInvalidXCharacterSet(nameAndAddressLine4);
+
             NameAndAddressLine4 = nameAndAddressLine4;
             return callingClass;
         }
