@@ -73,6 +73,9 @@
                                     <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
                                         <input type="text" class="form-control" ng-model="ssiTemplate.ServiceProvider" id="liServiceProvider" ng-required="ssiTemplate.SSITemplateType == 'Fee/Expense Payment'" />
                                     </div>
+                                    <div class="col-sm-6 col-md-3 col-lg-3">
+                                        <a id="btnSSITemplateServiceProvider" class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Service Provider')" title="Add Service Provider"><i class="glyphicon glyphicon-plus"></i></a>
+                                    </div>
                                 </div>
                                 <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                     <div class="col-sm-8 col-md-4 col-lg-4">
@@ -96,7 +99,7 @@
                                         <input type="text" ng-model="ssiTemplate.ReasonDetail" class="form-control" id="liReasonDetail" required />
                                     </div>
                                     <div class="col-sm-6 col-md-3 col-lg-3">
-                                        <a id="btnSSITemplateReason" class="btn btn-sm btn-info" ng-click="fnAddSSIPaymentReasonModal()" title="Add Reason"><i class="glyphicon glyphicon-plus"></i></a>
+                                        <a id="btnSSITemplateReason" class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Reason')" title="Add Reason"><i class="glyphicon glyphicon-plus"></i></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-9 col-lg-6 cashSweepTimeDiv paddingleft" id="otherReason" style="display: none;">
@@ -403,20 +406,20 @@
             </div>
         </div>
 
-        <div class="modal fade" id="ssiTemplateReasonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="ssiTemplateDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Description</h4>
+                        <h4>Add {{ detail }}</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-sm-4 col-md-4 col-lg-4">
-                                <label for="txtDescription" class="control-label">Reason:</label>
+                                <label for="txtDescription" class="control-label">{{ detail }}:</label>
                             </div>
                             <div class="col-sm-8 col-md-8 col-lg-8">
-                                <input type="text" id="txtDescription" class="modalInputWidth form-control" placeholder="Reason" />
+                                <input type="text" id="txtDescription" class="modalInputWidth form-control" placeholder="{{ detail }}" />
                             </div>
                         </div>
                         @*<div class="row" style="margin-top: 10px;">
@@ -428,8 +431,8 @@
                             </div>*@
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddSSIPaymentReason($index)">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Reason
+                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddSSITemplateDetail($index)">
+                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add {{ detail }}
                         </button>
                         <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                     </div>

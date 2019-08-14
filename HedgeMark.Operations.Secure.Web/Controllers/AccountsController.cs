@@ -926,6 +926,11 @@ namespace HMOSecureWeb.Controllers
             AccountManager.AddPaymentOrReceiptReasonDetails(reason, templateType, agreementTypeId, serviceProviderName);
         }
 
+        public void AddServiceProvider(string serviceProviderName)
+        {
+            AccountManager.AddServiceProvider(serviceProviderName);
+        }
+
         public void RemoveSsiTemplateDocument(string fileName, long documentId)
         {
             //var fileinfo = new FileInfo(FileSystemManager.OnboardingSsiTemplateFilesPath + fileName);

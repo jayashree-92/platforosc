@@ -413,7 +413,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $scope.fnLoadServiceProvider = function () {
-        $http.get("/Accounts/GetAllServiceProviderList").then(function (response) {
+        return $http.get("/Accounts/GetAllServiceProviderList").then(function (response) {
+            $scope.serviceProviders = response.data;
             $("#liServiceProvider").select2({
                 placeholder: "Select Service Provider",
                 allowClear: true,
@@ -439,14 +440,14 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         if ($scope.ssiTemplate.ReasonDetail != "") $scope.ReasonDetail = $scope.ssiTemplate.ReasonDetail;
     }
 
-    $scope.fnAddSSIPaymentReason = function (panelIndex) {
+    $scope.fnAddSSITemplateDetail = function (panelIndex) {
         if ($('#txtDescription').val() == undefined || $('#txtDescription').val() == "") {
             //pop-up    
             $("#txtDescription").popover({
                 placement: "right",
                 trigger: "manual",
                 container: "body",
-                content: "Reason cannot be empty. Please add a valid Reason",
+                content: $scope.detail + " cannot be empty. Please add a valid " + $scope.detail,
                 html: true,
                 width: "250px"
             });
@@ -457,18 +458,19 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
         $("#txtDescription").popover("hide");
         var isExists = false;
-        $($scope.SSIPaymentReasons).each(function (i, v) {
-            if ($("#txtDescription").val() == v.text) {
-                isExists = true;
-                return false;
-            }
-        });
+        if ($scope.detail == "Reason") {
+            isExists = $filter('filter')($scope.SSIPaymentReasons, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
+        }
+        else {
+           isExists = $filter('filter')($scope.serviceProviders, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
+        }
+
         if (isExists) {
             $("#txtDescription").popover({
                 placement: "right",
                 trigger: "manual",
                 container: "body",
-                content: "Reason is already exists. Please enter a valid Reason",
+                content: $scope.detail + " already exists. Please enter a valid " + $scope.detail,
                 html: true,
                 width: "250px"
             });
@@ -477,25 +479,38 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             return;
         }
         //PaymentOrReceiptReasonDetails?templateType=" + $("#liSSITemplateType").val() + "&agreementTypeId=" + $("#liAccountType").val() + "&serviceProviderName=" + $("#liServiceProvider").val()
-        $http.post("/Accounts/AddPaymentOrReceiptReasonDetails", { reason: $('#txtDescription').val(), templateType: $('#liSSITemplateType').val(), agreementTypeId: $("#liAccountType").val(), serviceProviderName: $("#liServiceProvider").val() }).then(function (response) {
-            notifySuccess("Reason added successfully");
-            $scope.fnPaymentOrReceiptReason();
-            $("#liReasonDetail").val($("#txtDescription").val());
-            //$scope.onBoardingAccountDetails[panelIndex].Description = $('#txtDescription').val();  
-        });
+        if ($scope.detail == "Reason") {
+            $http.post("/Accounts/AddPaymentOrReceiptReasonDetails", { reason: $('#txtDescription').val(), templateType: $('#liSSITemplateType').val(), agreementTypeId: $("#liAccountType").val(), serviceProviderName: $("#liServiceProvider").val() }).then(function (response) {
+                notifySuccess("Reason added successfully");
+                $scope.fnPaymentOrReceiptReason();
+                $("#liReasonDetail").val($("#txtDescription").val());
+                //$scope.onBoardingAccountDetails[panelIndex].Description = $('#txtDescription').val();  
+            });
+        }
+        else {
+            $http.post("/Accounts/AddServiceProvider", { serviceProviderName: $('#txtDescription').val() }).then(function (response) {
+                notifySuccess("Service Provider added successfully");
+                $scope.fnLoadServiceProvider().then(function () {
+                    var provider = $filter('filter')($scope.serviceProviders, { 'text': $('#txtDescription').val() }, true)[0];
+                    $("#liServiceProvider").select2('val', provider.id).trigger('change');
+                });
+                //$scope.onBoardingAccountDetails[panelIndex].Description = $('#txtDescription').val();  
+            });
+        }
 
-        $("#txtDescription").val("");
-        $("#ssiTemplateReasonModal").modal("hide");
+        //$("#txtDescription").val("");
+        $("#ssiTemplateDetailModal").modal("hide");
     }
 
-    $scope.fnAddSSIPaymentReasonModal = function () {
+    $scope.fnAddSSITemplateDetailModal = function (detail) {
         //$scope.scrollPosition = $(window).scrollTop();
         //$("#txtGoverningLaw").prop("placeholder", "Enter a governing law");
-        $('#ssiTemplateReasonModal').modal({
+        $scope.detail = detail;
+        $('#ssiTemplateDetailModal').modal({
             show: true,
             keyboard: true
         }).on("hidden.bs.modal", function () {
-            $("#txtDescription").popover("hide");
+            $("#txtDescription").popover("hide").val('');
             // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
         });
     }

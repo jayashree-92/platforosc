@@ -509,6 +509,16 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static void AddServiceProvider(string serviceProviderName)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var onboardingServiceProvider = new OnBoardingSSITemplateServiceProvider() { Reason = "Vendor Expenses", ServiceProvider = serviceProviderName };
+                context.OnBoardingSSITemplateServiceProviders.Add(onboardingServiceProvider);
+                context.SaveChanges();
+            }
+        }
+
         public static long AddSsiTemplate(onBoardingSSITemplate ssiTemplate, string userName)
         {
 
