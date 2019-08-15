@@ -173,9 +173,6 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 "drawCallback": function (settings) {
                     $("[id^='tblWireStatusDetails'] tbody td").animate({ "opacity": "1", "padding-top": "8px " }, 500);
                 },
-                "mark": {
-                    "ignorePunctuation": [","],
-                },
                 "columnDefs": [
                     //{ "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "orderable": false },
                     //{ "targets": [9], className: "ignoreMark", "orderable": false }

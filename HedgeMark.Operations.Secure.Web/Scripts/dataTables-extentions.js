@@ -88,7 +88,7 @@ $.extend($.fn.dataTable.defaults, {
     "sScrollY": $(document).height() - 130,
     "responsive": true,
     "bSortClasses": false,
-    "mark": true,
+    "mark": { "ignorePunctuation": [","] },
     "autoWidth": false,
     'language': {
         //search: '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>',
