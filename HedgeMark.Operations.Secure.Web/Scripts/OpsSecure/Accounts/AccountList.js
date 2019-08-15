@@ -358,10 +358,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                       {
                           "mData": "CreatedAt",
                           "sTitle": "Created Date",
-                          "type": "dotnet-date",
-                          "mRender": function (tdata) {
-                              return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
-                          }
+                          "mRender": renderDotNetDateAndTime
                       },
                       {
                           "mData": "UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
@@ -370,11 +367,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                       },
                       {
                           "mData": "UpdatedAt",
-                          "sTitle": "Last Modified",
-                          "type": "dotnet-date",
-                          "mRender": function (tdata) {
-                              return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
-                          }
+                          "mRender": renderDotNetDateAndTime
                       }
                     ],
                     "oLanguage": {

@@ -100,10 +100,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                  {
                      "mData": "CreatedAt",
                      "sTitle": "Created Date",
-                     "type": "dotnet-date",
-                     "mRender": function (tdata) {
-                         return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
-                     }
+                     "mRender": renderDotNetDateAndTime
                  },
                  {
                      "mData": "UpdatedBy", "sTitle": "Last Modified By",
@@ -114,10 +111,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                  {
                      "mData": "UpdatedAt",
                      "sTitle": "Last Modified",
-                     "type": "dotnet-date",
-                     "mRender": function (tdata) {
-                         return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
-                     }
+                     "mRender": renderDotNetDateAndTime
                  }
                ],
                "createdRow": function (row, data) {

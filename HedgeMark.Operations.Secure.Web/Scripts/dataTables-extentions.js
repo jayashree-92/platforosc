@@ -724,3 +724,45 @@ $.fn.pulse = function (options) {
         period.call(this, repeat);
     });
 };
+
+
+function renderDotNetDateOnly(tdata, type, row, meta) {
+
+    // If display or filter data is requested, format the date
+    if (type === 'filter') {
+        return getDateForDisplay(tdata);
+    }
+
+    if (type === 'sort') {
+        return tdata;
+    }
+
+    return "<div>" + getDateForDisplay(tdata) + "</div>";
+}
+
+
+function renderDotNetDateAndTime(tdata, type, row, meta) {
+
+    // If display or filter data is requested, format the date
+    if (type === 'filter') {
+        return getDateAndTimeForDisplay(tdata);
+    }
+
+    if (type === 'sort') {
+        return tdata;
+    }
+
+    return "<div>" + getDateAndTimeForDisplay(tdata) + "</div>";
+}
+
+function renderDataAsCurrency(tdata, type, row) {
+
+    if (type == "sort")
+        return tdata;
+
+    if (type == "filter") {
+        return tdata + " " + $.convertToCurrency(tdata.toString(), 2);
+    }
+
+    return $.convertToCurrency(tdata.toString(), 2);
+}

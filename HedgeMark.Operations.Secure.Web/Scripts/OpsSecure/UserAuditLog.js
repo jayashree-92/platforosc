@@ -175,14 +175,8 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     "className": "seeFullText"
                 },
                 {
-                    "mData": "CreatedAt", "sTitle": "Updated As Of",
-                    "type": "dotnet-date",
-                    "mRender": function (tdata, type, row) {
-                        if (tdata == null)
-                            return "-";
-
-                        return "<div  class='auditUpdatedAtColumn' title='" + getDateForToolTip(tdata) + "' date ='" + tdata + "'>" + $.getPrettyDate(tdata) + "</div>";
-                    }
+                    "mData": "CreatedAt", "sTitle": "Updated As Of",                    
+                    "mRender": renderDotNetDateAndTime
                 }],
                 "oLanguage": {
                     "sSearch": "",

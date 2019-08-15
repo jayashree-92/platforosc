@@ -33,7 +33,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
 
             Field59 f59 = new Field59()
                 .setAccount("12345678901234567890")
-                .setNameAndAddress("JOE DOE");
+                .setNameAndAddress("JOE DOE!@#$%^&");
             m.addField(f59);
 
             m.addField(new Field71A("OUR"));

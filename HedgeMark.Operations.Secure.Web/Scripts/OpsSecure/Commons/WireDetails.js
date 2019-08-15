@@ -42,22 +42,23 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 //"dom": "<'row'<'col-md-6'i><'#toolbar_tasklog'><'col-md-6 pull-right'f>>trI",
                 "dom": "<'pull-right'f>itI",
                 rowId: "hmsWireId",
+
                 rowCallback: function (row, data, index) {
 
                 },
                 //"dom": "trI",
                 "bDestroy": true,
                 "columns": [
-                    { "mData": "WireId", "sTitle": "Id" },
-                    { "mData": "FundName", "sTitle": "Fund" },
+                    { "data": "WireId", "sTitle": "Id" },
+                    { "data": "FundName", "sTitle": "Fund" },
                     {
-                        "mData": "Counterparty", "sTitle": "Counterparty/Service Provider",
-                        "mRender": function (tdata) {
+                        "data": "Counterparty", "sTitle": "Counterparty/Service Provider",
+                        "render": function (tdata) {
                             return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
                         }
                     },
                     {
-                        "mData": "TransferType", "sTitle": "Transfer Type"
+                        "data": "TransferType", "sTitle": "Transfer Type"
                     },
                     //{
                     //    "mData": "Agreement.AgreementShortName", "sTitle": "Agreement",
@@ -66,32 +67,26 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     //    }
                     //},
                     {
-                        "mData": "HMWire.ValueDate", "sTitle": "Value Date",
-                        "type": "dotnet-date",
-                        "mRender": function (tdata) {
-                            return "<div  title='" + getDateForDisplay(tdata) + "' date='" + tdata + "'>" + getDateForDisplay(tdata) + "</div>";
-                        }
+                        "data": "HMWire.ValueDate", "sTitle": "Value Date",
+                        "render": renderDotNetDateOnly
                     },
-                    { "mData": "HMWire.hmsWirePurposeLkup.Purpose", "sTitle": "Wire Purpose" },
-                    { "mData": "SendingAccount.AccountName", "sTitle": "Sending Account" },
+                    { "data": "HMWire.hmsWirePurposeLkup.Purpose", "sTitle": "Wire Purpose" },
+                    { "data": "SendingAccount.AccountName", "sTitle": "Sending Account" },
                     {
-                        "mData": "ReceivingAccountName", "sTitle": "Receiving Account",
-                        "mRender": function (tdata) {
+                        "data": "ReceivingAccountName", "sTitle": "Receiving Account",
+                        "render": function (tdata) {
                             return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
                         }
                     },
                     {
-                        "mData": "HMWire.Amount", "sTitle": "Amount", "type": "currency",
-                        "mRender": function (tdata, type, row) {
-                            return $.convertToCurrency(tdata.toString(), 2);
-                        }
-
+                        "data": "HMWire.Amount", "sTitle": "Amount",
+                        "render": renderDataAsCurrency,
                     },
-                    { "mData": "HMWire.hmsWireMessageType.MessageType", "sTitle": "Wire Message Type" },
-                    { "mData": "HMWire.Currency", "sTitle": "Currency" },
+                    { "data": "HMWire.hmsWireMessageType.MessageType", "sTitle": "Wire Message Type" },
+                    { "data": "HMWire.Currency", "sTitle": "Currency" },
                     {
                         "mData": "HMWire.WireStatusId", "sTitle": "Wire Status",
-                        "mRender": function (tdata, type, row) {
+                        "render": function (tdata, type, row) {
                             switch (tdata) {
                                 case 1: return "<label class='label label-default'>Drafted</label>";
                                 case 2: return "<label class='label label-warning'>Pending</label>";
@@ -101,8 +96,8 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                             }
                         }
                     }, {
-                        "mData": "HMWire.SwiftStatusId", "sTitle": "Swift Status",
-                        "mRender": function (tdata, type, row) {
+                        "data": "HMWire.SwiftStatusId", "sTitle": "Swift Status",
+                        "render": function (tdata, type, row) {
                             switch (tdata) {
                                 case 1: return "<label class='label label-default'>Not Started</label>";
                                 case 2: return "<label class='label label-warning'>Pending Ack</label>";
@@ -117,23 +112,17 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                          "mData": "WireCreatedBy", "sTitle": "Initiated By"
                      },
                     {
-                        "mData": "HMWire.CreatedAt",
+                        "data": "HMWire.CreatedAt",
                         "sTitle": "Initiated At",
-                        "type": "dotnet-date",
-                        "mRender": function (tdata) {
-                            return "<div  title='" + $.getPrettyDate(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
-                        }
+                        "render": renderDotNetDateAndTime
                     },
                      {
-                         "mData": "WireLastUpdatedBy", "sTitle": "Last Updated By"
+                         "data": "WireLastUpdatedBy", "sTitle": "Last Updated By"
                      },
                     {
-                        "mData": "HMWire.LastModifiedAt",
+                        "data": "HMWire.LastModifiedAt",
                         "sTitle": "Last Updated At",
-                        "type": "dotnet-date",
-                        "mRender": function (tdata) {
-                            return "<div  title='" + $.getPrettyDate(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
-                        }
+                        "render": renderDotNetDateAndTime
                     }
                 ],
                 "createdRow": function (row, data) {
@@ -184,7 +173,9 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 "drawCallback": function (settings) {
                     $("[id^='tblWireStatusDetails'] tbody td").animate({ "opacity": "1", "padding-top": "8px " }, 500);
                 },
-                "mark": { "exclude": [".ignoreMark"] },
+                "mark": {
+                    "ignorePunctuation": [","],
+                },
                 "columnDefs": [
                     //{ "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "orderable": false },
                     //{ "targets": [9], className: "ignoreMark", "orderable": false }

@@ -61,7 +61,7 @@ HmOpsApp.controller("MQLogsCtrl", function ($scope, $http, $timeout, $filter) {
                         "mRender": function (tdata) {
                             return tdata ? "<label class='label label-primary'>Outbound&nbsp;&nbsp;<i class='glyphicon glyphicon-log-out'></i></label>" : "<label class='label label-info'><i class='glyphicon glyphicon-log-in'></i>&nbsp;&nbsp;Inbound</label>";
                         }
-                        
+
                     },
                     {
                         "mData": "QueueManager", "sTitle": "Queue Manager"
@@ -70,21 +70,15 @@ HmOpsApp.controller("MQLogsCtrl", function ($scope, $http, $timeout, $filter) {
                         "mData": "QueueName", "sTitle": "Queue Name"
                     },
                     {
-                    "sTitle": "Messages",
-                    "mData": "Message",
-                    "mRender": function (tdata) {
-                        return "<p class=\"swiftMessgeBlock\">" + tdata + "</p>";
-                    }
-                },
+                        "sTitle": "Messages",
+                        "mData": "Message",
+                        "mRender": function (tdata) {
+                            return "<p class=\"swiftMessgeBlock\">" + tdata + "</p>";
+                        }
+                    },
                 {
-                    "mData": "CreatedAt", "sTitle": "Received At",
-                    "type": "dotnet-date",
-                    "mRender": function (tdata, type, row) {
-                        if (tdata == null)
-                            return "-";
-
-                        return "<div  class='auditUpdatedAtColumn' title='" + getDateForToolTip(tdata) + "' date ='" + tdata + "'>" + $.getPrettyDate(tdata) + "</div>";
-                    }
+                    "mData": "CreatedAt", "sTitle": "Received At",                    
+                    "mRender": renderDotNetDateAndTime
                 }],
                 "oLanguage": {
                     "sSearch": "",
