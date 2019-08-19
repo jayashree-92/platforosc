@@ -368,7 +368,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             //var senderDescriptionInfo = Enumerable.Range(0, noOfNarrativeLinesRequired).Select(s => wire.HMWire.SenderDescription.Substring(s * 30, 30)).ToList();
             //if ((noOfNarrativeLinesRequired * 30) < wire.HMWire.SenderDescription.Length)
             //    senderDescriptionInfo.Add(wire.HMWire.SenderDescription.Substring(noOfNarrativeLinesRequired * 30));
-            var senderDescriptionInfo = wire.HMWire.SenderDescription.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            var senderDescriptionInfo = wire.HMWire.SenderDescription.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
             for (int i = 0; i < senderDescriptionInfo.Count(); i++)
             {
                 if (i == 0 && senderDescriptionInfo[i].Length > 30)

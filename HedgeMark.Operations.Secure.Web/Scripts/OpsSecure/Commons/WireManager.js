@@ -447,7 +447,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         var receivingAccountId = $scope.wireTicketObj.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : angular.copy($scope.ssiTemplate.onBoardingSSITemplateId);
         if ($scope.accountDetail.onBoardingAccountId != 0 && $scope.WireTicket.OnBoardSSITemplateId != 0) {
             $http.post("/Home/IsWireCreated", JSON.stringify({ valueDate: $("#wireValueDate").text(), purpose: $scope.wireObj.Purpose, sendingAccountId: $scope.accountDetail.onBoardingAccountId, receivingAccountId: receivingAccountId, wireId: $scope.WireTicket.hmsWireId }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
-                $scope.isWireCreated = response.data;
+                if ($scope.WireTicket.hmsWireId == 0)
+                    $scope.isWireCreated = response.data;
+                else
+                    $scope.isWireCreated = false;
                 if (!$scope.isWireCreated) {
                     $scope.isUserActionDone = false;
                     if (!$scope.isMandatoryFieldsMissing && !$scope.isDeadlineCrossed) {
