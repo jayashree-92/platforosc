@@ -111,9 +111,11 @@ namespace HMOSecureMiddleware.Queues
                     Thread.Sleep(1000 * 2);
                     SendMessageInQueue(swiftMessage, true);
                 }
-
-                Logger.Error("Sending MQ Message Failed: " + ex.Message, ex);
-                throw;
+                else
+                {
+                    Logger.Error("Sending MQ Message Failed: " + ex.Message, ex);
+                    throw;
+                }
             }
 
             catch (Exception ex)
