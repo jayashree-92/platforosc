@@ -692,9 +692,11 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
 
     $scope.SaveAccount = function (form, isValid) {
 
-        if (!isValid)
+        if (!isValid) {
+            notifyError("FFC Name, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
             return;
-
+        }
+            
         var isAccountExits = false;
         var existAccount = "";
         var accountList = [];

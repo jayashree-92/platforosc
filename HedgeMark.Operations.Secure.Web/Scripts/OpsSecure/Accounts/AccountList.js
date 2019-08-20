@@ -624,8 +624,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     //Save Account
     $scope.fnSaveAccount = function (isValid, status) {
 
-        if (!isValid)
+        if (!isValid) {
+            notifyError("FFC Name, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
             return;
+        }
 
         var isAccountNameEmpty = false;
 

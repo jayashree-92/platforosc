@@ -740,7 +740,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.SaveSSITemplate = function (isValid) {
 
         if (!isValid) {
-            notifyWarning("Please fill-in the mandatory fields and try again");
+            notifyError("FFC Name, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
             return;
         }
 

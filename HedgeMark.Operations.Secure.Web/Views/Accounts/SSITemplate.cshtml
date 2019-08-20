@@ -122,7 +122,7 @@
                                         <label class="control-label">FFC Name </label>
                                     </div>
                                     <div class="col-sm-8 col-md-5 col-lg-5">
-                                        <input type="text" ng-model="ssiTemplate.FFCName" class="form-control control-label" placeholder="FFC Name" />
+                                        <input type="text" ng-model="ssiTemplate.FFCName" name="FFCName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/"  class="form-control control-label" placeholder="FFC Name" />
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
@@ -218,14 +218,14 @@
                                     <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
                                 </div>
                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                    <input type="text" ng-model="ssiTemplate.IntermediaryBankName" class="form-control control-label" id="intermediaryBankName" placeholder="Bank Name" disabled />
+                                    <input type="text" name='IntermediaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/"  ng-model="ssiTemplate.IntermediaryBankName" class="form-control control-label" id="intermediaryBankName" placeholder="Bank Name" disabled />
                                 </div>
                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                    <input type="text" ng-model="ssiTemplate.BeneficiaryBankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName" disabled />
+                                    <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/"  ng-model="ssiTemplate.BeneficiaryBankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName" disabled />
                                 </div>
                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                    <input type="text" name="BankName" ng-model="ssiTemplate.UltimateBeneficiaryBankName" class="form-control control-label" placeholder="Bank Name" id="ultimateBankName" disabled />
-                                    <input type="text" class="form-control" ng-model="ssiTemplate.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName" style="display: none;" />
+                                    <input type="text" name='BankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.UltimateBeneficiaryBankName" class="form-control control-label" placeholder="Bank Name" id="ultimateBankName" disabled />
+                                    <input type="text" name='AccountName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/"  class="form-control" ng-model="ssiTemplate.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName" style="display: none;" />
                                 </div>
                             </div>
                             <p></p>
@@ -234,13 +234,13 @@
                                     <label class="control-label" style="margin-left: 15px;">Bank Address </label>
                                 </div>
                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" ng-model="ssiTemplate.IntermediaryBankAddress" id="intermediaryBankAddress" disabled></textarea>
+                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name='IntermediaryBankAddress' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/"  ng-model="ssiTemplate.IntermediaryBankAddress" id="intermediaryBankAddress" disabled></textarea>
                                 </div>
                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" ng-model="ssiTemplate.BeneficiaryBankAddress" id="beneficiaryBankAddress" disabled></textarea>
+                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name='BeneficiaryBankAddress' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/"  ng-model="ssiTemplate.BeneficiaryBankAddress" id="beneficiaryBankAddress" disabled></textarea>
                                 </div>
                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" ng-model="ssiTemplate.UltimateBeneficiaryBankAddress" id="ultimateBankAddress" disabled></textarea>
+                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name='UltimateBeneficiaryBankAddress' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/"  ng-model="ssiTemplate.UltimateBeneficiaryBankAddress" id="ultimateBankAddress" disabled></textarea>
                                 </div>
                             </div>
                         </div>
