@@ -364,7 +364,7 @@
                                                 <label class="control-label">FFC Number </label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5">
-                                                <input type="text" ng-model="accountDetail.FFCNumber" class="form-control control-label" placeholder="FFC Number" />
+                                                <input type="text" name='FFCNumber' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.FFCNumber" class="form-control control-label" placeholder="FFC Number" />
                                             </div>
                                         </div>
                                     </div>
@@ -375,7 +375,7 @@
                                                 <label class="control-label">Reference </label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5">
-                                                <input type="text" ng-model="accountDetail.Reference" class="form-control control-label" placeholder="Reference" />
+                                                <input type="text" name='Reference' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Reference" class="form-control control-label" placeholder="Reference" />
                                             </div>
                                         </div>
                                         @*<div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
