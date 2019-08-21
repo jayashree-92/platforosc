@@ -776,6 +776,11 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     //Update SSI Template Status
     $scope.fnUpdateSSITemplateStatus = function (ssiStatus, statusAction) {
 
+        if (!$scope.ssiTemplateForm.$valid) {
+            notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
+            return;
+        }
+
         $scope.SSITemplateStatus = ssiStatus;
 
         if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.ssiTemplateDocuments.length == 0) {
