@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <project xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" basedir="." default="cleanAndDeployPackage"> 
- <!-- property settings-->  
-
+ 
   <property name="buildDirectory" value="../HedgeMark.Operations.Secure.Web/bin" /> 
   <property name="Configuration" value="QA" overwrite="false"/>
   <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
