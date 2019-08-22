@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <project xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" basedir="." default="cleanAndDeployPackage"> 
  
+  <!--Project properties-->
   <property name="buildDirectory" value="../HedgeMark.Operations.Secure.Web/bin" /> 
   <property name="Configuration" value="QA" overwrite="false"/>
   <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
@@ -14,13 +15,16 @@
 	  \\wc08a10004pv00\d$\OPS_Secure_QA01
   "/>
 
+   <property name="sql.user" value="HMWIRESUAT"/> 
+   <property name="sql.pwd" value="t8#24@B8"/> 
+   <property name="sql.svr" value="WSOMQCLDMUSQL01\MSDMUQ06"/> 
+
   <target name="cleanAndDeployPackage" >	
 	<nant buildfile="TestBuildAndPublish.build" />  
-	<nant buildfile="SQL_QA.Build" />  
+	<nant buildfile="SQL.Build" />  
 	<nant buildfile="CleanAndDeployPackage.build" />
   </target>
   
-   
 </project>
 
 

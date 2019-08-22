@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <project xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" basedir="." default="cleanAndDeployPackage"> 
  
+  <!--Project properties-->
   <property name="buildDirectory" value="../HedgeMark.Operations.Secure.Web/bin" /> 
   <property name="Configuration" value="QA" overwrite="false"/>
   <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
@@ -14,18 +15,29 @@
 	  \\W001GMN0C\OPS_Secure_Test01,
 	  \\W001GNN0C\OPS_Secure_Test01
   "/>
-  
-  <!-- Target for SQL Test -->
-  <fileset id="SQLFilesTest">
-    <include name="SQL.Build" />
-	<include name="SQL_Test.Build" />
-  </fileset>
+
+   <!--SQL Properties-->
+   <property name="sql.DB" value="HM_WIRES"/>
 
   <target name="cleanAndDeployPackage" >	
 	<nant buildfile="TestBuildAndPublish.build" />  
-    <nant>
-      <buildfiles refid="SQLFilesTest" />
-    </nant>
+	
+	<nant buildfile="SQL.Build">
+    <properties>
+	  <property name="sql.pwd" value="5$#2wires@1"/>
+	  <property name="sql.svr" value="W00001N00\MSDMUT05"/>
+	  <property name="sql.DB" value="HM_WIRES"/>
+    </properties>
+	</nant>
+	
+	<nant buildfile="SQL.Build">
+    <properties>
+		<property name="sql.user" value="HMWIRESQA"/>
+		<property name="sql.pwd" value="Dh@wires123"/>
+		<property name="sql.svr" value="W0001ZN01\MSDMUQ05"/>
+    </properties>
+	</nant>
+	
 	<nant buildfile="CleanAndDeployPackage.build" />
   </target>
   
