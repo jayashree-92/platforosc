@@ -876,6 +876,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 closeOnSelect: false
             });
             angular.element("#liSendingAccount").select2('val', $scope.sendingAccountsList[0].id).trigger('change');
+            angular.element("#liSenderInformation").select2("enable");
+            angular.element("#wireSenderDescription").removeAttr("disabled");
         }
         else if ($scope.isEditEnabled) {
             angular.element("#liSendingAccount").select2("destroy").val('');
@@ -887,6 +889,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             });
             $scope.isSendingAccountEnabled = true;
             angular.element("#liSendingAccount").select2('val', $scope.WireTicket.OnBoardAccountId).trigger('change');
+            angular.element("#liSenderInformation").select2("enable");
+            angular.element("#wireSenderDescription").removeAttr("disabled");
             $timeout(function () {
                 if ($scope.wireTicketObj.IsBookTransfer)
                     angular.element("#liReceivingBookAccount").select2('val', $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
