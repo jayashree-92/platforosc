@@ -80,9 +80,9 @@
       <arg value="/t:_WPPCopyWebApplication" />
       <arg value="/t:TransformWebConfig" />
       <arg value="/p:OutDir=${OutputFile1}" />
-      <arg value="/p:WebProjectOutputDir=${OutputFile2}" />
+      <arg value="/p:WebProjectOutputDir=${sourcePackageLocation}" />
     </exec>
-	<copy todir="${OutputFile2}\bin\" verbose="true">
+	<copy todir="${sourcePackageLocation}\bin\" verbose="true">
     <fileset basedir=".">
 		<include name="..\HedgeMark.Operations.Secure.Web\bin\ExternalLibraries\Aspose.Cells.lic"/>
 		<include name="..\HedgeMark.Operations.Secure.Web\bin\ExternalLibraries\Aspose.Pdf.lic"/>
