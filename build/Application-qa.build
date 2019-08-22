@@ -14,7 +14,9 @@
 	  \\wc08a10003pv00\d$\OPS_Secure_QA01,
 	  \\wc08a10004pv00\d$\OPS_Secure_QA01
   "/>
-
+   
+   <!--SQL Properties-->
+   <property name="sql.DB" value="HM_WIRES"/>
    <property name="sql.user" value="HMWIRESUAT"/> 
    <property name="sql.pwd" value="t8#24@B8"/> 
    <property name="sql.svr" value="WSOMQCLDMUSQL01\MSDMUQ06"/> 
