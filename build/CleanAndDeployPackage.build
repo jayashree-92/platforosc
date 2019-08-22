@@ -1,0 +1,18 @@
+<target name="cleanAndDeployPackage" depends="SQLBuildTest">
+	<foreach item="String" in="${primaryServers}" delim="," property="serverToDeploy">
+		<echo message="Cleaning up of files from:  ${serverToDeploy}" />
+		<delete>
+			<fileset basedir="${serverToDeploy}">   
+			  <exclude name="***/web.Config" />    
+			  <include name="***/*.*" />  
+			</fileset>
+		</delete>
+		<echo message="Copy files from ${sourcePackageLocation} to:  ${serverToDeploy}" />
+		<copy todir="${serverToDeploy}" includeemptydirs="false" overwrite="true">
+		  <fileset basedir="${sourcePackageLocation}">        
+			<exclude name="***/web.Config" />
+			<include name="***/*.*" />        
+		  </fileset>
+		</copy>
+	</foreach>
+ </target>

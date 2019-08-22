@@ -94,33 +94,16 @@
   <fileset id="SQLFilesTest">
     <include name="SQL.Build" />
 	<include name="SQL_Test.Build" />
+	<include name="CleanAndDeployPackage.build" />
   </fileset>
 
   <!-- target for SQL Process, includes files in fileset deployFiles-->
-  <target name="SQLBuildTest" depends="Publish">
+  <target name="cleanAndDeployPackage" depends="Publish">
     <nant>
       <buildfiles refid="SQLFilesTest" />
     </nant>
   </target>
   
-  <target name="cleanAndDeployPackage" depends="SQLBuildTest">
-	<foreach item="String" in="${primaryServers}" delim="," property="serverToDeploy">
-		<echo message="Cleaning up of files from:  ${serverToDeploy}" />
-		<delete>
-			<fileset basedir="${serverToDeploy}">   
-			  <exclude name="***/web.Config" />    
-			  <include name="***/*.*" />  
-			</fileset>
-		</delete>
-		<echo message="Copy files from ${sourcePackageLocation} to:  ${serverToDeploy}" />
-		<copy todir="${serverToDeploy}" includeemptydirs="false" overwrite="true">
-		  <fileset basedir="${sourcePackageLocation}">        
-			<exclude name="***/web.Config" />
-			<include name="***/*.*" />        
-		  </fileset>
-		</copy>
-	</foreach>
-  </target>
    
 </project>
 
