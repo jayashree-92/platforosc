@@ -1,9 +1,5 @@
 
 <project name="Application" default="cleanAndDeployPackage" basedir=".">
-
-<property name="sourcePackageLocation" value=""/>
-<property name="primaryServers" value=""/>
-
 <target name="cleanAndDeployPackage" >
 	<foreach item="String" in="${primaryServers}" delim="," property="serverToDeploy">
 		<echo message="Cleaning up of files from:  ${serverToDeploy}" />
