@@ -8,7 +8,7 @@
   
   <!-- <property name="DMAStagingTypes" value = "..\HMSQLDBProject\HM_DMA\DMAStagingTypes.sql"/> -->
   - <target name="executeSQLScripts">
-    <echo message="Executing Scripts to DataBase:${sql.DB}"/>
+    <echo message="Executing Scripts to DB :${sql.DB} in server: ${sql.svr}"/>
     <echo message="* Executing ${Change.sql}"/>
 
     <foreach item="File" property="sql.script">
