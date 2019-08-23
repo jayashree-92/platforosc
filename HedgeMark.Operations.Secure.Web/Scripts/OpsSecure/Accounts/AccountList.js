@@ -366,7 +366,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                           }
                       },
                       {
-                          "mData": "UpdatedAt",
+                          "mData": "UpdatedAt", 
+                          "sTitle": "Last Modified At",
                           "mRender": renderDotNetDateAndTime
                       }
                     ],
