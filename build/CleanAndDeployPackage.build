@@ -2,20 +2,28 @@
 <project name="Application" default="cleanAndDeployPackage" basedir=".">
 <target name="cleanAndDeployPackage" >
 	<foreach item="String" in="${primaryServers}" delim="," property="serverToDeploy">
-		<echo message="Cleaning up of files from:  ${serverToDeploy}" />
-		<delete>
-			<fileset basedir="${serverToDeploy}">   
-			  <exclude name="***/web.Config" />    
-			  <include name="***/*.*" />  
-			</fileset>
-		</delete>
-		<echo message="Copy files from ${sourcePackageLocation} to:  ${serverToDeploy}" />
-		<copy todir="${serverToDeploy}" includeemptydirs="false" overwrite="true">
-		  <fileset basedir="${sourcePackageLocation}">        
-			<exclude name="***/web.Config" />
-			<include name="***/*.*" />        
-		  </fileset>
-		</copy>
+	<echo message="Copying modified files from ${sourcePackageLocation} to:  ${serverToDeploy}" />
+	<exec program="robocopy" failonerror="false">
+	 <arg>
+        <path>
+            <pathelement dir="${sourcePackageLocation}" />
+        </path>
+     </arg>
+	 <arg>
+        <path>
+            <pathelement dir="${serverToDeploy}" />
+        </path>
+     </arg>
+	 <arg value="/XF" />
+	  <arg>
+        <path>
+             <pathelement file="${serverToDeploy}\web.Config" />
+        </path>
+     </arg>
+	 <arg value="/MIR" />
+	 <arg value="/PURGE" />
+	 <arg value="/MT" />
+    </exec>
 	</foreach>
  </target>
  </project>
