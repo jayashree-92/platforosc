@@ -14,15 +14,12 @@
             <pathelement dir="${serverToDeploy}" />
         </path>
      </arg>
-	 <arg value="/XF" />
-	  <arg>
-        <path>
-             <pathelement file="${serverToDeploy}\web.Config" />
-        </path>
-     </arg>
 	 <arg value="/MIR" />
 	 <arg value="/PURGE" />
 	 <arg value="/MT" />
+	 <arg value="/XF" >
+	 </arg>
+	 <arg><path><pathelement file="${sourcePackageLocation}\web.Config" /></path></arg>
     </exec>
 	</foreach>
  </target>
