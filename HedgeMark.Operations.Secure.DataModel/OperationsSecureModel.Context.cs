@@ -57,5 +57,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<onBoardingAccountModuleAssociation> onBoardingAccountModuleAssociations { get; set; }
         public virtual DbSet<onBoardingModule> onBoardingModules { get; set; }
         public virtual DbSet<hmsWireInvoiceAssociation> hmsWireInvoiceAssociations { get; set; }
+        public virtual DbSet<hmsWireCollateralAssociation> hmsWireCollateralAssociations { get; set; }
     }
 }

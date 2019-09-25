@@ -50,6 +50,15 @@
           <Property Name="ModifiedStateValue" Type="varchar" MaxLength="300" />
           <Property Name="IsLogFromOps" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsWireCollateralAssociation">
+          <Key>
+            <PropertyRef Name="hmsWireCollateralAssociationId" />
+          </Key>
+          <Property Name="hmsWireCollateralAssociationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="hmsWireId" Type="bigint" Nullable="false" />
+          <Property Name="dmaCashCollateralId" Type="bigint" Nullable="false" />
+          <Property Name="AgreedMovementType" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsWireDocument">
           <Key>
             <PropertyRef Name="hmsWireDocumentId" />
@@ -437,6 +446,18 @@
           <Property Name="CutoffTime" Type="time" Precision="7" Nullable="false" />
           <Property Name="DaystoWire" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_hmsWireCollateralAssociation_hmsWires_hmsWireId">
+          <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
+          <End Role="hmsWireCollateralAssociation" Type="Self.hmsWireCollateralAssociation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWires">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireCollateralAssociation">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_hmsWireDocument_hmsWires_hmsWireId">
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
           <End Role="hmsWireDocument" Type="Self.hmsWireDocument" Multiplicity="*" />
@@ -706,6 +727,7 @@
           <EntitySet Name="hmsNotificationStaging" EntityType="Self.hmsNotificationStaging" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUserAuditLog" EntityType="Self.hmsUserAuditLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsWireCollateralAssociation" EntityType="Self.hmsWireCollateralAssociation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireDocument" EntityType="Self.hmsWireDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireInvoiceAssociation" EntityType="Self.hmsWireInvoiceAssociation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireJobSchedules" EntityType="Self.hmsWireJobSchedules" Schema="dbo" store:Type="Tables" />
@@ -734,6 +756,10 @@
           <EntitySet Name="OnBoardingSSITemplateServiceProvider" EntityType="Self.OnBoardingSSITemplateServiceProvider" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingSwiftGroup" EntityType="Self.onBoardingSwiftGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingWirePortalCutoff" EntityType="Self.onBoardingWirePortalCutoff" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" Association="Self.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId">
+            <End Role="hmsWires" EntitySet="hmsWires" />
+            <End Role="hmsWireCollateralAssociation" EntitySet="hmsWireCollateralAssociation" />
+          </AssociationSet>
           <AssociationSet Name="FK_hmsWireDocument_hmsWires_hmsWireId" Association="Self.FK_hmsWireDocument_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsWireDocument" EntitySet="hmsWireDocument" />
@@ -947,6 +973,11 @@
           <AssociationSet Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireInvoiceAssociation" EntitySet="hmsWireInvoiceAssociations" />
+          </AssociationSet>
+          <EntitySet Name="hmsWireCollateralAssociations" EntityType="OperationsSecureModel.hmsWireCollateralAssociation" />
+          <AssociationSet Name="FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId">
+            <End Role="hmsWire" EntitySet="hmsWires" />
+            <End Role="hmsWireCollateralAssociation" EntitySet="hmsWireCollateralAssociations" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
@@ -1491,6 +1522,7 @@
           <Property Name="SenderDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsWireSenderInformation" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireSenderInformation_SenderInformationId" FromRole="hmsWire" ToRole="hmsWireSenderInformation" />
           <NavigationProperty Name="hmsWireInvoiceAssociations" Relationship="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireInvoiceAssociation" />
+          <NavigationProperty Name="hmsWireCollateralAssociations" Relationship="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireCollateralAssociation" />
         </EntityType>
         <Association Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
           <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
@@ -1685,6 +1717,28 @@
               <PropertyRef Name="hmsWireId" />
             </Principal>
             <Dependent Role="hmsWireInvoiceAssociation">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsWireCollateralAssociation">
+          <Key>
+            <PropertyRef Name="hmsWireCollateralAssociationId" />
+          </Key>
+          <Property Name="hmsWireCollateralAssociationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
+          <Property Name="dmaCashCollateralId" Type="Int64" Nullable="false" />
+          <Property Name="AgreedMovementType" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" FromRole="hmsWireCollateralAssociation" ToRole="hmsWire" />
+        </EntityType>
+        <Association Name="FK_hmsWireCollateralAssociation_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireCollateralAssociation" Role="hmsWireCollateralAssociation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireCollateralAssociation">
               <PropertyRef Name="hmsWireId" />
             </Dependent>
           </ReferentialConstraint>
@@ -2156,6 +2210,16 @@
                 <ScalarProperty Name="InvoiceId" ColumnName="InvoiceId" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
                 <ScalarProperty Name="hmsWireInvoiceAssociationId" ColumnName="hmsWireInvoiceAssociationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWireCollateralAssociations">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireCollateralAssociation">
+              <MappingFragment StoreEntitySet="hmsWireCollateralAssociation">
+                <ScalarProperty Name="AgreedMovementType" ColumnName="AgreedMovementType" />
+                <ScalarProperty Name="dmaCashCollateralId" ColumnName="dmaCashCollateralId" />
+                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+                <ScalarProperty Name="hmsWireCollateralAssociationId" ColumnName="hmsWireCollateralAssociationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

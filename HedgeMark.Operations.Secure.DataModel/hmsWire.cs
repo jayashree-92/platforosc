@@ -22,6 +22,7 @@ namespace HedgeMark.Operations.Secure.DataModel
             this.hmsWireLogs = new HashSet<hmsWireLog>();
             this.hmsWireWorkflowLogs = new HashSet<hmsWireWorkflowLog>();
             this.hmsWireInvoiceAssociations = new HashSet<hmsWireInvoiceAssociation>();
+            this.hmsWireCollateralAssociations = new HashSet<hmsWireCollateralAssociation>();
         }
     
         public long hmsWireId { get; set; }
@@ -67,5 +68,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual hmsWireSenderInformation hmsWireSenderInformation { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireInvoiceAssociation> hmsWireInvoiceAssociations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsWireCollateralAssociation> hmsWireCollateralAssociations { get; set; }
     }
 }

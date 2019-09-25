@@ -99,6 +99,7 @@ namespace HMOSecureMiddleware
                                          .Include("hmsWireTransferTypeLKup")
                                          .Include("hmsWireSenderInformation")
                                          .Include("hmsWireInvoiceAssociations")
+                                         .Include("hmsWireCollateralAssociations")
                                          //.Include("hmsWireLogs")
                                          .First(s => s.hmsWireId == wireId);
 
@@ -137,10 +138,8 @@ namespace HMOSecureMiddleware
                 s.hmsWireLogs = null;
             });
 
-            hmWire.hmsWireInvoiceAssociations.ForEach(s =>
-            {
-                s.hmsWire = null;
-            });
+            hmWire.hmsWireCollateralAssociations.ForEach(s => s.hmsWire = null);
+            hmWire.hmsWireInvoiceAssociations.ForEach(s => s.hmsWire = null);
 
             if (hmWire.hmsSwiftStatusLkup != null)
             {

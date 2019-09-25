@@ -59,6 +59,8 @@
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingModule_onBoardingModuleId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireInvoiceAssociation" Width="1.5" PointX="16.25" PointY="7.875" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsWireCollateralAssociation" Width="1.5" PointX="16.25" PointY="11.125" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
