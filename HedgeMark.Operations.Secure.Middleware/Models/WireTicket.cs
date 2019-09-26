@@ -96,6 +96,14 @@ namespace HMOSecureMiddleware.Models
                 return IsNotice ? SendingAccount.Currency : IsBookTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
             }
         }
+
+        public bool IsCSAccountWire
+        {
+            get
+            {
+                return SendingAccount.SwiftGroup == "Credit Suisse";
+            }
+        }
         public List<KeyValuePair<string, string>> SwiftMessages { get; set; }
 
         public hmsWireMessageType CancellationWireMessageType { get; set; }
