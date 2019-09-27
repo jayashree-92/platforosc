@@ -198,7 +198,7 @@ namespace HMOSecureMiddleware
                 WorkflowUsers = workflowUsers,
                 Counterparty = (counterparty ?? new dmaCounterPartyOnBoarding()).CounterpartyName,
                 SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireId),
-                ShortFundName = hFund.OpsFundName
+                ShortFundName = hFund != null ? hFund.OpsFundName : string.Empty
             };
         }
 
