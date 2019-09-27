@@ -596,7 +596,7 @@
                                     <button id="btnPendingApproval" ng-click="fnSaveAccount(accountForm.$valid,'Pending Approval')" title="Pending approval the account" class="btn btn-warning btn-sm" style="display: none;"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
                                     if (User.IsWireApprover())
                                     {
-                                        <button id="btnApprove" ng-click="fnSaveAccount(accountForm.$valid,'Approved')" title="Approve the account" class="btn btn-success btn-sm" style="display: none;"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
+                                        <button id="btnApprove" ng-click="fnSaveAccount(accountForm.$valid,'Approved')" title="Approve the account" ng-if="isAuthorizedUserToApprove" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
                                     }
                                     <button id="btnRevert" ng-click="fnSaveAccount(accountForm.$valid,'Created')" title="Revert the account" class="btn btn-info btn-sm" style="display: none;"><i class="glyphicon glyphicon-repeat"></i>&nbsp;Revert</button>
                                 }

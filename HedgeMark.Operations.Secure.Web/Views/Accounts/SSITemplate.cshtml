@@ -295,7 +295,7 @@
                                 <a id="requestForApproval" title="Request for Approval" class="btn btn-sm btn-warning" ng-show="ssiTemplate.SSITemplateStatus == 'Saved As Draft'" style="" ng-click="fnUpdateSSITemplateStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</a>
                                     if (User.IsWireApprover())
                                     {
-                                <a id="approve" title="Approve" class="btn btn-success btn-sm" ng-show="ssiTemplate.SSITemplateStatus == 'Pending Approval' && '@ViewBag.UserName'!= ssiTemplate.UpdatedBy" ng-click="fnUpdateSSITemplateStatus('Approved','Approve')"><i class="glyphicon glyphicon-ok"></i> Approve</a>
+                                <a id="approve" title="Approve" class="btn btn-success btn-sm" ng-if="isAuthorizedUserToApprove" ng-click="fnUpdateSSITemplateStatus('Approved','Approve')"><i class="glyphicon glyphicon-ok"></i> Approve</a>
                                     }
                                 <a id="revert" title="Revert" class="btn btn-info btn-sm" ng-show="ssiTemplate.SSITemplateStatus == 'Approved'||ssiTemplate.SSITemplateStatus == 'Pending Approval'" ng-click="fnUpdateSSITemplateStatus('Saved As Draft','Revert')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</a>
                                 }

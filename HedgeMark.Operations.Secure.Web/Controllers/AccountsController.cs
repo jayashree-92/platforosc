@@ -11,6 +11,7 @@ using HedgeMark.Operations.FileParseEngine.Parser;
 using HedgeMark.Operations.Secure.DataModel;
 using HMOSecureMiddleware;
 using HMOSecureMiddleware.Util;
+using HMOSecureWeb.Utility;
 using Newtonsoft.Json;
 
 namespace HMOSecureWeb.Controllers
@@ -375,7 +376,8 @@ namespace HMOSecureWeb.Controllers
             var onBoardingAccount = AccountManager.GetOnBoardingAccount(accountId);
             return Json(new
             {
-                OnBoardingAccount = onBoardingAccount
+                OnBoardingAccount = onBoardingAccount,
+                isAuthorizedUserToApprove = (User.IsWireApprover() && onBoardingAccount.onBoardingAccountStatus == "Pending Approval" && onBoardingAccount.CreatedBy != UserName && onBoardingAccount.UpdatedBy != UserName)
 
             }, JsonContentType, JsonContentEncoding);
         }
@@ -845,6 +847,7 @@ namespace HMOSecureWeb.Controllers
             return Json(new
             {
                 OnBoardingSsiTemplate = onBoardingSsiTemplate,
+                isAuthorizedUserToApprove = (User.IsWireApprover() && onBoardingSsiTemplate.SSITemplateStatus == "Pending Approval" && onBoardingSsiTemplate.CreatedBy != UserName && onBoardingSsiTemplate.UpdatedBy != UserName),
                 document
             }, JsonContentType, JsonContentEncoding);
         }

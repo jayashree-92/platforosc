@@ -507,6 +507,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $http.get("/Accounts/GetOnBoardingAccount?accountId=" + $scope.onBoardingAccountId).then(function (response) {
             var account = response.data.OnBoardingAccount;
+            $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
             if (account.CashSweepTime != null && account.CashSweepTime != "" && account.CashSweepTime != undefined) {
                 //var times = account.CashSweepTime.split(':');
                 account.CashSweepTime = new Date(2014, 0, 1, account.CashSweepTime.Hours, account.CashSweepTime.Minutes, account.CashSweepTime.Seconds);
@@ -1463,7 +1464,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#spnAgrCurrentStatus").html("Saved as Draft");
                 $("#hmStatus").show();
                 $("#btnPendingApproval").show();
-                $("#btnApprove").hide();
+                //$("#btnApprove").hide();
                 $("#btnRevert").hide();
                 $("#btnSave").show();
             }
@@ -1472,30 +1473,21 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#hmStatus").show();
                 $("#spnAgrCurrentStatus").removeClass("text-default").removeClass("text-success").addClass("text-warning");
                 $("#btnPendingApproval").hide();
-                $("#btnApprove").show();
+                //$("#btnApprove").show();
                 $("#btnRevert").hide();
                 $("#btnSave").hide();
-            }
-            else if (value.onBoardingAccountStatus == pendingStatus && value.UpdatedBy == $("#userName").val()) {
-                $("#spnAgrCurrentStatus").html(value.onBoardingAccountStatus);
-                $("#hmStatus").show();
-                $("#spnAgrCurrentStatus").parent().removeClass("text-default").removeClass("text-success").addClass("text-warning");
-                $("#btnPendingApproval").hide();
-                $("#btnApprove").hide();
-                $("#btnRevert").hide();
-                $("#btnSave").show();
             }
             else if (value.onBoardingAccountStatus == approvedStatus) {
                 $("#spnAgrCurrentStatus").html(value.onBoardingAccountStatus);
                 $("#hmStatus").show();
                 $("#spnAgrCurrentStatus").parent().removeClass("text-default").removeClass("text-warning").addClass("text-success");
                 $("#btnPendingApproval").hide();
-                $("#btnApprove").hide();
+                //$("#btnApprove").hide();
                 $("#btnRevert").hide();
                 $("#btnSave").hide();
             } else {
                 $("#btnPendingApproval").hide();
-                $("#btnApprove").hide();
+                //$("#btnApprove").hide();
                 $("#btnRevert").hide();
                 $("#btnSave").hide();
             }

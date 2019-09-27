@@ -366,6 +366,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         $http.get("/Accounts/GetSsiTemplate?templateId=" + ssiTemplateId).then(function (response) {
             $scope.ssiTemplateId = ssiTemplateId;
             $scope.fnBrokerList();
+            $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
             // $scope.fnPaymentOrReceiptReason();
             $scope.ssiTemplate = response.data.OnBoardingSsiTemplate;
             $scope.serviceProviders = $scope.ssiTemplate.ServiceProvider;
