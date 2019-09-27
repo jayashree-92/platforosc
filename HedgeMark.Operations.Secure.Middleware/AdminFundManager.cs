@@ -30,7 +30,24 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static IQueryable<QueryableHFund> GetUniversalDMAFundListQuery(OperationsContext context, string userName, string defaultPreferredCode = null)
+        public static HFund GetHFundCreatedForDMA(long hmFundId)
+        {
+            using (var context = new OperationsContext())
+            {
+                return GetUniversalDMAFundListQuery(context).Where(s => s.hmFundId == hmFundId).Select(s => new HFund
+                {
+                    HFundId = s.hmFundId,
+                    ClientFundName = s.HFund.ClientFundName,
+                    OpsFundName = s.HFund.ShortFundName,
+                    PerferredFundName = s.PreferredFundName,
+                    HMDataFundName = s.HFund.HMRAName,
+                    Currency = s.HFund.BaseCurrencyShareclass != null ? s.HFund.BaseCurrencyShareclass : string.Empty,
+                    LegalFundName = s.HFund.LegalFundName
+                }).FirstOrDefault();
+            }
+        }
+
+        public static IQueryable<QueryableHFund> GetUniversalDMAFundListQuery(OperationsContext context, string userName = null, string defaultPreferredCode = null)
         {
             var preferredFundName = PreferencesManager.GetPreferredFundName(userName);
             return (from fund in context.vw_HFundOps

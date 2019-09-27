@@ -154,6 +154,8 @@ namespace HMOSecureMiddleware
             List<string> workflowUsers;
             List<string> attachmentUsers;
 
+            var hFund = AdminFundManager.GetHFundCreatedForDMA(hmWire.hmFundId);
+
             using (var context = new AdminContext())
             {
                 context.Configuration.ProxyCreationEnabled = false;
@@ -170,7 +172,6 @@ namespace HMOSecureMiddleware
 
                 workflowUsers = hmWire.hmsWireWorkflowLogs.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
                 attachmentUsers = hmWire.hmsWireDocuments.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
-                
                 counterparty = context.dmaCounterPartyOnBoardings.FirstOrDefault(s => wireSSITemplate.TemplateEntityId == s.dmaCounterPartyOnBoardId);
             }
 
@@ -197,6 +198,7 @@ namespace HMOSecureMiddleware
                 WorkflowUsers = workflowUsers,
                 Counterparty = (counterparty ?? new dmaCounterPartyOnBoarding()).CounterpartyName,
                 SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireId),
+                ShortFundName = hFund.OpsFundName
             };
         }
 

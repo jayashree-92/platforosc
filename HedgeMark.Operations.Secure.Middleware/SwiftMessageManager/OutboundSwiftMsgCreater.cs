@@ -322,10 +322,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field70 GetField70(WireTicket wire)
         {
             var f70 = new Field70();
-            if (!wire.IsCSAccountWire)
+            if (!wire.ShouldIncludeWirePurpose)
                 return f70;
 
-            f70.setNarrativeLine1("/RFB/" + (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral ? "Collateral Payment" : wire.HMWire.hmsWirePurposeLkup.Purpose));
+            f70.setNarrativeLine1("/RFB/" + (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral ? wire.CollateralPaymentReason : wire.HMWire.hmsWirePurposeLkup.Purpose));
             return f70;
         }
 
@@ -362,7 +362,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             //if (!string.IsNullOrWhiteSpace(reference))
               //  f72.setNarrativeLine3("//" + reference);
 
-            if (string.IsNullOrWhiteSpace(ffcNumber) && (messageType == "MT103" || !wire.IsCSAccountWire))
+            if (string.IsNullOrWhiteSpace(ffcNumber) && (messageType == "MT103" || !wire.ShouldIncludeWirePurpose))
                 return f72;
 
             var senderDescriptionInfo = wire.HMWire.SenderDescription.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
@@ -375,45 +375,47 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                 switch (i)
                 {
                     case 0: if (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral)
-                                narrativeLine = string.Format("/BNF/{0}/{1}", wire.FundName, (wire.IsCSAccountWire ? "Collateral Payment" : ffcNumber));
+                                narrativeLine = string.Format("/BNF/{0}", (wire.ShouldIncludeWirePurpose ? wire.CollateralPaymentReason : wire.ShortFundName));
                             else
-                                narrativeLine = string.Format("/{0}/{1}", (messageType == "MT103" ? "BNF" : wire.HMWire.hmsWireSenderInformation.SenderInformation), (wire.IsCSAccountWire ? wire.HMWire.hmsWirePurposeLkup.Purpose : ffcNumber));
+                                narrativeLine = string.Format("/{0}/{1}", (messageType == "MT103" ? wire.DefaultSenderInformation : wire.HMWire.hmsWireSenderInformation.SenderInformation), (wire.ShouldIncludeWirePurpose ? wire.HMWire.hmsWirePurposeLkup.Purpose : ffcNumber));
 
                             f72.setNarrativeLine1(narrativeLine.Length > 30 ? narrativeLine.Substring(0, 30) : narrativeLine);
                             break;
-                    case 1: if (wire.IsCSAccountWire)
-                                narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(ffcNumber) ? ffcNumber : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : "")));
+                    case 1: if (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral)
+                                narrativeLine = string.Format("//{0}", (wire.ShouldIncludeWirePurpose ? wire.ShortFundName : ffcNumber));
+                            else if(wire.ShouldIncludeWirePurpose)
+                                narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(ffcNumber) ? ffcNumber : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)));
                             else
-                                narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(ffcName) ? ffcName : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : "")));
+                                narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(ffcName) ? ffcName : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)));
 
                             if (!string.IsNullOrWhiteSpace(narrativeLine))
-                                f72.setNarrativeLine2(narrativeLine);
+                                f72.setNarrativeLine2(narrativeLine.Length > 30 ? narrativeLine.Substring(0, 30) : narrativeLine);
                             break;
-                    case 2: if (wire.IsCSAccountWire)
-                                narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(ffcName) ? ffcName : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : "")));
+                    case 2: if (wire.ShouldIncludeWirePurpose)
+                                narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(ffcName) ? ffcName : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)));
                             else
-                                narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(reference) ? reference : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : "")));
+                                narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(reference) ? reference : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)));
 
                             if (!string.IsNullOrWhiteSpace(narrativeLine))
                                 f72.setNarrativeLine3(narrativeLine);
                             break;
-                    case 3: if (wire.IsCSAccountWire)
-                                narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(reference) ? ffcName : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : "")));
+                    case 3: if (wire.ShouldIncludeWirePurpose)
+                                narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(reference) ? ffcName : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)));
                             else
-                                narrativeLine = string.Format("//{0}", (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : ""));
+                                narrativeLine = string.Format("//{0}", (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty));
 
                             if (!string.IsNullOrWhiteSpace(narrativeLine))
                                 f72.setNarrativeLine4(narrativeLine);
                             break;
-                    case 4: narrativeLine = string.Format("//{0}", (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : ""));
-
-                            if (!string.IsNullOrWhiteSpace(narrativeLine))
-                                f72.setNarrativeLine4(narrativeLine);
-                            break;
-                    case 5: narrativeLine = string.Format("//{0}", (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : ""));
+                    case 4: narrativeLine = string.Format("//{0}", (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty));
 
                             if (!string.IsNullOrWhiteSpace(narrativeLine))
                                 f72.setNarrativeLine5(narrativeLine);
+                            break;
+                    case 5: narrativeLine = string.Format("//{0}", (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty));
+
+                            if (!string.IsNullOrWhiteSpace(narrativeLine))
+                                f72.setNarrativeLine6(narrativeLine);
                             break;
                     default: break;
                 }

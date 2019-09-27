@@ -191,6 +191,7 @@ namespace HMOSecureWeb.Controllers
                     ReceivingAccount = wire.WireTransferTypeId == 2 ? wireAccounts.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount() : new onBoardingAccount(),
                     SSITemplate = wire.WireTransferTypeId != 2 && wire.hmsWireTransferTypeLKup.TransferType != "Notice" ? wireSSITemplates.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate() : new onBoardingSSITemplate(),
                     FundName = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) == null ? "" : hFunds.First(s => s.HFundId == wire.hmFundId).PerferredFundName,
+                    ShortFundName = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) == null ? "" : hFunds.First(s => s.HFundId == wire.hmFundId).OpsFundName,
                     Counterparty = (wire.hmsWireTransferTypeLKup.TransferType != "Notice" ? counterParties.FirstOrDefault(s => counterpartyId == s.dmaCounterPartyOnBoardId) ?? new dmaCounterPartyOnBoarding() : new dmaCounterPartyOnBoarding()).CounterpartyName
                 };
 

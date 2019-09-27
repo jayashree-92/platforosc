@@ -82,6 +82,7 @@ namespace HMOSecureMiddleware.Models
         public onBoardingAccount ReceivingAccount { get; set; }
         public onBoardingSSITemplate SSITemplate { get; set; }
         public string FundName { get; set; }
+        public String ShortFundName { get; set; }
         public string ReceivingAccountName
         {
             get
@@ -97,7 +98,7 @@ namespace HMOSecureMiddleware.Models
             }
         }
 
-        public bool IsCSAccountWire
+        public bool ShouldIncludeWirePurpose
         {
             get
             {
@@ -107,6 +108,23 @@ namespace HMOSecureMiddleware.Models
         public List<KeyValuePair<string, string>> SwiftMessages { get; set; }
 
         public hmsWireMessageType CancellationWireMessageType { get; set; }
+
+        // Default Properties
+        public string CollateralPaymentReason
+        {
+            get
+            {
+                return "Collateral Payment";
+            }
+        }
+
+        public string DefaultSenderInformation
+        {
+            get
+            {
+                return "BNF";
+            }
+        }
     }
 
     public class WireInBoundMessage
