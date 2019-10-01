@@ -248,7 +248,7 @@ namespace HMOSecureWeb.Controllers
                 if (isNoticePending)
                     validationMsg = "The notice with same amount, value date and currency is already Processing with SWIFT.You cannot notice the same untill it gets a Confirmation";
             }
-            var usersInvolvedInWire = wireTicket.HMWire.hmsWireWorkflowLogs.Select(s => s.CreatedBy).Distinct().ToList();
+            var usersInvolvedInWire = wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated || s.WireStatusId == (int)WireDataManager.WireStatus.Drafted).Select(s => s.CreatedBy).Distinct().ToList();
             var isAuthorizedUserToApprove = WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && !usersInvolvedInWire.Contains(UserDetails.Id) && !isDeadlineCrossed && User.IsWireApprover() && !isNoticePending;
             var isEditEnabled = WireDataManager.WireStatus.Drafted == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && !isDeadlineCrossed;
             var isApprovedOrFailed = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId
