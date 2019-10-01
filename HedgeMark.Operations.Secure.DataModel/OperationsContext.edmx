@@ -37,6 +37,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           </Key>
           <Property Name="intFundId" Type="int" Nullable="false" />
           <Property Name="FundMapId" Type="int" Nullable="false" />
+          <Property Name="OnBoardFundId" Type="bigint" />
           <Property Name="CreatedFor" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="ShortFundName" Type="varchar" MaxLength="100" />
           <Property Name="LegalFundName" Type="varchar" MaxLength="100" Nullable="false" />
@@ -47,7 +48,6 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="NAVFrequency" Type="varchar" MaxLength="200" />
           <Property Name="FundLegalStructure" Type="varchar" MaxLength="200" />
           <Property Name="AccountingMethod" Type="varchar" MaxLength="200" />
-          <Property Name="CalendarId" Type="int" />
         </EntityType>
         <EntityContainer Name="DMA_HMModelStoreContainer">
           <EntitySet Name="dmaReports" EntityType="Self.dmaReports" Schema="dbo" store:Type="Tables" />
@@ -56,6 +56,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
             <DefiningQuery>SELECT 
     [vw_HFundOps].[intFundId] AS [intFundId], 
     [vw_HFundOps].[FundMapId] AS [FundMapId], 
+    [vw_HFundOps].[OnBoardFundId] AS [OnBoardFundId], 
     [vw_HFundOps].[CreatedFor] AS [CreatedFor], 
     [vw_HFundOps].[ShortFundName] AS [ShortFundName], 
     [vw_HFundOps].[LegalFundName] AS [LegalFundName], 
@@ -65,8 +66,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
     [vw_HFundOps].[BaseCurrencyShareclass] AS [BaseCurrencyShareclass], 
     [vw_HFundOps].[NAVFrequency] AS [NAVFrequency], 
     [vw_HFundOps].[FundLegalStructure] AS [FundLegalStructure], 
-    [vw_HFundOps].[AccountingMethod] AS [AccountingMethod], 
-    [vw_HFundOps].[CalendarId] AS [CalendarId]
+    [vw_HFundOps].[AccountingMethod] AS [AccountingMethod]
     FROM [dbo].[vw_HFundOps] AS [vw_HFundOps]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
@@ -83,6 +83,20 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="Key" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityContainer Name="OperationsContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="dmaUserPreferences" EntityType="Self.dmaUserPreference" />
+          <EntitySet Name="dmaReports" EntityType="OperationsModel.dmaReport" />
+          <EntitySet Name="vw_HFundOps" EntityType="OperationsModel.vw_HFundOps" />
+        </EntityContainer>
+        <EntityType Name="dmaReport">
+          <Key>
+            <PropertyRef Name="dmaReportsId" />
+          </Key>
+          <Property Name="dmaReportsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReportName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DisplayOrder" Type="Int32" Nullable="false" />
+          <Property Name="IsFundPrimaryReport" Type="Boolean" Nullable="false" />
+        </EntityType>
         <EntityType Name="vw_HFundOps">
           <Key>
             <PropertyRef Name="intFundId" />
@@ -95,31 +109,17 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           </Key>
           <Property Name="intFundId" Type="Int32" Nullable="false" />
           <Property Name="FundMapId" Type="Int32" Nullable="false" />
-          <Property Name="CreatedFor" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OnBoardFundId" Type="Int64" />
+          <Property Name="CreatedFor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="LegalFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ClientFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="HMRAName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FundStatus" Type="String" MaxLength="13" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LegalFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ClientFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HMRAName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FundStatus" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
           <Property Name="BaseCurrencyShareclass" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
           <Property Name="NAVFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="FundLegalStructure" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="AccountingMethod" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="CalendarId" Type="Int32" />
-        </EntityType>
-        <EntityContainer Name="OperationsContext" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="dmaUserPreferences" EntityType="Self.dmaUserPreference" />
-          <EntitySet Name="vw_HFundOps" EntityType="Self.vw_HFundOps" />
-          <EntitySet Name="dmaReports" EntityType="OperationsModel.dmaReport" />
-        </EntityContainer>
-        <EntityType Name="dmaReport">
-          <Key>
-            <PropertyRef Name="dmaReportsId" />
-          </Key>
-          <Property Name="dmaReportsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ReportName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DisplayOrder" Type="Int32" Nullable="false" />
-          <Property Name="IsFundPrimaryReport" Type="Boolean" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -137,25 +137,6 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="vw_HFundOps">
-            <EntityTypeMapping TypeName="OperationsModel.vw_HFundOps">
-              <MappingFragment StoreEntitySet="vw_HFundOps">
-                <ScalarProperty Name="intFundId" ColumnName="intFundId" />
-                <ScalarProperty Name="FundMapId" ColumnName="FundMapId" />
-                <ScalarProperty Name="CreatedFor" ColumnName="CreatedFor" />
-                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
-                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
-                <ScalarProperty Name="ClientFundName" ColumnName="ClientFundName" />
-                <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
-                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
-                <ScalarProperty Name="BaseCurrencyShareclass" ColumnName="BaseCurrencyShareclass" />
-                <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />
-                <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
-                <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
-                <ScalarProperty Name="CalendarId" ColumnName="CalendarId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="dmaReports">
             <EntityTypeMapping TypeName="OperationsModel.dmaReport">
               <MappingFragment StoreEntitySet="dmaReports">
@@ -163,6 +144,25 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
                 <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
                 <ScalarProperty Name="ReportName" ColumnName="ReportName" />
                 <ScalarProperty Name="dmaReportsId" ColumnName="dmaReportsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_HFundOps">
+            <EntityTypeMapping TypeName="OperationsModel.vw_HFundOps">
+              <MappingFragment StoreEntitySet="vw_HFundOps">
+                <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
+                <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
+                <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />
+                <ScalarProperty Name="BaseCurrencyShareclass" ColumnName="BaseCurrencyShareclass" />
+                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
+                <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
+                <ScalarProperty Name="ClientFundName" ColumnName="ClientFundName" />
+                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
+                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
+                <ScalarProperty Name="CreatedFor" ColumnName="CreatedFor" />
+                <ScalarProperty Name="OnBoardFundId" ColumnName="OnBoardFundId" />
+                <ScalarProperty Name="FundMapId" ColumnName="FundMapId" />
+                <ScalarProperty Name="intFundId" ColumnName="intFundId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

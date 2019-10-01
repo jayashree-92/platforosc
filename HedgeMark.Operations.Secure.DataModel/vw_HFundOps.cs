@@ -16,6 +16,7 @@ namespace HedgeMark.Operations.Secure.DataModel
     {
         public int intFundId { get; set; }
         public int FundMapId { get; set; }
+        public Nullable<long> OnBoardFundId { get; set; }
         public string CreatedFor { get; set; }
         public string ShortFundName { get; set; }
         public string LegalFundName { get; set; }
@@ -26,6 +27,5 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string NAVFrequency { get; set; }
         public string FundLegalStructure { get; set; }
         public string AccountingMethod { get; set; }
-        public Nullable<int> CalendarId { get; set; }
     }
 }

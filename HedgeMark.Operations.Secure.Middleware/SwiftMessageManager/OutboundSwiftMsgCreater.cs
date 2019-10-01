@@ -388,7 +388,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                             else
                                 narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(ffcName) ? ffcName : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)));
 
-                            if (!string.IsNullOrWhiteSpace(narrativeLine))
+                            if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
                                 f72.setNarrativeLine2(narrativeLine.Length > 30 ? narrativeLine.Substring(0, 30) : narrativeLine);
                             break;
                     case 2: if (wire.ShouldIncludeWirePurpose)
@@ -396,7 +396,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                             else
                                 narrativeLine = string.Format("//{0}", (!string.IsNullOrEmpty(reference) ? reference : (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)));
 
-                            if (!string.IsNullOrWhiteSpace(narrativeLine))
+                            if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
                                 f72.setNarrativeLine3(narrativeLine);
                             break;
                     case 3: if (wire.ShouldIncludeWirePurpose)
@@ -409,12 +409,12 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                             break;
                     case 4: narrativeLine = string.Format("//{0}", (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty));
 
-                            if (!string.IsNullOrWhiteSpace(narrativeLine))
+                            if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
                                 f72.setNarrativeLine5(narrativeLine);
                             break;
                     case 5: narrativeLine = string.Format("//{0}", (descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty));
 
-                            if (!string.IsNullOrWhiteSpace(narrativeLine))
+                            if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
                                 f72.setNarrativeLine6(narrativeLine);
                             break;
                     default: break;
