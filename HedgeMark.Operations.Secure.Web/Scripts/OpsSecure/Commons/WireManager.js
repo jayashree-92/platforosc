@@ -115,6 +115,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isWireCreated = response.data.isWireCreated;
             $scope.isCancelEnabled = response.data.IsCancelEnabled;
             $scope.isWirePurposeAdhoc = response.data.isWirePurposeAdhoc;
+            $scope.IsSwiftMessagesPresent = false;
             angular.forEach($scope.WireTicket.hmsWireDocuments, function (val, ind) {
                 val.CreatedAt = moment(val.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             });
