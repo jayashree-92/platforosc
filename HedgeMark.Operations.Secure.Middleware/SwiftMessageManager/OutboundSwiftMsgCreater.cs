@@ -362,10 +362,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             //if (!string.IsNullOrWhiteSpace(reference))
               //  f72.setNarrativeLine3("//" + reference);
 
-            if (string.IsNullOrWhiteSpace(ffcNumber) && (messageType == "MT103" || !wire.ShouldIncludeWirePurpose))
+            if (string.IsNullOrWhiteSpace(ffcNumber) && string.IsNullOrWhiteSpace(wire.HMWire.SenderDescription) && (messageType == "MT103" || !wire.ShouldIncludeWirePurpose))
                 return f72;
 
-            var senderDescriptionInfo = wire.HMWire.SenderDescription.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+            var senderDescriptionInfo = (wire.HMWire.SenderDescription ?? string.Empty).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
             var narrativeLine = string.Empty;
             var descIndex = 0;
             senderDescriptionInfo.Where(s => s.Length > 33).ForEach(s => s = s.Substring(0, 33));
