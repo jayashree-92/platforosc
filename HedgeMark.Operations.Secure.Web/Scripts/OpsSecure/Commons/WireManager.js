@@ -123,8 +123,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             });
             $timeout(function () {
                 $interval.cancel($scope.promise);
-                $scope.timeToShow = "00 : 00 : 00";
-            }, 50);
+                $scope.timeToApprove = "00 : 00 : 00";
+            }, 100);
             $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
         });
     }
@@ -191,7 +191,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 }
                 $interval.cancel($scope.promise);
                 $scope.promise = $interval(timer, 1000);
-            }, 50);
+            }, 100);
 
             $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
         });
@@ -296,12 +296,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case 2: angular.element("#workflowStatus_" + index).addClass("text-warning");
                 return "Initiated";
             case 3: angular.element("#workflowStatus_" + index).addClass("text-success");
-                return $scope.getSwiftStatusString(wireLog.SwiftStatusId) + " the Approved";
+                return $scope.getSwiftStatusString(wireLog.SwiftStatusId) + "Approved";
             case 4: angular.element("#workflowStatus_" + index).addClass("text-blocked");
                 if ($scope.WireTicket.SwiftStatusId == 1)
                     return "Rejected";
                 else
-                    return $scope.getSwiftStatusString(wireLog.SwiftStatusId) + " the Cancelled";
+                    return $scope.getSwiftStatusString(wireLog.SwiftStatusId) + "Cancelled";
             case 5: angular.element("#workflowStatus_" + index).addClass("text-danger");
                 return "Failed";
         }
@@ -313,15 +313,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
             case 1: return "";
             case 2: if ($container != null) $container.addClass("text-warning");
-                return " started Processing";
+                return " started Processing the";
             case 3: if ($container != null) $container.addClass("text-info");
-                return " Acknowledged";
+                return " Acknowledged the";
             case 4: if ($container != null) $container.addClass("text-dander");
-                return " N-Acknowledged";
+                return " N-Acknowledged the ";
             case 5: if ($container != null) $container.addClass("text-success");
-                return " Completed";
+                return " Completed the";
             case 6: if ($container != null) $container.addClass("text-dander");
-                return " Failed";
+                return " Failed the";
         }
         return "";
     }
@@ -611,6 +611,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return "Initiate";
     }
 
+    $scope.getCancelbuttonText = function (isLoading) {
+        if (isLoading) {
+            return $scope.WireTicket.SwiftStatusId == 1 ? "Rejecting" : "Cancelling";
+        }
+        else 
+           return $scope.WireTicket.SwiftStatusId == 1 ? "Reject" : "Cancel";
+        
+    }
+
     $scope.confirmCancellation = function () {
         angular.element('#cancelWire').popover('destroy').popover({
             trigger: 'click',
@@ -746,7 +755,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.timeToShow = "00 : 00 : 00";
     var timer = function () {
-        if ($scope.timeToApprove.Hours > 0) {
+        if ($scope.timeToApprove != undefined && $scope.timeToApprove.Hours > 0) {
             $scope.timeToApprove.Seconds--;
             if ($scope.timeToApprove.Seconds == -1) {
                 $scope.timeToApprove.Minutes--;
