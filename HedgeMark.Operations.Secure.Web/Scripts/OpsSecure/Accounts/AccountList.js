@@ -1289,8 +1289,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
-    $scope.fnSsiTemplateMap = function (accountId, fundId, index) {
-        $http.get("/Accounts/GetAccountSsiTemplateMap?accountId=" + accountId + "&fundId=" + fundId).then(function (response) {
+    $scope.fnSsiTemplateMap = function (accountId, fundId, index, currency) {
+        $http.get("/Accounts/GetAccountSsiTemplateMap?accountId=" + accountId + "&fundId=" + fundId + "&currency=" + currency).then(function (response) {
             $scope.ssiTemplates = response.data.ssiTemplates;
             $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
             if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined && $scope.ssiTemplateMaps.length > 0) {
@@ -1491,7 +1491,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#btnRevert").hide();
                 $("#btnSave").hide();
             }
-            $scope.fnSsiTemplateMap(value.onBoardingAccountId, $scope.FundId, key);
+            $scope.fnSsiTemplateMap(value.onBoardingAccountId, $scope.FundId, key, value.Currency);
             attachment(key);
             $scope.fnAccountDocuments(value.onBoardingAccountId, key);
 
@@ -2262,6 +2262,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if (row.data() != undefined) {
             var onBoardingAccountId = row.data().onBoardingAccountId;
             var fId = row.data().dmaFundOnBoardId;
+            var currency = row.data().Currency;
 
             var icon = $(this).find("i");
             if ($("#accountRowTable").hasClass("initialized")) {
@@ -2284,7 +2285,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 if ($(rowTableId).hasClass("initialized")) {
                     fnDestroyDataTable(rowTableId);
                 }
-                $http.get("/Accounts/GetAccountSsiTemplateMap?accountId=" + onBoardingAccountId + "&fundId=" + fId).then(function (response) {
+                $http.get("/Accounts/GetAccountSsiTemplateMap?accountId=" + onBoardingAccountId + "&fundId=" + fId + "&currency=" + currency).then(function (response) {
 
                     tblSsiTemplateRow = $(rowTableId).not(".initialized").addClass("initialized").DataTable(
                     {
