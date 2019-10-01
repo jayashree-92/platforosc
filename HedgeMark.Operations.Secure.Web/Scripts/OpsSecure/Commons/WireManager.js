@@ -689,11 +689,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.validateSenderDescription = function () {
-        if ($scope.WireTicket.SenderDescription.trim() == "") {
-            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-            $scope.validationMsg = "Sender Description cannot be empty.";
-            return false;
-        }
         var splittedInfo = $scope.WireTicket.SenderDescription.split("\n");
         if (splittedInfo.length > 6) {
             $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
