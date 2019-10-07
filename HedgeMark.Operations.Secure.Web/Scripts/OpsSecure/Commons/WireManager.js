@@ -256,7 +256,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.getWireLogText = function (wireLog) {
         if (wireLog == null)
             return "";
-        return " the wire at " + $.getPrettyDate(wireLog.CreatedAt);
+        return (wireLog.WireStatusId == 3 || wireLog.WireStatusId == 4 ? "" : " the") + " wire at " + $.getPrettyDate(wireLog.CreatedAt);
     }
 
 
@@ -297,12 +297,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case 2: angular.element("#workflowStatus_" + index).addClass("text-warning");
                 return "Initiated";
             case 3: angular.element("#workflowStatus_" + index).addClass("text-success");
-                return $scope.getSwiftStatusString(wireLog.SwiftStatusId) + "Approved";
+                return $scope.getSwiftStatusString(wireLog.SwiftStatusId) + " Approved";
             case 4: angular.element("#workflowStatus_" + index).addClass("text-blocked");
                 if ($scope.WireTicket.SwiftStatusId == 1)
                     return "Rejected";
                 else
-                    return $scope.getSwiftStatusString(wireLog.SwiftStatusId) + "Cancelled";
+                    return $scope.getSwiftStatusString(wireLog.SwiftStatusId) + " Cancelled";
             case 5: angular.element("#workflowStatus_" + index).addClass("text-danger");
                 return "Failed";
         }
@@ -1118,9 +1118,17 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             if ($scope.wireTicketObj.IsNotice)
                 $scope.isWireRequirementsFilled = $("#liFund").select2('val') != "" && $("#liWiresPurpose").select2('val') != "" && $("#liSendingAccount").select2('val') != "";
             else if ($scope.wireTicketObj.IsBookTransfer)
-                $scope.isWireRequirementsFilled = $("#liFund").select2('val') != "" && $("#liWiresPurpose").select2('val') != "" && $("#liSendingAccount").select2('val') != "" && $("#liReceivingBookAccount").select2('val') != "" && $("#liMessageType").select2('val') != "" && (!$scope.wireTicketObj.IsSenderInformationRequired || $("#liSenderInformation").select2('val') != "");
+                $scope.isWireRequirementsFilled = $("#liFund").select2('val') != "" && $("#liWiresPurpose").select2('val') != "" && $("#liSendingAccount").select2('val') != "" && $("#liReceivingBookAccount").select2('val') != "" && $("#liMessageType").select2('val') != "";
             else
-                $scope.isWireRequirementsFilled = $("#liFund").select2('val') != "" && $("#liWiresPurpose").select2('val') != "" && $("#liSendingAccount").select2('val') != "" && $("#liReceivingAccount").select2('val') != "" && (!$scope.wireTicketObj.IsSenderInformationRequired || $("#liSenderInformation").select2('val') != "");
+                $scope.isWireRequirementsFilled = $("#liFund").select2('val') != "" && $("#liWiresPurpose").select2('val') != "" && $("#liSendingAccount").select2('val') != "" && $("#liReceivingAccount").select2('val') != "";
+        }
+        else if ($scope.isEditEnabled) {
+            if ($scope.wireTicketObj.IsNotice)
+                $scope.isWireRequirementsFilled = $("#liSendingAccount").select2('val') != "";
+            else if ($scope.wireTicketObj.IsBookTransfer)
+                $scope.isWireRequirementsFilled = $("#liSendingAccount").select2('val') != "" && $("#liReceivingBookAccount").select2('val') != "" && $("#liMessageType").select2('val') != "";
+            else
+                $scope.isWireRequirementsFilled = $("#liSendingAccount").select2('val') != "" && $("#liReceivingAccount").select2('val') != "";
         }
         else
             $scope.isWireRequirementsFilled = true;

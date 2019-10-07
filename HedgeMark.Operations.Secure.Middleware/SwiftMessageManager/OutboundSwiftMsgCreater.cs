@@ -375,9 +375,9 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                 switch (i)
                 {
                     case 0: if (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral)
-                                narrativeLine = string.Format("/BNF/{0}", (wire.ShouldIncludeWirePurpose ? wire.CollateralPaymentReason : wire.ShortFundName));
+                                narrativeLine = string.Format("/{0}/{1}", wire.DefaultSenderInformation, (wire.ShouldIncludeWirePurpose ? wire.CollateralPaymentReason : wire.ShortFundName));
                             else
-                                narrativeLine = string.Format("/BNF/{0}", (wire.ShouldIncludeWirePurpose ? wire.HMWire.hmsWirePurposeLkup.Purpose : ffcNumber));
+                                narrativeLine = string.Format("/{0}/{1}", wire.DefaultSenderInformation, (wire.ShouldIncludeWirePurpose ? wire.HMWire.hmsWirePurposeLkup.Purpose : ffcNumber));
 
                             f72.setNarrativeLine1(narrativeLine.Length > 30 ? narrativeLine.Substring(0, 30) : narrativeLine);
                             break;

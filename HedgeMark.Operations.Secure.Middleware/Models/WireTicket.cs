@@ -122,7 +122,7 @@ namespace HMOSecureMiddleware.Models
         {
             get
             {
-                return "BNF";
+                return HMWire.hmsWireSenderInformation == null ? "BNF" : HMWire.hmsWireSenderInformation.SenderInformation;
             }
         }
     }
