@@ -885,18 +885,20 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
         else if ($scope.isEditEnabled) {
             $scope.IsNormalTransfer = $scope.WireTicket.WireTransferTypeId == 1;
-            angular.element("#liWireTransferType").select2('val', $scope.WireTicket.WireTransferTypeId).trigger('change');
-            angular.element("#liSendingAccount").select2("destroy").val('');
-            angular.element("#liSendingAccount").select2({
-                placeholder: "Select Sending Account",
-                data: $scope.sendingAccountsList,
-                allowClear: true,
-                closeOnSelect: false
-            });
-            $scope.isSendingAccountEnabled = true;
-            angular.element("#liSendingAccount").select2('val', $scope.WireTicket.OnBoardAccountId).trigger('change');
-            angular.element("#liSenderInformation").select2("enable");
-            angular.element("#wireSenderDescription").removeAttr("disabled");
+            $timeout(function () {
+                angular.element("#liWireTransferType").select2('val', $scope.WireTicket.WireTransferTypeId).trigger('change');
+                angular.element("#liSendingAccount").select2("destroy").val('');
+                angular.element("#liSendingAccount").select2({
+                    placeholder: "Select Sending Account",
+                    data: $scope.sendingAccountsList,
+                    allowClear: true,
+                    closeOnSelect: false
+                });
+                $scope.isSendingAccountEnabled = true;
+                angular.element("#liSendingAccount").select2('val', $scope.WireTicket.OnBoardAccountId).trigger('change');
+                angular.element("#liSenderInformation").select2("enable");
+                angular.element("#wireSenderDescription").removeAttr("disabled");
+            }, 50);
             //$timeout(function () {
             //    if ($scope.wireTicketObj.IsBookTransfer)
             //        angular.element("#liReceivingBookAccount").select2('val', $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
@@ -1075,7 +1077,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case "SSITemplate": $scope.isSSITemplateCollapsed = !$scope.isSSITemplateCollapsed;
                 break;
             case "Attachment": $scope.isAttachmentsCollapsed = !$scope.isAttachmentsCollapsed;
-                $timeout(function () { $scope.wireDocumentTable.columns.adjust(); }, 100);
+                $timeout(function () {
+                    if ($scope.wireDocumentTable != undefined)
+                    $scope.wireDocumentTable.columns.adjust();
+                }, 100);
                 break;
             case "Workflow": $scope.isWorkflowLogsCollapsed = !$scope.isWorkflowLogsCollapsed;
                 break;
