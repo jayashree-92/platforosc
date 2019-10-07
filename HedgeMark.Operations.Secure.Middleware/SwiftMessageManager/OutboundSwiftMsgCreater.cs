@@ -121,7 +121,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             var isFFCAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber);
 
             var f50K = new Field50K().setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber)
-                .setNameAndAddressLine1(isFFCAvailable ? wire.SendingAccount.UltimateBeneficiaryAccountName : wire.SendingAccount.UltimateBeneficiaryBankName)
+                .setNameAndAddressLine1(wire.SendingAccount.UltimateBeneficiaryAccountName)
                 .setNameAndAddressLine2(wire.SendingAccount.UltimateBeneficiaryBankAddress);
 
             return f50K;
@@ -377,7 +377,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
                     case 0: if (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral)
                                 narrativeLine = string.Format("/BNF/{0}", (wire.ShouldIncludeWirePurpose ? wire.CollateralPaymentReason : wire.ShortFundName));
                             else
-                                narrativeLine = string.Format("/{0}/{1}", (messageType == "MT103" ? wire.DefaultSenderInformation : wire.HMWire.hmsWireSenderInformation.SenderInformation), (wire.ShouldIncludeWirePurpose ? wire.HMWire.hmsWirePurposeLkup.Purpose : ffcNumber));
+                                narrativeLine = string.Format("/BNF/{0}", (wire.ShouldIncludeWirePurpose ? wire.HMWire.hmsWirePurposeLkup.Purpose : ffcNumber));
 
                             f72.setNarrativeLine1(narrativeLine.Length > 30 ? narrativeLine.Substring(0, 30) : narrativeLine);
                             break;
