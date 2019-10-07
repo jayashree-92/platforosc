@@ -57,7 +57,7 @@
                             <div class="col-md-3">
                                 <label>Receiving Account:</label>
                             </div>
-                            <div class="col-md-3" ng-show="!(isWirePurposeAdhoc && isEditEnabled && wireTicketObj.IsBookTransfer)">
+                            <div class="col-md-3" ng-show="!(isWirePurposeAdhoc && isEditEnabled)">
                                 <input type="text" id="liSSITemplate" class="form-control" ng-model="wireTicketObj.ReceivingAccountName" readonly />
                             </div>
                             <div class="col-md-3" ng-if="isWirePurposeAdhoc && isEditEnabled && !wireTicketObj.IsBookTransfer">

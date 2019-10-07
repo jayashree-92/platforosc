@@ -884,6 +884,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             angular.element("#wireSenderDescription").removeAttr("disabled");
         }
         else if ($scope.isEditEnabled) {
+            $scope.IsNormalTransfer = $scope.WireTicket.WireTransferTypeId == 1;
             angular.element("#liWireTransferType").select2('val', $scope.WireTicket.WireTransferTypeId).trigger('change');
             angular.element("#liSendingAccount").select2("destroy").val('');
             angular.element("#liSendingAccount").select2({
