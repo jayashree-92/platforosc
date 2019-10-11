@@ -369,7 +369,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                           "mData": "UpdatedAt", 
                           "sTitle": "Last Modified At",
                           "mRender": renderDotNetDateAndTime
+                        },
+                      {
+                            "mData": "ApprovedBy", "sTitle": "Approved By", "mRender": function (data) {
+                                return humanizeEmail(data == null ? "" : data);
+                            }
                       }
+
                     ],
                     "oLanguage": {
                         "sSearch": "",

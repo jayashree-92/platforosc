@@ -169,6 +169,7 @@ namespace HMOSecureMiddleware
                     account.StatusComments = comments;
                     account.UpdatedAt = DateTime.Now;
                     account.UpdatedBy = userName;
+                    account.ApprovedBy = accountStatus == "Approved" ? userName : null;
                     context.SaveChanges();
 
                     //var auditLog = new onBoardingUserAuditLog
@@ -643,6 +644,7 @@ namespace HMOSecureMiddleware
                     ssiTemplate.StatusComments = comments;
                     ssiTemplate.UpdatedAt = DateTime.Now;
                     ssiTemplate.UpdatedBy = userName;
+                    ssiTemplate.ApprovedBy = ssiTemplateStatus == "Approved" ? userName : null;
                     context.SaveChanges();
 
                     //var auditLog = new onBoardingUserAuditLog

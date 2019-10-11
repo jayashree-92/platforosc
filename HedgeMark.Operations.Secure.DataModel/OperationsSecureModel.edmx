@@ -260,6 +260,7 @@
           <Property Name="SweepCurrency" Type="varchar" MaxLength="10" />
           <Property Name="UltimateBeneficiaryAccountName" Type="varchar" MaxLength="500" />
           <Property Name="AccountModule" Type="varchar" MaxLength="500" />
+          <Property Name="ApprovedBy" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -397,6 +398,7 @@
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="MessageType" Type="varchar" MaxLength="100" />
           <Property Name="UltimateBeneficiaryAccountName" Type="varchar" MaxLength="500" />
+          <Property Name="ApprovedBy" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="OnBoardingSSITemplateAccountType">
           <Key>
@@ -1261,6 +1263,7 @@
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
           <Property Name="AccountModule" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="onBoardingAccountModuleAssociations" Relationship="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountModuleAssociation" />
+          <Property Name="ApprovedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -1383,6 +1386,7 @@
           <Property Name="UltimateBeneficiaryAccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountSSITemplateMap" />
           <NavigationProperty Name="onBoardingSSITemplateDocuments" Relationship="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingSSITemplateDocument" />
+          <Property Name="ApprovedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="OnBoardingSSITemplateAccountType">
           <Key>
@@ -1903,6 +1907,7 @@
           <EntitySetMapping Name="onBoardingAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccount">
               <MappingFragment StoreEntitySet="onBoardingAccount">
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
                 <ScalarProperty Name="AccountModule" ColumnName="AccountModule" />
                 <ScalarProperty Name="UltimateBeneficiaryAccountName" ColumnName="UltimateBeneficiaryAccountName" />
                 <ScalarProperty Name="SweepCurrency" ColumnName="SweepCurrency" />
@@ -2047,6 +2052,7 @@
           <EntitySetMapping Name="onBoardingSSITemplates">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingSSITemplate">
               <MappingFragment StoreEntitySet="onBoardingSSITemplate">
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
                 <ScalarProperty Name="UltimateBeneficiaryAccountName" ColumnName="UltimateBeneficiaryAccountName" />
                 <ScalarProperty Name="MessageType" ColumnName="MessageType" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />

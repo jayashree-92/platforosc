@@ -112,7 +112,12 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                      "mData": "UpdatedAt",
                      "sTitle": "Last Modified",
                      "mRender": renderDotNetDateAndTime
-                 }
+                   },
+                   {
+                       "mData": "ApprovedBy", "sTitle": "Approved By", "mRender": function (data) {
+                           return humanizeEmail(data == null ? "" : data);
+                       }
+                   }
                ],
                "createdRow": function (row, data) {
                    switch (data.SSITemplateStatus) {
