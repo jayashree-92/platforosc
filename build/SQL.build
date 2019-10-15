@@ -6,7 +6,7 @@
   <property name="Change.sql" value="${root.dir.sql}\ChangeScripts\"/>
   <property name="Data.sql" value="${root.dir.sql}\DataScripts\"/>  
   
-  <!-- <property name="DMAStagingTypes" value = "..\HMSQLDBProject\HM_DMA\DMAStagingTypes.sql"/> -->
+   <property name="DMAStagingTypes" value = "${root.dir.sql}\DMAStagingTypes.sql"/>
   - <target name="executeSQLScripts">
     <echo message="Executing Scripts to DB :${sql.DB} in server: ${sql.svr}"/>
     <echo message="* Executing ${Change.sql}"/>
@@ -23,7 +23,7 @@
       <do>
         <echo message="* Executing ${path::get-file-name(sql.script)}"/>
         <sql
-        connstring="Provider=SQLOLEDB;Data Source=${sql.svr}; Initial Catalog=${sql.DB};User ID=${sql.user};Password=${sql.pwd}"
+        connstring="Provider=SQLNCLI11.1;Data Source=${sql.svr}; Initial Catalog=${sql.DB};User ID=${sql.user};Password=${sql.pwd}"
         transaction="true"
         delimiter="GO"
         delimstyle="Line"
@@ -42,7 +42,7 @@
       <do>
         <echo message="* Executing ${path::get-file-name(SP.script)}"/>        
 		<sql
-        connstring="Provider=SQLOLEDB;Data Source=${sql.svr}; Initial Catalog=${sql.DB};User ID=${sql.user};Password=${sql.pwd}"
+        connstring="Provider=SQLNCLI11.1;Data Source=${sql.svr}; Initial Catalog=${sql.DB};User ID=${sql.user};Password=${sql.pwd}"
         transaction="true"
         delimiter="GO"
         delimstyle="Line"
@@ -52,6 +52,7 @@
 		<!-- <exec program="sqlcmd" commandline="-S ${sql.svr} -U ${sql.user} -P ${sql.pwd} -d ${sql.DB} -i ${SP.script}" failonerror="true"/> -->
       </do>
     </foreach> 
+	
 	<!-- <echo message="* Executing DMAStagingTypes"/> -->
     <!-- <sql -->
         <!-- connstring="Provider=SQLOLEDB;Data Source=${sql.svr}; Initial Catalog=${sql.DB};User ID=${sql.user};Password=${sql.pwd}" -->
