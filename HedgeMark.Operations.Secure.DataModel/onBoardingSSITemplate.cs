@@ -59,6 +59,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public bool IsDeleted { get; set; }
         public string MessageType { get; set; }
         public string UltimateBeneficiaryAccountName { get; set; }
+        public string ApprovedBy { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }

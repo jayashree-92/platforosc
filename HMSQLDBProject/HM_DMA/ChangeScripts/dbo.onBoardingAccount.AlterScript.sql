@@ -1,0 +1,12 @@
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'ApprovedBy' and TABLE_NAME = 'onBoardingAccount')
+BEGIN
+ ALTER TABLE [dbo].[onBoardingAccount] ADD ApprovedBy VARCHAR(100) NULL
+END
+GO
+
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'ApprovedBy' and TABLE_NAME = 'onBoardingSSITemplate')
+BEGIN
+ ALTER TABLE [dbo].[onBoardingSSITemplate] ADD ApprovedBy VARCHAR(100) NULL
+END
+GO
+

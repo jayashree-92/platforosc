@@ -247,6 +247,7 @@ namespace HMOSecureWeb.Controllers
                     x.Notes,
                     x.UpdatedAt,
                     x.UpdatedBy,
+                    x.ApprovedBy,
                     x.BeneficiaryType,
                     x.BeneficiaryBICorABA,
                     x.BeneficiaryBankName,
@@ -498,6 +499,7 @@ namespace HMOSecureWeb.Controllers
                     x.Notes,
                     x.UpdatedAt,
                     x.UpdatedBy,
+                    x.ApprovedBy,
                     x.BeneficiaryType,
                     x.BeneficiaryBICorABA,
                     x.BeneficiaryBankName,
@@ -815,6 +817,7 @@ namespace HMOSecureWeb.Controllers
                     template.CreatedBy,
                     template.UpdatedAt,
                     template.UpdatedBy,
+                    template.ApprovedBy,
                     template.BeneficiaryType,
                     template.BeneficiaryBICorABA,
                     template.BeneficiaryBankName,
@@ -1076,6 +1079,7 @@ namespace HMOSecureWeb.Controllers
                 row["CreatedDate"] = account.CreatedAt + "";
                 row["UpdatedBy"] = account.UpdatedBy;
                 row["ModifiedDate"] = account.UpdatedAt + "";
+                row["ApprovedBy"] = account.ApprovedBy;
                 switch (account.onBoardingAccountStatus)
                 {
                     case "Approved":
@@ -1155,6 +1159,7 @@ namespace HMOSecureWeb.Controllers
                 row["CreatedDate"] = template.CreatedAt + "";
                 row["UpdatedBy"] = template.UpdatedBy;
                 row["ModifiedDate"] = template.UpdatedAt + "";
+                row["ApprovedBy"] = template.ApprovedBy;
                 switch (template.SSITemplateStatus)
                 {
                     case "Approved":
@@ -1372,6 +1377,7 @@ namespace HMOSecureWeb.Controllers
                         accountDetail.StatusComments = account["Comments"];
                         accountDetail.CreatedBy = account["CreatedBy"];
                         accountDetail.UpdatedBy = account["UpdatedBy"];
+                        accountDetail.ApprovedBy = account["ApprovedBy"];
                         accountDetail.CreatedAt = !string.IsNullOrWhiteSpace(account["CreatedDate"])
                             ? DateTime.Parse(account["CreatedDate"])
                             : DateTime.Now;
@@ -1444,6 +1450,7 @@ namespace HMOSecureWeb.Controllers
             row["CreatedDate"] = String.Empty;
             row["UpdatedBy"] = String.Empty;
             row["ModifiedDate"] = String.Empty;
+            row["ApprovedBy"] = string.Empty;
 
             var accountListRows = new List<Row> { row };
 
@@ -1567,6 +1574,7 @@ namespace HMOSecureWeb.Controllers
                         }
                         templateDetail.CreatedBy = template["CreatedBy"];
                         templateDetail.UpdatedBy = template["UpdatedBy"];
+                        templateDetail.ApprovedBy = template["ApprovedBy"];
                         templateDetail.CreatedAt = !string.IsNullOrWhiteSpace(template["CreatedDate"])
                             ? DateTime.Parse(template["CreatedDate"])
                             : DateTime.Now;
@@ -1624,7 +1632,7 @@ namespace HMOSecureWeb.Controllers
             row["CreatedDate"] = string.Empty;
             row["UpdatedBy"] = string.Empty;
             row["ModifiedDate"] = string.Empty;
-
+            row["ApprovedBy"] = string.Empty;
             var templateListRows = new List<Row> { row };
 
             //File name and path
