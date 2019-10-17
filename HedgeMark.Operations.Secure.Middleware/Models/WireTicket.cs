@@ -81,7 +81,7 @@ namespace HMOSecureMiddleware.Models
         public onBoardingAccount SendingAccount { get; set; }
         public onBoardingAccount ReceivingAccount { get; set; }
         public onBoardingSSITemplate SSITemplate { get; set; }
-        public string FundName { get; set; }
+        public string PreferredFundName { get; set; }
         public String ShortFundName { get; set; }
         public string ReceivingAccountName
         {

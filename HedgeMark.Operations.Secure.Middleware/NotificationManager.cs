@@ -35,7 +35,7 @@ namespace HMOSecureMiddleware
             //message.Append(wireTicket.IsBookTransfer
             //    ? wireTicket.FundName
             //    : wireTicket.Agreement.AgreementShortName);
-            message.Append(wireTicket.FundName);
+            message.Append(wireTicket.PreferredFundName);
 
             message.AppendFormat(" is {0}", wireStatus);
 

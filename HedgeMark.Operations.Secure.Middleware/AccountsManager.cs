@@ -753,7 +753,7 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingAccountBICorABAs.ToList();
+                return context.onBoardingAccountBICorABAs.AsNoTracking().Where(s => !s.IsDeleted).ToList();
             }
         }
 
