@@ -219,6 +219,17 @@ namespace HMOSecureWeb
 
         void Session_End(object sender, EventArgs e)
         {
+
+            var auditData = new hmsUserAuditLog
+            {
+                Action = "Logged Out",
+                Module = "Account",
+                Log = "Signed out from Secure System",
+                CreatedAt = DateTime.Now,
+                UserName = User.Identity.Name
+            };
+            AuditManager.LogAudit(auditData);
+
             //var userName = Session["userName"] != null ? Session["userName"].ToString() : string.Empty;
 
             //string userNameOut;
@@ -236,15 +247,6 @@ namespace HMOSecureWeb
             //var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") { Expires = DateTime.Now.AddYears(-1) };
             //Response.Cookies.Add(cookie);
 
-            var auditData = new hmsUserAuditLog
-            {
-                Action = "Logged Out",
-                Module = "Account",
-                Log = "Signed out from Secure System",
-                CreatedAt = DateTime.Now,
-                UserName = User.Identity.Name
-            };
-            AuditManager.LogAudit(auditData);
 
         }
 
