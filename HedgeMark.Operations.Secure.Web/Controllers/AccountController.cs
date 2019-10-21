@@ -53,6 +53,17 @@ namespace HMOSecureWeb.Controllers
         {
             Logger.Debug("Logging off- Clearing Cookie and Authentication with name:" + FormsAuthentication.FormsCookieName);
 
+
+            var auditData = new hmsUserAuditLog
+            {
+                Action = "Logged Out",
+                Module = "Account",
+                Log = "Signed out from Secure System",
+                CreatedAt = DateTime.Now,
+                UserName = User.Identity.Name
+            };
+            AuditManager.LogAudit(auditData);
+
             //Clear Site-Minder Cookie
             ClearSiteMinder();
 
@@ -65,10 +76,11 @@ namespace HMOSecureWeb.Controllers
             FormsAuthentication.SignOut();
 
             // Clear authentication cookie.
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") { Expires = DateTime.Now.AddYears(-1) };
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") { Expires = DateTime.Now.AddYears(-30) };
             Response.Cookies.Add(cookie);
 
-            ViewBag.ReasonString = reasonStr;
+            ViewBag.ReasonString = reasonStr ?? string.Empty;
+
             return View();
         }
 
@@ -76,19 +88,21 @@ namespace HMOSecureWeb.Controllers
         {
             if (Request.Cookies["SMSESSION"] != null)
             {
-                var smCookie = new HttpCookie("SMSESSION", "NO")
-                {
-                    Domain = Utility.Util.Domain,
-                    Expires = DateTime.Now.AddDays(-1)
-                };
-                Response.Cookies.Add(smCookie);
+                //var smCookie = new HttpCookie("SMSESSION", "NO")
+                //{
+                //    Domain = Utility.Util.Domain,
+                //    Expires = DateTime.Now.AddDays(-30),
+                //    Value = "LOGGEDOFF"
+                //};
+                //Response.Cookies.Add(smCookie);
+                Response.Cookies.Clear();
             }
             if (Request.Cookies["SMUSRMSG"] != null)
             {
                 var smUsrCookie = new HttpCookie("SMUSRMSG", "NO")
                 {
                     Domain = Utility.Util.Domain,
-                    Expires = DateTime.Now.AddDays(-1)
+                    Expires = DateTime.Now.AddDays(-30)
                 };
                 Response.Cookies.Add(smUsrCookie);
             }
