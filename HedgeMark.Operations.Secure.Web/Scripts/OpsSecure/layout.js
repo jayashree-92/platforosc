@@ -135,4 +135,7 @@ $(document).ready(function () {
     }
     //__________________________________________________________________________________//
 
+    $("#btnLogOff").on("click", function () {
+        window.location.href = "/Account/LogOff";
+    });
 });

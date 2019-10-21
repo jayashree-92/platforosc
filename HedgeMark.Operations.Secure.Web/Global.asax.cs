@@ -79,7 +79,7 @@ namespace HMOSecureWeb
             if (IsAlreadyAuthenticated())
                 return;
 
-            Logger.Debug("New User Logging into the system - so Checking for Authorization");
+            //Logger.Debug("New User Logging into the system - so Checking for Authorization");
 
             var smUserId = HttpContext.Current.Request.Headers[SiteMinderHeaderToken];
             var roles = new List<string>();
