@@ -221,8 +221,8 @@ namespace HMOSecureWeb
         {
             //var userName = Session["userName"] != null ? Session["userName"].ToString() : string.Empty;
 
-            string userNameOut;
-            ActiveUsers.TryTake(out userNameOut);
+            //string userNameOut;
+            //ActiveUsers.TryTake(out userNameOut);
 
             // Delete the user details from Session.
             Session.Abandon();
@@ -232,9 +232,9 @@ namespace HMOSecureWeb
             // Delete the authentication ticket and sign out.
             //FormsAuthentication.SignOut();
 
-            // Clear authentication cookie.
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") { Expires = DateTime.Now.AddYears(-1) };
-            Response.Cookies.Add(cookie);
+            //// Clear authentication cookie.
+            //var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") { Expires = DateTime.Now.AddYears(-1) };
+            //Response.Cookies.Add(cookie);
 
             var auditData = new hmsUserAuditLog
             {
