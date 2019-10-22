@@ -168,7 +168,7 @@ namespace HMOSecureMiddleware
                     account.onBoardingAccountStatus = accountStatus;
                     account.StatusComments = comments;
                     account.UpdatedAt = DateTime.Now;
-                    account.UpdatedBy = userName;
+                    account.UpdatedBy = accountStatus == "Approved" ? account.UpdatedBy : userName;
                     account.ApprovedBy = accountStatus == "Approved" ? userName : null;
                     context.SaveChanges();
 
@@ -643,7 +643,7 @@ namespace HMOSecureMiddleware
                     ssiTemplate.SSITemplateStatus = ssiTemplateStatus;
                     ssiTemplate.StatusComments = comments;
                     ssiTemplate.UpdatedAt = DateTime.Now;
-                    ssiTemplate.UpdatedBy = userName;
+                    ssiTemplate.UpdatedBy = ssiTemplateStatus == "Approved" ? ssiTemplate.UpdatedBy : userName;
                     ssiTemplate.ApprovedBy = ssiTemplateStatus == "Approved" ? userName : null;
                     context.SaveChanges();
 

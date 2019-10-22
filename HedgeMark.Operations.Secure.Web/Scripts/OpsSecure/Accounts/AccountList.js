@@ -477,7 +477,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.AgreementTypeId = rowElement.AgreementTypeId;
         $scope.AccountStatus = rowElement.onBoardingAccountStatus;
 
-        if (rowElement.onBoardingAccountStatus == pendingStatus && rowElement.UpdatedBy != $("#userName").val()) {
+        if (rowElement.onBoardingAccountStatus == pendingStatus && row.CreatedBy != $("#userName").val() && rowElement.UpdatedBy != $("#userName").val()) {
             $("#btnAccountStatusButtons button[id='approve']").removeClass("disabled");
         }
         if (rowElement.onBoardingAccountStatus == createdStatus) {
