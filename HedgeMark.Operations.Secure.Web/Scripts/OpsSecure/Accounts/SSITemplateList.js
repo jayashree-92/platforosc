@@ -188,11 +188,21 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         $(row2).addClass("info");
 
 
-        $("#btnSSITemplateStatusButtons button").removeClass("disabled");
+        $("#btnSSITemplateStatusButtons button").addClass("disabled");
         var rowElement = ssiTemplateTable.row(this).data();
         $scope.onBoardingSSITemplateId = rowElement.onBoardingSSITemplateId;
         $scope.listSSITemplateStatus = rowElement.SSITemplateStatus;
         $scope.updatedBy = rowElement.UpdatedBy;
+
+        if (rowElement.onBoardingAccountStatus == pendingStatus && rowElement.CreatedBy != $("#userName").val() && rowElement.UpdatedBy != $("#userName").val()) {
+            $("#btnSSITemplateStatusButtons button[id='approve']").removeClass("disabled");
+        }
+        if (rowElement.onBoardingAccountStatus == createdStatus) {
+            $("#btnSSITemplateStatusButtons button[id='requestForApproval']").removeClass("disabled");
+        }
+        if (rowElement.onBoardingAccountStatus != createdStatus) {
+            $("#btnSSITemplateStatusButtons button[id='revert']").removeClass("disabled");
+        }
         $scope.$apply();
         // $("#btnSSITemplateStatusButtons button").addClass("disabled");
         $("#btnEdit").prop("disabled", false);
@@ -227,9 +237,13 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         }
 
         var confirmationMsg = "Are you sure you want to " + ((statusAction === "Request for Approval") ? "<b>request</b> for approval of" : "<b>" + (statusAction == "Revert" ? "save changes or sending approval for" : statusAction) + "</b>") + " the selected SSI Template?";
+        $("#btnSaveCommentAgreements").show();
+        $("#btnSendApproval").hide();
         if (statusAction == "Request for Approval") {
-            $("#btnSaveCommentAgreements").addClass("btn-warning").removeClass("btn-success").removeClass("btn-primary");
-            $("#btnSaveCommentAgreements").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
+            $("#btnSaveCommentAgreements").hide();
+            $("#btnSendApproval").show();
+            //$("#btnSaveCommentAgreements").addClass("btn-warning").removeClass("btn-success").removeClass("btn-primary");
+            //$("#btnSaveCommentAgreements").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
         } else if (statusAction == "Approve") {
             $("#btnSaveCommentAgreements").removeClass("btn-warning").addClass("btn-success").removeClass("btn-primary");
             $("#btnSaveCommentAgreements").html('<i class="glyphicon glyphicon-ok"></i>&nbsp;Approve');
