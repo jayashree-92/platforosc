@@ -778,11 +778,12 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.fnUpdateSSITemplateStatus = function (ssiStatus, statusAction) {
 
         if (!$scope.ssiTemplateForm.$valid) {
+            if($scope.ssiTemplate.$error.required == undefined)
             notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
             return;
         }
 
-        $scope.SSITemplateStatus = ssiStatus;
+        $scope.SSITemplateStatus = angular.copy(ssiStatus);
 
         if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.ssiTemplateDocuments.length == 0) {
             notifyWarning("Please upload document to approve ssi template");
@@ -813,7 +814,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 notifySuccess("SSI template " + $scope.SSITemplateStatus.toLowerCase() + " successfully");
                 //notifySuccess("SSI template saved successfully");
                 if ($scope.SSITemplateStatus == "Saved As Draft") {
-                    $scope.ssiTemplate.SSITemplateStatus = $scope.SSITemplateStatus;
+                    $scope.ssiTemplate.SSITemplateStatus = angular.copy($scope.SSITemplateStatus);
                 } else {
                     var searchText = getUrlParameter("searchText");
                     searchText = (searchText == undefined || searchText == 'undefined') ? "" : searchText;

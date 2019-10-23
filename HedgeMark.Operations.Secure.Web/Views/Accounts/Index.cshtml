@@ -593,12 +593,12 @@
                                 @if (User.IsWireUser())
                                 {
                                     <button type="submit" id="btnSave" ng-click="fnSaveAccount(accountForm.$valid,'Created')" title="Save the account" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Account</button>
-                                    <button id="btnPendingApproval" ng-click="fnSaveAccount(accountForm.$valid,'Pending Approval')" title="Pending approval the account" class="btn btn-warning btn-sm" style="display: none;"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
+                                    <button id="btnPendingApproval" ng-click="fnUpdateAccountStatus('Pending Approval','Request for Approval')" title="Pending approval the account" class="btn btn-warning btn-sm" style="display: none;"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
                                     if (User.IsWireApprover())
                                     {
-                                        <button id="btnApprove" ng-click="fnSaveAccount(accountForm.$valid,'Approved')" title="Approve the account" ng-if="isAuthorizedUserToApprove" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
+                                        <button id="btnApprove" ng-click="fnUpdateAccountStatus('Approved','Approve')" title="Approve the account" ng-if="isAuthorizedUserToApprove" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
                                     }
-                                    <button id="btnRevert" ng-click="fnSaveAccount(accountForm.$valid,'Created')" title="Revert the account" class="btn btn-info btn-sm" style="display: none;"><i class="glyphicon glyphicon-repeat"></i>&nbsp;Revert</button>
+                                    <button id="btnRevert" ng-click="fnUpdateAccountStatus('Created','Revert')" title="Revert the account" class="btn btn-info btn-sm" style="display: none;"><i class="glyphicon glyphicon-repeat"></i>&nbsp;Revert</button>
                                 }
                                 <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Dismiss</a>
                             </div>

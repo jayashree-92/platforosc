@@ -477,7 +477,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.AgreementTypeId = rowElement.AgreementTypeId;
         $scope.AccountStatus = rowElement.onBoardingAccountStatus;
 
-        if (rowElement.onBoardingAccountStatus == pendingStatus && row.CreatedBy != $("#userName").val() && rowElement.UpdatedBy != $("#userName").val()) {
+        if (rowElement.onBoardingAccountStatus == pendingStatus && rowElement.CreatedBy != $("#userName").val() && rowElement.UpdatedBy != $("#userName").val()) {
             $("#btnAccountStatusButtons button[id='approve']").removeClass("disabled");
         }
         if (rowElement.onBoardingAccountStatus == createdStatus) {
@@ -633,6 +633,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnSaveAccount = function (isValid, status) {
 
         if (!isValid) {
+            if ($scope.accountForm.$error.required == undefined)
             notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
             return;
         }
@@ -1489,7 +1490,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#spnAgrCurrentStatus").parent().removeClass("text-default").removeClass("text-warning").addClass("text-success");
                 $("#btnPendingApproval").hide();
                 //$("#btnApprove").hide();
-                $("#btnRevert").hide();
+                $("#btnRevert").show();
                 $("#btnSave").hide();
             } else {
                 $("#btnPendingApproval").hide();
