@@ -726,7 +726,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         $scope.ssiTemplate.UltimateBeneficiaryBankName = $("#ultimateBankName").val();
         $scope.ssiTemplate.UltimateBeneficiaryBankAddress = $("#ultimateBankAddress").val();
 
-        $http.post("/Accounts/AddSsiTemplate", { ssiTemplate: $scope.ssiTemplate, accountType: $scope.accountType, broker: $scope.broker }).then(function (response) {
+        return $http.post("/Accounts/AddSsiTemplate", { ssiTemplate: $scope.ssiTemplate, accountType: $scope.accountType, broker: $scope.broker }).then(function (response) {
 
             //window.location.href = "/OnBoarding/SSITemplateList";
             ssiTemplateId = response.data;
@@ -741,8 +741,15 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.SaveSSITemplate = function (isValid) {
 
         if (!isValid) {
-            if ($scope.ssiTemplate.$error.required == undefined)
-            notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
+            if ($scope.ssiTemplateForm.$error.required == undefined)
+                notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
+            else {
+                var message = "";
+                angular.forEach($scope.ssiTemplateForm.$error.required, function (ele, ind) {
+                    message += ele.$name + ", ";
+                });
+                notifyError("Please fill in the required fields " + message.substring(0, message.length - 2));
+            }
             return;
         }
 
@@ -779,8 +786,15 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.fnUpdateSSITemplateStatus = function (ssiStatus, statusAction) {
 
         if (!$scope.ssiTemplateForm.$valid) {
-            if($scope.ssiTemplate.$error.required == undefined)
+            if ($scope.ssiTemplateForm.$error.required == undefined)
             notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
+            else {
+                var message = "";
+                angular.forEach($scope.ssiTemplateForm.$error.required, function (ele, ind) {
+                    message += ele.$name + ", ";
+                });
+                notifyError("Please fill in the required fields " + message.substring(0, message.length - 2));
+            }
             return;
         }
 
@@ -803,14 +817,14 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $("#btnSaveCommentAgreements").html("<i class=\"glyphicon glyphicon-floppy-save\"></i>&nbsp;Save Changes");
             $("#btnSendApproval").show();
         }
-
+        
         $("#pMsg").html(confirmationMsg);
         $("#updateSSITemplateModal").modal("show");
     }
 
     $scope.fnSaveSSITemplateStatus = function () {
 
-        $q.all([$scope.fnUpdateSSITemplate(false)]).then(
+        $q.all([$scope.fnUpdateSSITemplate(false)]).then(function () {
             $http.post("/Accounts/UpdateSsiTemplateStatus", { ssiTemplateStatus: $scope.SSITemplateStatus, ssiTemplateId: $scope.ssiTemplateId, comments: $("#ssiTemplateCommentTextArea").val().trim() }).then(function () {
                 notifySuccess("SSI template " + $scope.SSITemplateStatus.toLowerCase() + " successfully");
                 //notifySuccess("SSI template saved successfully");
@@ -821,7 +835,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     searchText = (searchText == undefined || searchText == 'undefined') ? "" : searchText;
                     window.location.href = "/Accounts/SSITemplateList?searchText=" + searchText;
                 }
-            }));
+            })
+        });
 
         $("#updateSSITemplateModal").modal("hide");
 

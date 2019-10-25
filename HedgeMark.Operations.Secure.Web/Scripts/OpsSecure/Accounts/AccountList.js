@@ -635,6 +635,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if (!isValid) {
             if ($scope.accountForm.$error.required == undefined)
             notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
+            else {
+                var message = "";
+                angular.forEach($scope.accountForm.$error.required, function (ele, ind) {
+                    message += ele.$name + ", ";
+                });
+                notifyError("Please fill in the required fields " + message.substring(0, message.length - 2));
+            }
             return;
         }
 

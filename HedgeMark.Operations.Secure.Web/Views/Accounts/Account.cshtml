@@ -24,7 +24,7 @@
                                             <label class="control-label">Entity Type <span style="color: red">  *</span></label>
                                         </span>
                                         <span class="col-sm-8 col-md-8 col-lg-8 liAgreement">
-                                            <input type="text" class="form-control" id="liAccountType" required />
+                                            <input name="Account Type" type="text" class="form-control" id="liAccountType" required />
                                         </span>
                                     </span>
                                     <span class="row">
@@ -32,7 +32,7 @@
                                             <label class="control-label">Fund <span style="color: red">  *</span></label>
                                         </span>
                                         <span class="col-sm-8 col-md-8 col-lg-8 liAgreement">
-                                            <input type="text" class="form-control" id="liFund" required />
+                                            <input name="Fund" type="text" class="form-control" id="liFund" required />
                                         </span>
                                     </span>
                                     <span class="row" style="display: none;" id="spnBroker">
@@ -40,7 +40,7 @@
                                             <label class="control-label">Broker <span style="color: red">  *</span></label>
                                         </span>
                                         <span class="col-sm-8 col-md-8 col-lg-8 liAgreement">
-                                            <input type="text" class="form-control" id="liBroker" required />
+                                            <input name="Broker" type="text" class="form-control" id="liBroker" required />
                                         </span>
                                     </span>
                                     <span class="row" style="display: none;" id="spnAgreement">
@@ -48,7 +48,7 @@
                                             <label class="control-label">Agreement <span style="color: red">  *</span></label>
                                         </span>
                                         <span class="col-sm-8 col-md-8 col-lg-8 liAgreement">
-                                            <input type="text" class="form-control" id="liAgreement" required />
+                                            <input name="Agreement" type="text" class="form-control" id="liAgreement" required />
                                         </span>
                                     </span>
                                     <br />
@@ -177,7 +177,7 @@
                                                 <label class="control-label">Swift Group <span style="color: red">  *</span></label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input type="text" class="form-control" ng-model="accountDetail.SwiftGroup" id="liSwiftGroup{{$index}}" ng-change="fnOnSwiftGroupChange(accountDetail.SwiftGroup, $index)" required />
+                                                <input type="text" name="Swift Group" class="form-control" ng-model="accountDetail.SwiftGroup" id="liSwiftGroup{{$index}}" ng-change="fnOnSwiftGroupChange(accountDetail.SwiftGroup, $index)" required />
                                             </div>
                                             <div class="col-sm-8 col-md-3 col-lg-3">
                                                 <a class="btn btn-sm btn-info" ng-click="fnAddSwiftGroupModal($index)" title="Add Swift Group"><i class="glyphicon glyphicon-plus"></i></a>
@@ -254,10 +254,10 @@
                                                 </div>
                                                 <div class="col-sm-8 col-md-7 col-lg-7">
                                                     <div class="col-sm-8 col-md-5 col-lg-5" style="padding-left: 0;">
-                                                        <input type="time" name="cashSweepTime" ng-model="accountDetail.CashSweepTime" class="form-control" id="cashSweepTime{{$index}}" ng-required="accountDetail.CashSweep == 'Yes'" style="padding: 2px;" />
+                                                        <input type="time" name="Cash Sweep Time" ng-model="accountDetail.CashSweepTime" class="form-control" id="cashSweepTime{{$index}}" ng-required="accountDetail.CashSweep == 'Yes'" style="padding: 2px;" />
                                                     </div>
                                                     <div class="col-sm-8 col-md-4 col-lg-4 AdjustDropDownWidth" style="padding-left: 0; padding-right: 20px;">
-                                                        <input ng-model="accountDetail.CashSweepTimeZone" class="form-control control-label" id="cashSweepTimeZone{{$index}}" ng-required="accountDetail.CashSweep == 'Yes'">
+                                                        <input name="Cash Sweep Time Zone" ng-model="accountDetail.CashSweepTimeZone" class="form-control control-label" id="cashSweepTimeZone{{$index}}" ng-required="accountDetail.CashSweep == 'Yes'">
                                                     </div>
                                                 </div>
                                             </div>
@@ -378,7 +378,7 @@
                                             <input type="text" ng-model="accountDetail.BeneficiaryAccountNumber" class="form-control control-label" placeholder="Account Number" />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input name="accountnumber" type="text" class="form-control" ng-model="accountDetail.AccountNumber" placeholder="Account Number" required />
+                                            <input name="Account Number" type="text" class="form-control" ng-model="accountDetail.AccountNumber" placeholder="Account Number" required />
                                         </div>
                                     </div>
                                     <p></p>
@@ -391,7 +391,7 @@
                                             <input type="text" class="form-control" ng-model="accountDetail.IntermediaryType" id="liIntermediaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.IntermediaryType,'Intermediary',$index)" />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft paddingright AdjustDropDownWidth">
-                                            <input type="text" class="form-control" ng-model="accountDetail.BeneficiaryType" id="liBeneficiaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.BeneficiaryType,'Beneficiary',$index)" required />
+                                            <input name="Beneficiary Type" type="text" class="form-control" ng-model="accountDetail.BeneficiaryType" id="liBeneficiaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.BeneficiaryType,'Beneficiary',$index)" required />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft paddingright AdjustDropDownWidth">
                                             <input type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryType" id="liUltimateBeneficiaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.UltimateBeneficiaryType,'UltimateBeneficiary',$index)" />
@@ -408,7 +408,7 @@
                                             <input type="text" ng-model="accountDetail.IntermediaryBICorABA" class="form-control control-label" id="liIntermediaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.IntermediaryBICorABA,'Intermediary',$index)" />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft paddingright AdjustDropDownWidth">
-                                            <input type="text" ng-model="accountDetail.BeneficiaryBICorABA" class="form-control control-label" id="liBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.BeneficiaryBICorABA,'Beneficiary',$index)" required />
+                                            <input name="Beneficiary ABA/BIC" type="text" ng-model="accountDetail.BeneficiaryBICorABA" class="form-control control-label" id="liBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.BeneficiaryBICorABA,'Beneficiary',$index)" required />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft paddingright AdjustDropDownWidth" id="divUltimateBeneficiaryBICorABA{{$index}}">
                                             <input type="text" ng-model="accountDetail.UltimateBeneficiaryBICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.UltimateBeneficiaryBICorABA,'UltimateBeneficiary',$index)" />

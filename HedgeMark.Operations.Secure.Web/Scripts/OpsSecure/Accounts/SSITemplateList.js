@@ -194,13 +194,13 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         $scope.listSSITemplateStatus = rowElement.SSITemplateStatus;
         $scope.updatedBy = rowElement.UpdatedBy;
 
-        if (rowElement.onBoardingAccountStatus == pendingStatus && rowElement.CreatedBy != $("#userName").val() && rowElement.UpdatedBy != $("#userName").val()) {
+        if (rowElement.SSITemplateStatus == pendingStatus && rowElement.CreatedBy != $("#userName").val() && rowElement.UpdatedBy != $("#userName").val()) {
             $("#btnSSITemplateStatusButtons button[id='approve']").removeClass("disabled");
         }
-        if (rowElement.onBoardingAccountStatus == createdStatus) {
+        if (rowElement.SSITemplateStatus == createdStatus) {
             $("#btnSSITemplateStatusButtons button[id='requestForApproval']").removeClass("disabled");
         }
-        if (rowElement.onBoardingAccountStatus != createdStatus) {
+        if (rowElement.SSITemplateStatus != createdStatus) {
             $("#btnSSITemplateStatusButtons button[id='revert']").removeClass("disabled");
         }
         $scope.$apply();

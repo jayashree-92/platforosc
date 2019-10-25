@@ -119,9 +119,10 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field50K GetField50K(WireTicket wire)
         {
             var isFFCAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber);
+            var isFFCNameAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCName);
 
             var f50K = new Field50K().setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber)
-                .setNameAndAddressLine1(wire.SendingAccount.UltimateBeneficiaryAccountName)
+                .setNameAndAddressLine1(isFFCNameAvailable ? wire.SendingAccount.FFCName : wire.SendingAccount.UltimateBeneficiaryAccountName)
                 .setNameAndAddressLine2(wire.SendingAccount.UltimateBeneficiaryBankAddress);
 
             return f50K;

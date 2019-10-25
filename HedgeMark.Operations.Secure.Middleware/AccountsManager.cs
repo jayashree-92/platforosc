@@ -636,7 +636,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                var ssiTemplate = context.onBoardingSSITemplates.FirstOrDefault(template => template.onBoardingSSITemplateId == ssiTemplateId);
+                var ssiTemplate = context.onBoardingSSITemplates.AsNoTracking().FirstOrDefault(template => template.onBoardingSSITemplateId == ssiTemplateId);
                 if (ssiTemplate != null)
                 {
                     var existingStatus = ssiTemplate.SSITemplateStatus;
@@ -645,6 +645,7 @@ namespace HMOSecureMiddleware
                     ssiTemplate.UpdatedAt = DateTime.Now;
                     ssiTemplate.UpdatedBy = ssiTemplateStatus == "Approved" ? ssiTemplate.UpdatedBy : userName;
                     ssiTemplate.ApprovedBy = ssiTemplateStatus == "Approved" ? userName : null;
+                    context.onBoardingSSITemplates.AddOrUpdate(ssiTemplate);
                     context.SaveChanges();
 
                     //var auditLog = new onBoardingUserAuditLog
