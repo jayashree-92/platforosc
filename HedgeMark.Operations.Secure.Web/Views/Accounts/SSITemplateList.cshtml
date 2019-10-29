@@ -28,7 +28,7 @@
                     {
                         <button id="approve" title="Approve" class="btn btn-success btn-sm" ng-click="fnUpdateSSITemplateStatus('Approved','Approve')" ng-disabled="!(listSSITemplateStatus == 'Pending Approval') || updatedBy=='@User.Identity.Name'"><i class="glyphicon glyphicon-ok"></i> Approve</button>
                     }
-                    <button id="revert" title="Revert" class="btn btn-info btn-sm" ng-click="fnUpdateSSITemplateStatus('Saved As Draft','Revert')" ng-disabled="(listSSITemplateStatus == 'Saved As Draft')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</button>
+                    <button id="revert" title="Revert" class="btn btn-info btn-sm" ng-click="fnUpdateSSITemplateStatus('Saved As Draft','Revert')" ng-disabled="(listSSITemplateStatus == 'Saved As Draft')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Save and Update</button>
                 </div>
             }
             <div class="pull-right btn-group">

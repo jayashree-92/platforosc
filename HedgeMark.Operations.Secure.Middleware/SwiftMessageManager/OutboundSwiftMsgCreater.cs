@@ -162,9 +162,13 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field52D GetField52D(WireTicket wire)
         {
+            var isFFCAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber);
+            var isFFCNameAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCName);
+
             var f52D = new Field52D()
-                .setAccount(wire.SendingAccount.AccountNumber)
-                .setNameAndAddressLine1(wire.SendingAccount.UltimateBeneficiaryAccountName);
+                .setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber)
+                .setNameAndAddressLine1(isFFCNameAvailable ? wire.SendingAccount.FFCName : wire.SendingAccount.UltimateBeneficiaryAccountName);
+            
             return f52D;
         }
 

@@ -49,7 +49,7 @@
                                 <button id="approve" title="Approve" class="btn btn-success btn-sm disabled" ng-click="fnUpdateAccountStatus('Approved','Approve')"><i class="glyphicon glyphicon-ok"></i> Approve</button>
                             }
 
-                            <button id="revert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="fnUpdateAccountStatus('Created','Revert')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</button>
+                            <button id="revert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="fnUpdateAccountStatus('Created','Revert')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Save and Update</button>
                         </div>
                     }
                     <div class="pull-right btn-group">
@@ -598,7 +598,7 @@
                                     {
                                         <button id="btnApprove" ng-click="fnUpdateAccountStatus('Approved','Approve')" title="Approve the account" ng-if="isAuthorizedUserToApprove" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
                                     }
-                                    <button id="btnRevert" ng-click="fnUpdateAccountStatus('Created','Revert')" title="Revert the account" class="btn btn-info btn-sm" style="display: none;"><i class="glyphicon glyphicon-repeat"></i>&nbsp;Revert</button>
+                                    <button id="btnRevert" ng-click="fnUpdateAccountStatus('Created','Revert')" title="Revert the account" class="btn btn-info btn-sm" style="display: none;"><i class="glyphicon glyphicon-repeat"></i>&nbsp;Save and Update</button>
                                 }
                                 <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Dismiss</a>
                             </div>
