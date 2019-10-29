@@ -6,7 +6,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.broker = "";
     $scope.accountType = "";
     $scope.currency = "";
-    $scope.serviceProviders = "";
+    $scope.serviceProvider = "";
     $scope.reasonDetail = "";
     $scope.BrokerTemplateTypeId = 2;
     $scope.SSITemplateTypeData = [{ id: "Broker", text: "Broker" }, { id: "Fee/Expense Payment", text: "Fee/Expense Payment" }];
@@ -340,12 +340,12 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         if ($scope.SSITemplateType == "Broker")
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
         else
-            $scope.ssiTemplate.TemplateName = $scope.serviceProviders + " - " + $scope.currency + " - " + $scope.reasonDetail;
+            $scope.ssiTemplate.TemplateName = $scope.serviceProvider + " - " + $scope.currency + " - " + $scope.reasonDetail;
     });
 
     $("#liServiceProvider").change(function () {
-        $scope.serviceProviders = $(this).val();
-        $scope.ssiTemplate.TemplateName = $scope.serviceProviders + " - " + $scope.currency + " - " + $scope.reasonDetail;
+        $scope.serviceProvider = $(this).val();
+        $scope.ssiTemplate.TemplateName = $scope.serviceProvider + " - " + $scope.currency + " - " + $scope.reasonDetail;
         $scope.fnPaymentOrReceiptReason();
     });
 
@@ -354,7 +354,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         if ($scope.SSITemplateType == "Broker")
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
         else
-            $scope.ssiTemplate.TemplateName = $scope.serviceProviders + " - " + $scope.currency + " - " + $scope.reasonDetail;
+            $scope.ssiTemplate.TemplateName = $scope.serviceProvider + " - " + $scope.currency + " - " + $scope.reasonDetail;
         if ($scope.reasonDetail == "Other") {
             $("#otherReason").show();
         } else
@@ -369,7 +369,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
             // $scope.fnPaymentOrReceiptReason();
             $scope.ssiTemplate = response.data.OnBoardingSsiTemplate;
-            $scope.serviceProviders = $scope.ssiTemplate.ServiceProvider;
+            $scope.serviceProvider = $scope.ssiTemplate.ServiceProvider;
             $scope.reasonDetail = $scope.ssiTemplate.ReasonDetail;
             // $scope.SSITemplateType = $scope.ssiTemplate.SSITemplateType;
             $scope.ssiTemplate.CreatedAt = moment($scope.ssiTemplate.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
