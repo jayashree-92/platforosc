@@ -1229,12 +1229,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                                 closeOnSelect: false
                             });
                             $scope.isReceivingAccountEnabled = true;
-                            if ($scope.WireTicket.hmsWireId > 0) {
-                                if ($scope.wireTicketObj.IsBookTransfer)
-                                    angular.element("#liReceivingBookAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
-                                else
-                                    angular.element("#liReceivingAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
-                            }
+                            if ($scope.WireTicket.hmsWireId > 0) 
+                              angular.element("#liReceivingAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
                         });
                     }
                     else {
@@ -1249,6 +1245,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                             closeOnSelect: false
                         });
                         $scope.isReceivingAccountEnabled = true;
+                        if ($scope.WireTicket.hmsWireId > 0) 
+                         angular.element("#liReceivingBookAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
                     }
                 }
                 //var account = $filter('filter')(angular.copy($scope.sendingAccounts), function (account) {
