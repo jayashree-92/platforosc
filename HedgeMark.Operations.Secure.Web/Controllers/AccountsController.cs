@@ -60,7 +60,7 @@ namespace HMOSecureWeb.Controllers
                 accounts = accounts.Select(choice => new
                 {
                     id = choice.onBoardingAccountId,
-                    text = string.Join("{0}|{1}", choice.AccountNumber, choice.FFCNumber ?? string.Empty), 
+                    text = string.Join("{0}|{1}", choice.AccountNumber, choice.FFCNumber ?? string.Empty),
                 }).OrderBy(x => x.text).ToList(),
                 custodyAccounts = custodyAccounts.Select(choice => new
                 {
@@ -1385,7 +1385,9 @@ namespace HMOSecureWeb.Controllers
                             ? DateTime.Parse(account["ModifiedDate"])
                             : DateTime.Now;
                         accountDetail.IsDeleted = false;
-                        AccountManager.AddAccount(accountDetail, UserName);
+
+                        if (accountDetail.dmaFundOnBoardId != 0)
+                            AccountManager.AddAccount(accountDetail, UserName);
                     }
                 }
 
