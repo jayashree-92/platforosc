@@ -626,6 +626,9 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             var liAccountDescriptionsValue = "#liAccountDescriptions" + key;
             value.Description = $(liAccountDescriptionsValue).val();
 
+            var liModuleValue = "#liAccountModule_" + key;
+            value.AccountModule = $(liModuleValue).val();
+
             var liAccountPurposeValue = "#liAccountPurpose" + key;
             value.AccountPurpose = $(liAccountPurposeValue).val();
 
@@ -1163,6 +1166,9 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
 
             var descriptionValue = "#liAccountDescriptions" + key;
             $(descriptionValue).val(value.Description);
+
+            var moduleValue = "#liAccountModule_" + key;
+            $(moduleValue).val(value.AccountModule);
 
             //var contactNameValue = "#contactName" + key;
             //$(contactNameValue).val(value.ContactName);

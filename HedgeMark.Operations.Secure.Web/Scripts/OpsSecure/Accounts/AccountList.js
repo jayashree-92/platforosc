@@ -1504,7 +1504,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#btnPendingApproval").hide();
                 //$("#btnApprove").hide();
                 $("#btnRevert").hide();
-                $("#btnSave").hide();
+                $("#btnSave").show();
             }
             $scope.fnSsiTemplateMap(value.onBoardingAccountId, $scope.FundId, key, value.Currency);
             attachment(key);
