@@ -1500,6 +1500,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#btnRevert").show();
                 $("#btnSave").hide();
             } else {
+                $("#spnAgrCurrentStatus").html(value.onBoardingAccountStatus);
                 $("#btnPendingApproval").hide();
                 //$("#btnApprove").hide();
                 $("#btnRevert").hide();
