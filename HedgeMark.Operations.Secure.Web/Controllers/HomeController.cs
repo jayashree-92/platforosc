@@ -678,15 +678,6 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public void AddWirePurpose(hmsWirePurposeLkup purpose)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.hmsWirePurposeLkups.Add(purpose);
-                context.SaveChanges();
-            }
-        }
-
         public JsonResult GetNewWireDetails()
         {
             var wireTicket = new WireTicket()
