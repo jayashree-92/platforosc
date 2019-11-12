@@ -109,11 +109,13 @@ namespace HMOSecureWeb.Controllers
 
         public FileContentResult DownloadAndDeleteFile(FileInfo fileInfo, string downloadName = "")
         {
-            if (!System.IO.File.Exists(fileInfo.FullName))
+            var validFileFullName = FileSystemManager.GetValidatedConfigPath(fileInfo.FullName);
+
+            if (!System.IO.File.Exists(validFileFullName))
                 return null;
 
             FileContentResult fileContent;
-            using (var fileStream = System.IO.File.Open(fileInfo.FullName, FileMode.Open, FileAccess.Read))
+            using (var fileStream = System.IO.File.Open(validFileFullName, FileMode.Open, FileAccess.Read))
             {
                 var returnBytes = new byte[fileStream.Length];
                 fileStream.Read(returnBytes, 0, returnBytes.Length);
@@ -129,10 +131,12 @@ namespace HMOSecureWeb.Controllers
 
         protected FileResult DownloadFile(FileInfo fileInfo, string downloadName)
         {
-            if (!System.IO.File.Exists(fileInfo.FullName))
+            var validFileFullName = FileSystemManager.GetValidatedConfigPath(fileInfo.FullName);
+
+            if (!System.IO.File.Exists(validFileFullName))
                 return null;
 
-            using (var fileStream = System.IO.File.Open(fileInfo.FullName, FileMode.Open, FileAccess.Read))
+            using (var fileStream = System.IO.File.Open(validFileFullName, FileMode.Open, FileAccess.Read))
             {
                 var returnBytes = new byte[fileStream.Length];
                 fileStream.Read(returnBytes, 0, returnBytes.Length);

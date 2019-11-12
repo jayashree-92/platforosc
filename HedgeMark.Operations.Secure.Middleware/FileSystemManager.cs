@@ -31,7 +31,7 @@ namespace HMOSecureMiddleware
         {
             get
             {
-                var configPath = ConfigurationManagerWrapper.StringSetting("OpsSecureUploadFilesPath", string.Format(@"{0}SecureUploads\", OpsSecureRootDirectory));
+                var configPath = string.Format(@"{0}\SecureUploads\", OpsSecureRootDirectory);
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -40,7 +40,7 @@ namespace HMOSecureMiddleware
         {
             get
             {
-                var configPath = ConfigurationManagerWrapper.StringSetting("OpsSecureAccountsFileUploads", string.Format(@"{0}AccountsFileUploads\", OpsSecureRootDirectory));
+                var configPath = string.Format(@"{0}\AccountsFileUploads\", OpsSecureRootDirectory);
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -49,7 +49,7 @@ namespace HMOSecureMiddleware
         {
             get
             {
-                var configPath = ConfigurationManagerWrapper.StringSetting("OpsSecureSSITemplateFileUploads", string.Format(@"{0}SSITemplateFileUploads\", OpsSecureRootDirectory));
+                var configPath = string.Format(@"{0}\SSITemplateFileUploads\", OpsSecureRootDirectory);
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -115,7 +115,7 @@ namespace HMOSecureMiddleware
         }
 
 
-        private static string GetValidatedConfigPath(string configPath)
+        public static string GetValidatedConfigPath(string configPath)
         {
             if (configPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
                 throw new FileLoadException(string.Format("Invalid file path : {0}", configPath));
