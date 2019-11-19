@@ -86,10 +86,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     {
                         "sTitle": "Uploaded At",
                         "mData": "CreatedAt",
-                        "type": "dotnet-date",
-                        "mRender": function (tdata) {
-                            return "<div title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + (moment(tdata).fromNow()) + "</div>";
-                        }
+                        "mRender": renderDotNetDateAndTime
                     }
                 ],
                 "deferRender": false,
