@@ -1203,8 +1203,13 @@ namespace HMOSecureWeb.Controllers
                 if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
                     Directory.CreateDirectory(fileInfo.Directory.FullName);
 
-                if (System.IO.File.Exists(fileInfo.FullName))
-                    System.IO.File.Delete(fileInfo.FullName);
+                var newFileName = file.FileName;
+                var splitFileNames = file.FileName.Split('.');
+                var ind = 1;
+                while(System.IO.File.Exists(fileInfo.FullName)) {
+                     newFileName = string.Format("{0}_{1}.{2}", splitFileNames[0], ind++, splitFileNames[1]);
+                    fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", DateTime.Now.ToString("yyyy-MM-dd"), newFileName));
+                }
 
                 file.SaveAs(fileInfo.FullName);
 
@@ -1393,7 +1398,7 @@ namespace HMOSecureWeb.Controllers
                             AccountManager.AddAccount(accountDetail, UserName);
                     }
                 }
-                bulkUploadLogs.Add(new hmsBulkUploadLog() { FileName = file.FileName, IsFundAccountLog = true, UserName = UserName });
+                bulkUploadLogs.Add(new hmsBulkUploadLog() { FileName = newFileName, IsFundAccountLog = true, UserName = UserName });
             }
 
             AuditManager.AddBulkUploadLogs(bulkUploadLogs);
@@ -1489,8 +1494,14 @@ namespace HMOSecureWeb.Controllers
                 if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
                     Directory.CreateDirectory(fileInfo.Directory.FullName);
 
-                if (System.IO.File.Exists(fileInfo.FullName))
-                    System.IO.File.Delete(fileInfo.FullName);
+                var newFileName = file.FileName;
+                var splitFileNames = file.FileName.Split('.');
+                var ind = 1;
+                while (System.IO.File.Exists(fileInfo.FullName))
+                {
+                    newFileName = string.Format("{0}_{1}.{2}", splitFileNames[0], ind++, splitFileNames[1]);
+                    fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", DateTime.Now.ToString("yyyy-MM-dd"), newFileName));
+                }
 
                 file.SaveAs(fileInfo.FullName);
                 var templateListRows = new Parser().ParseAsRows(fileInfo, "List of SSI Template", string.Empty, true);
@@ -1590,7 +1601,7 @@ namespace HMOSecureWeb.Controllers
                         //templateDetail.TemplateName = template["SSI Template Type"] == "Broker" ? template["Broker"] + " - " + template["Account Type"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : (!string.IsNullOrWhiteSpace(template["SSI Template Type"]) ? template["Service Provider"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : template["Template Name"]);
                         AccountManager.AddSsiTemplate(templateDetail, UserName);
                     }
-                    bulkUploadLogs.Add(new hmsBulkUploadLog() { FileName = file.FileName, IsFundAccountLog = false, UserName = UserName });
+                    bulkUploadLogs.Add(new hmsBulkUploadLog() { FileName = newFileName, IsFundAccountLog = false, UserName = UserName });
                 }
 
                 AuditManager.AddBulkUploadLogs(bulkUploadLogs);
