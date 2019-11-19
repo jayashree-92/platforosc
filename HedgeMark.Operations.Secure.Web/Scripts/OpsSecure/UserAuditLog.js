@@ -107,7 +107,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
 
                 "fnRowCallback": function (nRow, aData) {
                     if (aData.FileName != "") {
-                        $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/Audit/DownloadLogFile?fileName=" + aData.FileName + "&isFundAccountLog=" + aData.IsFundAccountLog  + "'>" + aData.FileName + "</a>");
+                        $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/Audit/DownloadLogFile?fileName=" + aData.FileName + "&isFundAccountLog=" + aData.IsFundAccountLog + "&createdDate=" + moment(aData.CreatedAt).format('YYYY-MM-DD') + "'>" + aData.FileName + "</a>");
                     }
                 },
                 "oLanguage": {

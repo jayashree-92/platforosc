@@ -1198,7 +1198,7 @@ namespace HMOSecureWeb.Controllers
                 if (file == null)
                     throw new Exception("unable to retrive file information");
 
-                var fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", file.FileName));
+                var fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", DateTime.Now.ToString("yyyy-MM-dd"), file.FileName));
 
                 if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
                     Directory.CreateDirectory(fileInfo.Directory.FullName);
@@ -1484,7 +1484,7 @@ namespace HMOSecureWeb.Controllers
                 if (file == null)
                     throw new Exception("unable to retrive file information");
 
-                var fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureBulkFileUploads, "SSITemplate", file.FileName));
+                var fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "SSITemplate", DateTime.Now.ToString("yyyy-MM-dd"), file.FileName));
 
                 if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
                     Directory.CreateDirectory(fileInfo.Directory.FullName);

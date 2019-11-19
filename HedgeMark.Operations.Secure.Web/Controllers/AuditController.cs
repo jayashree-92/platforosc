@@ -44,9 +44,9 @@ namespace HMOSecureWeb.Controllers
             return Json(auditLogs);
         }
 
-        public FileResult DownloadLogFile(string fileName, bool isFundAccountLog)
+        public FileResult DownloadLogFile(string fileName, bool isFundAccountLog, DateTime createdDate)
         {
-            var file = new FileInfo(string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureBulkFileUploads, isFundAccountLog ? "FundAccount" : "SSITemplate", fileName));
+            var file = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, isFundAccountLog ? "FundAccount" : "SSITemplate", createdDate.ToString("yyyy-MM-dd"), fileName));
             return DownloadFile(file, fileName);
         }
 
