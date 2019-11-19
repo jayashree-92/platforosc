@@ -46,3 +46,15 @@ BEGIN
 INSERT INTO onBoardingWirePortalCutoff (CashInstruction, Country, Currency, CutOffTime, DaystoWire) VALUES ('BBH WorldView', 'USA', 'USD', '17:30:00', 0)
 END
 GO
+
+IF NOT EXISTS (SELECT 8 FROM onBoardingCashInstruction WHERE CashInstruction = 'BNP Neolink')
+BEGIN
+INSERT INTO onBoardingCashInstruction (CashInstruction) VALUES ('BNP Neolink')
+END
+GO
+
+IF NOT EXISTS (SELECT 8 FROM onBoardingCashInstruction WHERE CashInstruction = 'BBH WorldView')
+BEGIN
+INSERT INTO onBoardingCashInstruction (CashInstruction) VALUES ('BBH WorldView')
+END
+GO
