@@ -116,6 +116,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     "sInfo": "Showing _START_ to _END_ of _TOTAL_ Files"
                 }
             });
+            $("html, body").animate({ scrollTop: $(containerId).offset().top }, "slow");
             $("#btnGetAuditLogs").button("reset");
         }, function (error) {
             $("#btnGetAuditLogs").button("reset");
