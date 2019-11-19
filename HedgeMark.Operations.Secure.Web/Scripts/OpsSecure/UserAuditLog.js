@@ -33,12 +33,95 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
         }
     }, dateRangeOnChangeCallback);
 
+    $scope.isUserAuditsActive = true;
+    $scope.isFundAccountLog = true;
+
+    $scope.fnGetAuditLogs = function () {
+        if ($scope.isUserAuditsActive)
+            $scope.fnGetUserAuditLogs();
+        else
+            $scope.getBulkUploadLogs();
+
+    }
+
+    $scope.navigateAuditTabs = function (isUserAudit) {
+        if ($scope.isUserAuditsActive != isUserAudit) {
+            $scope.isUserAuditsActive = isUserAudit;
+            $scope.fnGetAuditLogs();
+        }
+    }
+
+    $scope.navigateUploadTabs = function (isFundAccount) {
+        if ($scope.isFundAccountLog != isFundAccount) {
+            $scope.isFundAccountLog = isFundAccount;
+            $scope.getBulkUploadLogs();
+        }
+    }
 
     $scope.fnGetUserAuditLogs = function () {
         var moduleText = "All";
         //if ($("#liModules").select2("data") != null && $("#liModules").select2("data").text != null)
         //    moduleText = $("#liModules").select2("data").text;
         createAuditLogsTable($scope.RangeStartDate, $scope.RangeEndDate, moduleText);
+    }
+
+    $scope.getBulkUploadLogs = function () {
+        $("#btnGetAuditLogs").button("loading");
+        $http.get("/Audit/GetBulkUploadLogs?startDate=" + moment($scope.RangeStartDate).format("YYYY-MM-DD") + "&endDate=" + moment($scope.RangeEndDate).format("YYYY-MM-DD") + "&isFundAccountLog=" + $scope.isFundAccountLog).then(function (response) {
+            var containerId = $scope.isFundAccountLog ? "#tblAccountUploadDetails" : "#tblSSITemplateUploadDetails";
+            fnDestroyDataTable(containerId);
+            var auditLogTable = $(containerId).DataTable({
+                "bDestroy": true,
+                // responsive: true,
+                aaData: response.data,
+                "aoColumns": [
+                    {
+                        "sTitle": "File Name",
+                        "mData": "FileName"
+                    },
+                    {
+                        "sTitle": "Uploaded By",
+                        "mData": "UserName",
+                    },
+                    {
+                        "sTitle": "Uploaded At",
+                        "mData": "CreatedAt",
+                        "type": "dotnet-date",
+                        "mRender": function (tdata) {
+                            return "<div title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + (moment(tdata).fromNow()) + "</div>";
+                        }
+                    }
+                ],
+                "deferRender": false,
+                "bScrollCollapse": true,
+                //scroller: true,
+                //sortable: false,
+                "searching": false,
+                "bInfo": false,
+                "sDom": "ift",
+                //pagination: true,
+                "sScrollX": "100%",
+                "sScrollXInner": "100%",
+                "scrollY": 350,
+                "order": [[2, "desc"]],
+
+                "fnRowCallback": function (nRow, aData) {
+                    if (aData.FileName != "") {
+                        $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/Audit/DownloadLogFile?fileName=" + aData.FileName + "&isFundAccountLog=" + aData.IsFundAccountLog  + "'>" + aData.FileName + "</a>");
+                    }
+                },
+                "oLanguage": {
+                    "sSearch": "",
+                    "sEmptyTable": "No logs available.",
+                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ Files"
+                }
+            });
+            $("#btnGetAuditLogs").button("reset");
+        }, function (error) {
+            $("#btnGetAuditLogs").button("reset");
+            notifyError(error.Message);
+        });
+        
     }
 
 

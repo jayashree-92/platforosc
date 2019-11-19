@@ -1190,6 +1190,7 @@ namespace HMOSecureWeb.Controllers
             var accountBicorAba = AccountManager.GetAllAccountBicorAba();
             var swiftgroups = AccountManager.GetAllSwiftGroup();
             var agreements = agreementList.ToDictionary(s => s.dmaAgreementOnBoardingId, s => s.dmaAgreementType.AgreementType + " - " + s.onboardingFund.LegalFundName + " - " + (s.dmaCounterPartyOnBoarding != null ? s.dmaCounterPartyOnBoarding.CounterpartyShortCode : string.Empty));
+            var bulkUploadLogs = new List<hmsBulkUploadLog>();
             for (var i = 0; i < Request.Files.Count; i++)
             {
                 var file = Request.Files[i];
@@ -1197,17 +1198,17 @@ namespace HMOSecureWeb.Controllers
                 if (file == null)
                     throw new Exception("unable to retrive file information");
 
-                var fileinfo = new FileInfo(FileSystemManager.UploadTemporaryFilesPath + file.FileName);
+                var fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", file.FileName));
 
-                if (fileinfo.Directory != null && !Directory.Exists(fileinfo.Directory.FullName))
-                    Directory.CreateDirectory(fileinfo.Directory.FullName);
+                if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
+                    Directory.CreateDirectory(fileInfo.Directory.FullName);
 
-                if (System.IO.File.Exists(fileinfo.FullName))
-                    System.IO.File.Delete(fileinfo.FullName);
+                if (System.IO.File.Exists(fileInfo.FullName))
+                    System.IO.File.Delete(fileInfo.FullName);
 
-                file.SaveAs(fileinfo.FullName);
+                file.SaveAs(fileInfo.FullName);
 
-                var accountRows = new Parser().ParseAsRows(fileinfo, "List of Accounts", string.Empty, true);
+                var accountRows = new Parser().ParseAsRows(fileInfo, "List of Accounts", string.Empty, true);
 
                 if (accountRows.Count > 0)
                 {
@@ -1392,10 +1393,10 @@ namespace HMOSecureWeb.Controllers
                             AccountManager.AddAccount(accountDetail, UserName);
                     }
                 }
-
-                if (System.IO.File.Exists(fileinfo.FullName))
-                    System.IO.File.Delete(fileinfo.FullName);
+                bulkUploadLogs.Add(new hmsBulkUploadLog() { FileName = file.FileName, IsFundAccountLog = true, UserName = UserName });
             }
+
+            AuditManager.AddBulkUploadLogs(bulkUploadLogs);
             return "";
         }
 
@@ -1475,7 +1476,7 @@ namespace HMOSecureWeb.Controllers
             var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
             var accountBicorAba = AccountManager.GetAllAccountBicorAba();
 
-
+            var bulkUploadLogs = new List<hmsBulkUploadLog>();
             for (var i = 0; i < Request.Files.Count; i++)
             {
                 var file = Request.Files[i];
@@ -1483,16 +1484,16 @@ namespace HMOSecureWeb.Controllers
                 if (file == null)
                     throw new Exception("unable to retrive file information");
 
-                var fileinfo = new FileInfo(FileSystemManager.UploadTemporaryFilesPath + file.FileName);
+                var fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureBulkFileUploads, "SSITemplate", file.FileName));
 
-                if (fileinfo.Directory != null && !Directory.Exists(fileinfo.Directory.FullName))
-                    Directory.CreateDirectory(fileinfo.Directory.FullName);
+                if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
+                    Directory.CreateDirectory(fileInfo.Directory.FullName);
 
-                if (System.IO.File.Exists(fileinfo.FullName))
-                    System.IO.File.Delete(fileinfo.FullName);
+                if (System.IO.File.Exists(fileInfo.FullName))
+                    System.IO.File.Delete(fileInfo.FullName);
 
-                file.SaveAs(fileinfo.FullName);
-                var templateListRows = new Parser().ParseAsRows(fileinfo, "List of SSI Template", string.Empty, true);
+                file.SaveAs(fileInfo.FullName);
+                var templateListRows = new Parser().ParseAsRows(fileInfo, "List of SSI Template", string.Empty, true);
 
                 if (templateListRows.Count > 0)
                 {
@@ -1589,10 +1590,10 @@ namespace HMOSecureWeb.Controllers
                         //templateDetail.TemplateName = template["SSI Template Type"] == "Broker" ? template["Broker"] + " - " + template["Account Type"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : (!string.IsNullOrWhiteSpace(template["SSI Template Type"]) ? template["Service Provider"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : template["Template Name"]);
                         AccountManager.AddSsiTemplate(templateDetail, UserName);
                     }
+                    bulkUploadLogs.Add(new hmsBulkUploadLog() { FileName = file.FileName, IsFundAccountLog = false, UserName = UserName });
                 }
 
-                if (System.IO.File.Exists(fileinfo.FullName))
-                    System.IO.File.Delete(fileinfo.FullName);
+                AuditManager.AddBulkUploadLogs(bulkUploadLogs);
             }
             return "";
         }

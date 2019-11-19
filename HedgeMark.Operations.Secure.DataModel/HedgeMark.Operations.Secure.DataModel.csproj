@@ -115,6 +115,9 @@
     <Compile Include="hLoginRegistration.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsBulkUploadLog.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsMQLog.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

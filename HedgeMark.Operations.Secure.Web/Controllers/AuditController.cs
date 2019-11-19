@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using HMOSecureMiddleware.Util;
+using System.IO;
 
 namespace HMOSecureWeb.Controllers
 {
@@ -33,8 +34,20 @@ namespace HMOSecureWeb.Controllers
         {
             var auditLogs = AuditManager.GetConsolidatedLogs(startDate, endDate, module);
             auditLogs.ForEach(log => log.UserName = log.UserName.HumanizeEmail());
-           
             return Json(auditLogs);
+        }
+
+        public JsonResult GetBulkUploadLogs(DateTime startDate, DateTime endDate, bool isFundAccountLog)
+        {
+            var auditLogs = AuditManager.GetBulkUploadLogs(isFundAccountLog, startDate, endDate);
+            auditLogs.ForEach(log => log.UserName = log.UserName.HumanizeEmail());
+            return Json(auditLogs);
+        }
+
+        public FileResult DownloadLogFile(string fileName, bool isFundAccountLog)
+        {
+            var file = new FileInfo(string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureBulkFileUploads, isFundAccountLog ? "FundAccount" : "SSITemplate", fileName));
+            return DownloadFile(file, fileName);
         }
 
         public ActionResult GetAuditLogsModule()

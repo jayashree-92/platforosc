@@ -61,6 +61,7 @@
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireCollateralAssociation" Width="1.5" PointX="16.25" PointY="11.125" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsBulkUploadLog" Width="1.5" PointX="13.375" PointY="12.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

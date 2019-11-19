@@ -5,6 +5,16 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="OperationsSecureModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="hmsBulkUploadLog">
+          <Key>
+            <PropertyRef Name="hmsBulkUploadLogId" />
+          </Key>
+          <Property Name="hmsBulkUploadLogId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FileName" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="IsFundAccountLog" Type="bit" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsMQLogs">
           <Key>
             <PropertyRef Name="hmsMQLogsId" />
@@ -725,6 +735,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="OperationsSecureModelStoreContainer">
+          <EntitySet Name="hmsBulkUploadLog" EntityType="Self.hmsBulkUploadLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsMQLogs" EntityType="Self.hmsMQLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsNotificationStaging" EntityType="Self.hmsNotificationStaging" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
@@ -981,6 +992,7 @@
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireCollateralAssociation" EntitySet="hmsWireCollateralAssociations" />
           </AssociationSet>
+          <EntitySet Name="hmsBulkUploadLogs" EntityType="OperationsSecureModel.hmsBulkUploadLog" />
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -1747,6 +1759,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="hmsBulkUploadLog">
+          <Key>
+            <PropertyRef Name="hmsBulkUploadLogId" />
+          </Key>
+          <Property Name="hmsBulkUploadLogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IsFundAccountLog" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2226,6 +2248,17 @@
                 <ScalarProperty Name="dmaCashCollateralId" ColumnName="dmaCashCollateralId" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
                 <ScalarProperty Name="hmsWireCollateralAssociationId" ColumnName="hmsWireCollateralAssociationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsBulkUploadLogs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsBulkUploadLog">
+              <MappingFragment StoreEntitySet="hmsBulkUploadLog">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="IsFundAccountLog" ColumnName="IsFundAccountLog" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="hmsBulkUploadLogId" ColumnName="hmsBulkUploadLogId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

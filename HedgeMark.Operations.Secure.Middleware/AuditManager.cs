@@ -119,5 +119,25 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static List<hmsBulkUploadLog> GetBulkUploadLogs(bool isFundAccountLog, DateTime startDate, DateTime endDate)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                endDate = endDate.AddDays(1);
+                return context.hmsBulkUploadLogs.Where(x => x.IsFundAccountLog == isFundAccountLog && x.CreatedAt >= startDate && x.CreatedAt <= endDate).OrderByDescending(s => s.CreatedAt).ToList();
+            }
+        }
+
+        public static void AddBulkUploadLogs(List<hmsBulkUploadLog> bulkUploadLogs)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                bulkUploadLogs.ForEach(s => s.CreatedAt = DateTime.Now);
+                context.hmsBulkUploadLogs.AddRange(bulkUploadLogs);
+                context.SaveChanges();
+            }
+
+        }
+
     }
 }

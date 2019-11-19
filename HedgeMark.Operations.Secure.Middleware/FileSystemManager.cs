@@ -54,6 +54,15 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static string OpsSecureBulkFileUploads
+        {
+            get
+            {
+                var configPath = string.Format(@"{0}\BulkFileUploads\", OpsSecureRootDirectory);
+                return GetValidatedConfigPath(configPath);
+            }
+        }
+
         public static string DefaultTimeZone
         {
             get
