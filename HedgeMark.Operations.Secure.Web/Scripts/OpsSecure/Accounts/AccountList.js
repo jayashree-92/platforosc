@@ -631,69 +631,71 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     //Save Account
     $scope.fnSaveAccount = function (isValid, status) {
-
-        if (!isValid) {
-            if ($scope.accountForm.$error.required == undefined)
-            notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
-            else {
-                var message = "";
-                angular.forEach($scope.accountForm.$error.required, function (ele, ind) {
-                    message += ele.$name + ", ";
-                });
-                notifyError("Please fill in the required fields " + message.substring(0, message.length - 2));
+        $timeout(function () {
+            if (!isValid) {
+                if ($scope.accountForm.$error.required == undefined)
+                    notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
+                else {
+                    var message = "";
+                    angular.forEach($scope.accountForm.$error.required, function (ele, ind) {
+                        message += ele.$name + ", ";
+                    });
+                    notifyError("Please fill in the required fields " + message.substring(0, message.length - 2));
+                }
+                return;
             }
-            return;
-        }
 
-        var isAccountNameEmpty = false;
 
-        $.each($scope.onBoardingAccountDetails, function (key, value) {
+            var isAccountNameEmpty = false;
 
-            var liAccountDescriptionsValue = "#liAccountDescriptions" + key;
-            value.Description = $(liAccountDescriptionsValue).val();
+            $.each($scope.onBoardingAccountDetails, function (key, value) {
 
-            if ($("#cashSweep" + key).val() == "Yes") {
-                var cashSweepTimeValue = "#cashSweepTime" + key;
-                value.CashSweepTime = $(cashSweepTimeValue).val();
-                var cashSweepTimeZoneValue = "#cashSweepTimeZone" + key;
-                value.CashSweepTimeZone = $(cashSweepTimeZoneValue).val();
+                var liAccountDescriptionsValue = "#liAccountDescriptions" + key;
+                value.Description = $(liAccountDescriptionsValue).val();
+
+                if ($("#cashSweep" + key).val() == "Yes") {
+                    var cashSweepTimeValue = "#cashSweepTime" + key;
+                    value.CashSweepTime = $(cashSweepTimeValue).val();
+                    var cashSweepTimeZoneValue = "#cashSweepTimeZone" + key;
+                    value.CashSweepTimeZone = $(cashSweepTimeZoneValue).val();
+                }
+                else {
+                    value.CashSweepTime = "";
+                    value.CashSweepTimeZone = "";
+                }
+                value.CutoffTime = $("#cutOffTime" + key).val();
+                value.SendersBIC = $("#txtSender" + key).val();
+
+                value.BeneficiaryBankName = $("#beneficiaryBankName" + key).val();
+                value.BeneficiaryBankAddress = $("#beneficiaryBankAddress" + key).val();
+
+                value.IntermediaryBankName = $("#intermediaryBankName" + key).val();
+                value.IntermediaryBankAddress = $("#intermediaryBankAddress" + key).val();
+
+                value.UltimateBeneficiaryBankName = $("#ultimateBankName" + key).val();
+                value.UltimateBeneficiaryBankAddress = $("#ultimateBankAddress" + key).val();
+                if (status != "" && status != undefined)
+                    value.onBoardingAccountStatus = status;
+                if (value.UltimateBeneficiaryType == "Account Name" &&
+                    (value.UltimateBeneficiaryAccountName == null || value.UltimateBeneficiaryAccountName == ""))
+                    isAccountNameEmpty = true;
+            });
+
+            if (isAccountNameEmpty) {
+                notifyWarning("Account name field is required");
+                return;
             }
-            else {
-                value.CashSweepTime = "";
-                value.CashSweepTimeZone = "";
-            }
-            value.CutoffTime = $("#cutOffTime" + key).val();
-            value.SendersBIC = $("#txtSender" + key).val();
 
-            value.BeneficiaryBankName = $("#beneficiaryBankName" + key).val();
-            value.BeneficiaryBankAddress = $("#beneficiaryBankAddress" + key).val();
+            $http.post("/Accounts/AddAccounts", { onBoardingAccounts: $scope.onBoardingAccountDetails }).then(function () {
+                notifySuccess("Account Saved successfully");
 
-            value.IntermediaryBankName = $("#intermediaryBankName" + key).val();
-            value.IntermediaryBankAddress = $("#intermediaryBankAddress" + key).val();
+                $scope.onBoardingAccountDetails = [];
+                $scope.accountDetail = {};
+                $scope.fnGetAccounts();
 
-            value.UltimateBeneficiaryBankName = $("#ultimateBankName" + key).val();
-            value.UltimateBeneficiaryBankAddress = $("#ultimateBankAddress" + key).val();
-            if (status != "" && status != undefined)
-                value.onBoardingAccountStatus = status;
-            if (value.UltimateBeneficiaryType == "Account Name" &&
-                (value.UltimateBeneficiaryAccountName == null || value.UltimateBeneficiaryAccountName == ""))
-                isAccountNameEmpty = true;
-        });
-
-        if (isAccountNameEmpty) {
-            notifyWarning("Account name field is required");
-            return;
-        }
-
-        $http.post("/Accounts/AddAccounts", { onBoardingAccounts: $scope.onBoardingAccountDetails }).then(function () {
-            notifySuccess("Account Saved successfully");
-
-            $scope.onBoardingAccountDetails = [];
-            $scope.accountDetail = {};
-            $scope.fnGetAccounts();
-
-            $("#accountModal").modal("hide");
-        });
+                $("#accountModal").modal("hide");
+            });
+        }, 100);
     }
 
     $scope.fnGetAccounts();
@@ -781,125 +783,106 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetBankDetails = function (biCorAbaValue, id, index) {
-
-        var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
-        switch (id) {
-            case "Beneficiary":
-                if (accountBicorAba != undefined) {
-                    $("#beneficiaryBankName" + index).val(accountBicorAba.BankName);
-                    $("#beneficiaryBankAddress" + index).val(accountBicorAba.BankAddress);
-
-                }
-                else {
-                    $("#beneficiaryBankName" + index).val("");
-                    $("#beneficiaryBankAddress" + index).val("");
-                }
-                break;
-            case "Intermediary":
-                if (accountBicorAba != undefined) {
-                    $("#intermediaryBankName" + index).val(accountBicorAba.BankName);
-                    $("#intermediaryBankAddress" + index).val(accountBicorAba.BankAddress);
-
-                }
-                else {
-                    $("#intermediaryBankName" + index).val("");
-                    $("#intermediaryBankAddress" + index).val("");
-                }
-                break;
-            case "UltimateBeneficiary":
-                if (accountBicorAba != undefined) {
-                    $("#ultimateBankName" + index).val(accountBicorAba.BankName);
-                    $("#ultimateBankAddress" + index).val(accountBicorAba.BankAddress);
-
-                }
-                else {
-                    $("#ultimateBankName" + index).val("");
-                    $("#ultimateBankAddress" + index).val("");
-                }
-                break;
-        }
+        $timeout(function () {
+            var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
+            switch (id) {
+                case "Beneficiary":
+                    $scope.onBoardingAccountDetails[index].BeneficiaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[index].BeneficiaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    break;
+                case "Intermediary":
+                    $scope.onBoardingAccountDetails[index].IntermediaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[index].IntermediaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    break;
+                case "UltimateBeneficiary":
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    break;
+            }
+        }, 100);
 
     }
 
     $scope.fnToggleBeneficiaryBICorABA = function (item, id, index) {
         //var $toggleBtn = $("#" + id + index);
+        $timeout(function () {
 
+            var isAba = (item == "ABA");
 
-        var isAba = (item == "ABA");
+            switch (id) {
+                case "Beneficiary":
+                    //$scope.onBoardingAccountDetails[index].IsBeneficiaryABA = $("#btnBeneficiaryBICorABA" + index).prop("checked");
 
-        switch (id) {
-            case "Beneficiary":
-                //$scope.onBoardingAccountDetails[index].IsBeneficiaryABA = $("#btnBeneficiaryBICorABA" + index).prop("checked");
+                    var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
+                    var accountBicorAbaData = [];
+                    $.each(accountBicorAba, function (key, value) {
+                        accountBicorAbaData.push({ "id": value.BICorABA, "text": value.BICorABA });
+                    });
 
-                var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
-                var accountBicorAbaData = [];
-                $.each(accountBicorAba, function (key, value) {
-                    accountBicorAbaData.push({ "id": value.BICorABA, "text": value.BICorABA });
-                });
+                    accountBicorAbaData = $filter('orderBy')(accountBicorAbaData, 'text');
 
-                accountBicorAbaData = $filter('orderBy')(accountBicorAbaData, 'text');
+                    if ($("#liBeneficiaryBICorABA" + index).data("select2")) {
+                        $("#liBeneficiaryBICorABA" + index).select2("destroy");
+                    }
+                    $("#liBeneficiaryBICorABA" + index).select2({
+                        placeholder: "Select a beneficiary BIC or ABA",
+                        allowClear: true,
+                        data: accountBicorAbaData
+                    });
+                    break;
+                case "Intermediary":
+                    //$scope.onBoardingAccountDetails[index].IsIntermediaryABA = $("#btnIntermediaryBICorABA" + index).prop("checked");
+                    var intermediaryBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
+                    var intermediaryBicorAbaData = [];
+                    $.each(intermediaryBicorAba, function (key, value) {
+                        intermediaryBicorAbaData.push({ "id": value.BICorABA, "text": value.BICorABA });
+                    });
 
-                if ($("#liBeneficiaryBICorABA" + index).data("select2")) {
-                    $("#liBeneficiaryBICorABA" + index).select2("destroy");
-                }
-                $("#liBeneficiaryBICorABA" + index).select2({
-                    placeholder: "Select a beneficiary BIC or ABA",
-                    allowClear: true,
-                    data: accountBicorAbaData
-                });
-                break;
-            case "Intermediary":
-                //$scope.onBoardingAccountDetails[index].IsIntermediaryABA = $("#btnIntermediaryBICorABA" + index).prop("checked");
-                var intermediaryBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
-                var intermediaryBicorAbaData = [];
-                $.each(intermediaryBicorAba, function (key, value) {
-                    intermediaryBicorAbaData.push({ "id": value.BICorABA, "text": value.BICorABA });
-                });
+                    intermediaryBicorAbaData = $filter('orderBy')(intermediaryBicorAbaData, 'text');
 
-                intermediaryBicorAbaData = $filter('orderBy')(intermediaryBicorAbaData, 'text');
+                    if ($("#liIntermediaryBICorABA" + index).data("select2")) {
+                        $("#liIntermediaryBICorABA" + index).select2("destroy");
+                    }
+                    $("#liIntermediaryBICorABA" + index).select2({
+                        placeholder: "Select a intermediary BIC or ABA",
+                        allowClear: true,
+                        data: intermediaryBicorAbaData
+                    });
+                    break;
+                case "UltimateBeneficiary":
+                    //$scope.onBoardingAccountDetails[index].IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + index).prop("checked");
+                    if (item == "Account Name") {
+                        $("#divUltimateBeneficiaryBICorABA" + index).hide();
+                        $("#ultimateBankName" + index).hide();
+                        $("#ultimateBankAddress" + index).hide();
+                        $("#accountName" + index).show();
+                        return;
+                    } else {
+                        $("#divUltimateBeneficiaryBICorABA" + index).show();
+                        $("#ultimateBankName" + index).show();
+                        $("#ultimateBankAddress" + index).show();
+                        $("#accountName" + index).hide();
+                    }
+                    var ultimateBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
+                    var ultimateBicorAbaData = [];
+                    $.each(ultimateBicorAba, function (key, value) {
+                        ultimateBicorAbaData.push({ "id": value.BICorABA, "text": value.BICorABA });
+                    });
 
-                if ($("#liIntermediaryBICorABA" + index).data("select2")) {
-                    $("#liIntermediaryBICorABA" + index).select2("destroy");
-                }
-                $("#liIntermediaryBICorABA" + index).select2({
-                    placeholder: "Select a intermediary BIC or ABA",
-                    allowClear: true,
-                    data: intermediaryBicorAbaData
-                });
-                break;
-            case "UltimateBeneficiary":
-                //$scope.onBoardingAccountDetails[index].IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + index).prop("checked");
-                if (item == "Account Name") {
-                    $("#divUltimateBeneficiaryBICorABA" + index).hide();
-                    $("#ultimateBankName" + index).hide();
-                    $("#ultimateBankAddress" + index).hide();
-                    $("#accountName" + index).show();
-                    return;
-                } else {
-                    $("#divUltimateBeneficiaryBICorABA" + index).show();
-                    $("#ultimateBankName" + index).show();
-                    $("#ultimateBankAddress" + index).show();
-                    $("#accountName" + index).hide();
-                }
-                var ultimateBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
-                var ultimateBicorAbaData = [];
-                $.each(ultimateBicorAba, function (key, value) {
-                    ultimateBicorAbaData.push({ "id": value.BICorABA, "text": value.BICorABA });
-                });
+                    ultimateBicorAbaData = $filter('orderBy')(ultimateBicorAbaData, 'text');
 
-                ultimateBicorAbaData = $filter('orderBy')(ultimateBicorAbaData, 'text');
+                    if ($("#liUltimateBeneficiaryBICorABA" + index).data("select2")) {
+                        $("#liUltimateBeneficiaryBICorABA" + index).select2("destroy");
+                    }
+                    $("#liUltimateBeneficiaryBICorABA" + index).select2({
+                        placeholder: "Select a ultimate beneficiary BIC or ABA",
+                        allowClear: true,
+                        data: ultimateBicorAbaData
+                    });
 
-                if ($("#liUltimateBeneficiaryBICorABA" + index).data("select2")) {
-                    $("#liUltimateBeneficiaryBICorABA" + index).select2("destroy");
-                }
-                $("#liUltimateBeneficiaryBICorABA" + index).select2({
-                    placeholder: "Select a ultimate beneficiary BIC or ABA",
-                    allowClear: true,
-                    data: ultimateBicorAbaData
-                });
-
-                break;
-        }
+                    break;
+            }
+        }, 100);
     }
 
     function toggleChevron(e) {

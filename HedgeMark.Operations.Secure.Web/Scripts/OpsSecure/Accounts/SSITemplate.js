@@ -97,6 +97,27 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         });
     }
 
+    $scope.fnGetBankDetails = function (biCorAbaValue, id, index) {
+        $timeout(function () {
+            var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
+            switch (id) {
+                case "Beneficiary":
+                    $scope.ssiTemplate.BeneficiaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.ssiTemplate.BeneficiaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    break;
+                case "Intermediary":
+                    $scope.ssiTemplate.IntermediaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.ssiTemplate.IntermediaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    break;
+                case "UltimateBeneficiary":
+                    $scope.ssiTemplate.UltimateBeneficiaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.ssiTemplate.UltimateBeneficiaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    break;
+            }
+        }, 100);
+
+    }
+
     $scope.fnGetBankDetails = function (biCorAbaValue, id) {
 
         var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
@@ -142,7 +163,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
         switch (id) {
             case "Beneficiary":
-                //$scope.onBoardingAccountDetails[index].IsBeneficiaryABA = $("#btnBeneficiaryBICorABA" + index).prop("checked");
+                //$scope.ssiTemplate.IsBeneficiaryABA = $("#btnBeneficiaryBICorABA" + index).prop("checked");
 
                 var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
                 var accountBicorAbaData = [];
@@ -162,7 +183,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 });
                 break;
             case "Intermediary":
-                //$scope.onBoardingAccountDetails[index].IsIntermediaryABA = $("#btnIntermediaryBICorABA" + index).prop("checked");
+                //$scope.ssiTemplate.IsIntermediaryABA = $("#btnIntermediaryBICorABA" + index).prop("checked");
                 var intermediaryBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
                 var intermediaryBicorAbaData = [];
                 $.each(intermediaryBicorAba, function (key, value) {
@@ -181,7 +202,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 });
                 break;
             case "UltimateBeneficiary":
-                //$scope.onBoardingAccountDetails[index].IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + index).prop("checked");
+                //$scope.ssiTemplate.IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + index).prop("checked");
                 if (item == "Account Name") {
                     $("#divUltimateBeneficiaryBICorABA").hide();
                     $("#ultimateBankName").hide();

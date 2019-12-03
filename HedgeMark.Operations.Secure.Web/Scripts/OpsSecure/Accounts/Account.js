@@ -795,43 +795,23 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
     }
 
     $scope.fnGetBankDetails = function (biCorAbaValue, id, index) {
-
-        var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
-        switch (id) {
-            case "Beneficiary":
-                if (accountBicorAba != undefined) {
-                    $("#beneficiaryBankName" + index).val(accountBicorAba.BankName);
-                    $("#beneficiaryBankAddress" + index).val(accountBicorAba.BankAddress);
-
-                }
-                else {
-                    $("#beneficiaryBankName" + index).val("");
-                    $("#beneficiaryBankAddress" + index).val("");
-                }
-                break;
-            case "Intermediary":
-                if (accountBicorAba != undefined) {
-                    $("#intermediaryBankName" + index).val(accountBicorAba.BankName);
-                    $("#intermediaryBankAddress" + index).val(accountBicorAba.BankAddress);
-
-                }
-                else {
-                    $("#intermediaryBankName" + index).val("");
-                    $("#intermediaryBankAddress" + index).val("");
-                }
-                break;
-            case "UltimateBeneficiary":
-                if (accountBicorAba != undefined) {
-                    $("#ultimateBankName" + index).val(accountBicorAba.BankName);
-                    $("#ultimateBankAddress" + index).val(accountBicorAba.BankAddress);
-
-                }
-                else {
-                    $("#ultimateBankName" + index).val("");
-                    $("#ultimateBankAddress" + index).val("");
-                }
-                break;
-        }
+        $timeout(function () {
+            var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
+            switch (id) {
+                case "Beneficiary":
+                    $scope.onBoardingAccountDetails[index].BeneficiaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[index].BeneficiaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    break;
+                case "Intermediary":
+                    $scope.onBoardingAccountDetails[index].IntermediaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[index].IntermediaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    break;
+                case "UltimateBeneficiary":
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    break;
+            }
+        }, 100);
 
     }
 
