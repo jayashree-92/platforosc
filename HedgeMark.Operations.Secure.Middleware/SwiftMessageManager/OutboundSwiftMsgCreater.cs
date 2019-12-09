@@ -551,7 +551,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             mt202Cov.addField(GetField50K(wire));
 
-            mt202Cov.addField(GetField59(wire));
+            //mt202Cov.addField(GetField59(wire));
+            SetField59X(mt202Cov, wire);
 
             return mt202Cov;
         }
