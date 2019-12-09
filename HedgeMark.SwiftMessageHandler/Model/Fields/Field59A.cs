@@ -8,7 +8,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 {
     public class Field59A : FieldWithAccountBICAndDCMark
     {
-        public Field59A() : base(FieldDirectory.FIELD_58A)
+        public Field59A() : base(FieldDirectory.FIELD_59A)
         {
         }
 

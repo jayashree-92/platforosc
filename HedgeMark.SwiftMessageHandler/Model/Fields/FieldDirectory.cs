@@ -232,6 +232,11 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public const string FIELD_59 = "59";
 
         /// <summary>
+        /// "Ultimate Benificiary Customer"
+        /// </summary>
+        public const string FIELD_59A = "59A";
+
+        /// <summary>
         /// "Details of Charges"
         /// </summary>
         public const string FIELD_71A = "71A";
