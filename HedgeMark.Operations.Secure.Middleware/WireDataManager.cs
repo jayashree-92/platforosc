@@ -224,7 +224,7 @@ namespace HMOSecureMiddleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
                 var sendingAccounts = (from oAccnt in context.onBoardingAccounts
-                                       where oAccnt.dmaFundOnBoardId == qualifiedOnBoardFundId && oAccnt.onBoardingAccountStatus == "Approved" && oAccnt.AuthorizedParty == "HedgeMark"
+                                       where oAccnt.dmaFundOnBoardId == qualifiedOnBoardFundId && oAccnt.onBoardingAccountStatus == "Approved" && oAccnt.AuthorizedParty == "HedgeMark" && !oAccnt.IsDeleted
                                        && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allPBAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
                                        select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber }).Distinct().ToList();
                 return sendingAccounts;
@@ -245,7 +245,7 @@ namespace HMOSecureMiddleware
                                        join oMap in context.onBoardingAccountSSITemplateMaps on oAccnt.onBoardingAccountId equals oMap.onBoardingAccountId
                                        let dmaReports = oAccnt.onBoardingAccountModuleAssociations.Select(s => s.onBoardingModule).Select(s => s.dmaReportsId)
                                        where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved"
-                                                                                                  && oAccnt.dmaFundOnBoardId == qualifiedOnBoardFundId && oAccnt.onBoardingAccountStatus == "Approved" && oAccnt.AuthorizedParty == "HedgeMark"
+                                                                                                  && oAccnt.dmaFundOnBoardId == qualifiedOnBoardFundId && oAccnt.onBoardingAccountStatus == "Approved" && oAccnt.AuthorizedParty == "HedgeMark" && !oAccnt.IsDeleted
                                                                                                   && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allPBAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
                                                                                                   && dmaReports.Contains(reportId)
                                        select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber }).ToList();
