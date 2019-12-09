@@ -232,7 +232,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public const string FIELD_59 = "59";
 
         /// <summary>
-        /// "Ultimate Benificiary Customer"
+        /// "Beneficiary Customer"
         /// </summary>
         public const string FIELD_59A = "59A";
 
@@ -383,6 +383,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             {FIELD_57D, "Account with Institution"},
             {FIELD_58A, "Beneficiary Institution"},
             {FIELD_58D, "Beneficiary Institution"},
+            {FIELD_59A, "Beneficiary Customer" },
             {FIELD_59, "Beneficiary Customer"},
 
             {FIELD_61,"Statement Line" },
