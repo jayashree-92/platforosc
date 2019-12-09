@@ -333,13 +333,13 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             return f59;
         }
 
-        private static Field58A GetField59A(WireTicket wire)
+        private static Field59A GetField59A(WireTicket wire)
         {
-            var f58A = new Field58A()
+            var f59A = new Field59A()
                 .setAccount(wire.IsBookTransfer ? wire.ReceivingAccount.AccountNumber : wire.SSITemplate.AccountNumber)
                 .setBIC(wire.IsBookTransfer ? wire.ReceivingAccount.UltimateBeneficiaryType == "ABA" ? string.Empty :
                     wire.ReceivingAccount.UltimateBeneficiaryBICorABA : wire.SSITemplate.UltimateBeneficiaryType == "ABA" ? string.Empty : wire.SSITemplate.UltimateBeneficiaryBICorABA);
-            return f58A;
+            return f59A;
         }
 
         private static Field70 GetField70(WireTicket wire)
