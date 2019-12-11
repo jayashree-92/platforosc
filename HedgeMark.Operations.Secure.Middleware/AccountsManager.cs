@@ -784,7 +784,7 @@ namespace HMOSecureMiddleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                var onBoardingWirePortalCutoff = context.onBoardingWirePortalCutoffs.FirstOrDefault(x => x.CashInstruction == cashInstruction && x.Currency == currency);
+                var onBoardingWirePortalCutoff = context.onBoardingWirePortalCutoffs.AsNoTracking().FirstOrDefault(x => x.CashInstruction == cashInstruction && x.Currency == currency);
                 return onBoardingWirePortalCutoff ?? new onBoardingWirePortalCutoff();
             }
         }
