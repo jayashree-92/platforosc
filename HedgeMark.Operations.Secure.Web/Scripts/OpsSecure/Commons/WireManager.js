@@ -176,7 +176,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.timeToApprove = angular.copy(response.data.deadlineToApprove);
                 $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
                 if (!$scope.isApprovedOrFailed) {
-                    if ($scope.timeToApprove.Hours > 0) {
+                    if ($scope.timeToApprove.Hours > 0 || ($scope.timeToApprove.Hours == 0 && $scope.timeToApprove.Minutes >= 0 && $scope.timeToApprove.Seconds > 0)) {
                         $scope.isDeadlineCrossed = false;
                         $("#wireErrorStatus").collapse("hide");
                         $scope.validationMsg = response.data.validationMsg;
@@ -728,7 +728,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $http.post("/Home/GetTimeToApproveTheWire", ({ onBoardingAccountId: account.onBoardingAccountId, valueDate: $("#wireValueDate").text() }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
             $scope.timeToApprove = response.data;
             $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
-            if ($scope.timeToApprove.Hours > 0) {
+            if ($scope.timeToApprove.Hours > 0 || ($scope.timeToApprove.Hours == 0 && $scope.timeToApprove.Minutes >= 0 && $scope.timeToApprove.Seconds > 0)) {
                 $scope.isDeadlineCrossed = false;
                 if (!$scope.isWireCreated && !$scope.isMandatoryFieldsMissing) {
                     $("#wireErrorStatus").collapse("hide");
@@ -755,7 +755,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.timeToShow = "00 : 00 : 00";
     var timer = function () {
-        if ($scope.timeToApprove != undefined && $scope.timeToApprove.Hours > 0) {
+        if ($scope.timeToApprove != undefined && $scope.timeToApprove.Hours >= 0) {
             $scope.timeToApprove.Seconds--;
             if ($scope.timeToApprove.Seconds == -1) {
                 $scope.timeToApprove.Minutes--;
@@ -765,7 +765,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 }
                 $scope.timeToApprove.Seconds = 59;
             }
-            $scope.timeToShow = (($scope.timeToApprove.Hours >= 10 ? $scope.timeToApprove.Hours : $scope.timeToApprove.Hours > 0 ? ("0" + $scope.timeToApprove.Hours) : $scope.timeToApprove.Hours)) + " : " + ($scope.timeToApprove.Minutes >= 10 ? $scope.timeToApprove.Minutes : ("0" + $scope.timeToApprove.Minutes)) + " : " + ($scope.timeToApprove.Seconds >= 10 ? $scope.timeToApprove.Seconds : ("0" + $scope.timeToApprove.Seconds));
+            if ($scope.timeToApprove.Hours < 0)
+                $scope.timeToShow = "00 : 00 : 00";
+            else
+                $scope.timeToShow = (($scope.timeToApprove.Hours >= 10 ? $scope.timeToApprove.Hours : $scope.timeToApprove.Hours >= 0 ? ("0" + $scope.timeToApprove.Hours) : $scope.timeToApprove.Hours)) + " : " + ($scope.timeToApprove.Minutes >= 10 ? $scope.timeToApprove.Minutes : ("0" + $scope.timeToApprove.Minutes)) + " : " + ($scope.timeToApprove.Seconds >= 10 ? $scope.timeToApprove.Seconds : ("0" + $scope.timeToApprove.Seconds));
         }
         else
             $scope.timeToShow = "00 : 00 : 00";
@@ -1259,7 +1262,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     $timeout(function () {
                         $scope.timeToApprove = angular.copy(response.data.deadlineToApprove);
                         $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
-                            if ($scope.timeToApprove.Hours > 0) {
+                            if ($scope.timeToApprove.Hours > 0 || ($scope.timeToApprove.Hours == 0 && $scope.timeToApprove.Minutes >= 0 && $scope.timeToApprove.Seconds > 0)) {
                                 $scope.isDeadlineCrossed = false;
                                 if (!$scope.isWireCreated && !$scope.isMandatoryFieldsMissing) {
                                     $("#wireErrorStatus").collapse("hide");
