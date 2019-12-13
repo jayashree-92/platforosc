@@ -76,9 +76,6 @@
     <Compile Include="dmaAgreementDocument.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="dmaAgreementOnBoarding.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="dmaAgreementOnBoardingAttribute.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
@@ -264,6 +261,9 @@
     </Compile>
     <Compile Include="vw_HFundOps.cs">
       <DependentUpon>OperationsContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vw_OnboardedAgreements.cs">
+      <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

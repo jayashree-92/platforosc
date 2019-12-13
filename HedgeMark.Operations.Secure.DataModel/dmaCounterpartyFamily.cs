@@ -17,15 +17,12 @@ namespace HedgeMark.Operations.Secure.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public dmaCounterpartyFamily()
         {
-            this.dmaAgreementOnBoardings = new HashSet<dmaAgreementOnBoarding>();
             this.dmaCounterPartyOnBoardings = new HashSet<dmaCounterPartyOnBoarding>();
         }
     
         public long dmaCounterpartyFamilyId { get; set; }
         public string CounterpartyFamily { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaCounterPartyOnBoarding> dmaCounterPartyOnBoardings { get; set; }
     }

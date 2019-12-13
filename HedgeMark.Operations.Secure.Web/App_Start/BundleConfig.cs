@@ -94,7 +94,9 @@ namespace HMOSecureWeb
 
 
             bundles.Add(new StyleBundle("~/Content/bundle")
-                .Include("~/Content/bootstrap-bny-2.css", new CssRewriteUrlTransform())
+                .Include("~/Content/bootstrap-bny-3.css", new CssRewriteUrlTransform())
+                .Include("~/Content/bootstrap-bny-nexen.css", new CssRewriteUrlTransform())
+                .Include("~/Content/bootstrap-extensions.css", new CssRewriteUrlTransform())
                 .Include("~/Content/css/select2.css", new CssRewriteUrlTransform())
                 .Include("~/Content/select2-bootstrap.css", new CssRewriteUrlTransform())
                 .Include("~/Content/bootstrap-notify.css", new CssRewriteUrlTransform())
@@ -123,14 +125,13 @@ namespace HMOSecureWeb
                 //.Include("~/Scripts/clockpicker-gh-pages/dist/bootstrap-clockpicker.css", new CssRewriteUrlTransform())
                 .Include("~/Content/bootstrap-toggle.less", new CssRewriteUrlTransform())
                 .Include("~/Content/bootstrap-milestones.min.css", new CssRewriteUrlTransform())
-                .Include("~/Content/bootstrap-extensions.css", new CssRewriteUrlTransform())
                 .Include("~/Content/themes/base/jquery-ui.css", new CssRewriteUrlTransform())
                 .Include("~/Content/site.css", new CssRewriteUrlTransform())
                 );
 #if Local
             BundleTable.EnableOptimizations = false;
 #else
-            BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = false;
 #endif
 
 

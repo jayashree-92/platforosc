@@ -17,7 +17,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public onboardingClient()
         {
-            this.dmaAgreementOnBoardings = new HashSet<dmaAgreementOnBoarding>();
             this.onboardingFunds = new HashSet<onboardingFund>();
         }
     
@@ -169,9 +168,13 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string TaxReturnPFIC { get; set; }
         public string ProjectLaunchDate { get; set; }
         public string DealingDay { get; set; }
+        public string DefaultHmOnboarding { get; set; }
+        public string DefaultHmAccounting { get; set; }
+        public string DefaultHmOps { get; set; }
+        public string DefaultHmStructuring { get; set; }
+        public string HmRiskClientServiceAndAnalytics { get; set; }
+        public string Tier { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onboardingFund> onboardingFunds { get; set; }
     }

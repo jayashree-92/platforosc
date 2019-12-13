@@ -20,7 +20,5 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string RecCreatedBy { get; set; }
         public Nullable<System.DateTime> RecCreatedAt { get; set; }
         public string FolderType { get; set; }
-    
-        public virtual dmaAgreementOnBoarding dmaAgreementOnBoarding { get; set; }
     }
 }

@@ -76,9 +76,7 @@ namespace HMOSecureWeb.Controllers
             var onboardedFunds = OnBoardingDataManager.GetAllOnBoardedFunds(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser);
             var funds = onboardedFunds.Select(x => new { id = x.dmaFundOnBoardId, text = x.LegalFundName }).OrderBy(x => x.text).ToList();
 
-            var agreementPreloadData = OnBoardingDataManager.GetAgreementsForOnboardingAccountPreloadData(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser);
-            var agreements = agreementPreloadData.Select(x => new { x.dmaAgreementOnBoardingId, agreementName = (x.dmaAgreementType.AgreementType + " - " + x.onboardingFund.LegalFundName + " - " + (x.dmaCounterPartyOnBoarding != null ? x.dmaCounterPartyOnBoarding.CounterpartyShortCode : string.Empty)), x.dmaFundOnBoardId }).ToList();
-
+            var agreements = OnBoardingDataManager.GetAgreementsForOnboardingAccountPreloadData(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser);
             var counterpartyFamilies = OnBoardingDataManager.GetAllCounterpartyFamilies().Select(x => new { id = x.dmaCounterpartyFamilyId, text = x.CounterpartyFamily }).OrderBy(x => x.text).ToList();
             return Json(new
             {
@@ -150,14 +148,6 @@ namespace HMOSecureWeb.Controllers
             AccountManager.AddOnboardingModule(reportId, accountModule, UserName);
         }
 
-
-        private class AgreementBaseDetails
-        {
-            public long AgreementOnboardingId { get; set; }
-            public string AgreementShortName { get; set; }
-            public int AgreementTypeId { get; set; }
-        }
-
         public string GetAllOnBoardingAccounts(string accountType, long agreementId, long fundId, long brokerId)
         {
             var counterpartyFamilyId = brokerId;
@@ -174,7 +164,7 @@ namespace HMOSecureWeb.Controllers
                 counterpartyFamilyId = agreement.dmaCounterPartyFamilyId ?? 0;
                 agreementTypeId = agreement.AgreementTypeId ?? 0;
                 fundId = agreement.dmaFundOnBoardId;
-                agreementType = agreement.dmaAgreementType.AgreementType;// AgreementManager.GetAgreementType(agreementTypeId);
+                agreementType = agreement.AgreementType;// AgreementManager.GetAgreementType(agreementTypeId);
             }
             else
                 agreementTypeId = OnBoardingDataManager.GetAgreementTypeId(accountType);
@@ -194,15 +184,15 @@ namespace HMOSecureWeb.Controllers
             var authorizedParty = AccountManager.GetAllAuthorizedParty();
 
             Dictionary<long, string> counterparties;
-            Dictionary<long, AgreementBaseDetails> agreements;
+            Dictionary<long, AgreementBaseData> agreements;
             var allAgreementIds = onBoardingAccounts.Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
             var allCounterpartyFamilyIds = onBoardingAccounts.Select(s => s.BrokerId).Distinct().ToList();
 
             using (var context = new AdminContext())
             {
-                agreements = context.dmaAgreementOnBoardings.AsNoTracking()
+                agreements = context.vw_OnboardedAgreements.AsNoTracking()
                     .Where(s => allAgreementIds.Contains(s.dmaAgreementOnBoardingId))
-                    .Select(s => new AgreementBaseDetails { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId })
+                    .Select(s => new AgreementBaseData { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId })
                     .ToDictionary(s => s.AgreementOnboardingId, v => v);
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
@@ -445,16 +435,16 @@ namespace HMOSecureWeb.Controllers
 
             Dictionary<long, string> counterparties;
             Dictionary<long, string> funds;
-            Dictionary<long, AgreementBaseDetails> agreements;
+            Dictionary<long, AgreementBaseData> agreements;
             var allAgreementIds = onBoardingAccounts.Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
             var allCounterpartyFamilyIds = onBoardingAccounts.Select(s => s.BrokerId).Distinct().ToList();
             var allFundIds = onBoardingAccounts.Select(s => s.dmaFundOnBoardId).Distinct().ToList();
 
             using (var context = new AdminContext())
             {
-                agreements = context.dmaAgreementOnBoardings.AsNoTracking()
+                agreements = context.vw_OnboardedAgreements.AsNoTracking()
                     .Where(s => allAgreementIds.Contains(s.dmaAgreementOnBoardingId))
-                    .Select(s => new AgreementBaseDetails { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId })
+                    .Select(s => new AgreementBaseData { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId })
                     .ToDictionary(s => s.AgreementOnboardingId, v => v);
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
@@ -981,16 +971,16 @@ namespace HMOSecureWeb.Controllers
 
             Dictionary<long, string> counterparties;
             Dictionary<long, string> funds;
-            Dictionary<long, AgreementBaseDetails> agreements;
+            Dictionary<long, AgreementBaseData> agreements;
             var allAgreementIds = onBoardingAccounts.Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
             var allCounterpartyFamilyIds = onBoardingAccounts.Select(s => s.BrokerId).Distinct().ToList();
             var allFundIds = onBoardingAccounts.Select(s => s.dmaFundOnBoardId).Distinct().ToList();
 
             using (var context = new AdminContext())
             {
-                agreements = context.dmaAgreementOnBoardings.AsNoTracking()
+                agreements = context.vw_OnboardedAgreements.AsNoTracking()
                     .Where(s => allAgreementIds.Contains(s.dmaAgreementOnBoardingId))
-                    .Select(s => new AgreementBaseDetails { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId })
+                    .Select(s => new AgreementBaseData { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId })
                     .ToDictionary(s => s.AgreementOnboardingId, v => v);
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
@@ -1185,20 +1175,19 @@ namespace HMOSecureWeb.Controllers
             var onboardingAccounts = AccountManager.GetAllOnBoardingAccounts(new List<long>(), true);
             var counterpartyFamilies = OnBoardingDataManager.GetAllCounterpartyFamilies().ToDictionary(x => x.dmaCounterpartyFamilyId, x => x.CounterpartyFamily);
             var funds = OnBoardingDataManager.GetAllFunds();
-            // var agreementTypes = OnBoardingManager.GetAllAgreementTypes();
-            var agreementList = OnBoardingDataManager.GetAllAgreements();
+            var agreements = OnBoardingDataManager.GetAllAgreements();
             var accountBicorAba = AccountManager.GetAllAccountBicorAba();
             var swiftgroups = AccountManager.GetAllSwiftGroup();
-            var agreements = agreementList.ToDictionary(s => s.dmaAgreementOnBoardingId, s => s.dmaAgreementType.AgreementType + " - " + s.onboardingFund.LegalFundName + " - " + (s.dmaCounterPartyOnBoarding != null ? s.dmaCounterPartyOnBoarding.CounterpartyShortCode : string.Empty));
+            
             var bulkUploadLogs = new List<hmsBulkUploadLog>();
             for (var i = 0; i < Request.Files.Count; i++)
             {
                 var file = Request.Files[i];
 
                 if (file == null)
-                    throw new Exception("unable to retrive file information");
+                    throw new Exception("unable to retrieve file information");
 
-                var fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", DateTime.Now.ToString("yyyy-MM-dd"), file.FileName));
+                var fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2:yyyy-MM-dd}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", DateTime.Now, file.FileName));
 
                 if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
                     Directory.CreateDirectory(fileInfo.Directory.FullName);
@@ -1206,9 +1195,10 @@ namespace HMOSecureWeb.Controllers
                 var newFileName = file.FileName;
                 var splitFileNames = file.FileName.Split('.');
                 var ind = 1;
-                while(System.IO.File.Exists(fileInfo.FullName)) {
-                     newFileName = string.Format("{0}_{1}.{2}", splitFileNames[0], ind++, splitFileNames[1]);
-                    fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", DateTime.Now.ToString("yyyy-MM-dd"), newFileName));
+                while (System.IO.File.Exists(fileInfo.FullName))
+                {
+                    newFileName = string.Format("{0}_{1}.{2}", splitFileNames[0], ind++, splitFileNames[1]);
+                    fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2:yyyy-MM-dd}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", DateTime.Now, newFileName));
                 }
 
                 file.SaveAs(fileInfo.FullName);

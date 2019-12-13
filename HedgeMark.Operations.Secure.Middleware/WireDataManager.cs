@@ -262,7 +262,7 @@ namespace HMOSecureMiddleware
 
             using (var context = new AdminContext())
             {
-                allPBAgreementIds = context.dmaAgreementOnBoardings.Where(s => s.dmaAgreementType.AgreementType == "PB").Select(s => s.dmaAgreementOnBoardingId).ToList();
+                allPBAgreementIds = context.vw_OnboardedAgreements.Where(s => s.AgreementType == "PB").Select(s => s.dmaAgreementOnBoardingId).ToList();
 
                 qualifiedOnBoardFundId = (from hFndOps in context.vw_HFund
                                           join onBoardFnd in context.onboardingFunds on hFndOps.FundMapId equals onBoardFnd.FundMapId

@@ -3,17 +3,17 @@
     ViewBag.Title = "Home Page";
 }
 <div ng-controller="WiresHomeCtrl">
-    <div class="container-fluid">
+    <div style="margin-top:10px;">
         <div class="row">
             <div class="col-md-2 dashDatepicker">
                 <input type="hidden" id="hdnDefaultContextDate" value="@Model.ToString("yyyy-MM-dd")" />
-                <h5 class="dashDatePrev">{{ContextDate.DayOfWeek}}</h5>
+                <h6 class="dashDatePrev">{{ContextDate.DayOfWeek}}</h6>
                 <i class="glyphicon glyphicon-menu-left" ng-click="fnSetNextContextDate(-1)"></i>
                 <span href='#' id="contextDate" data-date="@Model.ToString("MM/dd/yyyy")" title="Choose a context date">
                     <h3>{{ContextDate.Day}}</h3>
                 </span>
                 <i class="glyphicon glyphicon-menu-right {{IsNextDateNotAvailable ?'dashDateNavDisabled':''}}" ng-click="fnSetNextContextDate(1)"></i>
-                <h5 class="dashDateNext">{{ContextDate.Year}}</h5>
+                <h6 class="dashDateNext">{{ContextDate.Year}}</h6>
             </div>
 
             <div class="col-md-2">
@@ -61,12 +61,10 @@
             </div>
         </div>
         <hr class="dashHr" />
-        <div class="container-fluid" ng-controller="wireDetailsCtrl">
-            <div class="">
-                <button type="button" id="btnCreateWire" class="btn btn-sm btn-primary" ng-click="initiateWireModal()" ng-disabled="isWireCreationEnabled" data-toggle="collapse" data-target="#panelWireContainer" aria-expanded="false" aria-controls="panelWireContainer">
+        <div ng-controller="wireDetailsCtrl">
+            <button type="button" id="btnCreateWire" class="btn btn-primary" ng-click="initiateWireModal()" ng-disabled="isWireCreationEnabled" data-toggle="collapse" data-target="#panelWireContainer" aria-expanded="false" aria-controls="panelWireContainer">
                     <i class="glyphicon glyphicon-plus"></i>&nbsp;Initiate Wire
                 </button>
-            </div>
             <table id="tblWireStatusDetails" class="table table-hover shadowBox" style="background: white;cursor:pointer;"></table>
         </div>
     </div>

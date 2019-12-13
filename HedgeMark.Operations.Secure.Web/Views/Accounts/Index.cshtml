@@ -4,24 +4,24 @@
 }
 
 <style>
-    .input-group[class*="col-"] {
+    /*.input-group[class*="col-"] {
         float: none;
         padding-right: 0;
         padding-left: 15px;
-    }
+    }*/
 
     /*.select2-container {
         width: 258px !important;
     }*/
 
-    .AdjustDropDownWidth .select2-container {
+    /*.AdjustDropDownWidth .select2-container {
         width: 100% !important;
-    }
+    }*/
 </style>
 
 <legend>Accounts List</legend>
 
-<div id="accountListDiv" class="container-fluid" ng-controller="AccountListController">
+<div id="accountListDiv"  ng-controller="AccountListController">
     <ul id="accountTabs" class="nav nav-tabs" data-tabs="tabs">
         <li class="active"><a id="create" href="#dvList" data-toggle="tab">List</a></li>
         <li><a href="#dvAssociation" data-toggle="tab">Associated SSI</a></li>
@@ -87,7 +87,7 @@
                 <table id="accountTable" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
 
                 <div class="modal fade" id="accountModal" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog modal-mlg3" role="document">
+                    <div class="modal-dialog modal-mlg2" role="document">
                         <div id="accountDetailCP" class="modal-content" ng-repeat="accountDetail in onBoardingAccountDetails track by $index" on-last-repeat>
                             <div class="row" style="position: sticky; top: 0; z-index: 2;">
                                 <span class="col-md-12" style="margin-bottom: 10px;">

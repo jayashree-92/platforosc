@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Local|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -170,6 +171,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-bny-2.css" />
+    <Content Include="Content\bootstrap-bny-3.css" />
+    <Content Include="Content\bootstrap-bny-nexen.css" />
     <Content Include="Content\bootstrap-bny.css" />
     <Content Include="Content\bootstrap-bny.min.css" />
     <Content Include="Content\bootstrap-datepicker.css" />
@@ -400,7 +403,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\big-spinner.gif" />
     <Content Include="Images\bnymellon-arrow-icon.png" />
+    <Content Include="Images\bnymellon_logo.png" />
     <Content Include="Images\BNY_Mellon_Company.png" />
     <Content Include="Images\clear.png" />
     <Content Include="Images\grippy.png" />

@@ -21,6 +21,14 @@ namespace HMOSecureMiddleware
         public const int TaxAdvisorTypeId = 10;
     }
 
+    public class AgreementBaseData
+    {
+        public long FundOnBoardId { get; set; }
+        public long AgreementOnboardingId { get; set; }
+        public string AgreementShortName { get; set; }
+        public int AgreementTypeId { get; set; }
+    }
+
     public class OnBoardingDataManager
     {
 
@@ -40,17 +48,13 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<dmaAgreementOnBoarding> GetAllAgreements()
+        public static Dictionary<long, string> GetAllAgreements()
         {
             using (var context = new AdminContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.dmaAgreementOnBoardings
-                    .Include(x => x.onboardingFund)
-                    .Include(x => x.dmaCounterPartyOnBoarding)
-                    .Include(x => x.dmaAgreementType)
-                    .Where(a => !a.IsDeleted).AsNoTracking().ToList();
+                return context.vw_OnboardedAgreements.AsNoTracking().ToDictionary(s => s.dmaAgreementOnBoardingId, s => s.AgreementShortName);
             }
         }
 
@@ -64,7 +68,7 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<dmaAgreementOnBoarding> GetAgreementsForOnboardingAccountPreloadData(List<long> onBoardFundIds, bool isPreviledgedUser)
+        public static List<AgreementBaseData> GetAgreementsForOnboardingAccountPreloadData(List<long> onBoardFundIds, bool isPreviledgedUser)
         {
             using (var context = new AdminContext())
             {
@@ -73,27 +77,19 @@ namespace HMOSecureMiddleware
 
                 //var agreementStatus = context.dmaAgreementStatus.FirstOrDefault(s => s.AgreementStatus == "Fully Executed"); a.AgreementStatusId == agreementStatus.dmaAgreementStatusId &&
                 var permittedAgreementTypes = new List<string>() { "CDA", "Custody", "DDA", "Deemed ISDA", "Enhanced Custody", "FCM", "FXPB", "GMRA", "ISDA", "Listed Options", "MRA", "MSFTA", "Non-US Listed Options", "PB" };
-                return context.dmaAgreementOnBoardings.Include(x => x.onboardingFund).Include(x => x.dmaAgreementType).Include(x => x.dmaCounterPartyOnBoarding)
-                    .Where(a => permittedAgreementTypes.Contains(a.dmaAgreementType.AgreementType) && (isPreviledgedUser || onBoardFundIds.Contains(a.dmaFundOnBoardId)) && !a.IsDeleted)
-                    .AsNoTracking().ToList();
+                return context.vw_OnboardedAgreements
+                    .Where(a => permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || onBoardFundIds.Contains(a.dmaFundOnBoardId)))
+                    .AsNoTracking().Select(x => new AgreementBaseData() { AgreementOnboardingId = x.dmaAgreementOnBoardingId, AgreementShortName = x.AgreementShortName, FundOnBoardId = x.dmaFundOnBoardId }).ToList();
             }
         }
 
-        public static dmaAgreementOnBoarding GetOnBoardedAgreement(long agreementId)
+        public static vw_OnboardedAgreements GetOnBoardedAgreement(long agreementId)
         {
             using (var context = new AdminContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.dmaAgreementOnBoardings
-                    //.Include(y => y.dmaAgreementSettlementInstructions)
-                    //.Include(y => y.dmaEligibleCollaterals)
-                    //.Include(y => y.dmaNonCashCollaterals)
-                    //.Include(t => t.dmaNavTriggerRules)
-                    //.Include(d => d.dmaAgreementDocuments)
-                    //.Include(a => a.dmaAgreementAcadiaSoftMaps)
-                    .Include(a => a.dmaAgreementType)
-                    .FirstOrDefault(x => x.dmaAgreementOnBoardingId == agreementId);
+                return context.vw_OnboardedAgreements.FirstOrDefault(x => x.dmaAgreementOnBoardingId == agreementId);
             }
         }
 
@@ -120,11 +116,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-
-                return context.dmaAgreementOnBoardings.Where(x => x.dmaFundOnBoardId == fundId && !x.IsDeleted && x.dmaCounterPartyOnBoardId.HasValue && x.HMOpsStatus == "Approved")
-                .Select(x => x.dmaCounterPartyOnBoardId.Value)
-                .Distinct()
-                .ToList();
+                return context.vw_OnboardedAgreements.Where(x => x.dmaFundOnBoardId == fundId && x.dmaCounterPartyOnBoardId.HasValue && x.HMOpsStatus == "Approved").Select(x => x.dmaCounterPartyOnBoardId.Value).Distinct().ToList();
             }
         }
 

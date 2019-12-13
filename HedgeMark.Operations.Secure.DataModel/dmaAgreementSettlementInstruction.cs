@@ -24,7 +24,5 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string FFC_NAME { get; set; }
         public string FFC_NUMBER { get; set; }
         public Nullable<int> SETTLEMENT_TYPE { get; set; }
-    
-        public virtual dmaAgreementOnBoarding dmaAgreementOnBoarding { get; set; }
     }
 }

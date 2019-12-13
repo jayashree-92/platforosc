@@ -9,6 +9,10 @@ using HMOSecureMiddleware;
 
 namespace HMOSecureWeb.Controllers
 {
+    public enum SessionVars
+    {
+        UserCommitId
+    }
 
     public enum OpsSecureSessionVars
     {
@@ -43,7 +47,7 @@ namespace HMOSecureWeb.Controllers
                 if (userDetails != null)
                     return userDetails;
 
-                userDetails = AccountController.GetUserDetails(UserName, User);
+                userDetails = AccountController.GetUserDetails(Session[SessionVars.UserCommitId.ToString()].ToString(), User);
                 SetSessionValue("UserDetails", userDetails);
                 return userDetails;
             }

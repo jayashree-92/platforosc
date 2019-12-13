@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-
+      $("#liMainDashboardHome").addClass("active");
 });
 
 HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interval) {
@@ -67,7 +67,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
 
         $scope.ShouldApplyDatepickerScope = true;
         $timeout(function () {
-            $(".dashDateNext").css("padding", "0px " + ($("#contextDate").width() - 5) + "px");
+            $(".dashDateNext").css("padding", "0px " + ($("#contextDate").width() -2) + "px");
         }, 20);
     }
 
@@ -100,7 +100,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
 
         $scope.ShouldApplyDatepickerScope = false;
         $("#contextDate").datepicker("setDate", moment(nextContextDate).format("L"));
-        $(".dashDateNext").css("padding", "0px " + ($("#contextDate").width() - 5) + "px");
+        $(".dashDateNext").css("padding", "0px " + ($("#contextDate").width() - 2) + "px");
     }
 
     $scope.fnRetriveWireCounts = function () {

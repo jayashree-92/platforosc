@@ -23,7 +23,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string ResponsibleParty { get; set; }
         public int DayCount { get; set; }
     
-        public virtual dmaAgreementOnBoarding dmaAgreementOnBoarding { get; set; }
         public virtual dmaAgreementOnBoardingAttribute dmaAgreementOnBoardingAttribute { get; set; }
     }
 }
