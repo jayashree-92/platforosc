@@ -1,4 +1,4 @@
-﻿$("#liAccounts").addClass("active");
+﻿$("#liSSITemplates").addClass("active");
 HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filter, $q) {
     $("#onboardingMenu").addClass("active");
     $scope.ssiTemplate = {};

@@ -37,7 +37,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 pageResize: true,
                 // dom: 'Bfrtip',
                 fixedHeader: {
-                    headerOffset: 40
+                    //headerOffset: 10
                 },
                 //"dom": "<'row'<'col-md-6'i><'#toolbar_tasklog'><'col-md-6 pull-right'f>>trI",
                 "dom": "<'pull-right'f>itI",

@@ -19,53 +19,48 @@
     <meta charset="utf-8">
     <title> Operations Secured- @ViewBag.Title</title>
 
-        <div class="navbar navbar-ops navbar-ops-brand">
-            <span class="navbar-ops-title-divider">|</span><span>
-                <a class="navbar-ops-title" href=@Url.Action("Index", "Home")>
-                    HM-OPS-SECURE
-                    @if (@Util.IsLowerEnvironment)
-                    {
-                        @(Util.Environment.ToUpper());
-                    }
-                </a>
-            </span>
-            <div class="navbar-brand">
-                <a href=@Url.Action("Index", "Home")> <img src="~/images/bnymellon_logo.png"></a>
-            </div>
-            <ul class="nav navbar-nav navbar-right">
-                @*<li title="notifications" id="liMainNavNotifications" style="cursor: pointer;"><a><i class="glyphicon glyphicon-bell icon-lg"></i>&nbsp;<span class="badge user-notification un-success ng-show-hide shadowBox" ng-hide="unReadNotifications==0">{{unReadNotifications}}</span></a></li>*@
-                @*   <li title="notifications" id="liMainWireCountNotifications" ng-click="fnRetriveWireCounts()" style="cursor: pointer;"><a class="ng-show-hide"><i class="glyphicon glyphicon-usd icon-lg"></i><span class="badge user-notification ng-show-hide shadowBox" ng-class="WireStatusCounts.Failed>0 ? WireStatusCounts.Pending>9?  'un-pendingAndFailed-10':'un-pendingAndFailed-0': WireStatusCounts.Pending>9?'un-pending-10':WireStatusCounts.Pending>0?'un-pending-0':'un-no-pending'">{{WireStatusCounts.Pending}}</span><span style="margin: -11px 0px 0px -12px;" class="badge badge-danger user-notification ng-show-hide shadowBox" ng-show="WireStatusCounts.Failed>0">{{WireStatusCounts.Failed}}</span></a></li>*@
-                <li style="padding-top: 6px;" title="@User.Identity.Name"><label class="label label-default" href="#"><i class="glyphicon glyphicon-user"></i> @userRole</label></li>
-                <li id="liMainNavUserSettings" title="@User.Identity.Name" style="padding-top: 1px;padding-left: 7px;">
-                    @*<label style="cursor: pointer;padding: 5px 4px!important;" class="label label-default">
-                            <i class="glyphicon glyphicon-user"></i>&nbsp;@userRole
-                        </label>*@
-                    <img src="https://mysourcesocial.bnymellon.net/people/@commitId/avatar/45.png" class="profileImage" />
-                </li>
-            </ul>
+    <div class="navbar navbar-ops navbar-ops-brand">
+        <span class="navbar-ops-title-divider">|</span><span>
+            <a class="navbar-ops-title" href=@Url.Action("Index", "Home")>
+                HM-OPS-SECURE
+                @if (@Util.IsLowerEnvironment)
+                {
+                    @(Util.Environment.ToUpper());
+                }
+            </a>
+        </span>
+        <div class="navbar-brand">
+            <a href=@Url.Action("Index", "Home")> <img src="~/images/bnymellon_logo.png"></a>
         </div>
+        <ul class="nav navbar-nav navbar-right">
+            @*<li title="notifications" id="liMainNavNotifications" style="cursor: pointer;"><a><i class="glyphicon glyphicon-bell icon-lg"></i>&nbsp;<span class="badge user-notification un-success ng-show-hide shadowBox" ng-hide="unReadNotifications==0">{{unReadNotifications}}</span></a></li>*@
+            @*   <li title="notifications" id="liMainWireCountNotifications" ng-click="fnRetriveWireCounts()" style="cursor: pointer;"><a class="ng-show-hide"><i class="glyphicon glyphicon-usd icon-lg"></i><span class="badge user-notification ng-show-hide shadowBox" ng-class="WireStatusCounts.Failed>0 ? WireStatusCounts.Pending>9?  'un-pendingAndFailed-10':'un-pendingAndFailed-0': WireStatusCounts.Pending>9?'un-pending-10':WireStatusCounts.Pending>0?'un-pending-0':'un-no-pending'">{{WireStatusCounts.Pending}}</span><span style="margin: -11px 0px 0px -12px;" class="badge badge-danger user-notification ng-show-hide shadowBox" ng-show="WireStatusCounts.Failed>0">{{WireStatusCounts.Failed}}</span></a></li>*@
+            <li style="padding-top: 6px;" title="@User.Identity.Name"><label class="label label-default" href="#"><i class="glyphicon glyphicon-user"></i> @userRole</label></li>
+            <li id="liMainNavUserSettings" title="@User.Identity.Name" style="padding-top: 1px;padding-left: 7px;">
+                @*<label style="cursor: pointer;padding: 5px 4px!important;" class="label label-default">
+                        <i class="glyphicon glyphicon-user"></i>&nbsp;@userRole
+                    </label>*@
+                <img src="https://mysourcesocial.bnymellon.net/people/@commitId/avatar/45.png" class="profileImage" />
+            </li>
+        </ul>
+    </div>
 
 
-        <div class="navbar-ops-menu">
-            <ul class="nav navbar-nav">
-                <li title="home" id="liMainDashboardHome"><a href=@Url.Action("Index", "Home")><i class="glyphicon glyphicon-home"></i></a></li>
-                <li id="liAccounts">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accounts <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>@Html.ActionLink("Fund Accounts", "Index", "Accounts")</li>
-                        <li>@Html.ActionLink("SSI Templates", "SSITemplateList", "Accounts")</li>
-                    </ul>
-                </li>
-                <li id="liWirePurpose">@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
-                <li id="liWireLogs">@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
-                <li id="liUserLogs">@Html.ActionLink("User Audits", "Index", "Audit")</li>
-                <li id="liMQLogs">@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li title="Hangfire Jobs"><a href="/jobs" target="_blank"><i class="glyphicon glyphicon-stats"></i></a></li>
-                <li title="Logout"><a id="btnLogOff"><i class="glyphicon glyphicon-log-out"></i></a></li>
-            </ul>
-        </div>
+    <div class="navbar-ops-menu">
+        <ul class="nav navbar-nav">
+            <li title="home" id="liMainDashboardHome"><a href=@Url.Action("Index", "Home")><i class="glyphicon glyphicon-home"></i></a></li>
+            <li id="liAccounts">@Html.ActionLink("Fund Accounts", "Index", "Accounts")</li>
+            <li id="liSSITemplates">@Html.ActionLink("SSI Templates", "SSITemplateList", "Accounts")</li>
+            <li id="liWirePurpose">@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
+            <li id="liWireLogs">@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
+            <li id="liUserLogs">@Html.ActionLink("User Audits", "Index", "Audit")</li>
+            <li id="liMQLogs">@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li title="Hangfire Jobs"><a href="/jobs" target="_blank"><i class="glyphicon glyphicon-stats"></i></a></li>
+            <li title="Logout"><a id="btnLogOff"><i class="glyphicon glyphicon-log-out"></i></a></li>
+        </ul>
+    </div>
 
 
 
