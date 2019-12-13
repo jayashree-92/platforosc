@@ -61,6 +61,15 @@
     margin-bottom: 0px;
 }
 
+    .dashBoardCaption h1 {
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+
+    .dashBoardCaption label {
+        font-size: 30px;
+    }
+
 .dashboardIcon {
     font-size: 55px;
     opacity: 0.1;
@@ -70,7 +79,7 @@
     position: absolute;
     /* margin: 0px; */
     right: 30px;
-    top: 25px;
+    top: 20px;
     /*text-align: center;
     display: table-cell;
     margin: 1.5%;
@@ -1292,6 +1301,11 @@ button#btnSaveIrConfig {
     font-weight: normal;
     color: #999999;
 }
+.text-info {
+    font-weight: normal;
+    color: #35718e;
+}
+
 
 .text-divider {
     font-weight: lighter;
