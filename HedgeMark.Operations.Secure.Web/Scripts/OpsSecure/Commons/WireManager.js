@@ -292,11 +292,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return "";
 
         switch (wireLog.WireStatusId) {
-            case 1: angular.element("#workflowStatus_" + index).addClass("text-info");
+            case 1: angular.element("#workflowStatus_" + index).addClass("text-success");
                 return "Drafted";
             case 2: angular.element("#workflowStatus_" + index).addClass("text-warning");
                 return "Initiated";
-            case 3: angular.element("#workflowStatus_" + index).addClass("text-success");
+            case 3: angular.element("#workflowStatus_" + index).addClass("text-info");
                 return $scope.getSwiftStatusString(wireLog.SwiftStatusId) + " Approved";
             case 4: angular.element("#workflowStatus_" + index).addClass("text-blocked");
                 if ($scope.WireTicket.SwiftStatusId == 1)
@@ -315,11 +315,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case 1: return "";
             case 2: if ($container != null) $container.addClass("text-warning");
                 return " started Processing the";
-            case 3: if ($container != null) $container.addClass("text-info");
+            case 3: if ($container != null) $container.addClass("text-success");
                 return " Acknowledged the";
             case 4: if ($container != null) $container.addClass("text-dander");
                 return " N-Acknowledged the ";
-            case 5: if ($container != null) $container.addClass("text-success");
+            case 5: if ($container != null) $container.addClass("text-info");
                 return " Completed the";
             case 6: if ($container != null) $container.addClass("text-dander");
                 return " Failed the";
@@ -330,18 +330,18 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.getWireStatus = function () {
 
-        angular.element("#spnwireStatus").removeClass("text-info text-warning text-success text-blocked text-danger");
+        angular.element("#spnwireStatus").removeClass("label-info label-warning label-success label-default label-danger");
 
         switch ($scope.WireTicket.WireStatusId) {
-            case 1: angular.element("#spnwireStatus").addClass("text-info");
+            case 1: angular.element("#spnwireStatus").addClass("label-success");
                 return $scope.isLastModifiedUser ? "Modified" : "Drafted";
-            case 2: angular.element("#spnwireStatus").addClass("text-warning");
+            case 2: angular.element("#spnwireStatus").addClass("label-warning");
                 return "Initiated";
-            case 3: angular.element("#spnwireStatus").addClass("text-success");
+            case 3: angular.element("#spnwireStatus").addClass("label-info");
                 return "Approved";
-            case 4: angular.element("#spnwireStatus").addClass("text-blocked");
+            case 4: angular.element("#spnwireStatus").addClass("label-default");
                 return $scope.WireTicket.SwiftStatusId == 1 ? "Rejected" : "Cancelled";
-            case 5: angular.element("#spnwireStatus").addClass("text-danger");
+            case 5: angular.element("#spnwireStatus").addClass("label-danger");
                 return "Failed";
             default:
                 return "Draft";
@@ -351,18 +351,18 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.getSwiftStatus = function () {
 
-        angular.element("#spnswiftStatus").removeClass('text-info text-warning text-success text-blocked text-danger');
+        angular.element("#spnswiftStatus").removeClass('label-info label-warning label-success label-default label-danger');
 
         switch ($scope.WireTicket.SwiftStatusId) {
-            case 2: angular.element("#spnswiftStatus").addClass("text-warning");
+            case 2: angular.element("#spnswiftStatus").addClass("label-warning");
                 return "Pending Acknowledgement";
-            case 3: angular.element("#spnswiftStatus").addClass("text-info");
+            case 3: angular.element("#spnswiftStatus").addClass("label-success");
                 return "Pending Confirmation";
-            case 4: angular.element("#spnswiftStatus").addClass("text-dander");
+            case 4: angular.element("#spnswiftStatus").addClass("label-dander");
                 return "N-Acknowledged";
-            case 5: angular.element("#spnswiftStatus").addClass("text-success");
+            case 5: angular.element("#spnswiftStatus").addClass("label-info");
                 return "Completed";
-            case 6: angular.element("#spnswiftStatus").addClass("text-dander");
+            case 6: angular.element("#spnswiftStatus").addClass("label-dander");
                 return "Failed";
         }
     }
@@ -1309,8 +1309,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.WireTicket.OnBoardSSITemplateId = angular.copy($("#liReceivingBookAccount").select2('val'));
             if ($scope.WireTicket.OnBoardSSITemplateId != "") {
                 if ($scope.wireTicketObj.IsBookTransfer) {
-
-
 
                     $http.get("/Home/GetBoardingAccount?onBoardingAccountId=" + $scope.WireTicket.OnBoardSSITemplateId + "&valueDate=" + $("#wireValueDate").text()).then(function (response) {
 

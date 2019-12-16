@@ -16,34 +16,34 @@
     </div>
     <ul class="nav nav-tabs" data-tabs="tabs" id="ulAuditTab">
         <li ng-class="{active:isUserAuditsActive }"><a href="#auditContainer" data-toggle="tab" ng-click="navigateAuditTabs(true)">Audits</a></li>
-        <li ng-class="{active:!isUserAuditsActive }"><a href="#uploadContainer" data-toggle="tab" ng-click="navigateAuditTabs(false)">Account Uploads</a></li>
+        <li ng-class="{active:!isUserAuditsActive }"><a href="#uploadContainer" data-toggle="tab" ng-click="navigateAuditTabs(false)">Bulk Uploads</a></li>
     </ul>
     <div class="tab-content" id="contentTabs">
         <div class="tab-pane" id="auditContainer" ng-class="{active:isUserAuditsActive }">
             <div class="panel">
                 <div class="panel-body">
-                    <table id="tblAuditLogsDetails" class="table table-condensed table-hover"><tfoot></tfoot></table>
+                    <table id="tblAuditLogsDetails" class="table table-bordered table-striped table-condensed table-hover"><tfoot></tfoot></table>
                 </div>
             </div>
         </div>
-        <div class="tab-pane" id="uploadContainer" ng-class="{active:!isUserAuditsActive }">
-            <ul class="nav nav-tabs" data-tabs="tabs" id="ulUploadTab">
-                <li ng-class="{active:isFundAccountLog }"><a href="#accountContainer" data-toggle="tab" ng-click="navigateUploadTabs(true)">Fund Account</a></li>
-                <li ng-class="{active:!isFundAccountLog }"><a href="#ssiTemplateContainer" data-toggle="tab" ng-click="navigateUploadTabs(false)">SSI Template</a></li>
-            </ul>
+        <div class="tab-pane panel" id="uploadContainer" ng-class="{active:!isUserAuditsActive }">
+
+
+            <div class="container">
+                <div class="btn-group btn-group-sm" data-toggle="buttons-radio" id="ulUploadTab" style="padding-top: 15px;">
+                    <a ng-class="{active:isFundAccountLog }" href="#accountContainer" class="btn btn-sm btn-default" data-toggle="tab" ng-click="navigateUploadTabs(true)"> Fund Account</a>
+                    <a ng-class="{active:!isFundAccountLog }" href="#accountContainer" class="btn btn-sm btn-default" data-toggle="tab" ng-click="navigateUploadTabs(false)"> SSI Template</a>
+                </div>
+            </div>
             <div class="tab-content" id="contentUploadTabs">
                 <div class="tab-pane" id="accountContainer" ng-class="{active:isFundAccountLog }">
-                    <div class="panel">
-                        <div class="panel-body">
-                            <table id="tblAccountUploadDetails" class="table table-condensed table-hover"><tfoot></tfoot></table>
-                        </div>
+                    <div class="panel-body" style="padding-top: 5px">
+                        <table id="tblAccountUploadDetails" class="table table-bordered table-striped table-condensed table-hover"><tfoot></tfoot></table>
                     </div>
                 </div>
                 <div class="tab-pane" id="ssiTemplateContainer" ng-class="{active:!isFundAccountLog }">
-                    <div class="panel">
-                        <div class="panel-body">
-                            <table id="tblSSITemplateUploadDetails" class="table table-condensed table-hover"><tfoot></tfoot></table>
-                        </div>
+                    <div class="panel-body" style="padding-top: 5px">
+                        <table id="tblSSITemplateUploadDetails" class="table table-bordered table-striped table-condensed table-hover"><tfoot></tfoot></table>
                     </div>
                 </div>
             </div>
@@ -51,6 +51,6 @@
     </div>
 </div>
 
-        @section Javascript{
-            <script src="~/Scripts/OpsSecure/UserAuditLog.js"></script>
-        }
+@section Javascript{
+    <script src="~/Scripts/OpsSecure/UserAuditLog.js"></script>
+}

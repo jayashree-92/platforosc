@@ -484,7 +484,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             isExists = $filter('filter')($scope.SSIPaymentReasons, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
         }
         else {
-           isExists = $filter('filter')($scope.serviceProviders, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
+            isExists = $filter('filter')($scope.serviceProviders, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
         }
 
         if (isExists) {
@@ -808,7 +808,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
         if (!$scope.ssiTemplateForm.$valid) {
             if ($scope.ssiTemplateForm.$error.required == undefined)
-            notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
+                notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
             else {
                 var message = "";
                 angular.forEach($scope.ssiTemplateForm.$error.required, function (ele, ind) {
@@ -838,7 +838,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $("#btnSaveCommentAgreements").html("<i class=\"glyphicon glyphicon-floppy-save\"></i>&nbsp;Save Changes");
             $("#btnSendApproval").show();
         }
-        
+
         $("#pMsg").html(confirmationMsg);
         $("#updateSSITemplateModal").modal("show");
     }
@@ -894,73 +894,63 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         "cursor": "pointer"
     });
 
-    function attachment() {
-        Dropzone.options.myAwesomeDropzone = false;
-        Dropzone.autoDiscover = false;
+    $("#uploadSSIFiles").dropzone({
+        url: "/Accounts/UploadSsiTemplateFiles?ssiTemplateId=" + ssiTemplateId,
+        dictDefaultMessage: "<span style='font-size:20px;font-weight:normal;font-style:italic'>Drag/Drop SSI documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
+        autoDiscover: false,
+        acceptedFiles: ".csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
+        maxFiles: 6,
+        previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-sm'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
+            "</div> <div class='panel-body'> <span class='dz-upload' data-dz-uploadprogress></span>" +
+            "<div class='progress'><div data-dz-uploadprogress class='progress-bar progress-bar-warning progress-bar-striped active dzFileProgress' style='width: 0%'></div>" +
+            "</div></div></div></div>",
 
+        maxfilesexceeded: function (file) {
+            this.removeAllFiles();
+            this.addFile(file);
+        },
+        init: function () {
+            var myDropZone = this;
+            this.on("processing", function (file) {
+                this.options.url = "/Accounts/UploadSsiTemplateFiles?ssiTemplateId=" + ssiTemplateId;
+            });
+        },
+        processing: function (file, result) {
+            $("#uploadFiles").animate({ "min-height": "140px" });
+        },
+        success: function (file, result) {
+            if (ssiTemplateId == 0) {
+                notifyWarning("Please save ssi template to upload documents");
+                return;
+            } else {
+                $(".dzFileProgress").removeClass("progress-bar-striped").removeClass("active").removeClass("progress-bar-warning").addClass("progress-bar-success");
+                $(".dzFileProgress").html("Upload Successful");
 
-        $("#uploadFiles").dropzone({
-            url: "/Accounts/UploadSsiTemplateFiles?ssiTemplateId=" + ssiTemplateId,
-            dictDefaultMessage: "<span><span style=\"color: red\"> * </span>Drag/Drop SSI template files here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
-            autoDiscover: false,
-            acceptedFiles: ".csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
-            maxFiles: 6,
-            previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-dz'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
-                "</div> <div class='panel-body'> <span class='dz-upload' data-dz-uploadprogress></span>" +
-                "<div class='progress'><div data-dz-uploadprogress class='progress-bar progress-bar-warning progress-bar-striped active dzFileProgress' style='width: 0%'></div>" +
-                "</div></div></div></div>",
-
-            maxfilesexceeded: function (file) {
-                this.removeAllFiles();
-                this.addFile(file);
-            },
-            init: function () {
-                var myDropZone = this;
-                this.on("processing", function (file) {
-                    this.options.url = "/Accounts/UploadSsiTemplateFiles?ssiTemplateId=" + ssiTemplateId;
+                var aDocument = result;
+                $.each(aDocument.Documents, function (index, value) {
+                    $scope.ssiTemplateDocuments.push(value);
                 });
-            },
-            processing: function (file, result) {
-                $("#uploadFiles").animate({ "min-height": "140px" });
-            },
-            success: function (file, result) {
-                if (ssiTemplateId == 0) {
-                    notifyWarning("Please save ssi template to upload documents");
+
+                viewAttachmentTable($scope.ssiTemplateDocuments);
+            }
+        },
+        queuecomplete: function () {
+        },
+        complete: function (file, result) {
+            if (ssiTemplateId != 0) {
+                $("#uploadFiles").removeClass("dz-drag-hover");
+
+                if (this.getRejectedFiles().length > 0 && this.getAcceptedFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                    showMessage("File format is not supported to upload.", "Status");
                     return;
-                } else {
-                    $(".dzFileProgress").removeClass("progress-bar-striped").removeClass("active").removeClass("progress-bar-warning").addClass("progress-bar-success");
-                    $(".dzFileProgress").html("Upload Successful");
-
-                    var aDocument = result;
-                    $.each(aDocument.Documents, function (index, value) {
-                        $scope.ssiTemplateDocuments.push(value);
-                    });
-
-                    viewAttachmentTable($scope.ssiTemplateDocuments);
                 }
-            },
-            queuecomplete: function () {
-            },
-            complete: function (file, result) {
-                if (ssiTemplateId != 0) {
-                    $("#uploadFiles").removeClass("dz-drag-hover");
 
-                    if (this.getRejectedFiles().length > 0 && this.getAcceptedFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                        showMessage("File format is not supported to upload.", "Status");
-                        return;
-                    }
-
-                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                        notifySuccess("Files Uploaded successfully");
-                    }
+                if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                    notifySuccess("Files Uploaded successfully");
                 }
             }
-        });
-    }
-
-    attachment();
-
-    /* SSI Template Attachemnt */
+        }
+    });
 
 
 

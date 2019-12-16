@@ -15,6 +15,10 @@ output,
     font-size: 12px;
 }
 
+.form-control {
+    height: 32px;
+}
+
 .label {
     padding: .2em .6em .3em;
     font-size: 11px;

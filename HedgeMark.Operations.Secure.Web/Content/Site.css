@@ -1061,6 +1061,18 @@ ol.status-track li.status-track-bypass:before {
     padding: 9px 10px;
 }
 
+.select2-results .select2-highlighted {
+    background-color: #107a83;
+}
+
+.select2-container-active .select2-choice,
+.select2-container-multi.select2-container-active .select2-choices,
+.select2-drop-active,
+.select2-drop-auto-width,
+.select2-drop.select2-drop-above.select2-drop-active {
+    border-color: #107a83;
+}
+
 
 /*Bootstrap sub menu code*/
 .marginBottom-0 {
@@ -1301,6 +1313,7 @@ button#btnSaveIrConfig {
     font-weight: normal;
     color: #999999;
 }
+
 .text-info {
     font-weight: normal;
     color: #35718e;
@@ -1865,8 +1878,8 @@ div.DTCR_pointer {
 }
 
 #modalToRetrieveWires .modal-body div.panel-heading {
-    font-size: 12px;
-    padding: 8px 15px;
+    font-size: 14px;
+    /*padding: 8px 15px;*/
     border-top: 2px solid #107A83;
 }
 
@@ -1921,7 +1934,7 @@ div.DTCR_pointer {
 
 #ModalToRetieveSystemTaskLog .modal-footer,
 #modalToRetrieveWires .modal-footer {
-    padding: 8px 20px 8px 20px;
+    padding: 8px 15px 8px 15px;
     position: -webkit-sticky;
     position: sticky;
     bottom: 0;
@@ -1956,20 +1969,28 @@ div.DTCR_pointer {
     padding-left: 20px;
 }
 
-#accountOnBoardContainer .input-group[class*="col-"], #contactOnBoardContainer .input-group[class*="col-"], #contactListDiv .input-group[class*="col-"] {
+#accountOnBoardContainer .input-group[class*="col-"], 
+#contactOnBoardContainer .input-group[class*="col-"], 
+#contactListDiv .input-group[class*="col-"] {
     float: none;
     padding-right: 0;
     padding-left: 15px;
 }
 
-#accountOnBoardContainer .liAgreement .select2-container {
-    width: 500px !important;
-}
-
-#accountOnBoardContainer .AdjustDropDownWidth .select2-container, #ssiTemplateOnBoardContainer .AdjustDropDownWidth .select2-container, #contactListDiv .AdjustDropDownWidth .select2-container, #contactOnBoardContainer .AdjustDropDownWidth .select2-container {
+#accountOnBoardContainer .AdjustDropDownWidth .select2-container,
+#ssiTemplateOnBoardContainer .AdjustDropDownWidth .select2-container,
+#contactListDiv .AdjustDropDownWidth .select2-container,
+#contactOnBoardContainer .AdjustDropDownWidth .select2-container {
     width: 100% !important;
 }
 
+#ssiTemplateDetailDiv legend.small,
+#ssiTemplateDetailDiv span.small,
+#accountModal legend.small {
+    font-size: 13px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
 
 [data-toggle='collapse'] {
     position: -webkit-sticky;
@@ -1979,7 +2000,7 @@ div.DTCR_pointer {
 }
 
 .modal-footer {
-    padding: 8px 20px 8px 20px;
+    /*padding: 8px 20px 8px 20px;*/
     position: -webkit-sticky;
     position: sticky;
     bottom: 0;
@@ -2014,10 +2035,18 @@ div.DTCR_pointer {
 }
 
 .dropzone {
-    padding: 15px 15px;
+    padding: 5px 15px;
     min-height: 90px;
 }
 
 .no-padding {
     padding: 0px !important;
+}
+
+
+#hmStatus {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-right: 2%;
+    font-size: 12px;
 }

@@ -95,7 +95,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                 //sortable: false,
                 "searching": true,
                 "bInfo": false,
-                "sDom": "ift",
+                //"sDom": "ift",
                 //pagination: true,
                 "sScrollX": "100%",
                 "sScrollXInner": "100%",
