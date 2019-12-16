@@ -115,6 +115,8 @@ function validateForm() {
 
 //<!-- validate the form data and submit if valid -->
 function submitForm() {
+	
+	localStorage.setItem("SM-HM-Ops-Secure-CommitId", document.Login.USER.value);
     if (validateForm()) {
         document.Login.submit();
         return true;
