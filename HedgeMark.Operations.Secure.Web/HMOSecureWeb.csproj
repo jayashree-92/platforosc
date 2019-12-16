@@ -416,13 +416,11 @@
     <Content Include="Images\loading.gif" />
     <Content Include="Images\LoginBackground.jpg" />
     <Content Include="Images\spinner.gif" />
-    <Content Include="login\forms\BNY_Mellon_Company.png" />
     <Content Include="login\forms\css\bootstrap-bny-2.css" />
     <Content Include="login\forms\css\login.css" />
     <Content Include="login\forms\css\PwdLogin.css" />
     <Content Include="login\forms\Error.html" />
     <Content Include="login\forms\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="login\forms\HedgemarkIcon.png" />
     <Content Include="login\forms\img\BK_d_52px.jpg" />
     <Content Include="login\forms\img\bnym_login_bullet.gif" />
     <Content Include="login\forms\img\bnym_login_dottedhr.gif" />
@@ -434,10 +432,10 @@
     <Content Include="login\forms\img\spacer.gif" />
     <Content Include="login\forms\img\tbnymlogo.gif" />
     <Content Include="login\forms\img\verticalhrlong.gif" />
-    <Content Include="login\forms\LoginBackground.jpg" />
     <Content Include="login\forms\LoginHelp.html" />
     <Content Include="login\forms\logout.html" />
     <Content Include="login\forms\PrivacyPolicy.html" />
+    <Content Include="login\forms\scripts\login.js" />
     <Content Include="login\forms\TermsOfUse.html" />
     <Content Include="logout\logout.html" />
     <Content Include="logout\logout_old.html" />
