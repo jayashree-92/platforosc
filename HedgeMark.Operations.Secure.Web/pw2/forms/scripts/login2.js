@@ -90,41 +90,6 @@ function isValidURL(data) {
 }
 
 
-//<!-- validate the form data for empty String or alphaneumeric userid --> 
-function validateForm() {
-
-    if (document.Login.USER.value == "") {
-        alert("Field entry is required.");
-        document.Login.USER.focus();
-        return false;
-    }
-    else if (document.Login.PASSWRD.value == "") {
-        alert("Field entry is required.");
-        document.Login.PASSWRD.focus();
-        return false;
-    }
-    else if (!validateInput(document.Login.USER.value)) {
-        alert('Please enter a vaild user id');
-
-        return false;
-    }
-    return true;
-}
-
-
-
-//<!-- validate the form data and submit if valid -->
-function submitForm() {
-    localStorage.setItem("SM-HM-Ops-Secure-CommitId", document.forms[0].USER.value);
-    if (validateForm()) {
-        document.Login.submit();
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
 //<!-- Display Pop-Up window for help info. -->
 
 
@@ -143,6 +108,17 @@ app.controller('loginController', function ($scope) {
         linkTermsOfUse: 'https://www.bnymellon.com/us/en/terms-of-use.jsp',
         linkCookieCompliance: '/assets/bnym/cookie.landing.html'
     };
+    $scope.pf = {};
+
+    var commitId = localStorage.getItem("SM-HM-Ops-Secure-CommitId");
+
+    if (commitId != null && commitId.length > 0) {
+        $scope.pf.username = commitId;
+        document.getElementById('hmOpsPassword').focus();
+    }
+    else
+        document.getElementById('hmOpsUserID').focus();
+
 });
 
 function setFocus(loginFailed, rememberUsernameCookieExists, enableRememberUsername, isChainedUsernameAvailable) {
@@ -151,36 +127,21 @@ function setFocus(loginFailed, rememberUsernameCookieExists, enableRememberUsern
         if (loginFailed || (rememberUsernameCookieExists && enableRememberUsername) || isChainedUsernameAvailable)
             document.getElementById('hmOpsPassword').focus();
         else
-            document.getElementById('username').focus();
+            document.getElementById('hmOpsUserID').focus();
     }
-}
-
-function postForgotPassword(enableRememberUsername, passwordReset, forgotPasswordUrl) {
-    var target = forgotPasswordUrl;
-    if (enableRememberUsername)
-        if (document.getElementById('rememberUsername').checked) {
-            target += "&prEnableRememberUsername";
-        }
-
-    document.forms[0].action = target;
-    document.forms[0][passwordReset].value = 'clicked';
-    document.forms[0].submit();
-    document.Login.submit();
-    return true;
 }
 
 function postOk(ok) {
     //trimming the username
-    document.getElementById('username').value = document.getElementById('username').value.trim();
-    localStorage.setItem("SM-HM-Ops-Secure-CommitId", document.forms[0].USER.value);
-    document.forms[0]["signInBtn"].disabled = true;
-    document.forms[0].submit();
+    document.getElementById('hmOpsUserID').value = document.getElementById('hmOpsUserID').value.trim();
+    document.PWChange["signInBtn"].disabled = true;
+    document.PWChange.submit();
 }
 
 var wasSubmitted = false;
 
 function postOnReturn(e) {
-    if (document.getElementById('username').value == '') {
+    if (document.getElementById('hmOpsUserID').value == '') {
         return true;
     }
     if (document.getElementById('hmOpsPassword').value == '') {
@@ -194,49 +155,13 @@ function postOnReturn(e) {
         if (!wasSubmitted) {
             wasSubmitted = true;
             //trimming the username
-            postOk();
+            document.getElementById('hmOpsUserID').value = document.getElementById('hmOpsUserID').value.trim();
+            document.PWChange["signInBtn"].disabled = true;
+            document.PWChange.submit();
             return false;
         }
     } else {
         return true;
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-$(document).ready(function () {
-
-    var arr = [];
-
-    for (var i = 0; i < localStorage.length; i++) {
-        if (localStorage.key(i).indexOf('hm-ops-signal-') === 0) {
-            arr.push(localStorage.key(i));
-        }
-    }
-
-    for (var i = 0; i < arr.length; i++) {
-        localStorage.removeItem(arr[i]);
-    }
-
-
-    $("#hmOpsPassword").on("keypress", function (e) {
-        var s = String.fromCharCode(e.which);
-        if ((s.toUpperCase() === s && s.toLowerCase() !== s && !e.shiftKey) || (s.toUpperCase() !== s && s.toLowerCase() === s && e.shiftKey)) {
-            $("#hmOpsPassword").popover("show");
-        } else if ((s.toLowerCase() === s && s.toUpperCase() !== s && !e.shiftKey) || (s.toLowerCase() !== s && s.toUpperCase() === s && e.shiftKey)) {
-            $("#hmOpsPassword").popover("hide");
-        }
-    });
-
-    //Toggle warning message on Caps-Lock toggle (with some limitation)
-    $("#hmOpsPassword").keydown(function (e) {
-        if (e.which == 20) {
-            $("#hmOpsPassword").popover("toggle");
-        }
-    });
-
-    $("#hmOpsPassword").on("focusout", function () {
-        $("#hmOpsPassword").popover("hide");
-    });
-
-});
 

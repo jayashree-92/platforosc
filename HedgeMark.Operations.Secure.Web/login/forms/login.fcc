@@ -15,12 +15,12 @@
 
     <meta name="viewport" content="width=device-width" />
     <meta name="google-site-verification" content="EJIcNO6c1DD7Rqd2wrjvIGIXgbfLAKa8MfkMc1XUAe4" />
-    <title>Hedgemark - DMA Operations & Accounting</title>
+    <title>Hedgemark Operations Secure</title>
     <link rel="stylesheet" href="/Content/bootstrap-bny-3.css" type="text/css">
     <link rel="stylesheet" href="/Content/bootstrap-bny-nexen.css" type="text/css">
     <link rel="stylesheet" href="/Content/site.css" type="text/css">
     <link rel="stylesheet" href="css/login.css" type="text/css">
-    <script src="/Scripts/jquery-2.0.3.js"></script>
+    <script src="/Scripts/jquery-3.3.1.js"></script>
     <script src="/Scripts/angular.js"></script>
     <script src="/Scripts/angular-animate.js"></script>
     <script src="/Scripts/angular-route.js"></script>

@@ -457,6 +457,7 @@
     <Content Include="pw2\forms\logout.aspx" />
     <Content Include="pw2\forms\logout.html" />
     <Content Include="pw2\forms\PrivacyPolicy.html" />
+    <Content Include="pw2\forms\scripts\login2.js" />
     <Content Include="pw2\forms\TermsOfUse.html" />
     <Content Include="pw\forms\PasswordSecurity.html" />
     <Content Include="Scripts\angular-animate.js" />
