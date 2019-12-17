@@ -647,6 +647,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Key>
             <PropertyRef Name="dmaAgreementOnBoardingId" />
             <PropertyRef Name="dmaFundOnBoardId" />
+            <PropertyRef Name="dmaClientOnBoardId" />
             <PropertyRef Name="PBFXNetting" />
             <PropertyRef Name="AgreementType" />
             <PropertyRef Name="AgreementStatus" />
@@ -655,7 +656,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           </Key>
           <Property Name="dmaAgreementOnBoardingId" Type="bigint" Nullable="false" />
           <Property Name="dmaFundOnBoardId" Type="bigint" Nullable="false" />
+          <Property Name="dmaClientOnBoardId" Type="bigint" Nullable="false" />
           <Property Name="AgreementTypeId" Type="int" />
+          <Property Name="AgreementStatusId" Type="int" />
+          <Property Name="dmaOnBoardingAgreementVersionId" Type="bigint" />
+          <Property Name="dmaCounterPartyFamilyId" Type="bigint" />
           <Property Name="dmaCounterPartyOnBoardId" Type="bigint" />
           <Property Name="Comments" Type="nvarchar" MaxLength="3000" />
           <Property Name="CurrencyCode" Type="varchar" MaxLength="20" />
@@ -692,14 +697,27 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="TransferTiming" Type="varchar" MaxLength="10" />
           <Property Name="AgreementTask" Type="nvarchar" MaxLength="500" />
           <Property Name="ActualLaunchDate" Type="datetime" />
+          <Property Name="RevisedLaunchedDate" Type="datetime" />
+          <Property Name="OriginalTargetLaunchDate" Type="datetime" />
           <Property Name="TradeStartDate" Type="datetime" />
+          <Property Name="LaunchStatus" Type="varchar" MaxLength="100" />
           <Property Name="AgreementType" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="AgreementStatus" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="dmaCounterPartyFamilyId" Type="bigint" />
+          <Property Name="AgreementVersion" Type="varchar" MaxLength="500" />
+          <Property Name="TargetCompletion" Type="varchar" MaxLength="50" />
+          <Property Name="TargetCompletionDate" Type="datetime" />
+          <Property Name="RelativeDays" Type="int" />
+          <Property Name="RelativeOptions" Type="varchar" MaxLength="50" />
+          <Property Name="Notes" Type="varchar" MaxLength="8000" />
+          <Property Name="HistoricalNotes" Type="varchar" MaxLength="8000" />
+          <Property Name="NotesModifiedDate" Type="datetime" />
+          <Property Name="FullyExecutedDate" Type="datetime" />
+          <Property Name="StatusDate" Type="date" />
           <Property Name="CounterpartyFamily" Type="varchar" MaxLength="100" />
           <Property Name="CounterpartyName" Type="nvarchar" MaxLength="500" />
           <Property Name="CounterpartyShortCode" Type="nvarchar" MaxLength="500" />
           <Property Name="hFundId" Type="int" />
+          <Property Name="ClientName" Type="varchar" MaxLength="200" />
           <Property Name="LegalFundName" Type="varchar" MaxLength="100" />
           <Property Name="ShortFundName" Type="varchar" MaxLength="100" />
           <Property Name="AgreementLongName" Type="nvarchar" MaxLength="1114" Nullable="false" />
@@ -830,7 +848,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
             <DefiningQuery>SELECT 
     [vw_OnboardedAgreements].[dmaAgreementOnBoardingId] AS [dmaAgreementOnBoardingId], 
     [vw_OnboardedAgreements].[dmaFundOnBoardId] AS [dmaFundOnBoardId], 
+    [vw_OnboardedAgreements].[dmaClientOnBoardId] AS [dmaClientOnBoardId], 
     [vw_OnboardedAgreements].[AgreementTypeId] AS [AgreementTypeId], 
+    [vw_OnboardedAgreements].[AgreementStatusId] AS [AgreementStatusId], 
+    [vw_OnboardedAgreements].[dmaOnBoardingAgreementVersionId] AS [dmaOnBoardingAgreementVersionId], 
+    [vw_OnboardedAgreements].[dmaCounterPartyFamilyId] AS [dmaCounterPartyFamilyId], 
     [vw_OnboardedAgreements].[dmaCounterPartyOnBoardId] AS [dmaCounterPartyOnBoardId], 
     [vw_OnboardedAgreements].[Comments] AS [Comments], 
     [vw_OnboardedAgreements].[CurrencyCode] AS [CurrencyCode], 
@@ -867,14 +889,27 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
     [vw_OnboardedAgreements].[TransferTiming] AS [TransferTiming], 
     [vw_OnboardedAgreements].[AgreementTask] AS [AgreementTask], 
     [vw_OnboardedAgreements].[ActualLaunchDate] AS [ActualLaunchDate], 
+    [vw_OnboardedAgreements].[RevisedLaunchedDate] AS [RevisedLaunchedDate], 
+    [vw_OnboardedAgreements].[OriginalTargetLaunchDate] AS [OriginalTargetLaunchDate], 
     [vw_OnboardedAgreements].[TradeStartDate] AS [TradeStartDate], 
+    [vw_OnboardedAgreements].[LaunchStatus] AS [LaunchStatus], 
     [vw_OnboardedAgreements].[AgreementType] AS [AgreementType], 
     [vw_OnboardedAgreements].[AgreementStatus] AS [AgreementStatus], 
-    [vw_OnboardedAgreements].[dmaCounterPartyFamilyId] AS [dmaCounterPartyFamilyId], 
+    [vw_OnboardedAgreements].[AgreementVersion] AS [AgreementVersion], 
+    [vw_OnboardedAgreements].[TargetCompletion] AS [TargetCompletion], 
+    [vw_OnboardedAgreements].[TargetCompletionDate] AS [TargetCompletionDate], 
+    [vw_OnboardedAgreements].[RelativeDays] AS [RelativeDays], 
+    [vw_OnboardedAgreements].[RelativeOptions] AS [RelativeOptions], 
+    [vw_OnboardedAgreements].[Notes] AS [Notes], 
+    [vw_OnboardedAgreements].[HistoricalNotes] AS [HistoricalNotes], 
+    [vw_OnboardedAgreements].[NotesModifiedDate] AS [NotesModifiedDate], 
+    [vw_OnboardedAgreements].[FullyExecutedDate] AS [FullyExecutedDate], 
+    [vw_OnboardedAgreements].[StatusDate] AS [StatusDate], 
     [vw_OnboardedAgreements].[CounterpartyFamily] AS [CounterpartyFamily], 
     [vw_OnboardedAgreements].[CounterpartyName] AS [CounterpartyName], 
     [vw_OnboardedAgreements].[CounterpartyShortCode] AS [CounterpartyShortCode], 
     [vw_OnboardedAgreements].[hFundId] AS [hFundId], 
+    [vw_OnboardedAgreements].[ClientName] AS [ClientName], 
     [vw_OnboardedAgreements].[LegalFundName] AS [LegalFundName], 
     [vw_OnboardedAgreements].[ShortFundName] AS [ShortFundName], 
     [vw_OnboardedAgreements].[AgreementLongName] AS [AgreementLongName], 
@@ -1713,6 +1748,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Key>
             <PropertyRef Name="dmaAgreementOnBoardingId" />
             <PropertyRef Name="dmaFundOnBoardId" />
+            <PropertyRef Name="dmaClientOnBoardId" />
             <PropertyRef Name="PBFXNetting" />
             <PropertyRef Name="AgreementType" />
             <PropertyRef Name="AgreementStatus" />
@@ -1721,7 +1757,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           </Key>
           <Property Name="dmaAgreementOnBoardingId" Type="Int64" Nullable="false" />
           <Property Name="dmaFundOnBoardId" Type="Int64" Nullable="false" />
+          <Property Name="dmaClientOnBoardId" Type="Int64" Nullable="false" />
           <Property Name="AgreementTypeId" Type="Int32" />
+          <Property Name="AgreementStatusId" Type="Int32" />
+          <Property Name="dmaOnBoardingAgreementVersionId" Type="Int64" />
+          <Property Name="dmaCounterPartyFamilyId" Type="Int64" />
           <Property Name="dmaCounterPartyOnBoardId" Type="Int64" />
           <Property Name="Comments" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
           <Property Name="CurrencyCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
@@ -1758,14 +1798,27 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="TransferTiming" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="AgreementTask" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="ActualLaunchDate" Type="DateTime" Precision="3" />
+          <Property Name="RevisedLaunchedDate" Type="DateTime" Precision="3" />
+          <Property Name="OriginalTargetLaunchDate" Type="DateTime" Precision="3" />
           <Property Name="TradeStartDate" Type="DateTime" Precision="3" />
+          <Property Name="LaunchStatus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="AgreementType" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="AgreementStatus" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="dmaCounterPartyFamilyId" Type="Int64" />
+          <Property Name="AgreementVersion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="TargetCompletion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TargetCompletionDate" Type="DateTime" Precision="3" />
+          <Property Name="RelativeDays" Type="Int32" />
+          <Property Name="RelativeOptions" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="HistoricalNotes" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="NotesModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="FullyExecutedDate" Type="DateTime" Precision="3" />
+          <Property Name="StatusDate" Type="DateTime" Precision="0" />
           <Property Name="CounterpartyFamily" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="CounterpartyName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="CounterpartyShortCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="hFundId" Type="Int32" />
+          <Property Name="ClientName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="LegalFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="AgreementLongName" Type="String" Nullable="false" MaxLength="1114" FixedLength="false" Unicode="true" />
@@ -2501,14 +2554,27 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
                 <ScalarProperty Name="AgreementLongName" ColumnName="AgreementLongName" />
                 <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
                 <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
+                <ScalarProperty Name="ClientName" ColumnName="ClientName" />
                 <ScalarProperty Name="hFundId" ColumnName="hFundId" />
                 <ScalarProperty Name="CounterpartyShortCode" ColumnName="CounterpartyShortCode" />
                 <ScalarProperty Name="CounterpartyName" ColumnName="CounterpartyName" />
                 <ScalarProperty Name="CounterpartyFamily" ColumnName="CounterpartyFamily" />
-                <ScalarProperty Name="dmaCounterPartyFamilyId" ColumnName="dmaCounterPartyFamilyId" />
+                <ScalarProperty Name="StatusDate" ColumnName="StatusDate" />
+                <ScalarProperty Name="FullyExecutedDate" ColumnName="FullyExecutedDate" />
+                <ScalarProperty Name="NotesModifiedDate" ColumnName="NotesModifiedDate" />
+                <ScalarProperty Name="HistoricalNotes" ColumnName="HistoricalNotes" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="RelativeOptions" ColumnName="RelativeOptions" />
+                <ScalarProperty Name="RelativeDays" ColumnName="RelativeDays" />
+                <ScalarProperty Name="TargetCompletionDate" ColumnName="TargetCompletionDate" />
+                <ScalarProperty Name="TargetCompletion" ColumnName="TargetCompletion" />
+                <ScalarProperty Name="AgreementVersion" ColumnName="AgreementVersion" />
                 <ScalarProperty Name="AgreementStatus" ColumnName="AgreementStatus" />
                 <ScalarProperty Name="AgreementType" ColumnName="AgreementType" />
+                <ScalarProperty Name="LaunchStatus" ColumnName="LaunchStatus" />
                 <ScalarProperty Name="TradeStartDate" ColumnName="TradeStartDate" />
+                <ScalarProperty Name="OriginalTargetLaunchDate" ColumnName="OriginalTargetLaunchDate" />
+                <ScalarProperty Name="RevisedLaunchedDate" ColumnName="RevisedLaunchedDate" />
                 <ScalarProperty Name="ActualLaunchDate" ColumnName="ActualLaunchDate" />
                 <ScalarProperty Name="AgreementTask" ColumnName="AgreementTask" />
                 <ScalarProperty Name="TransferTiming" ColumnName="TransferTiming" />
@@ -2545,7 +2611,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
                 <ScalarProperty Name="CurrencyCode" ColumnName="CurrencyCode" />
                 <ScalarProperty Name="Comments" ColumnName="Comments" />
                 <ScalarProperty Name="dmaCounterPartyOnBoardId" ColumnName="dmaCounterPartyOnBoardId" />
+                <ScalarProperty Name="dmaCounterPartyFamilyId" ColumnName="dmaCounterPartyFamilyId" />
+                <ScalarProperty Name="dmaOnBoardingAgreementVersionId" ColumnName="dmaOnBoardingAgreementVersionId" />
+                <ScalarProperty Name="AgreementStatusId" ColumnName="AgreementStatusId" />
                 <ScalarProperty Name="AgreementTypeId" ColumnName="AgreementTypeId" />
+                <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
                 <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
                 <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
               </MappingFragment>

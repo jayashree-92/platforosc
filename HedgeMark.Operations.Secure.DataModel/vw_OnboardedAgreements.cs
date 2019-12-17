@@ -16,7 +16,11 @@ namespace HedgeMark.Operations.Secure.DataModel
     {
         public long dmaAgreementOnBoardingId { get; set; }
         public long dmaFundOnBoardId { get; set; }
+        public long dmaClientOnBoardId { get; set; }
         public Nullable<int> AgreementTypeId { get; set; }
+        public Nullable<int> AgreementStatusId { get; set; }
+        public Nullable<long> dmaOnBoardingAgreementVersionId { get; set; }
+        public Nullable<long> dmaCounterPartyFamilyId { get; set; }
         public Nullable<long> dmaCounterPartyOnBoardId { get; set; }
         public string Comments { get; set; }
         public string CurrencyCode { get; set; }
@@ -53,14 +57,27 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string TransferTiming { get; set; }
         public string AgreementTask { get; set; }
         public Nullable<System.DateTime> ActualLaunchDate { get; set; }
+        public Nullable<System.DateTime> RevisedLaunchedDate { get; set; }
+        public Nullable<System.DateTime> OriginalTargetLaunchDate { get; set; }
         public Nullable<System.DateTime> TradeStartDate { get; set; }
+        public string LaunchStatus { get; set; }
         public string AgreementType { get; set; }
         public string AgreementStatus { get; set; }
-        public Nullable<long> dmaCounterPartyFamilyId { get; set; }
+        public string AgreementVersion { get; set; }
+        public string TargetCompletion { get; set; }
+        public Nullable<System.DateTime> TargetCompletionDate { get; set; }
+        public Nullable<int> RelativeDays { get; set; }
+        public string RelativeOptions { get; set; }
+        public string Notes { get; set; }
+        public string HistoricalNotes { get; set; }
+        public Nullable<System.DateTime> NotesModifiedDate { get; set; }
+        public Nullable<System.DateTime> FullyExecutedDate { get; set; }
+        public Nullable<System.DateTime> StatusDate { get; set; }
         public string CounterpartyFamily { get; set; }
         public string CounterpartyName { get; set; }
         public string CounterpartyShortCode { get; set; }
         public Nullable<int> hFundId { get; set; }
+        public string ClientName { get; set; }
         public string LegalFundName { get; set; }
         public string ShortFundName { get; set; }
         public string AgreementLongName { get; set; }
