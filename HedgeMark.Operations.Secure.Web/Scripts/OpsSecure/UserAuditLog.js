@@ -150,13 +150,13 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                     if (actions.length > 1) {
                         $(actions).each(function (i, action) {
                             if (action == "Deleted") {
-                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-danger\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
+                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-default\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
                             }
                             else if (action == "Edited" || action == "Updated") {
-                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-warning\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
+                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-default\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
                             }
                             else if (action == "Added") {
-                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-success\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
+                                actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-default\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
                             }
                             else if (action == "All") {
                                 actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-default active\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
