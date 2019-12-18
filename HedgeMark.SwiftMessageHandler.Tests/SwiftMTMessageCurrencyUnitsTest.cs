@@ -16,6 +16,8 @@ namespace HedgeMark.SwiftMessageHandler.Tests
         [TestMethod]
         public void CurrencyUnitTestBasedOnConfiguration()
         {
+            Assert.IsTrue(FieldWithCurrencyAndAmount.CurrencyToDecimalPoints.Any());
+
             foreach (var currencyToDecimalPoint in FieldWithCurrencyAndAmount.CurrencyToDecimalPoints)
             {
                 var m = new MT103();
