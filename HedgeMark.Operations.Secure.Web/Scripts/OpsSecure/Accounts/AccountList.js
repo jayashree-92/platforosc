@@ -134,9 +134,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     "sTitle": "Email Type",
                     "mRender": function (tdata) {
                         if (tdata === "Individual")
-                            return "<label class=\"label ng-show-only shadowbox label-default\" style=\"font-size: 12px;\">Individual</label>";
+                            return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Individual</label>";
                         if (tdata === "Group")
-                            return "<label class=\"label ng-show-only shadowbox label-info\" style=\"font-size: 12px;\">Group</label>";
+                            return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Group</label>";
                         return "";
                     }
                 },
@@ -1144,9 +1144,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                      "sTitle": "SSI Template Type",
                      "mRender": function (tdata) {
                          if (tdata === "Broker")
-                             return "<label class=\"label ng-show-only shadowBox label-info\" style=\"font-size: 12px;\">Broker</label>";
+                             return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
                          if (tdata === "Fee/Expense Payment")
-                             return "<label class=\"label ng-show-only shadowBox label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
+                             return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
                          return "";
                      }
                  },
@@ -1182,7 +1182,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 {
                     "mData": "onBoardingSSITemplateId", "sTitle": "Go to SSI Template", "className": "dt-center",
                     "mRender": function (data, type, row) {
-                        // return " <label class=\"label ng-show-only shadowbox label-success\" style=\"font-size: 12px;\">" + row.CompletedCount + "</label> <label class=\"label ng-show-only shadowbox label-warning\"  style=\"font-size: 12px;\">" + row.InProcessCount + "</label> <label class=\"label ng-show-only shadowbox label-info\" style=\"font-size: 12px;\">" + row.TbdCount + "</label>";
+                        // return " <label class=\"label ng-show-only  label-success\" style=\"font-size: 12px;\">" + row.CompletedCount + "</label> <label class=\"label ng-show-only  label-warning\"  style=\"font-size: 12px;\">" + row.InProcessCount + "</label> <label class=\"label ng-show-only  label-info\" style=\"font-size: 12px;\">" + row.TbdCount + "</label>";
                         return "<a class=\"btn btn-primary btn-xs\" id=\"" + data + "\" ><i class=\"glyphicon glyphicon-share-alt\"></i></a>";
                     }
 
@@ -2300,9 +2300,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                                 "sTitle": "SSI Template Type",
                                 "mRender": function (tdata) {
                                     if (tdata === "Broker")
-                                        return "<label class=\"label ng-show-only shadowBox label-info\" style=\"font-size: 12px;\">Broker</label>";
+                                        return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
                                     if (tdata === "Fee/Expense Payment")
-                                        return "<label class=\"label ng-show-only shadowBox label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
+                                        return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
                                     return "";
                                 }
                             },
