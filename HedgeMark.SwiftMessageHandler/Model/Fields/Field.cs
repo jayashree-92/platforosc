@@ -17,7 +17,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         /// https://www2.swift.com/knowledgecentre/publications/usgi/1.0?topic=con_31519.htm
         /// </summary>
         protected static readonly string RegexNotAllowedSwiftXCharacterSet = @"[^a-zA-Z\d\s\/\-\?\:\(\)\.\,\'\+]";
-        
+
         public Field(string name)
         {
             Name = name;
@@ -45,7 +45,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             get
             {
                 var val = GetValue();
-                return string.IsNullOrWhiteSpace(val) ? string.Empty : string.Format("{0}:{1}", Name, GetValue());
+                return string.IsNullOrWhiteSpace(val) ? string.Empty : string.Format("{0}:{1}", Name, val);
             }
         }
 
