@@ -13,26 +13,10 @@ namespace HedgeMark.SwiftMessageHandler.Tests
     [TestClass]
     public class SwiftMTMessageCurrencyUnitsTest
     {
-        private static readonly Dictionary<string, int> CurrencyToDecimalPoints;
-        static SwiftMTMessageCurrencyUnitsTest()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            const string resourceName = "HedgeMark.SwiftMessageHandler.Tests.Configs.CurrencyDecimalUnits.csv";
-
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            using (var reader = new StreamReader(stream))
-            {
-                var lines = reader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                CurrencyToDecimalPoints = (from line in lines
-                                           let lineSplits = line.Split(',')
-                                           select new { currency = lineSplits[1], decimalPoint = lineSplits[3] }).ToDictionary(s => s.currency, v => v.decimalPoint.ToInt(2));
-            }
-        }
-
         [TestMethod]
         public void CurrencyUnitTestBasedOnConfiguration()
         {
-            foreach (var currencyToDecimalPoint in CurrencyToDecimalPoints)
+            foreach (var currencyToDecimalPoint in FieldWithCurrencyAndAmount.CurrencyToDecimalPoints)
             {
                 var m = new MT103();
                 m.setSender("FOOSEDR0AXXX");
@@ -63,7 +47,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
 
                 var finalMessage = m.GetMessage();
 
-                var expectedAmount = "190228" + currencyToDecimalPoint.Key + "1234567";
+                var expectedAmount = string.Format("190228{0}1234567", currencyToDecimalPoint.Key);
 
                 if (currencyToDecimalPoint.Value == 0)
                     expectedAmount = string.Format("{0},", expectedAmount);

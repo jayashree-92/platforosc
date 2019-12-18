@@ -11,7 +11,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
     public class FieldWithCurrencyAndAmount : Field
     {
 
-        private static readonly Dictionary<string, int> CurrencyToDecimalPoints;
+        public static readonly Dictionary<string, int> CurrencyToDecimalPoints;
         static FieldWithCurrencyAndAmount()
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -61,7 +61,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             var amountStrSplits = amountStr.Split(',');
             var allowedDecimalPlaces = CurrencyToDecimalPoints[Currency];
             var amountDecimalUnits = allowedDecimalPlaces > 2 ? amountStrSplits[1].PadRight(allowedDecimalPlaces, '0') : amountStrSplits[1].Substring(0, allowedDecimalPlaces);
-            amountStr = amountStrSplits[0] + "," + amountDecimalUnits;
+            amountStr = string.Format("{0},{1}", amountStrSplits[0], amountDecimalUnits);
             return string.Format("{0}{1}", Currency ?? FieldConstants.USD, amountStr);
         }
 
