@@ -1103,12 +1103,15 @@ body > .popover .popover-content {
         }
 
 .navbar-ops-title-divider {
-    margin-top: 7px;
+    height: 27px;
+    border: #FFFFFF 1.5px solid;
+    margin-top: 8px;
     margin-left: -11px;
     padding: 0px;
     font-size: 19px;
     position: absolute;
     color: #ffffff;
+    border-radius: 2px;
 }
 
 .navbar-ops-title {
