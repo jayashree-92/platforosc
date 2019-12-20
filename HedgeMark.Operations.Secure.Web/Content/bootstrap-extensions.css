@@ -401,10 +401,6 @@ output,
     font-weight: bold;
 }
 
-.input-group-addon {
-    padding: 9px;
-}
-
 .nav-tabs > li > a {
     cursor: pointer;
 }
