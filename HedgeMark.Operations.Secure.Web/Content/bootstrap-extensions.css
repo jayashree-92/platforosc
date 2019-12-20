@@ -19,6 +19,10 @@ output,
     height: 32px;
 }
 
+.input-group-addon {
+    padding: 7px;
+}
+
 .label {
     padding: .2em .6em .3em;
     font-size: 11px;
