@@ -410,6 +410,14 @@ output,
     padding: 10px;
 }
 
+.panel-title .label {
+    font-size: 13px;
+}
+
+.panel-title > a:focus {
+    color: inherit;
+}
+
 .modal-footer {
     border-top: 1px solid #e5e5e5;
 }
@@ -612,7 +620,7 @@ body > .popover .popover-content {
     /* color: #a6a6a6; */
     /* -webkit-box-shadow: none; */
     /*box-shadow: none;*/
-     color: inherit; 
+    color: inherit;
     -webkit-text-fill-color: inherit;
 }
 

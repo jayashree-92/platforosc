@@ -956,7 +956,7 @@ ol.status-track {
 
         ol.status-track li.status-track-active {
             font-weight: bold;
-            border-bottom: 3px solid #107A83;
+            border-bottom: 3px solid #F4BD0C;
             -webkit-animation: progress-animation 0.5s linear alternate infinite;
         }
 
@@ -1014,7 +1014,7 @@ ol.status-track li.status-track-todo:before {
 ol.status-track li.status-track-active:before {
     content: "\0021";
     color: white;
-    background-color: #107A83;
+    background-color: #F4BD0C;
     height: 1.2em;
     width: 1.2em;
     line-height: 1.2em;
@@ -1961,7 +1961,7 @@ div.DTCR_pointer {
 
 #modalToRetrieveWires ol.status-track li.status-track-active {
     font-weight: bold;
-    border-bottom: 2px solid #107A83;
+    border-bottom: 2px solid #F4BD0C;
     -webkit-animation: progress-animation 0.5s linear alternate infinite;
 }
 
