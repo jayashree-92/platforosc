@@ -14,12 +14,6 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class dmaCounterPartyOnBoarding
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public dmaCounterPartyOnBoarding()
-        {
-            this.dmaAgreementOnBoardings = new HashSet<dmaAgreementOnBoarding>();
-        }
-    
         public long dmaCounterPartyOnBoardId { get; set; }
         public string CounterpartyShortCode { get; set; }
         public string CounterpartyName { get; set; }
@@ -30,8 +24,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string UpdatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedAt { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }
         public virtual dmaCounterpartyFamily dmaCounterpartyFamily { get; set; }
     }
 }

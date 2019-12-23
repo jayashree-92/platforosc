@@ -88,8 +88,8 @@ namespace HMOSecureWeb
                 smUserId = ConfigurationManager.AppSettings["LocalSiteMinderCommitId"];
                 roles.Add(OpsSecureUserRoles.WireApprover);
             }
+            var userSso = AccountController.GetUserDetailByCommitId(smUserId);
 
-            var userSso = AccountController.GetEmailOfLdapUserId(smUserId);
             if (userSso == null)
             {
                 Logger.Error(string.Format("access denied to user '{0}', user not registered", smUserId));
@@ -97,7 +97,7 @@ namespace HMOSecureWeb
                 return;
             }
 
-            var email = userSso.varLoginID;
+            var email = userSso.Name;
 
             if (AccountController.AllowedDomains.All(domain => !email.EndsWith(domain, StringComparison.InvariantCultureIgnoreCase)))
             {
@@ -111,12 +111,12 @@ namespace HMOSecureWeb
 
             if (!(roles.Contains(OpsSecureUserRoles.WireApprover) || roles.Contains(OpsSecureUserRoles.WireInitiator)))
             {
-                Logger.InfoFormat(string.Format("LDAP ID: {0}", userSso.LDAPUserID));
+                Logger.InfoFormat(string.Format("LDAP ID: {0}", userSso.CommitId));
 
-                if (!string.IsNullOrWhiteSpace(userSso.LDAPUserID))
+                if (!string.IsNullOrWhiteSpace(userSso.CommitId))
                 {
                     var umsLib = new UmsLibrary();
-                    var ldapGroups = umsLib.GetLdapGroupsOfLdapUser(userSso.LDAPUserID);
+                    var ldapGroups = umsLib.GetLdapGroupsOfLdapUser(userSso.CommitId);
                     if (ldapGroups.Contains(OpsSecureUserRoles.WireApprover))
                         roles.Add(OpsSecureUserRoles.WireApprover);
                     else if (ldapGroups.Contains(OpsSecureUserRoles.WireInitiator))
@@ -136,7 +136,7 @@ namespace HMOSecureWeb
             {
                 var userRole = (from aspUser in context.aspnet_Users
                                 join usr in context.hLoginRegistrations on aspUser.UserName equals usr.varLoginID
-                                where usr.intLoginID == userSso.intLoginID && aspUser.aspnet_Roles.Any(r => AuthorizationManager.AuthorizedDmaUserRoles.Contains(r.RoleName)) && !usr.isDeleted
+                                where usr.intLoginID == userSso.LoginId && aspUser.aspnet_Roles.Any(r => AuthorizationManager.AuthorizedDmaUserRoles.Contains(r.RoleName)) && !usr.isDeleted
                                 let role = aspUser.aspnet_Roles.Any(r => r.RoleName == OpsSecureUserRoles.DMAAdmin) ? OpsSecureUserRoles.DMAAdmin : OpsSecureUserRoles.DMAUser
                                 select role).FirstOrDefault() ?? string.Empty;
 
@@ -200,6 +200,8 @@ namespace HMOSecureWeb
             Session.Timeout = GlobalSessionTimeOut;
             Session["SessionStartTime"] = DateTime.Now;
             Session["userName"] = User.Identity.Name;
+            var smUserId = HttpContext.Current.Request.IsLocal ? ConfigurationManager.AppSettings["LocalSiteMinderCommitId"] : HttpContext.Current.Request.Headers[SiteMinderHeaderToken];
+            Session[SessionVars.UserCommitId.ToString()] = smUserId;
         }
 
         public static ConcurrentBag<string> ActiveUsers = new ConcurrentBag<string>();

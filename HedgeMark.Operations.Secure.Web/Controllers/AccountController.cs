@@ -33,12 +33,13 @@ namespace HMOSecureWeb.Controllers
         }
 
 
-        public static UserAccountDetails GetUserDetails(string userName, IPrincipal user)
+        public static UserAccountDetails GetUserDetails(string commitId, IPrincipal user)
         {
+            var userDetail = GetUserDetailByCommitId(commitId);
             var userDetails = new UserAccountDetails
             {
-                User = GetUserDetail(userName),
-                Name = userName,
+                User = userDetail,
+                Name = userDetail.Name,
                 Role = user.IsInRole(OpsSecureUserRoles.WireApprover)
                     ? OpsSecureUserRoles.WireApprover
                     : user.IsInRole(OpsSecureUserRoles.WireInitiator)
@@ -108,11 +109,16 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public static USP_NEXEN_GetUserDetails_Result GetEmailOfLdapUserId(string userName)
+        public static HMUser GetUserDetailByCommitId(string commitId)
         {
             using (var context = new AdminContext())
             {
-                return context.USP_NEXEN_GetUserDetails(userName, "SITEMINDER").FirstOrDefault();
+                return context.USP_NEXEN_GetUserDetails(commitId, "SITEMINDER").Select(s => new HMUser()
+                {
+                    LoginId = s.intLoginID,
+                    Name = s.varLoginID,
+                    CommitId = s.LDAPUserID
+                }).FirstOrDefault();
             }
         }
     }

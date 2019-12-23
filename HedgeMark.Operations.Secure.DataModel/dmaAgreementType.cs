@@ -14,16 +14,7 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class dmaAgreementType
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public dmaAgreementType()
-        {
-            this.dmaAgreementOnBoardings = new HashSet<dmaAgreementOnBoarding>();
-        }
-    
         public int dmaAgreementTypeId { get; set; }
         public string AgreementType { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<dmaAgreementOnBoarding> dmaAgreementOnBoardings { get; set; }
     }
 }

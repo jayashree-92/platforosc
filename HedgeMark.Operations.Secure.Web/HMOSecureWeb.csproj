@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Local|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -170,6 +171,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-bny-2.css" />
+    <Content Include="Content\bootstrap-bny-3.css" />
+    <Content Include="Content\bootstrap-bny-nexen.css" />
     <Content Include="Content\bootstrap-bny.css" />
     <Content Include="Content\bootstrap-bny.min.css" />
     <Content Include="Content\bootstrap-datepicker.css" />
@@ -400,7 +403,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\big-spinner.gif" />
     <Content Include="Images\bnymellon-arrow-icon.png" />
+    <Content Include="Images\bnymellon_logo.png" />
     <Content Include="Images\BNY_Mellon_Company.png" />
     <Content Include="Images\clear.png" />
     <Content Include="Images\grippy.png" />
@@ -411,13 +416,11 @@
     <Content Include="Images\loading.gif" />
     <Content Include="Images\LoginBackground.jpg" />
     <Content Include="Images\spinner.gif" />
-    <Content Include="login\forms\BNY_Mellon_Company.png" />
     <Content Include="login\forms\css\bootstrap-bny-2.css" />
     <Content Include="login\forms\css\login.css" />
     <Content Include="login\forms\css\PwdLogin.css" />
     <Content Include="login\forms\Error.html" />
     <Content Include="login\forms\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="login\forms\HedgemarkIcon.png" />
     <Content Include="login\forms\img\BK_d_52px.jpg" />
     <Content Include="login\forms\img\bnym_login_bullet.gif" />
     <Content Include="login\forms\img\bnym_login_dottedhr.gif" />
@@ -429,10 +432,10 @@
     <Content Include="login\forms\img\spacer.gif" />
     <Content Include="login\forms\img\tbnymlogo.gif" />
     <Content Include="login\forms\img\verticalhrlong.gif" />
-    <Content Include="login\forms\LoginBackground.jpg" />
     <Content Include="login\forms\LoginHelp.html" />
     <Content Include="login\forms\logout.html" />
     <Content Include="login\forms\PrivacyPolicy.html" />
+    <Content Include="login\forms\scripts\login.js" />
     <Content Include="login\forms\TermsOfUse.html" />
     <Content Include="logout\logout.html" />
     <Content Include="logout\logout_old.html" />
@@ -454,6 +457,7 @@
     <Content Include="pw2\forms\logout.aspx" />
     <Content Include="pw2\forms\logout.html" />
     <Content Include="pw2\forms\PrivacyPolicy.html" />
+    <Content Include="pw2\forms\scripts\login2.js" />
     <Content Include="pw2\forms\TermsOfUse.html" />
     <Content Include="pw\forms\PasswordSecurity.html" />
     <Content Include="Scripts\angular-animate.js" />

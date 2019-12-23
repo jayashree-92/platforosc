@@ -1,4 +1,4 @@
-﻿$("#liAccounts").addClass("active");
+﻿$("#liSSITemplates").addClass("active");
 HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeout) {
     $("#onboardingMenu").addClass("active");
     $("#loading").show();
@@ -32,9 +32,9 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                       "sTitle": "SSI Template Type",
                       "mRender": function (tdata) {
                           if (tdata === "Broker")
-                              return "<label class=\"label ng-show-only shadowBox label-info\" style=\"font-size: 12px;\">Broker</label>";
+                              return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
                           if (tdata === "Fee/Expense Payment")
-                              return "<label class=\"label ng-show-only shadowBox label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
+                              return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
                           return "";
                       }
                   },

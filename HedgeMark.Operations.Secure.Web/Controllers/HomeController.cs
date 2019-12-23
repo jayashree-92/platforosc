@@ -333,7 +333,6 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-
         private static void SaveWireScheduleInfo(WireTicket wire, WireDataManager.WireStatus workflowStatus, int userId, TimeSpan deadlineToApprove)
         {
 
@@ -620,8 +619,7 @@ namespace HMOSecureWeb.Controllers
             using (var context = new AdminContext())
             {
                 onBoardedAgreements = (from hFndOps in context.vw_HFund
-                                       join onBoardFnd in context.onboardingFunds on hFndOps.FundMapId equals onBoardFnd.FundMapId
-                                       join oAgreement in context.dmaAgreementOnBoardings on onBoardFnd.dmaFundOnBoardId equals oAgreement.dmaFundOnBoardId
+                                       join oAgreement in context.vw_OnboardedAgreements on hFndOps.FundMapId equals oAgreement.hFundId
                                        where hFndOps.intFundID == fundId && oAgreement.HMOpsStatus == "Approved"
                                        select new AgreementBaseDetails { AgreementId = oAgreement.dmaAgreementOnBoardingId, AgreementShortName = oAgreement.AgreementShortName }).ToList();
             }

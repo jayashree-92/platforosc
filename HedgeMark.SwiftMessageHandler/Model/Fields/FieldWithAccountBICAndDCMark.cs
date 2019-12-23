@@ -65,22 +65,10 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         {
             var builder = new StringBuilder();
 
-            var isAccAvailable = !string.IsNullOrWhiteSpace(Account);
-
             if (!string.IsNullOrWhiteSpace(DCMark))
                 builder.Append(string.Format("{0}/", DCMark));
 
-            if (!string.IsNullOrWhiteSpace(ABA))
-                builder.AppendFormat("//FW{0}", ABA);
-            else
-            {
-                if (isAccAvailable)
-                    builder.AppendFormat("/{0}", Account);
-
-                if (!string.IsNullOrWhiteSpace(BIC))
-                    builder.AppendFormat("{0}{1}", isAccAvailable ? Environment.NewLine : string.Empty, BIC);
-            }
-
+            builder.Append(base.GetValue());
             return builder.ToString();
         }
 

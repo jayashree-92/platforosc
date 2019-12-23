@@ -12,12 +12,12 @@
             <span></span><b class="caret" style="padding-bottom: 1px;"></b>
         </span>
         &nbsp;<h4 style="display: inline-block">/</h4>&nbsp;
-        <button class="btn btn-default btn-sm btn-primary" id="btnGetWireLogs" ng-click="fnGetWireLogs()" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-refresh"></i>&nbsp;Get Logs</button>
+        <button class="btn btn-sm btn-primary" id="btnGetWireLogs" ng-click="fnGetWireLogs()" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-refresh"></i>&nbsp;Get Logs</button>
         <hr class="dashHr" />
     </div>
 
-    <div class="container-fluid" ng-controller="wireDetailsCtrl">
-        <table id="tblWireStatusDetails" class="table table-hover shadowBox" style="background: white;"></table>
+    <div ng-controller="wireDetailsCtrl">
+        <table id="tblWireStatusDetails" class="table table-hover table-striped shadowBox" style="background: white;"></table>
     </div>
     <div class="container-fluid">
         <div class="row" ng-controller="wireInitiationCtrl">

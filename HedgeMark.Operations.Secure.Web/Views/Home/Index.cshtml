@@ -3,21 +3,21 @@
     ViewBag.Title = "Home Page";
 }
 <div ng-controller="WiresHomeCtrl">
-    <div class="container-fluid">
+    <div style="margin-top:10px;">
         <div class="row">
             <div class="col-md-2 dashDatepicker">
                 <input type="hidden" id="hdnDefaultContextDate" value="@Model.ToString("yyyy-MM-dd")" />
-                <h5 class="dashDatePrev">{{ContextDate.DayOfWeek}}</h5>
+                <h6 class="dashDatePrev">{{ContextDate.DayOfWeek}}</h6>
                 <i class="glyphicon glyphicon-menu-left" ng-click="fnSetNextContextDate(-1)"></i>
                 <span href='#' id="contextDate" data-date="@Model.ToString("MM/dd/yyyy")" title="Choose a context date">
                     <h3>{{ContextDate.Day}}</h3>
                 </span>
                 <i class="glyphicon glyphicon-menu-right {{IsNextDateNotAvailable ?'dashDateNavDisabled':''}}" ng-click="fnSetNextContextDate(1)"></i>
-                <h5 class="dashDateNext">{{ContextDate.Year}}</h5>
+                <h6 class="dashDateNext">{{ContextDate.Year}}</h6>
             </div>
 
             <div class="col-md-2">
-                <div class="thumbnail dashBoardTile" ng-click="fnRetriveAllWireTickets(0)" style="border-left: 2px solid #A29060;">
+                <div class="thumbnail dashBoardTile" ng-click="fnRetriveAllWireTickets(0)" style="border-left: 2px solid #107A83;">
                     <div class="caption dashBoardCaption" style="">
                         <h5 class="">Total Transactions</h5>
                         <h1><label class="label text-primary number-counter" data-count="{{WireStatusCounts.Total}}">0</label><i class="glyphicon glyphicon-usd dashboardIcon"></i></h1>
@@ -35,12 +35,12 @@
             </div>
 
             <div class="col-md-2">
-                <div class="thumbnail dashBoardTile" ng-click="fnRetriveAllWireTickets(3)" style="border-left: 2px solid #43B02A;">
-                    <div class="caption dashBoardCaption" style="background-color: #EDF7EA">
+                <div class="thumbnail dashBoardTile" ng-click="fnRetriveAllWireTickets(3)" style="border-left: 2px solid #009FD6;">
+                    <div class="caption dashBoardCaption" style="background-color: #DAEDF7">
                         <h5 class="">Completed</h5>
                         <h1>
-                            <label class="label text-success number-counter" data-count="{{WireStatusCounts.Completed}}">0</label>
-                            <span class="small ng-show-hide" ng-show="WireStatusCounts.Approved>0">|&nbsp;<label class="label text-success number-counter" style="padding: 0px !important" data-count="{{WireStatusCounts.Approved}}">0</label><span style="font-size: 50%">&nbsp;Processing</span></span><i class="glyphicon glyphicon-ok dashboardIcon"></i>
+                            <label class="label text-info number-counter" data-count="{{WireStatusCounts.Completed}}">0</label>
+                            <span class="small ng-show-hide" ng-show="WireStatusCounts.Approved>0">|&nbsp;<label class="label text-info number-counter" style="padding: 0px !important;font-size: 20px" data-count="{{WireStatusCounts.Approved}}">0</label><span style="font-size: 70%">&nbsp;Processing</span></span><i class="glyphicon glyphicon-ok dashboardIcon"></i>
                         </h1>
                     </div>
                 </div>
@@ -52,8 +52,8 @@
                         <h5 class="">Cancelled </h5>
                         <h1>
                             <label class="label text-default number-counter" data-count="{{WireStatusCounts.Cancelled}}">0</label>
-                            <span class="small ng-show-hide" ng-show="WireStatusCounts.CancelledAndProcessing>0">|&nbsp;<label class="label text-warning number-counter" style="padding: 0px !important" data-count="{{WireStatusCounts.CancelledAndProcessing}}">0</label><span style="font-size: 50%">&nbsp;Processing</span></span>
-                            <span class="small ng-show-hide" ng-show="WireStatusCounts.Failed>0">|&nbsp;<label class="label text-danger number-counter" style="padding: 0px !important" data-count="{{WireStatusCounts.Failed}}">0</label><span style="font-size: 50%">&nbsp;Failed</span></span>
+                            <span class="small ng-show-hide" ng-show="WireStatusCounts.CancelledAndProcessing>0">|&nbsp;<label class="label text-warning number-counter" style="padding: 0px !important;font-size: 20px" data-count="{{WireStatusCounts.CancelledAndProcessing}}">0</label><span style="font-size: 70%">&nbsp;Processing</span></span>
+                            <span class="small ng-show-hide" ng-show="WireStatusCounts.Failed>0">|&nbsp;<label class="label text-danger number-counter" style="padding: 0px !important;font-size: 20px" data-count="{{WireStatusCounts.Failed}}">0</label><span style="font-size: 70%">&nbsp;Failed</span></span>
                             <i class="glyphicon glyphicon-trash dashboardIcon"></i>
                         </h1>
                     </div>
@@ -61,13 +61,11 @@
             </div>
         </div>
         <hr class="dashHr" />
-        <div class="container-fluid" ng-controller="wireDetailsCtrl">
-            <div class="">
-                <button type="button" id="btnCreateWire" class="btn btn-sm btn-primary" ng-click="initiateWireModal()" ng-disabled="isWireCreationEnabled" data-toggle="collapse" data-target="#panelWireContainer" aria-expanded="false" aria-controls="panelWireContainer">
+        <div ng-controller="wireDetailsCtrl">
+            <button type="button" id="btnCreateWire" class="btn btn-primary" ng-click="initiateWireModal()" ng-disabled="isWireCreationEnabled" data-toggle="collapse" data-target="#panelWireContainer" aria-expanded="false" aria-controls="panelWireContainer">
                     <i class="glyphicon glyphicon-plus"></i>&nbsp;Initiate Wire
                 </button>
-            </div>
-            <table id="tblWireStatusDetails" class="table table-hover shadowBox" style="background: white;cursor:pointer;"></table>
+            <table id="tblWireStatusDetails" class="table table-hover table-striped shadowBox" style="background: white;cursor:pointer;"></table>
         </div>
     </div>
     <div class="container-fluid">

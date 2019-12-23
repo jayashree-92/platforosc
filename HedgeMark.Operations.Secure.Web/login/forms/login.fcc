@@ -3,344 +3,172 @@
 @password=%PASSWORD%
 @smretries=0
 
-<html>
+<html ng-app="loginApp" lang="en" dir="ltr" class="ng-scope">
 
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=9" />
-<meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-<META HTTP-EQUIV="Expires" CONTENT="-1">
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
 
-<meta name="viewport" content="width=device-width" />
-<meta name="google-site-verification" content="EJIcNO6c1DD7Rqd2wrjvIGIXgbfLAKa8MfkMc1XUAe4" />
-<title>Hedgemark - DMA Operations & Accounting</title>
-
-<link rel="stylesheet" href="/login/forms/css/bootstrap-bny-2.css" type="text/css">
-<link rel="stylesheet" href="/Content/site.css" type="text/css">
-<link rel="stylesheet" href="/login/forms/css/login.css" type="text/css">
-<!-- Cross-frame scripting prevention: This code will prevent this page from being encapsulated within HTML frames. Remove, or comment out, this code if the functionality that is contained in this SiteMinder page is to be included within HTML frames. -->
-
-<style>
-	html{
-	display : none ;
-	visibility : hidden ;
-	}
-	body{
-		background-image: url(/login/forms/LoginBackground.jpg);
-		background-position: center;
-		background-size: 100% auto;
-    }
-</style>
-
-<SCRIPT LANGUAGE="JavaScript">
-	if( self == top ) {
-	document.documentElement.style.display = 'block' ;
-	document.documentElement.style.visibility = 'visible' ;
-	}
-	else {
-	top.location = self.location ;
-	}
-</script>
-
-<!--   end - frame busting script -->
-
-<!--redirect to error.html if not true -->
-
-<SCRIPT LANGUAGE="JavaScript">
-function initForm()
-	{
-		if (!validate())
-		{
-		top.location=("/login/forms/Error.html");
-		}
-	}
-
-
-<!-- Validate all the function before proceeding -->	
-function validate()
-	{
-	
-	if(!isValidURL(window.location.toString()))
-	{
-	return false;
-	}
-	if (!validateSMAUTHREASON()){		
-			return false;
-		}
-	 else if (!validateMETHOD()){
-			return false;
-		}
-	 else {
-			resetCredFields();
-			return true;
-		}
-	}
-	
-
-<!-- reset the fields -->
-function resetCredFields()
-	{
-	  document.Login.PASSWRD.value = "";
-	  document.Login.USER.value = "";
-	}
-
-	
-function validateSMAUTHREASON()
-	{
-	if (  "$$SMAUTHREASON$$"  == "" ){
-			
-			return true;
-		}
-	 else if (  "$$SMAUTHREASON$$"  <=  51 && "$$SMAUTHREASON$$" >= 0){
-			
-			return true;
-		}
-	else
-	{
-		return false;
-	}
-	}
-
-<!--   METHOD validation script.  Add additional methods if approved by IRM and policy updated. -->
-function validateMETHOD()
-	{
-	
-	if (  "$$METHOD$$"  == "" ){
-		return true;
-	}
-	else if (  "$$METHOD$$"  == "GET" ){
-		return true;
-	}
-	else if (  "$$METHOD$$"  == "POST" ){
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-	}
-	
-
-	
-
-
-<!-- validate the UserID for Bad CSS chars 	--> 
-function validateInput(input){
-		  
-		    if( input.match(/^[<>'\"]+$/)) {
-		    	
-		      
-		       return false;
-		        
-		 }
-		    else
-		    	return true; 
-	  }
-	  
-	  
-	  <!-- validate the requested url has bad chars -->  
-function isValidURL(data) {
-                
-				if( data.match(/.*[~<>'\"\\s].*/) || data.match(/^\\p{Cntrl}*$/) || data.match(/[\\x7F-\\xFF]/) )
-        {
-           
-			return false;
-        }
-		return true;
-	
-}
-
- 
-	  
-	<!-- validate the form data for empty String or alphaneumeric userid --> 
-function validateForm(){
-
-	   if ( document.Login.USER.value == "" ){
-			alert( "Field entry is required." );
-			document.Login.USER.focus();
-			return false;
-		   } 
-	   else if ( document.Login.PASSWRD.value == "" ){
-			alert( "Field entry is required." );
-			document.Login.PASSWRD.focus();
-			return false;
-	   }
-		else if(!validateInput( document.Login.USER.value))
-		{
-		 alert('Please enter a vaild user id');
-		 
-		 return false;
-		}
-	  return true;
-}
-	
-
-
-<!-- validate the form data and submit if valid -->
-function submitForm()
-{
-	if(validateForm()){
-	
-	localStorage.setItem("SM-HM-Ops-Secure-CommitId", document.Login.USER.value);
-	document.Login.submit();
-	return true;
-	}
-	else
-	{
-	return false;
-	}
-}
-
-<!-- Display Pop-Up window for help info. -->
-		
-
-function displayWindow(url, width, height)
-	{
-
-		var Win = window.open(url,"displayWindow",'width=' + width + ',height=' + height + ',left=50,top=50,resizable=yes,scrollbars=yes,menubar=no,status=no');
-
-	}
-
-
-</script>
-<script src="/Scripts/jquery-3.3.1.js"></script>
-<script src="/Scripts/bootstrap.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="google-site-verification" content="EJIcNO6c1DD7Rqd2wrjvIGIXgbfLAKa8MfkMc1XUAe4" />
+    <title>Hedgemark Operations Secure</title>
+    <link rel="stylesheet" href="/Content/bootstrap-bny-3.css" type="text/css">
+    <link rel="stylesheet" href="/Content/bootstrap-bny-nexen.css" type="text/css">
+    <link rel="stylesheet" href="/Content/site.css" type="text/css">
+    <link rel="stylesheet" href="css/login.css" type="text/css">
+    <script src="/Scripts/jquery-3.3.1.js"></script>
+    <script src="/Scripts/angular.js"></script>
+    <script src="/Scripts/angular-animate.js"></script>
+    <script src="/Scripts/angular-route.js"></script>
+    <script src="/Scripts/angular-sanitize.js"></script>
+    <script src="/Scripts/bootstrap.js"></script>
+    <script src="scripts/login.js"></script>
 </head>
 
 <body>
 
-  <!-- Form for collecting login credentials onLoad="javascript: initForm()" class="inner-bg"-->
-  <!-- Typically the login form will post the ProcessLogin.fcc file of the -->
-  <!-- same site that is serving the login page.  An absolute URL could also be specified. -->
-<form NAME="Login" METHOD="POST" action="/login/forms/ProcessLogin.fcc?SMQUERYDATA=$$smencode(SMQUERYDATA)$$" onSubmit="return submitForm()" AUTOCOMPLETE="OFF">
-<INPUT TYPE=HIDDEN NAME="SMENC" VALUE="UTF-8">
-
-  
-
-        <!-- Target is the field that tells SiteMinder where to go after successful login.  This  -->
-        <!-- value is typically supplied by SiteMinder, but can be supplied by this page if      -->
-        <!-- no value is specified (see initForm())     -->
-		
-		<div class="container center-block" id="loginForm" style="max-height: 450px; max-width: 700px; padding-top: 10%">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Sign In</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row" style="text-align: center;">
-                            <div class="">
-                                <img src="/images/Hedge_Mark_Bny.png" alt="HedgeMark Logo" style="padding-top: 10px;" />
-                            </div>
-                        </div>                        
-                            <div class="page-header" style="text-align: center">
-                                <h2>
-                                    <small>DMA OPERATIONS SECURE</small>
-                                </h2>
-                            </div>                           
-                            <div class="form-group row">
-                                <div class="input-group col-sm-8 col-sm-offset-2">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                    <input class="form-control" type="text" name="USER" value=""  placeholder="USERID" autofocus />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="input-group col-sm-8 col-sm-offset-2">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
-                                    <input id="hmOpsPassword" data-toggle="popover"  data-placement="right" data-container="body" data-trigger="manual" data-html="true" data-content="<i class='glyphicon glyphicon-exclamation-sign'></i> Caps On" class="form-control" type="password" name="PASSWRD" value="" autocomplete="off" placeholder="PASSWORD" autofocus />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-sm-offset-2">
-                                    <button type="submit" name="SUBMIT" class="btn btn-primary"><i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;Sign in</button>
-                                </div>
-                            </div>
-							<div class="form-group row">
-                                <div class="input-group col-sm-8 col-sm-offset-2">
-                                    <span id="errorMessage" class="errormsg" ></span>
-                                </div>
-                            </div>
-							<div class="form-group row">
-                                <div class="input-group col-sm-9 col-sm-offset-2">
-                                   <p>
-									<b>Need Help?</b><br /><br />
-									To log in you must know your COMIT ID and your system password (also known as the LDAP password). If you are having problems because of ID or password issues, you will find <a href="javascript:displayWindow('/login/forms/LoginHelp.html',650,400)">Step By Step Instructions</a> here.<br /><br />
-                                    If you have registered for the <a href='https://essservices.bnymellon.com/dsgportal/fps/forgotpwd'>Forgotten Password Service</a>, you may use it now.<br /><br />
-						            If you haven't registered for the forgotten password service, please contact the<br />
-		                            <a href="http://mysource.bnymellon.net/corporate/csd/index.html" target="_blank">Customer Service Desk</a> and ask to have your LDAP password reset.<br />
-		                          </p>
-                                </div>
-                            </div>
-                            <hr />
-                            <div class="row" style="text-align: center;">
-                                <small>
-                                    ©<script>document.write(new Date().getFullYear())</script> HedgeMark International, LLC. All rights reserved.
-                                </small>
-                            </div>
-							<!--start  trick the browser to enter the password into a fake input password field   -->
-				            <div style="display:none;">
-				            <input type="text" name=”preventAutoPass” id=" NoAutoPass"/>
-				            <input type="password" name=”textPass” id=" NoAutoPass "/>
-				            </div>   
-				           <!-- end  trick the browser to enter the password into a fake input password field  -->
-                        <SCRIPT language='JavaScript'>
-			//Auth Reason 4 - Session Expired
-			//Auth Reason 5 - AuthLevelTooLow 
-			if ($$smauthreason$$ == 4)
-                      	{
-						document.getElementById("errorMessage").innerHTML = "Your session has expired.<br>";
-                	//document.write("Your session has expired.<br>");
-                	}
-			if ($$smauthreason$$ == 5)
-                      	{
-                	//document.write("Authentication Level too low.<br>");
-					document.getElementById("errorMessage").innerHTML = "Authentication Level too low.<br>";
-                	}
-                        var smauthstatus = "$$smauthstatus$$";
-                       	if (smauthstatus == 1)
-                            //document.write("Invalid Credentials<br>");
-							document.getElementById("errorMessage").innerHTML = "Invalid Credentials<br>";							
-                        else if (smauthstatus == 2)
-                            //document.write("Unauthorized User<br>");
-							document.getElementById("errorMessage").innerHTML = "Unauthorized User<br>";
-                        </SCRIPT>
-                    </div>
+    <div class="oidc-container" ng-controller="loginController">
+        <div class="nexen-header row hidden-xs">
+            <div class="nexen-header logobar">
+                <div class="col-lg-12 col-md-12 nxn-legacy">
+                    <br>
+                    <label class="oidc-logo"> <img src="/Images/bnymellon_logo.png"> | Sign In</label>
+                    <span style="text-align: center;float:right;color:#ffffff"><small>HM OPERATIONS SECURE</small></span>
                 </div>
-
             </div>
         </div>
+
+        <!-- nav -->
+        <div id="nxnNavUrlId">
+            <div class="nexen-header">
+                <div class="nexen-nav">
+                    <div class="navbar navbar-default">
+                        <div class="navbar-header">
+                            <!-- button when for small screen size dropdown -->
+                            <!-- ngIf: header.opts.showNav -->
+                            <!-- small logo -->
+                            <div class="nexen-logo navbar-brand visible-sm visible-xs">
+                                <div nxn-logo=""><a ng-href="#/" href="#/"><label class="oidc-logo"><img src="/Images/bnymellon_logo.png"> | OpenID Connect</label></a></div>
+                            </div>
+
+                            <!-- right icons when small -->
+                            <!-- ngIf: header.opts.showRightSmIcons -->
+                            <!-- end right icons when small -->
+                            <!-- right icons when large -->
+                            <!-- ngIf: header.opts.showRightIcons -->
+                            <!-- end right icons when large -->
+                        </div>
+
+                        <!-- ngIf: header.opts.showNav -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="nxn-login-jumbotron-container" role="main">
+            <div class="jumbotron">
+                <div class="row">
+                    <div id="loginContainer" class="login-box col-sm-6 col-sm-push-6 col-md-4 col-md-push-8 ng-scope">
+                        <form id="loginForm" name="loginForm" class="login-form  ng-pristine ng-invalid ng-invalid-nxn-required ng-invalid-required" method="post" autocomplete="off" action="/login/forms/ProcessLogin.fcc?SMQUERYDATA=$$smencode(SMQUERYDATA)$$" novalidate="">
+                            <fieldset>
+
+                                <div id="userIdFormGroup" class="form-group">
+                                    <label for="USER">Username</label>
+                                    <input class="form-control ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" name="USER" id="username" type="text" name="pf.username" ng-init="pf.username = ''" ng-model="pf.username" value="" autocorrect="off" autocapitalize="off" onkeypress="return postOnReturn(event)" required="" autofocus>
+                                </div>
+
+                                <div id="passwordFormGroup" class="form-group">
+                                    <label for="PASSWRD">Password</label>
+                                    <input class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" name="PASSWRD" id="hmOpsPassword" type="password" autocomplete="off" data-toggle="popover" data-placement="top" data-container="body" data-trigger="manual" data-html="true" data-content=" Caps On" autocorrect="off" autocapitalize="off" spellcheck="false" name="pf.pass" ng-model="pf.pass" onkeypress="return postOnReturn(event)" required="">
+                                </div>
+
+                                <div class="form-group">
+                                    <span id="errorMessage" class="errorMessage"></span>
+                                </div>
+
+                                <!--start  trick the browser to enter the password into a fake input password field   -->
+                                <div style="display:none;">
+                                    <input type="text" name=”preventAutoPass” id=" NoAutoPass" />
+                                    <input type="password" name=”textPass” id=" NoAutoPass " />
+                                </div>
+                                <!-- end  trick the browser to enter the password into a fake input password field  -->
+                                <SCRIPT language='JavaScript'>
+                                    //Auth Reason 4 - Session Expired
+                                    //Auth Reason 5 - AuthLevelTooLow
+                                    if ($$smauthreason$$ == 4) {
+                                        document.getElementById("errorMessage").innerHTML = "Your session has expired.<br>";
+                                        //document.write("Your session has expired.<br>");
+                                    }
+                                    if ($$smauthreason$$ == 5) {
+                                        //document.write("Authentication Level too low.<br>");
+                                        document.getElementById("errorMessage").innerHTML = "Authentication Level too low.<br>";
+                                    }
+                                    var smauthstatus = "$$smauthstatus$$";
+                                    if (smauthstatus == 1)
+                                        //document.write("Invalid Credentials<br>");
+                                        document.getElementById("errorMessage").innerHTML = "Invalid Credentials<br>";
+                                    else if (smauthstatus == 2)
+                                        //document.write("Unauthorized User<br>");
+                                        document.getElementById("errorMessage").innerHTML = "Unauthorized User<br>";
+                                </SCRIPT>
+
+
+                                <div class="form-group button-container sign-in-links">
+                                    <input type="hidden" name="pf.ok" value="clicked" autocomplete="off">
+                                    <input type="hidden" name="pf.cancel" value="" autocomplete="off">
+                                    <button type="button" name="signInBtn" class="nxn-btn-primary" onclick="postOk();" title="Sign In" ng-disabled="loginForm.$invalid" disabled="disabled">Sign In</button>
+                                </div>
+
+                                <div class="form-group sign-in-links">
+                                    <a href="http://mysource.bnymellon.net/corporate/csd/index.html" target="_blank" class="hyper-link">Change Password?</a><span>|</span>
+                                    <a href="/login/forms/LoginHelp.html" class="hyper-link" target="_blank">Need Help?</a>
+                                </div>
+                                <input type="hidden" name="pf.adapterId" id="pf.adapterId" value="BNYMPWD" autocomplete="off">
+                            </fieldset>
+
+                        </form>
+                    </div>
+
+                    <div class="hero-text-container col-sm-6 col-sm-pull-6 col-md-8 col-md-pull-4">
+                        <div class="heroText">
+                            <div class="nxn-herotext-tagline1 ng-binding">
+                                One Account
+                            </div>
+                            <div class="nxn-herotext-tagline1 ng-binding">All of BNY Mellon</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div nxn-alert="" nxn-alert-type="alert-warning" class="ng-isolate-scope"><div class="nxn-alert-directive alert-warning" ng-class="{true: 'nxn-alert-dismissible'}[dismissible]"><div class="nxn-alert-directive-message"><span>&#9888;</span>   This system is for authorized users only. We may monitor, record, and disclose all activity and information on this system, subject to local law.</div><div class="nxn-alerts-close nxn-cursor-pointer" ng-click="close()" ng-class="{true: 'show', false: 'hide'}[dismissible]" style="display: none"><i class="fa fa-times fa-lg"></i></div></div></div>
+
+        <footer class="nexen-footer">
+            <div class="row">
+                <!-- ngIf: footer.opts.footerLogoSrc -->
+                <div class="col-sm-12 col-md-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="footernav">
+                                <!-- ngIf: footer.opts.displayPrivacyPolicy -->
+                                <li class="ng-scope"><a href="https://www.bnymellon.com/us/en/privacy.jsp" link-target="" target="_blank">Privacy Statement</a></li><!-- end ngIf: footer.opts.displayPrivacyPolicy --><!-- ngIf: footer.opts.displaySysRequirements --><!-- ngIf: footer.opts.displayCookieCompliance -->
+                                <li class="ng-scope"><a href="https://www.bnymellon.com/us/en/privacy.jsp#collection" link-target="">Cookie Policy</a></li><!-- end ngIf: footer.opts.displayCookieCompliance --><!-- ngIf: footer.opts.displayTermsOfUse -->
+                                <li class="ng-scope"><a href="https://www.bnymellon.com/us/en/terms-of-use.jsp" link-target="" target="_blank">Terms of Use</a></li><!-- end ngIf: footer.opts.displayTermsOfUse -->
+                            </ul>
+                        </div><div class="col-sm-6">
+                            <!-- ngIf: footer.opts.displayCopyright -->
+                            <div class="copyright ng-binding ng-scope">© 2019 The Bank of New York Mellon Corporation.</div><!-- end ngIf: footer.opts.displayCopyright -->
+                        </div>
+                    </div>
+                </div><!-- ngIf: footer.opts.showSecuritiesDisclaimer --><!-- ngIf: footer.opts.showSecuritiesDisclaimer -->
+            </div>
+        </footer>
     </div>
-        
-</form>
-<script type="text/javascript">
 
-        $(document).ready(function () {
-           
-		   $("#hmOpsPassword").on("keypress", function (e) {
-                var s = String.fromCharCode(e.which);
-                if ((s.toUpperCase() === s && s.toLowerCase() !== s && !e.shiftKey) || (s.toUpperCase() !== s && s.toLowerCase() === s && e.shiftKey)) {
-                    $("#hmOpsPassword").popover("show");
-                } else if ((s.toLowerCase() === s && s.toUpperCase() !== s && !e.shiftKey) || (s.toLowerCase() !== s && s.toUpperCase() === s && e.shiftKey)) {
-                    $("#hmOpsPassword").popover("hide");
-                }
-            });
-
-            //Toggle warning message on Caps-Lock toggle (with some limitation)
-            $("#hmOpsPassword").keydown(function (e) {
-                if (e.which == 20) {
-                    $("#hmOpsPassword").popover("toggle");
-                }
-            });
-
-            $("#hmOpsPassword").on("focusout", function () {
-                $("#hmOpsPassword").popover("hide");
-            });
-
-        });
-
-    </script>
 </body>
 </html>

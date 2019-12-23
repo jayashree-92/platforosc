@@ -77,7 +77,7 @@ namespace HMOSecureMiddleware.Models
         public string WireLastUpdatedBy { get; set; }
         public List<string> AttachmentUsers { get; set; }
         public List<string> WorkflowUsers { get; set; }
-        public dmaAgreementOnBoarding Agreement { get; set; }
+        public vw_OnboardedAgreements Agreement { get; set; }
         public onBoardingAccount SendingAccount { get; set; }
         public onBoardingAccount ReceivingAccount { get; set; }
         public onBoardingSSITemplate SSITemplate { get; set; }

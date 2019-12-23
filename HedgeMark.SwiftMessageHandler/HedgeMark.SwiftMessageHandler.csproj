@@ -110,6 +110,8 @@
     <Compile Include="Model\Fields\FieldWithAccountAndBIC.cs" />
     <Compile Include="Model\Fields\FieldWithAccountBICAndDCMark.cs" />
     <Compile Include="Model\Fields\FieldWithAccountAndAddress.cs" />
+    <Compile Include="Model\Fields\FieldWithDateCurrencyAndAmount.cs" />
+    <Compile Include="Model\Fields\FieldWithCurrencyAndAmount.cs" />
     <Compile Include="Model\Fields\FieldWithDateAndTime.cs" />
     <Compile Include="Model\Fields\FieldWithDate.cs" />
     <Compile Include="Model\Fields\FieldWithNarrative.cs" />
@@ -140,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EmbeddedResource Include="Configs\CurrencyDecimalUnits.csv" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

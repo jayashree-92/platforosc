@@ -457,10 +457,10 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         fundId = $(this).val();
         if (fundId > 0) {
 
-            var agreements = $.grep($scope.agreements, function (v) { return v.dmaFundOnBoardId == fundId; });
+            var agreements = $.grep($scope.agreements, function (v) { return v.FundOnBoardId == fundId; });
             var agreementData = [];
             $.each(agreements, function (key, value) {
-                agreementData.push({ "id": value.dmaAgreementOnBoardingId, "text": value.agreementName });
+                agreementData.push({ "id": value.AgreementOnboardingId, "text": value.AgreementShortName });
             });
 
             agreementData = $filter('orderBy')(agreementData, 'text');

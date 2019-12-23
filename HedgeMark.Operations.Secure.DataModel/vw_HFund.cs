@@ -31,5 +31,10 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string AccountingMethod { get; set; }
         public string FiscalYearEnd { get; set; }
         public string subFunds { get; set; }
+        public string ClientFundVersion { get; set; }
+        public string FundManagerName { get; set; }
+        public Nullable<int> FundManagerID { get; set; }
+        public string ManagerStrategy { get; set; }
+        public Nullable<long> dmaFundOnBoardId { get; set; }
     }
 }

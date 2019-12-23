@@ -4,38 +4,29 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="414b691953974c01be2844de38379599" Name="Diagram1" ZoomLevel="67">
+      <Diagram DiagramId="414b691953974c01be2844de38379599" Name="Diagram1" ZoomLevel="16">
         <EntityTypeShape EntityType="AdminModel.aspnet_Roles" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.aspnet_Users" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.hLoginRegistration" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.dmaAgreementDocument" Width="1.5" PointX="17.25" PointY="26.875" />
-        <EntityTypeShape EntityType="AdminModel.dmaAgreementOnBoarding" Width="1.5" PointX="15" PointY="14.125" />
         <EntityTypeShape EntityType="AdminModel.dmaAgreementOnBoardingAttribute" Width="1.5" PointX="18" PointY="15.625" />
         <EntityTypeShape EntityType="AdminModel.dmaAgreementOnBoardingChecklist" Width="1.5" PointX="20.25" PointY="26.375" />
         <EntityTypeShape EntityType="AdminModel.dmaAgreementSettlementInstruction" Width="1.5" PointX="17.25" PointY="19.25" />
         <EntityTypeShape EntityType="AdminModel.dmaAgreementStatu" Width="1.5" PointX="12.75" PointY="28" />
         <EntityTypeShape EntityType="AdminModel.dmaAgreementType" Width="1.5" PointX="7.75" PointY="26.75" />
-        <AssociationConnector Association="AdminModel.FK__dmaAgreem__dmaAg__31598A75" />
-        <AssociationConnector Association="AdminModel.FK__dmaAgreem__dmaAg__28C44474" />
-        <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_AgreementStatusId" />
-        <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_AgreementTypeId" />
-        <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingId" />
         <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId" />
         <EntityTypeShape EntityType="AdminModel.dmaCounterPartyOnBoarding" Width="1.5" PointX="13.125" PointY="30.625" />
-        <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_dmaCounterPartyOnBoardId" />
         <EntityTypeShape EntityType="AdminModel.onboardingFund" Width="1.5" PointX="12.75" PointY="0.75" />
-        <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_OnboardingFund_dmaFundOnBoardId" />
         <EntityTypeShape EntityType="AdminModel.dmaFundOnBoardPermission" Width="1.5" PointX="15" PointY="10.875" />
         <AssociationConnector Association="AdminModel.FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId" />
         <AssociationConnector Association="AdminModel.aspnet_UsersInRoles" />
         <EntityTypeShape EntityType="AdminModel.dmaCounterpartyFamily" Width="1.5" PointX="6.875" PointY="23.25" />
-        <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_dmaCounterPartyFamilyId" />
         <AssociationConnector Association="AdminModel.FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId" />
         <EntityTypeShape EntityType="AdminModel.dmaOnBoardingContactDetail" Width="1.5" PointX="17.375" PointY="0.75" />
         <EntityTypeShape EntityType="AdminModel.vw_HFund" Width="1.5" PointX="7.375" PointY="13.75" />
         <EntityTypeShape EntityType="AdminModel.onboardingClient" Width="1.5" PointX="4.5" PointY="14.625" />
-        <AssociationConnector Association="AdminModel.FK_dmaAgreementOnBoarding_OnboardingClient_dmaClientOnBoardId" />
         <AssociationConnector Association="AdminModel.FK_onboardingFund_dmaClientOnBoardId" />
+        <EntityTypeShape EntityType="AdminModel.vw_OnboardedAgreements" Width="1.5" PointX="0.75" PointY="4.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
