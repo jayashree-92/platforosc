@@ -1,3 +1,7 @@
+label {
+    padding: 0px 0px !important;
+}
+
 /* OpenID Connect Portal Styles */
 .oidc-logo {
     color: #ffffff;
