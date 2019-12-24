@@ -414,11 +414,14 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
             viewAttachmentTable($scope.ssiTemplateDocuments);
 
+            $scope.watchSSITemplate = $scope.ssiTemplate;
+
             if ($scope.ssiTemplateDocuments.length > 0 && $scope.ssiTemplate.SSITemplateStatus == "Approved") {
                 $(".dz-hidden-input").prop("disabled", true);
             } else {
                 $(".dz-hidden-input").prop("disabled", false);
             }
+
         });
 
     } else {
@@ -426,6 +429,17 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         $scope.fnBrokerList();
         viewAttachmentTable(JSON.parse("{" + documentData + "}"));
     }
+
+    $scope.$watch('watchSSITemplate', function (val, oldVal) {
+        
+        if (oldVal != undefined && val != oldVal) {
+            $scope.isSSITemplateChanged = true;
+        }
+        else {
+            $scope.isSSITemplateChanged = false;
+        }
+
+    }, true);
 
     $scope.fnSSITemplateType = function (templateType) {
         $scope.SSITemplateType = templateType;
