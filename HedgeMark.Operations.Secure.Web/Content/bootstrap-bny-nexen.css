@@ -2586,7 +2586,7 @@ div.nxn-error-msg .fa {
 @media (min-width: 1200px) {
     .nxn-login-jumbotron-container .jumbotron {
         /* background-color: #2d3a51; */
-        /* background-position: left top; */
+         background-position: left top; 
         /* background-repeat: no-repeat; */
         background-image: url("../Images/LoginBackground.jpg");
     }
