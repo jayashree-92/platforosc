@@ -431,8 +431,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $scope.$watch('watchSSITemplate', function (val, oldVal) {
-        
-        if (oldVal != undefined && val != oldVal) {
+
+        if (val.SSITemplateStatus != "Approved" || (oldVal != undefined && val != oldVal)) {
             $scope.isSSITemplateChanged = true;
         }
         else {

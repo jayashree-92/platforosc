@@ -1528,9 +1528,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             //if (val != oldVal && $("#spnAgrCurrentStatus").html() == approvedStatus) {
             //    $("#btnPendingApproval").show();
             //    $("#btnSave").show();
-            //}
-            if (val != oldVal) {
-                if ($("#spnAgrCurrentStatus").html() == createdStatus) {
+            //
+                if ($("#spnAgrCurrentStatus").html() == "Saved as Draft") {
 
                     $("#btnPendingApproval").show();
                     //$("#btnApprove").hide();
@@ -1545,18 +1544,24 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     $("#btnSave").hide();
                 }
                 else if ($("#spnAgrCurrentStatus").html() == approvedStatus) {
-
-                    $("#btnPendingApproval").hide();
-                    //$("#btnApprove").hide();
-                    $("#btnRevert").show();
-                    $("#btnSave").hide();
+                    if (val != oldVal) {
+                        $("#btnPendingApproval").hide();
+                        //$("#btnApprove").hide();
+                        $("#btnRevert").show();
+                        $("#btnSave").hide();
+                    }
+                    else {
+                        $("#btnPendingApproval").hide();
+                        //$("#btnApprove").hide();
+                        $("#btnRevert").hide();
+                        $("#btnSave").hide();
+                    }
                 } else {
                     $("#btnPendingApproval").hide();
                     //$("#btnApprove").hide();
                     $("#btnRevert").hide();
                     $("#btnSave").show();
                 }
-            }
 
         }, true);
     }
