@@ -1335,6 +1335,8 @@ namespace HMOSecureWeb.Controllers
                         {
                             accountDetail.BeneficiaryBankName = string.Empty;
                             accountDetail.BeneficiaryBankAddress = string.Empty;
+                            accountDetail.BeneficiaryBICorABA = string.Empty;
+                            accountDetail.BeneficiaryType = string.Empty;
                         }
 
                         accountDetail.BeneficiaryAccountNumber = account["Beneficiary Account Number"];
@@ -1350,6 +1352,8 @@ namespace HMOSecureWeb.Controllers
                         {
                             accountDetail.IntermediaryBankName = string.Empty;
                             accountDetail.IntermediaryBankAddress = string.Empty;
+                            accountDetail.IntermediaryBICorABA = string.Empty;
+                            accountDetail.IntermediaryType = string.Empty;
                         }
 
                         accountDetail.IntermediaryAccountNumber = account["Intermediary Account Number"];
@@ -1366,6 +1370,8 @@ namespace HMOSecureWeb.Controllers
                         {
                             accountDetail.UltimateBeneficiaryBankName = string.Empty;
                             accountDetail.UltimateBeneficiaryBankAddress = string.Empty;
+                            accountDetail.UltimateBeneficiaryBICorABA = string.Empty;
+                            accountDetail.UltimateBeneficiaryType = string.Empty;
                         }
 
                         accountDetail.FFCName = account["FFC Name"];
@@ -1528,6 +1534,8 @@ namespace HMOSecureWeb.Controllers
                         {
                             templateDetail.BeneficiaryBankName = string.Empty;
                             templateDetail.BeneficiaryBankAddress = string.Empty;
+                            templateDetail.BeneficiaryBICorABA = string.Empty;
+                            templateDetail.BeneficiaryType = string.Empty;
                         }
 
                         templateDetail.BeneficiaryAccountNumber = template["Beneficiary Account Number"];
@@ -1543,6 +1551,8 @@ namespace HMOSecureWeb.Controllers
                         {
                             templateDetail.IntermediaryBankName = string.Empty;
                             templateDetail.IntermediaryBankAddress = string.Empty;
+                            templateDetail.IntermediaryBICorABA = string.Empty;
+                            templateDetail.IntermediaryType = string.Empty;
                         }
 
                         templateDetail.IntermediaryAccountNumber = template["Intermediary Account Number"];
@@ -1559,6 +1569,8 @@ namespace HMOSecureWeb.Controllers
                         {
                             templateDetail.UltimateBeneficiaryBankName = string.Empty;
                             templateDetail.UltimateBeneficiaryBankAddress = string.Empty;
+                            templateDetail.UltimateBeneficiaryBICorABA = string.Empty;
+                            templateDetail.UltimateBeneficiaryType = string.Empty;
                         }
 
                         templateDetail.UltimateBeneficiaryAccountName = template["Ultimate Beneficiary Account Name"];
