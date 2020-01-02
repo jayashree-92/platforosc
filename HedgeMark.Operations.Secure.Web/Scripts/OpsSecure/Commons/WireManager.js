@@ -973,6 +973,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }
 
             if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                this.removeAllFiles();
                 notifySuccess("Files Uploaded successfully");
             }
         }

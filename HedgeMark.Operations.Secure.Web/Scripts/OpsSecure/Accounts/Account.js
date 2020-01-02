@@ -1074,7 +1074,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
                 url: "/Accounts/UploadAccountFiles?accountId=" + $scope.onBoardingAccountDetails[key].onBoardingAccountId,
                 dictDefaultMessage: "<span><span style=\"color: red\"> * </span>Drag/Drop account documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
                 autoDiscover: false,
-                acceptedFiles: ".csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
+                acceptedFiles: ".msg,.csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
                 maxFiles: 5,
                 previewTemplate: "<div class='row col-sm-2' style='padding: 15px;'><div class='panel panel-success panel-dz'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
                     "</div> <div class='panel-body'> <span class='dz-upload' data-dz-uploadprogress></span>" +
