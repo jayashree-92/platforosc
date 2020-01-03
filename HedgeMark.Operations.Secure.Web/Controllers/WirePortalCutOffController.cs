@@ -52,7 +52,7 @@ namespace HMOSecureWeb.Controllers
             //File name and path
             var fileName = string.Format("{0}_{1:yyyyMMdd}", "WireCutOffData", DateTime.Now);
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, ".xlsx"));
-            contentToExport.Add("List of Accounts", accountListRows);
+            contentToExport.Add("Wire Portal CutOff Data", accountListRows);
             //Export the checklist file
             Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
             return DownloadAndDeleteFile(exportFileInfo);

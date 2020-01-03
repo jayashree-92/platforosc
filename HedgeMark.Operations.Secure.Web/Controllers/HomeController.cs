@@ -266,9 +266,8 @@ namespace HMOSecureWeb.Controllers
             var isInitiationEnabled = !isDeadlineCrossed && (WireDataManager.WireStatus.Drafted == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId);
             var isDraftEnabled = !isDeadlineCrossed && (WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId || WireDataManager.WireStatus.Failed == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId
                                                         || (WireDataManager.WireStatus.Cancelled == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId && WireDataManager.SwiftStatus.NotInitiated == (WireDataManager.SwiftStatus)wireTicket.HMWire.SwiftStatusId));
-            var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
-            var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
-            var deadlineToApprove = GetTimeToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
+
+            var deadlineToApprove = GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
             var isLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == UserDetails.Id;
             var isWirePurposeAdhoc = wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocReport;
             var sendingAccounts = new List<WireAccountBaseData>();
@@ -297,10 +296,7 @@ namespace HMOSecureWeb.Controllers
             try
             {
                 wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
-
-                var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan());
-                var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan());
-                var deadlineToApprove = GetDeadlineToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
+                var deadlineToApprove = GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
                 SaveWireScheduleInfo(wireTicket, (WireDataManager.WireStatus)statusId, UserDetails.Id, deadlineToApprove);
                 var tempFilePath = string.Format("Temp\\{0}", UserName);
 
@@ -443,11 +439,11 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetTimeToApproveTheWire(long onboardingAccountId, DateTime valueDate)
         {
             var onboardAccount = WireDataManager.GetBoardingAccount(onboardingAccountId);
-            var timeToApprove = GetTimeToApprove(onboardAccount, valueDate);
+            var timeToApprove = GetDeadlineToApprove(onboardAccount, valueDate);
             return Json(timeToApprove);
         }
 
-        private TimeSpan GetTimeToApprove(onBoardingAccount onboardAccount, DateTime valueDate)
+        private TimeSpan GetDeadlineToApprove(onBoardingAccount onboardAccount, DateTime valueDate)
         {
             try
             {
@@ -490,28 +486,6 @@ namespace HMOSecureWeb.Controllers
             }
             catch (TimeZoneNotFoundException e)
             {
-                return new TimeSpan();
-            }
-        }
-
-        private TimeSpan GetDeadlineToApprove(DateTime cashSweep, DateTime cutOff, string cashSweepTimeZone)
-        {
-            try
-            {
-                cashSweepTimeZone = cashSweepTimeZone ?? "";
-                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones.ContainsKey(cashSweepTimeZone) ? FileSystemManager.TimeZones[cashSweepTimeZone] : FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
-                TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
-                var actualTime = TimeZoneInfo.ConvertTime(new DateTime(cashSweep.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone);
-                var cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(actualTime, "Eastern Standard Time");
-                var cutOffTime = cutOff;
-                var currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
-
-                return cashSweepTime < cutOffTime ? cashSweepTime.TimeOfDay : cutOffTime.TimeOfDay;
-
-            }
-            catch (TimeZoneNotFoundException e)
-            {
-                Logger.Error(e.Message, e);
                 return new TimeSpan();
             }
         }
@@ -705,7 +679,7 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetBoardingAccount(long onBoardingAccountId, DateTime valueDate)
         {
             var onboardAccount = WireDataManager.GetBoardingAccount(onBoardingAccountId);
-            var deadlineToApprove = GetTimeToApprove(onboardAccount, valueDate);
+            var deadlineToApprove = GetDeadlineToApprove(onboardAccount, valueDate);
             return Json(new { onboardAccount, deadlineToApprove });
         }
 
