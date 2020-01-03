@@ -156,6 +156,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\WireLogController.cs" />
+    <Compile Include="Controllers\WirePortalCutoffController.cs" />
     <Compile Include="Filters\CompressAttribute.cs" />
     <Compile Include="Filters\RedirectToHttps.cs" />
     <Compile Include="Global.asax.cs">
@@ -1497,6 +1498,7 @@
     <Content Include="Scripts\OpsSecure\OpsSecureAngularFactory.js" />
     <Content Include="Scripts\OpsSecure\UserAuditLog.js" />
     <Content Include="Scripts\OpsSecure\WireLog.js" />
+    <Content Include="Scripts\OpsSecure\WirePortalCutoff.js" />
     <Content Include="Scripts\OpsSecure\WirePurpose.js" />
     <Content Include="Scripts\Plugins\ContextMenu.js" />
     <Content Include="Scripts\Plugins\NumericCellEditor.js" />
@@ -1575,6 +1577,7 @@
     <Content Include="Views\Accounts\Index.cshtml" />
     <Content Include="Views\Accounts\SSITemplateList.cshtml" />
     <Content Include="Views\Accounts\SSITemplate.cshtml" />
+    <Content Include="Views\WirePortalCutoff\Index.cshtml" />
     <None Include="Web.Local.config">
       <SubType>Designer</SubType>
     </None>

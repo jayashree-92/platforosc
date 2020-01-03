@@ -461,7 +461,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                var document = context.hmsWireDocuments.FirstOrDefault(x => x.hmsWireId == wireId && x.FileName == fileName);
+                var document = context.hmsWireDocuments.Where(x => x.hmsWireId == wireId).ToList().FirstOrDefault(s => s.FileName == fileName);
                 if (document == null)
                     return;
 
@@ -518,5 +518,45 @@ namespace HMOSecureMiddleware
                 return context.hmsMQLogs.Where(s => s.CreatedAt >= startDate && s.CreatedAt <= endDate).ToList();
             }
         }
+
+        #region Wire Portal Cutoffs
+
+        public static List<onBoardingWirePortalCutoff> GetWirePortalCutoffData()
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                return context.onBoardingWirePortalCutoffs.ToList();
+            }
+        }
+
+        public static void SaveWirePortalCutoff(onBoardingWirePortalCutoff wirePortalCutoff)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.onBoardingWirePortalCutoffs.AddOrUpdate(wirePortalCutoff);
+                if(wirePortalCutoff.onBoardingWirePortalCutoffId != 0)
+                {
+                    var thisCutoffAccounts = context.onBoardingAccounts.Where(s => s.CashInstruction == wirePortalCutoff.CashInstruction && s.Currency == wirePortalCutoff.Currency);
+                    thisCutoffAccounts.ForEach(s => {
+                        s.CutoffTime = wirePortalCutoff.CutoffTime;
+                        s.CutOffTimeZone = wirePortalCutoff.CutOffTimeZone;
+                        s.DaystoWire = s.DaystoWire;
+                    });
+                }
+                context.SaveChanges();
+            }
+        }
+
+        public static void DeleteWirePortalCutoff(long wireCutoffId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var wirePortalCutoff = context.onBoardingWirePortalCutoffs.FirstOrDefault(s => s.onBoardingWirePortalCutoffId == wireCutoffId);
+                context.onBoardingWirePortalCutoffs.Remove(wirePortalCutoff);
+                context.SaveChanges();
+            }
+        }
+
+        #endregion
     }
 }

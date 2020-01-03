@@ -121,7 +121,7 @@
                                                 <label class="control-label">Currency </label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input type="text" class="form-control" ng-model="accountDetail.Currency" id="liCurrency{{$index}}" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, $index)" />
+                                                <input type="text" class="form-control" ng-model="accountDetail.Currency" id="liCurrency{{$index}}" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, accountDetail.CutOffTimeZone, $index)" />
                                             </div>
                                             <div class="col-sm-8 col-md-3 col-lg-3">
                                                 <a class="btn btn-sm btn-info" ng-click="fnAddCurrencyModal($index)" title="Add Currency"><i class="glyphicon glyphicon-plus"></i></a>
@@ -131,13 +131,13 @@
                                     <p></p>
                                     <div class="row">
                                         @*<div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                                <div class="col-sm-8 col-md-4 col-lg-4">
-                                                    <label class="control-label">Account Type</label>
-                                                </div>
-                                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                    <input type="text" class="form-control" ng-model="accountDetail.AccountPurpose" id="liAccountPurpose{{$index}}" />
-                                                </div>
-                                            </div>*@
+                <div class="col-sm-8 col-md-4 col-lg-4">
+                    <label class="control-label">Account Type</label>
+                </div>
+                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                    <input type="text" class="form-control" ng-model="accountDetail.AccountPurpose" id="liAccountPurpose{{$index}}" />
+                </div>
+            </div>*@
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
                                                 <label class="control-label">Account Status</label>
@@ -231,7 +231,7 @@
                                                 <label class="control-label">Cash Instruction Mechanism</label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input type="text" class="form-control" ng-model="accountDetail.CashInstruction" id="liCashInstruction{{$index}}" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, $index)" />
+                                                <input type="text" class="form-control" ng-model="accountDetail.CashInstruction" id="liCashInstruction{{$index}}" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, accountDetail.CutOffTimeZone, $index)" />
                                             </div>
                                             <div class="col-sm-8 col-md-3 col-lg-3">
                                                 <a class="btn btn-sm btn-info" ng-click="fnAddCashInstructionModal($index)" title="Add Cash Instruction"><i class="glyphicon glyphicon-plus"></i></a>
@@ -247,6 +247,21 @@
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
                                                 <input ng-model="accountDetail.CashSweep" class="form-control control-label" id="cashSweep{{$index}}" ng-change="fnCashSweep(accountDetail.CashSweep, $index)">
                                             </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                            <div class="col-sm-8 col-md-4 col-lg-4">
+                                                <label class="control-label">Cutoff Time Zone</label>
+                                            </div>
+                                            <div class="col-sm-8 col-md-6 col-lg-7">
+                                                <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
+                                                    <input type="text" name="cutoffTimeZone" ng-model="accountDetail.CutOffTimeZone" class="form-control" id="liTimeZone{{$index}}" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, accountDetail.CutOffTimeZone, $index)" style="padding: 5px;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p></p>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                         </div>
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
@@ -375,13 +390,13 @@
                                             </div>
                                         </div>
                                         @*<div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                                <div class="col-sm-8 col-md-4 col-lg-4">
-                                                    <label class="control-label">Status Comments</label>
-                                                </div>
-                                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                                    <textarea cols="10" rows="3" ng-model="accountDetail.StatusComments" class="form-control control-label" placeholder="Status Comments"></textarea>
-                                                </div>
-                                            </div>*@
+                <div class="col-sm-8 col-md-4 col-lg-4">
+                    <label class="control-label">Status Comments</label>
+                </div>
+                <div class="col-sm-8 col-md-5 col-lg-5">
+                    <textarea cols="10" rows="3" ng-model="accountDetail.StatusComments" class="form-control control-label" placeholder="Status Comments"></textarea>
+                </div>
+            </div>*@
                                     </div>
                                     <p></p>
                                     <div class="row">

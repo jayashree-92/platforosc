@@ -70,6 +70,22 @@ namespace HMOSecureMiddleware
                 return ConfigurationManagerWrapper.StringSetting("DefaultTimeZone", "EST");
             }
         }
+
+        public static Dictionary<string, string> TimeZones = new Dictionary<string, string>()
+        {
+                { "EST", "Eastern Standard Time" },
+                { "EDT", "Eastern Daylight Time" },
+                { "CST", "Central Standard Time" },
+                { "CDT", "Central Daylight Time" },
+                { "MST", "Mountain Standard Time" },
+                { "MDT", "Mountain Daylight Time" },
+                { "PST", "Pacific Standard Time" },
+                { "PDT", "Pacific Daylight Time" },
+                { "CET", "Central European Standard Time"},
+                { "GMT", "GMT Standard Time" },
+                { "IST", "Indian Standard Time" },
+                { "JST", "Japan Standard Time" }
+        };
         private static readonly object InitialiseLock;
 
         static FileSystemManager()

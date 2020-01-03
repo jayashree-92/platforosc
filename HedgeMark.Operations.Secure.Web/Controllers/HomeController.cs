@@ -268,7 +268,7 @@ namespace HMOSecureWeb.Controllers
                                                         || (WireDataManager.WireStatus.Cancelled == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId && WireDataManager.SwiftStatus.NotInitiated == (WireDataManager.SwiftStatus)wireTicket.HMWire.SwiftStatusId));
             var cashSweep = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
             var cutOff = wireTicket.HMWire.ValueDate.Date.Add(wireTicket.SendingAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
-            var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, wireTicket.SendingAccount.CashSweepTimeZone);
+            var deadlineToApprove = GetTimeToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
             var isLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == UserDetails.Id;
             var isWirePurposeAdhoc = wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocReport;
             var sendingAccounts = new List<WireAccountBaseData>();
@@ -440,46 +440,45 @@ namespace HMOSecureWeb.Controllers
             return DownloadFile(file, fileName);
         }
 
-        public Dictionary<string, string> TimeZones = new Dictionary<string, string>()
-        {
-                { "EST", "Eastern Standard Time" },
-                { "EDT", "Eastern Daylight Time" },
-                { "CST", "Central Standard Time" },
-                { "CDT", "Central Daylight Time" },
-                { "MST", "Mountain Standard Time" },
-                { "MDT", "Mountain Daylight Time" },
-                { "PST", "Pacific Standard Time" },
-                { "PDT", "Pacific Daylight Timee" },
-                { "CET", "Central European Standard Time"},
-                { "GMT", "GMT Standard Time" }
-        };
-        public JsonResult GetTimeToApproveTheWire(long onboardingAccountId, DateTime valueDate, string cashSweepTimeZone)
+        public JsonResult GetTimeToApproveTheWire(long onboardingAccountId, DateTime valueDate)
         {
             var onboardAccount = WireDataManager.GetBoardingAccount(onboardingAccountId);
-            var cashSweep = valueDate.Date.Add(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
-            var cutOff = valueDate.Date.Add(onboardAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
-            var timeToApprove = GetTimeToApprove(cashSweep, cutOff, onboardAccount.CashSweepTimeZone);
+            var timeToApprove = GetTimeToApprove(onboardAccount, valueDate);
             return Json(timeToApprove);
         }
 
-        private TimeSpan GetTimeToApprove(DateTime cashSweep, DateTime cutOff, string cashSweepTimeZone)
+        private TimeSpan GetTimeToApprove(onBoardingAccount onboardAccount, DateTime valueDate)
         {
             try
             {
-                cashSweepTimeZone = cashSweepTimeZone ?? "";
+                var cashSweep = valueDate.Date.Add(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
+                var cutOff = valueDate.AddDays(onboardAccount.DaystoWire ?? 0).Date.Add(onboardAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
+
+                var cashSweepTimeZone = onboardAccount.CashSweepTimeZone ?? "";
                 var cashSweepTime = new DateTime();
-                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones.ContainsKey(cashSweepTimeZone) ? TimeZones[cashSweepTimeZone] : TimeZones[FileSystemManager.DefaultTimeZone]);
-                TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones[FileSystemManager.DefaultTimeZone]);
-                if (customTimeZone.Id != "Eastern Standard Time")
+                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones.ContainsKey(cashSweepTimeZone) ? FileSystemManager.TimeZones[cashSweepTimeZone] : FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
+                TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
+                if (customTimeZone.Id != FileSystemManager.DefaultTimeZone)
                 {
                     cashSweepTime = TimeZoneInfo.ConvertTime(new DateTime(cashSweep.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone);
                 }
                 else
                     cashSweepTime = cashSweep;
-                var cutOffTime = cutOff;
+
+                var cutoffTimeZone = onboardAccount.CutOffTimeZone ?? "";
+                var cutOffTime = new DateTime();
+                customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones.ContainsKey(cutoffTimeZone) ? FileSystemManager.TimeZones[cutoffTimeZone] : FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
+                destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
+                if (customTimeZone.Id != FileSystemManager.DefaultTimeZone)
+                {
+                    cutOffTime = TimeZoneInfo.ConvertTime(new DateTime(cutOff.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone);
+                }
+                else
+                    cutOffTime = cutOff;
+
                 var currentTime = DateTime.Now;
-                if (TimeZoneInfo.Local.Id != "Eastern Standard Time")
-                    currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Eastern Standard Time");
+                if (TimeZoneInfo.Local.Id != FileSystemManager.DefaultTimeZone)
+                    currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, FileSystemManager.DefaultTimeZone);
 
                 TimeSpan offSetTime;
                 if (cashSweepTime < cutOffTime)
@@ -500,8 +499,8 @@ namespace HMOSecureWeb.Controllers
             try
             {
                 cashSweepTimeZone = cashSweepTimeZone ?? "";
-                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones.ContainsKey(cashSweepTimeZone) ? TimeZones[cashSweepTimeZone] : TimeZones[FileSystemManager.DefaultTimeZone]);
-                TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZones[FileSystemManager.DefaultTimeZone]);
+                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones.ContainsKey(cashSweepTimeZone) ? FileSystemManager.TimeZones[cashSweepTimeZone] : FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
+                TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
                 var actualTime = TimeZoneInfo.ConvertTime(new DateTime(cashSweep.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone);
                 var cashSweepTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(actualTime, "Eastern Standard Time");
                 var cutOffTime = cutOff;
@@ -532,7 +531,6 @@ namespace HMOSecureWeb.Controllers
             {
                 users = context.hLoginRegistrations.Where(s => UserDetails.Id == s.intLoginID || userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
             }
-
 
             var allPurposes = wirePurposes.Select(wirePurpose =>
                 new
@@ -707,9 +705,7 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetBoardingAccount(long onBoardingAccountId, DateTime valueDate)
         {
             var onboardAccount = WireDataManager.GetBoardingAccount(onBoardingAccountId);
-            var cashSweep = valueDate.Date.Add(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
-            var cutOff = valueDate.Date.Add(onboardAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
-            var deadlineToApprove = GetTimeToApprove(cashSweep, cutOff, onboardAccount.CashSweepTimeZone);
+            var deadlineToApprove = GetTimeToApprove(onboardAccount, valueDate);
             return Json(new { onboardAccount, deadlineToApprove });
         }
 

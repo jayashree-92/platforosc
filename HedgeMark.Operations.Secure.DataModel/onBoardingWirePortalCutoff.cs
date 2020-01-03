@@ -20,5 +20,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string Currency { get; set; }
         public System.TimeSpan CutoffTime { get; set; }
         public int DaystoWire { get; set; }
+        public string CutOffTimeZone { get; set; }
+        public int RecCreatedBy { get; set; }
+        public System.DateTime RecCreatedAt { get; set; }
     }
 }

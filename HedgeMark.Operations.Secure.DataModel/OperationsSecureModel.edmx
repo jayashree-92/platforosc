@@ -271,6 +271,7 @@
           <Property Name="UltimateBeneficiaryAccountName" Type="varchar" MaxLength="500" />
           <Property Name="AccountModule" Type="varchar" MaxLength="500" />
           <Property Name="ApprovedBy" Type="varchar" MaxLength="100" />
+          <Property Name="CutOffTimeZone" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -457,6 +458,9 @@
           <Property Name="Currency" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="CutoffTime" Type="time" Precision="7" Nullable="false" />
           <Property Name="DaystoWire" Type="int" Nullable="false" />
+          <Property Name="CutOffTimeZone" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="RecCreatedBy" Type="int" Nullable="false" />
+          <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK_hmsWireCollateralAssociation_hmsWires_hmsWireId">
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
@@ -1276,6 +1280,7 @@
           <Property Name="AccountModule" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="onBoardingAccountModuleAssociations" Relationship="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountModuleAssociation" />
           <Property Name="ApprovedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CutOffTimeZone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -1448,6 +1453,9 @@
           <Property Name="Currency" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="CutoffTime" Type="Time" Nullable="false" Precision="7" />
           <Property Name="DaystoWire" Type="Int32" Nullable="false" />
+          <Property Name="CutOffTimeZone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <Association Name="FK_onBoardingAccountDocument_onBoardingAccountId">
           <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
@@ -1929,6 +1937,7 @@
           <EntitySetMapping Name="onBoardingAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccount">
               <MappingFragment StoreEntitySet="onBoardingAccount">
+                <ScalarProperty Name="CutOffTimeZone" ColumnName="CutOffTimeZone" />
                 <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
                 <ScalarProperty Name="AccountModule" ColumnName="AccountModule" />
                 <ScalarProperty Name="UltimateBeneficiaryAccountName" ColumnName="UltimateBeneficiaryAccountName" />
@@ -2160,6 +2169,9 @@
           <EntitySetMapping Name="onBoardingWirePortalCutoffs">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingWirePortalCutoff">
               <MappingFragment StoreEntitySet="onBoardingWirePortalCutoff">
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="CutOffTimeZone" ColumnName="CutOffTimeZone" />
                 <ScalarProperty Name="DaystoWire" ColumnName="DaystoWire" />
                 <ScalarProperty Name="CutoffTime" ColumnName="CutoffTime" />
                 <ScalarProperty Name="Currency" ColumnName="Currency" />

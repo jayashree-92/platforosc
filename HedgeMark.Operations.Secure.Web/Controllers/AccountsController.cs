@@ -644,7 +644,12 @@ namespace HMOSecureWeb.Controllers
                 {
                     id = choice.CashInstruction,
                     text = choice.CashInstruction
-                }).OrderBy(x => x.text).ToList()
+                }).OrderBy(x => x.text).ToList(),
+                timeZones = FileSystemManager.TimeZones.Select(s => new
+                {
+                    id = s.Key,
+                    text = s.Key
+                }).ToList(),
             }, JsonContentType, JsonContentEncoding);
         }
 
@@ -725,9 +730,9 @@ namespace HMOSecureWeb.Controllers
             AccountManager.RemoveSsiTemplateMap(ssiTemplateMapId);
         }
 
-        public JsonResult GetCutoffTime(string cashInstruction, string currency)
+        public JsonResult GetCutoffTime(string cashInstruction, string currency, string timeZone)
         {
-            var cutOffTime = AccountManager.GetCutoffTime(cashInstruction, currency);
+            var cutOffTime = AccountManager.GetCutoffTime(cashInstruction, currency, timeZone);
             return Json(new
             {
                 cutOffTime

@@ -1,0 +1,112 @@
+﻿@using HMOSecureWeb.Utility
+@{
+    ViewBag.Title = "Wire Cutoffs";
+}
+
+<style>
+    /*.input-group[class*="col-"] {
+        float: none;
+        padding-right: 0;
+        padding-left: 15px;
+    }*/
+
+    /*.select2-container {
+        width: 258px !important;
+    }*/
+
+    /*.AdjustDropDownWidth .select2-container {
+        width: 100% !important;
+    }*/
+</style>
+
+<legend>Wire Cutoffs</legend>
+
+<div id="wireCutoffsDiv" ng-controller="WirePortalCutoffCtrl">
+    <div class="well well-sm sticky-header" style="min-height: 50px;">
+        @if (User.IsWireUser())
+        {
+            <button ng-click="fnAddOrUpdateWirePortalCutoff(true)" id="btnAddWireCutoff" class="btn btn-success btn-sm" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Wire Cutoff</button>
+            <div class="pull-right btn-group">
+                &nbsp;&nbsp; <button class=" btn btn-primary btn-sm" id="btnEdit" ng-disabled="!enableWireActions" ng-click="fnAddOrUpdateWirePortalCutoff(false)">
+                    <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
+                </button>
+                @if (User.IsWireApprover())
+                {
+                    <button class="btn btn-danger btn-sm" id="btnDel" ng-disabled="!enableWireActions" ng-click="fnDeleteWireCutoff()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>
+                }
+                <div class="pull-right btn-group" style="padding-right: 2px;">
+                    &nbsp;&nbsp;<a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportData()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
+                </div>
+            </div>
+        }
+    </div>
+    <table id="tblWirePortalCutoffData" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+    <div class="modal fade" id="wirePortalCutoffModal" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Wire Portal Cutoff</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="liCashInstruction" class="control-label">Cash Instruction:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-6 col-lg-3">
+                            <input type="text" id="liCashInstruction" ng-disabled="!isAdd" ng-model="wirePortalCutoff.CashInstruction" class="modalInputWidth dropDown form-control" placeholder="Select a Cash Instruction" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="liCurrency" class="control-label">Currency:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-6 col-lg-3">
+                            <input type="text" id="liCurrency" ng-disabled="!isAdd" ng-model="wirePortalCutoff.Currency" class="modalInputWidth dropDown form-control" placeholder="Select a Currency" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="liTimeZone" class="control-label">Time Zone:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-6 col-lg-3">
+                            <input type="text" id="liTimeZone" ng-model="wirePortalCutoff.CutOffTimeZone" class="modalInputWidth dropDown form-control" placeholder="Select a Time Zone" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="cutoffTime" class="control-label">Cutoff Time:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-3 col-lg-2">
+                            <input type="time" id="cutoffTime" ng-model="wirePortalCutoff.CutoffTime" class="modalInputWidth form-control" value="00:00" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="daysToWire" class="control-label">Days to Wire:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-3 col-lg-2">
+                            <input type="number" id="daysToWire" ng-model="wirePortalCutoff.DaystoWire" class="modalInputWidth form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-disabled="!isWireCutoffRequirementsFilled" ng-click="fnSaveWirePortalCutoff()">
+                        <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Cutoff
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section javascript
+{
+    <script src="~/Scripts/OpsSecure/wirePortalCutoff.js"></script>
+}

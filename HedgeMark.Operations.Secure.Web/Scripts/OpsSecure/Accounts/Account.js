@@ -221,15 +221,25 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
     $scope.fnGetCashInstruction = function (panelIndex) {
         $http.get("/Accounts/GetAllCashInstruction").then(function (response) {
             $scope.cashInstructions = response.data.cashInstructions;
-            if (agreementId > 0 && panelIndex != undefined) {
+            $scope.timeZones = response.data.timeZones;
+            if (panelIndex != undefined && panelIndex != null) {
                 $("#liCashInstruction" + panelIndex).select2({
                     placeholder: "Select a Cash Instruction",
                     allowClear: true,
                     data: response.data.cashInstructions
                 });
 
+                $("#liTimeZone" + panelIndex).select2({
+                    placeholder: "Select a TimeZone",
+                    allowClear: true,
+                    data: response.data.timeZones
+                });
+
                 if ($scope.onBoardingAccountDetails[panelIndex].CashInstruction != null && $scope.onBoardingAccountDetails[panelIndex].CashInstruction != 'undefined')
                     $("#liCashInstruction" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].CashInstruction);
+
+                if ($scope.onBoardingAccountDetails[panelIndex].CutOffTimeZone != null && $scope.onBoardingAccountDetails[panelIndex].CutOffTimeZone != 'undefined')
+                    $("#liTimeZone" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].CutOffTimeZone);
             }
         });
     }
@@ -564,6 +574,11 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             placeholder: "select a Cash Instruction",
             allowClear: true,
             data: $scope.cashInstructions == undefined ? [] : $scope.cashInstructions
+        });
+        $("#liTimeZone" + key).select2({
+            placeholder: "select a Time Zone",
+            allowClear: true,
+            data: $scope.timeZones == undefined ? [] : $scope.timeZones
         });
 
         $("#liAccountDescriptions" + key).select2({

@@ -80,6 +80,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string UltimateBeneficiaryAccountName { get; set; }
         public string AccountModule { get; set; }
         public string ApprovedBy { get; set; }
+        public string CutOffTimeZone { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountDocument> onBoardingAccountDocuments { get; set; }
