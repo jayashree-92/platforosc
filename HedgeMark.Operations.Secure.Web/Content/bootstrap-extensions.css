@@ -629,28 +629,29 @@ body > .popover .popover-content {
     border: thin solid #cfcfcf;
 }
 
-.table > thead > tr > td.info,
-.table > tbody > tr > td.info,
-.table > tfoot > tr > td.info,
-.table > thead > tr > th.info,
-.table > tbody > tr > th.info,
-.table > tfoot > tr > th.info,
-.table > thead > tr.info > td,
-.table > tbody > tr.info > td,
-.table > tfoot > tr.info > td,
-.table > thead > tr.info > th,
-.table > tbody > tr.info > th,
-.table > tfoot > tr.info > th {
-    background-color: #daedf7;
+
+.table > thead > tr > td.section,
+.table > tbody > tr > td.section,
+.table > tfoot > tr > td.section,
+.table > thead > tr > th.section,
+.table > tbody > tr > th.section,
+.table > tfoot > tr > th.section,
+.table > thead > tr.section > td,
+.table > tbody > tr.section > td,
+.table > tfoot > tr.section > td,
+.table > thead > tr.section > th,
+.table > tbody > tr.section > th,
+.table > tfoot > tr.section > th {
+    background-color: #ebebeb !important;
 }
 
-.table-hover > tbody > tr > td.info:hover,
-.table-hover > tbody > tr > th.info:hover,
-.table-hover > tbody > tr.info:hover > td,
-.table-hover > tbody > tr:hover > .info,
-.table-hover > tbody > tr.info:hover > th {
-    background-color: #c5e3f2;
+.table-hover > tbody > tr > td.section:hover,
+.table-hover > tbody > tr > th.section:hover,
+.table-hover > tbody > tr.section:hover > td,
+.table-hover > tbody > tr.section:hover > th {
+    background-color: #e1e1e1 !important;
 }
+
 
 .table > thead > tr > td.blocked,
 .table > tbody > tr > td.blocked,
@@ -664,15 +665,18 @@ body > .popover .popover-content {
 .table > thead > tr.blocked > th,
 .table > tbody > tr.blocked > th,
 .table > tfoot > tr.blocked > th {
-    background-color: #ebebeb !important;
+    background-color: #ebebeb;
 }
 
 .table-hover > tbody > tr > td.blocked:hover,
 .table-hover > tbody > tr > th.blocked:hover,
 .table-hover > tbody > tr.blocked:hover > td,
 .table-hover > tbody > tr.blocked:hover > th {
-    background-color: #e1e1e1 !important;
+    background-color: #e1e1e1;
 }
+
+
+
 
 .table > thead > tr > td.bordered,
 .table > tbody > tr > td.bordered,
@@ -689,7 +693,7 @@ body > .popover .popover-content {
 .table-hover > tbody > tr > th.bordered:hover,
 .table-hover > tbody > tr.bordered:hover > td,
 .table-hover > tbody > tr.bordered:hover > th {
-    background-color: #e1e1e1 !important;
+    background-color: #e1e1e1;
     /*height: 20px;*/
     font-weight: bold;
     cursor: pointer;
@@ -725,6 +729,7 @@ body > .popover .popover-content {
 .table > tbody > tr.blockedSection > th,
 .table > tfoot > tr.blockedSection > th {
     background-color: #dcdcdc !important;
+    cursor: pointer;
 }
 
 .table > thead > tr > td.blockedSectionHeader,
@@ -741,10 +746,35 @@ body > .popover .popover-content {
 .table > tfoot > tr.blockedSectionHeader > th {
     background-color: #CFCFCF !important;
     text-transform: uppercase;
+    cursor: pointer !important;
     /*font-style: oblique;*/
     /*font-stretch: condensed;*/
     font-weight: bolder;
 }
+
+.table > thead > tr > td.info,
+.table > tbody > tr > td.info,
+.table > tfoot > tr > td.info,
+.table > thead > tr > th.info,
+.table > tbody > tr > th.info,
+.table > tfoot > tr > th.info,
+.table > thead > tr.info > td,
+.table > tbody > tr.info > td,
+.table > tfoot > tr.info > td,
+.table > thead > tr.info > th,
+.table > tbody > tr.info > th,
+.table > tfoot > tr.info > th {
+    background-color: #daedf7;
+}
+
+.table-hover > tbody > tr > td.info:hover,
+.table-hover > tbody > tr > th.info:hover,
+.table-hover > tbody > tr.info:hover > td,
+.table-hover > tbody > tr:hover > .info,
+.table-hover > tbody > tr.info:hover > th {
+    background-color: #c5e3f2;
+}
+
 
 @media screen {
     .modal-open .table > caption + thead > tr:first-child > th,
@@ -1102,17 +1132,21 @@ body > .popover .popover-content {
         margin-right: 15px !important;
     }
 
-    .navbar-ops-brand .navbar-right {
-        margin-top: 7px !important;
+    .navbar-ops-brand .icon-lg {
+        font-size: 18px;
+        padding: 0px;
+        padding-bottom: 1px;
     }
 
-        .navbar-ops-brand .navbar-right img {
-            margin-top: -8px !important;
+        .navbar-ops-brand .icon-lg:hover {
+            color: #a4a4a4;
+            text-decoration: none;
         }
+
 
 .navbar-ops-title-divider {
     height: 27px;
-    border: #FFFFFF 1.5px solid;
+    border: #FFFFFF 1.2px solid;
     margin-top: 8px;
     margin-left: -11px;
     padding: 0px;
