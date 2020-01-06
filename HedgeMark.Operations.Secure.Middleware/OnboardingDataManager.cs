@@ -78,7 +78,7 @@ namespace HMOSecureMiddleware
                 //var agreementStatus = context.dmaAgreementStatus.FirstOrDefault(s => s.AgreementStatus == "Fully Executed"); a.AgreementStatusId == agreementStatus.dmaAgreementStatusId &&
                 var permittedAgreementTypes = new List<string>() { "CDA", "Custody", "DDA", "Deemed ISDA", "Enhanced Custody", "FCM", "FXPB", "GMRA", "ISDA", "Listed Options", "MRA", "MSFTA", "Non-US Listed Options", "PB" };
                 return context.vw_OnboardedAgreements
-                    .Where(a => permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || onBoardFundIds.Contains(a.dmaFundOnBoardId)))
+                    .Where(a => a.AgreementStatus != "Terminated – Agreement" && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || onBoardFundIds.Contains(a.dmaFundOnBoardId)))
                     .AsNoTracking().Select(x => new AgreementBaseData() { AgreementOnboardingId = x.dmaAgreementOnBoardingId, AgreementShortName = x.AgreementShortName, FundOnBoardId = x.dmaFundOnBoardId }).ToList();
             }
         }
