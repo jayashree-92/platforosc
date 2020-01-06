@@ -52,7 +52,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
                 //pagination: true,
                 "sScrollX": "100%",
                 "sScrollXInner": "100%",
-                "scrollY": 500,
+                "scrollY": window.innerHeight - 400,
                 "order": [[0, "asc"], [1, "asc"]],
                 "oLanguage": {
                     "sSearch": "",

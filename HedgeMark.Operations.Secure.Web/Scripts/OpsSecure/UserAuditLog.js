@@ -99,7 +99,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                 //pagination: true,
                 "sScrollX": "100%",
                 "sScrollXInner": "100%",
-                "scrollY": 350,
+                "scrollY": window.innerHeight - 400,
                 "order": [[2, "desc"]],
 
                 "fnRowCallback": function (nRow, aData) {
@@ -144,7 +144,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                 "bDestroy": true,
                 "order": [[7, "desc"]],
                 "scrollX": true,
-                "scrollY": window.innerHeight - 350,
+                "scrollY": window.innerHeight - 400,
                 "initComplete": function (settings, json) {
                     var actionsMessage = "";
                     if (actions.length > 1) {
