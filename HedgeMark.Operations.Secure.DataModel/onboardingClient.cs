@@ -174,6 +174,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string DefaultHmStructuring { get; set; }
         public string HmRiskClientServiceAndAnalytics { get; set; }
         public string Tier { get; set; }
+        public string ConfirmProtocolForSubscriptionRedemption { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onboardingFund> onboardingFunds { get; set; }

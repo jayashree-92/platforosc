@@ -408,6 +408,7 @@
           <Property Name="DefaultHmStructuring" Type="varchar" MaxLength="100" />
           <Property Name="HmRiskClientServiceAndAnalytics" Type="varchar" MaxLength="100" />
           <Property Name="Tier" Type="varchar" MaxLength="50" />
+          <Property Name="ConfirmProtocolForSubscriptionRedemption" Type="varchar" MaxLength="2000" />
         </EntityType>
         <EntityType Name="onboardingFund">
           <Key>
@@ -604,6 +605,7 @@
           <Property Name="AddtoFundCount" Type="varchar" MaxLength="5" />
           <Property Name="RegisteredwithNFAExempt" Type="varchar" MaxLength="500" />
           <Property Name="RegisteredwithSECExempt" Type="varchar" MaxLength="500" />
+          <Property Name="OpenBankAccount" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -635,7 +637,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="BaseCurrencyShareclass" Type="char" MaxLength="3" />
           <Property Name="AccountingMethod" Type="varchar" MaxLength="200" />
           <Property Name="FiscalYearEnd" Type="varchar" MaxLength="10" />
-          <Property Name="subFunds" Type="nvarchar(max)" />
           <Property Name="FundManagerName" Type="varchar" MaxLength="100" />
           <Property Name="FundManagerID" Type="int" />
           <Property Name="ManagerStrategy" Type="varchar" MaxLength="200" />
@@ -713,6 +714,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="NotesModifiedDate" Type="datetime" />
           <Property Name="FullyExecutedDate" Type="datetime" />
           <Property Name="StatusDate" Type="date" />
+          <Property Name="Responsibility" Type="varchar" MaxLength="500" />
           <Property Name="CounterpartyFamily" Type="varchar" MaxLength="100" />
           <Property Name="CounterpartyName" Type="nvarchar" MaxLength="500" />
           <Property Name="CounterpartyShortCode" Type="nvarchar" MaxLength="500" />
@@ -837,7 +839,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
     [vw_HFund].[BaseCurrencyShareclass] AS [BaseCurrencyShareclass], 
     [vw_HFund].[AccountingMethod] AS [AccountingMethod], 
     [vw_HFund].[FiscalYearEnd] AS [FiscalYearEnd], 
-    [vw_HFund].[subFunds] AS [subFunds], 
     [vw_HFund].[FundManagerName] AS [FundManagerName], 
     [vw_HFund].[FundManagerID] AS [FundManagerID], 
     [vw_HFund].[ManagerStrategy] AS [ManagerStrategy], 
@@ -905,6 +906,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
     [vw_OnboardedAgreements].[NotesModifiedDate] AS [NotesModifiedDate], 
     [vw_OnboardedAgreements].[FullyExecutedDate] AS [FullyExecutedDate], 
     [vw_OnboardedAgreements].[StatusDate] AS [StatusDate], 
+    [vw_OnboardedAgreements].[Responsibility] AS [Responsibility], 
     [vw_OnboardedAgreements].[CounterpartyFamily] AS [CounterpartyFamily], 
     [vw_OnboardedAgreements].[CounterpartyName] AS [CounterpartyName], 
     [vw_OnboardedAgreements].[CounterpartyShortCode] AS [CounterpartyShortCode], 
@@ -1070,13 +1072,13 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
             <End Role="dmaCounterPartyOnBoarding" EntitySet="dmaCounterPartyOnBoardings" />
           </AssociationSet>
           <EntitySet Name="dmaOnBoardingContactDetails" EntityType="AdminModel.dmaOnBoardingContactDetail" />
-          <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
           <EntitySet Name="onboardingClients" EntityType="AdminModel.onboardingClient" />
           <AssociationSet Name="FK_onboardingFund_dmaClientOnBoardId" Association="AdminModel.FK_onboardingFund_dmaClientOnBoardId">
             <End Role="onboardingClient" EntitySet="onboardingClients" />
             <End Role="onboardingFund" EntitySet="onboardingFunds" />
           </AssociationSet>
           <EntitySet Name="vw_OnboardedAgreements" EntityType="AdminModel.vw_OnboardedAgreements" />
+          <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -1436,6 +1438,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="AddtoFundCount" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="RegisteredwithNFAExempt" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="RegisteredwithSECExempt" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="OpenBankAccount" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="dmaFundOnBoardPermission">
           <Key>
@@ -1537,40 +1540,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="Onboarding" Type="Boolean" Nullable="false" />
           <Property Name="ClientSubCategory" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ComplainceCert" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="vw_HFund">
-          <Key>
-            <PropertyRef Name="intFundID" />
-            <PropertyRef Name="FundMapId" />
-            <PropertyRef Name="ClientFundName" />
-            <PropertyRef Name="LegalFundName" />
-            <PropertyRef Name="HMRAName" />
-            <PropertyRef Name="CreatedFor" />
-            <PropertyRef Name="FundStatus" />
-            <PropertyRef Name="ClientFundVersion" />
-          </Key>
-          <Property Name="intFundID" Type="Int32" Nullable="false" />
-          <Property Name="FundMapId" Type="Int32" Nullable="false" />
-          <Property Name="ClientFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="LegalFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="HMRAName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedFor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FundStatus" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
-          <Property Name="DataProviderNameId" Type="Int32" />
-          <Property Name="DataProviderName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="varPositionFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="NAVFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FundLegalStructure" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="BaseCurrencyShareclass" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
-          <Property Name="AccountingMethod" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FiscalYearEnd" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="subFunds" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ClientFundVersion" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FundManagerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FundManagerID" Type="Int32" />
-          <Property Name="ManagerStrategy" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="dmaFundOnBoardId" Type="Int64" />
         </EntityType>
         <EntityType Name="onboardingClient">
           <Key>
@@ -1731,6 +1700,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="DefaultHmStructuring" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="HmRiskClientServiceAndAnalytics" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Tier" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ConfirmProtocolForSubscriptionRedemption" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_onboardingFund_dmaClientOnBoardId">
           <End Type="AdminModel.onboardingClient" Role="onboardingClient" Multiplicity="1" />
@@ -1825,6 +1795,40 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="AgreementShortName" Type="String" Nullable="false" MaxLength="1106" FixedLength="false" Unicode="true" />
           <Property Name="FundManagerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Responsibility" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="vw_HFund">
+          <Key>
+            <PropertyRef Name="intFundID" />
+            <PropertyRef Name="FundMapId" />
+            <PropertyRef Name="ClientFundName" />
+            <PropertyRef Name="LegalFundName" />
+            <PropertyRef Name="HMRAName" />
+            <PropertyRef Name="CreatedFor" />
+            <PropertyRef Name="ClientFundVersion" />
+            <PropertyRef Name="FundStatus" />
+          </Key>
+          <Property Name="intFundID" Type="Int32" Nullable="false" />
+          <Property Name="FundMapId" Type="Int32" Nullable="false" />
+          <Property Name="ClientFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LegalFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HMRAName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedFor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ClientFundVersion" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FundStatus" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="DataProviderNameId" Type="Int32" />
+          <Property Name="DataProviderName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="varPositionFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="NAVFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FundLegalStructure" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="BaseCurrencyShareclass" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="AccountingMethod" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FiscalYearEnd" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="FundManagerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FundManagerID" Type="Int32" />
+          <Property Name="ManagerStrategy" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="dmaFundOnBoardId" Type="Int64" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2081,6 +2085,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <EntitySetMapping Name="onboardingFunds">
             <EntityTypeMapping TypeName="AdminModel.onboardingFund">
               <MappingFragment StoreEntitySet="onboardingFund">
+                <ScalarProperty Name="OpenBankAccount" ColumnName="OpenBankAccount" />
                 <ScalarProperty Name="RegisteredwithSECExempt" ColumnName="RegisteredwithSECExempt" />
                 <ScalarProperty Name="RegisteredwithNFAExempt" ColumnName="RegisteredwithNFAExempt" />
                 <ScalarProperty Name="AddtoFundCount" ColumnName="AddtoFundCount" />
@@ -2357,37 +2362,10 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="vw_HFund">
-            <EntityTypeMapping TypeName="AdminModel.vw_HFund">
-              <MappingFragment StoreEntitySet="vw_HFund">
-                <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
-                <ScalarProperty Name="ManagerStrategy" ColumnName="ManagerStrategy" />
-                <ScalarProperty Name="FundManagerID" ColumnName="FundManagerID" />
-                <ScalarProperty Name="FundManagerName" ColumnName="FundManagerName" />
-                <ScalarProperty Name="ClientFundVersion" ColumnName="ClientFundVersion" />
-                <ScalarProperty Name="subFunds" ColumnName="subFunds" />
-                <ScalarProperty Name="FiscalYearEnd" ColumnName="FiscalYearEnd" />
-                <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
-                <ScalarProperty Name="BaseCurrencyShareclass" ColumnName="BaseCurrencyShareclass" />
-                <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
-                <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />
-                <ScalarProperty Name="varPositionFrequency" ColumnName="varPositionFrequency" />
-                <ScalarProperty Name="DataProviderName" ColumnName="DataProviderName" />
-                <ScalarProperty Name="DataProviderNameId" ColumnName="DataProviderNameId" />
-                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
-                <ScalarProperty Name="CreatedFor" ColumnName="CreatedFor" />
-                <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
-                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
-                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
-                <ScalarProperty Name="ClientFundName" ColumnName="ClientFundName" />
-                <ScalarProperty Name="FundMapId" ColumnName="FundMapId" />
-                <ScalarProperty Name="intFundID" ColumnName="intFundID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="onboardingClients">
             <EntityTypeMapping TypeName="AdminModel.onboardingClient">
               <MappingFragment StoreEntitySet="onboardingClient">
+                <ScalarProperty Name="ConfirmProtocolForSubscriptionRedemption" ColumnName="ConfirmProtocolForSubscriptionRedemption" />
                 <ScalarProperty Name="Tier" ColumnName="Tier" />
                 <ScalarProperty Name="HmRiskClientServiceAndAnalytics" ColumnName="HmRiskClientServiceAndAnalytics" />
                 <ScalarProperty Name="DefaultHmStructuring" ColumnName="DefaultHmStructuring" />
@@ -2548,6 +2526,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <EntitySetMapping Name="vw_OnboardedAgreements">
             <EntityTypeMapping TypeName="AdminModel.vw_OnboardedAgreements">
               <MappingFragment StoreEntitySet="vw_OnboardedAgreements">
+                <ScalarProperty Name="Responsibility" ColumnName="Responsibility" />
                 <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
                 <ScalarProperty Name="FundManagerName" ColumnName="FundManagerName" />
                 <ScalarProperty Name="AgreementShortName" ColumnName="AgreementShortName" />
@@ -2618,6 +2597,33 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
                 <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
                 <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
                 <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_HFund">
+            <EntityTypeMapping TypeName="AdminModel.vw_HFund">
+              <MappingFragment StoreEntitySet="vw_HFund">
+                <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
+                <ScalarProperty Name="ManagerStrategy" ColumnName="ManagerStrategy" />
+                <ScalarProperty Name="FundManagerID" ColumnName="FundManagerID" />
+                <ScalarProperty Name="FundManagerName" ColumnName="FundManagerName" />
+                <ScalarProperty Name="FiscalYearEnd" ColumnName="FiscalYearEnd" />
+                <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
+                <ScalarProperty Name="BaseCurrencyShareclass" ColumnName="BaseCurrencyShareclass" />
+                <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
+                <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />
+                <ScalarProperty Name="varPositionFrequency" ColumnName="varPositionFrequency" />
+                <ScalarProperty Name="DataProviderName" ColumnName="DataProviderName" />
+                <ScalarProperty Name="DataProviderNameId" ColumnName="DataProviderNameId" />
+                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
+                <ScalarProperty Name="ClientFundVersion" ColumnName="ClientFundVersion" />
+                <ScalarProperty Name="CreatedFor" ColumnName="CreatedFor" />
+                <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
+                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
+                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
+                <ScalarProperty Name="ClientFundName" ColumnName="ClientFundName" />
+                <ScalarProperty Name="FundMapId" ColumnName="FundMapId" />
+                <ScalarProperty Name="intFundID" ColumnName="intFundID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

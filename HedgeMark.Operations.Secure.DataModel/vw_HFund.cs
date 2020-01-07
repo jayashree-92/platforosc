@@ -21,6 +21,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string LegalFundName { get; set; }
         public string HMRAName { get; set; }
         public string CreatedFor { get; set; }
+        public string ClientFundVersion { get; set; }
         public string FundStatus { get; set; }
         public Nullable<int> DataProviderNameId { get; set; }
         public string DataProviderName { get; set; }
@@ -30,8 +31,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string BaseCurrencyShareclass { get; set; }
         public string AccountingMethod { get; set; }
         public string FiscalYearEnd { get; set; }
-        public string subFunds { get; set; }
-        public string ClientFundVersion { get; set; }
         public string FundManagerName { get; set; }
         public Nullable<int> FundManagerID { get; set; }
         public string ManagerStrategy { get; set; }

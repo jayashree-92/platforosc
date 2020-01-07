@@ -84,5 +84,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string AgreementShortName { get; set; }
         public string FundManagerName { get; set; }
         public string AdminChoice { get; set; }
+        public string Responsibility { get; set; }
     }
 }

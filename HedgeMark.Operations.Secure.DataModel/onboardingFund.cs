@@ -211,6 +211,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string AddtoFundCount { get; set; }
         public string RegisteredwithNFAExempt { get; set; }
         public string RegisteredwithSECExempt { get; set; }
+        public string OpenBankAccount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaFundOnBoardPermission> dmaFundOnBoardPermissions { get; set; }
