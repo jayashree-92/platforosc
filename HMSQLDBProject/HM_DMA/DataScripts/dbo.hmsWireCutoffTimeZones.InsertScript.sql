@@ -58,9 +58,9 @@ INSERT INTO hmsWireCutoffTimeZones ([TimeZone], [TimeZoneStandardName]) VALUES('
 END 
 GO
 
-IF NOT EXISTS(SELECT 8 FROM hmsWireCutoffTimeZones WHERE TimeZone = 'IST' AND TimeZoneStandardName = 'Indian Standard Time')
+IF NOT EXISTS(SELECT 8 FROM hmsWireCutoffTimeZones WHERE TimeZone = 'IST' AND TimeZoneStandardName = 'India Standard Time')
 BEGIN
-INSERT INTO hmsWireCutoffTimeZones ([TimeZone], [TimeZoneStandardName]) VALUES('IST', 'Indian Standard Time')
+INSERT INTO hmsWireCutoffTimeZones ([TimeZone], [TimeZoneStandardName]) VALUES('IST', 'India Standard Time')
 END 
 GO
 
