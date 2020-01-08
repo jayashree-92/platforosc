@@ -1295,8 +1295,8 @@ namespace HMOSecureWeb.Controllers
                                 cutoffTime = (hours + increment).ToString() + ":" + splitCutoffTime[1];
                                 accountDetail.CutoffTime = TimeSpan.Parse(cutoffTime);
                             }
-
                         }
+                        accountDetail.CutOffTimeZone = string.IsNullOrWhiteSpace(account["Cutoff Time Zone"]) ?  "EST" : account["Cutoff Time Zone"]; 
                         if (!string.IsNullOrWhiteSpace(account["Days to wire per V.D"]))
                         {
                             var wirePerDays = account["Days to wire per V.D"].Replace(" Days", "").Replace(" Day", "").Trim();
@@ -1430,6 +1430,7 @@ namespace HMOSecureWeb.Controllers
             row["Cash Sweep"] = String.Empty;
             row["Cash Sweep Time"] = String.Empty;
             row["Cash Sweep Time Zone"] = String.Empty;
+            row["Cutoff Time Zone"] = string.Empty;
             row["Cutoff Time"] = String.Empty;
             row["Days to wire per V.D"] = String.Empty;
             row["Holdback Amount"] = String.Empty;
