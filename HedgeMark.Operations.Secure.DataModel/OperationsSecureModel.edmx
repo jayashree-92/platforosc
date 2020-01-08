@@ -69,6 +69,14 @@
           <Property Name="dmaCashCollateralId" Type="bigint" Nullable="false" />
           <Property Name="AgreedMovementType" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsWireCutoffTimeZones">
+          <Key>
+            <PropertyRef Name="hmsWireCutoffTimeZoneId" />
+          </Key>
+          <Property Name="hmsWireCutoffTimeZoneId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TimeZone" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="TimeZoneStandardName" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsWireDocument">
           <Key>
             <PropertyRef Name="hmsWireDocumentId" />
@@ -458,9 +466,9 @@
           <Property Name="Currency" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="CutoffTime" Type="time" Precision="7" Nullable="false" />
           <Property Name="DaystoWire" Type="int" Nullable="false" />
-          <Property Name="CutOffTimeZone" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="RecCreatedBy" Type="int" Nullable="false" />
           <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="CutOffTimeZone" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <Association Name="FK_hmsWireCollateralAssociation_hmsWires_hmsWireId">
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
@@ -745,6 +753,7 @@
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUserAuditLog" EntityType="Self.hmsUserAuditLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireCollateralAssociation" EntityType="Self.hmsWireCollateralAssociation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsWireCutoffTimeZones" EntityType="Self.hmsWireCutoffTimeZones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireDocument" EntityType="Self.hmsWireDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireInvoiceAssociation" EntityType="Self.hmsWireInvoiceAssociation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireJobSchedules" EntityType="Self.hmsWireJobSchedules" Schema="dbo" store:Type="Tables" />
@@ -997,6 +1006,7 @@
             <End Role="hmsWireCollateralAssociation" EntitySet="hmsWireCollateralAssociations" />
           </AssociationSet>
           <EntitySet Name="hmsBulkUploadLogs" EntityType="OperationsSecureModel.hmsBulkUploadLog" />
+          <EntitySet Name="hmsWireCutoffTimeZones" EntityType="OperationsSecureModel.hmsWireCutoffTimeZone" />
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -1777,6 +1787,14 @@
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="hmsWireCutoffTimeZone">
+          <Key>
+            <PropertyRef Name="hmsWireCutoffTimeZoneId" />
+          </Key>
+          <Property Name="hmsWireCutoffTimeZoneId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TimeZone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TimeZoneStandardName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2271,6 +2289,15 @@
                 <ScalarProperty Name="IsFundAccountLog" ColumnName="IsFundAccountLog" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="hmsBulkUploadLogId" ColumnName="hmsBulkUploadLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWireCutoffTimeZones">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireCutoffTimeZone">
+              <MappingFragment StoreEntitySet="hmsWireCutoffTimeZones">
+                <ScalarProperty Name="TimeZoneStandardName" ColumnName="TimeZoneStandardName" />
+                <ScalarProperty Name="TimeZone" ColumnName="TimeZone" />
+                <ScalarProperty Name="hmsWireCutoffTimeZoneId" ColumnName="hmsWireCutoffTimeZoneId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -71,21 +71,6 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static Dictionary<string, string> TimeZones = new Dictionary<string, string>()
-        {
-                { "EST", "Eastern Standard Time" },
-                { "EDT", "Eastern Daylight Time" },
-                { "CST", "Central Standard Time" },
-                { "CDT", "Central Daylight Time" },
-                { "MST", "Mountain Standard Time" },
-                { "MDT", "Mountain Daylight Time" },
-                { "PST", "Pacific Standard Time" },
-                { "PDT", "Pacific Daylight Time" },
-                { "CET", "Central European Standard Time"},
-                { "GMT", "GMT Standard Time" },
-                { "IST", "Indian Standard Time" },
-                { "JST", "Japan Standard Time" }
-        };
         private static readonly object InitialiseLock;
 
         static FileSystemManager()
@@ -108,6 +93,7 @@ namespace HMOSecureMiddleware
             lock (InitialiseLock)
             {
                 DmaReports = GetAllReports();
+                SystemTimeZones = GetAllTimeZones();
                 //InitializeManagedAccounts();
             }
         }
@@ -126,6 +112,22 @@ namespace HMOSecureMiddleware
             using (var context = new OperationsContext())
             {
                 return context.dmaReports.OrderBy(s => s.DisplayOrder).ToList();
+            }
+        }
+
+        public static List<hmsWireCutoffTimeZone> SystemTimeZones { get; set; }
+        public static Dictionary<string, string> TimeZones
+        {
+            get
+            {
+                return SystemTimeZones.OrderBy(s => s.hmsWireCutoffTimeZoneId).ToDictionary(s => s.TimeZone, v => v.TimeZoneStandardName);
+            }
+        }
+        private static List<hmsWireCutoffTimeZone> GetAllTimeZones()
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                return context.hmsWireCutoffTimeZones.OrderBy(s => s.hmsWireCutoffTimeZoneId).ToList();
             }
         }
 

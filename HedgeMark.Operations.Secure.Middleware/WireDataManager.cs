@@ -461,7 +461,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                var document = context.hmsWireDocuments.Where(x => x.hmsWireId == wireId).ToList().FirstOrDefault(s => s.FileName == fileName);
+                var document = context.hmsWireDocuments.Where(x => x.hmsWireId == wireId).FirstOrDefault(s => s.FileName == fileName);
                 if (document == null)
                     return;
 

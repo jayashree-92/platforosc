@@ -133,6 +133,9 @@
     <Compile Include="hmsWireCollateralAssociation.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsWireCutoffTimeZone.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsWireDocument.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
