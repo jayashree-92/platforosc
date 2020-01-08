@@ -645,7 +645,7 @@ namespace HMOSecureWeb.Controllers
                     id = choice.CashInstruction,
                     text = choice.CashInstruction
                 }).OrderBy(x => x.text).ToList(),
-                timeZones = FileSystemManager.TimeZones.Select(s => new
+                timeZones = FileSystemManager.GetAllTimeZones().Select(s => new
                 {
                     id = s.Key,
                     text = s.Key

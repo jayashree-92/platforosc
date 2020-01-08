@@ -27,7 +27,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetCutoffRelatedData()
         {
-            var timeZones = FileSystemManager.TimeZones.Select(s => new { id = s.Key, text = s.Key }).ToList();
+            var timeZones = FileSystemManager.GetAllTimeZones().Select(s => new { id = s.Key, text = s.Key }).ToList();
             var currencies = AccountManager.GetAllCurrencies().Select(s => new { id = s.Currency, text = s.Currency }).ToList();
             var cashInstructions = AccountManager.GetAllCashInstruction().Select(s => new { id = s.CashInstruction, text = s.CashInstruction }).Distinct().ToList();
             return Json(new { cashInstructions, currencies, timeZones }, JsonRequestBehavior.AllowGet);

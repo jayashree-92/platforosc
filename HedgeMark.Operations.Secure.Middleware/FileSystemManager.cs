@@ -93,7 +93,6 @@ namespace HMOSecureMiddleware
             lock (InitialiseLock)
             {
                 DmaReports = GetAllReports();
-                SystemTimeZones = GetAllTimeZones();
                 //InitializeManagedAccounts();
             }
         }
@@ -115,19 +114,11 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<hmsWireCutoffTimeZone> SystemTimeZones { get; set; }
-        public static Dictionary<string, string> TimeZones
-        {
-            get
-            {
-                return SystemTimeZones.OrderBy(s => s.hmsWireCutoffTimeZoneId).ToDictionary(s => s.TimeZone, v => v.TimeZoneStandardName);
-            }
-        }
-        private static List<hmsWireCutoffTimeZone> GetAllTimeZones()
+        public static Dictionary<string, string> GetAllTimeZones()
         {
             using (var context = new OperationsSecureContext())
             {
-                return context.hmsWireCutoffTimeZones.OrderBy(s => s.hmsWireCutoffTimeZoneId).ToList();
+                return context.hmsWireCutoffTimeZones.OrderBy(s => s.hmsWireCutoffTimeZoneId).ToDictionary(s => s.TimeZone, v => v.TimeZoneStandardName);
             }
         }
 

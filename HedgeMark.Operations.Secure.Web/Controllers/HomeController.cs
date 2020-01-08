@@ -447,14 +447,15 @@ namespace HMOSecureWeb.Controllers
         {
             try
             {
+                var timeZones = FileSystemManager.GetAllTimeZones();
                 var cashSweep = valueDate.Date.Add(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
                 var cutOff = valueDate.AddDays(onboardAccount.DaystoWire ?? 0).Date.Add(onboardAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
-                var baseTimeZone = FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone];
+                var baseTimeZone = timeZones[FileSystemManager.DefaultTimeZone];
 
                 var cashSweepTimeZone = onboardAccount.CashSweepTimeZone ?? "";
                 var cashSweepTime = new DateTime();
-                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones.ContainsKey(cashSweepTimeZone) ? FileSystemManager.TimeZones[cashSweepTimeZone] : baseTimeZone);
-                TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
+                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cashSweepTimeZone) ? timeZones[cashSweepTimeZone] : baseTimeZone);
+                TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones[FileSystemManager.DefaultTimeZone]);
 
                 if (customTimeZone.Id != baseTimeZone)
                     cashSweepTime = TimeZoneInfo.ConvertTime(new DateTime(cashSweep.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone);
@@ -463,7 +464,7 @@ namespace HMOSecureWeb.Controllers
 
                 var cutoffTimeZone = onboardAccount.CutOffTimeZone ?? "";
                 var cutOffTime = new DateTime();
-                customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones.ContainsKey(cutoffTimeZone) ? FileSystemManager.TimeZones[cutoffTimeZone] : baseTimeZone);
+                customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cutoffTimeZone) ? timeZones[cutoffTimeZone] : baseTimeZone);
 
                 if (customTimeZone.Id != baseTimeZone)
                     cutOffTime = TimeZoneInfo.ConvertTime(new DateTime(cutOff.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone);
