@@ -46,7 +46,7 @@ namespace HMOSecureWeb.Controllers
         }
         public FileResult ExportData()
         {
-            var wireCutoffData = WireDataManager.GetWirePortalCutoffData().OrderBy(s => new { s.CashInstruction, s.Currency }).ToList();
+            var wireCutoffData = WireDataManager.GetWirePortalCutoffData().OrderBy(s => s.CashInstruction).ThenBy(s => s.Currency).ToList();
             var contentToExport = new Dictionary<string, List<Row>>();
             var accountListRows = BuildExportRows(wireCutoffData);
             //File name and path

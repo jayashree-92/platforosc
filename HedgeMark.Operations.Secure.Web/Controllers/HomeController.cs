@@ -449,33 +449,30 @@ namespace HMOSecureWeb.Controllers
             {
                 var cashSweep = valueDate.Date.Add(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
                 var cutOff = valueDate.AddDays(onboardAccount.DaystoWire ?? 0).Date.Add(onboardAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
+                var baseTimeZone = FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone];
 
                 var cashSweepTimeZone = onboardAccount.CashSweepTimeZone ?? "";
                 var cashSweepTime = new DateTime();
-                var defaultTimeZone = FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone];
-                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones.ContainsKey(cashSweepTimeZone) ? FileSystemManager.TimeZones[cashSweepTimeZone] : FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
+                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones.ContainsKey(cashSweepTimeZone) ? FileSystemManager.TimeZones[cashSweepTimeZone] : baseTimeZone);
                 TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
-                if (customTimeZone.Id != defaultTimeZone)
-                {
+
+                if (customTimeZone.Id != baseTimeZone)
                     cashSweepTime = TimeZoneInfo.ConvertTime(new DateTime(cashSweep.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone);
-                }
                 else
                     cashSweepTime = cashSweep;
 
                 var cutoffTimeZone = onboardAccount.CutOffTimeZone ?? "";
                 var cutOffTime = new DateTime();
-                customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones.ContainsKey(cutoffTimeZone) ? FileSystemManager.TimeZones[cutoffTimeZone] : FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
-                destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones[FileSystemManager.DefaultTimeZone]);
-                if (customTimeZone.Id != defaultTimeZone)
-                {
+                customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(FileSystemManager.TimeZones.ContainsKey(cutoffTimeZone) ? FileSystemManager.TimeZones[cutoffTimeZone] : baseTimeZone);
+
+                if (customTimeZone.Id != baseTimeZone)
                     cutOffTime = TimeZoneInfo.ConvertTime(new DateTime(cutOff.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone);
-                }
                 else
                     cutOffTime = cutOff;
 
                 var currentTime = DateTime.Now;
-                if (TimeZoneInfo.Local.Id != defaultTimeZone)
-                    currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, defaultTimeZone);
+                if (TimeZoneInfo.Local.Id != baseTimeZone)
+                    currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, baseTimeZone);
 
                 TimeSpan offSetTime;
                 if (cashSweepTime < cutOffTime)
