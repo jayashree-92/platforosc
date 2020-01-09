@@ -799,6 +799,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
                 //var cutoffTimes = cutOff.CutoffTime;
                 $scope.onBoardingAccountDetails[index].CutoffTime = new Date(2014, 0, 1, cutOff.CutoffTime.Hours, cutOff.CutoffTime.Minutes, cutOff.CutoffTime.Seconds);
                 //$("#cutOffTime" + index).val($scope.onBoardingAccountDetails[index].CutoffTime);
+                $scope.onBoardingAccountDetails[index].CutOffTimeZone = cutOff.CutOffTimeZone;
                 $scope.onBoardingAccountDetails[index].DaystoWire = cutOff.DaystoWire;
             }
             else {

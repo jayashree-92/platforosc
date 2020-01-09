@@ -70,3 +70,6 @@ INSERT INTO hmsWireCutoffTimeZones ([TimeZone], [TimeZoneStandardName]) VALUES('
 END 
 GO
 
+UPDATE hmsWireCutoffTimeZones SET TimeZoneStandardName = 'Tokyo Standard Time' WHERE TimeZone = 'JST'
+GO
+

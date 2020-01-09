@@ -782,6 +782,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 //var cutoffTimes = cutOff.CutoffTime;
                 $scope.onBoardingAccountDetails[index].CutoffTime = new Date(2014, 0, 1, cutOff.CutoffTime.Hours, cutOff.CutoffTime.Minutes, cutOff.CutoffTime.Seconds);
                 //$("#cutOffTime" + index).val($scope.onBoardingAccountDetails[index].CutoffTime);
+                $scope.onBoardingAccountDetails[index].CutOffTimeZone = cutOff.CutOffTimeZone;
                 $scope.onBoardingAccountDetails[index].DaystoWire = cutOff.DaystoWire;
             }
             else {
@@ -1223,13 +1224,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             },
             "deferRender": false,
             "bScrollCollapse": true,
-            //"scroller": true,
+            "bPaginate": true,
+            "scroller": data.length > 10,
+            "scrollX": data.length > 0,
+            "scrollY": 350,
             //sortable: false,
             //"sDom": "ift",
             //pagination: true,
             "sScrollX": "100%",
             "sScrollXInner": "100%",
-            "scrollY": 350,
             "order": [[0, "desc"]],
             "oLanguage": {
                 "sSearch": "",
