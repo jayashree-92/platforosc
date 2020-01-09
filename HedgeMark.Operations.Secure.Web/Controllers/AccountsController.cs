@@ -1366,10 +1366,11 @@ namespace HMOSecureWeb.Controllers
                         accountDetail.UltimateBeneficiaryType = account["Ultimate Beneficiary Type"];
                         accountDetail.UltimateBeneficiaryBICorABA = account["Ultimate Beneficiary BIC or ABA"];
                         var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == accountDetail.UltimateBeneficiaryBICorABA);
-                        if (ultimateBeneficiaryBiCorAba != null)
+                        if (ultimateBeneficiaryBiCorAba != null && accountDetail.UltimateBeneficiaryType != "Account Name")
                         {
                             accountDetail.UltimateBeneficiaryBankName = ultimateBeneficiaryBiCorAba.BankName;
                             accountDetail.UltimateBeneficiaryBankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
+                            accountDetail.UltimateBeneficiaryAccountName = string.Empty;
                         }
                         else
                         {
@@ -1562,14 +1563,16 @@ namespace HMOSecureWeb.Controllers
                         }
 
                         templateDetail.IntermediaryAccountNumber = template["Intermediary Account Number"];
-
+                        
                         templateDetail.UltimateBeneficiaryType = template["Ultimate Beneficiary Type"];
                         templateDetail.UltimateBeneficiaryBICorABA = template["Ultimate Beneficiary BIC or ABA"];
+                        templateDetail.UltimateBeneficiaryAccountName = template["Ultimate Beneficiary Account Name"];
                         var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == templateDetail.UltimateBeneficiaryBICorABA);
-                        if (ultimateBeneficiaryBiCorAba != null)
+                        if (ultimateBeneficiaryBiCorAba != null && templateDetail.UltimateBeneficiaryType != "Account Name")
                         {
                             templateDetail.UltimateBeneficiaryBankName = ultimateBeneficiaryBiCorAba.BankName;
                             templateDetail.UltimateBeneficiaryBankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
+                            templateDetail.UltimateBeneficiaryAccountName = string.Empty;
                         }
                         else
                         {
@@ -1578,8 +1581,6 @@ namespace HMOSecureWeb.Controllers
                             templateDetail.UltimateBeneficiaryBICorABA = string.Empty;
                             templateDetail.UltimateBeneficiaryType = string.Empty;
                         }
-
-                        templateDetail.UltimateBeneficiaryAccountName = template["Ultimate Beneficiary Account Name"];
                         templateDetail.AccountNumber = template["Ultimate Beneficiary Account Number"];
                         templateDetail.FFCName = template["FFC Name"];
                         templateDetail.FFCNumber = template["FFC Number"];
