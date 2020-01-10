@@ -764,6 +764,14 @@ body > .popover .popover-content {
     color: #262626;
 }
 
+.table-hover > tbody > tr > td.selected:hover,
+.table-hover > tbody > tr > th.selected:hover,
+.table-hover > tbody > tr.selected:hover > td,
+.table-hover > tbody > tr.selected:hover > th {
+    background-color: #b8def4 !important;
+}
+
+
 table.dataTable tbody tr.selected,
 table.dataTable tbody th.selected,
 table.dataTable tbody td.selected {
