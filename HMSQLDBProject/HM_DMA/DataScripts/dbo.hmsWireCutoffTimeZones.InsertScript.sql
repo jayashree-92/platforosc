@@ -64,9 +64,9 @@ INSERT INTO hmsWireCutoffTimeZones ([TimeZone], [TimeZoneStandardName]) VALUES('
 END 
 GO
 
-IF NOT EXISTS(SELECT 8 FROM hmsWireCutoffTimeZones WHERE TimeZone = 'JST' AND TimeZoneStandardName = 'Japan Standard Time')
+IF NOT EXISTS(SELECT 8 FROM hmsWireCutoffTimeZones WHERE TimeZone = 'JST' AND TimeZoneStandardName = 'Tokyo Standard Time')
 BEGIN
-INSERT INTO hmsWireCutoffTimeZones ([TimeZone], [TimeZoneStandardName]) VALUES('JST', 'Japan Standard Time')
+INSERT INTO hmsWireCutoffTimeZones ([TimeZone], [TimeZoneStandardName]) VALUES('JST', 'Tokyo Standard Time')
 END 
 GO
 
