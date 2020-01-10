@@ -630,6 +630,43 @@ body > .popover .popover-content {
 }
 
 
+.table > thead > tr > td.selected,
+.table > tbody > tr > td.selected,
+.table > tfoot > tr > td.selected,
+.table > thead > tr > th.selected,
+.table > tbody > tr > th.selected,
+.table > tfoot > tr > th.selected,
+.table > thead > tr.selected > td,
+.table > tbody > tr.selected > td,
+.table > tfoot > tr.selected > td,
+.table > thead > tr.selected > th,
+.table > tbody > tr.selected > th,
+.table > tfoot > tr.selected > th {
+    background-color: #acceee;
+    /*color: #262626;*/
+}
+
+.table-hover > tbody > tr > td.selected:hover,
+.table-hover > tbody > tr > th.selected:hover,
+.table-hover > tbody > tr.selected:hover > td,
+.table-hover > tbody > tr.selected:hover > th {
+    background-color: #99c5ee !important;
+}
+
+
+table.dataTable tbody tr.selected,
+table.dataTable tbody th.selected,
+table.dataTable tbody td.selected {
+    color: inherit !important;
+}
+
+table.dataTable tbody tr.selected a,
+table.dataTable tbody th.selected a,
+table.dataTable tbody td.selected a {
+    color: #0070c9 !important;
+}
+
+
 .table > thead > tr > td.section,
 .table > tbody > tr > td.section,
 .table > tfoot > tr > td.section,
@@ -745,45 +782,6 @@ body > .popover .popover-content {
 .table > tfoot > tr.info > th {
     background-color: #daedf7;
 }
-
-
-
-.table > thead > tr > td.selected,
-.table > tbody > tr > td.selected,
-.table > tfoot > tr > td.selected,
-.table > thead > tr > th.selected,
-.table > tbody > tr > th.selected,
-.table > tfoot > tr > th.selected,
-.table > thead > tr.selected > td,
-.table > tbody > tr.selected > td,
-.table > tfoot > tr.selected > td,
-.table > thead > tr.selected > th,
-.table > tbody > tr.selected > th,
-.table > tfoot > tr.selected > th {
-    background-color: #c5e4f5;
-    color: #262626;
-}
-
-.table-hover > tbody > tr > td.selected:hover,
-.table-hover > tbody > tr > th.selected:hover,
-.table-hover > tbody > tr.selected:hover > td,
-.table-hover > tbody > tr.selected:hover > th {
-    background-color: #b8def4 !important;
-}
-
-
-table.dataTable tbody tr.selected,
-table.dataTable tbody th.selected,
-table.dataTable tbody td.selected {
-    color: inherit !important;
-}
-
-    table.dataTable tbody tr.selected a,
-    table.dataTable tbody th.selected a,
-    table.dataTable tbody td.selected a {
-        color: #0070c9 !important;
-    }
-
 
 .table > thead > tr > td.bolder,
 .table > tbody > tr > td.bolder,
@@ -1163,7 +1161,7 @@ table.dataTable tbody td.selected {
 
 .navbar-ops-title-divider {
     height: 27px;
-    border: #FFFFFF 1.2px solid;
+    border: #FFFFFF 0.8px solid;
     margin-top: 8px;
     margin-left: -11px;
     padding: 0px;
