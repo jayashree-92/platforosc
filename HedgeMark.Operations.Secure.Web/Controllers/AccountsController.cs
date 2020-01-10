@@ -1377,7 +1377,6 @@ namespace HMOSecureWeb.Controllers
                             accountDetail.UltimateBeneficiaryBankName = string.Empty;
                             accountDetail.UltimateBeneficiaryBankAddress = string.Empty;
                             accountDetail.UltimateBeneficiaryBICorABA = string.Empty;
-                            accountDetail.UltimateBeneficiaryType = string.Empty;
                         }
 
                         accountDetail.FFCName = account["FFC Name"];
@@ -1579,7 +1578,6 @@ namespace HMOSecureWeb.Controllers
                             templateDetail.UltimateBeneficiaryBankName = string.Empty;
                             templateDetail.UltimateBeneficiaryBankAddress = string.Empty;
                             templateDetail.UltimateBeneficiaryBICorABA = string.Empty;
-                            templateDetail.UltimateBeneficiaryType = string.Empty;
                         }
                         templateDetail.AccountNumber = template["Ultimate Beneficiary Account Number"];
                         templateDetail.FFCName = template["FFC Name"];
