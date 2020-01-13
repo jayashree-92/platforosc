@@ -630,6 +630,43 @@ body > .popover .popover-content {
 }
 
 
+.table > thead > tr > td.selected,
+.table > tbody > tr > td.selected,
+.table > tfoot > tr > td.selected,
+.table > thead > tr > th.selected,
+.table > tbody > tr > th.selected,
+.table > tfoot > tr > th.selected,
+.table > thead > tr.selected > td,
+.table > tbody > tr.selected > td,
+.table > tfoot > tr.selected > td,
+.table > thead > tr.selected > th,
+.table > tbody > tr.selected > th,
+.table > tfoot > tr.selected > th {
+    background-color: #acceee;
+    /*color: #262626;*/
+}
+
+.table-hover > tbody > tr > td.selected:hover,
+.table-hover > tbody > tr > th.selected:hover,
+.table-hover > tbody > tr.selected:hover > td,
+.table-hover > tbody > tr.selected:hover > th {
+    background-color: #99c5ee !important;
+}
+
+
+table.dataTable tbody tr.selected,
+table.dataTable tbody th.selected,
+table.dataTable tbody td.selected {
+    color: inherit !important;
+}
+
+table.dataTable tbody tr.selected a,
+table.dataTable tbody th.selected a,
+table.dataTable tbody td.selected a {
+    color: #0070c9 !important;
+}
+
+
 .table > thead > tr > td.section,
 .table > tbody > tr > td.section,
 .table > tfoot > tr > td.section,
@@ -643,6 +680,7 @@ body > .popover .popover-content {
 .table > tbody > tr.section > th,
 .table > tfoot > tr.section > th {
     background-color: #ebebeb !important;
+    cursor: default !important;
 }
 
 .table-hover > tbody > tr > td.section:hover,
@@ -675,9 +713,6 @@ body > .popover .popover-content {
     background-color: #e1e1e1;
 }
 
-
-
-
 .table > thead > tr > td.bordered,
 .table > tbody > tr > td.bordered,
 .table > tfoot > tr > td.bordered,
@@ -697,23 +732,6 @@ body > .popover .popover-content {
     /*height: 20px;*/
     font-weight: bold;
     cursor: pointer;
-}
-
-
-.table > thead > tr > td.section,
-.table > tbody > tr > td.section,
-.table > tfoot > tr > td.section,
-.table > thead > tr > th.section,
-.table > tbody > tr > th.section,
-.table > tfoot > tr > th.section,
-.table > thead > tr.section > td,
-.table > tbody > tr.section > td,
-.table > tfoot > tr.section > td,
-.table > thead > tr.section > th,
-.table > tbody > tr.section > th,
-.table > tfoot > tr.section > th {
-    cursor: default !important;
-    /*font-weight: bold;*/
 }
 
 .table > thead > tr > td.blockedSection,
@@ -747,8 +765,6 @@ body > .popover .popover-content {
     background-color: #CFCFCF !important;
     text-transform: uppercase;
     cursor: pointer !important;
-    /*font-style: oblique;*/
-    /*font-stretch: condensed;*/
     font-weight: bolder;
 }
 
@@ -766,6 +782,23 @@ body > .popover .popover-content {
 .table > tfoot > tr.info > th {
     background-color: #daedf7;
 }
+
+.table > thead > tr > td.bolder,
+.table > tbody > tr > td.bolder,
+.table > tfoot > tr > td.bolder,
+.table > thead > tr > th.bolder,
+.table > tbody > tr > th.bolder,
+.table > tfoot > tr > th.bolder,
+.table > thead > tr.bolder > td,
+.table > tbody > tr.bolder > td,
+.table > tfoot > tr.bolder > td,
+.table > thead > tr.bolder > th,
+.table > tbody > tr.bolder > th,
+.table > tfoot > tr.bolder > th {
+    font-weight: bold;
+    cursor: pointer;
+}
+
 
 .table-hover > tbody > tr > td.info:hover,
 .table-hover > tbody > tr > th.info:hover,
@@ -986,24 +1019,6 @@ body > .popover .popover-content {
     }
 }
 
-
-.table > thead > tr > td.bolder,
-.table > tbody > tr > td.bolder,
-.table > tfoot > tr > td.bolder,
-.table > thead > tr > th.bolder,
-.table > tbody > tr > th.bolder,
-.table > tfoot > tr > th.bolder,
-.table > thead > tr.bolder > td,
-.table > tbody > tr.bolder > td,
-.table > tfoot > tr.bolder > td,
-.table > thead > tr.bolder > th,
-.table > tbody > tr.bolder > th,
-.table > tfoot > tr.bolder > th {
-    font-weight: bold;
-    cursor: pointer;
-}
-
-
 .sidenav {
     height: 100%;
     width: 1%;
@@ -1146,7 +1161,7 @@ body > .popover .popover-content {
 
 .navbar-ops-title-divider {
     height: 27px;
-    border: #FFFFFF 1.2px solid;
+    border: #FFFFFF 0.8px solid;
     margin-top: 8px;
     margin-left: -11px;
     padding: 0px;
