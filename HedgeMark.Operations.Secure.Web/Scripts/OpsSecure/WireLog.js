@@ -12,12 +12,12 @@ HmOpsApp.controller("WireLogsCtrl", function ($scope, $http, $timeout) {
         $scope.RangeStartDate = start.toDate();
         $scope.RangeEndDate = end.toDate();
     }
-    dateRangeOnChangeCallback(moment().subtract(7, "days"), moment());
+    dateRangeOnChangeCallback(moment().subtract(6, "days"), moment());
 
     $("#wireLogDateRange").daterangepicker({
         "alwaysShowCalendars": true,
         "showDropdowns": true,
-        "startDate": moment().subtract(1, "days"),
+        "startDate": moment().subtract(6, "days"),
         "endDate": moment(),
         "autoApply": true,
         "maxDate": moment().add(7, "days"),
