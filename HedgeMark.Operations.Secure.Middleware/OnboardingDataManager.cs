@@ -21,6 +21,12 @@ namespace HMOSecureMiddleware
         public const int TaxAdvisorTypeId = 10;
     }
 
+    public class FundBaseData
+    {
+        public long FundOnBoardId { get; set; }
+        public string LegalFundName { get; set; }
+    }
+
     public class AgreementBaseData
     {
         public long FundOnBoardId { get; set; }
@@ -32,11 +38,11 @@ namespace HMOSecureMiddleware
     public class OnBoardingDataManager
     {
 
-        public static List<onboardingFund> GetAllOnBoardedFunds(List<long> onBoardFundIds, bool isPreviledgedUser)
+        public static List<FundBaseData> GetAllOnBoardedFunds(List<long> onBoardFundIds, bool isPreviledgedUser)
         {
             using (var context = new AdminContext())
             {
-                return context.onboardingFunds.Include(x => x.onboardingClient).Where(s => (isPreviledgedUser || onBoardFundIds.Contains(s.dmaFundOnBoardId)) && !s.IsDeleted).ToList();
+                return context.vw_HFund.Where(s => s.dmaFundOnBoardId != null).Where(s => (isPreviledgedUser || onBoardFundIds.Contains(s.dmaFundOnBoardId ?? 0))).Select(s => new FundBaseData() { FundOnBoardId = s.dmaFundOnBoardId ?? 0, LegalFundName = s.LegalFundName }).ToList();
             }
         }
 
@@ -44,7 +50,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-                return context.onboardingFunds.Where(f => !f.IsDeleted).ToDictionary(s => s.dmaFundOnBoardId, s => s.LegalFundName);
+                return context.vw_HFund.Where(f => f.dmaFundOnBoardId != null).ToDictionary(s => s.dmaFundOnBoardId ?? 0, s => s.LegalFundName);
             }
         }
 
@@ -138,7 +144,7 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                var onboardingFund = context.onboardingFunds.FirstOrDefault(x => x.dmaFundOnBoardId == fundId);
+                var onboardingFund = context.vw_HFund.FirstOrDefault(x => x.dmaFundOnBoardId == fundId);
                 return (onboardingFund != null) ? onboardingFund.LegalFundName : string.Empty;
             }
         }

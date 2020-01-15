@@ -72,7 +72,7 @@ namespace HMOSecureMiddleware
     public class AuthorizationManager
     {
         public static readonly List<string> AuthorizedDmaUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedDmaUserRoles", "DMAUser,DMAAdmin");
-        
+
         public static AuthorizedData GetAuthorizedData(int userId, string userName, string userRole)
         {
             if (string.IsNullOrWhiteSpace(userName))
@@ -92,9 +92,9 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-                var hmFunds = (from obFid in context.onboardingFunds
-                               join vf in context.vw_HFund on obFid.FundMapId equals vf.FundMapId
-                               join obP in context.dmaFundOnBoardPermissions on obFid.dmaFundOnBoardId equals obP.dmaFundOnBoardId
+                var hmFunds = (from vf in context.vw_HFund
+                               where vf.dmaFundOnBoardId != null
+                               join obP in context.dmaFundOnBoardPermissions on vf.dmaFundOnBoardId equals obP.dmaFundOnBoardId
                                where obP.userId == userId
                                select new AuthorizedEntity()
                                {
@@ -109,7 +109,8 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-                var hmFunds = (from obFid in context.onboardingFunds
+                var hmFunds = (from obFid in context.vw_HFund
+                               where obFid.dmaFundOnBoardId != null
                                join obP in context.dmaFundOnBoardPermissions on obFid.dmaFundOnBoardId equals obP.dmaFundOnBoardId
                                where obP.userId == userId
                                select new AuthorizedEntity()

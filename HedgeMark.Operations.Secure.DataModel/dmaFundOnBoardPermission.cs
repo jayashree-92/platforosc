@@ -20,7 +20,5 @@ namespace HedgeMark.Operations.Secure.DataModel
         public int dmaPermissionLevelId { get; set; }
         public System.DateTime RecCreatedDt { get; set; }
         public string RecCreatedBy { get; set; }
-    
-        public virtual onboardingFund onboardingFund { get; set; }
     }
 }

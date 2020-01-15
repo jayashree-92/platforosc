@@ -37,7 +37,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<dmaAgreementStatu> dmaAgreementStatus { get; set; }
         public virtual DbSet<dmaAgreementType> dmaAgreementTypes { get; set; }
         public virtual DbSet<dmaCounterPartyOnBoarding> dmaCounterPartyOnBoardings { get; set; }
-        public virtual DbSet<onboardingFund> onboardingFunds { get; set; }
         public virtual DbSet<dmaFundOnBoardPermission> dmaFundOnBoardPermissions { get; set; }
         public virtual DbSet<dmaCounterpartyFamily> dmaCounterpartyFamilies { get; set; }
         public virtual DbSet<dmaOnBoardingContactDetail> dmaOnBoardingContactDetails { get; set; }

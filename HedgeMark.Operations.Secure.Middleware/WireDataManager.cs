@@ -265,9 +265,8 @@ namespace HMOSecureMiddleware
                 allPBAgreementIds = context.vw_OnboardedAgreements.Where(s => s.AgreementType == "PB").Select(s => s.dmaAgreementOnBoardingId).ToList();
 
                 qualifiedOnBoardFundId = (from hFndOps in context.vw_HFund
-                                          join onBoardFnd in context.onboardingFunds on hFndOps.FundMapId equals onBoardFnd.FundMapId
                                           where hFndOps.intFundID == fundId
-                                          select onBoardFnd.dmaFundOnBoardId).FirstOrDefault();
+                                          select hFndOps.dmaFundOnBoardId ?? 0).FirstOrDefault();
             }
 
             return allPBAgreementIds;
@@ -442,8 +441,8 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-               var duplicateNotice = context.hmsWires.FirstOrDefault(s => DbFunctions.TruncateTime(s.ValueDate) == DbFunctions.TruncateTime(wire.ValueDate) && s.Currency == wire.Currency && s.hmsWireTransferTypeLKup.TransferType == "Notice" && s.hmsWireId != wire.hmsWireId && ((SwiftStatus)s.SwiftStatusId == SwiftStatus.Processing || (SwiftStatus)s.SwiftStatusId == SwiftStatus.Acknowledged)) ?? new hmsWire();
-               return duplicateNotice.Amount == wire.Amount;
+                var duplicateNotice = context.hmsWires.FirstOrDefault(s => DbFunctions.TruncateTime(s.ValueDate) == DbFunctions.TruncateTime(wire.ValueDate) && s.Currency == wire.Currency && s.hmsWireTransferTypeLKup.TransferType == "Notice" && s.hmsWireId != wire.hmsWireId && ((SwiftStatus)s.SwiftStatusId == SwiftStatus.Processing || (SwiftStatus)s.SwiftStatusId == SwiftStatus.Acknowledged)) ?? new hmsWire();
+                return duplicateNotice.Amount == wire.Amount;
             }
         }
 
@@ -534,10 +533,11 @@ namespace HMOSecureMiddleware
             using (var context = new OperationsSecureContext())
             {
                 context.onBoardingWirePortalCutoffs.AddOrUpdate(wirePortalCutoff);
-                if(wirePortalCutoff.onBoardingWirePortalCutoffId != 0)
+                if (wirePortalCutoff.onBoardingWirePortalCutoffId != 0)
                 {
                     var thisCutoffAccounts = context.onBoardingAccounts.Where(s => s.CashInstruction == wirePortalCutoff.CashInstruction && s.Currency == wirePortalCutoff.Currency);
-                    thisCutoffAccounts.ForEach(s => {
+                    thisCutoffAccounts.ForEach(s =>
+                    {
                         s.CutoffTime = wirePortalCutoff.CutoffTime;
                         s.CutOffTimeZone = wirePortalCutoff.CutOffTimeZone;
                         s.DaystoWire = s.DaystoWire;

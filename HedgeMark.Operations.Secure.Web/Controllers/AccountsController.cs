@@ -74,7 +74,8 @@ namespace HMOSecureWeb.Controllers
         {
             var fundOnBoardIds = AuthorizedSessionData.OnBoardFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
             var onboardedFunds = OnBoardingDataManager.GetAllOnBoardedFunds(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser);
-            var funds = onboardedFunds.Select(x => new { id = x.dmaFundOnBoardId, text = x.LegalFundName }).OrderBy(x => x.text).ToList();
+
+            var funds = onboardedFunds.Select(x => new { id = x.FundOnBoardId, text = x.LegalFundName }).OrderBy(x => x.text).ToList();
 
             var agreements = OnBoardingDataManager.GetAgreementsForOnboardingAccountPreloadData(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser);
             var counterpartyFamilies = OnBoardingDataManager.GetAllCounterpartyFamilies().Select(x => new { id = x.dmaCounterpartyFamilyId, text = x.CounterpartyFamily }).OrderBy(x => x.text).ToList();
@@ -90,7 +91,7 @@ namespace HMOSecureWeb.Controllers
         {
             var fundOnBoardIds = AuthorizedSessionData.OnBoardFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
             var onboardedFunds = OnBoardingDataManager.GetAllOnBoardedFunds(fundOnBoardIds, AuthorizedSessionData.IsPrivilegedUser);
-            var funds = onboardedFunds.Select(x => new { id = x.dmaFundOnBoardId, text = x.LegalFundName }).OrderBy(x => x.text).ToList();
+            var funds = onboardedFunds.Select(x => new { id = x.FundOnBoardId, text = x.LegalFundName }).OrderBy(x => x.text).ToList();
 
             return Json(new
             {
@@ -448,7 +449,7 @@ namespace HMOSecureWeb.Controllers
                     .ToDictionary(s => s.AgreementOnboardingId, v => v);
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
-                funds = context.onboardingFunds.AsNoTracking().Where(s => allFundIds.Contains(s.dmaFundOnBoardId)).ToDictionary(s => s.dmaFundOnBoardId, v => v.LegalFundName);
+                funds = context.vw_HFund.AsNoTracking().Where(s => s.dmaFundOnBoardId != null).Where(s => allFundIds.Contains(s.dmaFundOnBoardId ?? 0)).ToDictionary(s => s.dmaFundOnBoardId ?? 0, v => v.LegalFundName);
             }
 
 
@@ -973,7 +974,6 @@ namespace HMOSecureWeb.Controllers
         {
             var accountListRows = new List<Row>();
 
-
             Dictionary<long, string> counterparties;
             Dictionary<long, string> funds;
             Dictionary<long, AgreementBaseData> agreements;
@@ -989,7 +989,7 @@ namespace HMOSecureWeb.Controllers
                     .ToDictionary(s => s.AgreementOnboardingId, v => v);
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
-                funds = context.onboardingFunds.AsNoTracking().Where(s => allFundIds.Contains(s.dmaFundOnBoardId)).ToDictionary(s => s.dmaFundOnBoardId, v => v.LegalFundName);
+                funds = context.vw_HFund.AsNoTracking().Where(s => s.dmaFundOnBoardId != null).Where(s => allFundIds.Contains(s.dmaFundOnBoardId ?? 0)).ToDictionary(s => s.dmaFundOnBoardId ?? 0, v => v.LegalFundName);
             }
 
             foreach (var account in onBoardingAccounts)
@@ -1183,7 +1183,7 @@ namespace HMOSecureWeb.Controllers
             var agreements = OnBoardingDataManager.GetAllAgreements();
             var accountBicorAba = AccountManager.GetAllAccountBicorAba();
             var swiftgroups = AccountManager.GetAllSwiftGroup();
-            
+
             var bulkUploadLogs = new List<hmsBulkUploadLog>();
             for (var i = 0; i < Request.Files.Count; i++)
             {
@@ -1296,7 +1296,7 @@ namespace HMOSecureWeb.Controllers
                                 accountDetail.CutoffTime = TimeSpan.Parse(cutoffTime);
                             }
                         }
-                        accountDetail.CutOffTimeZone = string.IsNullOrWhiteSpace(account["Cutoff Time Zone"]) ?  "EST" : account["Cutoff Time Zone"]; 
+                        accountDetail.CutOffTimeZone = string.IsNullOrWhiteSpace(account["Cutoff Time Zone"]) ? "EST" : account["Cutoff Time Zone"];
                         if (!string.IsNullOrWhiteSpace(account["Days to wire per V.D"]))
                         {
                             var wirePerDays = account["Days to wire per V.D"].Replace(" Days", "").Replace(" Day", "").Trim();
@@ -1562,7 +1562,7 @@ namespace HMOSecureWeb.Controllers
                         }
 
                         templateDetail.IntermediaryAccountNumber = template["Intermediary Account Number"];
-                        
+
                         templateDetail.UltimateBeneficiaryType = template["Ultimate Beneficiary Type"];
                         templateDetail.UltimateBeneficiaryBICorABA = template["Ultimate Beneficiary BIC or ABA"];
                         templateDetail.UltimateBeneficiaryAccountName = template["Ultimate Beneficiary Account Name"];

@@ -14,12 +14,6 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class onboardingClient
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public onboardingClient()
-        {
-            this.onboardingFunds = new HashSet<onboardingFund>();
-        }
-    
         public long dmaClientOnBoardId { get; set; }
         public string ClientLegalEntityName { get; set; }
         public string ClientShortName { get; set; }
@@ -176,8 +170,5 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string Tier { get; set; }
         public string ConfirmProtocolForSubscriptionRedemption { get; set; }
         public string PlatformCustodian { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<onboardingFund> onboardingFunds { get; set; }
     }
 }
