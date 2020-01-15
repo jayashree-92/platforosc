@@ -449,7 +449,7 @@ namespace HMOSecureWeb.Controllers
                     .ToDictionary(s => s.AgreementOnboardingId, v => v);
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
-                funds = context.vw_HFund.AsNoTracking().Where(s => s.dmaFundOnBoardId != null).Where(s => allFundIds.Contains(s.dmaFundOnBoardId ?? 0)).ToDictionary(s => s.dmaFundOnBoardId ?? 0, v => v.LegalFundName);
+                funds = context.vw_HFund.AsNoTracking().Where(s => s.ClientFundVersion == "DMA" && s.dmaFundOnBoardId != null && s.dmaFundOnBoardId != 0).Where(s => allFundIds.Contains(s.dmaFundOnBoardId ?? 0)).ToDictionary(s => s.dmaFundOnBoardId ?? 0, v => v.LegalFundName);
             }
 
 
@@ -989,7 +989,7 @@ namespace HMOSecureWeb.Controllers
                     .ToDictionary(s => s.AgreementOnboardingId, v => v);
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
-                funds = context.vw_HFund.AsNoTracking().Where(s => s.dmaFundOnBoardId != null).Where(s => allFundIds.Contains(s.dmaFundOnBoardId ?? 0)).ToDictionary(s => s.dmaFundOnBoardId ?? 0, v => v.LegalFundName);
+                funds = context.vw_HFund.AsNoTracking().Where(s => s.ClientFundVersion == "DMA" && s.dmaFundOnBoardId != null && s.dmaFundOnBoardId != 0).Where(s => allFundIds.Contains(s.dmaFundOnBoardId ?? 0)).ToDictionary(s => s.dmaFundOnBoardId ?? 0, v => v.LegalFundName);
             }
 
             foreach (var account in onBoardingAccounts)

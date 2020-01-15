@@ -42,7 +42,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-                return context.vw_HFund.Where(s => s.dmaFundOnBoardId != null).Where(s => (isPreviledgedUser || onBoardFundIds.Contains(s.dmaFundOnBoardId ?? 0))).Select(s => new FundBaseData() { FundOnBoardId = s.dmaFundOnBoardId ?? 0, LegalFundName = s.LegalFundName }).ToList();
+                return context.vw_HFund.Where(s => s.ClientFundVersion == "DMA" && s.dmaFundOnBoardId != null).Where(s => (isPreviledgedUser || onBoardFundIds.Contains(s.dmaFundOnBoardId ?? 0))).Select(s => new FundBaseData() { FundOnBoardId = s.dmaFundOnBoardId ?? 0, LegalFundName = s.LegalFundName }).ToList();
             }
         }
 
@@ -50,7 +50,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-                return context.vw_HFund.Where(f => f.dmaFundOnBoardId != null).ToDictionary(s => s.dmaFundOnBoardId ?? 0, s => s.LegalFundName);
+                return context.vw_HFund.Where(f => f.ClientFundVersion == "DMA" &&  f.dmaFundOnBoardId != null).ToDictionary(s => s.dmaFundOnBoardId ?? 0, s => s.LegalFundName);
             }
         }
 
