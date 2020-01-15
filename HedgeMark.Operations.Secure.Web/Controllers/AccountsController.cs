@@ -449,7 +449,13 @@ namespace HMOSecureWeb.Controllers
                     .ToDictionary(s => s.AgreementOnboardingId, v => v);
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
-                funds = context.vw_HFund.AsNoTracking().Where(s => s.ClientFundVersion == "DMA" && s.dmaFundOnBoardId != null && s.dmaFundOnBoardId != 0).Where(s => allFundIds.Contains(s.dmaFundOnBoardId ?? 0)).ToDictionary(s => s.dmaFundOnBoardId ?? 0, v => v.LegalFundName);
+                var dmaFunds = context.vw_HFund.AsNoTracking().Where(s => s.ClientFundVersion == "DMA" && s.dmaFundOnBoardId != null && s.dmaFundOnBoardId != 0).Where(s => allFundIds.Contains(s.dmaFundOnBoardId ?? 0)).ToList();
+
+                funds = new Dictionary<long, string>();
+                foreach (var fund in dmaFunds.Where(fund => !funds.ContainsKey(fund.dmaFundOnBoardId ?? 0)))
+                {
+                    funds.Add(fund.dmaFundOnBoardId ?? 0, fund.LegalFundName);
+                }
             }
 
 
@@ -989,7 +995,13 @@ namespace HMOSecureWeb.Controllers
                     .ToDictionary(s => s.AgreementOnboardingId, v => v);
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
-                funds = context.vw_HFund.AsNoTracking().Where(s => s.ClientFundVersion == "DMA" && s.dmaFundOnBoardId != null && s.dmaFundOnBoardId != 0).Where(s => allFundIds.Contains(s.dmaFundOnBoardId ?? 0)).ToDictionary(s => s.dmaFundOnBoardId ?? 0, v => v.LegalFundName);
+                var dmaFunds = context.vw_HFund.AsNoTracking().Where(s => s.ClientFundVersion == "DMA" && s.dmaFundOnBoardId != null && s.dmaFundOnBoardId != 0).Where(s => allFundIds.Contains(s.dmaFundOnBoardId ?? 0)).ToList();
+
+                funds = new Dictionary<long, string>();
+                foreach (var fund in dmaFunds.Where(fund => !funds.ContainsKey(fund.dmaFundOnBoardId ?? 0)))
+                {
+                    funds.Add(fund.dmaFundOnBoardId ?? 0, fund.LegalFundName);
+                }
             }
 
             foreach (var account in onBoardingAccounts)
