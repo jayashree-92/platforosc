@@ -20,9 +20,11 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string ShortFundName { get; set; }
         public string LegalFundName { get; set; }
         public string HMRAName { get; set; }
-        public string CreatedFor { get; set; }
+        public string FundType { get; set; }
         public string ClientFundVersion { get; set; }
         public string FundStatus { get; set; }
+        public int StrategyID { get; set; }
+        public Nullable<int> RegionID { get; set; }
         public Nullable<int> DataProviderNameId { get; set; }
         public string DataProviderName { get; set; }
         public string varPositionFrequency { get; set; }
@@ -33,7 +35,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string FiscalYearEnd { get; set; }
         public string FundManagerName { get; set; }
         public Nullable<int> FundManagerID { get; set; }
-        public string ManagerStrategy { get; set; }
         public Nullable<long> dmaFundOnBoardId { get; set; }
     }
 }

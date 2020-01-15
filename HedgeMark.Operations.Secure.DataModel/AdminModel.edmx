@@ -409,6 +409,7 @@
           <Property Name="HmRiskClientServiceAndAnalytics" Type="varchar" MaxLength="100" />
           <Property Name="Tier" Type="varchar" MaxLength="50" />
           <Property Name="ConfirmProtocolForSubscriptionRedemption" Type="varchar" MaxLength="2000" />
+          <Property Name="PlatformCustodian" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="onboardingFund">
           <Key>
@@ -606,6 +607,51 @@
           <Property Name="RegisteredwithNFAExempt" Type="varchar" MaxLength="500" />
           <Property Name="RegisteredwithSECExempt" Type="varchar" MaxLength="500" />
           <Property Name="OpenBankAccount" Type="varchar" MaxLength="100" />
+          <Property Name="HasFundBeenPermissionedOnHMOpsWebsite" Type="varchar" MaxLength="100" />
+          <Property Name="HasNAVReviewChecklistBeenSetUp" Type="varchar" MaxLength="100" />
+          <Property Name="HasNAVReviewChecklistBeenCustomizedToIncludeFundSpecifictask" Type="varchar" MaxLength="100" />
+          <Property Name="HasNAVReviewBeenAssignedToRespectiveAccountant" Type="varchar" MaxLength="100" />
+          <Property Name="HasThisFundBeenSetUpInNewReposrtingModule" Type="varchar" MaxLength="100" />
+          <Property Name="AreWeRecievingRequiredDataForThisModuleFromTheAdmin" Type="varchar" MaxLength="100" />
+          <Property Name="DidWeCommunicateToIndiaTeamToVerifyTheNAVDataOnAMonthlyBasis" Type="varchar" MaxLength="100" />
+          <Property Name="HasTheIMASAAbeenReviewedByResponsibleAccountant" Type="varchar" MaxLength="100" />
+          <Property Name="HaveWeSentTheIMASAAToAdminForTheirReview" Type="varchar" MaxLength="100" />
+          <Property Name="HaveWePutTogetherExpenseAccrualFileAndAgreedUponAllAsset" Type="varchar" MaxLength="100" />
+          <Property Name="HaveWeUpdatedOurInvoicePaymentProcedure" Type="varchar" MaxLength="100" />
+          <Property Name="HaveWeSetUpAllTheFeeTypesOnExpenseModule" Type="varchar" MaxLength="100" />
+          <Property Name="HasTheInvestmentManagerBeenNotifiedOfTheInitialCapital" Type="varchar" MaxLength="100" />
+          <Property Name="IsTheFundSetUpInTheCapitalActivityModule" Type="varchar" MaxLength="100" />
+          <Property Name="HasTheInitialSubscriptionBeenApprovedInTheCapitalActivityModule" Type="varchar" MaxLength="100" />
+          <Property Name="IsThisFundAComingledFundOrSingleInvestorFund" Type="varchar" MaxLength="100" />
+          <Property Name="DoesTheFundHaveOnshoreAndOffshoreInvestors" Type="varchar" MaxLength="100" />
+          <Property Name="IsThisFundOwnedByOnshoreInvetorsOrOffshoreInvestors" Type="varchar" MaxLength="100" />
+          <Property Name="IfTheFundIsOwnedByEitherThenDidWeSendInitialTaxDocs" Type="varchar" MaxLength="100" />
+          <Property Name="IfTheFundIsOwnedByBothOnshoreAndOffshoreInvestors" Type="varchar" MaxLength="100" />
+          <Property Name="IfYesThenDidProvideAllTheTaxDocumentsAlongWithWithholdingTaxStatements" Type="varchar" MaxLength="100" />
+          <Property Name="DidWeWalkIndiaThroughTheNewFundAndWhsProcess" Type="varchar" MaxLength="100" />
+          <Property Name="DoesThisFundHaveOvernightSweepSetUpAtBNYM" Type="varchar" MaxLength="100" />
+          <Property Name="WorkWithLiquidityDirectCorporateTaxDeptToEnsureTaxDocProvided" Type="varchar" MaxLength="100" />
+          <Property Name="IsThisPricingPolicyForAnExisitingClient" Type="varchar" MaxLength="100" />
+          <Property Name="HaveWeUpdatedThePricingPolicyToIncludeTheFundOnTheAppendix" Type="varchar" MaxLength="100" />
+          <Property Name="IsThisPricingPolicyForANewClient" Type="varchar" MaxLength="100" />
+          <Property Name="DidWeWorkOnANewPricingPolicy" Type="varchar" MaxLength="100" />
+          <Property Name="HasStructuringTeamReviewedAndApprovedThePricingPolicy" Type="varchar" MaxLength="100" />
+          <Property Name="HasHMAcctingReviewedAndApprovedThePricingPolicy" Type="varchar" MaxLength="100" />
+          <Property Name="HasDirectorsReviewedAndApprovedThePricingPolicy" Type="varchar" MaxLength="100" />
+          <Property Name="HasClientReviewedAndApprovedThePricingPolicy" Type="varchar" MaxLength="100" />
+          <Property Name="HasAdminReviewedAndApprovedThePricingPolicy" Type="varchar" MaxLength="100" />
+          <Property Name="IsThisForAnExisitingClientBondAccretion" Type="varchar" MaxLength="100" />
+          <Property Name="UpdatedTheBondAccretionPolicyToIncludeTheFundOnTheAppendix" Type="varchar" MaxLength="100" />
+          <Property Name="IsThisForaNewClientBondAccretionPolicy" Type="varchar" MaxLength="100" />
+          <Property Name="DidsWeWorkOnaNewPolicyForBondAccretion" Type="varchar" MaxLength="100" />
+          <Property Name="HasClientReviewedAndApprovedTheBondAccretionPolicy" Type="varchar" MaxLength="100" />
+          <Property Name="HasAdminReviewedAndApprovedTheBondAccretionPolicy" Type="varchar" MaxLength="100" />
+          <Property Name="DidWePrepareCashRecForThe1stMonthEnd" Type="varchar" MaxLength="100" />
+          <Property Name="After1stMonthSetUpTheCashRecInTheCashRecModule" Type="varchar" MaxLength="100" />
+          <Property Name="HasTheCashRecBeenSetUpOnCashRecModule" Type="varchar" MaxLength="100" />
+          <Property Name="ConfirmWithOpsAnalystThatPositionReconciliationHasBeenSetUpOnHM" Type="varchar" MaxLength="100" />
+          <Property Name="FundCustodian" Type="varchar" MaxLength="100" />
+          <Property Name="SetUpClientAndManagerWithReportingAccess" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -616,9 +662,10 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
             <PropertyRef Name="ClientFundName" />
             <PropertyRef Name="LegalFundName" />
             <PropertyRef Name="HMRAName" />
-            <PropertyRef Name="CreatedFor" />
+            <PropertyRef Name="FundType" />
             <PropertyRef Name="ClientFundVersion" />
             <PropertyRef Name="FundStatus" />
+            <PropertyRef Name="StrategyID" />
           </Key>
           <Property Name="intFundID" Type="int" Nullable="false" />
           <Property Name="FundMapId" Type="int" Nullable="false" />
@@ -626,9 +673,11 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="ShortFundName" Type="varchar" MaxLength="100" />
           <Property Name="LegalFundName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="HMRAName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="CreatedFor" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="FundType" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="ClientFundVersion" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="FundStatus" Type="varchar" MaxLength="13" Nullable="false" />
+          <Property Name="StrategyID" Type="int" Nullable="false" />
+          <Property Name="RegionID" Type="int" />
           <Property Name="DataProviderNameId" Type="int" />
           <Property Name="DataProviderName" Type="varchar(max)" />
           <Property Name="varPositionFrequency" Type="varchar" MaxLength="200" />
@@ -639,7 +688,6 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="FiscalYearEnd" Type="varchar" MaxLength="10" />
           <Property Name="FundManagerName" Type="varchar" MaxLength="100" />
           <Property Name="FundManagerID" Type="int" />
-          <Property Name="ManagerStrategy" Type="varchar" MaxLength="200" />
           <Property Name="dmaFundOnBoardId" Type="bigint" />
         </EntityType>
         <!--Errors Found During Generation:
@@ -828,9 +876,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
     [vw_HFund].[ShortFundName] AS [ShortFundName], 
     [vw_HFund].[LegalFundName] AS [LegalFundName], 
     [vw_HFund].[HMRAName] AS [HMRAName], 
-    [vw_HFund].[CreatedFor] AS [CreatedFor], 
+    [vw_HFund].[FundType] AS [FundType], 
     [vw_HFund].[ClientFundVersion] AS [ClientFundVersion], 
     [vw_HFund].[FundStatus] AS [FundStatus], 
+    [vw_HFund].[StrategyID] AS [StrategyID], 
+    [vw_HFund].[RegionID] AS [RegionID], 
     [vw_HFund].[DataProviderNameId] AS [DataProviderNameId], 
     [vw_HFund].[DataProviderName] AS [DataProviderName], 
     [vw_HFund].[varPositionFrequency] AS [varPositionFrequency], 
@@ -841,7 +891,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
     [vw_HFund].[FiscalYearEnd] AS [FiscalYearEnd], 
     [vw_HFund].[FundManagerName] AS [FundManagerName], 
     [vw_HFund].[FundManagerID] AS [FundManagerID], 
-    [vw_HFund].[ManagerStrategy] AS [ManagerStrategy], 
     [vw_HFund].[dmaFundOnBoardId] AS [dmaFundOnBoardId]
     FROM [dbo].[vw_HFund] AS [vw_HFund]</DefiningQuery>
           </EntitySet>
@@ -1439,6 +1488,51 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="RegisteredwithNFAExempt" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="RegisteredwithSECExempt" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="OpenBankAccount" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasFundBeenPermissionedOnHMOpsWebsite" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasNAVReviewChecklistBeenSetUp" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasNAVReviewChecklistBeenCustomizedToIncludeFundSpecifictask" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasNAVReviewBeenAssignedToRespectiveAccountant" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasThisFundBeenSetUpInNewReposrtingModule" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AreWeRecievingRequiredDataForThisModuleFromTheAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DidWeCommunicateToIndiaTeamToVerifyTheNAVDataOnAMonthlyBasis" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasTheIMASAAbeenReviewedByResponsibleAccountant" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HaveWeSentTheIMASAAToAdminForTheirReview" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HaveWePutTogetherExpenseAccrualFileAndAgreedUponAllAsset" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HaveWeUpdatedOurInvoicePaymentProcedure" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HaveWeSetUpAllTheFeeTypesOnExpenseModule" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasTheInvestmentManagerBeenNotifiedOfTheInitialCapital" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsTheFundSetUpInTheCapitalActivityModule" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasTheInitialSubscriptionBeenApprovedInTheCapitalActivityModule" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsThisFundAComingledFundOrSingleInvestorFund" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DoesTheFundHaveOnshoreAndOffshoreInvestors" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsThisFundOwnedByOnshoreInvetorsOrOffshoreInvestors" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IfTheFundIsOwnedByEitherThenDidWeSendInitialTaxDocs" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IfTheFundIsOwnedByBothOnshoreAndOffshoreInvestors" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IfYesThenDidProvideAllTheTaxDocumentsAlongWithWithholdingTaxStatements" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DidWeWalkIndiaThroughTheNewFundAndWhsProcess" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DoesThisFundHaveOvernightSweepSetUpAtBNYM" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="WorkWithLiquidityDirectCorporateTaxDeptToEnsureTaxDocProvided" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsThisPricingPolicyForAnExisitingClient" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HaveWeUpdatedThePricingPolicyToIncludeTheFundOnTheAppendix" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsThisPricingPolicyForANewClient" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DidWeWorkOnANewPricingPolicy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasStructuringTeamReviewedAndApprovedThePricingPolicy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasHMAcctingReviewedAndApprovedThePricingPolicy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasDirectorsReviewedAndApprovedThePricingPolicy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasClientReviewedAndApprovedThePricingPolicy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasAdminReviewedAndApprovedThePricingPolicy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsThisForAnExisitingClientBondAccretion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedTheBondAccretionPolicyToIncludeTheFundOnTheAppendix" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsThisForaNewClientBondAccretionPolicy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DidsWeWorkOnaNewPolicyForBondAccretion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasClientReviewedAndApprovedTheBondAccretionPolicy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasAdminReviewedAndApprovedTheBondAccretionPolicy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DidWePrepareCashRecForThe1stMonthEnd" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="After1stMonthSetUpTheCashRecInTheCashRecModule" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HasTheCashRecBeenSetUpOnCashRecModule" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ConfirmWithOpsAnalystThatPositionReconciliationHasBeenSetUpOnHM" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FundCustodian" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SetUpClientAndManagerWithReportingAccess" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="dmaFundOnBoardPermission">
           <Key>
@@ -1701,6 +1795,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="HmRiskClientServiceAndAnalytics" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Tier" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ConfirmProtocolForSubscriptionRedemption" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="PlatformCustodian" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_onboardingFund_dmaClientOnBoardId">
           <End Type="AdminModel.onboardingClient" Role="onboardingClient" Multiplicity="1" />
@@ -1804,9 +1899,10 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
             <PropertyRef Name="ClientFundName" />
             <PropertyRef Name="LegalFundName" />
             <PropertyRef Name="HMRAName" />
-            <PropertyRef Name="CreatedFor" />
+            <PropertyRef Name="FundType" />
             <PropertyRef Name="ClientFundVersion" />
             <PropertyRef Name="FundStatus" />
+            <PropertyRef Name="StrategyID" />
           </Key>
           <Property Name="intFundID" Type="Int32" Nullable="false" />
           <Property Name="FundMapId" Type="Int32" Nullable="false" />
@@ -1814,9 +1910,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="LegalFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="HMRAName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedFor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FundType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ClientFundVersion" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="FundStatus" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="StrategyID" Type="Int32" Nullable="false" />
+          <Property Name="RegionID" Type="Int32" />
           <Property Name="DataProviderNameId" Type="Int32" />
           <Property Name="DataProviderName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="varPositionFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
@@ -1827,7 +1925,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="FiscalYearEnd" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="FundManagerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FundManagerID" Type="Int32" />
-          <Property Name="ManagerStrategy" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="dmaFundOnBoardId" Type="Int64" />
         </EntityType>
         </Schema>
@@ -2085,6 +2182,51 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <EntitySetMapping Name="onboardingFunds">
             <EntityTypeMapping TypeName="AdminModel.onboardingFund">
               <MappingFragment StoreEntitySet="onboardingFund">
+                <ScalarProperty Name="SetUpClientAndManagerWithReportingAccess" ColumnName="SetUpClientAndManagerWithReportingAccess" />
+                <ScalarProperty Name="FundCustodian" ColumnName="FundCustodian" />
+                <ScalarProperty Name="ConfirmWithOpsAnalystThatPositionReconciliationHasBeenSetUpOnHM" ColumnName="ConfirmWithOpsAnalystThatPositionReconciliationHasBeenSetUpOnHM" />
+                <ScalarProperty Name="HasTheCashRecBeenSetUpOnCashRecModule" ColumnName="HasTheCashRecBeenSetUpOnCashRecModule" />
+                <ScalarProperty Name="After1stMonthSetUpTheCashRecInTheCashRecModule" ColumnName="After1stMonthSetUpTheCashRecInTheCashRecModule" />
+                <ScalarProperty Name="DidWePrepareCashRecForThe1stMonthEnd" ColumnName="DidWePrepareCashRecForThe1stMonthEnd" />
+                <ScalarProperty Name="HasAdminReviewedAndApprovedTheBondAccretionPolicy" ColumnName="HasAdminReviewedAndApprovedTheBondAccretionPolicy" />
+                <ScalarProperty Name="HasClientReviewedAndApprovedTheBondAccretionPolicy" ColumnName="HasClientReviewedAndApprovedTheBondAccretionPolicy" />
+                <ScalarProperty Name="DidsWeWorkOnaNewPolicyForBondAccretion" ColumnName="DidsWeWorkOnaNewPolicyForBondAccretion" />
+                <ScalarProperty Name="IsThisForaNewClientBondAccretionPolicy" ColumnName="IsThisForaNewClientBondAccretionPolicy" />
+                <ScalarProperty Name="UpdatedTheBondAccretionPolicyToIncludeTheFundOnTheAppendix" ColumnName="UpdatedTheBondAccretionPolicyToIncludeTheFundOnTheAppendix" />
+                <ScalarProperty Name="IsThisForAnExisitingClientBondAccretion" ColumnName="IsThisForAnExisitingClientBondAccretion" />
+                <ScalarProperty Name="HasAdminReviewedAndApprovedThePricingPolicy" ColumnName="HasAdminReviewedAndApprovedThePricingPolicy" />
+                <ScalarProperty Name="HasClientReviewedAndApprovedThePricingPolicy" ColumnName="HasClientReviewedAndApprovedThePricingPolicy" />
+                <ScalarProperty Name="HasDirectorsReviewedAndApprovedThePricingPolicy" ColumnName="HasDirectorsReviewedAndApprovedThePricingPolicy" />
+                <ScalarProperty Name="HasHMAcctingReviewedAndApprovedThePricingPolicy" ColumnName="HasHMAcctingReviewedAndApprovedThePricingPolicy" />
+                <ScalarProperty Name="HasStructuringTeamReviewedAndApprovedThePricingPolicy" ColumnName="HasStructuringTeamReviewedAndApprovedThePricingPolicy" />
+                <ScalarProperty Name="DidWeWorkOnANewPricingPolicy" ColumnName="DidWeWorkOnANewPricingPolicy" />
+                <ScalarProperty Name="IsThisPricingPolicyForANewClient" ColumnName="IsThisPricingPolicyForANewClient" />
+                <ScalarProperty Name="HaveWeUpdatedThePricingPolicyToIncludeTheFundOnTheAppendix" ColumnName="HaveWeUpdatedThePricingPolicyToIncludeTheFundOnTheAppendix" />
+                <ScalarProperty Name="IsThisPricingPolicyForAnExisitingClient" ColumnName="IsThisPricingPolicyForAnExisitingClient" />
+                <ScalarProperty Name="WorkWithLiquidityDirectCorporateTaxDeptToEnsureTaxDocProvided" ColumnName="WorkWithLiquidityDirectCorporateTaxDeptToEnsureTaxDocProvided" />
+                <ScalarProperty Name="DoesThisFundHaveOvernightSweepSetUpAtBNYM" ColumnName="DoesThisFundHaveOvernightSweepSetUpAtBNYM" />
+                <ScalarProperty Name="DidWeWalkIndiaThroughTheNewFundAndWhsProcess" ColumnName="DidWeWalkIndiaThroughTheNewFundAndWhsProcess" />
+                <ScalarProperty Name="IfYesThenDidProvideAllTheTaxDocumentsAlongWithWithholdingTaxStatements" ColumnName="IfYesThenDidProvideAllTheTaxDocumentsAlongWithWithholdingTaxStatements" />
+                <ScalarProperty Name="IfTheFundIsOwnedByBothOnshoreAndOffshoreInvestors" ColumnName="IfTheFundIsOwnedByBothOnshoreAndOffshoreInvestors" />
+                <ScalarProperty Name="IfTheFundIsOwnedByEitherThenDidWeSendInitialTaxDocs" ColumnName="IfTheFundIsOwnedByEitherThenDidWeSendInitialTaxDocs" />
+                <ScalarProperty Name="IsThisFundOwnedByOnshoreInvetorsOrOffshoreInvestors" ColumnName="IsThisFundOwnedByOnshoreInvetorsOrOffshoreInvestors" />
+                <ScalarProperty Name="DoesTheFundHaveOnshoreAndOffshoreInvestors" ColumnName="DoesTheFundHaveOnshoreAndOffshoreInvestors" />
+                <ScalarProperty Name="IsThisFundAComingledFundOrSingleInvestorFund" ColumnName="IsThisFundAComingledFundOrSingleInvestorFund" />
+                <ScalarProperty Name="HasTheInitialSubscriptionBeenApprovedInTheCapitalActivityModule" ColumnName="HasTheInitialSubscriptionBeenApprovedInTheCapitalActivityModule" />
+                <ScalarProperty Name="IsTheFundSetUpInTheCapitalActivityModule" ColumnName="IsTheFundSetUpInTheCapitalActivityModule" />
+                <ScalarProperty Name="HasTheInvestmentManagerBeenNotifiedOfTheInitialCapital" ColumnName="HasTheInvestmentManagerBeenNotifiedOfTheInitialCapital" />
+                <ScalarProperty Name="HaveWeSetUpAllTheFeeTypesOnExpenseModule" ColumnName="HaveWeSetUpAllTheFeeTypesOnExpenseModule" />
+                <ScalarProperty Name="HaveWeUpdatedOurInvoicePaymentProcedure" ColumnName="HaveWeUpdatedOurInvoicePaymentProcedure" />
+                <ScalarProperty Name="HaveWePutTogetherExpenseAccrualFileAndAgreedUponAllAsset" ColumnName="HaveWePutTogetherExpenseAccrualFileAndAgreedUponAllAsset" />
+                <ScalarProperty Name="HaveWeSentTheIMASAAToAdminForTheirReview" ColumnName="HaveWeSentTheIMASAAToAdminForTheirReview" />
+                <ScalarProperty Name="HasTheIMASAAbeenReviewedByResponsibleAccountant" ColumnName="HasTheIMASAAbeenReviewedByResponsibleAccountant" />
+                <ScalarProperty Name="DidWeCommunicateToIndiaTeamToVerifyTheNAVDataOnAMonthlyBasis" ColumnName="DidWeCommunicateToIndiaTeamToVerifyTheNAVDataOnAMonthlyBasis" />
+                <ScalarProperty Name="AreWeRecievingRequiredDataForThisModuleFromTheAdmin" ColumnName="AreWeRecievingRequiredDataForThisModuleFromTheAdmin" />
+                <ScalarProperty Name="HasThisFundBeenSetUpInNewReposrtingModule" ColumnName="HasThisFundBeenSetUpInNewReposrtingModule" />
+                <ScalarProperty Name="HasNAVReviewBeenAssignedToRespectiveAccountant" ColumnName="HasNAVReviewBeenAssignedToRespectiveAccountant" />
+                <ScalarProperty Name="HasNAVReviewChecklistBeenCustomizedToIncludeFundSpecifictask" ColumnName="HasNAVReviewChecklistBeenCustomizedToIncludeFundSpecifictask" />
+                <ScalarProperty Name="HasNAVReviewChecklistBeenSetUp" ColumnName="HasNAVReviewChecklistBeenSetUp" />
+                <ScalarProperty Name="HasFundBeenPermissionedOnHMOpsWebsite" ColumnName="HasFundBeenPermissionedOnHMOpsWebsite" />
                 <ScalarProperty Name="OpenBankAccount" ColumnName="OpenBankAccount" />
                 <ScalarProperty Name="RegisteredwithSECExempt" ColumnName="RegisteredwithSECExempt" />
                 <ScalarProperty Name="RegisteredwithNFAExempt" ColumnName="RegisteredwithNFAExempt" />
@@ -2365,6 +2507,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <EntitySetMapping Name="onboardingClients">
             <EntityTypeMapping TypeName="AdminModel.onboardingClient">
               <MappingFragment StoreEntitySet="onboardingClient">
+                <ScalarProperty Name="PlatformCustodian" ColumnName="PlatformCustodian" />
                 <ScalarProperty Name="ConfirmProtocolForSubscriptionRedemption" ColumnName="ConfirmProtocolForSubscriptionRedemption" />
                 <ScalarProperty Name="Tier" ColumnName="Tier" />
                 <ScalarProperty Name="HmRiskClientServiceAndAnalytics" ColumnName="HmRiskClientServiceAndAnalytics" />
@@ -2604,7 +2747,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
             <EntityTypeMapping TypeName="AdminModel.vw_HFund">
               <MappingFragment StoreEntitySet="vw_HFund">
                 <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
-                <ScalarProperty Name="ManagerStrategy" ColumnName="ManagerStrategy" />
                 <ScalarProperty Name="FundManagerID" ColumnName="FundManagerID" />
                 <ScalarProperty Name="FundManagerName" ColumnName="FundManagerName" />
                 <ScalarProperty Name="FiscalYearEnd" ColumnName="FiscalYearEnd" />
@@ -2615,9 +2757,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
                 <ScalarProperty Name="varPositionFrequency" ColumnName="varPositionFrequency" />
                 <ScalarProperty Name="DataProviderName" ColumnName="DataProviderName" />
                 <ScalarProperty Name="DataProviderNameId" ColumnName="DataProviderNameId" />
+                <ScalarProperty Name="RegionID" ColumnName="RegionID" />
+                <ScalarProperty Name="StrategyID" ColumnName="StrategyID" />
                 <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
                 <ScalarProperty Name="ClientFundVersion" ColumnName="ClientFundVersion" />
-                <ScalarProperty Name="CreatedFor" ColumnName="CreatedFor" />
+                <ScalarProperty Name="FundType" ColumnName="FundType" />
                 <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
                 <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
                 <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />

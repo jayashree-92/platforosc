@@ -212,6 +212,51 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string RegisteredwithNFAExempt { get; set; }
         public string RegisteredwithSECExempt { get; set; }
         public string OpenBankAccount { get; set; }
+        public string HasFundBeenPermissionedOnHMOpsWebsite { get; set; }
+        public string HasNAVReviewChecklistBeenSetUp { get; set; }
+        public string HasNAVReviewChecklistBeenCustomizedToIncludeFundSpecifictask { get; set; }
+        public string HasNAVReviewBeenAssignedToRespectiveAccountant { get; set; }
+        public string HasThisFundBeenSetUpInNewReposrtingModule { get; set; }
+        public string AreWeRecievingRequiredDataForThisModuleFromTheAdmin { get; set; }
+        public string DidWeCommunicateToIndiaTeamToVerifyTheNAVDataOnAMonthlyBasis { get; set; }
+        public string HasTheIMASAAbeenReviewedByResponsibleAccountant { get; set; }
+        public string HaveWeSentTheIMASAAToAdminForTheirReview { get; set; }
+        public string HaveWePutTogetherExpenseAccrualFileAndAgreedUponAllAsset { get; set; }
+        public string HaveWeUpdatedOurInvoicePaymentProcedure { get; set; }
+        public string HaveWeSetUpAllTheFeeTypesOnExpenseModule { get; set; }
+        public string HasTheInvestmentManagerBeenNotifiedOfTheInitialCapital { get; set; }
+        public string IsTheFundSetUpInTheCapitalActivityModule { get; set; }
+        public string HasTheInitialSubscriptionBeenApprovedInTheCapitalActivityModule { get; set; }
+        public string IsThisFundAComingledFundOrSingleInvestorFund { get; set; }
+        public string DoesTheFundHaveOnshoreAndOffshoreInvestors { get; set; }
+        public string IsThisFundOwnedByOnshoreInvetorsOrOffshoreInvestors { get; set; }
+        public string IfTheFundIsOwnedByEitherThenDidWeSendInitialTaxDocs { get; set; }
+        public string IfTheFundIsOwnedByBothOnshoreAndOffshoreInvestors { get; set; }
+        public string IfYesThenDidProvideAllTheTaxDocumentsAlongWithWithholdingTaxStatements { get; set; }
+        public string DidWeWalkIndiaThroughTheNewFundAndWhsProcess { get; set; }
+        public string DoesThisFundHaveOvernightSweepSetUpAtBNYM { get; set; }
+        public string WorkWithLiquidityDirectCorporateTaxDeptToEnsureTaxDocProvided { get; set; }
+        public string IsThisPricingPolicyForAnExisitingClient { get; set; }
+        public string HaveWeUpdatedThePricingPolicyToIncludeTheFundOnTheAppendix { get; set; }
+        public string IsThisPricingPolicyForANewClient { get; set; }
+        public string DidWeWorkOnANewPricingPolicy { get; set; }
+        public string HasStructuringTeamReviewedAndApprovedThePricingPolicy { get; set; }
+        public string HasHMAcctingReviewedAndApprovedThePricingPolicy { get; set; }
+        public string HasDirectorsReviewedAndApprovedThePricingPolicy { get; set; }
+        public string HasClientReviewedAndApprovedThePricingPolicy { get; set; }
+        public string HasAdminReviewedAndApprovedThePricingPolicy { get; set; }
+        public string IsThisForAnExisitingClientBondAccretion { get; set; }
+        public string UpdatedTheBondAccretionPolicyToIncludeTheFundOnTheAppendix { get; set; }
+        public string IsThisForaNewClientBondAccretionPolicy { get; set; }
+        public string DidsWeWorkOnaNewPolicyForBondAccretion { get; set; }
+        public string HasClientReviewedAndApprovedTheBondAccretionPolicy { get; set; }
+        public string HasAdminReviewedAndApprovedTheBondAccretionPolicy { get; set; }
+        public string DidWePrepareCashRecForThe1stMonthEnd { get; set; }
+        public string After1stMonthSetUpTheCashRecInTheCashRecModule { get; set; }
+        public string HasTheCashRecBeenSetUpOnCashRecModule { get; set; }
+        public string ConfirmWithOpsAnalystThatPositionReconciliationHasBeenSetUpOnHM { get; set; }
+        public string FundCustodian { get; set; }
+        public string SetUpClientAndManagerWithReportingAccess { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaFundOnBoardPermission> dmaFundOnBoardPermissions { get; set; }
