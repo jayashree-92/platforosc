@@ -202,17 +202,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     data: response.data.cashInstructions
                 });
 
-                $("#liTimeZone" + panelIndex).select2({
-                    placeholder: "Select a TimeZone",
-                    allowClear: true,
-                    data: response.data.timeZones
-                });
-
                 if ($scope.onBoardingAccountDetails[panelIndex].CashInstruction != null && $scope.onBoardingAccountDetails[panelIndex].CashInstruction != 'undefined')
                     $("#liCashInstruction" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].CashInstruction);
 
-                if ($scope.onBoardingAccountDetails[panelIndex].CutOffTimeZone != null && $scope.onBoardingAccountDetails[panelIndex].CutOffTimeZone != 'undefined')
-                    $("#liTimeZone" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].CutOffTimeZone);
             }
         });
     }
@@ -774,9 +766,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
     }
 
-    $scope.fnCutOffTime = function (currency, cashInstruction, timeZone, index) {
+    $scope.fnCutOffTime = function (currency, cashInstruction, index) {
 
-        $http.get("/Accounts/GetCutoffTime?cashInstruction=" + cashInstruction + "&currency=" + currency + "&timeZone=" + timeZone).then(function (response) {
+        $http.get("/Accounts/GetCutoffTime?cashInstruction=" + cashInstruction + "&currency=" + currency).then(function (response) {
             var cutOff = response.data.cutOffTime;
             if (cutOff != undefined && cutOff != "") {
                 //var cutoffTimes = cutOff.CutoffTime;
@@ -1111,12 +1103,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             placeholder: "select a Cash Instruction",
             allowClear: true,
             data: $scope.cashInstructions
-        });
-
-        $("#liTimeZone" + key).select2({
-            placeholder: "select a Time Zone",
-            allowClear: true,
-            data: $scope.timeZones
         });
 
         $("#liAccountPurpose" + key).select2({

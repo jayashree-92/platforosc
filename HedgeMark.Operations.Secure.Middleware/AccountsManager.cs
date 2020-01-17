@@ -777,14 +777,14 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static onBoardingWirePortalCutoff GetCutoffTime(string cashInstruction, string currency, string timeZone)
+        public static onBoardingWirePortalCutoff GetCutoffTime(string cashInstruction, string currency)
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                var onBoardingWirePortalCutoff = context.onBoardingWirePortalCutoffs.AsNoTracking().FirstOrDefault(x => x.CashInstruction == cashInstruction && x.Currency == currency && x.CutOffTimeZone == timeZone);
+                var onBoardingWirePortalCutoff = context.onBoardingWirePortalCutoffs.AsNoTracking().FirstOrDefault(x => x.CashInstruction == cashInstruction && x.Currency == currency);
                 return onBoardingWirePortalCutoff ?? new onBoardingWirePortalCutoff();
             }
         }

@@ -737,9 +737,9 @@ namespace HMOSecureWeb.Controllers
             AccountManager.RemoveSsiTemplateMap(ssiTemplateMapId);
         }
 
-        public JsonResult GetCutoffTime(string cashInstruction, string currency, string timeZone)
+        public JsonResult GetCutoffTime(string cashInstruction, string currency)
         {
-            var cutOffTime = AccountManager.GetCutoffTime(cashInstruction, currency, timeZone);
+            var cutOffTime = AccountManager.GetCutoffTime(cashInstruction, currency);
             return Json(new
             {
                 cutOffTime
