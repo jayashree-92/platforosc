@@ -942,7 +942,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             } else {
                 $(".dzFileProgress").removeClass("progress-bar-striped").removeClass("active").removeClass("progress-bar-warning").addClass("progress-bar-success");
                 $(".dzFileProgress").html("Upload Successful");
-
+                $("#uploadFiles").animate({ "min-height": "80px" });
                 var aDocument = result;
                 $.each(aDocument.Documents, function (index, value) {
                     $scope.ssiTemplateDocuments.push(value);
@@ -963,6 +963,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 }
 
                 if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                    this.removeAllFiles();
                     notifySuccess("Files Uploaded successfully");
                 }
             }

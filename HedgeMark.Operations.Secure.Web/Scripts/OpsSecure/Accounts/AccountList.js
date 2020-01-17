@@ -28,7 +28,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     //var rejectedStatus = "Rejected";
     var pendingStatus = "Pending Approval";
     var createdStatus = "Created";
-    $scope.isExistsDocument = "False";
+   
 
     function viewAttachmentTable(data, key) {
 
@@ -491,10 +491,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $("#btnEdit").prop("disabled", false);
 
-        $http.get("/Accounts/IsAccountDocumentExists?accountId=" + $scope.onBoardingAccountId).then(function (response) {
-            $scope.isExistsDocument = response.data;
-        });
-
         $("#btnDel").prop("disabled", false);
     });
 
@@ -559,7 +555,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnUpdateAccountStatus = function (status, statusAction) {
         $scope.AccountStatus = status;
 
-        if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.isExistsDocument == "False") {
+        if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.accountDocuments.length == 0) {
             notifyWarning("Please upload document to approve account");
             return;
         }
@@ -1365,12 +1361,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 //});
             },
             processing: function (file, result) {
-                $("#uploadFiles" + key).animate({ "min-height": "120px" });
+                $("#uploadFiles" + key).animate({ "min-height": "140px" });
             },
             success: function (file, result) {
                 $(".dzFileProgress").removeClass("progress-bar-striped").removeClass("active").removeClass("progress-bar-warning").addClass("progress-bar-success");
                 $(".dzFileProgress").html("Upload Successful");
-
+                $("#uploadFiles" + key).animate({ "min-height": "80px" });
                 var aDocument = result;
                 $.each(aDocument.Documents, function (index, value) {
                     // $scope.ssiTemplateDocuments.push(value);
@@ -1390,6 +1386,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 }
 
                 if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                    this.removeAllFiles();
                     notifySuccess("Files Uploaded successfully");
                 }
             }

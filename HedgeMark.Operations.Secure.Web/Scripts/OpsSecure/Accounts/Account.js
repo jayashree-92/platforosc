@@ -1112,6 +1112,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
                     else {
                         $(".dzFileProgress").removeClass("progress-bar-striped").removeClass("active").removeClass("progress-bar-warning").addClass("progress-bar-success");
                         $(".dzFileProgress").html("Upload Successful");
+                        $("#uploadFiles" + key).animate({ "min-height": "80px" });
 
                         var aDocument = result;
                         $.each(aDocument.Documents, function (index, value) {
@@ -1134,6 +1135,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
                         }
 
                         if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                            this.removeAllFiles();
                             notifySuccess("Files Uploaded successfully");
                         }
                     }
