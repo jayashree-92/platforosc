@@ -234,7 +234,7 @@
                     <p></p>
                 </div>
 
-                <div class="panel panel-default container-fluid" id="Attachment" ng-if="ssiTemplateId != 0">
+                <div class="panel panel-default container-fluid" id="Attachment" ng-show="ssiTemplateId != 0">
                     <div class="panel-heading row">
                         <h4 class="panel-title">
                             Attachment
@@ -262,9 +262,9 @@
                         <a class="btn btn-default" ng-click="fnBack()"><i class="glyphicon glyphicon-step-backward"></i>&nbsp;Back</a>
                         @if (User.IsWireUser())
                         {
-                            <button type="submit" title="Save SSI Template" class="btn btn-primary" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' ||ssiTemplateId==0)" style="" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;Save SSI Template</button>
+                            <button type="submit" title="Save SSI Template" class="btn btn-primary" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' || ssiTemplateId==0)" style="" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;Save SSI Template</button>
                             @*<button type="submit" class="btn btn-primary" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save SSI Template</button>*@
-                            <a id="requestForApproval" title="Request for Approval" class="btn btn-warning" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft')" style="" ng-click="fnUpdateSSITemplateStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</a>
+                            <a id="requestForApproval" title="Request for Approval" class="btn btn-warning" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' && ssiTemplateId != 0)" style="" ng-click="fnUpdateSSITemplateStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</a>
                             if (User.IsWireApprover())
                             {
                                 <a id="approve" title="Approve" class="btn btn-success" ng-if="isAuthorizedUserToApprove" ng-click="fnUpdateSSITemplateStatus('Approved','Approve')"><i class="glyphicon glyphicon-ok"></i> Approve</a>
