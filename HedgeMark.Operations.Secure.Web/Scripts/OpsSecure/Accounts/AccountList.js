@@ -1970,7 +1970,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $scope.accountBeneficiary = {
             onBoardingAccountBICorABAId: 0,
-            BICorABA: $("#txtBICorABA").val(),
+            BICorABA: $("#txtBICorABA").val().toUpperCase(),
             BankName: $("#txtBankName").val(),
             BankAddress: $("#txtBankAddress").val(),
             IsABA: $("#btnBICorABA").prop("checked")

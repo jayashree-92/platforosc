@@ -713,7 +713,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
         $scope.accountBeneficiary = {
             onBoardingAccountBICorABAId: 0,
-            BICorABA: $("#txtBICorABA").val(),
+            BICorABA: $("#txtBICorABA").val().toUpperCase(),
             BankName: $("#txtBankName").val(),
             BankAddress: $("#txtBankAddress").val(),
             IsABA: $("#btnBICorABA").prop("checked")
