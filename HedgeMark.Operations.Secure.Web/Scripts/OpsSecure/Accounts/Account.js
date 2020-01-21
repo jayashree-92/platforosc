@@ -1686,7 +1686,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
 
         $http.post("/Accounts/AddAccountBiCorAba", { accountBiCorAba: $scope.accountBeneficiary }).then(function (response) {
             notifySuccess("Beneficiary BIC or ABA added successfully");
-            $scope.BicorAba = $("#txtBICorABA").val();
+            $scope.BicorAba = $("#txtBICorABA").val().toUpperCase();
             $scope.isBicorAba = $("#btnBICorABA").prop("checked");
             $scope.fnGetBicorAba($scope.PanelIndex);
             $("#txtBICorABA").val("");
@@ -1975,10 +1975,10 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             return;
         }
 
-        $http.post("/Accounts/AddSwiftGroup", { swiftGroup: $("#txtSwiftGroup").val(), senderBic: $("#txtSendersBIC").val() }).then(function (response) {
+        $http.post("/Accounts/AddSwiftGroup", { swiftGroup: $("#txtSwiftGroup").val(), senderBic: $("#txtSendersBIC").val().toUpperCase() }).then(function (response) {
             notifySuccess("Swift Group added successfully");
             $scope.onBoardingAccountDetails[$scope.PanelIndex].SwiftGroup = $("#txtSwiftGroup").val();
-            $scope.onBoardingAccountDetails[$scope.PanelIndex].SendersBIC = $("#txtSendersBIC").val();
+            $scope.onBoardingAccountDetails[$scope.PanelIndex].SendersBIC = $("#txtSendersBIC").val().toUpperCase();
             $scope.fnGetSwiftGroup($scope.PanelIndex);
             $("#txtSwiftGroup").val("");
             $("#txtSendersBIC").val("");
