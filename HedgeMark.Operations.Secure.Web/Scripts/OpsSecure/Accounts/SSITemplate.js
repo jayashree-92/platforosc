@@ -722,7 +722,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
         $http.post("/Accounts/AddAccountBiCorAba", { accountBiCorAba: $scope.accountBeneficiary }).then(function (response) {
             notifySuccess("Beneficiary BIC or ABA added successfully");
-            $scope.BicorAba = $("#txtBICorABA").val();
+            $scope.BicorAba = $("#txtBICorABA").val().toUpperCase();
             $scope.isBicorAba = $("#btnBICorABA").prop("checked");
             $scope.fnGetBicorAba(true);
             $("#txtBICorABA").val("");
