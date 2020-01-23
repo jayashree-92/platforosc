@@ -383,7 +383,6 @@ namespace HMOSecureWeb.Controllers
 
             var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds, currency);
 
-            ssiTemplates = ssiTemplates.Where(s => !ssiTemplateMaps.Select(p => p.onBoardingSSITemplateId).Contains(s.onBoardingSSITemplateId)).ToList();
             ssiTemplateMaps.ForEach(x => x.onBoardingSSITemplate = null);
 
             return Json(new
@@ -410,7 +409,7 @@ namespace HMOSecureWeb.Controllers
                         onBoardingSsiTemplate.AccountNumber
                     } : null;
                 }).Where(temp => temp != null).OrderBy(y => y.TemplateName).ToList(),
-                ssiTemplates
+                ssiTemplates = ssiTemplates.Where(s => !ssiTemplateMaps.Select(p => p.onBoardingSSITemplateId).Contains(s.onBoardingSSITemplateId)).ToList(),
             }, JsonContentType, JsonContentEncoding);
         }
 
