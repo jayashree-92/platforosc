@@ -1206,10 +1206,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             },
             "deferRender": false,
             "bScrollCollapse": true,
-            //"bPaginate": true,
+            "bPaginate": false,
             //"scroller": false,
             "scrollX": data.length > 0,
-            "scrollY": 350,
+            "scrollY": "350px",
             //sortable: false,
             //"sDom": "ift",
             //pagination: true,
@@ -1243,6 +1243,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                             //$scope.ssiTemplateDocuments.pop(rowElement);
                             $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountSSITemplateMaps.pop(rowElement);
                             notifySuccess("ssi template has removed succesfully");
+                            $scope.fnSsiTemplateMap($scope.onBoardingAccountDetails[key].onBoardingAccountId, $scope.FundId, key, $scope.onBoardingAccountDetails[key].Currency);
                         });
                     } else {
                         ssiMapTable[rowIndex].row(selectedRow).remove().draw();
@@ -1643,7 +1644,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             notifySuccess("Ssi template mapped to account successfully");
             $scope.ssiTemplateMaps.push($scope.onBoardingAccountSSITemplateMap);
             //$scope.onBoardingAccountDetails[$scope.PanelIndex].onBoardingAccountSSITemplateMaps.push($scope.onBoardingAccountSSITemplateMap);
-            viewSsiTemplateTable($scope.ssiTemplateMaps, $scope.PanelIndex);
+            var thisAccount = $filter('filter')($scope.onBoardingAccountDetails, { 'onBoardingAccountId': $scope.onBoardingAccountId }, true)[0];
+            if (thisAccount != undefined)
+                $scope.fnSsiTemplateMap(thisAccount.onBoardingAccountId, $scope.FundId, 0, thisAccount.Currency);
         });
 
         $("#accountSSITemplateMapModal").modal("hide");
