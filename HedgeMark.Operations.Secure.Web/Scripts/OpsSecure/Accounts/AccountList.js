@@ -525,7 +525,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             var agreementType = $.grep($scope.agreementTypes, function (v) { return v.id == $scope.AgreementTypeId; })[0];
 
-            if (agreementType.text == "PB" || agreementType.text == "FCM" || $scope.AccountType == "DDA") {
+            if (agreementType != undefined && (agreementType.text == "PB" || agreementType.text == "FCM" || $scope.AccountType == "DDA")) {
                 $scope.accountPurpose = [{ id: "Cash", text: "Cash" }, { id: "Margin", text: "Margin" }];
             } else {
                 $scope.accountPurpose = [{ id: "Pledge Account", text: "Pledge Account" }, { id: "Return Account", text: "Return Account" }, { id: "Both", text: "Both" }];
@@ -772,10 +772,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 //$("#cutOffTime" + index).val($scope.onBoardingAccountDetails[index].CutoffTime);
                 $scope.onBoardingAccountDetails[index].CutOffTimeZone = cutOff.CutOffTimeZone;
                 $scope.onBoardingAccountDetails[index].DaystoWire = cutOff.DaystoWire;
+                $scope.onBoardingAccountDetails[index].Currency = cutOff.Currency;
+                $scope.onBoardingAccountDetails[index].CashInstruction = cutOff.CashInstruction;
             }
             else {
                 $("#cutOffTime" + index).val("");
                 $("#wireDays" + index).val("");
+                $scope.onBoardingAccountDetails[index].Currency = currency;
+                $scope.onBoardingAccountDetails[index].CashInstruction = cashInstruction;
             }
 
         });

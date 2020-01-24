@@ -1494,7 +1494,7 @@ namespace HMOSecureWeb.Controllers
             var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties();
             var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
             var accountBicorAba = AccountManager.GetAllAccountBicorAba();
-
+            var messageTypes = new List<string> { "MT103", "MT202", "MT202 COV" };
             var bulkUploadLogs = new List<hmsBulkUploadLog>();
             for (var i = 0; i < Request.Files.Count; i++)
             {
@@ -1533,7 +1533,7 @@ namespace HMOSecureWeb.Controllers
                         templateDetail.Currency = template["Currency"];
                         templateDetail.ReasonDetail = template["Payment/Receipt Reason Detail"];
                         templateDetail.OtherReason = template["Other Reason"];
-                        templateDetail.MessageType = template["Message Type"];
+                        templateDetail.MessageType = messageTypes.Contains(template["Message Type"].Trim()) ? template["Message Type"].Trim() : string.Empty;
                         templateDetail.TemplateName = template["SSI Template Type"] == "Broker" ? template["Legal Entity"] + " - " + template["Account Type"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : (!string.IsNullOrWhiteSpace(template["SSI Template Type"]) ? template["Service Provider"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : template["Template Name"]);
                         if (templateDetail.onBoardingSSITemplateId == 0)
                         {
