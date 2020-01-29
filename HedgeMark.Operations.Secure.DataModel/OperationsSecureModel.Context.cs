@@ -60,5 +60,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsWireCollateralAssociation> hmsWireCollateralAssociations { get; set; }
         public virtual DbSet<hmsBulkUploadLog> hmsBulkUploadLogs { get; set; }
         public virtual DbSet<hmsWireCutoffTimeZone> hmsWireCutoffTimeZones { get; set; }
+        public virtual DbSet<hmsSystemPreference> hmsSystemPreferences { get; set; }
     }
 }

@@ -63,6 +63,7 @@
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsBulkUploadLog" Width="1.5" PointX="13.375" PointY="12.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireCutoffTimeZone" Width="1.5" PointX="13.375" PointY="15.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsSystemPreference" Width="1.5" PointX="15.375" PointY="14.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
