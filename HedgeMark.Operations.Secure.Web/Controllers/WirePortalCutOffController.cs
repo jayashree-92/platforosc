@@ -33,17 +33,65 @@ namespace HMOSecureWeb.Controllers
             return Json(new { cashInstructions, currencies, timeZones }, JsonRequestBehavior.AllowGet);
         }
 
+        private onBoardingWirePortalCutoff GetWirePortalCutOffData(long wireCutoffId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                return context.onBoardingWirePortalCutoffs.FirstOrDefault(s => s.onBoardingWirePortalCutoffId == wireCutoffId) ?? new onBoardingWirePortalCutoff();
+            }
+        }
+
         public void SaveWirePortalCutoff(onBoardingWirePortalCutoff wirePortalCutoff)
         {
+            var originalCutOff = GetWirePortalCutOffData(wirePortalCutoff.onBoardingWirePortalCutoffId);
+
             wirePortalCutoff.RecCreatedBy = UserDetails.Id;
             wirePortalCutoff.RecCreatedAt = DateTime.Now;
             WireDataManager.SaveWirePortalCutoff(wirePortalCutoff);
+
+            AuditWireCutoffChanges(wirePortalCutoff, originalCutOff);
+        }
+
+        private void AuditWireCutoffChanges(onBoardingWirePortalCutoff wirePortalCutoff, onBoardingWirePortalCutoff originalCutOff, bool isDeleted = false)
+        {
+            var fieldsChanged = new List<string>();
+
+            if (originalCutOff.CutOffTimeZone != wirePortalCutoff.CutOffTimeZone)
+                fieldsChanged.Add("Time Zone");
+            if (originalCutOff.CutoffTime != wirePortalCutoff.CutoffTime)
+                fieldsChanged.Add("Cutoff Time");
+            if (originalCutOff.DaystoWire != wirePortalCutoff.DaystoWire)
+                fieldsChanged.Add("Days To Wire");
+
+            //Log the changes in user audits
+            var auditData = new hmsUserAuditLog
+            {
+                Action = isDeleted ? "Deleted" : originalCutOff.onBoardingWirePortalCutoffId > 0 ? "Edited" : "Added",
+                Module = "Wire Cutoff",
+                Log = string.Format("Cash Instruction: <i>{0}</i><br/>Currency: <i>{1}</i>", wirePortalCutoff.CashInstruction,
+                    wirePortalCutoff.Currency),
+                Field = string.Join(",<br>", fieldsChanged),
+                PreviousStateValue =
+                    string.Format("TimeZone: <i>{0}</i><br/>Cutoff Time: <i>{1}</i><br/>Days to Wire:<i>{2}</i>",
+                        originalCutOff.CutOffTimeZone, originalCutOff.CutoffTime, originalCutOff.DaystoWire),
+                ModifiedStateValue =
+                    string.Format("TimeZone: <i>{0}</i><br/>Cutoff Time: <i>{1}</i><br/>Days to Wire:<i>{2}</i>",
+                        wirePortalCutoff.CutOffTimeZone, wirePortalCutoff.CutoffTime, wirePortalCutoff.DaystoWire),
+                CreatedAt = DateTime.Now,
+                UserName = User.Identity.Name
+            };
+            AuditManager.LogAudit(auditData);
         }
 
         public void DeleteWirePortalCutoff(long wireCutoffId)
         {
+            var originalCutOff = GetWirePortalCutOffData(wireCutoffId);
             WireDataManager.DeleteWirePortalCutoff(wireCutoffId);
+
+            AuditWireCutoffChanges(new onBoardingWirePortalCutoff() { onBoardingWirePortalCutoffId = wireCutoffId }, originalCutOff, true);
         }
+
+
         public FileResult ExportData()
         {
             var wireCutoffData = WireDataManager.GetWirePortalCutoffData().OrderBy(s => s.CashInstruction).ThenBy(s => s.Currency).ToList();

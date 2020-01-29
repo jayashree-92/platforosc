@@ -187,6 +187,8 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                                     return "<span class=\"label label-warning ignoreMark\"> " + tdata + "</span>";
                                 case "Added":
                                     return "<span class=\"label label-success ignoreMark\"> " + tdata + "</span>";
+                                case "Deleted":
+                                    return "<span class=\"label label-danger ignoreMark\"> " + tdata + "</span>";
                             }
                         }
                     },
@@ -211,9 +213,11 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                         switch (row.Action) {
                             case "Logged In":
                             case "Logged Out":
-                            case "Added": return "";
+                            case "Added":
+                                return "";
                             case "Edited":
                             case "Updated":
+                            case "Deleted":
                                 if (row.Field == "Wire Status") {
                                     return $scope.getWireStatus(row.PreviousStateValue);
                                 }
@@ -230,6 +234,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                         switch (row.Action) {
                             case "Logged In":
                             case "Logged Out":
+                            case "Deleted":
                                 return "";
                             case "Edited":
                             case "Updated":
