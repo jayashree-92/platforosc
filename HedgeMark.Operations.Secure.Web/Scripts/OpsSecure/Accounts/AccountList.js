@@ -578,17 +578,19 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnSaveAccountStatus = function () {
-        if ($scope.validateAccount($scope.AccountStatus))
-            $q.all([$scope.fnUpdateAccount(false)]).then(function () {
-                $http.post("/Accounts/UpdateAccountStatus", { accountStatus: $scope.AccountStatus, accountId: $scope.onBoardingAccountId, comments: $("#statusComments").val().trim() }).then(function () {
-                    notifySuccess("Account  " + $scope.AccountStatus.toLowerCase() + " successfully");
-                    window.location.href = "/Accounts/Index";
+        $timeout(function () {
+            if ($scope.validateAccount($scope.AccountStatus))
+                $q.all([$scope.fnUpdateAccount(false)]).then(function () {
+                    $http.post("/Accounts/UpdateAccountStatus", { accountStatus: $scope.AccountStatus, accountId: $scope.onBoardingAccountId, comments: $("#statusComments").val().trim() }).then(function () {
+                        notifySuccess("Account  " + $scope.AccountStatus.toLowerCase() + " successfully");
+                        window.location.href = "/Accounts/Index";
+                    });
+                    $("#btnSendApproval").hide();
+                    $("#UpdateAccountStatusModal").modal("hide");
                 });
-                $("#btnSendApproval").hide();
+            else
                 $("#UpdateAccountStatusModal").modal("hide");
-            });
-        else
-            $("#UpdateAccountStatusModal").modal("hide");
+        }, 100);
     }
 
     $scope.fnSendApprovalAccountStatus = function () {
