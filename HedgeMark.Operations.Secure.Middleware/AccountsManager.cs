@@ -258,7 +258,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1} - {2}", methodName, ex.Message, ex.StackTrace));
+                Logger.Error(string.Format("{0} - Error Message : {1} - {2}", methodName, ex.Message, ex.InnerException));
             }
             return account.onBoardingAccountId;
         }
