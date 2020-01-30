@@ -44,6 +44,14 @@
           <Property Name="hmsSwiftStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Status" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsSystemPreferences">
+          <Key>
+            <PropertyRef Name="hmsSystemPreferenceId" />
+          </Key>
+          <Property Name="hmsSystemPreferenceId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SystemKey" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SystemValue" Type="varchar" MaxLength="3000" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsUserAuditLog">
           <Key>
             <PropertyRef Name="hmsUserAuditLogId" />
@@ -751,6 +759,7 @@
           <EntitySet Name="hmsMQLogs" EntityType="Self.hmsMQLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsNotificationStaging" EntityType="Self.hmsNotificationStaging" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsSystemPreferences" EntityType="Self.hmsSystemPreferences" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUserAuditLog" EntityType="Self.hmsUserAuditLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireCollateralAssociation" EntityType="Self.hmsWireCollateralAssociation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireCutoffTimeZones" EntityType="Self.hmsWireCutoffTimeZones" Schema="dbo" store:Type="Tables" />
@@ -1007,6 +1016,7 @@
           </AssociationSet>
           <EntitySet Name="hmsBulkUploadLogs" EntityType="OperationsSecureModel.hmsBulkUploadLog" />
           <EntitySet Name="hmsWireCutoffTimeZones" EntityType="OperationsSecureModel.hmsWireCutoffTimeZone" />
+          <EntitySet Name="hmsSystemPreferences" EntityType="OperationsSecureModel.hmsSystemPreference" />
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -1795,6 +1805,14 @@
           <Property Name="TimeZone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="TimeZoneStandardName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="hmsSystemPreference">
+          <Key>
+            <PropertyRef Name="hmsSystemPreferenceId" />
+          </Key>
+          <Property Name="hmsSystemPreferenceId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SystemKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SystemValue" Type="String" Nullable="false" MaxLength="3000" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2298,6 +2316,15 @@
                 <ScalarProperty Name="TimeZoneStandardName" ColumnName="TimeZoneStandardName" />
                 <ScalarProperty Name="TimeZone" ColumnName="TimeZone" />
                 <ScalarProperty Name="hmsWireCutoffTimeZoneId" ColumnName="hmsWireCutoffTimeZoneId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsSystemPreferences">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsSystemPreference">
+              <MappingFragment StoreEntitySet="hmsSystemPreferences">
+                <ScalarProperty Name="SystemValue" ColumnName="SystemValue" />
+                <ScalarProperty Name="SystemKey" ColumnName="SystemKey" />
+                <ScalarProperty Name="hmsSystemPreferenceId" ColumnName="hmsSystemPreferenceId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

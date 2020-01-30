@@ -26,5 +26,21 @@ namespace HMOSecureMiddleware
             }
         }
 
+
+        public enum SystemPreferences
+        {
+            AllowedAgreementTypesForAccounts
+        }
+
+
+        public static string GetSystemPreference(SystemPreferences preference)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var pref = context.hmsSystemPreferences.FirstOrDefault(s => s.SystemKey == preference.ToString()) ?? new hmsSystemPreference();
+                return pref.SystemValue;
+            }
+        }
+
     }
 }

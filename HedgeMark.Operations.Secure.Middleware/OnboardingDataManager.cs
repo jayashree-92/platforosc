@@ -50,7 +50,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-                return context.vw_HFund.Where(f => f.ClientFundVersion == "DMA" &&  f.dmaFundOnBoardId != null).ToDictionary(s => s.dmaFundOnBoardId ?? 0, s => s.LegalFundName);
+                return context.vw_HFund.Where(f => f.ClientFundVersion == "DMA" && f.dmaFundOnBoardId != null).ToDictionary(s => s.dmaFundOnBoardId ?? 0, s => s.LegalFundName);
             }
         }
 
@@ -76,13 +76,12 @@ namespace HMOSecureMiddleware
 
         public static List<AgreementBaseData> GetAgreementsForOnboardingAccountPreloadData(List<long> onBoardFundIds, bool isPreviledgedUser)
         {
+            var permittedAgreementTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.AllowedAgreementTypesForAccounts).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             using (var context = new AdminContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                //var agreementStatus = context.dmaAgreementStatus.FirstOrDefault(s => s.AgreementStatus == "Fully Executed"); a.AgreementStatusId == agreementStatus.dmaAgreementStatusId &&
-                var permittedAgreementTypes = new List<string>() { "CDA", "Custody", "DDA", "Deemed ISDA", "Enhanced Custody", "FCM", "FXPB", "GMRA", "ISDA", "Listed Options", "MRA", "MSFTA", "Non-US Listed Options", "PB" };
                 return context.vw_OnboardedAgreements
                     .Where(a => a.AgreementStatus != "Terminated – Agreement" && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || onBoardFundIds.Contains(a.dmaFundOnBoardId)))
                     .AsNoTracking().Select(x => new AgreementBaseData() { AgreementOnboardingId = x.dmaAgreementOnBoardingId, AgreementShortName = x.AgreementShortName, FundOnBoardId = x.dmaFundOnBoardId }).ToList();
