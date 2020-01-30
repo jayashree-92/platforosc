@@ -1,5 +1,5 @@
 ﻿$("#liAccounts").addClass("active");
-HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, $filter) {
+HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, $filter, $q) {
     $("#onboardingMenu").addClass("active");
     var accountTable, accountSsiTemplateTable, tblSsiTemplateRow;
     var myDropZone;
@@ -578,13 +578,19 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnSaveAccountStatus = function () {
-        $http.post("/Accounts/UpdateAccountStatus", { accountStatus: $scope.AccountStatus, accountId: $scope.onBoardingAccountId, comments: $("#statusComments").val().trim() }).then(function () {
-            notifySuccess("Account  " + $scope.AccountStatus.toLowerCase() + " successfully");
-            window.location.href = "/Accounts/Index";
-        });
-        $("#btnSendApproval").hide();
-        $("#UpdateAccountStatusModal").modal("hide");
+        if ($scope.validateAccount($scope.AccountStatus))
+            $q.all([$scope.fnUpdateAccount(false)]).then(function () {
+                $http.post("/Accounts/UpdateAccountStatus", { accountStatus: $scope.AccountStatus, accountId: $scope.onBoardingAccountId, comments: $("#statusComments").val().trim() }).then(function () {
+                    notifySuccess("Account  " + $scope.AccountStatus.toLowerCase() + " successfully");
+                    window.location.href = "/Accounts/Index";
+                });
+                $("#btnSendApproval").hide();
+                $("#UpdateAccountStatusModal").modal("hide");
+            });
+        else
+            $("#UpdateAccountStatusModal").modal("hide");
     }
+
     $scope.fnSendApprovalAccountStatus = function () {
         $scope.AccountStatus = pendingStatus;
         $scope.fnSaveAccountStatus();
@@ -627,75 +633,79 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         window.location.assign("/Accounts/ExportAllAccountlist");
     }
 
-    //Save Account
-    $scope.fnSaveAccount = function (isValid, status) {
-        $timeout(function () {
-            if (!isValid) {
-                if ($scope.accountForm.$error.required == undefined)
-                    notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
-                else {
-                    var message = "";
-                    angular.forEach($scope.accountForm.$error.required, function (ele, ind) {
-                        message += ele.$name + ", ";
-                    });
-                    notifyError("Please fill in the required fields " + message.substring(0, message.length - 2));
-                }
-                return;
+    $scope.validateAccount = function (status) {
+        if (!$scope.accountForm.$valid) {
+            if ($scope.accountForm.$error.required == undefined)
+                notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
+            else {
+                var message = "";
+                angular.forEach($scope.accountForm.$error.required, function (ele, ind) {
+                    message += ele.$name + ", ";
+                });
+                notifyError("Please fill in the required fields " + message.substring(0, message.length - 2));
             }
+            return false;
+        }
+        var isAccountNameEmpty = false;
 
+        $.each($scope.onBoardingAccountDetails, function (key, value) {
 
-            var isAccountNameEmpty = false;
+            var liAccountDescriptionsValue = "#liAccountDescriptions" + key;
+            value.Description = $(liAccountDescriptionsValue).val();
 
-            $.each($scope.onBoardingAccountDetails, function (key, value) {
-
-                var liAccountDescriptionsValue = "#liAccountDescriptions" + key;
-                value.Description = $(liAccountDescriptionsValue).val();
-
-                if ($("#cashSweep" + key).val() == "Yes") {
-                    var cashSweepTimeValue = "#cashSweepTime" + key;
-                    value.CashSweepTime = $(cashSweepTimeValue).val();
-                    var cashSweepTimeZoneValue = "#cashSweepTimeZone" + key;
-                    value.CashSweepTimeZone = $(cashSweepTimeZoneValue).val();
-                }
-                else {
-                    value.CashSweepTime = "";
-                    value.CashSweepTimeZone = "";
-                }
-                value.CutoffTime = $("#cutOffTime" + key).val();
-                value.SendersBIC = $("#txtSender" + key).val();
-
-                value.BeneficiaryBankName = $("#beneficiaryBankName" + key).val();
-                value.BeneficiaryBankAddress = $("#beneficiaryBankAddress" + key).val();
-
-                value.IntermediaryBankName = $("#intermediaryBankName" + key).val();
-                value.IntermediaryBankAddress = $("#intermediaryBankAddress" + key).val();
-
-                value.UltimateBeneficiaryBankName = $("#ultimateBankName" + key).val();
-                value.UltimateBeneficiaryBankAddress = $("#ultimateBankAddress" + key).val();
-                if (status != "" && status != undefined)
-                    value.onBoardingAccountStatus = status;
-                if (value.UltimateBeneficiaryType == "Account Name" &&
-                    (value.UltimateBeneficiaryAccountName == null || value.UltimateBeneficiaryAccountName == ""))
-                    isAccountNameEmpty = true;
-            });
-
-            if (isAccountNameEmpty) {
-                notifyWarning("Account name field is required");
-                return;
+            if ($("#cashSweep" + key).val() == "Yes") {
+                var cashSweepTimeValue = "#cashSweepTime" + key;
+                value.CashSweepTime = $(cashSweepTimeValue).val();
+                var cashSweepTimeZoneValue = "#cashSweepTimeZone" + key;
+                value.CashSweepTimeZone = $(cashSweepTimeZoneValue).val();
             }
+            else {
+                value.CashSweepTime = "";
+                value.CashSweepTimeZone = "";
+            }
+            value.CutoffTime = $("#cutOffTime" + key).val();
+            value.SendersBIC = $("#txtSender" + key).val();
 
-            $http.post("/Accounts/AddAccounts", { onBoardingAccounts: $scope.onBoardingAccountDetails }).then(function () {
-                notifySuccess("Account Saved successfully");
+            value.BeneficiaryBankName = $("#beneficiaryBankName" + key).val();
+            value.BeneficiaryBankAddress = $("#beneficiaryBankAddress" + key).val();
 
-                $scope.onBoardingAccountDetails = [];
-                $scope.accountDetail = {};
-                $scope.fnGetAccounts();
+            value.IntermediaryBankName = $("#intermediaryBankName" + key).val();
+            value.IntermediaryBankAddress = $("#intermediaryBankAddress" + key).val();
 
-                $("#accountModal").modal("hide");
-            });
-        }, 100);
+            value.UltimateBeneficiaryBankName = $("#ultimateBankName" + key).val();
+            value.UltimateBeneficiaryBankAddress = $("#ultimateBankAddress" + key).val();
+            if (status != "" && status != undefined)
+                value.onBoardingAccountStatus = status;
+            if (value.UltimateBeneficiaryType == "Account Name" &&
+                (value.UltimateBeneficiaryAccountName == null || value.UltimateBeneficiaryAccountName == ""))
+                isAccountNameEmpty = true;
+        });
+
+        if (isAccountNameEmpty) {
+            notifyWarning("Account name field is required");
+            return false;
+        }
+        return true;
     }
 
+    //Save Account
+    $scope.fnSaveAccount = function (status) {
+        $timeout(function () {
+            if ($scope.validateAccount(status))
+                $scope.fnUpdateAccount();
+        }, 100);
+    }
+    $scope.fnUpdateAccount = function () {
+        return $http.post("/Accounts/AddAccounts", { onBoardingAccounts: $scope.onBoardingAccountDetails }).then(function () {
+            notifySuccess("Account Saved successfully");
+
+            $scope.onBoardingAccountDetails = [];
+            $scope.accountDetail = {};
+            $scope.fnGetAccounts();
+
+            $("#accountModal").modal("hide");
+        });
+    }
     $scope.fnGetAccounts();
 
     $scope.fnCashSweep = function (cashSweep, index) {
@@ -776,7 +786,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#cutOffTime" + index).val("");
                 $("#wireDays" + index).val("");
             }
-            $scope.onBoardingAccountDetails[index].CutOffTimeZone = cutOff != undefined && cutOff.CutOffTimeZone != null ? cutoff.CutOffTimeZone : "EST";
+            $scope.onBoardingAccountDetails[index].CutOffTimeZone = cutOff != undefined && cutOff.CutOffTimeZone != null ? cutOff.CutOffTimeZone : "EST";
             $scope.onBoardingAccountDetails[index].Currency = currency;
             $scope.onBoardingAccountDetails[index].CashInstruction = cashInstruction;
         });
@@ -1320,7 +1330,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#UpdateAccountMapStatusModal").modal("show");
     }
 
-    $scope.fnSaveAccountMapStatus = function () {
+    $scope.fnSaveAccountMapStatus = function ()
+    {
         $http.post("/Accounts/UpdateAccountMapStatus", { status: $scope.AccountMapStatus, accountMapId: $scope.onBoardingAccountSSITemplateMapId, comments: $("#statusMapComments").val().trim() }).then(function () {
             notifySuccess("Account ssi template map  " + $scope.AccountMapStatus.toLowerCase() + " successfully");
 
@@ -1337,6 +1348,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         });
         $("#UpdateAccountMapStatusModal").modal("hide");
+            
     }
 
     function attachment(key) {

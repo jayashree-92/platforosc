@@ -593,7 +593,7 @@
                             <div class="modal-footer">
                                 @if (User.IsWireUser())
                                 {
-                                    <button type="submit" id="btnSave" ng-click="fnSaveAccount(accountForm.$valid,'Created')" title="Save the account" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Account</button>
+                                    <button type="submit" id="btnSave" ng-click="fnSaveAccount('Created')" title="Save the account" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Account</button>
                                     <button id="btnPendingApproval" ng-click="fnUpdateAccountStatus('Pending Approval','Request for Approval')" title="Pending approval the account" class="btn btn-warning btn-sm" style="display: none;"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
                                     if (User.IsWireApprover())
                                     {
