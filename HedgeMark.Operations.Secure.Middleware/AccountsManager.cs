@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -250,6 +251,10 @@ namespace HMOSecureMiddleware
                     context.SaveChanges();
                 }
 
+            }
+            catch(DbEntityValidationException db)
+            {
+                Logger.Error(string.Format("{0} - Error Message : {1} - {2}", methodName, db.Message, string.Join(",", db.EntityValidationErrors.SelectMany(s => s.ValidationErrors.Select(p => p.PropertyName)).ToList())));
             }
             catch (Exception ex)
             {
