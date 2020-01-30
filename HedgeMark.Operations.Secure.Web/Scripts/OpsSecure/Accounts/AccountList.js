@@ -674,6 +674,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             value.IntermediaryBankName = $("#intermediaryBankName" + key).val();
             value.IntermediaryBankAddress = $("#intermediaryBankAddress" + key).val();
 
+            var data = $("#liAccountModule_" + key).select2('data') == undefined ? [] : $("#liAccountModule_" + key).select2('data');
+            value.AccountModule = data.map(s => { return s.id }).join(',');
+
             value.UltimateBeneficiaryBankName = $("#ultimateBankName" + key).val();
             value.UltimateBeneficiaryBankAddress = $("#ultimateBankAddress" + key).val();
             if (status != "" && status != undefined)
