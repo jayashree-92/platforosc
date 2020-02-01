@@ -129,7 +129,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -154,7 +154,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -252,13 +252,13 @@ namespace HMOSecureMiddleware
                 }
 
             }
-            catch(DbEntityValidationException db)
+            catch (DbEntityValidationException db)
             {
                 Logger.Error(string.Format("{0} - Error Message : {1} - {2}", methodName, db.Message, string.Join(",", db.EntityValidationErrors.SelectMany(s => s.ValidationErrors.Select(p => p.PropertyName)).ToList())));
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1} - {2}", methodName, ex.Message, ex));
+                Logger.Error(string.Format("{0} - Error Message : {1} - {2}", methodName, ex.Message, ex.InnerException != null ? ex.InnerException.Message : ""), ex);
             }
             return account.onBoardingAccountId;
         }
@@ -292,7 +292,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -331,7 +331,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -361,7 +361,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -384,7 +384,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -413,7 +413,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -562,7 +562,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
             return ssiTemplate.onBoardingSSITemplateId;
         }
@@ -595,7 +595,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -633,7 +633,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -718,7 +718,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -749,7 +749,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -778,7 +778,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -812,7 +812,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -831,7 +831,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -867,7 +867,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
@@ -904,7 +904,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
