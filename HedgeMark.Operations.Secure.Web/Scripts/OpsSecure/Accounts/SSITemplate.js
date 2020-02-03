@@ -203,17 +203,22 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 break;
             case "UltimateBeneficiary":
                 //$scope.ssiTemplate.IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + index).prop("checked");
+                $scope.ssiTemplate.UltimateBeneficiaryType = item;
                 if (item == "Account Name") {
                     $("#divUltimateBeneficiaryBICorABA").hide();
                     $("#ultimateBankName").hide();
                     $("#ultimateBankAddress").hide();
-                    $("#accountName").show();
+                    $("#accountName").show();   
+                    $scope.ssiTemplate.UltimateBeneficiaryBICorABA = null;
+                    $scope.ssiTemplate.UltimateBeneficiaryBankName = null;
+                    $scope.ssiTemplate.UltimateBeneficiaryBankAddress = null;
                     return;
                 } else {
                     $("#divUltimateBeneficiaryBICorABA").show();
                     $("#ultimateBankName").show();
                     $("#ultimateBankAddress").show();
                     $("#accountName").hide();
+                    $scope.ssiTemplate.UltimateBeneficiaryAccountName = null;
                 }
                 var ultimateBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
                 var ultimateBicorAbaData = [];

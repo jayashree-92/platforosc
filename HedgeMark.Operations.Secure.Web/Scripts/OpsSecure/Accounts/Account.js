@@ -875,17 +875,23 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
                 break;
             case "UltimateBeneficiary":
                 //$scope.onBoardingAccountDetails[index].IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + index).prop("checked");
+                $scope.onBoardingAccountDetails[index].UltimateBeneficiaryType = item;
+                
                 if (item == "Account Name") {
                     $("#divUltimateBeneficiaryBICorABA" + index).hide();
                     $("#ultimateBankName" + index).hide();
                     $("#ultimateBankAddress" + index).hide();
                     $("#accountName" + index).show();
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBICorABA = null;
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankName = null;
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankAddress = null;
                     return;
                 } else {
                     $("#divUltimateBeneficiaryBICorABA" + index).show();
                     $("#ultimateBankName" + index).show();
                     $("#ultimateBankAddress" + index).show();
                     $("#accountName" + index).hide();
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountName = null;
                 }
                 var ultimateBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
                 var ultimateBicorAbaData = [];
