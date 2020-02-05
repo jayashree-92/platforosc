@@ -496,7 +496,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $(document).on("dblclick", "#accountTable tbody tr", function () {
         var rowElement = accountTable.row(this).data();
-        fnEditAccountDetails(rowElement);
+        $scope.fnEditAccountDetails(rowElement);
     });
 
 
