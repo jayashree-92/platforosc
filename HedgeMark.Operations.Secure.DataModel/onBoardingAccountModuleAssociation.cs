@@ -20,7 +20,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public System.DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
     
-        public virtual onBoardingAccount onBoardingAccount { get; set; }
         public virtual onBoardingModule onBoardingModule { get; set; }
+        public virtual onBoardingAccount onBoardingAccount { get; set; }
     }
 }

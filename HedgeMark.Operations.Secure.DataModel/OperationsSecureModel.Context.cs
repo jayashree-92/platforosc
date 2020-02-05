@@ -38,7 +38,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsWireLog> hmsWireLogs { get; set; }
         public virtual DbSet<hmsWireLogTypeLkup> hmsWireLogTypeLkups { get; set; }
         public virtual DbSet<hmsUserAuditLog> hmsUserAuditLogs { get; set; }
-        public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
         public virtual DbSet<onBoardingAccountBICorABA> onBoardingAccountBICorABAs { get; set; }
         public virtual DbSet<OnBoardingAccountDescription> OnBoardingAccountDescriptions { get; set; }
         public virtual DbSet<onBoardingAccountDocument> onBoardingAccountDocuments { get; set; }
@@ -61,5 +60,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsBulkUploadLog> hmsBulkUploadLogs { get; set; }
         public virtual DbSet<hmsWireCutoffTimeZone> hmsWireCutoffTimeZones { get; set; }
         public virtual DbSet<hmsSystemPreference> hmsSystemPreferences { get; set; }
+        public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
     }
 }
