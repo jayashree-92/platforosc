@@ -28,7 +28,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     //var rejectedStatus = "Rejected";
     var pendingStatus = "Pending Approval";
     var createdStatus = "Created";
-   
+
 
     function viewAttachmentTable(data, key) {
 
@@ -140,17 +140,17 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         return "";
                     }
                 },
-                  { "mData": "JobTitle", "sTitle": "Group / Job Function" },
-                  { "mData": "name", "sTitle": "Name" },
-                  //{ "mData": "LastName", "sTitle": "LastName" },
-                  { "mData": "Email", "sTitle": "Email" },
-                  { "mData": "BusinessPhone", "sTitle": "Business Phone" },
-                  { "mData": "Notes", "sTitle": "Notes" },
-                  { "mData": "wires", "sTitle": "Wires" },
-                  { "mData": "margin", "sTitle": "Margin" },
-                  { "mData": "cash", "sTitle": "Cash" },
-                  { "mData": "collateral", "sTitle": "Collateral" },
-                  { "mData": "Interest", "sTitle": "Interest" }
+                { "mData": "JobTitle", "sTitle": "Group / Job Function" },
+                { "mData": "name", "sTitle": "Name" },
+                //{ "mData": "LastName", "sTitle": "LastName" },
+                { "mData": "Email", "sTitle": "Email" },
+                { "mData": "BusinessPhone", "sTitle": "Business Phone" },
+                { "mData": "Notes", "sTitle": "Notes" },
+                { "mData": "wires", "sTitle": "Wires" },
+                { "mData": "margin", "sTitle": "Margin" },
+                { "mData": "cash", "sTitle": "Cash" },
+                { "mData": "collateral", "sTitle": "Collateral" },
+                { "mData": "Interest", "sTitle": "Interest" }
             ],
             "deferRender": false,
             "bScrollCollapse": true,
@@ -253,130 +253,130 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     aaData: response.data.OnBoardingAccounts,
                     "bDestroy": true,
                     "columns": [
-                       { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
-                       { "mData": "dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
-                       { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
-                       { "mData": "BrokerId", "sTitle": "BrokerId", visible: false },
-                       //{ "mData": "AccountType", "sTitle": "Account Type" },
-                       { "mData": "onBoardingAccountId", "sTitle": "SSI Association Status" },
-                       {
-                           "mData": "AccountType", "sTitle": "Entity Type",
-                           "mRender": function (tdata) {
-                               if (tdata != null && tdata != "undefinied") {
-                                   switch (tdata) {
-                                       case "Agreement": return "<label class='label label-success'>" + tdata + "</label>";
-                                       case "DDA": return "<label class='label label-warning'>" + tdata + "</label>";
-                                       case "Custody": return "<label class='label label-info'>" + tdata + "</label>";
-                                   }
-                                   return "<label class='label label-default'>" + tdata + "</label>";
-                               }
-                               return "";
-                           }
-                       },
-                       {
-                           "mData": "FundName", "sTitle": "Fund Name"
-                       },
-                       { "mData": "AgreementName", "sTitle": "Agreement Name" },
-                       { "mData": "Broker", "sTitle": "Broker" },
-                       { "mData": "AccountName", "sTitle": "Account Name" },
-                       { "mData": "AccountNumber", "sTitle": "Account Number" },
-                       { "mData": "AccountPurpose", "sTitle": "Account Type" },
-                       { "mData": "AccountStatus", "sTitle": "Account Status" },
-                       { "mData": "Currency", "sTitle": "Currency" },
-                       { "mData": "Description", "sTitle": "Description" },
-                       { "mData": "Notes", "sTitle": "Notes" },
-                       { "mData": "AuthorizedParty", "sTitle": "Authorized Party" },
-                       { "mData": "CashInstruction", "sTitle": "Cash Instruction Mechanism" },
-                       { "mData": "SwiftGroup", "sTitle": "Swift Group" },
-                       { "mData": "SendersBIC", "sTitle": "Senders BIC" },
-                       { "mData": "CashSweep", "sTitle": "Cash Sweep" },
-                       {
-                           "mData": "CashSweepTime", "sTitle": "Cash Sweep Time",
-                           "mRender": function (tdata) {
-                               if (tdata == "" || tdata == null)
-                                   return "";
-
-                               return moment(tdata).format("LT");
-                           }
-                       },
-                       { "mData": "CashSweepTimeZone", "sTitle": "Cash Sweep Time Zone" },
-                       {
-                           "mData": "CutoffTime", "sTitle": "Cutoff Time",
-                           "mRender": function (tdata) {
-                               if (tdata == "" || tdata == null)
-                                   return "";
-                               return moment(tdata).format("LT");
-                           }
-                       },
-                       { "mData": "DaystoWire", "sTitle": "Days to wire per V.D" },
-                       { "mData": "HoldbackAmount", "sTitle": "Holdback Amount" },
-                       { "mData": "SweepComments", "sTitle": "Sweep Comments" },
-                       { "mData": "AssociatedCustodyAcct", "sTitle": "Associated Custody Acct" },
-                       { "mData": "PortfolioSelection", "sTitle": "Portfolio Selection" },
-                       { "mData": "TickerorISIN", "sTitle": "Ticker/ISIN" },
-                       { "mData": "SweepCurrency", "sTitle": "Sweep Currency" },
-                       //{ "mData": "ContactType", "sTitle": "Contact Type" },
-                       //{ "mData": "ContactName", "sTitle": "Contact Name" },
-                       //{ "mData": "ContactEmail", "sTitle": "Contact Email" },
-                       //{ "mData": "ContactNumber", "sTitle": "Contact Number" },
-                       { "mData": "BeneficiaryType", "sTitle": "Beneficiary Type" },
-                       { "mData": "BeneficiaryBICorABA", "sTitle": "Beneficiary BIC or ABA" },
-                       { "mData": "BeneficiaryBankName", "sTitle": "Beneficiary Bank/Account Name" },
-                       { "mData": "BeneficiaryBankAddress", "sTitle": "Beneficiary Bank Address" },
-                       { "mData": "BeneficiaryAccountNumber", "sTitle": "Beneficiary Account Number" },
-                       { "mData": "IntermediaryType", "sTitle": "Intermediary Beneficiary Type" },
-                       { "mData": "IntermediaryBICorABA", "sTitle": "Intermediary BIC or ABA" },
-                       { "mData": "IntermediaryBankName", "sTitle": "Intermediary Bank/Account Name" },
-                       { "mData": "IntermediaryBankAddress", "sTitle": "Intermediary Bank Address" },
-                       { "mData": "IntermediaryAccountNumber", "sTitle": "Intermediary Account Number" },
-                       { "mData": "UltimateBeneficiaryType", "sTitle": "Ultimate Beneficiary Type" },
-                       { "mData": "UltimateBeneficiaryBICorABA", "sTitle": "Ultimate Beneficiary BIC or ABA" },
-                       { "mData": "UltimateBeneficiaryBankName", "sTitle": "Ultimate Beneficiary Bank Name" },
-                       { "mData": "UltimateBeneficiaryBankAddress", "sTitle": "Ultimate Beneficiary Bank Address" },
-                       { "mData": "UltimateBeneficiaryAccountName", "sTitle": "Ultimate Beneficiary Account Name" },
-                       { "mData": "FFCName", "sTitle": "FFC Name" },
-                       { "mData": "FFCNumber", "sTitle": "FFC Number" },
-                       { "mData": "Reference", "sTitle": "Reference" },
-                       {
-                           "mData": "onBoardingAccountStatus", "sTitle": "Status",
-                           "mRender": function (tdata) {
-                               if (tdata != null && tdata != "undefined") {
-                                   switch (tdata) {
-                                       case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
-                                       case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
-                                       case "Created": return "<label class='label label-default'>" + "Saved As Draft" + "</label>";
-                                   }
-                                   return "<label class='label label-default'>" + tdata + "</label>";
-                               }
-                               return "";
-                           }
-                       },
-                       { "mData": "StatusComments", "sTitle": "Comments" },
-                       {
-                           "mData": "CreatedBy", "sTitle": "Created By", "mRender": function (data) {
-                               return humanizeEmail(data);
-                           }
-                       },
-                      {
-                          "mData": "CreatedAt",
-                          "sTitle": "Created Date",
-                          "mRender": renderDotNetDateAndTime
-                      },
-                      {
-                          "mData": "UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
-                              return humanizeEmail(data);
-                          }
-                      },
-                      {
-                          "mData": "UpdatedAt", 
-                          "sTitle": "Last Modified At",
-                          "mRender": renderDotNetDateAndTime
+                        { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
+                        { "mData": "dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
+                        { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
+                        { "mData": "BrokerId", "sTitle": "BrokerId", visible: false },
+                        //{ "mData": "AccountType", "sTitle": "Account Type" },
+                        { "mData": "onBoardingAccountId", "sTitle": "SSI Association Status" },
+                        {
+                            "mData": "AccountType", "sTitle": "Entity Type",
+                            "mRender": function (tdata) {
+                                if (tdata != null && tdata != "undefinied") {
+                                    switch (tdata) {
+                                        case "Agreement": return "<label class='label label-success'>" + tdata + "</label>";
+                                        case "DDA": return "<label class='label label-warning'>" + tdata + "</label>";
+                                        case "Custody": return "<label class='label label-info'>" + tdata + "</label>";
+                                    }
+                                    return "<label class='label label-default'>" + tdata + "</label>";
+                                }
+                                return "";
+                            }
                         },
-                      {
+                        {
+                            "mData": "FundName", "sTitle": "Fund Name"
+                        },
+                        { "mData": "AgreementName", "sTitle": "Agreement Name" },
+                        { "mData": "Broker", "sTitle": "Broker" },
+                        { "mData": "AccountName", "sTitle": "Account Name" },
+                        { "mData": "AccountNumber", "sTitle": "Account Number" },
+                        { "mData": "AccountPurpose", "sTitle": "Account Type" },
+                        { "mData": "AccountStatus", "sTitle": "Account Status" },
+                        { "mData": "Currency", "sTitle": "Currency" },
+                        { "mData": "Description", "sTitle": "Description" },
+                        { "mData": "Notes", "sTitle": "Notes" },
+                        { "mData": "AuthorizedParty", "sTitle": "Authorized Party" },
+                        { "mData": "CashInstruction", "sTitle": "Cash Instruction Mechanism" },
+                        { "mData": "SwiftGroup", "sTitle": "Swift Group" },
+                        { "mData": "SendersBIC", "sTitle": "Senders BIC" },
+                        { "mData": "CashSweep", "sTitle": "Cash Sweep" },
+                        {
+                            "mData": "CashSweepTime", "sTitle": "Cash Sweep Time",
+                            "mRender": function (tdata) {
+                                if (tdata == "" || tdata == null)
+                                    return "";
+
+                                return moment(tdata).format("LT");
+                            }
+                        },
+                        { "mData": "CashSweepTimeZone", "sTitle": "Cash Sweep Time Zone" },
+                        {
+                            "mData": "CutoffTime", "sTitle": "Cutoff Time",
+                            "mRender": function (tdata) {
+                                if (tdata == "" || tdata == null)
+                                    return "";
+                                return moment(tdata).format("LT");
+                            }
+                        },
+                        { "mData": "DaystoWire", "sTitle": "Days to wire per V.D" },
+                        { "mData": "HoldbackAmount", "sTitle": "Holdback Amount" },
+                        { "mData": "SweepComments", "sTitle": "Sweep Comments" },
+                        { "mData": "AssociatedCustodyAcct", "sTitle": "Associated Custody Acct" },
+                        { "mData": "PortfolioSelection", "sTitle": "Portfolio Selection" },
+                        { "mData": "TickerorISIN", "sTitle": "Ticker/ISIN" },
+                        { "mData": "SweepCurrency", "sTitle": "Sweep Currency" },
+                        //{ "mData": "ContactType", "sTitle": "Contact Type" },
+                        //{ "mData": "ContactName", "sTitle": "Contact Name" },
+                        //{ "mData": "ContactEmail", "sTitle": "Contact Email" },
+                        //{ "mData": "ContactNumber", "sTitle": "Contact Number" },
+                        { "mData": "BeneficiaryType", "sTitle": "Beneficiary Type" },
+                        { "mData": "BeneficiaryBICorABA", "sTitle": "Beneficiary BIC or ABA" },
+                        { "mData": "BeneficiaryBankName", "sTitle": "Beneficiary Bank/Account Name" },
+                        { "mData": "BeneficiaryBankAddress", "sTitle": "Beneficiary Bank Address" },
+                        { "mData": "BeneficiaryAccountNumber", "sTitle": "Beneficiary Account Number" },
+                        { "mData": "IntermediaryType", "sTitle": "Intermediary Beneficiary Type" },
+                        { "mData": "IntermediaryBICorABA", "sTitle": "Intermediary BIC or ABA" },
+                        { "mData": "IntermediaryBankName", "sTitle": "Intermediary Bank/Account Name" },
+                        { "mData": "IntermediaryBankAddress", "sTitle": "Intermediary Bank Address" },
+                        { "mData": "IntermediaryAccountNumber", "sTitle": "Intermediary Account Number" },
+                        { "mData": "UltimateBeneficiaryType", "sTitle": "Ultimate Beneficiary Type" },
+                        { "mData": "UltimateBeneficiaryBICorABA", "sTitle": "Ultimate Beneficiary BIC or ABA" },
+                        { "mData": "UltimateBeneficiaryBankName", "sTitle": "Ultimate Beneficiary Bank Name" },
+                        { "mData": "UltimateBeneficiaryBankAddress", "sTitle": "Ultimate Beneficiary Bank Address" },
+                        { "mData": "UltimateBeneficiaryAccountName", "sTitle": "Ultimate Beneficiary Account Name" },
+                        { "mData": "FFCName", "sTitle": "FFC Name" },
+                        { "mData": "FFCNumber", "sTitle": "FFC Number" },
+                        { "mData": "Reference", "sTitle": "Reference" },
+                        {
+                            "mData": "onBoardingAccountStatus", "sTitle": "Status",
+                            "mRender": function (tdata) {
+                                if (tdata != null && tdata != "undefined") {
+                                    switch (tdata) {
+                                        case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
+                                        case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
+                                        case "Created": return "<label class='label label-default'>" + "Saved As Draft" + "</label>";
+                                    }
+                                    return "<label class='label label-default'>" + tdata + "</label>";
+                                }
+                                return "";
+                            }
+                        },
+                        { "mData": "StatusComments", "sTitle": "Comments" },
+                        {
+                            "mData": "CreatedBy", "sTitle": "Created By", "mRender": function (data) {
+                                return humanizeEmail(data);
+                            }
+                        },
+                        {
+                            "mData": "CreatedAt",
+                            "sTitle": "Created Date",
+                            "mRender": renderDotNetDateAndTime
+                        },
+                        {
+                            "mData": "UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
+                                return humanizeEmail(data);
+                            }
+                        },
+                        {
+                            "mData": "UpdatedAt",
+                            "sTitle": "Last Modified At",
+                            "mRender": renderDotNetDateAndTime
+                        },
+                        {
                             "mData": "ApprovedBy", "sTitle": "Approved By", "mRender": function (data) {
                                 return humanizeEmail(data == null ? "" : data);
                             }
-                      }
+                        }
 
                     ],
                     "oLanguage": {
@@ -495,8 +495,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     });
 
     $(document).on("dblclick", "#accountTable tbody tr", function () {
-
         var rowElement = accountTable.row(this).data();
+        fnEditAccountDetails(rowElement);
+    });
+
+
+    $scope.fnEditAccountDetails = function (rowElement) {
+
         $scope.accountDetail = rowElement;
         $scope.onBoardingAccountId = rowElement.onBoardingAccountId;
         $scope.AgreementId = rowElement.dmaAgreementOnBoardingId;
@@ -550,7 +555,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }).off("shown.bs.modal").on("shown.bs.modal", function () {
 
         });
-    });
+    }
 
     $scope.fnUpdateAccountStatus = function (status, statusAction) {
         $scope.AccountStatus = status;
@@ -598,10 +603,16 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.fnSaveAccountStatus();
     }
     $scope.fnEditAccount = function () {
+
         var searchText = $('#accountListDiv input[type="search"]').val();
-        var accountListUrl = "/Accounts/Index?searchText=" + searchText;
-        window.history.pushState("", "", accountListUrl);
-        window.location.assign("/Accounts/Account?fundId=" + $scope.FundId + "&brokerId=" + $scope.BrokerId + "&agreementId=" + $scope.AgreementId + "&accountType=" + $scope.AccountType + "&searchText=" + searchText);
+
+        var rowElement = accountTable.row(".info").data();
+        $scope.fnEditAccountDetails(rowElement);
+
+
+        //var accountListUrl = "/Accounts/Index?searchText=" + searchText;
+        //window.history.pushState("", "", accountListUrl);
+        //window.location.assign("/Accounts/Account?fundId=" + $scope.FundId + "&brokerId=" + $scope.BrokerId + "&agreementId=" + $scope.AgreementId + "&accountType=" + $scope.AccountType + "&searchText=" + searchText);
     }
 
     $scope.fnCreateAccount = function () {
@@ -610,23 +621,23 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnDeleteAccount = function () {
         showMessage("Are you sure do you want to delete account? ", "Delete Account", [
-                 {
-                     label: "Delete",
-                     className: "btn btn-sm btn-danger",
-                     callback: function () {
-                         $http.post("/Accounts/DeleteAccount", { onBoardingAccountId: $scope.onBoardingAccountId }).then(function () {
-                             accountTable.row(".info").remove().draw();
-                             notifySuccess("Delete successfull");
-                             $scope.onBoardingAccountId = 0;
-                             $("#btnEdit").prop("disabled", true);
-                             $("#btnDel").prop("disabled", true);
-                         });
-                     }
-                 },
-                 {
-                     label: "Cancel",
-                     className: "btn btn-sm btn-default"
-                 }
+            {
+                label: "Delete",
+                className: "btn btn-sm btn-danger",
+                callback: function () {
+                    $http.post("/Accounts/DeleteAccount", { onBoardingAccountId: $scope.onBoardingAccountId }).then(function () {
+                        accountTable.row(".info").remove().draw();
+                        notifySuccess("Delete successfull");
+                        $scope.onBoardingAccountId = 0;
+                        $("#btnEdit").prop("disabled", true);
+                        $("#btnDel").prop("disabled", true);
+                    });
+                }
+            },
+            {
+                label: "Cancel",
+                className: "btn btn-sm btn-default"
+            }
         ]);
     }
 
@@ -867,7 +878,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 case "UltimateBeneficiary":
                     //$scope.onBoardingAccountDetails[index].IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + index).prop("checked");
                     $scope.onBoardingAccountDetails[index].UltimateBeneficiaryType = item;
-                    
+
                     if (item == "Account Name") {
                         $("#divUltimateBeneficiaryBICorABA" + index).hide();
                         $("#ultimateBankName" + index).hide();
@@ -1014,7 +1025,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             });
         }
         else {
-            $http.post("/Accounts/AddAccountModule", { reportId:$("#liAccountReport").select2('val'),  accountModule: $("#txtDetail").val() }).then(function (response) {
+            $http.post("/Accounts/AddAccountModule", { reportId: $("#liAccountReport").select2('val'), accountModule: $("#txtDetail").val() }).then(function (response) {
                 notifySuccess("Module added successfully");
                 $scope.fnGetAccountModules($scope.PanelIndex);
             });
@@ -1160,17 +1171,17 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     "sTitle": "Template Name",
                     "mData": "TemplateName"
                 },
-                 {
-                     "mData": "SSITemplateType",
-                     "sTitle": "SSI Template Type",
-                     "mRender": function (tdata) {
-                         if (tdata === "Broker")
-                             return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
-                         if (tdata === "Fee/Expense Payment")
-                             return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
-                         return "";
-                     }
-                 },
+                {
+                    "mData": "SSITemplateType",
+                    "sTitle": "SSI Template Type",
+                    "mRender": function (tdata) {
+                        if (tdata === "Broker")
+                            return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
+                        if (tdata === "Fee/Expense Payment")
+                            return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
+                        return "";
+                    }
+                },
                 {
                     "sTitle": "Account Number",
                     "mData": "AccountNumber",
@@ -1341,8 +1352,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#UpdateAccountMapStatusModal").modal("show");
     }
 
-    $scope.fnSaveAccountMapStatus = function ()
-    {
+    $scope.fnSaveAccountMapStatus = function () {
         $http.post("/Accounts/UpdateAccountMapStatus", { status: $scope.AccountMapStatus, accountMapId: $scope.onBoardingAccountSSITemplateMapId, comments: $("#statusMapComments").val().trim() }).then(function () {
             notifySuccess("Account ssi template map  " + $scope.AccountMapStatus.toLowerCase() + " successfully");
 
@@ -1359,7 +1369,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         });
         $("#UpdateAccountMapStatusModal").modal("hide");
-            
+
     }
 
     function attachment(key) {
@@ -1556,39 +1566,39 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             //    $("#btnPendingApproval").show();
             //    $("#btnSave").show();
             //
-                if ($("#spnAgrCurrentStatus").html() == "Saved as Draft") {
+            if ($("#spnAgrCurrentStatus").html() == "Saved as Draft") {
 
-                    $("#btnPendingApproval").show();
-                    //$("#btnApprove").hide();
-                    $("#btnRevert").hide();
-                    $("#btnSave").show();
-                }
-                else if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val()) {
+                $("#btnPendingApproval").show();
+                //$("#btnApprove").hide();
+                $("#btnRevert").hide();
+                $("#btnSave").show();
+            }
+            else if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val()) {
 
+                $("#btnPendingApproval").hide();
+                //$("#btnApprove").show();
+                $("#btnRevert").hide();
+                $("#btnSave").hide();
+            }
+            else if ($("#spnAgrCurrentStatus").html() == approvedStatus) {
+                if (val != oldVal) {
                     $("#btnPendingApproval").hide();
-                    //$("#btnApprove").show();
+                    //$("#btnApprove").hide();
+                    $("#btnRevert").show();
+                    $("#btnSave").hide();
+                }
+                else {
+                    $("#btnPendingApproval").hide();
+                    //$("#btnApprove").hide();
                     $("#btnRevert").hide();
                     $("#btnSave").hide();
                 }
-                else if ($("#spnAgrCurrentStatus").html() == approvedStatus) {
-                    if (val != oldVal) {
-                        $("#btnPendingApproval").hide();
-                        //$("#btnApprove").hide();
-                        $("#btnRevert").show();
-                        $("#btnSave").hide();
-                    }
-                    else {
-                        $("#btnPendingApproval").hide();
-                        //$("#btnApprove").hide();
-                        $("#btnRevert").hide();
-                        $("#btnSave").hide();
-                    }
-                } else {
-                    $("#btnPendingApproval").hide();
-                    //$("#btnApprove").hide();
-                    $("#btnRevert").hide();
-                    $("#btnSave").show();
-                }
+            } else {
+                $("#btnPendingApproval").hide();
+                //$("#btnApprove").hide();
+                $("#btnRevert").hide();
+                $("#btnSave").show();
+            }
 
         }, true);
     }
@@ -2189,110 +2199,110 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             fnDestroyDataTable("#accountSSITemplateTable");
         }
         accountSsiTemplateTable = $("#accountSSITemplateTable").DataTable(
-          {
-              aaData: data,
-              "bDestroy": true,
-              "columns": [
-                 { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
-                 { "mData": "dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
-                 { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
-                 { "mData": "BrokerId", "sTitle": "BrokerId", visible: false },
-                 {
-                     "orderable": false,
-                     "data": null,
-                     "defaultContent": "<i class=\"glyphicon glyphicon-menu-right\" style=\"cursor:pointer;\"></i>"
-                 },
-                 {
-                     "mData": "AccountType", "sTitle": "Entity Type",
-                     "mRender": function (tdata) {
-                         if (tdata != null && tdata != "undefinied") {
-                             switch (tdata) {
-                                 case "Agreement": return "<label class='label label-success'>" + tdata + "</label>";
-                                 case "DDA": return "<label class='label label-warning'>" + tdata + "</label>";
-                                 case "Custody": return "<label class='label label-info'>" + tdata + "</label>";
-                             }
-                             return "<label class='label label-default'>" + tdata + "</label>";
-                         }
-                         return "";
-                     }
-                 },
-                 {
-                     "mData": "FundName", "sTitle": "Fund Name"
-                 },
-                 { "mData": "AgreementName", "sTitle": "Agreement Name" },
-                 { "mData": "Broker", "sTitle": "Broker" },
-                 //{ "mData": "AccountName", "sTitle": "Account Name" },
-                 { "mData": "AccountNumber", "sTitle": "Account Number" },
-                 {
-                     "mData": "onBoardingAccountStatus", "sTitle": "Account Status",
-                     "mRender": function (tdata) {
-                         if (tdata != null && tdata != "undefined") {
-                             switch (tdata) {
-                                 case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
-                                 case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
-                                 case "Created": return "<label class='label label-default'>" + "Saved As Draft" + "</label>";
-                             }
-                             return "<label class='label label-default'>" + tdata + "</label>";
-                         }
-                         return "";
-                     }
-                 },
-                 {
-                     "mData": "CreatedBy", "sTitle": "Created By", "mRender": function (data) {
-                         return humanizeEmail(data);
-                     }
-                 },
-                 {
-                     "mData": "CreatedAt",
-                     "sTitle": "Created Date",
-                     "type": "dotnet-date",
-                     "mRender": function (tdata) {
-                         return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
-                     }
-                 },
-                 {
-                     "mData": "UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
-                         return humanizeEmail(data);
-                     }
-                 },
-                 {
-                     "mData": "UpdatedAt",
-                     "sTitle": "Last Modified",
-                     "type": "dotnet-date",
-                     "mRender": function (tdata) {
-                         return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
-                     }
-                 }
-              ],
-              "oLanguage": {
-                  "sSearch": "",
-                  "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Onboarded Accounts",
-                  "sInfoFiltered": " - filtering from _MAX_ Onboarded Accounts"
-              },
-              "createdRow": function (row, data) {
-                  switch (data.onBoardingAccountStatus) {
-                      case "Approved":
-                          $(row).addClass("success");
-                          break;
-                      case "Pending Approval":
-                          $(row).addClass("warning");
-                          break;
-                  }
+            {
+                aaData: data,
+                "bDestroy": true,
+                "columns": [
+                    { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
+                    { "mData": "dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
+                    { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
+                    { "mData": "BrokerId", "sTitle": "BrokerId", visible: false },
+                    {
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": "<i class=\"glyphicon glyphicon-menu-right\" style=\"cursor:pointer;\"></i>"
+                    },
+                    {
+                        "mData": "AccountType", "sTitle": "Entity Type",
+                        "mRender": function (tdata) {
+                            if (tdata != null && tdata != "undefinied") {
+                                switch (tdata) {
+                                    case "Agreement": return "<label class='label label-success'>" + tdata + "</label>";
+                                    case "DDA": return "<label class='label label-warning'>" + tdata + "</label>";
+                                    case "Custody": return "<label class='label label-info'>" + tdata + "</label>";
+                                }
+                                return "<label class='label label-default'>" + tdata + "</label>";
+                            }
+                            return "";
+                        }
+                    },
+                    {
+                        "mData": "FundName", "sTitle": "Fund Name"
+                    },
+                    { "mData": "AgreementName", "sTitle": "Agreement Name" },
+                    { "mData": "Broker", "sTitle": "Broker" },
+                    //{ "mData": "AccountName", "sTitle": "Account Name" },
+                    { "mData": "AccountNumber", "sTitle": "Account Number" },
+                    {
+                        "mData": "onBoardingAccountStatus", "sTitle": "Account Status",
+                        "mRender": function (tdata) {
+                            if (tdata != null && tdata != "undefined") {
+                                switch (tdata) {
+                                    case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
+                                    case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
+                                    case "Created": return "<label class='label label-default'>" + "Saved As Draft" + "</label>";
+                                }
+                                return "<label class='label label-default'>" + tdata + "</label>";
+                            }
+                            return "";
+                        }
+                    },
+                    {
+                        "mData": "CreatedBy", "sTitle": "Created By", "mRender": function (data) {
+                            return humanizeEmail(data);
+                        }
+                    },
+                    {
+                        "mData": "CreatedAt",
+                        "sTitle": "Created Date",
+                        "type": "dotnet-date",
+                        "mRender": function (tdata) {
+                            return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                        }
+                    },
+                    {
+                        "mData": "UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
+                            return humanizeEmail(data);
+                        }
+                    },
+                    {
+                        "mData": "UpdatedAt",
+                        "sTitle": "Last Modified",
+                        "type": "dotnet-date",
+                        "mRender": function (tdata) {
+                            return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                        }
+                    }
+                ],
+                "oLanguage": {
+                    "sSearch": "",
+                    "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Onboarded Accounts",
+                    "sInfoFiltered": " - filtering from _MAX_ Onboarded Accounts"
+                },
+                "createdRow": function (row, data) {
+                    switch (data.onBoardingAccountStatus) {
+                        case "Approved":
+                            $(row).addClass("success");
+                            break;
+                        case "Pending Approval":
+                            $(row).addClass("warning");
+                            break;
+                    }
 
-              },
-              //"scrollX": false,
-              "deferRender": true,
-              // "scroller": true,
-              "orderClasses": false,
-              "sScrollX": "100%",
-              //sDom: "ift",
-              "sScrollY": 450,
-              "sScrollXInner": "100%",
-              "bScrollCollapse": true,
-              "order": [[14, "desc"]],
-              //"bPaginate": false,
-              iDisplayLength: -1
-          });
+                },
+                //"scrollX": false,
+                "deferRender": true,
+                // "scroller": true,
+                "orderClasses": false,
+                "sScrollX": "100%",
+                //sDom: "ift",
+                "sScrollY": 450,
+                "sScrollXInner": "100%",
+                "bScrollCollapse": true,
+                "order": [[14, "desc"]],
+                //"bPaginate": false,
+                iDisplayLength: -1
+            });
 
 
         window.setTimeout(function () {
@@ -2352,90 +2362,90 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $http.get("/Accounts/GetAccountSsiTemplateMap?accountId=" + onBoardingAccountId + "&fundId=" + fId + "&currency=" + currency).then(function (response) {
 
                     tblSsiTemplateRow = $(rowTableId).not(".initialized").addClass("initialized").DataTable(
-                    {
-                        aaData: response.data.ssiTemplateMaps,
-                        rowId: "onBoardingAccountSSITemplateMapId",
-                        "bDestroy": true,
-                        "aoColumns": [
-                            {
-                                "sTitle": "Template Name",
-                                "mData": "TemplateName"
-                            },
-                            {
-                                "mData": "SSITemplateType",
-                                "sTitle": "SSI Template Type",
-                                "mRender": function (tdata) {
-                                    if (tdata === "Broker")
-                                        return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
-                                    if (tdata === "Fee/Expense Payment")
-                                        return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
-                                    return "";
+                        {
+                            aaData: response.data.ssiTemplateMaps,
+                            rowId: "onBoardingAccountSSITemplateMapId",
+                            "bDestroy": true,
+                            "aoColumns": [
+                                {
+                                    "sTitle": "Template Name",
+                                    "mData": "TemplateName"
+                                },
+                                {
+                                    "mData": "SSITemplateType",
+                                    "sTitle": "SSI Template Type",
+                                    "mRender": function (tdata) {
+                                        if (tdata === "Broker")
+                                            return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
+                                        if (tdata === "Fee/Expense Payment")
+                                            return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
+                                        return "";
+                                    }
+                                },
+                                {
+                                    "sTitle": "Account Number",
+                                    "mData": "AccountNumber"
+                                },
+                                {
+                                    "sTitle": "Created By",
+                                    "mData": "CreatedBy", "mRender": function (data) {
+                                        return humanizeEmail(data);
+                                    }
+                                },
+                                {
+                                    "sTitle": "Updated By",
+                                    "mData": "UpdatedBy", "mRender": function (data) {
+                                        return humanizeEmail(data);
+                                    }
+                                },
+                                {
+                                    "mData": "Status",
+                                    "sTitle": "Status",
+                                    "mRender": function (tdata) {
+                                        if (tdata === "Pending Approval")
+                                            return "<label class=\"label ng-show-only label-warning\" style=\"font-size: 12px;\">Pending Approval</label>";
+                                        if (tdata === "Approved")
+                                            return "<label class=\"label ng-show-only label-success\" style=\"font-size: 12px;\">Approved</label>";
+                                        return "";
+                                    }
+                                },
+                                {
+                                    "mData": "onBoardingSSITemplateId",
+                                    "sTitle": "Go to SSI Template",
+                                    "className": "dt-center",
+                                    "mRender": function (tdata, type, row) {
+                                        return "<a class=\"btn btn-primary btn-xs\" id=\"" + tdata + "\" ><i class=\"glyphicon glyphicon-share-alt\"></i></a>";
+                                    }
+
                                 }
-                            },
-                            {
-                                "sTitle": "Account Number",
-                                "mData": "AccountNumber"
-                            },
-                            {
-                                "sTitle": "Created By",
-                                "mData": "CreatedBy", "mRender": function (data) {
-                                    return humanizeEmail(data);
-                                }
-                            },
-                            {
-                                "sTitle": "Updated By",
-                                "mData": "UpdatedBy", "mRender": function (data) {
-                                    return humanizeEmail(data);
-                                }
-                            },
-                            {
-                                "mData": "Status",
-                                "sTitle": "Status",
-                                "mRender": function (tdata) {
-                                    if (tdata === "Pending Approval")
-                                        return "<label class=\"label ng-show-only label-warning\" style=\"font-size: 12px;\">Pending Approval</label>";
-                                    if (tdata === "Approved")
-                                        return "<label class=\"label ng-show-only label-success\" style=\"font-size: 12px;\">Approved</label>";
-                                    return "";
-                                }
-                            },
-                            {
-                                "mData": "onBoardingSSITemplateId",
-                                "sTitle": "Go to SSI Template",
-                                "className": "dt-center",
-                                "mRender": function (tdata, type, row) {
-                                    return "<a class=\"btn btn-primary btn-xs\" id=\"" + tdata + "\" ><i class=\"glyphicon glyphicon-share-alt\"></i></a>";
+                            ],
+                            "createdRow": function (row, rowData) {
+                                switch (rowData.Status) {
+                                    case "Approved":
+                                        $(row).addClass("success");
+                                        break;
+                                    case "Pending Approval":
+                                        $(row).addClass("warning");
+                                        break;
                                 }
 
+                            },
+                            "deferRender": false,
+                            "bScrollCollapse": true,
+                            //"scroller": true,
+                            //sortable: false,
+                            //"sDom": "ift",
+                            //pagination: true,
+                            "sScrollX": "100%",
+                            "sScrollXInner": "100%",
+                            "scrollY": 350,
+                            "order": [[0, "desc"]],
+                            "oLanguage": {
+                                "sSearch": "",
+                                "sEmptyTable": "No ssi templates are available for the account",
+                                "sInfo": "Showing _START_ to _END_ of _TOTAL_ SSI Templates"
                             }
-                        ],
-                        "createdRow": function (row, rowData) {
-                            switch (rowData.Status) {
-                                case "Approved":
-                                    $(row).addClass("success");
-                                    break;
-                                case "Pending Approval":
-                                    $(row).addClass("warning");
-                                    break;
-                            }
-
-                        },
-                        "deferRender": false,
-                        "bScrollCollapse": true,
-                        //"scroller": true,
-                        //sortable: false,
-                        //"sDom": "ift",
-                        //pagination: true,
-                        "sScrollX": "100%",
-                        "sScrollXInner": "100%",
-                        "scrollY": 350,
-                        "order": [[0, "desc"]],
-                        "oLanguage": {
-                            "sSearch": "",
-                            "sEmptyTable": "No ssi templates are available for the account",
-                            "sInfo": "Showing _START_ to _END_ of _TOTAL_ SSI Templates"
-                        }
-                    });
+                        });
 
                     $(".onboardingLoadSpinner").hide();
                 });
