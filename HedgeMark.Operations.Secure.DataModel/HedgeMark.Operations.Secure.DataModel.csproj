@@ -73,21 +73,6 @@
     <Compile Include="aspnet_Users.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="dmaAgreementDocument.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="dmaAgreementOnBoardingAttribute.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="dmaAgreementOnBoardingChecklist.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="dmaAgreementSettlementInstruction.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="dmaAgreementStatu.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="dmaAgreementType.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
@@ -197,9 +182,6 @@
     </Compile>
     <Compile Include="onBoardingCashInstruction.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="onboardingClient.cs">
-      <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingCurrency.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>

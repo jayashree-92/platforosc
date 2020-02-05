@@ -30,17 +30,11 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<aspnet_Roles> aspnet_Roles { get; set; }
         public virtual DbSet<aspnet_Users> aspnet_Users { get; set; }
         public virtual DbSet<hLoginRegistration> hLoginRegistrations { get; set; }
-        public virtual DbSet<dmaAgreementDocument> dmaAgreementDocuments { get; set; }
-        public virtual DbSet<dmaAgreementOnBoardingAttribute> dmaAgreementOnBoardingAttributes { get; set; }
-        public virtual DbSet<dmaAgreementOnBoardingChecklist> dmaAgreementOnBoardingChecklists { get; set; }
-        public virtual DbSet<dmaAgreementSettlementInstruction> dmaAgreementSettlementInstructions { get; set; }
-        public virtual DbSet<dmaAgreementStatu> dmaAgreementStatus { get; set; }
         public virtual DbSet<dmaAgreementType> dmaAgreementTypes { get; set; }
         public virtual DbSet<dmaCounterPartyOnBoarding> dmaCounterPartyOnBoardings { get; set; }
         public virtual DbSet<dmaFundOnBoardPermission> dmaFundOnBoardPermissions { get; set; }
         public virtual DbSet<dmaCounterpartyFamily> dmaCounterpartyFamilies { get; set; }
         public virtual DbSet<dmaOnBoardingContactDetail> dmaOnBoardingContactDetails { get; set; }
-        public virtual DbSet<onboardingClient> onboardingClients { get; set; }
         public virtual DbSet<vw_OnboardedAgreements> vw_OnboardedAgreements { get; set; }
         public virtual DbSet<vw_HFund> vw_HFund { get; set; }
     

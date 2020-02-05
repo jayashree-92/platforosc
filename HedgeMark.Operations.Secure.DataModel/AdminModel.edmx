@@ -99,65 +99,6 @@
           <Property Name="CommunicationEmail" Type="varchar" MaxLength="250" Nullable="false" />
           <Property Name="isProcessID" Type="bit" Nullable="false" />
         </EntityType>
-        <EntityType Name="dmaAgreementDocument">
-          <Key>
-            <PropertyRef Name="dmaAgreementDocumentId" />
-          </Key>
-          <Property Name="dmaAgreementDocumentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="dmaAgreementOnBoardingId" Type="bigint" Nullable="false" />
-          <Property Name="FileName" Type="varchar" MaxLength="300" />
-          <Property Name="RecCreatedBy" Type="varchar" MaxLength="100" />
-          <Property Name="RecCreatedAt" Type="datetime" />
-          <Property Name="FolderType" Type="varchar" MaxLength="100" />
-        </EntityType>
-        <EntityType Name="dmaAgreementOnBoardingAttributes">
-          <Key>
-            <PropertyRef Name="dmaAgreementOnBoardingAttributeId" />
-          </Key>
-          <Property Name="dmaAgreementOnBoardingAttributeId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="AttributeName" Type="nvarchar" MaxLength="4000" />
-          <Property Name="dmaAttributeTypeId" Type="bigint" Nullable="false" />
-          <Property Name="AgreementType" Type="nvarchar" MaxLength="4000" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="IsHMOps" Type="bit" Nullable="false" />
-          <Property Name="SortOrder" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="dmaAgreementOnBoardingChecklist">
-          <Key>
-            <PropertyRef Name="dmaAgreementOnBoardingChecklistId" />
-          </Key>
-          <Property Name="dmaAgreementOnBoardingChecklistId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="dmaAgreementOnBoardingId" Type="bigint" Nullable="false" />
-          <Property Name="dmaAgreementOnBoardingAttributeId" Type="bigint" Nullable="false" />
-          <Property Name="Responsibility" Type="nvarchar" MaxLength="4000" />
-          <Property Name="Status" Type="nvarchar" MaxLength="4000" />
-          <Property Name="Comments" Type="nvarchar" MaxLength="4000" />
-          <Property Name="ResponsibleParty" Type="varchar" MaxLength="500" />
-          <Property Name="DayCount" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="dmaAgreementSettlementInstructions">
-          <Key>
-            <PropertyRef Name="dmaAgreementSettlementInstructionID" />
-          </Key>
-          <Property Name="dmaAgreementSettlementInstructionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="dmaAgreementOnBoardingId" Type="bigint" Nullable="false" />
-          <Property Name="SETTLEMENT_NAME" Type="varchar" MaxLength="100" />
-          <Property Name="BANK_NAME" Type="varchar" MaxLength="100" />
-          <Property Name="BANK_NUMBER" Type="varchar" MaxLength="100" />
-          <Property Name="ACCT_NAME" Type="varchar" MaxLength="100" />
-          <Property Name="ACCT_NUMBER" Type="varchar" MaxLength="100" />
-          <Property Name="FFC_NAME" Type="varchar" MaxLength="100" />
-          <Property Name="FFC_NUMBER" Type="varchar" MaxLength="100" />
-          <Property Name="SETTLEMENT_TYPE" Type="int" />
-        </EntityType>
-        <EntityType Name="dmaAgreementStatus">
-          <Key>
-            <PropertyRef Name="dmaAgreementStatusId" />
-          </Key>
-          <Property Name="dmaAgreementStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="AgreementStatus" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="ExecutionOrder" Type="int" />
-        </EntityType>
         <EntityType Name="dmaAgreementTypes">
           <Key>
             <PropertyRef Name="dmaAgreementTypeId" />
@@ -249,167 +190,6 @@
           <Property Name="Trading" Type="bit" Nullable="false" />
           <Property Name="ClientSubCategory" Type="varchar" MaxLength="20" />
           <Property Name="ComplainceCert" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="onboardingClient">
-          <Key>
-            <PropertyRef Name="dmaClientOnBoardId" />
-          </Key>
-          <Property Name="dmaClientOnBoardId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClientLegalEntityName" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="ClientShortName" Type="varchar" MaxLength="200" />
-          <Property Name="ClientType" Type="varchar" MaxLength="100" />
-          <Property Name="ClientCID" Type="varchar" MaxLength="100" />
-          <Property Name="CDDClassification" Type="varchar" MaxLength="50" />
-          <Property Name="CDDClassificationReason" Type="varchar" MaxLength="3000" />
-          <Property Name="OnboardingCallsFrequency" Type="varchar" MaxLength="50" />
-          <Property Name="OnboardingCallsDays" Type="varchar" MaxLength="50" />
-          <Property Name="OnboardingCallsTime" Type="time" Precision="7" />
-          <Property Name="IsClientCurrentCustodyClientofBNYM" Type="varchar" MaxLength="5" />
-          <Property Name="IsHegdeMarkAccessPlatformClient" Type="varchar" MaxLength="5" />
-          <Property Name="FormDResponsibility" Type="varchar" MaxLength="5" />
-          <Property Name="FATCAResponsibility" Type="varchar" MaxLength="5" />
-          <Property Name="FATCAResponsibilityNotes" Type="varchar" MaxLength="3000" />
-          <Property Name="HedgeMarkVolckerSponsorshipStatus" Type="varchar" MaxLength="5" />
-          <Property Name="CoveredFundStatus" Type="varchar" MaxLength="50" />
-          <Property Name="AMLROorMLROorDeputy" Type="varchar" MaxLength="100" />
-          <Property Name="PPOCorPPOCChangeNotifier" Type="varchar" MaxLength="100" />
-          <Property Name="Notes" Type="varchar" MaxLength="3000" />
-          <Property Name="PlatformName" Type="varchar" MaxLength="100" />
-          <Property Name="FundNamingConvention" Type="varchar" MaxLength="100" />
-          <Property Name="FundStructureId" Type="bigint" />
-          <Property Name="MasterFundDomicileId" Type="bigint" />
-          <Property Name="MasterFundCorporateStructure" Type="varchar" MaxLength="50" />
-          <Property Name="GeneralPartner" Type="varchar" MaxLength="100" />
-          <Property Name="DirectorsoftheGP" Type="varchar" MaxLength="100" />
-          <Property Name="ManagingMemberorManager" Type="varchar" MaxLength="100" />
-          <Property Name="Directors" Type="varchar" MaxLength="100" />
-          <Property Name="AIFM" Type="varchar" MaxLength="100" />
-          <Property Name="Depositary" Type="varchar" MaxLength="100" />
-          <Property Name="FeederFund1DomicileId" Type="bigint" />
-          <Property Name="FeederFund1CorporateStructure" Type="varchar" MaxLength="50" />
-          <Property Name="FeederFund2DomicileId" Type="bigint" />
-          <Property Name="FeederFund2CorporateStructure" Type="varchar" MaxLength="50" />
-          <Property Name="LegalRoleId" Type="bigint" />
-          <Property Name="EntityName" Type="varchar" MaxLength="500" />
-          <Property Name="FundAdministratorsforPlatform" Type="varchar" MaxLength="500" />
-          <Property Name="LegalCounsel" Type="varchar" MaxLength="100" />
-          <Property Name="LegalCounselTradingAgreements" Type="varchar" MaxLength="100" />
-          <Property Name="LegalCounselFundorLocal" Type="varchar" MaxLength="100" />
-          <Property Name="CustodianorBankforSubscriptions" Type="varchar" MaxLength="500" />
-          <Property Name="Auditor" Type="varchar" MaxLength="100" />
-          <Property Name="TaxAdvisor" Type="varchar" MaxLength="100" />
-          <Property Name="CPOName" Type="varchar" MaxLength="100" />
-          <Property Name="PlatformAcceptERISAFunds" Type="varchar" MaxLength="5" />
-          <Property Name="ERISAFunds" Type="varchar" MaxLength="100" />
-          <Property Name="OfferingDocumentsRequired" Type="varchar" MaxLength="5" />
-          <Property Name="FundRegisterwithCIMA" Type="varchar" MaxLength="10" />
-          <Property Name="NumberofCashAccountsNeededforeachFund" Type="varchar" MaxLength="3000" />
-          <Property Name="ShareClasses" Type="varchar" MaxLength="500" />
-          <Property Name="PerformanceFees" Type="varchar" MaxLength="5" />
-          <Property Name="AccountingMethodologyId" Type="bigint" />
-          <Property Name="ResponsiblePartyforCashManagement" Type="varchar" MaxLength="100" />
-          <Property Name="CashManagementApproachforExcessCashBrokers" Type="varchar" MaxLength="5" />
-          <Property Name="CashManagementApproachLevel" Type="varchar" MaxLength="100" />
-          <Property Name="CashManagementApproachMarginRule" Type="varchar" MaxLength="10" />
-          <Property Name="CashManagementApproachforExcessCashCustodian" Type="varchar" MaxLength="5" />
-          <Property Name="EstablishMethodNotificationProxyVoting" Type="varchar" MaxLength="50" />
-          <Property Name="ProxyVotingThirdPartyCompanyName" Type="varchar" MaxLength="100" />
-          <Property Name="EstablishMethodNotificationClassAction" Type="varchar" MaxLength="50" />
-          <Property Name="ClassActionThirdPartyCompanyName" Type="varchar" MaxLength="100" />
-          <Property Name="IsTaxlotAccountingMethodPlatformorFundSpecific" Type="varchar" MaxLength="50" />
-          <Property Name="TaxlotAccountingMethodId" Type="bigint" />
-          <Property Name="ResponsiblePartySendingNAV" Type="varchar" MaxLength="50" />
-          <Property Name="ResponsiblePartySendingNAVAdmin" Type="varchar" MaxLength="100" />
-          <Property Name="FileForm1099MISC" Type="varchar" MaxLength="5" />
-          <Property Name="FileForm1099MISCHMorAdmin" Type="varchar" MaxLength="100" />
-          <Property Name="EstimatesRequiredInvestors" Type="varchar" MaxLength="5" />
-          <Property Name="EstimatesRequiredInvestorsFrequency" Type="varchar" MaxLength="50" />
-          <Property Name="EstimatesRequiredInvestorsType" Type="varchar" MaxLength="10" />
-          <Property Name="EstimatesRequiredInvestorsDeliveryDate" Type="date" />
-          <Property Name="EstimatesRequiredInvestorsNotes" Type="varchar" MaxLength="3000" />
-          <Property Name="NAVFrequency" Type="varchar" MaxLength="100" />
-          <Property Name="TimingofNAVRelease" Type="varchar" MaxLength="100" />
-          <Property Name="ClientSignoffNAV" Type="varchar" MaxLength="500" />
-          <Property Name="ManagerSignoffNAV" Type="varchar" MaxLength="500" />
-          <Property Name="AdminMethodforDeliveryofNAV" Type="varchar" MaxLength="20" />
-          <Property Name="ClientNAVDistributionList" Type="varchar" MaxLength="500" />
-          <Property Name="NumberofDecimalPlacesforNAV" Type="int" />
-          <Property Name="NumberofDecimalPlacesforShares" Type="int" />
-          <Property Name="AccountingStandard" Type="varchar" MaxLength="100" />
-          <Property Name="EstablishCPOReportingProtocols" Type="varchar" MaxLength="100" />
-          <Property Name="ConfirmProtocolApprovingSubscriptionsRedemptions" Type="varchar" MaxLength="100" />
-          <Property Name="EstablishTemplateCapitalActivityTrackerandTiming" Type="varchar" MaxLength="100" />
-          <Property Name="ProtocolNotifyingManagersCapitalActivityorTradingLevel" Type="varchar" MaxLength="100" />
-          <Property Name="RequirementTrackERISAInvestors" Type="varchar" MaxLength="1000" />
-          <Property Name="TalkaboutProcessFlowofInformationonHedging" Type="varchar" MaxLength="100" />
-          <Property Name="AuditedFinancialsRequired" Type="varchar" MaxLength="20" />
-          <Property Name="AuditedFinancialsRequiredPlatform" Type="varchar" MaxLength="5" />
-          <Property Name="AuditedFinancialsRequiredFund" Type="varchar" MaxLength="5" />
-          <Property Name="FinanicalYearEndDate" Type="varchar" MaxLength="20" />
-          <Property Name="FinanicalYearEndDatePlatform" Type="date" />
-          <Property Name="FinanicalYearEndDateFund" Type="date" />
-          <Property Name="InvestmentGuidelineBreachProtocol" Type="varchar" MaxLength="100" />
-          <Property Name="DistributionlistInvestmentGuidelineMonitoring" Type="varchar" MaxLength="1000" />
-          <Property Name="ClientUnderstandReportingNeeds" Type="varchar" MaxLength="100" />
-          <Property Name="DetermineRiskReportingInvestors" Type="varchar" MaxLength="100" />
-          <Property Name="ClientUsersTraining" Type="varchar" MaxLength="100" />
-          <Property Name="SetupTimeTrainingSystem" Type="varchar" MaxLength="100" />
-          <Property Name="Status" Type="varchar" MaxLength="50" />
-          <Property Name="Comments" Type="varchar" MaxLength="3000" />
-          <Property Name="CompanyId" Type="int" />
-          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
-          <Property Name="UpdatedBy" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="CashAccountForMasterFund" Type="varchar" MaxLength="100" />
-          <Property Name="CashAccountForFeeder1Fund" Type="varchar" MaxLength="100" />
-          <Property Name="CashAccountForFeeder2Fund" Type="varchar" MaxLength="100" />
-          <Property Name="OtherDocumentNotes" Type="varchar" MaxLength="100" />
-          <Property Name="FinanicalYearEndFundDate" Type="varchar" MaxLength="100" />
-          <Property Name="FinanicalYearEndPlatformDate" Type="varchar" MaxLength="100" />
-          <Property Name="EstimatesRequiredInvestorDeliveryDate" Type="varchar" MaxLength="100" />
-          <Property Name="AgreementTemplateRelationship" Type="varchar" MaxLength="100" />
-          <Property Name="SweepAtCustodian" Type="varchar" MaxLength="100" />
-          <Property Name="ResponsiblePartySendingNAVHM" Type="varchar" MaxLength="100" />
-          <Property Name="FieldBusinessDay" Type="varchar" MaxLength="100" />
-          <Property Name="MonthEndValuation" Type="varchar" MaxLength="100" />
-          <Property Name="ShareClassNotes" Type="varchar" MaxLength="100" />
-          <Property Name="ExcessCashManagementForBrokerValue" Type="varchar" MaxLength="100" />
-          <Property Name="InvestorAudience" Type="varchar" MaxLength="100" />
-          <Property Name="OfferingDocumentsType" Type="varchar" MaxLength="100" />
-          <Property Name="CPONameValue" Type="varchar" MaxLength="100" />
-          <Property Name="FormDResponsiblePartyForFiling" Type="varchar" MaxLength="100" />
-          <Property Name="NoOfFeeders" Type="varchar" MaxLength="20" />
-          <Property Name="GeneralPartnerFeeder1" Type="varchar" MaxLength="100" />
-          <Property Name="GeneralPartnerFeeder2" Type="varchar" MaxLength="100" />
-          <Property Name="DirectorsOfGPFeeder1" Type="varchar" MaxLength="100" />
-          <Property Name="DirectorsOfGPFeeder2" Type="varchar" MaxLength="100" />
-          <Property Name="ManagingMemberFeeder1" Type="varchar" MaxLength="100" />
-          <Property Name="ManagingMemberFeeder2" Type="varchar" MaxLength="100" />
-          <Property Name="DirectorsFeeder1" Type="varchar" MaxLength="100" />
-          <Property Name="DirectorsFeeder2" Type="varchar" MaxLength="100" />
-          <Property Name="AIFMFeeder1" Type="varchar" MaxLength="100" />
-          <Property Name="AIFMFeeder2" Type="varchar" MaxLength="100" />
-          <Property Name="DepositoryFeeder1" Type="varchar" MaxLength="100" />
-          <Property Name="DepositoryFeeder2" Type="varchar" MaxLength="100" />
-          <Property Name="QPAMDirectionLetter" Type="varchar" MaxLength="100" />
-          <Property Name="ClientChecklistView" Type="varchar" MaxLength="1000" />
-          <Property Name="TargetLaunchDate" Type="datetime" />
-          <Property Name="RiskCSPrimary" Type="varchar" MaxLength="200" />
-          <Property Name="RiskCSSecondaryA" Type="varchar" MaxLength="200" />
-          <Property Name="RiskCSSecondaryB" Type="varchar" MaxLength="200" />
-          <Property Name="TaxReturnPFIC" Type="varchar" MaxLength="100" />
-          <Property Name="ProjectLaunchDate" Type="varchar" MaxLength="100" />
-          <Property Name="DealingDay" Type="varchar" MaxLength="100" />
-          <Property Name="DefaultHmOnboarding" Type="varchar" MaxLength="100" />
-          <Property Name="DefaultHmAccounting" Type="varchar" MaxLength="100" />
-          <Property Name="DefaultHmOps" Type="varchar" MaxLength="100" />
-          <Property Name="DefaultHmStructuring" Type="varchar" MaxLength="100" />
-          <Property Name="HmRiskClientServiceAndAnalytics" Type="varchar" MaxLength="100" />
-          <Property Name="Tier" Type="varchar" MaxLength="50" />
-          <Property Name="ConfirmProtocolForSubscriptionRedemption" Type="varchar" MaxLength="2000" />
-          <Property Name="PlatformCustodian" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -557,18 +337,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId">
-          <End Role="dmaAgreementOnBoardingAttributes" Type="Self.dmaAgreementOnBoardingAttributes" Multiplicity="1" />
-          <End Role="dmaAgreementOnBoardingChecklist" Type="Self.dmaAgreementOnBoardingChecklist" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="dmaAgreementOnBoardingAttributes">
-              <PropertyRef Name="dmaAgreementOnBoardingAttributeId" />
-            </Principal>
-            <Dependent Role="dmaAgreementOnBoardingChecklist">
-              <PropertyRef Name="dmaAgreementOnBoardingAttributeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId">
           <End Role="dmaCounterpartyFamily" Type="Self.dmaCounterpartyFamily" Multiplicity="0..1" />
           <End Role="dmaCounterPartyOnBoarding" Type="Self.dmaCounterPartyOnBoarding" Multiplicity="*" />
@@ -590,17 +358,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <EntitySet Name="aspnet_Users" EntityType="Self.aspnet_Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="aspnet_UsersInRoles" EntityType="Self.aspnet_UsersInRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hLoginRegistration" EntityType="Self.hLoginRegistration" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="dmaAgreementDocument" EntityType="Self.dmaAgreementDocument" Schema="HMADMIN" store:Type="Tables" />
-          <EntitySet Name="dmaAgreementOnBoardingAttributes" EntityType="Self.dmaAgreementOnBoardingAttributes" Schema="HMADMIN" store:Type="Tables" />
-          <EntitySet Name="dmaAgreementOnBoardingChecklist" EntityType="Self.dmaAgreementOnBoardingChecklist" Schema="HMADMIN" store:Type="Tables" />
-          <EntitySet Name="dmaAgreementSettlementInstructions" EntityType="Self.dmaAgreementSettlementInstructions" Schema="HMADMIN" store:Type="Tables" />
-          <EntitySet Name="dmaAgreementStatus" EntityType="Self.dmaAgreementStatus" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaAgreementTypes" EntityType="Self.dmaAgreementTypes" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaCounterpartyFamily" EntityType="Self.dmaCounterpartyFamily" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaCounterPartyOnBoarding" EntityType="Self.dmaCounterPartyOnBoarding" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaFundOnBoardPermissions" EntityType="Self.dmaFundOnBoardPermissions" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaOnBoardingContactDetail" EntityType="Self.dmaOnBoardingContactDetail" Schema="HMADMIN" store:Type="Tables" />
-          <EntitySet Name="onboardingClient" EntityType="Self.onboardingClient" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="vw_HFund" EntityType="Self.vw_HFund" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vw_HFund].[intFundID] AS [intFundID], 
@@ -710,10 +472,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
             <End Role="aspnet_Users" EntitySet="aspnet_Users" />
             <End Role="aspnet_UsersInRoles" EntitySet="aspnet_UsersInRoles" />
           </AssociationSet>
-          <AssociationSet Name="FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId" Association="Self.FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId">
-            <End Role="dmaAgreementOnBoardingAttributes" EntitySet="dmaAgreementOnBoardingAttributes" />
-            <End Role="dmaAgreementOnBoardingChecklist" EntitySet="dmaAgreementOnBoardingChecklist" />
-          </AssociationSet>
           <AssociationSet Name="FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId" Association="Self.FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId">
             <End Role="dmaCounterpartyFamily" EntitySet="dmaCounterpartyFamily" />
             <End Role="dmaCounterPartyOnBoarding" EntitySet="dmaCounterPartyOnBoarding" />
@@ -819,16 +577,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
             <Parameter Name="userID" Mode="In" Type="String" />
             <Parameter Name="userType" Mode="In" Type="String" />
           </FunctionImport>
-          <EntitySet Name="dmaAgreementDocuments" EntityType="AdminModel.dmaAgreementDocument" />
-          <EntitySet Name="dmaAgreementOnBoardingAttributes" EntityType="AdminModel.dmaAgreementOnBoardingAttribute" />
-          <EntitySet Name="dmaAgreementOnBoardingChecklists" EntityType="AdminModel.dmaAgreementOnBoardingChecklist" />
-          <EntitySet Name="dmaAgreementSettlementInstructions" EntityType="AdminModel.dmaAgreementSettlementInstruction" />
-          <EntitySet Name="dmaAgreementStatus" EntityType="AdminModel.dmaAgreementStatu" />
           <EntitySet Name="dmaAgreementTypes" EntityType="AdminModel.dmaAgreementType" />
-          <AssociationSet Name="FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId" Association="AdminModel.FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId">
-            <End Role="dmaAgreementOnBoardingAttribute" EntitySet="dmaAgreementOnBoardingAttributes" />
-            <End Role="dmaAgreementOnBoardingChecklist" EntitySet="dmaAgreementOnBoardingChecklists" />
-          </AssociationSet>
           <EntitySet Name="dmaCounterPartyOnBoardings" EntityType="AdminModel.dmaCounterPartyOnBoarding" />
           <EntitySet Name="dmaFundOnBoardPermissions" EntityType="AdminModel.dmaFundOnBoardPermission" />
           <AssociationSet Name="aspnet_UsersInRoles" Association="AdminModel.aspnet_UsersInRoles">
@@ -841,7 +590,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
             <End Role="dmaCounterPartyOnBoarding" EntitySet="dmaCounterPartyOnBoardings" />
           </AssociationSet>
           <EntitySet Name="dmaOnBoardingContactDetails" EntityType="AdminModel.dmaOnBoardingContactDetail" />
-          <EntitySet Name="onboardingClients" EntityType="AdminModel.onboardingClient" />
           <EntitySet Name="vw_OnboardedAgreements" EntityType="AdminModel.vw_OnboardedAgreements" />
           <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
           </EntityContainer>
@@ -911,67 +659,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Type="String" Name="CommunicationEmail" Nullable="false" MaxLength="250" />
           <Property Type="Boolean" Name="isProcessID" Nullable="false" />
         </ComplexType>
-        <EntityType Name="dmaAgreementDocument">
-          <Key>
-            <PropertyRef Name="dmaAgreementDocumentId" />
-          </Key>
-          <Property Name="dmaAgreementDocumentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="dmaAgreementOnBoardingId" Type="Int64" Nullable="false" />
-          <Property Name="FileName" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="RecCreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="RecCreatedAt" Type="DateTime" Precision="3" />
-          <Property Name="FolderType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="dmaAgreementOnBoardingAttribute">
-          <Key>
-            <PropertyRef Name="dmaAgreementOnBoardingAttributeId" />
-          </Key>
-          <Property Name="dmaAgreementOnBoardingAttributeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AttributeName" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <Property Name="dmaAttributeTypeId" Type="Int64" Nullable="false" />
-          <Property Name="AgreementType" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="IsHMOps" Type="Boolean" Nullable="false" />
-          <Property Name="SortOrder" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="dmaAgreementOnBoardingChecklists" Relationship="AdminModel.FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId" FromRole="dmaAgreementOnBoardingAttribute" ToRole="dmaAgreementOnBoardingChecklist" />
-        </EntityType>
-        <EntityType Name="dmaAgreementOnBoardingChecklist">
-          <Key>
-            <PropertyRef Name="dmaAgreementOnBoardingChecklistId" />
-          </Key>
-          <Property Name="dmaAgreementOnBoardingChecklistId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="dmaAgreementOnBoardingId" Type="Int64" Nullable="false" />
-          <Property Name="dmaAgreementOnBoardingAttributeId" Type="Int64" Nullable="false" />
-          <Property Name="Responsibility" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <Property Name="Comments" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <Property Name="ResponsibleParty" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="DayCount" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="dmaAgreementOnBoardingAttribute" Relationship="AdminModel.FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId" FromRole="dmaAgreementOnBoardingChecklist" ToRole="dmaAgreementOnBoardingAttribute" />
-        </EntityType>
-        <EntityType Name="dmaAgreementSettlementInstruction">
-          <Key>
-            <PropertyRef Name="dmaAgreementSettlementInstructionID" />
-          </Key>
-          <Property Name="dmaAgreementSettlementInstructionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="dmaAgreementOnBoardingId" Type="Int64" Nullable="false" />
-          <Property Name="SETTLEMENT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BANK_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BANK_NUMBER" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ACCT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ACCT_NUMBER" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FFC_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FFC_NUMBER" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SETTLEMENT_TYPE" Type="Int32" />
-        </EntityType>
-        <EntityType Name="dmaAgreementStatu">
-          <Key>
-            <PropertyRef Name="dmaAgreementStatusId" />
-          </Key>
-          <Property Name="dmaAgreementStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AgreementStatus" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ExecutionOrder" Type="Int32" />
-        </EntityType>
         <EntityType Name="dmaAgreementType">
           <Key>
             <PropertyRef Name="dmaAgreementTypeId" />
@@ -979,18 +666,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="dmaAgreementTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="AgreementType" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
-        <Association Name="FK_dmaAgreementOnBoardingChecklist_dmaAgreementOnBoardingAttributeId">
-          <End Type="AdminModel.dmaAgreementOnBoardingAttribute" Role="dmaAgreementOnBoardingAttribute" Multiplicity="1" />
-          <End Type="AdminModel.dmaAgreementOnBoardingChecklist" Role="dmaAgreementOnBoardingChecklist" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="dmaAgreementOnBoardingAttribute">
-              <PropertyRef Name="dmaAgreementOnBoardingAttributeId" />
-            </Principal>
-            <Dependent Role="dmaAgreementOnBoardingChecklist">
-              <PropertyRef Name="dmaAgreementOnBoardingAttributeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="dmaCounterPartyOnBoarding">
           <Key>
             <PropertyRef Name="dmaCounterPartyOnBoardId" />
@@ -1093,167 +768,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="Onboarding" Type="Boolean" Nullable="false" />
           <Property Name="ClientSubCategory" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ComplainceCert" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="onboardingClient">
-          <Key>
-            <PropertyRef Name="dmaClientOnBoardId" />
-          </Key>
-          <Property Name="dmaClientOnBoardId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ClientLegalEntityName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ClientShortName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ClientType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ClientCID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CDDClassification" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CDDClassificationReason" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="OnboardingCallsFrequency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="OnboardingCallsDays" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="OnboardingCallsTime" Type="Time" Precision="7" />
-          <Property Name="IsClientCurrentCustodyClientofBNYM" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="IsHegdeMarkAccessPlatformClient" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="FormDResponsibility" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="FATCAResponsibility" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="FATCAResponsibilityNotes" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="HedgeMarkVolckerSponsorshipStatus" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="CoveredFundStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="AMLROorMLROorDeputy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PPOCorPPOCChangeNotifier" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Notes" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="PlatformName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FundNamingConvention" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FundStructureId" Type="Int64" />
-          <Property Name="MasterFundDomicileId" Type="Int64" />
-          <Property Name="MasterFundCorporateStructure" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="GeneralPartner" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DirectorsoftheGP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ManagingMemberorManager" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Directors" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="AIFM" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Depositary" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FeederFund1DomicileId" Type="Int64" />
-          <Property Name="FeederFund1CorporateStructure" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FeederFund2DomicileId" Type="Int64" />
-          <Property Name="FeederFund2CorporateStructure" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LegalRoleId" Type="Int64" />
-          <Property Name="EntityName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="FundAdministratorsforPlatform" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="LegalCounsel" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="LegalCounselTradingAgreements" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="LegalCounselFundorLocal" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CustodianorBankforSubscriptions" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="Auditor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="TaxAdvisor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CPOName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PlatformAcceptERISAFunds" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="ERISAFunds" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="OfferingDocumentsRequired" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="FundRegisterwithCIMA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="NumberofCashAccountsNeededforeachFund" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="ShareClasses" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="PerformanceFees" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="AccountingMethodologyId" Type="Int64" />
-          <Property Name="ResponsiblePartyforCashManagement" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CashManagementApproachforExcessCashBrokers" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="CashManagementApproachLevel" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CashManagementApproachMarginRule" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="CashManagementApproachforExcessCashCustodian" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="EstablishMethodNotificationProxyVoting" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ProxyVotingThirdPartyCompanyName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="EstablishMethodNotificationClassAction" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ClassActionThirdPartyCompanyName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IsTaxlotAccountingMethodPlatformorFundSpecific" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="TaxlotAccountingMethodId" Type="Int64" />
-          <Property Name="ResponsiblePartySendingNAV" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ResponsiblePartySendingNAVAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FileForm1099MISC" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="FileForm1099MISCHMorAdmin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="EstimatesRequiredInvestors" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="EstimatesRequiredInvestorsFrequency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="EstimatesRequiredInvestorsType" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="EstimatesRequiredInvestorsDeliveryDate" Type="DateTime" Precision="0" />
-          <Property Name="EstimatesRequiredInvestorsNotes" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="NAVFrequency" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="TimingofNAVRelease" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ClientSignoffNAV" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ManagerSignoffNAV" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="AdminMethodforDeliveryofNAV" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ClientNAVDistributionList" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="NumberofDecimalPlacesforNAV" Type="Int32" />
-          <Property Name="NumberofDecimalPlacesforShares" Type="Int32" />
-          <Property Name="AccountingStandard" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="EstablishCPOReportingProtocols" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ConfirmProtocolApprovingSubscriptionsRedemptions" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="EstablishTemplateCapitalActivityTrackerandTiming" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ProtocolNotifyingManagersCapitalActivityorTradingLevel" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="RequirementTrackERISAInvestors" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="TalkaboutProcessFlowofInformationonHedging" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="AuditedFinancialsRequired" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="AuditedFinancialsRequiredPlatform" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="AuditedFinancialsRequiredFund" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="FinanicalYearEndDate" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FinanicalYearEndDatePlatform" Type="DateTime" Precision="0" />
-          <Property Name="FinanicalYearEndDateFund" Type="DateTime" Precision="0" />
-          <Property Name="InvestmentGuidelineBreachProtocol" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DistributionlistInvestmentGuidelineMonitoring" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="ClientUnderstandReportingNeeds" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DetermineRiskReportingInvestors" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ClientUsersTraining" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SetupTimeTrainingSystem" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Comments" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
-          <Property Name="CompanyId" Type="Int32" />
-          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="TargetLaunchDate" Type="DateTime" Precision="3" />
-          <Property Name="RiskCSPrimary" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="RiskCSSecondaryA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="RiskCSSecondaryB" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="NoOfFeeders" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="GeneralPartnerFeeder1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="GeneralPartnerFeeder2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DirectorsOfGPFeeder1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DirectorsOfGPFeeder2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ManagingMemberFeeder1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ManagingMemberFeeder2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DirectorsFeeder1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DirectorsFeeder2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="AIFMFeeder1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="AIFMFeeder2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DepositoryFeeder1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DepositoryFeeder2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="QPAMDirectionLetter" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FormDResponsiblePartyForFiling" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="OfferingDocumentsType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="InvestorAudience" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CPONameValue" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ExcessCashManagementForBrokerValue" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ShareClassNotes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ResponsiblePartySendingNAVHM" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FieldBusinessDay" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="MonthEndValuation" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ClientChecklistView" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="AgreementTemplateRelationship" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SweepAtCustodian" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="EstimatesRequiredInvestorDeliveryDate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FinanicalYearEndPlatformDate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FinanicalYearEndFundDate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="OtherDocumentNotes" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CashAccountForMasterFund" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CashAccountForFeeder1Fund" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CashAccountForFeeder2Fund" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="TaxReturnPFIC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ProjectLaunchDate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DealingDay" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DefaultHmOnboarding" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DefaultHmAccounting" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DefaultHmOps" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DefaultHmStructuring" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="HmRiskClientServiceAndAnalytics" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Tier" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ConfirmProtocolForSubscriptionRedemption" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <Property Name="PlatformCustodian" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="vw_OnboardedAgreements">
           <Key>
@@ -1538,70 +1052,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="dmaAgreementDocuments">
-            <EntityTypeMapping TypeName="AdminModel.dmaAgreementDocument">
-              <MappingFragment StoreEntitySet="dmaAgreementDocument">
-                <ScalarProperty Name="FolderType" ColumnName="FolderType" />
-                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
-                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
-                <ScalarProperty Name="dmaAgreementDocumentId" ColumnName="dmaAgreementDocumentId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="dmaAgreementOnBoardingAttributes">
-            <EntityTypeMapping TypeName="AdminModel.dmaAgreementOnBoardingAttribute">
-              <MappingFragment StoreEntitySet="dmaAgreementOnBoardingAttributes">
-                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
-                <ScalarProperty Name="IsHMOps" ColumnName="IsHMOps" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="AgreementType" ColumnName="AgreementType" />
-                <ScalarProperty Name="dmaAttributeTypeId" ColumnName="dmaAttributeTypeId" />
-                <ScalarProperty Name="AttributeName" ColumnName="AttributeName" />
-                <ScalarProperty Name="dmaAgreementOnBoardingAttributeId" ColumnName="dmaAgreementOnBoardingAttributeId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="dmaAgreementOnBoardingChecklists">
-            <EntityTypeMapping TypeName="AdminModel.dmaAgreementOnBoardingChecklist">
-              <MappingFragment StoreEntitySet="dmaAgreementOnBoardingChecklist">
-                <ScalarProperty Name="DayCount" ColumnName="DayCount" />
-                <ScalarProperty Name="ResponsibleParty" ColumnName="ResponsibleParty" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Responsibility" ColumnName="Responsibility" />
-                <ScalarProperty Name="dmaAgreementOnBoardingAttributeId" ColumnName="dmaAgreementOnBoardingAttributeId" />
-                <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
-                <ScalarProperty Name="dmaAgreementOnBoardingChecklistId" ColumnName="dmaAgreementOnBoardingChecklistId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="dmaAgreementSettlementInstructions">
-            <EntityTypeMapping TypeName="AdminModel.dmaAgreementSettlementInstruction">
-              <MappingFragment StoreEntitySet="dmaAgreementSettlementInstructions">
-                <ScalarProperty Name="SETTLEMENT_TYPE" ColumnName="SETTLEMENT_TYPE" />
-                <ScalarProperty Name="FFC_NUMBER" ColumnName="FFC_NUMBER" />
-                <ScalarProperty Name="FFC_NAME" ColumnName="FFC_NAME" />
-                <ScalarProperty Name="ACCT_NUMBER" ColumnName="ACCT_NUMBER" />
-                <ScalarProperty Name="ACCT_NAME" ColumnName="ACCT_NAME" />
-                <ScalarProperty Name="BANK_NUMBER" ColumnName="BANK_NUMBER" />
-                <ScalarProperty Name="BANK_NAME" ColumnName="BANK_NAME" />
-                <ScalarProperty Name="SETTLEMENT_NAME" ColumnName="SETTLEMENT_NAME" />
-                <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
-                <ScalarProperty Name="dmaAgreementSettlementInstructionID" ColumnName="dmaAgreementSettlementInstructionID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="dmaAgreementStatus">
-            <EntityTypeMapping TypeName="AdminModel.dmaAgreementStatu">
-              <MappingFragment StoreEntitySet="dmaAgreementStatus">
-                <ScalarProperty Name="ExecutionOrder" ColumnName="ExecutionOrder" />
-                <ScalarProperty Name="AgreementStatus" ColumnName="AgreementStatus" />
-                <ScalarProperty Name="dmaAgreementStatusId" ColumnName="dmaAgreementStatusId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="dmaAgreementTypes">
             <EntityTypeMapping TypeName="AdminModel.dmaAgreementType">
               <MappingFragment StoreEntitySet="dmaAgreementTypes">
@@ -1704,168 +1154,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
                 <ScalarProperty Name="dmaOnBoardingEntityId" ColumnName="dmaOnBoardingEntityId" />
                 <ScalarProperty Name="dmaOnBoardingTypeId" ColumnName="dmaOnBoardingTypeId" />
                 <ScalarProperty Name="dmaOnBoardingContactDetailId" ColumnName="dmaOnBoardingContactDetailId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="onboardingClients">
-            <EntityTypeMapping TypeName="AdminModel.onboardingClient">
-              <MappingFragment StoreEntitySet="onboardingClient">
-                <ScalarProperty Name="PlatformCustodian" ColumnName="PlatformCustodian" />
-                <ScalarProperty Name="ConfirmProtocolForSubscriptionRedemption" ColumnName="ConfirmProtocolForSubscriptionRedemption" />
-                <ScalarProperty Name="Tier" ColumnName="Tier" />
-                <ScalarProperty Name="HmRiskClientServiceAndAnalytics" ColumnName="HmRiskClientServiceAndAnalytics" />
-                <ScalarProperty Name="DefaultHmStructuring" ColumnName="DefaultHmStructuring" />
-                <ScalarProperty Name="DefaultHmOps" ColumnName="DefaultHmOps" />
-                <ScalarProperty Name="DefaultHmAccounting" ColumnName="DefaultHmAccounting" />
-                <ScalarProperty Name="DefaultHmOnboarding" ColumnName="DefaultHmOnboarding" />
-                <ScalarProperty Name="DealingDay" ColumnName="DealingDay" />
-                <ScalarProperty Name="ProjectLaunchDate" ColumnName="ProjectLaunchDate" />
-                <ScalarProperty Name="TaxReturnPFIC" ColumnName="TaxReturnPFIC" />
-                <ScalarProperty Name="CashAccountForFeeder2Fund" ColumnName="CashAccountForFeeder2Fund" />
-                <ScalarProperty Name="CashAccountForFeeder1Fund" ColumnName="CashAccountForFeeder1Fund" />
-                <ScalarProperty Name="CashAccountForMasterFund" ColumnName="CashAccountForMasterFund" />
-                <ScalarProperty Name="OtherDocumentNotes" ColumnName="OtherDocumentNotes" />
-                <ScalarProperty Name="FinanicalYearEndFundDate" ColumnName="FinanicalYearEndFundDate" />
-                <ScalarProperty Name="FinanicalYearEndPlatformDate" ColumnName="FinanicalYearEndPlatformDate" />
-                <ScalarProperty Name="EstimatesRequiredInvestorDeliveryDate" ColumnName="EstimatesRequiredInvestorDeliveryDate" />
-                <ScalarProperty Name="SweepAtCustodian" ColumnName="SweepAtCustodian" />
-                <ScalarProperty Name="AgreementTemplateRelationship" ColumnName="AgreementTemplateRelationship" />
-                <ScalarProperty Name="ClientChecklistView" ColumnName="ClientChecklistView" />
-                <ScalarProperty Name="MonthEndValuation" ColumnName="MonthEndValuation" />
-                <ScalarProperty Name="FieldBusinessDay" ColumnName="FieldBusinessDay" />
-                <ScalarProperty Name="ResponsiblePartySendingNAVHM" ColumnName="ResponsiblePartySendingNAVHM" />
-                <ScalarProperty Name="ShareClassNotes" ColumnName="ShareClassNotes" />
-                <ScalarProperty Name="ExcessCashManagementForBrokerValue" ColumnName="ExcessCashManagementForBrokerValue" />
-                <ScalarProperty Name="CPONameValue" ColumnName="CPONameValue" />
-                <ScalarProperty Name="InvestorAudience" ColumnName="InvestorAudience" />
-                <ScalarProperty Name="OfferingDocumentsType" ColumnName="OfferingDocumentsType" />
-                <ScalarProperty Name="FormDResponsiblePartyForFiling" ColumnName="FormDResponsiblePartyForFiling" />
-                <ScalarProperty Name="QPAMDirectionLetter" ColumnName="QPAMDirectionLetter" />
-                <ScalarProperty Name="DepositoryFeeder2" ColumnName="DepositoryFeeder2" />
-                <ScalarProperty Name="DepositoryFeeder1" ColumnName="DepositoryFeeder1" />
-                <ScalarProperty Name="AIFMFeeder2" ColumnName="AIFMFeeder2" />
-                <ScalarProperty Name="AIFMFeeder1" ColumnName="AIFMFeeder1" />
-                <ScalarProperty Name="DirectorsFeeder2" ColumnName="DirectorsFeeder2" />
-                <ScalarProperty Name="DirectorsFeeder1" ColumnName="DirectorsFeeder1" />
-                <ScalarProperty Name="ManagingMemberFeeder2" ColumnName="ManagingMemberFeeder2" />
-                <ScalarProperty Name="ManagingMemberFeeder1" ColumnName="ManagingMemberFeeder1" />
-                <ScalarProperty Name="DirectorsOfGPFeeder2" ColumnName="DirectorsOfGPFeeder2" />
-                <ScalarProperty Name="DirectorsOfGPFeeder1" ColumnName="DirectorsOfGPFeeder1" />
-                <ScalarProperty Name="GeneralPartnerFeeder2" ColumnName="GeneralPartnerFeeder2" />
-                <ScalarProperty Name="GeneralPartnerFeeder1" ColumnName="GeneralPartnerFeeder1" />
-                <ScalarProperty Name="NoOfFeeders" ColumnName="NoOfFeeders" />
-                <ScalarProperty Name="RiskCSSecondaryB" ColumnName="RiskCSSecondaryB" />
-                <ScalarProperty Name="RiskCSSecondaryA" ColumnName="RiskCSSecondaryA" />
-                <ScalarProperty Name="RiskCSPrimary" ColumnName="RiskCSPrimary" />
-                <ScalarProperty Name="TargetLaunchDate" ColumnName="TargetLaunchDate" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="SetupTimeTrainingSystem" ColumnName="SetupTimeTrainingSystem" />
-                <ScalarProperty Name="ClientUsersTraining" ColumnName="ClientUsersTraining" />
-                <ScalarProperty Name="DetermineRiskReportingInvestors" ColumnName="DetermineRiskReportingInvestors" />
-                <ScalarProperty Name="ClientUnderstandReportingNeeds" ColumnName="ClientUnderstandReportingNeeds" />
-                <ScalarProperty Name="DistributionlistInvestmentGuidelineMonitoring" ColumnName="DistributionlistInvestmentGuidelineMonitoring" />
-                <ScalarProperty Name="InvestmentGuidelineBreachProtocol" ColumnName="InvestmentGuidelineBreachProtocol" />
-                <ScalarProperty Name="FinanicalYearEndDateFund" ColumnName="FinanicalYearEndDateFund" />
-                <ScalarProperty Name="FinanicalYearEndDatePlatform" ColumnName="FinanicalYearEndDatePlatform" />
-                <ScalarProperty Name="FinanicalYearEndDate" ColumnName="FinanicalYearEndDate" />
-                <ScalarProperty Name="AuditedFinancialsRequiredFund" ColumnName="AuditedFinancialsRequiredFund" />
-                <ScalarProperty Name="AuditedFinancialsRequiredPlatform" ColumnName="AuditedFinancialsRequiredPlatform" />
-                <ScalarProperty Name="AuditedFinancialsRequired" ColumnName="AuditedFinancialsRequired" />
-                <ScalarProperty Name="TalkaboutProcessFlowofInformationonHedging" ColumnName="TalkaboutProcessFlowofInformationonHedging" />
-                <ScalarProperty Name="RequirementTrackERISAInvestors" ColumnName="RequirementTrackERISAInvestors" />
-                <ScalarProperty Name="ProtocolNotifyingManagersCapitalActivityorTradingLevel" ColumnName="ProtocolNotifyingManagersCapitalActivityorTradingLevel" />
-                <ScalarProperty Name="EstablishTemplateCapitalActivityTrackerandTiming" ColumnName="EstablishTemplateCapitalActivityTrackerandTiming" />
-                <ScalarProperty Name="ConfirmProtocolApprovingSubscriptionsRedemptions" ColumnName="ConfirmProtocolApprovingSubscriptionsRedemptions" />
-                <ScalarProperty Name="EstablishCPOReportingProtocols" ColumnName="EstablishCPOReportingProtocols" />
-                <ScalarProperty Name="AccountingStandard" ColumnName="AccountingStandard" />
-                <ScalarProperty Name="NumberofDecimalPlacesforShares" ColumnName="NumberofDecimalPlacesforShares" />
-                <ScalarProperty Name="NumberofDecimalPlacesforNAV" ColumnName="NumberofDecimalPlacesforNAV" />
-                <ScalarProperty Name="ClientNAVDistributionList" ColumnName="ClientNAVDistributionList" />
-                <ScalarProperty Name="AdminMethodforDeliveryofNAV" ColumnName="AdminMethodforDeliveryofNAV" />
-                <ScalarProperty Name="ManagerSignoffNAV" ColumnName="ManagerSignoffNAV" />
-                <ScalarProperty Name="ClientSignoffNAV" ColumnName="ClientSignoffNAV" />
-                <ScalarProperty Name="TimingofNAVRelease" ColumnName="TimingofNAVRelease" />
-                <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />
-                <ScalarProperty Name="EstimatesRequiredInvestorsNotes" ColumnName="EstimatesRequiredInvestorsNotes" />
-                <ScalarProperty Name="EstimatesRequiredInvestorsDeliveryDate" ColumnName="EstimatesRequiredInvestorsDeliveryDate" />
-                <ScalarProperty Name="EstimatesRequiredInvestorsType" ColumnName="EstimatesRequiredInvestorsType" />
-                <ScalarProperty Name="EstimatesRequiredInvestorsFrequency" ColumnName="EstimatesRequiredInvestorsFrequency" />
-                <ScalarProperty Name="EstimatesRequiredInvestors" ColumnName="EstimatesRequiredInvestors" />
-                <ScalarProperty Name="FileForm1099MISCHMorAdmin" ColumnName="FileForm1099MISCHMorAdmin" />
-                <ScalarProperty Name="FileForm1099MISC" ColumnName="FileForm1099MISC" />
-                <ScalarProperty Name="ResponsiblePartySendingNAVAdmin" ColumnName="ResponsiblePartySendingNAVAdmin" />
-                <ScalarProperty Name="ResponsiblePartySendingNAV" ColumnName="ResponsiblePartySendingNAV" />
-                <ScalarProperty Name="TaxlotAccountingMethodId" ColumnName="TaxlotAccountingMethodId" />
-                <ScalarProperty Name="IsTaxlotAccountingMethodPlatformorFundSpecific" ColumnName="IsTaxlotAccountingMethodPlatformorFundSpecific" />
-                <ScalarProperty Name="ClassActionThirdPartyCompanyName" ColumnName="ClassActionThirdPartyCompanyName" />
-                <ScalarProperty Name="EstablishMethodNotificationClassAction" ColumnName="EstablishMethodNotificationClassAction" />
-                <ScalarProperty Name="ProxyVotingThirdPartyCompanyName" ColumnName="ProxyVotingThirdPartyCompanyName" />
-                <ScalarProperty Name="EstablishMethodNotificationProxyVoting" ColumnName="EstablishMethodNotificationProxyVoting" />
-                <ScalarProperty Name="CashManagementApproachforExcessCashCustodian" ColumnName="CashManagementApproachforExcessCashCustodian" />
-                <ScalarProperty Name="CashManagementApproachMarginRule" ColumnName="CashManagementApproachMarginRule" />
-                <ScalarProperty Name="CashManagementApproachLevel" ColumnName="CashManagementApproachLevel" />
-                <ScalarProperty Name="CashManagementApproachforExcessCashBrokers" ColumnName="CashManagementApproachforExcessCashBrokers" />
-                <ScalarProperty Name="ResponsiblePartyforCashManagement" ColumnName="ResponsiblePartyforCashManagement" />
-                <ScalarProperty Name="AccountingMethodologyId" ColumnName="AccountingMethodologyId" />
-                <ScalarProperty Name="PerformanceFees" ColumnName="PerformanceFees" />
-                <ScalarProperty Name="ShareClasses" ColumnName="ShareClasses" />
-                <ScalarProperty Name="NumberofCashAccountsNeededforeachFund" ColumnName="NumberofCashAccountsNeededforeachFund" />
-                <ScalarProperty Name="FundRegisterwithCIMA" ColumnName="FundRegisterwithCIMA" />
-                <ScalarProperty Name="OfferingDocumentsRequired" ColumnName="OfferingDocumentsRequired" />
-                <ScalarProperty Name="ERISAFunds" ColumnName="ERISAFunds" />
-                <ScalarProperty Name="PlatformAcceptERISAFunds" ColumnName="PlatformAcceptERISAFunds" />
-                <ScalarProperty Name="CPOName" ColumnName="CPOName" />
-                <ScalarProperty Name="TaxAdvisor" ColumnName="TaxAdvisor" />
-                <ScalarProperty Name="Auditor" ColumnName="Auditor" />
-                <ScalarProperty Name="CustodianorBankforSubscriptions" ColumnName="CustodianorBankforSubscriptions" />
-                <ScalarProperty Name="LegalCounselFundorLocal" ColumnName="LegalCounselFundorLocal" />
-                <ScalarProperty Name="LegalCounselTradingAgreements" ColumnName="LegalCounselTradingAgreements" />
-                <ScalarProperty Name="LegalCounsel" ColumnName="LegalCounsel" />
-                <ScalarProperty Name="FundAdministratorsforPlatform" ColumnName="FundAdministratorsforPlatform" />
-                <ScalarProperty Name="EntityName" ColumnName="EntityName" />
-                <ScalarProperty Name="LegalRoleId" ColumnName="LegalRoleId" />
-                <ScalarProperty Name="FeederFund2CorporateStructure" ColumnName="FeederFund2CorporateStructure" />
-                <ScalarProperty Name="FeederFund2DomicileId" ColumnName="FeederFund2DomicileId" />
-                <ScalarProperty Name="FeederFund1CorporateStructure" ColumnName="FeederFund1CorporateStructure" />
-                <ScalarProperty Name="FeederFund1DomicileId" ColumnName="FeederFund1DomicileId" />
-                <ScalarProperty Name="Depositary" ColumnName="Depositary" />
-                <ScalarProperty Name="AIFM" ColumnName="AIFM" />
-                <ScalarProperty Name="Directors" ColumnName="Directors" />
-                <ScalarProperty Name="ManagingMemberorManager" ColumnName="ManagingMemberorManager" />
-                <ScalarProperty Name="DirectorsoftheGP" ColumnName="DirectorsoftheGP" />
-                <ScalarProperty Name="GeneralPartner" ColumnName="GeneralPartner" />
-                <ScalarProperty Name="MasterFundCorporateStructure" ColumnName="MasterFundCorporateStructure" />
-                <ScalarProperty Name="MasterFundDomicileId" ColumnName="MasterFundDomicileId" />
-                <ScalarProperty Name="FundStructureId" ColumnName="FundStructureId" />
-                <ScalarProperty Name="FundNamingConvention" ColumnName="FundNamingConvention" />
-                <ScalarProperty Name="PlatformName" ColumnName="PlatformName" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="PPOCorPPOCChangeNotifier" ColumnName="PPOCorPPOCChangeNotifier" />
-                <ScalarProperty Name="AMLROorMLROorDeputy" ColumnName="AMLROorMLROorDeputy" />
-                <ScalarProperty Name="CoveredFundStatus" ColumnName="CoveredFundStatus" />
-                <ScalarProperty Name="HedgeMarkVolckerSponsorshipStatus" ColumnName="HedgeMarkVolckerSponsorshipStatus" />
-                <ScalarProperty Name="FATCAResponsibilityNotes" ColumnName="FATCAResponsibilityNotes" />
-                <ScalarProperty Name="FATCAResponsibility" ColumnName="FATCAResponsibility" />
-                <ScalarProperty Name="FormDResponsibility" ColumnName="FormDResponsibility" />
-                <ScalarProperty Name="IsHegdeMarkAccessPlatformClient" ColumnName="IsHegdeMarkAccessPlatformClient" />
-                <ScalarProperty Name="IsClientCurrentCustodyClientofBNYM" ColumnName="IsClientCurrentCustodyClientofBNYM" />
-                <ScalarProperty Name="OnboardingCallsTime" ColumnName="OnboardingCallsTime" />
-                <ScalarProperty Name="OnboardingCallsDays" ColumnName="OnboardingCallsDays" />
-                <ScalarProperty Name="OnboardingCallsFrequency" ColumnName="OnboardingCallsFrequency" />
-                <ScalarProperty Name="CDDClassificationReason" ColumnName="CDDClassificationReason" />
-                <ScalarProperty Name="CDDClassification" ColumnName="CDDClassification" />
-                <ScalarProperty Name="ClientCID" ColumnName="ClientCID" />
-                <ScalarProperty Name="ClientType" ColumnName="ClientType" />
-                <ScalarProperty Name="ClientShortName" ColumnName="ClientShortName" />
-                <ScalarProperty Name="ClientLegalEntityName" ColumnName="ClientLegalEntityName" />
-                <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
