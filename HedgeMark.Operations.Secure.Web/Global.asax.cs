@@ -201,7 +201,7 @@ namespace HMOSecureWeb
             Session["SessionStartTime"] = DateTime.Now;
             Session["userName"] = User.Identity.Name;
             var smUserId = HttpContext.Current.Request.IsLocal ? ConfigurationManager.AppSettings["LocalSiteMinderCommitId"] : HttpContext.Current.Request.Headers[SiteMinderHeaderToken];
-            Session[SessionVars.UserCommitId.ToString()] = smUserId;
+            Session[OpsSecureSessionVars.UserCommitId.ToString()] = smUserId;
         }
 
         public static ConcurrentBag<string> ActiveUsers = new ConcurrentBag<string>();

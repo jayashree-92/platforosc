@@ -22,6 +22,8 @@
           <Property Name="UserId" Type="varchar" MaxLength="1000" />
           <Property Name="Key" Type="varchar" MaxLength="1000" />
           <Property Name="Value" Type="text" />
+          <Property Name="hmUserId" Type="int" Nullable="false" />
+          <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -82,6 +84,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="UserId" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="Key" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="hmUserId" Type="Int32" Nullable="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityContainer Name="OperationsContext" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="dmaUserPreferences" EntityType="Self.dmaUserPreference" />
@@ -130,6 +134,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <EntitySetMapping Name="dmaUserPreferences">
             <EntityTypeMapping TypeName="OperationsModel.dmaUserPreference">
               <MappingFragment StoreEntitySet="dmaUserPreference">
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="hmUserId" ColumnName="hmUserId" />
                 <ScalarProperty Name="dmaUserPreferenceId" ColumnName="dmaUserPreferenceId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Key" ColumnName="Key" />

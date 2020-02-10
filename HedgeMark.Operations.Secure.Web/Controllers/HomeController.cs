@@ -170,7 +170,7 @@ namespace HMOSecureWeb.Controllers
                 counterParties = context.dmaCounterPartyOnBoardings.Where(s => counterpartyIds.Contains(s.dmaCounterPartyOnBoardId)).ToList();
             }
 
-            var hFunds = AdminFundManager.GetHFundsCreatedForDMA(hFundIds, UserName);
+            var hFunds = AdminFundManager.GetHFundsCreatedForDMA(hFundIds, PreferredFundNameInSession);
 
             foreach (var wire in wireStatusDetails)
             {
@@ -577,7 +577,7 @@ namespace HMOSecureWeb.Controllers
             using (var context = new OperationsContext())
             {
                 var authorizedFundIds = AuthorizedSessionData.HMFundIds.Select(s => s.Id).ToList();
-                var hFunds = AdminFundManager.GetUniversalDMAFundListQuery(context, UserName)
+                var hFunds = AdminFundManager.GetUniversalDMAFundListQuery(context, PreferredFundNameInSession)
                     .Where(s => AuthorizedSessionData.IsPrivilegedUser || authorizedFundIds.Contains(s.hmFundId)).OrderBy(s => s.PreferredFundName)
                     .Select(s => new { id = s.hmFundId, text = s.PreferredFundName }).ToList();
 

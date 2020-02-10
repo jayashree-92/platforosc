@@ -7,7 +7,7 @@
 
 @{
     var userRole = @Util.GetRole(User).Replace("-", " ").Replace("Hm ", string.Empty);
-    var commitId = @HttpContext.Current.Session[SessionVars.UserCommitId.ToString()].ToString();
+    var commitId = @HttpContext.Current.Session[OpsSecureSessionVars.UserCommitId.ToString()].ToString();
 }
 <body ng-app="HmOperationsSecureApp">
 

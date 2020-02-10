@@ -18,5 +18,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string UserId { get; set; }
         public string Key { get; set; }
         public string Value { get; set; }
+        public int hmUserId { get; set; }
+        public System.DateTime RecCreatedAt { get; set; }
     }
 }

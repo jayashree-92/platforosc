@@ -1,22 +1,23 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using System.Web.Mvc;
 using HedgeMark.Operations.Secure.DataModel.Models;
 using HMOSecureWeb.Filters;
 using Web.Filters;
 using System.IO;
+using System.Linq;
 using System.Net.Mime;
+using Com.HedgeMark.Commons.Extensions;
+using HedgeMark.Operations.Secure.DataModel;
 using HMOSecureMiddleware;
 
 namespace HMOSecureWeb.Controllers
 {
-    public enum SessionVars
-    {
-        UserCommitId
-    }
-
     public enum OpsSecureSessionVars
     {
-        AuthorizedUserData
+        UserCommitId,
+        AuthorizedUserData,
+        UserPreferencesInSession
     }
 
     public class AuthorizedRolesAttribute : AuthorizeAttribute
@@ -38,6 +39,11 @@ namespace HMOSecureWeb.Controllers
             set { thisUserName = value; }
         }
 
+        public int UserId
+        {
+            get { return UserDetails.Id; }
+        }
+
         public UserAccountDetails UserDetails
         {
             get
@@ -47,7 +53,7 @@ namespace HMOSecureWeb.Controllers
                 if (userDetails != null)
                     return userDetails;
 
-                userDetails = AccountController.GetUserDetails(Session[SessionVars.UserCommitId.ToString()].ToString(), User);
+                userDetails = AccountController.GetUserDetails(Session[OpsSecureSessionVars.UserCommitId.ToString()].ToString(), User);
                 SetSessionValue("UserDetails", userDetails);
                 return userDetails;
             }
@@ -65,6 +71,44 @@ namespace HMOSecureWeb.Controllers
         public void SetSessionValue(string key, object value)
         {
             Session[key] = value;
+        }
+
+        public List<dmaUserPreference> UserPreferencesInSession
+        {
+            get
+            {
+                var preferncesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.UserPreferencesInSession);
+                if (GetSessionValue(preferncesKey) != null)
+                    return (List<dmaUserPreference>)GetSessionValue(preferncesKey);
+
+                var allPreferences = PreferencesManager.GetAllUserPreferences(UserId);
+                SetSessionValue(preferncesKey, allPreferences);
+                return allPreferences;
+            }
+        }
+
+        protected string GetPreferenceInSession(string key, string defaultValue = "")
+        {
+            var allPreferences = UserPreferencesInSession;
+            return allPreferences.Any(s => s.Key == key) ? allPreferences.First(s => s.Key == key).Value : defaultValue;
+        }
+
+        public void SavePreferenceInSession(string key, string value)
+        {
+            PreferencesManager.SaveUserPreferences(UserDetails.Id, key, value);
+            ResetPreferencesInSession();
+        }
+
+        private void ResetPreferencesInSession()
+        {
+            var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.UserPreferencesInSession);
+            SetSessionValue(preferencesKey, null);
+        }
+
+
+        public PreferencesManager.FundNameInDropDown PreferredFundNameInSession
+        {
+            get { return (PreferencesManager.FundNameInDropDown)GetPreferenceInSession(PreferencesManager.ShowRiskOrShortFundNames).ToInt(0); }
         }
 
         public AuthorizedData AuthorizedSessionData

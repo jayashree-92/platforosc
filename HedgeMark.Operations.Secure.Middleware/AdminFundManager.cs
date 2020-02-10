@@ -13,11 +13,11 @@ namespace HMOSecureMiddleware
             public vw_HFundOps HFund { get; set; }
         }
 
-        public static List<HFund> GetHFundsCreatedForDMA(List<long> hFundIds, string userName, string preferredCode = null)
+        public static List<HFund> GetHFundsCreatedForDMA(List<long> hFundIds, PreferencesManager.FundNameInDropDown preferredFundName)
         {
             using (var context = new OperationsContext())
             {
-                return GetUniversalDMAFundListQuery(context, userName, preferredCode).Where(s => hFundIds.Contains(s.hmFundId)).Select(s => new HFund
+                return GetUniversalDMAFundListQuery(context, preferredFundName).Where(s => hFundIds.Contains(s.hmFundId)).Select(s => new HFund
                 {
                     HFundId = s.hmFundId,
                     ClientFundName = s.HFund.ClientFundName,
@@ -30,11 +30,11 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static HFund GetHFundCreatedForDMA(long hmFundId)
+        public static HFund GetHFundCreatedForDMA(long hmFundId, PreferencesManager.FundNameInDropDown preferredFundName)
         {
             using (var context = new OperationsContext())
             {
-                return GetUniversalDMAFundListQuery(context).Where(s => s.hmFundId == hmFundId).Select(s => new HFund
+                return GetUniversalDMAFundListQuery(context, preferredFundName).Where(s => s.hmFundId == hmFundId).Select(s => new HFund
                 {
                     HFundId = s.hmFundId,
                     ClientFundName = s.HFund.ClientFundName,
@@ -47,16 +47,15 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static IQueryable<QueryableHFund> GetUniversalDMAFundListQuery(OperationsContext context, string userName = null, string defaultPreferredCode = null)
+        public static IQueryable<QueryableHFund> GetUniversalDMAFundListQuery(OperationsContext context, PreferencesManager.FundNameInDropDown preferredFundName)
         {
-            var preferredFundName = PreferencesManager.GetPreferredFundName(userName);
             return (from fund in context.vw_HFundOps
-                let prefName = preferredFundName == PreferencesManager.FundNameInDropDown.ClientFundName ? fund.ClientFundName
-                    : preferredFundName == PreferencesManager.FundNameInDropDown.HMRAName ? fund.HMRAName
-                    : preferredFundName == PreferencesManager.FundNameInDropDown.LegalFundName ? fund.LegalFundName
-                    : preferredFundName == PreferencesManager.FundNameInDropDown.OpsShortName && fund.ShortFundName != null ? fund.ShortFundName
-                    : fund.ClientFundName
-                    
+                    let prefName = preferredFundName == PreferencesManager.FundNameInDropDown.ClientFundName ? fund.ClientFundName
+                        : preferredFundName == PreferencesManager.FundNameInDropDown.HMRAName ? fund.HMRAName
+                        : preferredFundName == PreferencesManager.FundNameInDropDown.LegalFundName ? fund.LegalFundName
+                        : preferredFundName == PreferencesManager.FundNameInDropDown.OpsShortName && fund.ShortFundName != null ? fund.ShortFundName
+                        : fund.ClientFundName
+
                     select new QueryableHFund()
                     {
                         hmFundId = fund.intFundId,

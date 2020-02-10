@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,29 +10,46 @@ namespace HMOSecureMiddleware
 {
     public class PreferencesManager
     {
+        public enum SystemPreferences
+        {
+            AllowedAgreementTypesForAccounts
+        }
+
         public static readonly string ShowRiskOrShortFundNames = "CONFIG:ShowRiskOrShortFundNames";
+
+        public static List<string> AllPreferrenceKeys = new List<string>()
+        {
+            ShowRiskOrShortFundNames
+        };
 
         public enum FundNameInDropDown
         {
             OpsShortName = 0, LegalFundName = 1, ClientFundName = 2, HMRAName = 3
         }
 
-        public static FundNameInDropDown GetPreferredFundName(string userName)
+        public static List<dmaUserPreference> GetAllUserPreferences(int hmUserId)
         {
-            var key = ShowRiskOrShortFundNames;
             using (var context = new OperationsContext())
             {
-                var preferredFundName = context.dmaUserPreferences.Where(up => up.UserId == userName && up.Key == key).Select(s => s.Value).FirstOrDefault() ?? "0";
-                return (FundNameInDropDown)Convert.ToInt32(preferredFundName);
+                return context.dmaUserPreferences.Where(s => s.hmUserId == hmUserId && AllPreferrenceKeys.Contains(s.Key)).ToList();
             }
         }
 
-
-        public enum SystemPreferences
+        public static void SaveUserPreferences(int hmUserId, string key, string value)
         {
-            AllowedAgreementTypesForAccounts
+            var preference = new dmaUserPreference() { Key = key, Value = value, hmUserId = hmUserId, UserId = string.Empty };
+            SaveUserPreferences(preference);
         }
 
+        private static void SaveUserPreferences(dmaUserPreference userPreference)
+        {
+            userPreference.RecCreatedAt = DateTime.Now;
+
+            using (var context = new OperationsContext())
+            {
+                context.dmaUserPreferences.AddOrUpdate(s => new { s.Key, s.hmUserId }, userPreference);
+            }
+        }
 
         public static string GetSystemPreference(SystemPreferences preference)
         {

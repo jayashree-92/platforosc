@@ -154,7 +154,7 @@ namespace HMOSecureMiddleware
             List<string> workflowUsers;
             List<string> attachmentUsers;
 
-            var hFund = AdminFundManager.GetHFundCreatedForDMA(hmWire.hmFundId);
+            var hFund = AdminFundManager.GetHFundCreatedForDMA(hmWire.hmFundId, PreferencesManager.FundNameInDropDown.OpsShortName);
 
             using (var context = new AdminContext())
             {
