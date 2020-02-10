@@ -214,27 +214,26 @@ namespace HMOSecureMiddleware
         }
 
 
-        public static List<WireAccountBaseData> GetApprovedFundAccounts(long fundId, bool isBookTransfer)
+        public static List<WireAccountBaseData> GetApprovedFundAccounts(long hmFundId, bool isBookTransfer)
         {
-            long qualifiedOnBoardFundId;
-            var allEligibleAgreementIds = AllEligibleAgreementIds(fundId, out qualifiedOnBoardFundId);
+            var allEligibleAgreementIds = AllEligibleAgreementIds();
 
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
                 var sendingAccounts = (from oAccnt in context.onBoardingAccounts
-                                       where oAccnt.dmaFundOnBoardId == qualifiedOnBoardFundId && oAccnt.onBoardingAccountStatus == "Approved" && oAccnt.AuthorizedParty == "HedgeMark" && !oAccnt.IsDeleted
+                                       where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && oAccnt.AuthorizedParty == "HedgeMark" && !oAccnt.IsDeleted
                                        && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
                                        select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber }).Distinct().ToList();
+             
                 return sendingAccounts;
             }
         }
 
         public static List<WireAccountBaseData> GetApprovedFundAccountsForModule(long hmFundId, long onBoardSSITemplateId, long reportId)
         {
-            long qualifiedOnBoardFundId;
-            var allEligibleAgreementIds = AllEligibleAgreementIds(hmFundId, out qualifiedOnBoardFundId);
+            var allEligibleAgreementIds = AllEligibleAgreementIds();
 
             using (var context = new OperationsSecureContext())
             {
@@ -245,7 +244,7 @@ namespace HMOSecureMiddleware
                                        join oMap in context.onBoardingAccountSSITemplateMaps on oAccnt.onBoardingAccountId equals oMap.onBoardingAccountId
                                        let dmaReports = oAccnt.onBoardingAccountModuleAssociations.Select(s => s.onBoardingModule).Select(s => s.dmaReportsId)
                                        where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved"
-                                                                                                  && oAccnt.dmaFundOnBoardId == qualifiedOnBoardFundId && oAccnt.onBoardingAccountStatus == "Approved" && oAccnt.AuthorizedParty == "HedgeMark" && !oAccnt.IsDeleted
+                                                                                                  && oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && oAccnt.AuthorizedParty == "HedgeMark" && !oAccnt.IsDeleted
                                                                                                   && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
                                                                                                   && dmaReports.Contains(reportId)
                                        select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber }).ToList();
@@ -254,22 +253,12 @@ namespace HMOSecureMiddleware
             }
         }
 
-        private static List<long> AllEligibleAgreementIds(long fundId, out long qualifiedOnBoardFundId)
+        private static List<long> AllEligibleAgreementIds()
         {
-            List<long> allEligibleAgreementIds;
-            qualifiedOnBoardFundId = 0;
-
-
             using (var context = new AdminContext())
             {
-                allEligibleAgreementIds = context.vw_OnboardedAgreements.Where(s => s.AgreementType == "PB" || s.AgreementType == "Custody").Select(s => s.dmaAgreementOnBoardingId).ToList();
-
-                qualifiedOnBoardFundId = (from hFndOps in context.vw_HFund
-                                          where hFndOps.intFundID == fundId
-                                          select hFndOps.dmaFundOnBoardId ?? 0).FirstOrDefault();
+                return context.vw_OnboardedAgreements.Where(s => s.AgreementType == "PB" || s.AgreementType == "Custody").Select(s => s.dmaAgreementOnBoardingId).ToList();
             }
-
-            return allEligibleAgreementIds;
         }
 
         private static List<KeyValuePair<string, string>> GetFormattedSwiftMessages(long wireId)

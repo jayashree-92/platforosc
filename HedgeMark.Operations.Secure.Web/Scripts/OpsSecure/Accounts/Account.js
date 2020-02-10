@@ -305,7 +305,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             $scope.copyAccount.dmaAgreementOnBoardingId = agreementId;
         }
 
-        $scope.copyAccount.dmaFundOnBoardId = fundId;
+        $scope.copyAccount.hmFundId = fundId;
         $scope.copyAccount.BrokerId = brokerId;
         $scope.copyAccount.onBoardingAccountSSITemplateMaps = [];
         $scope.copyAccount.onBoardingAccountDocuments = [];
@@ -467,7 +467,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         fundId = $(this).val();
         if (fundId > 0) {
 
-            var agreements = $.grep($scope.agreements, function (v) { return v.FundOnBoardId == fundId; });
+            var agreements = $.grep($scope.agreements, function (v) { return v.hmFundId == fundId; });
             var agreementData = [];
             $.each(agreements, function (key, value) {
                 agreementData.push({ "id": value.AgreementOnboardingId, "text": value.AgreementShortName });

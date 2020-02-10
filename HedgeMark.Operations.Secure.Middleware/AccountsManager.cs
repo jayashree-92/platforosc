@@ -44,7 +44,7 @@ namespace HMOSecureMiddleware
                         .Where(account => account.dmaAgreementOnBoardingId == agreementId && !account.IsDeleted).ToList();
 
                 return context.onBoardingAccounts.Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
-                    .Where(account => account.BrokerId == brokerId && account.dmaFundOnBoardId == fundId && account.AccountType != AgreementAccountType && !account.IsDeleted).ToList();
+                    .Where(account => account.BrokerId == brokerId && account.hmFundId == fundId && account.AccountType != AgreementAccountType && !account.IsDeleted).ToList();
             }
         }
 
@@ -69,14 +69,14 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<onBoardingAccount> GetAllOnBoardingAccounts(List<long> onBoardFundIds, bool isPreviledgedUser)
+        public static List<onBoardingAccount> GetAllOnBoardingAccounts(List<long> hmFundIds, bool isPreviledgedUser)
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                return context.onBoardingAccounts.Include(x => x.onBoardingAccountSSITemplateMaps).Where(x => !x.IsDeleted).Where(s => isPreviledgedUser || onBoardFundIds.Contains(s.dmaFundOnBoardId)).AsNoTracking().ToList();
+                return context.onBoardingAccounts.Include(x => x.onBoardingAccountSSITemplateMaps).Where(x => !x.IsDeleted).Where(s => isPreviledgedUser || hmFundIds.Contains(s.hmFundId)).AsNoTracking().ToList();
             }
 
         }

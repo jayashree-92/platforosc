@@ -589,9 +589,8 @@ namespace HMOSecureWeb.Controllers
             List<AgreementBaseDetails> onBoardedAgreements;
             using (var context = new AdminContext())
             {
-                onBoardedAgreements = (from hFndOps in context.vw_HFund
-                                       join oAgreement in context.vw_OnboardedAgreements on hFndOps.FundMapId equals oAgreement.hFundId
-                                       where hFndOps.intFundID == fundId && oAgreement.HMOpsStatus == "Approved"
+                onBoardedAgreements = (from oAgreement in context.vw_OnboardedAgreements
+                                       where oAgreement.hmFundId == fundId && oAgreement.HMOpsStatus == "Approved"
                                        select new AgreementBaseDetails { AgreementId = oAgreement.dmaAgreementOnBoardingId, AgreementShortName = oAgreement.AgreementShortName }).ToList();
             }
 

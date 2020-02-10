@@ -20,16 +20,9 @@ namespace HMOSecureMiddleware
         public const int AuditorTypeId = 9;
         public const int TaxAdvisorTypeId = 10;
     }
-
-    public class FundBaseData
-    {
-        public long FundOnBoardId { get; set; }
-        public string LegalFundName { get; set; }
-    }
-
     public class AgreementBaseData
     {
-        public long FundOnBoardId { get; set; }
+        public long HMFundId { get; set; }
         public long AgreementOnboardingId { get; set; }
         public string AgreementShortName { get; set; }
         public int AgreementTypeId { get; set; }
@@ -37,23 +30,6 @@ namespace HMOSecureMiddleware
 
     public class OnBoardingDataManager
     {
-
-        public static List<FundBaseData> GetAllOnBoardedFunds(List<long> onBoardFundIds, bool isPreviledgedUser)
-        {
-            using (var context = new AdminContext())
-            {
-                return context.vw_HFund.Where(s => s.ClientFundVersion == "DMA" && s.dmaFundOnBoardId != null).Where(s => (isPreviledgedUser || onBoardFundIds.Contains(s.dmaFundOnBoardId ?? 0))).Select(s => new FundBaseData() { FundOnBoardId = s.dmaFundOnBoardId ?? 0, LegalFundName = s.LegalFundName }).ToList();
-            }
-        }
-
-        public static Dictionary<long, string> GetAllFunds()
-        {
-            using (var context = new AdminContext())
-            {
-                return context.vw_HFund.Where(f => f.ClientFundVersion == "DMA" && f.dmaFundOnBoardId != null).ToDictionary(s => s.dmaFundOnBoardId ?? 0, s => s.LegalFundName);
-            }
-        }
-
         public static Dictionary<long, string> GetAllAgreements()
         {
             using (var context = new AdminContext())
@@ -74,7 +50,7 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<AgreementBaseData> GetAgreementsForOnboardingAccountPreloadData(List<long> onBoardFundIds, bool isPreviledgedUser)
+        public static List<AgreementBaseData> GetAgreementsForOnboardingAccountPreloadData(List<long> hmFundIds, bool isPreviledgedUser)
         {
             var permittedAgreementTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.AllowedAgreementTypesForAccounts).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             using (var context = new AdminContext())
@@ -83,8 +59,8 @@ namespace HMOSecureMiddleware
                 context.Configuration.ProxyCreationEnabled = false;
 
                 return context.vw_OnboardedAgreements
-                    .Where(a => a.AgreementStatus != "Terminated – Agreement" && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || onBoardFundIds.Contains(a.dmaFundOnBoardId)))
-                    .AsNoTracking().Select(x => new AgreementBaseData() { AgreementOnboardingId = x.dmaAgreementOnBoardingId, AgreementShortName = x.AgreementShortName, FundOnBoardId = x.dmaFundOnBoardId }).ToList();
+                    .Where(a => a.AgreementStatus != "Terminated – Agreement" && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || hmFundIds.Contains(a.hmFundId ?? 0)))
+                    .AsNoTracking().Select(x => new AgreementBaseData() { AgreementOnboardingId = x.dmaAgreementOnBoardingId, AgreementShortName = x.AgreementShortName, HMFundId = x.hmFundId ?? 0 }).ToList();
             }
         }
 
@@ -121,7 +97,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-                return context.vw_OnboardedAgreements.Where(x => x.dmaFundOnBoardId == fundId && x.dmaCounterPartyOnBoardId.HasValue && x.HMOpsStatus == "Approved").Select(x => x.dmaCounterPartyOnBoardId.Value).Distinct().ToList();
+                return context.vw_OnboardedAgreements.Where(x => x.hmFundId == fundId && x.dmaCounterPartyOnBoardId.HasValue && x.HMOpsStatus == "Approved").Select(x => x.dmaCounterPartyOnBoardId.Value).Distinct().ToList();
             }
         }
 
@@ -137,13 +113,13 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static string GetOnBoardedFundName(long fundId)
+        public static string GetFundLegalName(long hmFundId)
         {
             using (var context = new AdminContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                var onboardingFund = context.vw_HFund.FirstOrDefault(x => x.dmaFundOnBoardId == fundId);
+                var onboardingFund = context.vw_HFund.FirstOrDefault(x => x.intFundID == hmFundId);
                 return (onboardingFund != null) ? onboardingFund.LegalFundName : string.Empty;
             }
         }

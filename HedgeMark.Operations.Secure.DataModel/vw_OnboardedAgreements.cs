@@ -16,6 +16,7 @@ namespace HedgeMark.Operations.Secure.DataModel
     {
         public long dmaAgreementOnBoardingId { get; set; }
         public long dmaFundOnBoardId { get; set; }
+        public Nullable<int> hmFundId { get; set; }
         public long dmaClientOnBoardId { get; set; }
         public Nullable<int> AgreementTypeId { get; set; }
         public Nullable<int> AgreementStatusId { get; set; }
@@ -73,10 +74,11 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<System.DateTime> NotesModifiedDate { get; set; }
         public Nullable<System.DateTime> FullyExecutedDate { get; set; }
         public Nullable<System.DateTime> StatusDate { get; set; }
+        public string Responsibility { get; set; }
         public string CounterpartyFamily { get; set; }
         public string CounterpartyName { get; set; }
         public string CounterpartyShortCode { get; set; }
-        public Nullable<int> hFundId { get; set; }
+        public Nullable<int> FundMapId { get; set; }
         public string ClientName { get; set; }
         public string LegalFundName { get; set; }
         public string ShortFundName { get; set; }
@@ -84,6 +86,5 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string AgreementShortName { get; set; }
         public string FundManagerName { get; set; }
         public string AdminChoice { get; set; }
-        public string Responsibility { get; set; }
     }
 }

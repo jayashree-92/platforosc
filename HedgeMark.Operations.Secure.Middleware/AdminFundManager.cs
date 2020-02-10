@@ -13,6 +13,15 @@ namespace HMOSecureMiddleware
             public vw_HFundOps HFund { get; set; }
         }
 
+
+        public static Dictionary<int, string> GetHFundsCreatedForDMA(PreferencesManager.FundNameInDropDown preferredFundName)
+        {
+            using (var context = new OperationsContext())
+            {
+                return GetUniversalDMAFundListQuery(context, preferredFundName).ToDictionary(s => s.hmFundId, v => v.PreferredFundName);
+            }
+        }
+
         public static List<HFund> GetHFundsCreatedForDMA(List<long> hFundIds, PreferencesManager.FundNameInDropDown preferredFundName)
         {
             using (var context = new OperationsContext())

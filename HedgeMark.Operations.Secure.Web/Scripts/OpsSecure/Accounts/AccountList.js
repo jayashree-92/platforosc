@@ -381,8 +381,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     ],
                     "oLanguage": {
                         "sSearch": "",
-                        "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Onboarded Accounts",
-                        "sInfoFiltered": " - filtering from _MAX_ Onboarded Accounts"
+                        "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Accounts",
+                        "sInfoFiltered": " - filtering from _MAX_ Accounts"
                     },
                     "createdRow": function (row, data) {
                         switch (data.onBoardingAccountStatus) {
@@ -471,7 +471,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#btnAccountStatusButtons button").addClass("disabled");
         var rowElement = accountTable.row(this).data();
         $scope.onBoardingAccountId = rowElement.onBoardingAccountId;
-        $scope.FundId = rowElement.dmaFundOnBoardId;
+        $scope.FundId = rowElement.hmFundId;
         $scope.AgreementId = rowElement.dmaAgreementOnBoardingId;
         $scope.BrokerId = rowElement.BrokerId;
         $scope.AccountType = rowElement.AccountType;
@@ -505,7 +505,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.accountDetail = rowElement;
         $scope.onBoardingAccountId = rowElement.onBoardingAccountId;
         $scope.AgreementId = rowElement.dmaAgreementOnBoardingId;
-        $scope.FundId = rowElement.dmaFundOnBoardId;
+        $scope.FundId = rowElement.hmFundId;
         $scope.AgreementTypeId = rowElement.AgreementTypeId;
         $scope.BrokerId = rowElement.BrokerId;
         $scope.counterpartyFamilyId = rowElement.BrokerId;
@@ -2324,7 +2324,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         var fundId = $(this).val();
         var accountList = [];
         if (fundId > 0) {
-            accountList = $.grep($scope.allAccountList, function (v) { return v.dmaFundOnBoardId == fundId; });
+            accountList = $.grep($scope.allAccountList, function (v) { return v.hmFundId == fundId; });
         }
         viewAssociationTable(accountList);
     });
@@ -2335,7 +2335,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         var row = accountSsiTemplateTable.row(tr);
         if (row.data() != undefined) {
             var onBoardingAccountId = row.data().onBoardingAccountId;
-            var fId = row.data().dmaFundOnBoardId;
+            var fId = row.data().hmFundId;
             var currency = row.data().Currency;
 
             var icon = $(this).find("i");
