@@ -79,7 +79,7 @@ namespace HMOSecureWeb.Controllers
                 funds = AdminFundManager
                     .GetUniversalDMAFundListQuery(context, PreferencesManager.FundNameInDropDown.LegalFundName)
                     .Where(s => AuthorizedSessionData.IsPrivilegedUser || hmFundIds.Contains(s.hmFundId))
-                    .OrderBy(s => s.PreferredFundName).Select(s => new {id = s.hmFundId, text = s.PreferredFundName})
+                    .OrderBy(s => s.PreferredFundName).Select(s => new { id = s.hmFundId, text = s.PreferredFundName })
                     .ToList();
 
             }
@@ -456,10 +456,15 @@ namespace HMOSecureWeb.Controllers
 
             using (var context = new AdminContext())
             {
-                agreements = context.vw_OnboardedAgreements.AsNoTracking()
-                    .Where(s => allAgreementIds.Contains(s.dmaAgreementOnBoardingId))
-                    .Select(s => new AgreementBaseData { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId })
-                    .ToDictionary(s => s.AgreementOnboardingId, v => v);
+                var agreementList = context.vw_OnboardedAgreements.AsNoTracking()
+                    .Where(s => allAgreementIds.Contains(s.dmaAgreementOnBoardingId)).OrderBy(s => s.hmFundId ?? 0)
+                    .Select(s => new AgreementBaseData { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId }).ToList();
+
+                agreements = new Dictionary<long, AgreementBaseData>();
+                foreach (var data in agreementList.Where(data => !agreements.ContainsKey(data.AgreementOnboardingId)))
+                {
+                    agreements.Add(data.AgreementOnboardingId, data);
+                }
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
 
