@@ -5,7 +5,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.fnLoadWireTicketDetails = function (wireObj) {
         $scope.wireObj = angular.copy(wireObj);
         $scope.isWireLoadingInProgress = true;
-        if ($scope.wireObj.WireId > 0) 
+        if ($scope.wireObj.WireId > 0)
             $scope.loadWireRelatedData();
         else
             $scope.loadAdhocWireRelatedData();
@@ -17,35 +17,35 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.loadWireRelatedData = function () {
         $scope.promise = $interval(timer, 1000);
         $q.all([$scope.getWireDetails($scope.wireObj.WireId), $scope.getWireMessageTypes($scope.wireObj.Report)])
-                .then(function () {
-                    if ($scope.dzRawFileUploads != undefined)
-                        $scope.dzRawFileUploads.removeAllFiles(true);
-                    $scope.isAccountCollapsed = true;
-                    $scope.isReceivingAccountCollapsed = true;
-                    $scope.isSSITemplateCollapsed = true;
-                    $scope.isAttachmentsCollapsed = true;
-                    $scope.isWorkflowLogsCollapsed = true;
-                    $scope.isSwiftMessagesCollapsed = true;
-                    $scope.canSave = false;
-                    $scope.initializeControls();
-                });
+            .then(function () {
+                if ($scope.dzRawFileUploads != undefined)
+                    $scope.dzRawFileUploads.removeAllFiles(true);
+                $scope.isAccountCollapsed = true;
+                $scope.isReceivingAccountCollapsed = true;
+                $scope.isSSITemplateCollapsed = true;
+                $scope.isAttachmentsCollapsed = true;
+                $scope.isWorkflowLogsCollapsed = true;
+                $scope.isSwiftMessagesCollapsed = true;
+                $scope.canSave = false;
+                $scope.initializeControls();
+            });
     }
 
     $scope.loadAdhocWireRelatedData = function () {
         $scope.promise = $interval(timer, 1000);
         $q.all([$scope.getAdhocWireDetails(), $scope.getWireMessageTypes($scope.wireObj.Report), $scope.getAdhocWireAssociations()])
-                .then(function () {
-                    if ($scope.dzRawFileUploads != undefined)
-                        $scope.dzRawFileUploads.removeAllFiles(true);
-                    $scope.isAccountCollapsed = true;
-                    $scope.isReceivingAccountCollapsed = true;
-                    $scope.isSSITemplateCollapsed = true;
-                    $scope.isAttachmentsCollapsed = true;
-                    $scope.isWorkflowLogsCollapsed = true;
-                    $scope.isSwiftMessagesCollapsed = true;
-                    $scope.canSave = false;
-                    $scope.initializeControls();
-                });
+            .then(function () {
+                if ($scope.dzRawFileUploads != undefined)
+                    $scope.dzRawFileUploads.removeAllFiles(true);
+                $scope.isAccountCollapsed = true;
+                $scope.isReceivingAccountCollapsed = true;
+                $scope.isSSITemplateCollapsed = true;
+                $scope.isAttachmentsCollapsed = true;
+                $scope.isWorkflowLogsCollapsed = true;
+                $scope.isSwiftMessagesCollapsed = true;
+                $scope.canSave = false;
+                $scope.initializeControls();
+            });
     }
 
     $scope.initializeDatePicker = function () {
@@ -130,6 +130,21 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         });
     }
 
+    $scope.fnSetCurrentlyViewedInfo = function (allusers) {
+        if (allusers.length > 0) {
+            if (allusers.length == 1)
+                $scope.currentlyViewedBy = allusers[0];
+            else if (allusers.length == 2)
+                $scope.currentlyViewedBy = allusers[0] + ", " + allusers[1];
+            else if (allusers.length > 2)
+                $scope.currentlyViewedBy = allusers[0] + ", " + allusers[1] + " and " + allusers.length - 2 + " other(s).";
+
+            $("#wireCurrentlyViewedBy").collapse("show");
+        }
+        else
+            $("#wireCurrentlyViewedBy").collapse("hide");
+    }
+
     $scope.getWireDetails = function (wireId) {
         return $http.get("/Home/GetWireDetails?wireId=" + wireId).then(function (response) {
             $scope.wireTicketObj = response.data.wireTicket;
@@ -154,6 +169,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.workflowUsers = $scope.wireTicketObj.WorkflowUsers;
             $scope.attachmentUsers = $scope.wireTicketObj.AttachmentUsers;
             $scope.isWirePurposeAdhoc = response.data.isWirePurposeAdhoc;
+
+
+            $scope.fnSetCurrentlyViewedInfo(response.data.currentlyViewedBy);
+
 
             var keyValuePair = $scope.wireTicketObj.SwiftMessages;
 
@@ -615,9 +634,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.getCancelButtonText = function (isLoading) {
         if (isLoading)
             return $scope.WireTicket.SwiftStatusId == 1 ? "Rejecting" : "Cancelling";
-        else 
-           return $scope.WireTicket.SwiftStatusId == 1 ? "Reject" : "Cancel";
-        
+        else
+            return $scope.WireTicket.SwiftStatusId == 1 ? "Reject" : "Cancel";
+
     }
 
     $scope.confirmCancellation = function () {
@@ -635,9 +654,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             html: true
         }).popover("show");
         $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
-                    + "<button class=\"btn btn-sm btn-success confirmCancellation\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
-                    + "<button class=\"btn btn-sm btn-default dismissCancellation\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
-                    + "</div>");
+            + "<button class=\"btn btn-sm btn-success confirmCancellation\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
+            + "<button class=\"btn btn-sm btn-default dismissCancellation\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
+            + "</div>");
     }
 
     $(document).on('click', ".confirmCancellation", function () {
@@ -675,7 +694,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         if ($scope.WireTicket.WireStatusId == 0)
             $scope.WireTicket.hmFundId = $scope.wireObj.IsAdhocWire ? $("#liFund").select2('val') : 0;
-        
+
         if (!$scope.wireTicketObj.IsSenderInformationRequired || $scope.validateSenderDescription()) {
             if ($scope.WireTicket.Amount != 0) {
                 if (!$scope.isDeadlineCrossed || $scope.wireComments.trim() != "") {
@@ -765,7 +784,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 }
                 $scope.timeToApprove.Seconds = 59;
             }
-            if ($scope.timeToApprove.Hours < 0) 
+            if ($scope.timeToApprove.Hours < 0)
                 $scope.timeToShow = "00 : 00 : 00";
             else
                 $scope.timeToShow = (($scope.timeToApprove.Hours >= 10 ? $scope.timeToApprove.Hours : $scope.timeToApprove.Hours >= 0 ? ("0" + $scope.timeToApprove.Hours) : $scope.timeToApprove.Hours)) + " : " + ($scope.timeToApprove.Minutes >= 10 ? $scope.timeToApprove.Minutes : ("0" + $scope.timeToApprove.Minutes)) + " : " + ($scope.timeToApprove.Seconds >= 10 ? $scope.timeToApprove.Seconds : ("0" + $scope.timeToApprove.Seconds));
@@ -1083,7 +1102,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case "Attachment": $scope.isAttachmentsCollapsed = !$scope.isAttachmentsCollapsed;
                 $timeout(function () {
                     if ($scope.wireDocumentTable != undefined)
-                    $scope.wireDocumentTable.columns.adjust();
+                        $scope.wireDocumentTable.columns.adjust();
                 }, 100);
                 break;
             case "Workflow": $scope.isWorkflowLogsCollapsed = !$scope.isWorkflowLogsCollapsed;
@@ -1233,8 +1252,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                                 closeOnSelect: false
                             });
                             $scope.isReceivingAccountEnabled = true;
-                            if ($scope.WireTicket.hmsWireId > 0) 
-                              angular.element("#liReceivingAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
+                            if ($scope.WireTicket.hmsWireId > 0)
+                                angular.element("#liReceivingAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
                         });
                     }
                     else {
@@ -1249,8 +1268,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                             closeOnSelect: false
                         });
                         $scope.isReceivingAccountEnabled = true;
-                        if ($scope.WireTicket.hmsWireId > 0) 
-                         angular.element("#liReceivingBookAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
+                        if ($scope.WireTicket.hmsWireId > 0)
+                            angular.element("#liReceivingBookAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
                     }
                 }
                 //var account = $filter('filter')(angular.copy($scope.sendingAccounts), function (account) {
@@ -1263,18 +1282,18 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     $timeout(function () {
                         $scope.timeToApprove = angular.copy(response.data.deadlineToApprove);
                         $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
-                            if ($scope.timeToApprove.Hours > 0 || ($scope.timeToApprove.Hours == 0 && $scope.timeToApprove.Minutes >= 0 && $scope.timeToApprove.Seconds > 0)) {
-                                $scope.isDeadlineCrossed = false;
-                                if (!$scope.isWireCreated && !$scope.isMandatoryFieldsMissing) {
-                                    $("#wireErrorStatus").collapse("hide");
-                                    $scope.validationMsg = "";
-                                }
+                        if ($scope.timeToApprove.Hours > 0 || ($scope.timeToApprove.Hours == 0 && $scope.timeToApprove.Minutes >= 0 && $scope.timeToApprove.Seconds > 0)) {
+                            $scope.isDeadlineCrossed = false;
+                            if (!$scope.isWireCreated && !$scope.isMandatoryFieldsMissing) {
+                                $("#wireErrorStatus").collapse("hide");
+                                $scope.validationMsg = "";
                             }
-                            else {
-                                $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-                                $scope.isDeadlineCrossed = true;
-                                $scope.validationMsg = "Note: Deadline crossed. Please select a future date for settlement.";
-                            }
+                        }
+                        else {
+                            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
+                            $scope.isDeadlineCrossed = true;
+                            $scope.validationMsg = "Note: Deadline crossed. Please select a future date for settlement.";
+                        }
                         $interval.cancel($scope.promise);
                         $scope.promise = $interval(timer, 1000);
                     }, 50);

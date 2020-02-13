@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-      $("#liMainDashboardHome").addClass("active");
+    $("#liMainDashboardHome").addClass("active");
 });
 
 HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interval) {
@@ -41,6 +41,12 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
 
     $scope.IsWireTicketModelOpen = false;
     $scope.$on("wireTicketModelClosed", function (event, args) {
+
+        console.log(args);
+
+        //Remove user viewing information
+        $scope.fnRemoveActionInProgres(args.wireId);
+
         $scope.SelectedStatusId = args.statusId;
         $scope.fnRetriveWireCounts();
         $scope.IsWireTicketModelOpen = false;
@@ -67,7 +73,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
 
         $scope.ShouldApplyDatepickerScope = true;
         $timeout(function () {
-            $(".dashDateNext").css("padding", "0px " + ($("#contextDate").width() -2) + "px");
+            $(".dashDateNext").css("padding", "0px " + ($("#contextDate").width() - 2) + "px");
         }, 20);
     }
 

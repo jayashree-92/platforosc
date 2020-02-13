@@ -5,6 +5,15 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="OperationsSecureModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="hmsActionInProgress">
+          <Key>
+            <PropertyRef Name="hmsActionInProgressId" />
+          </Key>
+          <Property Name="hmsActionInProgressId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="hmsWireId" Type="bigint" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="RecCreatedDt" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsBulkUploadLog">
           <Key>
             <PropertyRef Name="hmsBulkUploadLogId" />
@@ -91,9 +100,9 @@
           </Key>
           <Property Name="hmsWireDocumentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hmsWireId" Type="bigint" Nullable="false" />
-          <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsWireInvoiceAssociation">
           <Key>
@@ -169,17 +178,17 @@
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="WirePurposeId" Type="int" Nullable="false" />
           <Property Name="ContextDate" Type="date" Nullable="false" />
-          <Property Name="OnBoardAccountId" Type="bigint" Nullable="false" />
-          <Property Name="OnBoardSSITemplateId" Type="bigint" Nullable="false" />
-          <Property Name="OnBoardAgreementId" Type="bigint" Nullable="false" />
-          <Property Name="hmFundId" Type="bigint" Nullable="false" />
           <Property Name="ValueDate" Type="date" Nullable="false" />
           <Property Name="PaymentOrReceipt" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="hmFundId" Type="bigint" Nullable="false" />
           <Property Name="SendingAccountNumber" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="SendingPlatform" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="ReceivingAccountNumber" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Currency" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="OnBoardAccountId" Type="bigint" Nullable="false" />
+          <Property Name="OnBoardSSITemplateId" Type="bigint" Nullable="false" />
+          <Property Name="OnBoardAgreementId" Type="bigint" Nullable="false" />
           <Property Name="WireMessageTypeId" Type="int" Nullable="false" />
           <Property Name="WireStatusId" Type="int" Nullable="false" />
           <Property Name="LastModifiedAt" Type="datetime" Nullable="false" />
@@ -475,10 +484,22 @@
           <Property Name="Currency" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="CutoffTime" Type="time" Precision="7" Nullable="false" />
           <Property Name="DaystoWire" Type="int" Nullable="false" />
-          <Property Name="CutOffTimeZone" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="RecCreatedBy" Type="int" Nullable="false" />
           <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="CutOffTimeZone" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
+        <Association Name="FK_hmsActionInProgress_hmsWireId">
+          <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
+          <End Role="hmsActionInProgress" Type="Self.hmsActionInProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWires">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsActionInProgress">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_hmsWireCollateralAssociation_hmsWires_hmsWireId">
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
           <End Role="hmsWireCollateralAssociation" Type="Self.hmsWireCollateralAssociation" Multiplicity="*" />
@@ -756,6 +777,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="OperationsSecureModelStoreContainer">
+          <EntitySet Name="hmsActionInProgress" EntityType="Self.hmsActionInProgress" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsBulkUploadLog" EntityType="Self.hmsBulkUploadLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsMQLogs" EntityType="Self.hmsMQLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsNotificationStaging" EntityType="Self.hmsNotificationStaging" Schema="dbo" store:Type="Tables" />
@@ -792,6 +814,10 @@
           <EntitySet Name="OnBoardingSSITemplateServiceProvider" EntityType="Self.OnBoardingSSITemplateServiceProvider" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingSwiftGroup" EntityType="Self.onBoardingSwiftGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingWirePortalCutoff" EntityType="Self.onBoardingWirePortalCutoff" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_hmsActionInProgress_hmsWireId" Association="Self.FK_hmsActionInProgress_hmsWireId">
+            <End Role="hmsWires" EntitySet="hmsWires" />
+            <End Role="hmsActionInProgress" EntitySet="hmsActionInProgress" />
+          </AssociationSet>
           <AssociationSet Name="FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" Association="Self.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsWireCollateralAssociation" EntitySet="hmsWireCollateralAssociation" />
@@ -1017,6 +1043,11 @@
           <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_AccountId" Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId">
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
             <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMaps" />
+          </AssociationSet>
+          <EntitySet Name="hmsActionInProgresses" EntityType="OperationsSecureModel.hmsActionInProgress" />
+          <AssociationSet Name="FK_hmsActionInProgress_hmsWireId" Association="OperationsSecureModel.FK_hmsActionInProgress_hmsWireId">
+            <End Role="hmsWire" EntitySet="hmsWires" />
+            <End Role="hmsActionInProgress" EntitySet="hmsActionInProgresses" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
@@ -1477,6 +1508,7 @@
           <NavigationProperty Name="hmsWireSenderInformation" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireSenderInformation_SenderInformationId" FromRole="hmsWire" ToRole="hmsWireSenderInformation" />
           <NavigationProperty Name="hmsWireInvoiceAssociations" Relationship="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireInvoiceAssociation" />
           <NavigationProperty Name="hmsWireCollateralAssociations" Relationship="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireCollateralAssociation" />
+          <NavigationProperty Name="hmsActionInProgresses" Relationship="OperationsSecureModel.FK_hmsActionInProgress_hmsWireId" FromRole="hmsWire" ToRole="hmsActionInProgress" />
         </EntityType>
         <Association Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
           <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
@@ -1812,6 +1844,28 @@
             </Principal>
             <Dependent Role="onBoardingAccountSSITemplateMap">
               <PropertyRef Name="onBoardingAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsActionInProgress">
+          <Key>
+            <PropertyRef Name="hmsActionInProgressId" />
+          </Key>
+          <Property Name="hmsActionInProgressId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsActionInProgress_hmsWireId" FromRole="hmsActionInProgress" ToRole="hmsWire" />
+        </EntityType>
+        <Association Name="FK_hmsActionInProgress_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsActionInProgress" Role="hmsActionInProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsActionInProgress">
+              <PropertyRef Name="hmsWireId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2328,6 +2382,16 @@
                 <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
                 <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
                 <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsActionInProgresses">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsActionInProgress">
+              <MappingFragment StoreEntitySet="hmsActionInProgress">
+                <ScalarProperty Name="RecCreatedDt" ColumnName="RecCreatedDt" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+                <ScalarProperty Name="hmsActionInProgressId" ColumnName="hmsActionInProgressId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

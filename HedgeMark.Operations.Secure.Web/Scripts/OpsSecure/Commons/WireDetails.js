@@ -13,10 +13,18 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
         $scope.IsWireTicketModelOpen = true;
         $opsSharedScopes.get("wireInitiationCtrl").fnLoadWireTicketDetails($scope.wireObj);
         $scope.$emit("wireTicketModelOpen");
-    }).on("hidden.bs.modal", function () {
+    }).on("hide.bs.modal", function () {
         $scope.IsWireTicketModelOpen = false;
+        console.log($scope.wireObj);
+
+        if ($scope.wireObj.WireId > 0)
+            $scope.fnRemoveActionInProgres($scope.wireObj.WireId);
         $scope.$emit("wireTicketModelClosed", { statusId: $scope.SelectedStatusId });
     });
+
+    $scope.fnRemoveActionInProgres = function (wireId) {
+        $http.post("/Home/RemoveActionInProgress?wireId=" + wireId);
+    }
 
     $scope.fnLoadWireDetailsGrid = function (statusId, startContextDate, endContextDate) {
 
@@ -108,17 +116,17 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                             }
                         }
                     },
-                     {
-                         "mData": "WireCreatedBy", "sTitle": "Initiated By"
-                     },
+                    {
+                        "mData": "WireCreatedBy", "sTitle": "Initiated By"
+                    },
                     {
                         "data": "HMWire.CreatedAt",
                         "sTitle": "Initiated At",
                         "render": renderDotNetDateAndTime
                     },
-                     {
-                         "data": "WireLastUpdatedBy", "sTitle": "Last Updated By"
-                     },
+                    {
+                        "data": "WireLastUpdatedBy", "sTitle": "Last Updated By"
+                    },
                     {
                         "data": "HMWire.LastModifiedAt",
                         "sTitle": "Last Updated At",

@@ -282,7 +282,57 @@ namespace HMOSecureWeb.Controllers
                     : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId, reportId);
             }
             var sendingAccountsList = sendingAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
-            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser, isWirePurposeAdhoc, validationMsg, sendingAccountsList, IsWireCreated = false });
+
+            //Also include who is currently viewing this wire 
+            var currentlyViewedBy = GetCurrentlyViewingUsers(wireId);
+
+            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser, isWirePurposeAdhoc, validationMsg, sendingAccountsList, IsWireCreated = false, currentlyViewedBy });
+        }
+
+        private List<string> GetCurrentlyViewingUsers(long wireId)
+        {
+            if (wireId == 0)
+                return new List<string>();
+
+            var readableName = UserName.HumanizeEmail();
+            using (var context = new OperationsSecureContext())
+            {
+                var allUsers = context.hmsActionInProgresses.Where(s => s.hmsWireId == wireId).Select(s => s.UserName).ToList();
+
+                //remove all actionsInProgress for this User - as he will be able to do one wire at a time.
+                var allWires = context.hmsActionInProgresses.Where(s => s.UserName == readableName).ToList();
+
+                if (allWires.Any())
+                {
+                    context.hmsActionInProgresses.RemoveRange(allWires);
+                    context.SaveChanges();
+                }
+
+                context.hmsActionInProgresses.Add(new hmsActionInProgress() { UserName = readableName, hmsWireId = wireId, RecCreatedDt = DateTime.Now });
+                context.SaveChanges();
+
+                if (!allUsers.Contains(readableName))
+                    return allUsers;
+
+                //same user name should not appear on his item
+                allUsers.Remove(readableName);
+                return allUsers;
+            }
+        }
+
+        public void RemoveActionInProgress(long wireId)
+        {
+            var readableName = UserName.HumanizeEmail();
+            using (var context = new OperationsSecureContext())
+            {
+                var thisAction = context.hmsActionInProgresses.FirstOrDefault(s => s.hmsWireId == wireId && s.UserName == readableName);
+
+                if (thisAction == null)
+                    return;
+
+                context.hmsActionInProgresses.Remove(thisAction);
+                context.SaveChanges();
+            }
         }
 
         public JsonResult IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId)
