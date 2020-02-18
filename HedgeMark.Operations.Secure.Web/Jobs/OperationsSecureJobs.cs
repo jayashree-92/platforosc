@@ -120,7 +120,7 @@ namespace HMOSecureWeb.Jobs
             RecurringJob.AddOrUpdate(OverdueWireCancellationScheduleManager.JobName, () => OverdueWireCancellationScheduleManager.ScheduleOverdueWiresCancellation(), Cron.Minutely);
         }
 
-        public static void ScheduleAutoApprovalofNoticeWires(bool isDisabled)
+        public static void ScheduleAutoApprovalOfNoticeWires(bool isDisabled)
         {
             if (isDisabled)
             {
