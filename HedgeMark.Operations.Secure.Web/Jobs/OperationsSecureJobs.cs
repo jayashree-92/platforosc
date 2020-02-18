@@ -105,6 +105,7 @@ namespace HMOSecureWeb.Jobs
             ScheduleOverdueWireCancellation(false);
             ScheduleReceiptOfInboundMessages(false);
             ScheduleReceiptOfInboundAckMessages(false);
+            ScheduleAutoApprovalOfNoticeWires(false);
         }
 
         public static void ScheduleOverdueWireCancellation(bool isDisabled)
@@ -117,6 +118,18 @@ namespace HMOSecureWeb.Jobs
 
             //This can be minutly for now 
             RecurringJob.AddOrUpdate(OverdueWireCancellationScheduleManager.JobName, () => OverdueWireCancellationScheduleManager.ScheduleOverdueWiresCancellation(), Cron.Minutely);
+        }
+
+        public static void ScheduleAutoApprovalofNoticeWires(bool isDisabled)
+        {
+            if (isDisabled)
+            {
+                RecurringJob.RemoveIfExists(NoticeWiresApprovalManager.JobName);
+                return;
+            }
+
+            //This can be minutly for now 
+            RecurringJob.AddOrUpdate(NoticeWiresApprovalManager.JobName, () => NoticeWiresApprovalManager.ScheduleNoticeWiresApproval(), new CronHelper().Every().Minute);
         }
 
         public static void ScheduleReceiptOfInboundMessages(bool isDisabled)

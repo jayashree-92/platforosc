@@ -162,6 +162,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Jobs\NoticeWiresApprovalManager.cs" />
     <Compile Include="Jobs\OperationsSecureJobs.cs" />
     <Compile Include="Jobs\OverdueWireCancellationScheduleManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

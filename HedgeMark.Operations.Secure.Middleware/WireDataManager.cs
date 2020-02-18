@@ -498,6 +498,14 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static List<long> GetNoticeWiresAwaitingApproval()
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                return context.hmsWires.Where(s => s.hmsWireMessageType.MessageType == "MT210" && s.WireStatusId == (int)WireStatus.Initiated).Select(s => s.hmsWireId).ToList();
+            }
+        }
+
         public static List<hmsMQLog> GetMQLogs(DateTime startDate, DateTime endDate)
         {
             endDate = endDate.Date == DateTime.Now.Date ? DateTime.Now : endDate;
