@@ -270,23 +270,24 @@ namespace HMOSecureWeb.Controllers
             var deadlineToApprove = GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
             var isLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == UserDetails.Id;
             var isWirePurposeAdhoc = wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocReport;
-            var sendingAccounts = new List<WireAccountBaseData>();
+            var fundAccounts = new List<WireAccountBaseData>();
             long reportId = 0;
             if (isEditEnabled)
             {
                 if (!isWirePurposeAdhoc)
                     reportId = FileSystemManager.GetReportId(wireTicket.HMWire.hmsWirePurposeLkup.ReportName);
 
-                sendingAccounts = isWirePurposeAdhoc
+                fundAccounts = isWirePurposeAdhoc
                     ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, wireTicket.IsBookTransfer)
                     : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId, reportId);
             }
-            var sendingAccountsList = sendingAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
+            var sendingAccountsList = fundAccounts.Where(s => s.AuthorizedParty == "Hedgemark").Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
+            var receivingAccountsList = fundAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
 
             //Also include who is currently viewing this wire 
             var currentlyViewedBy = GetCurrentlyViewingUsers(wireId);
 
-            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser, isWirePurposeAdhoc, validationMsg, sendingAccountsList, IsWireCreated = false, currentlyViewedBy });
+            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser, isWirePurposeAdhoc, validationMsg, sendingAccountsList, receivingAccountsList, IsWireCreated = false, currentlyViewedBy });
         }
 
         private List<string> GetCurrentlyViewingUsers(long wireId)
@@ -656,9 +657,10 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetApprovedAccountsForFund(long fundId, bool isBookTransfer)
         {
-            var sendingAccounts = WireDataManager.GetApprovedFundAccounts(fundId, isBookTransfer);
-            var sendingAccountsList = sendingAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
-            return Json(new { sendingAccounts, sendingAccountsList });
+            var fundAccounts = WireDataManager.GetApprovedFundAccounts(fundId, isBookTransfer);
+            var sendingAccountsList = fundAccounts.Where(s => s.AuthorizedParty == "Hedgemark").Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
+            var receivingAccountsList = fundAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
+            return Json(new { sendingAccountsList, receivingAccountsList });
         }
 
         //public JsonResult GetApprovedAccountsForAgreement(long agreementId)

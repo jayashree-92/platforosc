@@ -744,7 +744,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 });
 
                 if ($scope.onBoardingAccountDetails[panelIndex].AuthorizedParty != null && $scope.onBoardingAccountDetails[panelIndex].AuthorizedParty != 'undefined')
-                    $("#liAuthorizedParty" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].AuthorizedParty);
+                    $("#liAuthorizedParty" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].AuthorizedParty).trigger('change');
             }
         });
     }
@@ -787,6 +787,23 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#txtSender" + index).val("");
         }
     }
+
+    $scope.fnAuthorizedPartyChange = function (index) {
+
+        if ($scope.onBoardingAccountDetails[index].AuthorizedParty == "Hedgemark")
+        {
+            $scope.onBoardingAccountDetails[index].AccountModule = null;
+            $scope.onBoardingAccountDetails[index].SwiftGroup = null;
+            $scope.onBoardingAccountDetails[index].SendersBIC = null;
+            $scope.onBoardingAccountDetails[index].CashSweepTime = null;
+            $scope.onBoardingAccountDetails[index].CashSweepTimeZone = null;
+            $scope.onBoardingAccountDetails[index].CashSweep = 'No';
+            $("#liAccountModule_" + index).select2("val", null);
+            $("#liSwiftGroup" + index).select2("val", null);
+            $("#cashSweep" + index).select2("val", "No");
+        }
+    }
+
 
     $scope.fnCutOffTime = function (currency, cashInstruction, index) {
 

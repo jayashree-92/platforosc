@@ -787,6 +787,21 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         }
     }
 
+    $scope.fnAuthorizedPartyChange = function (ev, index) {
+        $scope.onBoardingAccountDetails[index].AuthorizedParty = $(ev.currentTarget).select2('val');
+        if ($scope.onBoardingAccountDetails[index].AuthorizedParty == "Hedgemark") {
+            $scope.onBoardingAccountDetails[index].AccountModule = null;
+            $scope.onBoardingAccountDetails[index].SwiftGroup = null;
+            $scope.onBoardingAccountDetails[index].SendersBIC = null;
+            $scope.onBoardingAccountDetails[index].CashSweepTime = null;
+            $scope.onBoardingAccountDetails[index].CashSweepTimeZone = null;
+            $scope.onBoardingAccountDetails[index].CashSweep = 'No';
+            $("#liAccountModule_" + index).select2("val", null);
+            $("#liSwiftGroup" + index).select2("val", null);
+            $("#cashSweep" + index).select2("val", "No");
+        }
+    }
+
     $scope.fnCutOffTime = function (currency, cashInstruction, index) {
 
         $http.get("/Accounts/GetCutoffTime?cashInstruction=" + cashInstruction + "&currency=" + currency).then(function (response) {

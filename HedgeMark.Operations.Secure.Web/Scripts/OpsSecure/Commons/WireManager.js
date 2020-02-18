@@ -157,6 +157,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isDraftEnabled = response.data.isDraftEnabled;
             $scope.wireTicketObj.HMWire.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.sendingAccountsList = response.data.sendingAccountsList;
+            $scope.receivingAccountsList = response.data.receivingAccountsList;
             $scope.isWirePurposeAdhoc = response.data.isWirePurposeAdhoc;
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
             $scope.castToDate($scope.wireTicketObj.SendingAccount);
@@ -1188,6 +1189,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 //else {
                 $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2('val') + "&isBookTransfer=" + $scope.wireTicketObj.IsBookTransfer).then(function (response) {
                     $scope.sendingAccountsList = response.data.sendingAccountsList;
+                    $scope.receivingAccountsList = response.data.receivingAccountsList;
                     angular.element("#liSendingAccount").select2({
                         placeholder: "Select Sending Account",
                         data: $scope.sendingAccountsList,
@@ -1257,7 +1259,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         });
                     }
                     else {
-                        $scope.receivingBookAccountList = $filter('filter')(angular.copy($scope.sendingAccountsList), function (acc) {
+                        $scope.receivingBookAccountList = $filter('filter')(angular.copy($scope.receivingAccountsList), function (acc) {
                             return acc.id != $scope.WireTicket.OnBoardAccountId;
                         }, true);
                         angular.element("#liReceivingBookAccount").select2('destroy');

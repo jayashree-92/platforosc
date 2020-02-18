@@ -171,7 +171,7 @@
                                     </div>
                                     <p></p>
                                     <div class="row">
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="accountDetail.AuthorizedParty == 'Hedgemark'">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
                                                 <label class="control-label">Module </label>
                                             </div>
@@ -192,7 +192,7 @@
                                         </div>
                                     </div>
                                     <p></p>
-                                    <div class="row">
+                                    <div class="row" ng-hide="accountDetail.AuthorizedParty == 'Hedgemark'">
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
                                                 <label class="control-label">Swift Group <span style="color: red">  *</span></label>
@@ -220,7 +220,7 @@
                                                 <label class="control-label">Authorized Party</label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input ng-model="accountDetail.AuthorizedParty" class="form-control control-label" id="liAuthorizedParty{{$index}}">
+                                                <input ng-model="accountDetail.AuthorizedParty" class="form-control control-label" id="liAuthorizedParty{{$index}}" ng-change="fnAuthorizedPartyChange($index)">
                                             </div>
                                             <div class="col-sm-8 col-md-3 col-lg-3">
                                                 <a class="btn btn-sm btn-info" ng-click="fnAddAuthorizedPartyModal($index)" title="Add Authorized Party"><i class="glyphicon glyphicon-plus"></i></a>
@@ -240,7 +240,7 @@
                                     </div>
                                     <p></p>
                                     <div class="row">
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="accountDetail.AuthorizedParty == 'Hedgemark'">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
                                                 <label class="control-label">Cash Sweep</label>
                                             </div>
@@ -279,12 +279,12 @@
                                     </div>
                                     <p></p>
                                     <div class="cashSweepTimeDiv cashSweepTimeDiv{{$index}}">
-                                        <div class="row control-group" style="margin-left: 15px; margin-right: 10px;">
+                                        <div class="row control-group" ng-hide="accountDetail.AuthorizedParty == 'Hedgemark'" style="margin-left: 15px; margin-right: 10px;">
                                             <legend class="small font-primary">Cash Sweep:</legend>
                                         </div>
                                         <p></p>
                                         <div class="row">
-                                            <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                            <div class="col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="accountDetail.AuthorizedParty == 'Hedgemark'">
                                                 <div class="col-sm-8 col-md-4 col-lg-4">
                                                     <label class="control-label">Cash Sweep Time</label>
                                                 </div>
