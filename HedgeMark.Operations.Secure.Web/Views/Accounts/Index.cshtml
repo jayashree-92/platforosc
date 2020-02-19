@@ -85,20 +85,63 @@
                 <table id="accountTable" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
 
                 <div class="modal fade" id="accountModal" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog modal-mlg2" role="document">
+                    <div class="modal-dialog modal-xlg" role="document">
                         <div id="accountDetailCP" class="modal-content" ng-repeat="accountDetail in onBoardingAccountDetails track by $index" on-last-repeat>
                             <div class="row" style="position: sticky; top: 0; z-index: 2;">
                                 <span class="col-md-12">
-                                    <p class="panel panel-heading" style="background: #F5F5F5; border-bottom: 1px solid lightgray; margin: 0px">
+                                    <p class="panel panel-heading" style="cursor: pointer; background: #F5F5F5; border-bottom: 1px solid lightgray; margin: 0px" data-toggle="collapse" data-target="#basicDetailCP">
                                         @*<i class="glyphicon glyphicon-usd"></i>*@
                                         <span style="font-size: 15px; font-weight: bold">{{accountDetail.AccountName}}  </span>
                                         | Broker:<span style="font-size: 15px; font-weight: bold"> {{broker}}  </span>
                                         <span id="hmStatus" style="display: none;">| Status: <b><span id="spnAgrCurrentStatus" class=""></span></b></span>
                                     </p>
+
                                 </span>
-                                <span class="pull-right" style="padding: 5px; position: absolute; margin: 5px 0px 0px -50px">
+
+                                <span class="col-md-12" >
+                                    <div id="basicDetailCP" class="collapse" style="background: #f5f5f5">
+                                        <div class="control-group" style="margin-left: 10px; margin-right: 10px;">
+                                            <span class="row">
+                                                <span class="col-md-1">
+                                                    <label class="control-label">Entity Type <span style="color: red">  *</span></label>
+                                                </span>
+                                                <span class="col-md-4">
+                                                    <input name="Account Type" type="text" class="form-control" id="liAccountType" required />
+                                                </span>
+                                            </span>
+                                            <span class="row">
+                                                <span class="col-md-1">
+                                                    <label class="control-label">Fund <span style="color: red">  *</span></label>
+                                                </span>
+                                                <span class="col-md-4">
+                                                    <input name="Fund" type="text" class="form-control" id="liFund" required />
+                                                </span>
+                                            </span>
+                                            <span class="row" style="display: none;" id="spnBroker">
+                                                <span class="col-md-1">
+                                                    <label class="control-label">Broker <span style="color: red">  *</span></label>
+                                                </span>
+                                                <span class="col-md-4">
+                                                    <input name="Broker" type="text" class="form-control" id="liBroker" required />
+                                                </span>
+                                            </span>
+                                            <span class="row" style="display: none;" id="spnAgreement">
+                                                <span class="col-md-1">
+                                                    <label class="control-label">Agreement <span style="color: red">  *</span></label>
+                                                </span>
+                                                <span class="col-md-4">
+                                                    <input name="Agreement" type="text" class="form-control" id="liAgreement" required />
+                                                </span>
+                                            </span>
+                                            <br />
+                                        </div>
+                                    </div>
+                                </span>
+
+                                <span class="pull-right" style="z-index: 1; padding:5px;position: absolute; margin: 5px 0px 0px -50px">
                                     <button title="close this log" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 </span>
+
                             </div>
 
                             <div class="modal-body" style="padding: 0px">
@@ -131,13 +174,13 @@
                                     <p></p>
                                     <div class="row">
                                         @*<div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                <div class="col-sm-8 col-md-4 col-lg-4">
-                    <label class="control-label">Account Type</label>
-                </div>
-                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                    <input type="text" class="form-control" ng-model="accountDetail.AccountPurpose" id="liAccountPurpose{{$index}}" />
-                </div>
-            </div>*@
+                                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                                    <label class="control-label">Account Type</label>
+                                                </div>
+                                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                    <input type="text" class="form-control" ng-model="accountDetail.AccountPurpose" id="liAccountPurpose{{$index}}" />
+                                                </div>
+                                            </div>*@
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
                                                 <label class="control-label">Account Status</label>
@@ -195,7 +238,7 @@
                                     <div class="row" ng-hide="accountDetail.IsReceivingAccount">
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Swift Group <span style="color: red">  *</span></label>
+                                                <label class="control-label">Swift Group <span style="color: red"> *</span></label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
                                                 <input name="Swift Group" type="text" class="form-control" ng-model="accountDetail.SwiftGroup" id="liSwiftGroup{{$index}}" ng-change="fnOnSwiftGroupChange(accountDetail.SwiftGroup, $index)" required />
@@ -358,7 +401,7 @@
                                     </div>
                                     <p></p>
                                     <div class="row control-group" style="margin-left: 15px; margin-right: 10px;">
-                                        <legend class="small font-primary">Additional Details:</legend>
+                                        <legend class="small font-primary">Account SSI:</legend>
                                     </div>
                                     <p></p>
                                     <div class="row">
@@ -390,13 +433,13 @@
                                             </div>
                                         </div>
                                         @*<div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                <div class="col-sm-8 col-md-4 col-lg-4">
-                    <label class="control-label">Status Comments</label>
-                </div>
-                <div class="col-sm-8 col-md-5 col-lg-5">
-                    <textarea cols="10" rows="3" ng-model="accountDetail.StatusComments" class="form-control control-label" placeholder="Status Comments"></textarea>
-                </div>
-            </div>*@
+                                                <div class="col-sm-8 col-md-4 col-lg-4">
+                                                    <label class="control-label">Status Comments</label>
+                                                </div>
+                                                <div class="col-sm-8 col-md-5 col-lg-5">
+                                                    <textarea cols="10" rows="3" ng-model="accountDetail.StatusComments" class="form-control control-label" placeholder="Status Comments"></textarea>
+                                                </div>
+                                            </div>*@
                                     </div>
                                     <p></p>
                                     <div class="row">
@@ -406,10 +449,10 @@
                                             <span class="row font-primary small">Intermediary</span>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <span class="row font-primary small">Beneficiary <span style="color: red">  *</span></span>
+                                            <span class="row font-primary small">Beneficiary <span style="color: red"> *</span></span>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <span class="row font-primary small">Ultimate Beneficiary <span style="color: red">  *</span></span>
+                                            <span class="row font-primary small">Ultimate Beneficiary <span style="color: red"> *</span></span>
                                         </div>
                                     </div>
                                     <div class="row">

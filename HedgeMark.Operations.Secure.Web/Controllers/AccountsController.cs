@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -53,21 +54,26 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAllAccounts()
         {
-            var accounts = AccountManager.GetAllAccounts();
-            var custodyAccounts = accounts.Where(x => x.AccountType == "Custody").ToList();
-            return Json(new
+            using (var context = new OperationsSecureContext())
             {
-                accounts = accounts.Select(choice => new
+                var accounts = context.onBoardingAccounts.AsNoTracking().Where(a => !a.IsDeleted).Select(s => new { s.onBoardingAccountId, s.AccountName, s.AccountType, s.AccountNumber, s.FFCNumber }).ToList();
+
+                var custodyAccounts = accounts.Where(x => x.AccountType == "Custody").ToList();
+                return Json(new
                 {
-                    id = choice.onBoardingAccountId,
-                    text = string.Join("{0}|{1}", choice.AccountNumber, choice.FFCNumber ?? string.Empty),
-                }).OrderBy(x => x.text).ToList(),
-                custodyAccounts = custodyAccounts.Select(choice => new
-                {
-                    id = choice.AccountName,
-                    text = choice.AccountName
-                }).OrderBy(x => x.text).ToList()
-            }, JsonContentType, JsonContentEncoding);
+                    accounts = accounts.Select(choice => new
+                    {
+                        id = choice.onBoardingAccountId,
+                        text = string.Join("{0}|{1}", choice.AccountNumber, choice.FFCNumber ?? string.Empty),
+                    }).OrderBy(x => x.text).ToList(),
+                    custodyAccounts = custodyAccounts.Select(choice => new
+                    {
+                        id = choice.AccountName,
+                        text = choice.AccountName
+                    }).OrderBy(x => x.text).ToList()
+                });
+            }
+
         }
 
         public JsonResult GetAccountPreloadData()

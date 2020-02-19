@@ -310,10 +310,10 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         $scope.copyAccount.onBoardingAccountSSITemplateMaps = [];
         $scope.copyAccount.onBoardingAccountDocuments = [];
         $scope.copyAccount.IsReceivingAccountType = accountType == "Agreement" && $.inArray($scope.agreementType, ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"]) > -1;
-        if (account.IsReceivingAccountType || account.AuthorizedParty != "Hedgemark")
-            account.IsReceivingAccount = true;
+        if ($scope.copyAccount.IsReceivingAccountType || $scope.copyAccount.AuthorizedParty != "Hedgemark")
+            $scope.copyAccount.IsReceivingAccount = true;
         else
-            account.IsReceivingAccount = false;
+            $scope.copyAccount.IsReceivingAccount = false;
         $scope.onBoardingAccountDetails.push($scope.copyAccount);
     }
 

@@ -55,8 +55,6 @@ BEGIN
 
 END
 
-GO
-
 
 IF NOT EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'WirePortalCutoffId' AND TABLE_NAME = 'onBoardingAccount')
 BEGIN
@@ -64,7 +62,7 @@ BEGIN
 
 		DECLARE @command4 varchar(Max);
 
-		SELECT @Command4 ='UPDATE TGT.WirePortalCutoffId =SRC.onBoardingWirePortalCutoffId FROM onBoardingAccount TGT INNER JOIN onBoardingWirePortalCutoff SRC ON SRC.CutOffTimeZone = TGT.CutOffTimeZone 
+		SELECT @Command4 ='UPDATE TGT SET TGT.WirePortalCutoffId =SRC.onBoardingWirePortalCutoffId FROM onBoardingAccount TGT INNER JOIN onBoardingWirePortalCutoff SRC ON SRC.CutOffTimeZone = TGT.CutOffTimeZone 
 						WHERE SRC.DaystoWire = TGT.DaystoWire AND SRC.CutoffTime = TGT.CutoffTime AND SRC.CutoffTime is not null AND SRC.Currency = TGT.Currency AND SRC.CashInstruction =TGT.CashInstruction'
 
 		EXEC(@command4);
@@ -108,7 +106,7 @@ GO
 --IF EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'CutOffTimeZone' AND TABLE_NAME = 'onBoardingAccount') BEGIN ALTER TABLE onBoardingAccount DROP COLUMN CutOffTimeZone; END
 
 
-select * from onBoardingAccount
+--select * from onBoardingAccount
 
 
 
