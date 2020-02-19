@@ -309,7 +309,11 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         $scope.copyAccount.BrokerId = brokerId;
         $scope.copyAccount.onBoardingAccountSSITemplateMaps = [];
         $scope.copyAccount.onBoardingAccountDocuments = [];
-
+        $scope.copyAccount.IsReceivingAccountType = accountType == "Agreement" && $.inArray($scope.agreementType, ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"]);
+        if (account.IsReceivingAccountType || account.AuthorizedParty != "Hedgemark")
+            account.IsReceivingAccount = true;
+        else
+            account.IsReceivingAccount = false;
         $scope.onBoardingAccountDetails.push($scope.copyAccount);
     }
 
@@ -324,6 +328,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             $scope.accountReports = response.data.accountReports;
             $scope.ssiTemplates = response.data.ssiTemplates;
             $scope.agreementTypeId = response.data.agreementTypeId;
+            $scope.agreementType = response.data.agreementType;
             $scope.broker = response.data.broker;
             $scope.authorizedPartyData = response.data.authorizedParties;
             $scope.SwiftGroups = response.data.swiftGroups;
@@ -787,9 +792,9 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         }
     }
 
-    $scope.fnAuthorizedPartyChange = function (ev, index) {
-        $scope.onBoardingAccountDetails[index].AuthorizedParty = $(ev.currentTarget).select2('val');
-        if ($scope.onBoardingAccountDetails[index].AuthorizedParty == "Hedgemark") {
+    $scope.fnAuthorizedPartyChange = function (ev, index) {');
+        if ($scope.onBoardingAccountDetails[index].AuthorizedParty != "Hedgemark") {
+            $scope.onBoardingAccountDetails[index].IsReceivingAccount = true;
             $scope.onBoardingAccountDetails[index].AccountModule = null;
             $scope.onBoardingAccountDetails[index].SwiftGroup = null;
             $scope.onBoardingAccountDetails[index].SendersBIC = null;
@@ -800,6 +805,8 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             $("#liSwiftGroup" + index).select2("val", null);
             $("#cashSweep" + index).select2("val", "No");
         }
+        else
+            $scope.onBoardingAccountDetails[index].IsReceivingAccount = angular.copy($scope.onBoardingAccountDetails[index].IsReceivingAccountType);
     }
 
     $scope.fnCutOffTime = function (currency, cashInstruction, index) {
