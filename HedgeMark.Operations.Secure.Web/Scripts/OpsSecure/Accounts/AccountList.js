@@ -535,7 +535,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             } else {
                 $scope.accountPurpose = [{ id: "Pledge Account", text: "Pledge Account" }, { id: "Return Account", text: "Return Account" }, { id: "Both", text: "Both" }];
             }
-            account.IsReceivingAccountType = account.AccountType == "Agreement" && $.inArray(agreementType, ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"]);
+            account.IsReceivingAccountType = account.AccountType == "Agreement" && $.inArray(agreementType, ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"]) > -1;
             if (account.IsReceivingAccountType || account.AuthorizedParty != "Hedgemark")
                 account.IsReceivingAccount = true;
             else

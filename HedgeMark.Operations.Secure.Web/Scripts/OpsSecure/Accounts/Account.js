@@ -309,7 +309,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         $scope.copyAccount.BrokerId = brokerId;
         $scope.copyAccount.onBoardingAccountSSITemplateMaps = [];
         $scope.copyAccount.onBoardingAccountDocuments = [];
-        $scope.copyAccount.IsReceivingAccountType = accountType == "Agreement" && $.inArray($scope.agreementType, ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"]);
+        $scope.copyAccount.IsReceivingAccountType = accountType == "Agreement" && $.inArray($scope.agreementType, ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"]) > -1;
         if (account.IsReceivingAccountType || account.AuthorizedParty != "Hedgemark")
             account.IsReceivingAccount = true;
         else
