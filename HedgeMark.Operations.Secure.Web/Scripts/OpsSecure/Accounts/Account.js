@@ -792,7 +792,8 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         }
     }
 
-    $scope.fnAuthorizedPartyChange = function (ev, index) {');
+    $scope.fnAuthorizedPartyChange = function (index)
+    {
         if ($scope.onBoardingAccountDetails[index].AuthorizedParty != "Hedgemark") {
             $scope.onBoardingAccountDetails[index].IsReceivingAccount = true;
             $scope.onBoardingAccountDetails[index].AccountModule = null;
