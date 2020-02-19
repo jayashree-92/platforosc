@@ -449,8 +449,6 @@ namespace HMOSecureWeb.Controllers
             var onBoardingAccounts = AccountManager.GetAllOnBoardingAccounts(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
 
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
-            var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates().Select(s => s.onBoardingSSITemplateId).ToList();
-
 
             Dictionary<long, string> counterparties;
             Dictionary<int, string> funds;
@@ -471,12 +469,9 @@ namespace HMOSecureWeb.Controllers
                 }
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
-
-                funds = context.vw_HFund.AsNoTracking()
-                    .Where(s => AuthorizedSessionData.IsPrivilegedUser || hmFundIds.Contains(s.intFundID))
-                    .ToDictionary(x => x.intFundID, v => v.LegalFundName);
             }
 
+            funds = AdminFundManager.GetHFundsCreatedForDMA(hmFundIds, AuthorizedSessionData.IsPrivilegedUser, PreferencesManager.FundNameInDropDown.LegalFundName);
 
             return Json(new
             {
@@ -490,8 +485,8 @@ namespace HMOSecureWeb.Controllers
 
                     Broker = x.BrokerId != null && counterparties.ContainsKey((long)x.BrokerId) ? counterparties[(long)x.BrokerId] : string.Empty,
                     FundName = funds.ContainsKey((int)x.hmFundId) ? funds[(int)x.hmFundId] : string.Empty,
-                    ApprovedMaps = x.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Approved" && ssiTemplates.Contains(s.onBoardingSSITemplateId)),
-                    PendingApprovalMaps = x.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Pending Approval" && ssiTemplates.Contains(s.onBoardingSSITemplateId)),
+                    ApprovedMaps = x.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Approved"),
+                    PendingApprovalMaps = x.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Pending Approval"),
                     x.onBoardingAccountId,
                     x.dmaAgreementOnBoardingId,
                     x.AccountType,

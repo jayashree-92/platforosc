@@ -470,16 +470,6 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates()
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved").ToList();
-            }
-        }
-
         public static List<onBoardingSSITemplate> GetAllBrokerSsiTemplates()
         {
             using (var context = new OperationsSecureContext())
