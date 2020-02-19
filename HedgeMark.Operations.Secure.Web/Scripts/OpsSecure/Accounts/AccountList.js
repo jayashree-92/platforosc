@@ -538,6 +538,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             } else {
                 $scope.accountPurpose = [{ id: "Pledge Account", text: "Pledge Account" }, { id: "Return Account", text: "Return Account" }, { id: "Both", text: "Both" }];
             }
+            account.IsReceivingAccountType = account.AccountType == "Agreement" && $.inArray(agreementType, ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"]) > -1;
+            if (account.IsReceivingAccountType || account.AuthorizedParty != "Hedgemark")
+                account.IsReceivingAccount = true;
+            else
+                account.IsReceivingAccount = false;
             $scope.onBoardingAccountDetails.push(account);
             $scope.watchAccountDetails = $scope.onBoardingAccountDetails;
 
@@ -698,6 +703,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (value.UltimateBeneficiaryType == "Account Name" &&
                 (value.UltimateBeneficiaryAccountName == null || value.UltimateBeneficiaryAccountName == ""))
                 isAccountNameEmpty = true;
+            if (value.IsReceivingAccount)
+                value.onBoardingAccountSSITemplateMaps = [];
         });
 
         if (isAccountNameEmpty) {
@@ -750,7 +757,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 });
 
                 if ($scope.onBoardingAccountDetails[panelIndex].AuthorizedParty != null && $scope.onBoardingAccountDetails[panelIndex].AuthorizedParty != 'undefined')
-                    $("#liAuthorizedParty" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].AuthorizedParty).trigger('change');
+                {
+                    $("#liAuthorizedParty" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].AuthorizedParty);
+                    $scope.fnAuthorizedPartyChange(panelIndex);
+                }
             }
         });
     }
@@ -796,7 +806,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnAuthorizedPartyChange = function (index) {
 
-        if ($scope.onBoardingAccountDetails[index].AuthorizedParty == "Hedgemark") {
+        if ($scope.onBoardingAccountDetails[index].AuthorizedParty != "Hedgemark")
+        {
+            $scope.onBoardingAccountDetails[index].IsReceivingAccount = true;
             $scope.onBoardingAccountDetails[index].AccountModule = null;
             $scope.onBoardingAccountDetails[index].SwiftGroup = null;
             $scope.onBoardingAccountDetails[index].SendersBIC = null;
@@ -807,8 +819,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#liSwiftGroup" + index).select2("val", null);
             $("#cashSweep" + index).select2("val", "No");
         }
+        else
+            $scope.onBoardingAccountDetails[index].IsReceivingAccount = angular.copy($scope.onBoardingAccountDetails[index].IsReceivingAccountType);
     }
-
 
     $scope.fnCutOffTime = function (currency, cashInstruction, index) {
 
