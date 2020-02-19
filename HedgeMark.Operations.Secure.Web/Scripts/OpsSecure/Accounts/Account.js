@@ -167,17 +167,17 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
                         return "";
                     }
                 },
-                  { "mData": "JobTitle", "sTitle": "Group / Job Function" },
-                  { "mData": "name", "sTitle": "Name" },
-                  //{ "mData": "LastName", "sTitle": "LastName" },
-                  { "mData": "Email", "sTitle": "Email" },
-                  { "mData": "BusinessPhone", "sTitle": "Business Phone" },
-                  { "mData": "Notes", "sTitle": "Notes" },
-                  { "mData": "wires", "sTitle": "Wires" },
-                  { "mData": "margin", "sTitle": "Margin" },
-                  { "mData": "cash", "sTitle": "Cash" },
-                  { "mData": "collateral", "sTitle": "Collateral" },
-                  { "mData": "Interest", "sTitle": "Interest" }
+                { "mData": "JobTitle", "sTitle": "Group / Job Function" },
+                { "mData": "name", "sTitle": "Name" },
+                //{ "mData": "LastName", "sTitle": "LastName" },
+                { "mData": "Email", "sTitle": "Email" },
+                { "mData": "BusinessPhone", "sTitle": "Business Phone" },
+                { "mData": "Notes", "sTitle": "Notes" },
+                { "mData": "wires", "sTitle": "Wires" },
+                { "mData": "margin", "sTitle": "Margin" },
+                { "mData": "cash", "sTitle": "Cash" },
+                { "mData": "collateral", "sTitle": "Collateral" },
+                { "mData": "Interest", "sTitle": "Interest" }
             ],
             "deferRender": false,
             "bScrollCollapse": true,
@@ -575,7 +575,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             allowClear: true,
             data: $scope.cashInstructions == undefined ? [] : $scope.cashInstructions
         });
-        
+
 
         $("#liAccountDescriptions" + key).select2({
             placeholder: "Select Description",
@@ -708,7 +708,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
 
         if (!isValid) {
             if ($scope.accountForm.$error.required == undefined)
-            notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
+                notifyError("FFC Name, FFC Number, Reference, Bank Name, Bank Address & Account Names can only contain ?:().,'+- characters");
             else {
                 var message = "";
                 angular.forEach($scope.accountForm.$error.required, function (ele, ind) {
@@ -718,7 +718,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             }
             return;
         }
-            
+
         var isAccountExits = false;
         var existAccount = "";
         var accountList = [];
@@ -738,7 +738,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         if (isAccountExits) {
             bootbox.confirm(
                 {
-                    "message": "Account Number: " + existAccount[0]  + " and FFC Number: " + existAccount[1] + " combination already exists. Do you wish to add the account?",
+                    "message": "Account Number: " + existAccount[0] + " and FFC Number: " + existAccount[1] + " combination already exists. Do you wish to add the account?",
                     buttons: {
                         cancel: {
                             label: "No"
@@ -806,16 +806,25 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
 
         $http.get("/Accounts/GetCutoffTime?cashInstruction=" + cashInstruction + "&currency=" + currency).then(function (response) {
             var cutOff = response.data.cutOffTime;
+
+            $scope.onBoardingAccountDetails[index].WirePortalCutoff = {};
+            $scope.onBoardingAccountDetails[index].WirePortalCutoff.CutoffTime = new Date(2014, 0, 1, 0, 0, 0);
+            $scope.onBoardingAccountDetails[index].WirePortalCutoff.CutOffTimeZone = "EST";
+
             if (cutOff != undefined && cutOff != "") {
-                //var cutoffTimes = cutOff.CutoffTime;
-                $scope.onBoardingAccountDetails[index].CutoffTime = new Date(2014, 0, 1, cutOff.CutoffTime.Hours, cutOff.CutoffTime.Minutes, cutOff.CutoffTime.Seconds);
+
+                $scope.onBoardingAccountDetails[index].WirePortalCutoff.CutoffTime = new Date(2014, 0, 1, cutOff.CutoffTime.Hours, cutOff.CutoffTime.Minutes, cutOff.CutoffTime.Seconds);
                 //$("#cutOffTime" + index).val($scope.onBoardingAccountDetails[index].CutoffTime);
+                $scope.onBoardingAccountDetails[index].WirePortalCutoff.DaystoWire = cutOff.DaystoWire;
+                $scope.onBoardingAccountDetails[index].WirePortalCutoff.CutOffTimeZone = cutOff.CutOffTimeZone;
+                $scope.onBoardingAccountDetails[index].WirePortalCutoff.onBoardingWirePortalCutoffId = cutOff.onBoardingWirePortalCutoffId;
+                $scope.onBoardingAccountDetails[index].WirePortalCutoffId = cutOff.onBoardingWirePortalCutoffId;
             }
             else {
                 $("#cutOffTime" + index).val("");
                 $("#wireDays" + index).val("");
             }
-            $scope.onBoardingAccountDetails[index].CutOffTimeZone = cutOff != undefined && cutOff.CutOffTimeZone != null ? cutoff.CutOffTimeZone : "EST";
+
             $scope.onBoardingAccountDetails[index].Currency = currency;
             $scope.onBoardingAccountDetails[index].CashInstruction = cashInstruction;
 
@@ -825,18 +834,32 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
     $scope.fnGetBankDetails = function (biCorAbaValue, id, index) {
         $timeout(function () {
             var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
+
             switch (id) {
                 case "Beneficiary":
-                    $scope.onBoardingAccountDetails[index].BeneficiaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
-                    $scope.onBoardingAccountDetails[index].BeneficiaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    $scope.onBoardingAccountDetails[index].Beneficiary = {};
+
+                    $scope.onBoardingAccountDetails[index].BeneficiaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[index].Beneficiary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[index].Beneficiary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
+                    $scope.onBoardingAccountDetails[index].Beneficiary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[index].Beneficiary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
                     break;
                 case "Intermediary":
-                    $scope.onBoardingAccountDetails[index].IntermediaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
-                    $scope.onBoardingAccountDetails[index].IntermediaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    $scope.onBoardingAccountDetails[index].Intermediary = {};
+                    $scope.onBoardingAccountDetails[index].IntermediaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[index].Intermediary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[index].Intermediary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
+                    $scope.onBoardingAccountDetails[index].Intermediary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[index].Intermediary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
                     break;
                 case "UltimateBeneficiary":
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiary = {};
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
                     break;
             }
         }, 100);
@@ -891,15 +914,16 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             case "UltimateBeneficiary":
                 //$scope.onBoardingAccountDetails[index].IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + index).prop("checked");
                 $scope.onBoardingAccountDetails[index].UltimateBeneficiaryType = item;
-                
+
                 if (item == "Account Name") {
                     $("#divUltimateBeneficiaryBICorABA" + index).hide();
                     $("#ultimateBankName" + index).hide();
                     $("#ultimateBankAddress" + index).hide();
                     $("#accountName" + index).show();
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBICorABA = null;
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankName = null;
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankAddress = null;
+                    $scope.onBoardingAccountDetails[index].UltimateBeneficiary = {};
+                    //$scope.onBoardingAccountDetails[index].UltimateBeneficiaryBICorABA = null;
+                    //$scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankName = null;
+                    //$scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankAddress = null;
                     return;
                 } else {
                     $("#divUltimateBeneficiaryBICorABA" + index).show();
@@ -1360,7 +1384,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
                 data: response.data.accountDescriptions
             });
             if ($scope.agreementTypeId > 0)
-                $("#liAccountDescriptions" + panelIndex).val($scope.onBoardingAccountDetails[panelIndex].Description);    
+                $("#liAccountDescriptions" + panelIndex).val($scope.onBoardingAccountDetails[panelIndex].Description);
         });
     }
 

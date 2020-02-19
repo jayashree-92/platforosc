@@ -254,7 +254,7 @@
                                             </div>
                                             <div class="col-sm-8 col-md-6 col-lg-7">
                                                 <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
-                                                    <input type="text" name="cutoffTimeZone" ng-model="accountDetail.CutOffTimeZone" class="form-control" id="liTimeZone{{$index}}" disabled style="padding: 5px;" />
+                                                    <input type="text" name="cutoffTimeZone" ng-model="accountDetail.WirePortalCutoff.CutOffTimeZone" class="form-control" id="liTimeZone{{$index}}" disabled style="padding: 5px;" />
                                                 </div>
                                             </div>
                                         </div>
@@ -269,10 +269,10 @@
                                             </div>
                                             <div class="col-sm-8 col-md-6 col-lg-7">
                                                 <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
-                                                    <input type="time" name="cutOffTime" ng-model="accountDetail.CutoffTime" class="form-control" id="cutOffTime{{$index}}" disabled style="padding: 5px;" />
+                                                    <input type="time" name="cutOffTime" ng-model="accountDetail.WirePortalCutoff.CutoffTime" class="form-control" id="cutOffTime{{$index}}" disabled style="padding: 5px;" />
                                                 </div>
                                                 <div class="col-sm-8 col-md-4 col-lg-4 AdjustDropDownWidth" style="margin-top: 5px; padding-left: 0;">
-                                                    <label class="label label-success" id="wireDays{{$index}}" style="font-size: 12px; padding: 5px;">{{accountDetail.DaystoWire}} {{accountDetail.DaystoWire > 1 ? "Days" : "Day"}}</label>
+                                                    <label class="label label-success" id="wireDays{{$index}}" style="font-size: 12px; padding: 5px;">{{accountDetail.WirePortalCutoff.DaystoWire}} {{accountDetail.WirePortalCutoff.DaystoWire > 1 ? "Days" : "Day"}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -448,13 +448,13 @@
                                             <a class="btn btn-sm btn-info" ng-click="fnAddBeneficiaryModal($index)" title="Add Beneficiary"><i class="glyphicon glyphicon-plus"></i></a>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input type="text" ng-model="accountDetail.IntermediaryBICorABA" class="form-control control-label" id="liIntermediaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.IntermediaryBICorABA,'Intermediary',$index)" />
+                                            <input type="text" ng-model="accountDetail.Intermediary.BICorABA" class="form-control control-label" id="liIntermediaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.Intermediary.BICorABA,'Intermediary',$index)" />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input name="Beneficiary ABA/BIC" type="text" ng-model="accountDetail.BeneficiaryBICorABA" class="form-control control-label" id="liBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.BeneficiaryBICorABA,'Beneficiary',$index)" required />
+                                            <input name="Beneficiary ABA/BIC" type="text" ng-model="accountDetail.Beneficiary.BICorABA" class="form-control control-label" id="liBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.Beneficiary.BICorABA,'Beneficiary',$index)" required />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth" id="divUltimateBeneficiaryBICorABA{{$index}}">
-                                            <input type="text" ng-model="accountDetail.UltimateBeneficiaryBICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.UltimateBeneficiaryBICorABA,'UltimateBeneficiary',$index)" />
+                                            <input type="text" ng-model="accountDetail.UltimateBeneficiary.BICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.UltimateBeneficiary.BICorABA,'UltimateBeneficiary',$index)" />
                                         </div>
                                     </div>
                                     <p></p>
@@ -463,13 +463,13 @@
                                             <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input type="text" name='IntermediaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.IntermediaryBankName" class="form-control control-label" id="intermediaryBankName{{$index}}" placeholder="Bank Name" disabled />
+                                            <input type="text" name='IntermediaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankName" class="form-control control-label" id="intermediaryBankName{{$index}}" placeholder="Bank Name" disabled />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.BeneficiaryBankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName{{$index}}" disabled />
+                                            <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName{{$index}}" disabled />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input type="text" name="BankName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiaryBankName" class="form-control control-label" placeholder="Bank/Bene Name" id="ultimateBankName{{$index}}" disabled />
+                                            <input type="text" name="BankName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankName" class="form-control control-label" placeholder="Bank/Bene Name" id="ultimateBankName{{$index}}" disabled />
                                             <input type="text" name="AccountName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control" ng-model="accountDetail.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName{{$index}}" style="display: none;" />
                                         </div>
                                     </div>
@@ -479,13 +479,13 @@
                                             <label for="beneficiaryBankAddress{{$index}}" class="control-label" style="margin-left: 15px;">Bank Address </label>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="IntermediaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.IntermediaryBankAddress" id="intermediaryBankAddress{{$index}}" disabled></textarea>
+                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="IntermediaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankAddress" id="intermediaryBankAddress{{$index}}" disabled></textarea>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="BeneficiaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.BeneficiaryBankAddress" id="beneficiaryBankAddress{{$index}}" disabled></textarea>
+                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="BeneficiaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankAddress" id="beneficiaryBankAddress{{$index}}" disabled></textarea>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank/Bene Address" name="BankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiaryBankAddress" id="ultimateBankAddress{{$index}}" disabled></textarea>
+                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank/Bene Address" name="BankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankAddress" id="ultimateBankAddress{{$index}}" disabled></textarea>
 
                                         </div>
                                     </div>

@@ -500,7 +500,7 @@ namespace HMOSecureWeb.Controllers
             {
                 var timeZones = FileSystemManager.GetAllTimeZones();
                 var cashSweep = valueDate.Date.Add(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
-                var cutOff = valueDate.AddDays(onboardAccount.DaystoWire ?? 0).Date.Add(onboardAccount.CutoffTime ?? new TimeSpan(23, 59, 0));
+                var cutOff = valueDate.AddDays(onboardAccount.WirePortalCutoff.DaystoWire).Date.Add(onboardAccount.WirePortalCutoff.CutoffTime);
                 var baseTimeZone = timeZones[FileSystemManager.DefaultTimeZone];
 
                 var cashSweepTimeZone = onboardAccount.CashSweepTimeZone ?? "";
@@ -513,7 +513,7 @@ namespace HMOSecureWeb.Controllers
                 else
                     cashSweepTime = cashSweep;
 
-                var cutoffTimeZone = onboardAccount.CutOffTimeZone ?? "";
+                var cutoffTimeZone = onboardAccount.WirePortalCutoff.CutOffTimeZone ?? "";
                 var cutOffTime = new DateTime();
                 customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cutoffTimeZone) ? timeZones[cutoffTimeZone] : baseTimeZone);
 
@@ -743,8 +743,8 @@ namespace HMOSecureWeb.Controllers
                     if (isBookTransfer)
                         isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(receivingAccount.Currency) || string.IsNullOrWhiteSpace(receivingAccount.AccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.Description) || string.IsNullOrWhiteSpace(receivingAccount.UltimateBeneficiaryAccountName) ||
-                                                   string.IsNullOrWhiteSpace(receivingAccount.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBICorABA) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBankName) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBankAddress) ||
-                                                   string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBICorABA) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBankName) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBankAddress));
+                                                   string.IsNullOrWhiteSpace(receivingAccount.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BICorABA) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BankName) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BankAddress) ||
+                                                   string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BICorABA) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BankName) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BankAddress));
                     else
                         isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(ssiTemplate.Currency) || string.IsNullOrWhiteSpace(ssiTemplate.AccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.ReasonDetail) || string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryAccountName) ||
@@ -757,8 +757,8 @@ namespace HMOSecureWeb.Controllers
                     if (isBookTransfer)
                         isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(receivingAccount.Currency) || string.IsNullOrWhiteSpace(receivingAccount.AccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.UltimateBeneficiaryAccountName) ||
-                                                   string.IsNullOrWhiteSpace(receivingAccount.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBICorABA) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBankName) || string.IsNullOrWhiteSpace(receivingAccount.IntermediaryBankAddress) ||
-                                                   string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBICorABA) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBankName) || string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryBankAddress));
+                                                   string.IsNullOrWhiteSpace(receivingAccount.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BICorABA) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BankName) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BankAddress) ||
+                                                   string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BICorABA) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BankName) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BankAddress));
 
                     else
                         isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||

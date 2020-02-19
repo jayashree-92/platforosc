@@ -14,6 +14,14 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class onBoardingAccountBICorABA
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public onBoardingAccountBICorABA()
+        {
+            this.onBoardingAccounts = new HashSet<onBoardingAccount>();
+            this.onBoardingAccounts1 = new HashSet<onBoardingAccount>();
+            this.onBoardingAccounts2 = new HashSet<onBoardingAccount>();
+        }
+    
         public long onBoardingAccountBICorABAId { get; set; }
         public string BICorABA { get; set; }
         public string BankName { get; set; }
@@ -24,5 +32,12 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string UpdatedBy { get; set; }
         public System.DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<onBoardingAccount> onBoardingAccounts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<onBoardingAccount> onBoardingAccounts1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<onBoardingAccount> onBoardingAccounts2 { get; set; }
     }
 }

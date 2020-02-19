@@ -14,6 +14,12 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class onBoardingWirePortalCutoff
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public onBoardingWirePortalCutoff()
+        {
+            this.onBoardingAccounts = new HashSet<onBoardingAccount>();
+        }
+    
         public long onBoardingWirePortalCutoffId { get; set; }
         public string CashInstruction { get; set; }
         public string Country { get; set; }
@@ -23,5 +29,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string CutOffTimeZone { get; set; }
         public int RecCreatedBy { get; set; }
         public System.DateTime RecCreatedAt { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<onBoardingAccount> onBoardingAccounts { get; set; }
     }
 }

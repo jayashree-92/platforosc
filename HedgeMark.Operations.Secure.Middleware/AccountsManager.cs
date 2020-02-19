@@ -54,7 +54,27 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingAccounts.FirstOrDefault(account => account.onBoardingAccountId == accountId);
+                var account = context.onBoardingAccounts.Include(s => s.Beneficiary)
+                    .Include(s => s.Intermediary)
+                    .Include(s => s.UltimateBeneficiary)
+                    .Include(s => s.WirePortalCutoff).FirstOrDefault(acnt => acnt.onBoardingAccountId == accountId);
+
+                if (account.WirePortalCutoff == null)
+                    account.WirePortalCutoff = new onBoardingWirePortalCutoff() { CutOffTimeZone = "EST" };
+                if (account.Beneficiary == null)
+                    account.Beneficiary = new onBoardingAccountBICorABA();
+                if (account.Intermediary == null)
+                    account.Intermediary = new onBoardingAccountBICorABA();
+                if (account.UltimateBeneficiary == null)
+                    account.UltimateBeneficiary = new onBoardingAccountBICorABA();
+
+                //remove circular references
+                account.WirePortalCutoff.onBoardingAccounts = null;
+                account.Beneficiary.onBoardingAccounts = account.Beneficiary.onBoardingAccounts1 = account.Beneficiary.onBoardingAccounts2 = null;
+                account.Intermediary.onBoardingAccounts = account.Intermediary.onBoardingAccounts1 = account.Intermediary.onBoardingAccounts2 = null;
+                account.UltimateBeneficiary.onBoardingAccounts = account.UltimateBeneficiary.onBoardingAccounts1 = account.UltimateBeneficiary.onBoardingAccounts2 = null;
+
+                return account;
             }
 
         }
@@ -76,7 +96,12 @@ namespace HMOSecureMiddleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                return context.onBoardingAccounts.Include(x => x.onBoardingAccountSSITemplateMaps).Where(x => !x.IsDeleted).Where(s => isPreviledgedUser || hmFundIds.Contains(s.hmFundId)).AsNoTracking().ToList();
+                return context.onBoardingAccounts.AsNoTracking()
+                    .Include(s => s.Beneficiary)
+                    .Include(s => s.Intermediary)
+                    .Include(s => s.UltimateBeneficiary)
+                    .Include(s => s.WirePortalCutoff)
+                    .Include(x => x.onBoardingAccountSSITemplateMaps).Where(x => !x.IsDeleted).Where(s => isPreviledgedUser || hmFundIds.Contains(s.hmFundId)).ToList();
             }
 
         }
@@ -229,7 +254,7 @@ namespace HMOSecureMiddleware
                     {
                         account.UpdatedAt = DateTime.Now;
                         account.UpdatedBy = userName;
-                        context.onBoardingAccounts.AddOrUpdate(account);
+                        context.onBoardingAccounts.AddOrUpdate(s => s.onBoardingAccountId, account);
                         if (account.onBoardingAccountModuleAssociations != null && account.onBoardingAccountModuleAssociations.Count > 0)
                         {
                             var accountToBeDeleted = context.onBoardingAccountModuleAssociations.Where(x => x.onBoardingAccountId == account.onBoardingAccountId).ToList();
@@ -252,9 +277,9 @@ namespace HMOSecureMiddleware
                 }
 
             }
-            catch (DbEntityValidationException db)
+            catch (DbEntityValidationException dbex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1} - {2}", methodName, db.Message, string.Join(",", db.EntityValidationErrors.SelectMany(s => s.ValidationErrors.Select(p => p.PropertyName)).ToList())));
+                Logger.Error(string.Format("{0} - Error Message : {1} - {2}", methodName, dbex.Message, string.Join(",", dbex.EntityValidationErrors.SelectMany(s => s.ValidationErrors.Select(p => p.PropertyName)).ToList())), dbex);
             }
             catch (Exception ex)
             {

@@ -39,7 +39,7 @@ namespace HMOSecureMiddleware.Models
             get
             {
                 var senderInvolvedMessageTypes = new List<string> { "MT103", "MT202" };
-                return HMWire.hmsWireMessageType != null ? senderInvolvedMessageTypes.Contains(HMWire.hmsWireMessageType.MessageType) : false;
+                return HMWire.hmsWireMessageType != null && senderInvolvedMessageTypes.Contains(HMWire.hmsWireMessageType.MessageType);
             }
         }
 
@@ -77,7 +77,6 @@ namespace HMOSecureMiddleware.Models
         public string WireLastUpdatedBy { get; set; }
         public List<string> AttachmentUsers { get; set; }
         public List<string> WorkflowUsers { get; set; }
-        public vw_OnboardedAgreements Agreement { get; set; }
         public onBoardingAccount SendingAccount { get; set; }
         public onBoardingAccount ReceivingAccount { get; set; }
         public onBoardingSSITemplate SSITemplate { get; set; }

@@ -231,8 +231,8 @@ namespace HMOSecureWeb.Controllers
                     x.dmaAgreementOnBoardingId,
                     x.AccountType,
                     x.BrokerId,
-                    x.CutoffTime,
-                    x.DaystoWire,
+                    CutoffTime = x.WirePortalCutoff != null ? x.WirePortalCutoff.CutoffTime : new TimeSpan(),
+                    DaystoWire = x.WirePortalCutoff != null ? x.WirePortalCutoff.DaystoWire : 0,
                     x.hmFundId,
                     x.AccountName,
                     x.AccountNumber,
@@ -255,20 +255,20 @@ namespace HMOSecureWeb.Controllers
                     x.UpdatedBy,
                     x.ApprovedBy,
                     x.BeneficiaryType,
-                    x.BeneficiaryBICorABA,
-                    x.BeneficiaryBankName,
-                    x.BeneficiaryBankAddress,
+                    BeneficiaryBICorABA = x.Beneficiary != null ? x.Beneficiary.BICorABA : string.Empty,
+                    BeneficiaryBankName = x.Beneficiary != null ? x.Beneficiary.BankName : string.Empty,
+                    BeneficiaryBankAddress = x.Beneficiary != null ? x.Beneficiary.BankAddress : string.Empty,
                     x.BeneficiaryAccountNumber,
                     x.IntermediaryType,
-                    x.IntermediaryBICorABA,
-                    x.IntermediaryBankName,
-                    x.IntermediaryBankAddress,
+                    IntermediaryBICorABA = x.Intermediary != null ? x.Intermediary.BICorABA : string.Empty,
+                    IntermediaryBankName = x.Intermediary != null ? x.Intermediary.BankName : string.Empty,
+                    IntermediaryBankAddress = x.Intermediary != null ? x.Intermediary.BankAddress : string.Empty,
                     x.IntermediaryAccountNumber,
                     x.UltimateBeneficiaryType,
-                    x.UltimateBeneficiaryBICorABA,
-                    x.UltimateBeneficiaryBankName,
+                    UltimateBeneficiaryBICorABA = x.UltimateBeneficiary != null ? x.UltimateBeneficiary.BICorABA : string.Empty,
+                    UltimateBeneficiaryBankName = x.UltimateBeneficiary != null ? x.UltimateBeneficiary.BankName : string.Empty,
+                    UltimateBeneficiaryBankAddress = x.UltimateBeneficiary != null ? x.UltimateBeneficiary.BankAddress : string.Empty,
                     x.UltimateBeneficiaryAccountName,
-                    x.UltimateBeneficiaryBankAddress,
                     x.FFCName,
                     x.FFCNumber,
                     x.Reference,
@@ -381,6 +381,7 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetOnBoardingAccount(long accountId)
         {
             var onBoardingAccount = AccountManager.GetOnBoardingAccount(accountId);
+
             return Json(new
             {
                 OnBoardingAccount = onBoardingAccount,
@@ -436,9 +437,6 @@ namespace HMOSecureWeb.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
-
-
-
         public JsonResult GetAllOnBoardingAccount()
         {
             var hmFundIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
@@ -492,8 +490,8 @@ namespace HMOSecureWeb.Controllers
                     x.dmaAgreementOnBoardingId,
                     x.AccountType,
                     x.BrokerId,
-                    x.CutoffTime,
-                    x.DaystoWire,
+                    CutoffTime = x.WirePortalCutoff != null ? x.WirePortalCutoff.CutoffTime : new TimeSpan(),
+                    DaystoWire = x.WirePortalCutoff != null ? x.WirePortalCutoff.DaystoWire : 0,
                     x.AccountName,
                     x.AccountNumber,
                     x.AuthorizedParty,
@@ -515,20 +513,20 @@ namespace HMOSecureWeb.Controllers
                     x.UpdatedBy,
                     x.ApprovedBy,
                     x.BeneficiaryType,
-                    x.BeneficiaryBICorABA,
-                    x.BeneficiaryBankName,
-                    x.BeneficiaryBankAddress,
+                    BeneficiaryBICorABA = x.Beneficiary != null ? x.Beneficiary.BICorABA : string.Empty,
+                    BeneficiaryBankName = x.Beneficiary != null ? x.Beneficiary.BankName : string.Empty,
+                    BeneficiaryBankAddress = x.Beneficiary != null ? x.Beneficiary.BankAddress : string.Empty,
                     x.BeneficiaryAccountNumber,
                     x.IntermediaryType,
-                    x.IntermediaryBICorABA,
-                    x.IntermediaryBankName,
-                    x.IntermediaryBankAddress,
+                    IntermediaryBICorABA = x.Intermediary != null ? x.Intermediary.BICorABA : string.Empty,
+                    IntermediaryBankName = x.Intermediary != null ? x.Intermediary.BankName : string.Empty,
+                    IntermediaryBankAddress = x.Intermediary != null ? x.Intermediary.BankAddress : string.Empty,
                     x.IntermediaryAccountNumber,
                     x.UltimateBeneficiaryType,
-                    x.UltimateBeneficiaryBICorABA,
-                    x.UltimateBeneficiaryBankName,
+                    UltimateBeneficiaryBICorABA = x.UltimateBeneficiary != null ? x.UltimateBeneficiary.BICorABA : string.Empty,
+                    UltimateBeneficiaryBankName = x.UltimateBeneficiary != null ? x.UltimateBeneficiary.BankName : string.Empty,
+                    UltimateBeneficiaryBankAddress = x.UltimateBeneficiary != null ? x.UltimateBeneficiary.BankAddress : string.Empty,
                     x.UltimateBeneficiaryAccountName,
-                    x.UltimateBeneficiaryBankAddress,
                     x.FFCName,
                     x.FFCNumber,
                     x.Reference,
@@ -1049,9 +1047,9 @@ namespace HMOSecureWeb.Controllers
 
                 row["Cash Sweep Time Zone"] = account.CashSweepTimeZone;
 
-                if (account.CutoffTime != null)
+                if (account.WirePortalCutoff != null && account.WirePortalCutoff.CutoffTime != null)
                 {
-                    var dateTime = DateTime.Today.AddHours(account.CutoffTime.Value.Hours).AddMinutes(account.CutoffTime.Value.Minutes);
+                    var dateTime = DateTime.Today.AddHours(account.WirePortalCutoff.CutoffTime.Hours).AddMinutes(account.WirePortalCutoff.CutoffTime.Minutes);
                     var stringTime = dateTime.ToString("hh:mm tt");
 
                     row["Cutoff Time"] = stringTime;
@@ -1061,7 +1059,7 @@ namespace HMOSecureWeb.Controllers
                     row["Cutoff Time"] = string.Empty;
                 }
 
-                row["Days to wire per V.D"] = account.DaystoWire != null ? account.DaystoWire.ToString() + (account.DaystoWire.Value > 1 ? " Days" : " Day") : string.Empty;
+                row["Days to wire per V.D"] = account.WirePortalCutoff != null ? account.WirePortalCutoff.DaystoWire.ToString() + (account.WirePortalCutoff.DaystoWire > 1 ? " Days" : " Day") : string.Empty;
 
                 row["Holdback Amount"] = account.HoldbackAmount.HasValue ? account.HoldbackAmount.ToString() : string.Empty;
                 row["Sweep Comments"] = account.SweepComments;
@@ -1075,19 +1073,19 @@ namespace HMOSecureWeb.Controllers
                 //row["Contact Email"] = account.ContactEmail;
                 //row["Contact Number"] = account.ContactNumber;
                 row["Beneficiary Type"] = account.BeneficiaryType;
-                row["Beneficiary BIC or ABA"] = account.BeneficiaryBICorABA;
-                row["Beneficiary Bank Name"] = account.BeneficiaryBankName;
-                row["Beneficiary Bank Address"] = account.BeneficiaryBankAddress;
+                row["Beneficiary BIC or ABA"] = account.Beneficiary.BICorABA;
+                row["Beneficiary Bank Name"] = account.Beneficiary.BankName;
+                row["Beneficiary Bank Address"] = account.Beneficiary.BankAddress;
                 row["Beneficiary Account Number"] = account.BeneficiaryAccountNumber;
                 row["Intermediary Beneficiary Type"] = account.IntermediaryType;
-                row["Intermediary BIC or ABA"] = account.IntermediaryBICorABA;
-                row["Intermediary Bank Name"] = account.IntermediaryBankName;
-                row["Intermediary Bank Address"] = account.IntermediaryBankAddress;
+                row["Intermediary BIC or ABA"] = account.Intermediary.BICorABA;
+                row["Intermediary Bank Name"] = account.Intermediary.BankName;
+                row["Intermediary Bank Address"] = account.Intermediary.BankAddress;
                 row["Intermediary Account Number"] = account.IntermediaryAccountNumber;
                 row["Ultimate Beneficiary Type"] = account.UltimateBeneficiaryType;
-                row["Ultimate Beneficiary BIC or ABA"] = account.UltimateBeneficiaryBICorABA;
-                row["Ultimate Beneficiary Bank Name"] = account.UltimateBeneficiaryBankName;
-                row["Ultimate Beneficiary Bank Address"] = account.UltimateBeneficiaryBankAddress;
+                row["Ultimate Beneficiary BIC or ABA"] = account.UltimateBeneficiary.BICorABA;
+                row["Ultimate Beneficiary Bank Name"] = account.UltimateBeneficiary.BankName;
+                row["Ultimate Beneficiary Bank Address"] = account.UltimateBeneficiary.BankAddress;
                 row["Ultimate Beneficiary Account Name"] = account.UltimateBeneficiaryAccountName;
                 row["FFC Name"] = account.FFCName;
                 row["FFC Number"] = account.FFCNumber;
@@ -1234,10 +1232,17 @@ namespace HMOSecureWeb.Controllers
                 {
                     foreach (var account in accountRows)
                     {
-                        var accountDetail = new onBoardingAccount();
-                        accountDetail.onBoardingAccountId = string.IsNullOrWhiteSpace(account["Account Id"]) ? 0 : long.Parse(account["Account Id"]);
-                        accountDetail.AccountNumber = account["Account Number"];
-                        accountDetail.AccountType = account["Entity Type"];
+                        var accountDetail = new onBoardingAccount
+                        {
+                            Beneficiary = new onBoardingAccountBICorABA(),
+                            Intermediary = new onBoardingAccountBICorABA(),
+                            UltimateBeneficiary = new onBoardingAccountBICorABA(),
+                            WirePortalCutoff = new onBoardingWirePortalCutoff(),
+                            onBoardingAccountId = string.IsNullOrWhiteSpace(account["Account Id"]) ? 0 : long.Parse(account["Account Id"]),
+                            AccountNumber = account["Account Number"],
+                            AccountType = account["Entity Type"]
+                        };
+
 
                         if (account["Entity Type"] == "Agreement")
                         {
@@ -1313,14 +1318,14 @@ namespace HMOSecureWeb.Controllers
                                 var hours = Convert.ToInt32(splitCutoffTime[0]);
                                 hours = hours >= 12 ? hours % 12 : hours;
                                 cutoffTime = (hours + increment).ToString() + ":" + splitCutoffTime[1];
-                                accountDetail.CutoffTime = TimeSpan.Parse(cutoffTime);
+                                accountDetail.WirePortalCutoff.CutoffTime = TimeSpan.Parse(cutoffTime);
                             }
                         }
-                        accountDetail.CutOffTimeZone = string.IsNullOrWhiteSpace(account["Cutoff Time Zone"]) ? "EST" : account["Cutoff Time Zone"];
+                        accountDetail.WirePortalCutoff.CutOffTimeZone = string.IsNullOrWhiteSpace(account["Cutoff Time Zone"]) ? "EST" : account["Cutoff Time Zone"];
                         if (!string.IsNullOrWhiteSpace(account["Days to wire per V.D"]))
                         {
                             var wirePerDays = account["Days to wire per V.D"].Replace(" Days", "").Replace(" Day", "").Trim();
-                            accountDetail.DaystoWire = Convert.ToInt32(wirePerDays);
+                            accountDetail.WirePortalCutoff.DaystoWire = Convert.ToInt32(wirePerDays);
                         }
 
                         if (!string.IsNullOrWhiteSpace(account["Cash Sweep"]) && account["Cash Sweep"] == "Yes")
@@ -1349,54 +1354,54 @@ namespace HMOSecureWeb.Controllers
                         //    }
                         //}
                         accountDetail.BeneficiaryType = account["Beneficiary Type"];
-                        accountDetail.BeneficiaryBICorABA = account["Beneficiary BIC or ABA"];
-                        var beneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.BeneficiaryType == "ABA") && x.BICorABA == accountDetail.BeneficiaryBICorABA);
+                        accountDetail.Beneficiary.BICorABA = account["Beneficiary BIC or ABA"];
+                        var beneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.BeneficiaryType == "ABA") && x.BICorABA == accountDetail.Beneficiary.BICorABA);
                         if (beneficiaryBiCorAba != null)
                         {
-                            accountDetail.BeneficiaryBankName = beneficiaryBiCorAba.BankName;
-                            accountDetail.BeneficiaryBankAddress = beneficiaryBiCorAba.BankAddress;
+                            accountDetail.Beneficiary.BankName = beneficiaryBiCorAba.BankName;
+                            accountDetail.Beneficiary.BankAddress = beneficiaryBiCorAba.BankAddress;
                         }
                         else
                         {
-                            accountDetail.BeneficiaryBankName = string.Empty;
-                            accountDetail.BeneficiaryBankAddress = string.Empty;
-                            accountDetail.BeneficiaryBICorABA = string.Empty;
+                            accountDetail.Beneficiary.BankName = string.Empty;
+                            accountDetail.Beneficiary.BankAddress = string.Empty;
+                            accountDetail.Beneficiary.BICorABA = string.Empty;
                             accountDetail.BeneficiaryType = string.Empty;
                         }
 
                         accountDetail.BeneficiaryAccountNumber = account["Beneficiary Account Number"];
                         accountDetail.IntermediaryType = account["Intermediary Beneficiary Type"];
-                        accountDetail.IntermediaryBICorABA = account["Intermediary BIC or ABA"];
-                        var intermediaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.IntermediaryType == "ABA") && x.BICorABA == accountDetail.IntermediaryBICorABA);
+                        accountDetail.Intermediary.BICorABA = account["Intermediary BIC or ABA"];
+                        var intermediaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.IntermediaryType == "ABA") && x.BICorABA == accountDetail.Intermediary.BICorABA);
                         if (intermediaryBiCorAba != null)
                         {
-                            accountDetail.IntermediaryBankName = intermediaryBiCorAba.BankName;
-                            accountDetail.IntermediaryBankAddress = intermediaryBiCorAba.BankAddress;
+                            accountDetail.Intermediary.BankName = intermediaryBiCorAba.BankName;
+                            accountDetail.Intermediary.BankAddress = intermediaryBiCorAba.BankAddress;
                         }
                         else
                         {
-                            accountDetail.IntermediaryBankName = string.Empty;
-                            accountDetail.IntermediaryBankAddress = string.Empty;
-                            accountDetail.IntermediaryBICorABA = string.Empty;
+                            accountDetail.Intermediary.BankName = string.Empty;
+                            accountDetail.Intermediary.BankAddress = string.Empty;
+                            accountDetail.Intermediary.BICorABA = string.Empty;
                             accountDetail.IntermediaryType = string.Empty;
                         }
 
                         accountDetail.IntermediaryAccountNumber = account["Intermediary Account Number"];
                         accountDetail.UltimateBeneficiaryAccountName = account["Ultimate Beneficiary Account Name"];
                         accountDetail.UltimateBeneficiaryType = account["Ultimate Beneficiary Type"];
-                        accountDetail.UltimateBeneficiaryBICorABA = account["Ultimate Beneficiary BIC or ABA"];
-                        var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == accountDetail.UltimateBeneficiaryBICorABA);
+                        accountDetail.UltimateBeneficiary.BICorABA = account["Ultimate Beneficiary BIC or ABA"];
+                        var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == accountDetail.UltimateBeneficiary.BICorABA);
                         if (ultimateBeneficiaryBiCorAba != null && accountDetail.UltimateBeneficiaryType != "Account Name")
                         {
-                            accountDetail.UltimateBeneficiaryBankName = ultimateBeneficiaryBiCorAba.BankName;
-                            accountDetail.UltimateBeneficiaryBankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
+                            accountDetail.UltimateBeneficiary.BankName = ultimateBeneficiaryBiCorAba.BankName;
+                            accountDetail.UltimateBeneficiary.BankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
                             accountDetail.UltimateBeneficiaryAccountName = string.Empty;
                         }
                         else
                         {
-                            accountDetail.UltimateBeneficiaryBankName = string.Empty;
-                            accountDetail.UltimateBeneficiaryBankAddress = string.Empty;
-                            accountDetail.UltimateBeneficiaryBICorABA = string.Empty;
+                            accountDetail.UltimateBeneficiary.BankName = string.Empty;
+                            accountDetail.UltimateBeneficiary.BankAddress = string.Empty;
+                            accountDetail.UltimateBeneficiary.BICorABA = string.Empty;
                         }
 
                         accountDetail.FFCName = account["FFC Name"];
@@ -2025,8 +2030,8 @@ namespace HMOSecureWeb.Controllers
                 if (account.SweepCurrency != nonUpdatedAccount.SweepCurrency)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Sweep Currency", "Edited", nonUpdatedAccount.SweepCurrency, account.SweepCurrency, UserName));
             }
-            if (account.CutoffTime != nonUpdatedAccount.CutoffTime)
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cutoff Time", "Edited", nonUpdatedAccount.CutoffTime.ToString(), account.CutoffTime.ToString(), UserName));
+            if (account.WirePortalCutoff.CutoffTime != nonUpdatedAccount.WirePortalCutoff.CutoffTime)
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Cutoff Time", "Edited", nonUpdatedAccount.WirePortalCutoff.CutoffTime.ToString(), account.WirePortalCutoff.CutoffTime.ToString(), UserName));
 
             if (account.ContactType != nonUpdatedAccount.ContactType)
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Contact Type", "Edited", nonUpdatedAccount.ContactType, account.ContactType, UserName));
@@ -2042,49 +2047,49 @@ namespace HMOSecureWeb.Controllers
             //if (account.ContactNumber != nonUpdatedAccount.ContactNumber)
             //    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Contact Number", "Edited", nonUpdatedAccount.ContactNumber, account.ContactNumber, UserName));
 
-            if (account.BeneficiaryBICorABA != nonUpdatedAccount.BeneficiaryBICorABA)
+            if (account.Beneficiary.BICorABA != nonUpdatedAccount.Beneficiary.BICorABA)
             {
                 if (account.BeneficiaryType != nonUpdatedAccount.BeneficiaryType)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Type", "Edited", nonUpdatedAccount.BeneficiaryType, account.BeneficiaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary BIC or ABA", "Edited", nonUpdatedAccount.BeneficiaryBICorABA, account.BeneficiaryBICorABA, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary BIC or ABA", "Edited", nonUpdatedAccount.Beneficiary.BICorABA, account.Beneficiary.BICorABA, UserName));
 
-                if (account.BeneficiaryBankName != nonUpdatedAccount.BeneficiaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Bank Name", "Edited", nonUpdatedAccount.BeneficiaryBankName, account.BeneficiaryBankName, UserName));
-                if (account.BeneficiaryBankAddress != nonUpdatedAccount.BeneficiaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Bank Address", "Edited", nonUpdatedAccount.BeneficiaryBankAddress, account.BeneficiaryBankAddress, UserName));
+                if (account.Beneficiary.BankName != nonUpdatedAccount.Beneficiary.BankName)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Bank Name", "Edited", nonUpdatedAccount.Beneficiary.BankName, account.Beneficiary.BankName, UserName));
+                if (account.Beneficiary.BankAddress != nonUpdatedAccount.Beneficiary.BankAddress)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Bank Address", "Edited", nonUpdatedAccount.Beneficiary.BankAddress, account.Beneficiary.BankAddress, UserName));
             }
 
             if (account.BeneficiaryAccountNumber != nonUpdatedAccount.BeneficiaryAccountNumber)
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Account Number", "Edited", nonUpdatedAccount.BeneficiaryAccountNumber, account.BeneficiaryAccountNumber, UserName));
 
-            if (account.IntermediaryBICorABA != nonUpdatedAccount.IntermediaryBICorABA)
+            if (account.Intermediary.BICorABA != nonUpdatedAccount.Intermediary.BICorABA)
             {
                 if (account.IntermediaryType != nonUpdatedAccount.IntermediaryType)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Type", "Edited", nonUpdatedAccount.IntermediaryType, account.IntermediaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary BIC or ABA", "Edited", nonUpdatedAccount.IntermediaryBICorABA, account.IntermediaryBICorABA, UserName));
-                if (account.IntermediaryBankName != nonUpdatedAccount.IntermediaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Bank Name", "Edited", nonUpdatedAccount.IntermediaryBankName, account.IntermediaryBankName, UserName));
-                if (account.IntermediaryBankAddress != nonUpdatedAccount.IntermediaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Bank Address", "Edited", nonUpdatedAccount.IntermediaryBankAddress, account.IntermediaryBankAddress, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary BIC or ABA", "Edited", nonUpdatedAccount.Intermediary.BICorABA, account.Intermediary.BICorABA, UserName));
+                if (account.Intermediary.BankName != nonUpdatedAccount.Intermediary.BankName)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Bank Name", "Edited", nonUpdatedAccount.Intermediary.BankName, account.Intermediary.BankName, UserName));
+                if (account.Intermediary.BankAddress != nonUpdatedAccount.Intermediary.BankAddress)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Bank Address", "Edited", nonUpdatedAccount.Intermediary.BankAddress, account.Intermediary.BankAddress, UserName));
             }
 
             if (account.IntermediaryAccountNumber != nonUpdatedAccount.IntermediaryAccountNumber)
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Account Number", "Edited", nonUpdatedAccount.IntermediaryAccountNumber, account.IntermediaryAccountNumber, UserName));
 
-            if (account.UltimateBeneficiaryBICorABA != nonUpdatedAccount.UltimateBeneficiaryBICorABA)
+            if (account.UltimateBeneficiary.BICorABA != nonUpdatedAccount.UltimateBeneficiary.BICorABA)
             {
                 if (nonUpdatedAccount.UltimateBeneficiaryType != account.UltimateBeneficiaryType)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Type", "Edited", nonUpdatedAccount.UltimateBeneficiaryType, account.UltimateBeneficiaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary BIC or ABA", "Edited", nonUpdatedAccount.UltimateBeneficiaryBICorABA, account.UltimateBeneficiaryBICorABA, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary BIC or ABA", "Edited", nonUpdatedAccount.UltimateBeneficiary.BICorABA, account.UltimateBeneficiary.BICorABA, UserName));
 
-                if (account.UltimateBeneficiaryBankName != nonUpdatedAccount.UltimateBeneficiaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Bank Name", "Edited", nonUpdatedAccount.UltimateBeneficiaryBankName, account.UltimateBeneficiaryBankName, UserName));
+                if (account.UltimateBeneficiary.BankName != nonUpdatedAccount.UltimateBeneficiary.BankName)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Bank Name", "Edited", nonUpdatedAccount.UltimateBeneficiary.BankName, account.UltimateBeneficiary.BankName, UserName));
 
-                if (account.UltimateBeneficiaryBankAddress != nonUpdatedAccount.UltimateBeneficiaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Bank Address", "Edited", nonUpdatedAccount.UltimateBeneficiaryBankAddress, account.UltimateBeneficiaryBankAddress, UserName));
+                if (account.UltimateBeneficiary.BankAddress != nonUpdatedAccount.UltimateBeneficiary.BankAddress)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Bank Address", "Edited", nonUpdatedAccount.UltimateBeneficiary.BankAddress, account.UltimateBeneficiary.BankAddress, UserName));
             }
 
             if (account.UltimateBeneficiaryAccountName != nonUpdatedAccount.UltimateBeneficiaryAccountName)

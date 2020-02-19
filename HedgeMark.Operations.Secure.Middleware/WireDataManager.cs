@@ -530,16 +530,6 @@ namespace HMOSecureMiddleware
             using (var context = new OperationsSecureContext())
             {
                 context.onBoardingWirePortalCutoffs.AddOrUpdate(wirePortalCutoff);
-                if (wirePortalCutoff.onBoardingWirePortalCutoffId != 0)
-                {
-                    var thisCutoffAccounts = context.onBoardingAccounts.Where(s => s.CashInstruction == wirePortalCutoff.CashInstruction && s.Currency == wirePortalCutoff.Currency);
-                    thisCutoffAccounts.ForEach(s =>
-                    {
-                        s.CutoffTime = wirePortalCutoff.CutoffTime;
-                        s.CutOffTimeZone = wirePortalCutoff.CutOffTimeZone;
-                        s.DaystoWire = s.DaystoWire;
-                    });
-                }
                 context.SaveChanges();
             }
         }
