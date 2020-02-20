@@ -219,6 +219,13 @@ namespace HMOSecureWeb.Controllers
                 thisWire.WireLastUpdatedBy = users.First(s => s.Key == thisWire.HMWire.LastUpdatedBy).Value.HumanizeEmail();
                 thisWire.WireApprovedBy = thisWire.HMWire.ApprovedBy > 0 ? users.First(s => s.Key == thisWire.HMWire.ApprovedBy).Value.HumanizeEmail() : "-";
 
+                //approved wire
+                if (thisWire.HMWire.WireStatusId == 3 && thisWire.HMWire.ApprovedBy == null)
+                {
+                    thisWire.WireApprovedBy = thisWire.WireLastUpdatedBy;
+                    thisWire.HMWire.ApprovedAt = thisWire.HMWire.LastModifiedAt;
+                }
+
                 if (thisWire.HMWire.WireStatusId == 2 && thisWire.WireLastUpdatedBy == thisWire.WireCreatedBy)
                     thisWire.WireLastUpdatedBy = "-";
 
