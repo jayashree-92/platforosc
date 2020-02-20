@@ -247,7 +247,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnInitPreLoadEvents = function () {
 
-        
+
         $("#liAccountType").select2({
             placeholder: "Select a entity type",
             allowClear: true,
@@ -656,14 +656,16 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
             account.CreatedAt = moment(account.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
 
-            var agreementType = $.grep($scope.agreementTypes, function (v) { return v.id == $scope.AgreementTypeId; })[0];
+            var agreementType = {};
+            if ($scope.AgreementTypeId > 0)
+                agreementType = $.grep($scope.agreementTypes, function (v) { return v.id == $scope.AgreementTypeId; })[0];
 
             if (agreementType != undefined && (agreementType.text == "PB" || agreementType.text == "FCM" || $scope.AccountType == "DDA")) {
                 $scope.accountPurpose = [{ id: "Cash", text: "Cash" }, { id: "Margin", text: "Margin" }];
             } else {
                 $scope.accountPurpose = [{ id: "Pledge Account", text: "Pledge Account" }, { id: "Return Account", text: "Return Account" }, { id: "Both", text: "Both" }];
             }
-            account.IsReceivingAccountType = account.AccountType == "Agreement" && $.inArray(agreementType.text, $scope.receivingAccountTypes) > -1;
+            account.IsReceivingAccountType = account.AccountType != undefined && account.AccountType == "Agreement" && $.inArray(agreementType.text, $scope.receivingAccountTypes) > -1;
             if (account.IsReceivingAccountType || account.AuthorizedParty != "Hedgemark")
                 account.IsReceivingAccount = true;
             else

@@ -129,11 +129,7 @@ namespace HMOSecureWeb.Controllers
                 var accountIds = wireStatusDetails.Select(s => s.OnBoardAccountId).Union(wireStatusDetails.Where(s => s.WireTransferTypeId == 2).Select(s => s.OnBoardSSITemplateId)).Distinct().ToList();
                 var ssiTemplateIds = wireStatusDetails.Select(s => s.OnBoardSSITemplateId).Distinct().ToList();
 
-
-
-
-
-                wireAccounts = context.onBoardingAccounts.Where(s => accountIds.Contains(s.onBoardingAccountId)).ToList();
+                wireAccounts = context.onBoardingAccounts.Include(s => s.Beneficiary).Where(s => accountIds.Contains(s.onBoardingAccountId)).ToList();
                 wireSSITemplates = context.onBoardingSSITemplates.Where(s => ssiTemplateIds.Contains(s.onBoardingSSITemplateId)).ToList();
             }
 
@@ -145,7 +141,7 @@ namespace HMOSecureWeb.Controllers
 
             // List<dmaAgreementOnBoarding> wireAgreements;
 
-            List<dmaCounterPartyOnBoarding> counterParties;
+            //  List<dmaCounterPartyOnBoarding> counterParties;
             Dictionary<int, string> users;
             var hFundIds = wireStatusDetails.Select(s => s.hmFundId).ToList();
 
@@ -157,7 +153,7 @@ namespace HMOSecureWeb.Controllers
 
 
 
-                var userIds = wireStatusDetails.Select(s => s.LastUpdatedBy).Union(wireStatusDetails.Select(s => s.CreatedBy)).Distinct().ToList();
+                var userIds = wireStatusDetails.Select(s => s.LastUpdatedBy).Union(wireStatusDetails.Select(s => s.CreatedBy)).Union(wireStatusDetails.Select(s => s.ApprovedBy ?? 0)).Distinct().ToList();
 
                 //var agreementIds = wireStatusDetails.Select(s => s.OnBoardAgreementId).Distinct().ToList();
                 //wireAgreements = context.dmaAgreementOnBoardings.Include("onboardingFund")
@@ -166,8 +162,8 @@ namespace HMOSecureWeb.Controllers
 
 
                 users = context.hLoginRegistrations.Where(s => UserDetails.Id == s.intLoginID || userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
-                var counterpartyIds = wireSSITemplates.Select(s => s.TemplateEntityId).ToList();
-                counterParties = context.dmaCounterPartyOnBoardings.Where(s => counterpartyIds.Contains(s.dmaCounterPartyOnBoardId)).ToList();
+                //   var counterpartyIds = wireSSITemplates.Select(s => s.TemplateEntityId).ToList();
+                //    counterParties = context.dmaCounterPartyOnBoardings.Where(s => counterpartyIds.Contains(s.dmaCounterPartyOnBoardId)).ToList();
             }
 
             var hFunds = AdminFundManager.GetHFundsCreatedForDMA(hFundIds, PreferredFundNameInSession);
@@ -178,7 +174,10 @@ namespace HMOSecureWeb.Controllers
                 wire.hmsWirePurposeLkup.hmsWires = null;
                 wire.hmsWireStatusLkup.hmsWires = null;
                 wire.hmsWireTransferTypeLKup.hmsWires = null;
-                var counterpartyId = (wireSSITemplates.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate()).TemplateEntityId;
+                //     var counterpartyId = (wireSSITemplates.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate()).TemplateEntityId;
+
+
+                var fund = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) ?? new HFund();
                 var thisWire = new WireTicket
                 {
                     HMWire = wire,
@@ -190,9 +189,11 @@ namespace HMOSecureWeb.Controllers
                     SendingAccount = wireAccounts.FirstOrDefault(s => wire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount(),  //wire.onBoardingAccount
                     ReceivingAccount = wire.WireTransferTypeId == 2 ? wireAccounts.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount() : new onBoardingAccount(),
                     SSITemplate = wire.WireTransferTypeId != 2 && wire.hmsWireTransferTypeLKup.TransferType != "Notice" ? wireSSITemplates.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate() : new onBoardingSSITemplate(),
-                    PreferredFundName = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) == null ? "" : hFunds.First(s => s.HFundId == wire.hmFundId).PerferredFundName,
-                    ShortFundName = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) == null ? "" : hFunds.First(s => s.HFundId == wire.hmFundId).OpsFundName,
-                    Counterparty = (wire.hmsWireTransferTypeLKup.TransferType != "Notice" ? counterParties.FirstOrDefault(s => counterpartyId == s.dmaCounterPartyOnBoardId) ?? new dmaCounterPartyOnBoarding() : new dmaCounterPartyOnBoarding()).CounterpartyName
+                    PreferredFundName = fund.PerferredFundName ?? string.Empty,
+                    ShortFundName = fund.ShortFundName ?? string.Empty,
+                    ClientLegalName = fund.ClientLegalName ?? string.Empty,
+                    ClientShortName = fund.ClientShortName ?? string.Empty
+                    //  Counterparty = (wire.hmsWireTransferTypeLKup.TransferType != "Notice" ? counterParties.FirstOrDefault(s => counterpartyId == s.dmaCounterPartyOnBoardId) ?? new dmaCounterPartyOnBoarding() : new dmaCounterPartyOnBoarding()).CounterpartyName
                 };
 
                 //thisWire.Agreement.dmaAgreementDocuments = null;
@@ -204,15 +205,29 @@ namespace HMOSecureWeb.Controllers
                 //thisWire.Agreement.onboardingFund.onBoardingAccounts = null;
                 //thisWire.Agreement.dmaCounterPartyOnBoarding.dmaAgreementOnBoardings = null;
 
+                if (thisWire.SendingAccount.Beneficiary != null)
+                    thisWire.SendingAccount.Beneficiary.onBoardingAccounts = thisWire.SendingAccount.Beneficiary.onBoardingAccounts1 = thisWire.SendingAccount.Beneficiary.onBoardingAccounts2 = null;
+                else
+                    thisWire.SendingAccount.Beneficiary = new onBoardingAccountBICorABA();
+                if (thisWire.ReceivingAccount.Beneficiary != null)
+                    thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts = thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts1 = thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts2 = null;
+                else
+                    thisWire.ReceivingAccount.Beneficiary = new onBoardingAccountBICorABA();
+
                 //Update User Details
                 thisWire.WireCreatedBy = users.First(s => s.Key == thisWire.HMWire.CreatedBy).Value.HumanizeEmail();
                 thisWire.WireLastUpdatedBy = users.First(s => s.Key == thisWire.HMWire.LastUpdatedBy).Value.HumanizeEmail();
+                thisWire.WireApprovedBy = thisWire.HMWire.ApprovedBy > 0 ? users.First(s => s.Key == thisWire.HMWire.ApprovedBy).Value.HumanizeEmail() : "-";
 
                 if (thisWire.HMWire.WireStatusId == 2 && thisWire.WireLastUpdatedBy == thisWire.WireCreatedBy)
                     thisWire.WireLastUpdatedBy = "-";
 
                 wireData.Add(thisWire);
             }
+
+            //Custom ordering as per HMOS-56
+            var customStatusOrder = new[] { 2, 5, 1, 4, 3 };
+            wireData = wireData.OrderBy(s => Array.IndexOf(customStatusOrder, s.HMWire.WireStatusId)).ToList();
             return Json(new { wireData, AuthorizedSessionData.IsPrivilegedUser, isAdmin = User.IsInRole(OpsSecureUserRoles.DMAAdmin) });
         }
 

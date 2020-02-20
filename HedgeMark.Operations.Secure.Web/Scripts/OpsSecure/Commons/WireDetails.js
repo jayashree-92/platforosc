@@ -57,41 +57,6 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 //"dom": "trI",
                 "bDestroy": true,
                 "columns": [
-                    { "data": "WireId", "sTitle": "Id" },
-                    { "data": "PreferredFundName", "sTitle": "Fund" },
-                    {
-                        "data": "Counterparty", "sTitle": "Counterparty/Service Provider",
-                        "render": function (tdata) {
-                            return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
-                        }
-                    },
-                    {
-                        "data": "TransferType", "sTitle": "Transfer Type"
-                    },
-                    //{
-                    //    "mData": "Agreement.AgreementShortName", "sTitle": "Agreement",
-                    //    "mRender": function (tdata) {
-                    //        return "<div>" + (tdata != null ? tdata : "N/A") + "</div>";
-                    //    }
-                    //},
-                    {
-                        "data": "HMWire.ValueDate", "sTitle": "Value Date",
-                        "render": renderDotNetDateOnly
-                    },
-                    { "data": "HMWire.hmsWirePurposeLkup.Purpose", "sTitle": "Wire Purpose" },
-                    { "data": "SendingAccount.AccountName", "sTitle": "Sending Account" },
-                    {
-                        "data": "ReceivingAccountName", "sTitle": "Receiving Account",
-                        "render": function (tdata) {
-                            return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
-                        }
-                    },
-                    {
-                        "data": "HMWire.Amount", "sTitle": "Amount",
-                        "render": renderDataAsCurrency,
-                    },
-                    { "data": "HMWire.hmsWireMessageType.MessageType", "sTitle": "Wire Message Type" },
-                    { "data": "HMWire.Currency", "sTitle": "Currency" },
                     {
                         "mData": "HMWire.WireStatusId", "sTitle": "Wire Status",
                         "render": function (tdata, type, row) {
@@ -116,6 +81,56 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                             }
                         }
                     },
+                    { "data": "WireId", "sTitle": "Id" },
+                    { "data": "ClientLegalName", "sTitle": "Client" },
+                    { "data": "PreferredFundName", "sTitle": "Fund" },
+                    { "data": "SendingAccount.AccountName", "sTitle": "Sending Account Name" },
+                    { "data": "SendingAccount.AccountNumber", "sTitle": "Sending Account Number" },
+                    {
+                        "data": "SendingAccount.AccountNumber", "sTitle": "Module/Origin", "render": function (tdata, type, row) {
+                            return "";
+                        }
+                    },
+                    //{
+                    //    "data": "Counterparty", "sTitle": "Counterparty/Service Provider",
+                    //    "render": function (tdata) {
+                    //        return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
+                    //    }
+                    //},
+                    {
+                        "data": "TransferType", "sTitle": "Transfer Type"
+                    },
+                    //{
+                    //    "mData": "Agreement.AgreementShortName", "sTitle": "Agreement",
+                    //    "mRender": function (tdata) {
+                    //        return "<div>" + (tdata != null ? tdata : "N/A") + "</div>";
+                    //    }
+                    //},
+                    { "data": "HMWire.hmsWirePurposeLkup.Purpose", "sTitle": "Wire Purpose" },
+                    {
+                        "data": "HMWire.ValueDate", "sTitle": "Value Date",
+                        "render": renderDotNetDateOnly
+                    },
+
+                    { "data": "HMWire.Currency", "sTitle": "Currency" },
+                    {
+                        "data": "HMWire.Amount", "sTitle": "Amount",
+                        "render": renderDataAsCurrency,
+                    },
+                    {
+                        "data": "ReceivingAccountName", "sTitle": "Template Name",
+                        "render": function (tdata) {
+                            return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
+                        }
+                    },
+
+                    { "data": "ReceivingAccount.Beneficiary.BankName", "sTitle": "Beneficiary Bank" },
+                    { "data": "ReceivingAccount.Beneficiary.BICorABA", "sTitle": "Beneficiary" },
+                    { "data": "ReceivingAccount.BeneficiaryAccountNumber", "sTitle": "Beneficiary A/C Number" },
+
+                    { "data": "HMWire.hmsWireMessageType.MessageType", "sTitle": "Wire Message Type" },
+
+
                     {
                         "mData": "WireCreatedBy", "sTitle": "Initiated By"
                     },
@@ -131,7 +146,16 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         "data": "HMWire.LastModifiedAt",
                         "sTitle": "Last Updated At",
                         "render": renderDotNetDateAndTime
+                    },
+                    {
+                        "data": "WireApprovedBy", "sTitle": "Approved By"
+                    },
+                    {
+                        "data": "HMWire.ApprovedAt",
+                        "sTitle": "ApprovedAt At",
+                        "render": renderDotNetDateAndTime
                     }
+
                 ],
                 "createdRow": function (row, data) {
 
@@ -163,16 +187,17 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     "sInfo": "Showing _START_ to _END_ of _TOTAL_ wire tickets",
                     "sInfoFiltered": " - filtering from _MAX_ tickets"
                 },
-                "scrollX": false,
+                //"scrollX": false,
+                scroller: true,
                 "sScrollX": "100%",
                 "sScrollXInner": "100%",
-                "sScrollY": false,
+                //"sScrollY": false,
                 //"scrollY": $("#pageMainContent").offset().top + 600,
                 //stateSave: true,
                 //"scrollX": true,
-                "order": [[16, "desc"]],
+                "order": [],
                 //"bSort": false,
-                "bPaginate": false,
+                //"bPaginate": false,
                 iDisplayLength: -1,
                 sRowSelect: false,
                 "preDrawCallback": function (settings) {

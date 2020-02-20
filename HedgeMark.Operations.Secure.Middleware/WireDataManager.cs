@@ -107,10 +107,11 @@ namespace HMOSecureMiddleware
                 hmWire.hmsWireWorkflowLogs = context.hmsWireWorkflowLogs.Where(s => s.hmsWireId == wireId).ToList();
                 hmWire.hmsWireLogs = context.hmsWireLogs.Where(s => s.hmsWireId == wireId).ToList();
 
-                wireSendingAccount = context.onBoardingAccounts.FirstOrDefault(s => hmWire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount();
-                wireReceivingAccount = context.onBoardingAccounts.FirstOrDefault(s => hmWire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount();
                 wireSSITemplate = context.onBoardingSSITemplates.FirstOrDefault(s => hmWire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate();
             }
+
+            wireSendingAccount = AccountManager.GetOnBoardingAccount(hmWire.OnBoardAccountId);
+            wireReceivingAccount = AccountManager.GetOnBoardingAccount(hmWire.OnBoardSSITemplateId);
 
             //if (hmWire == null)
             //    return null;
@@ -198,7 +199,7 @@ namespace HMOSecureMiddleware
                 WorkflowUsers = workflowUsers,
                 Counterparty = (counterparty ?? new dmaCounterPartyOnBoarding()).CounterpartyName,
                 SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireId),
-                ShortFundName = hFund != null ? hFund.OpsFundName : string.Empty
+                ShortFundName = hFund != null ? hFund.ShortFundName : string.Empty
             };
         }
 
@@ -223,9 +224,9 @@ namespace HMOSecureMiddleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
                 var fundAccounts = (from oAccnt in context.onBoardingAccounts
-                                       let isAuthorizedSendingAccount = (oAccnt.Currency == currency && oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0)))
-                                       where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && (isBookTransfer || isAuthorizedSendingAccount)
-                                       select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber, IsAuthorizedSendingAccount = isAuthorizedSendingAccount }).Distinct().ToList();
+                                    let isAuthorizedSendingAccount = (oAccnt.Currency == currency && oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0)))
+                                    where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && (isBookTransfer || isAuthorizedSendingAccount)
+                                    select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber, IsAuthorizedSendingAccount = isAuthorizedSendingAccount }).Distinct().ToList();
                 return fundAccounts;
             }
         }
@@ -240,11 +241,11 @@ namespace HMOSecureMiddleware
                 context.Configuration.ProxyCreationEnabled = false;
 
                 var fundAccounts = (from oAccnt in context.onBoardingAccounts
-                                       join oMap in context.onBoardingAccountSSITemplateMaps on oAccnt.onBoardingAccountId equals oMap.onBoardingAccountId
-                                       let dmaReports = oAccnt.onBoardingAccountModuleAssociations.Select(s => s.onBoardingModule).Select(s => s.dmaReportsId)
-                                       let isAuthorizedSendingAccount = (oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0)))
-                                       where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved" && oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && isAuthorizedSendingAccount && dmaReports.Contains(reportId)
-                                       select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber, IsAuthorizedSendingAccount = isAuthorizedSendingAccount }).ToList();
+                                    join oMap in context.onBoardingAccountSSITemplateMaps on oAccnt.onBoardingAccountId equals oMap.onBoardingAccountId
+                                    let dmaReports = oAccnt.onBoardingAccountModuleAssociations.Select(s => s.onBoardingModule).Select(s => s.dmaReportsId)
+                                    let isAuthorizedSendingAccount = (oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0)))
+                                    where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved" && oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && isAuthorizedSendingAccount && dmaReports.Contains(reportId)
+                                    select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber, IsAuthorizedSendingAccount = isAuthorizedSendingAccount }).ToList();
                 return fundAccounts;
             }
         }
@@ -344,10 +345,21 @@ namespace HMOSecureMiddleware
                 wire.WireStatusId = (int)wireStatus;
                 wire.SwiftStatusId = (int)swiftStatus;
 
-                if (userId != -1)
+                if (userId != -1 && wireStatus != WireStatus.Approved)
                 {
                     wire.LastUpdatedBy = userId;
                     wire.LastModifiedAt = DateTime.Now;
+                }
+
+                if (wireStatus == WireStatus.Approved)
+                {
+                    wire.ApprovedAt = DateTime.Now;
+                    wire.ApprovedBy = userId;
+                }
+                else
+                {
+                    wire.ApprovedAt = null;
+                    wire.ApprovedBy = null;
                 }
 
                 if (wireStatus == WireStatus.Initiated)

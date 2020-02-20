@@ -36,6 +36,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
             <PropertyRef Name="ClientFundName" />
             <PropertyRef Name="HMRAName" />
             <PropertyRef Name="FundStatus" />
+            <PropertyRef Name="ClientLegalEntityName" />
           </Key>
           <Property Name="intFundId" Type="int" Nullable="false" />
           <Property Name="FundMapId" Type="int" Nullable="false" />
@@ -50,6 +51,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="NAVFrequency" Type="varchar" MaxLength="200" />
           <Property Name="FundLegalStructure" Type="varchar" MaxLength="200" />
           <Property Name="AccountingMethod" Type="varchar" MaxLength="200" />
+          <Property Name="ClientLegalEntityName" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="ClientShortName" Type="varchar" MaxLength="200" />
         </EntityType>
         <EntityContainer Name="DMA_HMModelStoreContainer">
           <EntitySet Name="dmaReports" EntityType="Self.dmaReports" Schema="dbo" store:Type="Tables" />
@@ -68,7 +71,9 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
     [vw_HFundOps].[BaseCurrencyShareclass] AS [BaseCurrencyShareclass], 
     [vw_HFundOps].[NAVFrequency] AS [NAVFrequency], 
     [vw_HFundOps].[FundLegalStructure] AS [FundLegalStructure], 
-    [vw_HFundOps].[AccountingMethod] AS [AccountingMethod]
+    [vw_HFundOps].[AccountingMethod] AS [AccountingMethod], 
+    [vw_HFundOps].[ClientLegalEntityName] AS [ClientLegalEntityName], 
+    [vw_HFundOps].[ClientShortName] AS [ClientShortName]
     FROM [dbo].[vw_HFundOps] AS [vw_HFundOps]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
@@ -110,6 +115,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
             <PropertyRef Name="ClientFundName" />
             <PropertyRef Name="HMRAName" />
             <PropertyRef Name="FundStatus" />
+            <PropertyRef Name="ClientLegalEntityName" />
           </Key>
           <Property Name="intFundId" Type="Int32" Nullable="false" />
           <Property Name="FundMapId" Type="Int32" Nullable="false" />
@@ -124,6 +130,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="NAVFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="FundLegalStructure" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="AccountingMethod" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ClientLegalEntityName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ClientShortName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -156,6 +164,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <EntitySetMapping Name="vw_HFundOps">
             <EntityTypeMapping TypeName="OperationsModel.vw_HFundOps">
               <MappingFragment StoreEntitySet="vw_HFundOps">
+                <ScalarProperty Name="ClientShortName" ColumnName="ClientShortName" />
+                <ScalarProperty Name="ClientLegalEntityName" ColumnName="ClientLegalEntityName" />
                 <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
                 <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
                 <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />

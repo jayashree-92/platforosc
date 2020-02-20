@@ -2051,7 +2051,7 @@ namespace HMOSecureWeb.Controllers
             //if (account.ContactNumber != nonUpdatedAccount.ContactNumber)
             //    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Contact Number", "Edited", nonUpdatedAccount.ContactNumber, account.ContactNumber, UserName));
 
-            if (account.Beneficiary.BICorABA != nonUpdatedAccount.Beneficiary.BICorABA)
+            if (account.Beneficiary != null && account.Beneficiary.BICorABA != nonUpdatedAccount.Beneficiary.BICorABA)
             {
                 if (account.BeneficiaryType != nonUpdatedAccount.BeneficiaryType)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Type", "Edited", nonUpdatedAccount.BeneficiaryType, account.BeneficiaryType, UserName));
@@ -2067,7 +2067,7 @@ namespace HMOSecureWeb.Controllers
             if (account.BeneficiaryAccountNumber != nonUpdatedAccount.BeneficiaryAccountNumber)
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Beneficiary Account Number", "Edited", nonUpdatedAccount.BeneficiaryAccountNumber, account.BeneficiaryAccountNumber, UserName));
 
-            if (account.Intermediary.BICorABA != nonUpdatedAccount.Intermediary.BICorABA)
+            if (account.Intermediary != null && account.Intermediary.BICorABA != nonUpdatedAccount.Intermediary.BICorABA)
             {
                 if (account.IntermediaryType != nonUpdatedAccount.IntermediaryType)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Type", "Edited", nonUpdatedAccount.IntermediaryType, account.IntermediaryType, UserName));
@@ -2082,7 +2082,7 @@ namespace HMOSecureWeb.Controllers
             if (account.IntermediaryAccountNumber != nonUpdatedAccount.IntermediaryAccountNumber)
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Intermediary Account Number", "Edited", nonUpdatedAccount.IntermediaryAccountNumber, account.IntermediaryAccountNumber, UserName));
 
-            if (account.UltimateBeneficiary.BICorABA != nonUpdatedAccount.UltimateBeneficiary.BICorABA)
+            if (account.UltimateBeneficiary != null && account.UltimateBeneficiary.BICorABA != nonUpdatedAccount.UltimateBeneficiary.BICorABA)
             {
                 if (nonUpdatedAccount.UltimateBeneficiaryType != account.UltimateBeneficiaryType)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Ultimate Beneficiary Type", "Edited", nonUpdatedAccount.UltimateBeneficiaryType, account.UltimateBeneficiaryType, UserName));
