@@ -16,6 +16,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.ContactType = [{ id: "Cash", text: "Cash" }, { id: "Custody", text: "Custody" }, { id: "PB Client Service", text: "PB Client Service" }, { id: "Margin", text: "Margin" }];
     $scope.accountPurpose = [];
     $scope.accountStatus = [{ id: "Requested", text: "Requested" }, { id: "Reserved", text: "Reserved" }, { id: "Open", text: "Open" }, { id: "Requested Closure", text: "Requested Closure" }, { id: "Closed", text: "Closed" }];
+    $scope.entityTypes = [{ id: "Agreement", text: "Agreement" }, { id: "DDA", text: "DDA" }, { id: "Custody", text: "Custody" }];
     $scope.SwiftGroups = [];
     $scope.SwiftGroupData = [];
     var accountDocumentTable = [];
@@ -220,9 +221,132 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
-    $scope.fnGetBicorAba();
-    $scope.fnGetCurrency();
-    $scope.fnGetCashInstruction();
+
+
+    $scope.fnPreloadAccountData = function () {
+
+        $http.get("/Accounts/GetAccountPreloadData").then(function (response) {
+            $scope.funds = response.data.funds;
+            $scope.agreements = response.data.agreements;
+            $scope.counterpartyFamilies = response.data.counterpartyFamilies;
+
+        });
+    }
+
+
+
+    //$scope.fnInitializeSelect2 = function() {
+
+    //}
+
+    var initAccount = function () {
+        $q.all([$scope.fnGetBicorAba(null), $scope.fnGetCurrency(), $scope.fnGetCashInstruction()]).then($scope.fnPreloadAccountData);
+    }
+
+    initAccount();
+
+    $scope.fnInitPreLoadEvents = function () {
+
+        
+        $("#liAccountType").select2({
+            placeholder: "Select a entity type",
+            allowClear: true,
+            data: $scope.entityTypes
+        });
+
+        $("#liFund").select2({
+            placeholder: "Select a fund",
+            allowClear: true,
+            data: $scope.funds
+        });
+
+        $("#liBroker").select2({
+            placeholder: "Select a broker",
+            allowClear: true,
+            data: $scope.counterpartyFamilies
+        });
+
+        $("#liAgreement").select2({
+            placeholder: "Select an agreement",
+            allowClear: true,
+            data: []
+        });
+
+        $("#liAccountType").change(function () {
+            accountType = $(this).val();
+            if ($(this).val() != "" && $(this).val() != undefined) {
+                if ($(this).val() == "Agreement") {
+                    $("#spnBroker").hide();
+                    $("#spnAgreement").show();
+                } else {
+                    $("#spnBroker").show();
+                    $("#spnAgreement").hide();
+                }
+            } else {
+                $("#spnBroker").hide();
+                $("#spnAgreement").hide();
+            }
+        });
+
+        $("#liFund").change(function () {
+
+            fundId = $(this).val();
+            if (fundId > 0) {
+
+                var agreements = $.grep($scope.agreements, function (v) { return v.hmFundId == fundId; });
+                var agreementData = [];
+                $.each(agreements, function (key, value) {
+                    agreementData.push({ "id": value.AgreementOnboardingId, "text": value.AgreementShortName });
+                });
+
+                agreementData = $filter('orderBy')(agreementData, 'text');
+
+                if ($("#liAgreement").data("select2")) {
+                    $("#liAgreement").select2("destroy");
+                }
+
+                $("#liAgreement").select2({
+                    placeholder: "Select the agreements",
+                    allowClear: true,
+                    data: agreementData
+                });
+            }
+            else {
+
+                if ($("#liAgreement").data("select2")) {
+                    $("#liAgreement").select2("destroy");
+                }
+                $("#liAgreement").select2({
+                    placeholder: "Select the agreements",
+                    allowClear: true,
+                    data: []
+                });
+            }
+        });
+
+        $("#liAgreement").change(function () {
+            agreementId = $(this).val();
+            if ($(this).val() > 0) {
+                // Get row details 
+                var rowElement = accountTable.row(this).data();
+                $scope.fnEditAccountDetails(rowElement);
+            }
+
+        });
+
+        $("#liBroker").change(function () {
+
+            brokerId = $(this).val();
+            $scope.counterpartyFamilyId = $(this).val();
+
+            if ($(this).val() > 0) {
+                var rowElement = accountTable.row(this).data();
+                $scope.fnEditAccountDetails(rowElement);
+            }
+        });
+
+
+    }
 
     $scope.$on("onRepeatLast", function (scope, element, attrs) {
         $timeout(function () {
@@ -561,7 +685,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             //window.location.href = "/Accounts/Index?searchText=" + searchText;
 
         }).off("shown.bs.modal").on("shown.bs.modal", function () {
-
+            $scope.fnPreloadAccountData();
+            $scope.fnInitPreLoadEvents();
         });
     }
 
@@ -756,8 +881,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     data: response.data.AuthorizedParties
                 });
 
-                if ($scope.onBoardingAccountDetails[panelIndex].AuthorizedParty != null && $scope.onBoardingAccountDetails[panelIndex].AuthorizedParty != 'undefined')
-                {
+                if ($scope.onBoardingAccountDetails[panelIndex].AuthorizedParty != null && $scope.onBoardingAccountDetails[panelIndex].AuthorizedParty != 'undefined') {
                     $("#liAuthorizedParty" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].AuthorizedParty);
                     $scope.fnAuthorizedPartyChange(panelIndex);
                 }
@@ -806,8 +930,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnAuthorizedPartyChange = function (index) {
 
-        if ($scope.onBoardingAccountDetails[index].AuthorizedParty != "Hedgemark")
-        {
+        if ($scope.onBoardingAccountDetails[index].AuthorizedParty != "Hedgemark") {
             $scope.onBoardingAccountDetails[index].IsReceivingAccount = true;
             $scope.onBoardingAccountDetails[index].AccountModule = null;
             $scope.onBoardingAccountDetails[index].SwiftGroup = null;
