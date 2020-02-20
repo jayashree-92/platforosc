@@ -110,17 +110,17 @@
                         </div>
                     </div>
                     <p style="height:5px;" ng-show="wireObj.IsAdhocWire" />
-                    @*<div class="row" ng-show="IsNormalTransfer">
-                            <div class="col-md-12">
-                                <div class="col-md-3">
-                                    <label>Select Agreement:</label>
-                                </div>
-                                <div class="col-md-3">
-                                    <input id="liAgreement" type="text" name="liAgreement" class="form-control" ng-disabled="!isFundsChanged" />
-                                </div>
+                    <div class="row" ng-show="wireObj.IsAdhocWire">
+                        <div class="col-md-12">
+                            <div class="col-md-3">
+                                <label>Select Currency:</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input id="liCurrency" type="text" name="liCurrency" class="form-control primary-info" ng-disabled="!isEditEnabled"/>
                             </div>
                         </div>
-                        <p style="height:5px;" ng-show="IsNormalTransfer" />*@
+                    </div>
+                    <p style="height:5px;" ng-show="wireObj.IsAdhocWire" />
                     <div class="row">
                         <div class="col-md-12">
                             <div class="col-md-3">

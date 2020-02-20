@@ -12,7 +12,8 @@ namespace HMOSecureMiddleware
     {
         public enum SystemPreferences
         {
-            AllowedAgreementTypesForAccounts
+            AllowedAgreementTypesForAccounts,
+            ReceivingAgreementTypesForAccount
         }
 
         public static readonly string ShowRiskOrShortFundNames = "CONFIG:ShowRiskOrShortFundNames";

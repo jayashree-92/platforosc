@@ -278,10 +278,10 @@ namespace HMOSecureWeb.Controllers
                     reportId = FileSystemManager.GetReportId(wireTicket.HMWire.hmsWirePurposeLkup.ReportName);
 
                 fundAccounts = isWirePurposeAdhoc
-                    ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, wireTicket.IsBookTransfer)
+                    ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, wireTicket.SendingAccount.Currency, wireTicket.IsBookTransfer)
                     : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId, reportId);
             }
-            var sendingAccountsList = fundAccounts.Where(s => s.AuthorizedParty == "Hedgemark").Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
+            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
             var receivingAccountsList = fundAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
 
             //Also include who is currently viewing this wire 
@@ -614,7 +614,8 @@ namespace HMOSecureWeb.Controllers
                 context.Configuration.ProxyCreationEnabled = false;
                 var adhocWirePurposes = context.hmsWirePurposeLkups.Where(s => s.ReportName == ReportName.AdhocReport && s.IsApproved).ToList();
                 var wirePurposes = adhocWirePurposes.Select(s => new { id = s.hmsWirePurposeId, text = s.Purpose }).ToList();
-                return Json(wirePurposes);
+                var currencies = context.onBoardingCurrencies.AsNoTracking().Select(s => new { id = s.Currency, text = s.Currency }).ToList();
+                return Json(new { wirePurposes, currencies });
             }
         }
         private class AgreementBaseDetails
@@ -628,8 +629,10 @@ namespace HMOSecureWeb.Controllers
             using (var context = new OperationsContext())
             {
                 var authorizedFundIds = AuthorizedSessionData.HMFundIds.Select(s => s.Id).ToList();
+                var fundsWithApprovedAccounts = AccountManager.GetFundsOfApprovedAccounts();
+                authorizedFundIds = authorizedFundIds.Intersect(fundsWithApprovedAccounts).ToList();
                 var hFunds = AdminFundManager.GetUniversalDMAFundListQuery(context, PreferredFundNameInSession)
-                    .Where(s => AuthorizedSessionData.IsPrivilegedUser || authorizedFundIds.Contains(s.hmFundId)).OrderBy(s => s.PreferredFundName)
+                    .Where(s => authorizedFundIds.Contains(s.hmFundId)).OrderBy(s => s.PreferredFundName)
                     .Select(s => new { id = s.hmFundId, text = s.PreferredFundName }).ToList();
 
                 return Json(hFunds, JsonRequestBehavior.AllowGet);
@@ -655,10 +658,10 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public JsonResult GetApprovedAccountsForFund(long fundId, bool isBookTransfer)
+        public JsonResult GetApprovedAccountsForFund(long fundId, string currency, bool isBookTransfer)
         {
-            var fundAccounts = WireDataManager.GetApprovedFundAccounts(fundId, isBookTransfer);
-            var sendingAccountsList = fundAccounts.Where(s => s.AuthorizedParty == "Hedgemark").Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
+            var fundAccounts = WireDataManager.GetApprovedFundAccounts(fundId, currency, isBookTransfer);
+            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
             var receivingAccountsList = fundAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
             return Json(new { sendingAccountsList, receivingAccountsList });
         }

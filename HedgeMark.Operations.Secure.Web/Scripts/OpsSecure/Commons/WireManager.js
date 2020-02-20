@@ -538,6 +538,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }
             else
                 angular.element("#wireValueDate").datepicker('remove').html(getFormattedUIDate(moment(getDateForDisplay($scope.WireTicket.ValueDate))._d))
+            angular.element("#liCurrency").select2('val', $scope.accountDetail.Currency).trigger('change');
             $scope.WireTicket.Amount = $scope.WireTicket.WireStatusId == 1 ? angular.copy($scope.wireObj.Amount) : $scope.WireTicket.Amount;
             angular.element("#wireAmount").text($.convertToCurrency(($scope.WireTicket.Amount), 2)).attr('contenteditable', false);
             angular.element("#liMessageType").select2('val', $scope.WireTicket.WireMessageTypeId).trigger('change');
@@ -553,6 +554,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.bindWireValues = function () {
         angular.element("#wireEntryDate").html(getFormattedUIDate(moment(getDateForDisplay($scope.WireTicket.ContextDate))._d));
+        angular.element("#liCurrency").select2('val', $scope.accountDetail.Currency).trigger('change');
         if ($scope.isEditEnabled) {
             $scope.initializeDatePicker();
             angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditable', true);
@@ -847,14 +849,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 closeOnSelect: false,
                 val: ""
             });
-            //angular.element("#liAgreement").select2("destroy").val('');
-            //angular.element("#liAgreement").select2({
-            //    placeholder: "Select Agreement",
-            //    data: [],
-            //    allowClear: true,
-            //    closeOnSelect: false
-            //});
-
+            $scope.currencies = $filter('orderBy')($scope.currencies, 'text');
+            angular.element("#liCurrency").select2("destroy").val('');
+            angular.element("#liCurrency").select2({
+                placeholder: "Select Currency",
+                data: $scope.currencies,
+                allowClear: true,
+                closeOnSelect: false,
+                val: ""
+            });
             angular.element("#liSendingAccount").select2("destroy").val('');
             angular.element("#liSendingAccount").select2({
                 placeholder: "Select Sending Account",
@@ -1121,7 +1124,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     // Adhoc 
     $scope.getAdhocWireAssociations = function () {
         return $http.get("/Home/GetAdhocWireAssociations").then(function (response) {
-            $scope.purposes = response.data;
+            $scope.purposes = response.data.wirePurposes;
+            $scope.currencies = response.data.currencies;
         });
     };
 
@@ -1172,22 +1176,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
     angular.element(document).on("change", "#liFund", function () {
         $timeout(function () {
-            if ($("#liFund").select2('val') != "") {
+            if ($("#liFund").select2('val') != "" && $("#liCurrency").select2('val') != "") {
                 $scope.isFundsChanged = true;
-                //if ($scope.IsNormalTransfer) {
-                //    $http.get("/Home/GetApprovedAgreementsForFund?fundId=" + $("#liFund").select2('val')).then(function (response) {
-                //        $scope.agreements = response.data;
-                //        angular.element("#liAgreement").select2({
-                //            placeholder: "Select Agreement",
-                //            data: $scope.agreements,
-                //            allowClear: true,
-                //            closeOnSelect: false
-                //        });
-                //        $scope.isSendingAccountEnabled = false;
-                //    });
-                //}
-                //else {
-                $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2('val') + "&isBookTransfer=" + $scope.wireTicketObj.IsBookTransfer).then(function (response) {
+                $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2('val') + "&currency=" + $("#liCurrency").select2('val') + "&isBookTransfer=" + $scope.wireTicketObj.IsBookTransfer).then(function (response) {
                     $scope.sendingAccountsList = response.data.sendingAccountsList;
                     $scope.receivingAccountsList = response.data.receivingAccountsList;
                     angular.element("#liSendingAccount").select2({
@@ -1209,32 +1200,31 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }, 50);
     });
 
-    //angular.element(document).on("change", "#liAgreement", function () {
-    //    $timeout(function () {
-    //        if ($("#liAgreement").select2('val') != "") {
-    //            $scope.wireObj.AgreementName = $("#liAgreement").select2('data').text;
-    //            if (!$scope.wireTicketObj.IsBookTransfer)
-    //                $http.get("/Home/GetApprovedAccountsForAgreement?agreementId=" + $("#liAgreement").select2('val')).then(function (response) {
-    //                    $scope.sendingAccounts = response.data.sendingAccounts;
-    //                    $scope.sendingAccountList = response.data.sendingAccountList;
-    //                    angular.element("#liSendingAccount").select2('destroy');
-    //                    angular.element("#liSendingAccount").select2({
-    //                        placeholder: "Select Sending Account",
-    //                        data: $scope.sendingAccountList,
-    //                        allowClear: true,
-    //                        closeOnSelect: false
-    //                    });
-    //                    $scope.isSendingAccountEnabled = true;
-    //                });
-    //        }
-    //        else {
-    //            $scope.isSendingAccountEnabled = false;
-    //            $scope.isReceivingAccountEnabled = false;
-    //            angular.element("#liSendingAccount").select2("val", "").trigger('change');
-    //        }
-    //        $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
-    //    }, 50);
-    //});
+    angular.element(document).on("change", "#liCurrency", function () {
+        $timeout(function () {
+            if ($("#liFund").select2('val') != "" && $("#liCurrency").select2('val') != "") {
+                $scope.isFundsChanged = true;
+                $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2('val') + "&currency=" + $("#liCurrency").select2('val') + "&isBookTransfer=" + $scope.wireTicketObj.IsBookTransfer).then(function (response) {
+                    $scope.sendingAccountsList = response.data.sendingAccountsList;
+                    $scope.receivingAccountsList = response.data.receivingAccountsList;
+                    angular.element("#liSendingAccount").select2({
+                        placeholder: "Select Sending Account",
+                        data: $scope.sendingAccountsList,
+                        allowClear: true,
+                        closeOnSelect: false
+                    });
+                    $scope.isSendingAccountEnabled = true;
+                });
+            }
+            else {
+                $scope.isFundsChanged = false;
+                $("#liAgreement").select2('val', '').trigger('change');
+                $("#liSendingAccount").select2('val', '').trigger('change');
+                $("#liReceivingBookAccount").select2('val', '').trigger('change');
+                $("#liReceivingAccount").select2('val', '').trigger('change');
+            }
+        }, 50);
+    });    
 
     angular.element(document).on("change", "#liSendingAccount", function () {
         $timeout(function () {
@@ -1425,6 +1415,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.wireTicketObj.IsNotice = $("#liWireTransferType").select2('data').text == "Notice";
             $("#liWiresPurpose").select2('val', '').trigger('change');
             $("#liFund").select2('val', '').trigger('change');
+            $("#liCurrency").select2('val', '').trigger('change');
             $("#liAgreement").select2('val', '').trigger('change');
             $("#liSendingAccount").select2('val', '').trigger('change');
             $("#liReceivingBookAccount").select2('val', '').trigger('change');

@@ -460,6 +460,16 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static List<long> GetFundsOfApprovedAccounts()
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.onBoardingAccounts.Where(account => !account.IsDeleted && account.onBoardingAccountStatus == "Approved").Select(s => s.hmFundId).Distinct().ToList();
+            }
+        }
+
         public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates(List<long> counterpartyIds, string currency = null)
         {
             using (var context = new OperationsSecureContext())

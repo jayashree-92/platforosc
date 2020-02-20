@@ -361,6 +361,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $http.get("/Accounts/GetAllOnBoardingAccount").then(function (response) {
 
             $scope.agreementTypes = response.data.accountTypes;
+            $scope.receivingAccountTypes = response.data.receivingAccountTypes;
             if (response.data.OnBoardingAccounts.length > 0)
                 $("#btnAccountStatusButtons").show();
             $scope.allAccountList = response.data.OnBoardingAccounts;
@@ -662,7 +663,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             } else {
                 $scope.accountPurpose = [{ id: "Pledge Account", text: "Pledge Account" }, { id: "Return Account", text: "Return Account" }, { id: "Both", text: "Both" }];
             }
-            account.IsReceivingAccountType = account.AccountType == "Agreement" && $.inArray(agreementType, ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"]) > -1;
+            account.IsReceivingAccountType = account.AccountType == "Agreement" && $.inArray(agreementType.text, $scope.receivingAccountTypes) > -1;
             if (account.IsReceivingAccountType || account.AuthorizedParty != "Hedgemark")
                 account.IsReceivingAccount = true;
             else

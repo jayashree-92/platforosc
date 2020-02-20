@@ -198,6 +198,7 @@ namespace HMOSecureWeb.Controllers
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
             var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds);
 
+
             var broker = OnBoardingDataManager.GetCounterpartyFamilyName(counterpartyFamilyId);
             var legalFundName = OnBoardingDataManager.GetFundLegalName(fundId);
 
@@ -218,7 +219,7 @@ namespace HMOSecureWeb.Controllers
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
             }
-
+            var receivingAccountTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.ReceivingAgreementTypesForAccount).Split(',').ToList();
             return JsonConvert.SerializeObject(new
             {
                 legalFundName,
@@ -358,7 +359,8 @@ namespace HMOSecureWeb.Controllers
                     id = choice.dmaReportsId,
                     text = choice.ReportName,
                 }).OrderBy(x => x.id).ToList(),
-                ssiTemplates
+                ssiTemplates,
+                receivingAccountTypes
 
             }, Formatting.None, new JsonSerializerSettings()
             {
@@ -470,12 +472,13 @@ namespace HMOSecureWeb.Controllers
 
                 counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
             }
-
+            var receivingAccountTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.ReceivingAgreementTypesForAccount).Split(',').ToList();
             funds = AdminFundManager.GetHFundsCreatedForDMA(hmFundIds, AuthorizedSessionData.IsPrivilegedUser, PreferencesManager.FundNameInDropDown.LegalFundName);
 
             return Json(new
             {
                 accountTypes = accountTypes.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
+                receivingAccountTypes,
                 OnBoardingAccounts = onBoardingAccounts.Select(x => new
                 {
                     AgreementName = x.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)x.dmaAgreementOnBoardingId) ? agreements[(long)x.dmaAgreementOnBoardingId].AgreementShortName : string.Empty,

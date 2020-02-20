@@ -309,7 +309,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         $scope.copyAccount.BrokerId = brokerId;
         $scope.copyAccount.onBoardingAccountSSITemplateMaps = [];
         $scope.copyAccount.onBoardingAccountDocuments = [];
-        $scope.copyAccount.IsReceivingAccountType = accountType == "Agreement" && $.inArray($scope.agreementType, ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"]) > -1;
+        $scope.copyAccount.IsReceivingAccountType = accountType == "Agreement" && $.inArray($scope.agreementType, $scope.receivingAccountTypes) > -1;
         if ($scope.copyAccount.IsReceivingAccountType || $scope.copyAccount.AuthorizedParty != "Hedgemark")
             $scope.copyAccount.IsReceivingAccount = true;
         else
@@ -337,7 +337,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             $scope.OnBoardingContactsDetails = [];
             brokerId = response.data.counterpartyFamilyId;
             fundId = response.data.fundId;
-
+            $scope.receivingAccountTypes = response.data.receivingAccountTypes;
 
             if (response.data.OnBoardingContacts.length > 0) {
                 $.each(response.data.OnBoardingContacts, function (i, v) {
