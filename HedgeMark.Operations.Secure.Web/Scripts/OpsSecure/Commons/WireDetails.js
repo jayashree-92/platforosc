@@ -124,13 +124,11 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         }
                     },
 
-                    { "data": "ReceivingAccount.Beneficiary.BankName", "sTitle": "Beneficiary Bank" },
-                    { "data": "ReceivingAccount.Beneficiary.BICorABA", "sTitle": "Beneficiary" },
-                    { "data": "ReceivingAccount.BeneficiaryAccountNumber", "sTitle": "Beneficiary A/C Number" },
+                    { "data": "ReceivingAccount.UltimateBeneficiary.BankName", "sTitle": "Beneficiary Bank" },
+                    { "data": "ReceivingAccount.UltimateBeneficiary.BICorABA", "sTitle": "Beneficiary" },
+                    { "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary A/C Number" },
 
                     { "data": "HMWire.hmsWireMessageType.MessageType", "sTitle": "Wire Message Type" },
-
-
                     {
                         "mData": "WireCreatedBy", "sTitle": "Initiated By"
                     },

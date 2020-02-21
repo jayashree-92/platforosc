@@ -129,7 +129,7 @@ namespace HMOSecureWeb.Controllers
                 var accountIds = wireStatusDetails.Select(s => s.OnBoardAccountId).Union(wireStatusDetails.Where(s => s.WireTransferTypeId == 2).Select(s => s.OnBoardSSITemplateId)).Distinct().ToList();
                 var ssiTemplateIds = wireStatusDetails.Select(s => s.OnBoardSSITemplateId).Distinct().ToList();
 
-                wireAccounts = context.onBoardingAccounts.Include(s => s.Beneficiary).Where(s => accountIds.Contains(s.onBoardingAccountId)).ToList();
+                wireAccounts = context.onBoardingAccounts.Include(s => s.UltimateBeneficiary).Where(s => accountIds.Contains(s.onBoardingAccountId)).ToList();
                 wireSSITemplates = context.onBoardingSSITemplates.Where(s => ssiTemplateIds.Contains(s.onBoardingSSITemplateId)).ToList();
             }
 
@@ -205,14 +205,14 @@ namespace HMOSecureWeb.Controllers
                 //thisWire.Agreement.onboardingFund.onBoardingAccounts = null;
                 //thisWire.Agreement.dmaCounterPartyOnBoarding.dmaAgreementOnBoardings = null;
 
-                if (thisWire.SendingAccount.Beneficiary != null)
-                    thisWire.SendingAccount.Beneficiary.onBoardingAccounts = thisWire.SendingAccount.Beneficiary.onBoardingAccounts1 = thisWire.SendingAccount.Beneficiary.onBoardingAccounts2 = null;
+                if (thisWire.SendingAccount.UltimateBeneficiary != null)
+                    thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts = thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts1 = thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts2 = null;
                 else
-                    thisWire.SendingAccount.Beneficiary = new onBoardingAccountBICorABA();
-                if (thisWire.ReceivingAccount.Beneficiary != null)
-                    thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts = thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts1 = thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts2 = null;
+                    thisWire.SendingAccount.UltimateBeneficiary = new onBoardingAccountBICorABA();
+                if (thisWire.ReceivingAccount.UltimateBeneficiary != null)
+                    thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts = thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts1 = thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts2 = null;
                 else
-                    thisWire.ReceivingAccount.Beneficiary = new onBoardingAccountBICorABA();
+                    thisWire.ReceivingAccount.UltimateBeneficiary = new onBoardingAccountBICorABA();
 
                 //Update User Details
                 thisWire.WireCreatedBy = users.First(s => s.Key == thisWire.HMWire.CreatedBy).Value.HumanizeEmail();
