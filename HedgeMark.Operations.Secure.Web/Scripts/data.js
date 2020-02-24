@@ -537,7 +537,7 @@ function getDateForDisplay(dateTime) {
 
 function getDateAndTimeForDisplay(dateTime) {
     if (dateTime == null)
-        return '';
+        return '-';
     return moment(dateTime).format("lll");
 }
 
@@ -550,7 +550,7 @@ function placeCaretAtEnd(el) {
     el = el.get(0);
     el.focus();
     if (typeof window.getSelection != "undefined"
-            && typeof document.createRange != "undefined") {
+        && typeof document.createRange != "undefined") {
         var range = document.createRange();
         range.selectNodeContents(el);
         range.collapse(false);

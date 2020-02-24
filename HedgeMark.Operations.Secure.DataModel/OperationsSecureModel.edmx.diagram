@@ -48,7 +48,15 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireCutoffTimeZone" Width="1.5" PointX="13.375" PointY="15.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsSystemPreference" Width="1.5" PointX="15.375" PointY="14.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsActionInProgress" Width="1.5" PointX="16.25" PointY="18.25" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsWire" Width="1.5" PointX="19" PointY="7.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAccount" Width="1.5" PointX="22" PointY="6.5" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_BeneficiaryBICorABAId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_IntermediaryBICorABAId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_UltimateBeneficiaryBICorABAId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountDocument_onBoardingAccountId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsWire" Width="1.5" PointX="19" PointY="7.5" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsActionInProgress_hmsWireId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" />
@@ -62,14 +70,6 @@
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" />
-        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAccount" Width="1.5" PointX="22" PointY="6.5" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_BeneficiaryBICorABAId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_IntermediaryBICorABAId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_UltimateBeneficiaryBICorABAId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountDocument_onBoardingAccountId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

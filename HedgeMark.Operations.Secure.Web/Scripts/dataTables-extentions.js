@@ -85,7 +85,7 @@ $.extend($.fn.dataTable.defaults, {
     "pagination": false,
     "processing": false,
     "sScrollX": false,
-    "sScrollY": $(document).height() - 130,
+    "sScrollY": $(document).height() - 150,
     "responsive": true,
     "bSortClasses": false,
     "mark": { "ignorePunctuation": [","] },

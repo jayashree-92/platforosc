@@ -8,3 +8,5 @@
 --END
 --GO
 
+
+--UPDATE hmsWires SET ApprovedBy = LastUpdatedBy , ApprovedAt=LastModifiedAt WHERE ApprovedBy is NULL AND WireStatusId =3

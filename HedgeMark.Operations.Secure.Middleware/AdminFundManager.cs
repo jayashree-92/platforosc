@@ -38,30 +38,21 @@ namespace HMOSecureMiddleware
                 {
                     HFundId = s.hmFundId,
                     ClientFundName = s.HFund.ClientFundName,
-                    OpsFundName = s.HFund.ShortFundName,
+                    ShortFundName = s.HFund.ShortFundName,
                     PerferredFundName = s.PreferredFundName,
                     HMDataFundName = s.HFund.HMRAName,
                     Currency = s.HFund.BaseCurrencyShareclass != null ? s.HFund.BaseCurrencyShareclass : string.Empty,
-                    LegalFundName = s.HFund.LegalFundName
+                    LegalFundName = s.HFund.LegalFundName,
+                    ClientShortName = s.HFund.ClientShortName,
+                    ClientLegalName = s.HFund.ClientLegalEntityName,
+                    
                 }).ToList();
             }
         }
 
         public static HFund GetHFundCreatedForDMA(long hmFundId, PreferencesManager.FundNameInDropDown preferredFundName)
         {
-            using (var context = new OperationsContext())
-            {
-                return GetUniversalDMAFundListQuery(context, preferredFundName).Where(s => s.hmFundId == hmFundId).Select(s => new HFund
-                {
-                    HFundId = s.hmFundId,
-                    ClientFundName = s.HFund.ClientFundName,
-                    OpsFundName = s.HFund.ShortFundName,
-                    PerferredFundName = s.PreferredFundName,
-                    HMDataFundName = s.HFund.HMRAName,
-                    Currency = s.HFund.BaseCurrencyShareclass != null ? s.HFund.BaseCurrencyShareclass : string.Empty,
-                    LegalFundName = s.HFund.LegalFundName
-                }).FirstOrDefault();
-            }
+            return GetHFundsCreatedForDMA(new List<long>() {hmFundId}, preferredFundName).FirstOrDefault();
         }
 
         public static IQueryable<QueryableHFund> GetUniversalDMAFundListQuery(OperationsContext context, PreferencesManager.FundNameInDropDown preferredFundName)
@@ -96,12 +87,15 @@ namespace HMOSecureMiddleware
         public bool IsFeederFund { get; set; }
         public bool IsStandAloneFund { get; set; }
         public string ClientFundName { get; set; }
-        public string OpsFundName { get; set; }
+        public string ShortFundName { get; set; }
         public string HMDataFundName { get; set; }
         public string PerferredFundName { get; set; }
         public int HFundId { get; set; }
         public string LegalFundName { get; set; }
         public string Currency { get; set; }
         public List<HFund> Children { get; set; }
+
+        public string ClientLegalName { get; set; }
+        public string ClientShortName { get; set; }
     }
 }

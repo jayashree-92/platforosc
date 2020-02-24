@@ -75,6 +75,7 @@ namespace HMOSecureMiddleware.Models
         }
         public string WireCreatedBy { get; set; }
         public string WireLastUpdatedBy { get; set; }
+        public string WireApprovedBy { get; set; }
         public List<string> AttachmentUsers { get; set; }
         public List<string> WorkflowUsers { get; set; }
         public onBoardingAccount SendingAccount { get; set; }
@@ -82,6 +83,8 @@ namespace HMOSecureMiddleware.Models
         public onBoardingSSITemplate SSITemplate { get; set; }
         public string PreferredFundName { get; set; }
         public String ShortFundName { get; set; }
+        public String ClientLegalName { get; set; }
+        public String ClientShortName { get; set; }
         public string ReceivingAccountName
         {
             get
