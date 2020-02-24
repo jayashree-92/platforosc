@@ -17,7 +17,8 @@ namespace HMOSecureWeb.Controllers
     {
         UserCommitId,
         AuthorizedUserData,
-        UserPreferencesInSession
+        UserPreferencesInSession,
+        SwiftGroupData
     }
 
     public class AuthorizedRolesAttribute : AuthorizeAttribute

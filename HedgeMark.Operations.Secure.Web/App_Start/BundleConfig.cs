@@ -129,9 +129,9 @@ namespace HMOSecureWeb
                 .Include("~/Content/site.css", new CssRewriteUrlTransform())
                 );
 #if Local
-            BundleTable.EnableOptimizations = false;
+            BundleTable.EnableOptimizations = true;
 #else
-            BundleTable.EnableOptimizations = false;
+            BundleTable.EnableOptimizations = true;
 #endif
 
 

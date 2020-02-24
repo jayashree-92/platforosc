@@ -539,6 +539,8 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
                 return context.onBoardingWirePortalCutoffs.ToList();
             }
         }

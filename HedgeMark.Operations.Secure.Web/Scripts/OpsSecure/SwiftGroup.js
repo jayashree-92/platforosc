@@ -18,7 +18,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
                 "aoColumns": [
                     {
                         "sTitle": "Swift Group",
-                        "mData": "CashInstruction"
+                        "mData": "SwiftGroup"
                     },
                     {
                         "sTitle": "Sender's BIC",
@@ -33,7 +33,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
                         "mData": "SwiftGroupStatus",
                     },
                     {
-                        "sTitle": "MT Messages",
+                        "sTitle": "Swift Messages",
                         "mData": "AcceptedMessages",
                     },
                     {
@@ -149,7 +149,6 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
         Notes: null,
         BrokerLegalEntityId: null,
         SwiftGroupStatusId: null,
-        DaystoWire: 0,
     }
 
     $scope.$watch("isSwiftGroupRequirementsFilled", function (newValue, oldValue) {
@@ -158,7 +157,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
 
     $scope.fnSaveSwiftGroup = function () {
         var existingSwiftGroup = $filter('filter')($scope.swiftGroupData, function (swift) {
-            return swift.SwiftGroup == $scope.hmsSwiftGroup.SwiftGroup && swift.SendersBIC == $scope.hmsSwiftGroup.hmsSwiftGroup;
+            return swift.SwiftGroup == $scope.swiftGroup.SwiftGroup && swift.SendersBIC == $scope.swiftGroup.hmsSwiftGroup;
         }, true)[0];
         if (existingSwiftGroup != undefined && $scope.isAdd) {
             notifyError("Swift group data exists for selected Swift Group and Sender's BIC. Please select a new combination.")

@@ -88,6 +88,7 @@
     <Compile Include="BootUpMiddleware.cs" />
     <Compile Include="FileSystemManager.cs" />
     <Compile Include="Models\AuditLogData.cs" />
+    <Compile Include="Models\SwiftGroupData.cs" />
     <Compile Include="Models\WireTicket.cs" />
     <Compile Include="NotificationManager.cs" />
     <Compile Include="OnBoardingDataManager.cs" />
