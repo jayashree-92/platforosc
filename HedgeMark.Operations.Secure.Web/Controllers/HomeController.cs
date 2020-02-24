@@ -652,12 +652,15 @@ namespace HMOSecureWeb.Controllers
             {
                 var authorizedFundIds = AuthorizedSessionData.HMFundIds.Select(s => s.Id).ToList();
                 var fundsWithApprovedAccounts = AccountManager.GetFundsOfApprovedAccounts();
-                var authFundIds = authorizedFundIds.Intersect(fundsWithApprovedAccounts).ToList();
+                if (authorizedFundIds.Count == 0)
+                    authorizedFundIds = fundsWithApprovedAccounts;
+                else 
+                    authorizedFundIds = authorizedFundIds.Intersect(fundsWithApprovedAccounts).ToList();
                 var hFunds = AdminFundManager.GetUniversalDMAFundListQuery(context, PreferredFundNameInSession)
-                    .Where(s => authFundIds.Contains(s.hmFundId)).OrderBy(s => s.PreferredFundName)
+                    .Where(s => authorizedFundIds.Contains(s.hmFundId)).OrderBy(s => s.PreferredFundName)
                     .Select(s => new { id = s.hmFundId, text = s.PreferredFundName }).ToList();
 
-                return Json(new { hFunds, authorizedFundIds, fundsWithApprovedAccounts }, JsonRequestBehavior.AllowGet);
+                return Json(hFunds, JsonRequestBehavior.AllowGet);
             }
         }
         public JsonResult GetApprovedAgreementsForFund(long fundId)
