@@ -49,7 +49,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<OnBoardingSSITemplateAccountType> OnBoardingSSITemplateAccountTypes { get; set; }
         public virtual DbSet<onBoardingSSITemplateDocument> onBoardingSSITemplateDocuments { get; set; }
         public virtual DbSet<OnBoardingSSITemplateServiceProvider> OnBoardingSSITemplateServiceProviders { get; set; }
-        public virtual DbSet<onBoardingSwiftGroup> onBoardingSwiftGroups { get; set; }
         public virtual DbSet<onBoardingWirePortalCutoff> onBoardingWirePortalCutoffs { get; set; }
         public virtual DbSet<hmsWireSenderInformation> hmsWireSenderInformations { get; set; }
         public virtual DbSet<onBoardingAccountModuleAssociation> onBoardingAccountModuleAssociations { get; set; }
@@ -62,5 +61,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsActionInProgress> hmsActionInProgresses { get; set; }
         public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
         public virtual DbSet<hmsWire> hmsWires { get; set; }
+        public virtual DbSet<hmsSwiftGroup> hmsSwiftGroups { get; set; }
+        public virtual DbSet<hmsSwiftGroupStatusLkp> hmsSwiftGroupStatusLkps { get; set; }
     }
 }

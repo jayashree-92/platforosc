@@ -1,0 +1,105 @@
+﻿@using HMOSecureWeb.Utility
+@{
+    ViewBag.Title = "Swift Groups";
+}
+
+<legend>Swift Groups</legend>
+
+<div id="swiftGroupsDiv" ng-controller="SwiftGroupCtrl">
+    <div class="well well-sm sticky-header" style="min-height: 50px;">
+        @if (User.IsWireUser())
+        {
+            <button ng-click="fnAddOrUpdateSwiftGroup(true)" id="btnAddSwiftGroup" class="btn btn-success btn-sm" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Swift Group</button>
+            <div class="pull-right btn-group">
+                &nbsp;&nbsp; <button class=" btn btn-primary btn-sm" id="btnEdit" ng-disabled="!enableSwiftGroupActions" ng-click="fnAddOrUpdateSwiftGroup(false)">
+                    <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
+                </button>
+                @if (User.IsWireApprover())
+                {
+                    <button class="btn btn-danger btn-sm" id="btnDel" ng-disabled="!enableSwiftGroupActions" ng-click="fnDeleteSwiftGroup()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>
+                }
+                <div class="pull-right btn-group" style="padding-right: 2px;">
+                    &nbsp;&nbsp;<a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportData()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
+                </div>
+            </div>
+        }
+    </div>
+    <table id="tblSwiftGroupData" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+    <div class="modal fade" id="swiftGroupModal" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Swift Group</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="swiftGroup" class="control-label">Swift Group:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-3 col-lg-2">
+                            <input type="text" id="swiftGroup" ng-model="swiftGroup.SwiftGroup" class="modalInputWidth form-control" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="liCashInstruction" class="control-label">Broker Legal Entity:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-6 col-lg-3">
+                            <input type="text" id="liBrokerEntity" ng-model="swiftGroup.BrokerLegalEntityId" class="modalInputWidth dropDown form-control" placeholder="Select a Broker" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="sendersBIC" class="control-label">Sender's BIC:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-3 col-lg-2">
+                            <input type="number" id="sendersBIC" ng-model="swiftGroup.SendersBIC" class="modalInputWidth form-control" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="liSwiftGroupStatus" class="control-label">Status:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-6 col-lg-3">
+                            <input type="text" id="liSwiftGroupStatus" ng-model="swiftGroup.SwiftGroupStatusId" class="modalInputWidth dropDown form-control" placeholder="Select a Status" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="liMessageTypes" class="control-label">MT Messages:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-6 col-lg-3">
+                            <input type="text" id="liMessageTypes" ng-model="swiftGroup.AcceptedMessages" class="modalInputWidth dropDown form-control" placeholder="Select Message Type(s)" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="notes" class="control-label">Notes:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-6 col-lg-3">
+                            <textarea type="text" id="notes" ng-model="swiftGroup.Notes" class="modalInputWidth dropDown form-control" placeholder="Enter Notes" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-disabled="!isSwiftGroupRequirementsFilled" ng-click="fnSaveSwiftGroup()">
+                        <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Swift Group
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section javascript
+{
+    <script src="~/Scripts/OpsSecure/SwiftGroup.js"></script>
+}

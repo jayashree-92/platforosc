@@ -712,11 +712,6 @@ namespace HMOSecureWeb.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
-        public void AddSwiftGroup(string swiftGroup, string senderBic)
-        {
-            AccountManager.AddSwiftGroup(swiftGroup, senderBic, UserName);
-        }
-
         public JsonResult GetAllAccountBicorAba()
         {
             var accountBicorAba = AccountManager.GetAllAccountBicorAba();

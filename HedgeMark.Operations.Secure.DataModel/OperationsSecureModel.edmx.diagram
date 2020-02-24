@@ -34,7 +34,6 @@
         <EntityTypeShape EntityType="OperationsSecureModel.OnBoardingSSITemplateAccountType" Width="1.5" PointX="10.75" PointY="9.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.onBoardingSSITemplateDocument" Width="1.5" PointX="8" PointY="19" />
         <EntityTypeShape EntityType="OperationsSecureModel.OnBoardingSSITemplateServiceProvider" Width="1.5" PointX="2.75" PointY="11.75" />
-        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingSwiftGroup" Width="1.5" PointX="12.75" PointY="9.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.onBoardingWirePortalCutoff" Width="1.5" PointX="10.75" PointY="12.75" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" />
@@ -70,6 +69,9 @@
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsSwiftGroup" Width="1.5" PointX="12.625" PointY="19" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsSwiftGroupStatusLkp" Width="1.5" PointX="10.375" PointY="19.625" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

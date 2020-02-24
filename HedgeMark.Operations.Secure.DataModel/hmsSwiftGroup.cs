@@ -12,13 +12,19 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class onBoardingSwiftGroup
+    public partial class hmsSwiftGroup
     {
-        public long onBoardingSwiftGroupId { get; set; }
+        public long hmsSwiftGroupId { get; set; }
         public string SwiftGroup { get; set; }
         public string SendersBIC { get; set; }
         public string RecCreatedBy { get; set; }
         public Nullable<System.DateTime> RecCreatedAt { get; set; }
         public bool IsDeleted { get; set; }
+        public string AcceptedMessages { get; set; }
+        public string Notes { get; set; }
+        public Nullable<int> SwiftGroupStatusId { get; set; }
+        public Nullable<long> BrokerLegalEntityId { get; set; }
+    
+        public virtual hmsSwiftGroupStatusLkp hmsSwiftGroupStatusLkp { get; set; }
     }
 }

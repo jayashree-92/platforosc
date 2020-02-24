@@ -433,6 +433,16 @@ namespace HMOSecureMiddleware
                 return context.hmsWires.Any(s => s.ValueDate == valueDate && s.OnBoardAccountId == sendingAccountId && s.OnBoardSSITemplateId == receivingAccountId && s.hmsWirePurposeLkup.Purpose == purpose);
             }
         }
+        public static List<hmsWireMessageType> GetWireMessageTypes()
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.hmsWireMessageTypes.AsNoTracking().ToList();
+            }
+        }
+
 
         public static bool IsNoticeWirePendingAcknowledgement(hmsWire wire)
         {

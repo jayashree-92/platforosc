@@ -109,6 +109,12 @@
     <Compile Include="hmsNotificationStaging.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsSwiftGroup.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hmsSwiftGroupStatusLkp.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsSwiftStatusLkup.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
@@ -202,9 +208,6 @@
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="OnBoardingSSITemplateServiceProvider.cs">
-      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="onBoardingSwiftGroup.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingWirePortalCutoff.cs">

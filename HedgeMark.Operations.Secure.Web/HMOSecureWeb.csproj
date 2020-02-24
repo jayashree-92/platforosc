@@ -155,6 +155,7 @@
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SwiftGroupController.cs" />
     <Compile Include="Controllers\WireLogController.cs" />
     <Compile Include="Controllers\WirePortalCutoffController.cs" />
     <Compile Include="Filters\CompressAttribute.cs" />
@@ -1497,6 +1498,7 @@
     <Content Include="Scripts\OpsSecure\MQLog.js" />
     <Content Include="Scripts\OpsSecure\layout.js" />
     <Content Include="Scripts\OpsSecure\OpsSecureAngularFactory.js" />
+    <Content Include="Scripts\OpsSecure\SwiftGroup.js" />
     <Content Include="Scripts\OpsSecure\UserAuditLog.js" />
     <Content Include="Scripts\OpsSecure\WireLog.js" />
     <Content Include="Scripts\OpsSecure\WirePortalCutoff.js" />
@@ -1579,6 +1581,7 @@
     <Content Include="Views\Accounts\SSITemplateList.cshtml" />
     <Content Include="Views\Accounts\SSITemplate.cshtml" />
     <Content Include="Views\WirePortalCutoff\Index.cshtml" />
+    <Content Include="Views\SwiftGroup\Index.cshtml" />
     <None Include="Web.Local.config">
       <SubType>Designer</SubType>
     </None>

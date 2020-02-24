@@ -896,17 +896,27 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<onBoardingSwiftGroup> GetAllSwiftGroup()
+        public static List<hmsSwiftGroup> GetAllSwiftGroup()
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingSwiftGroups.AsNoTracking().ToList();
+                return context.hmsSwiftGroups.Where(s => !s.IsDeleted).AsNoTracking().ToList();
             }
         }
 
-        public static void AddSwiftGroup(string swiftGroup, string senderBic, string username)
+        public static List<hmsSwiftGroupStatusLkp> GetSwiftGroupStatus()
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.hmsSwiftGroupStatusLkps.ToList();
+            }
+        }
+
+        public static void AddOrUpdateSwiftGroup(hmsSwiftGroup hmsSwiftGroup)
         {
 
             var methodName = MethodBase.GetCurrentMethod();
@@ -915,15 +925,8 @@ namespace HMOSecureMiddleware
             {
                 using (var context = new OperationsSecureContext())
                 {
-                    var onboardingSwiftGroup = new onBoardingSwiftGroup
-                    {
-                        SwiftGroup = swiftGroup,
-                        SendersBIC = senderBic,
-                        RecCreatedAt = DateTime.Now,
-                        RecCreatedBy = username,
-                        IsDeleted = false
-                    };
-                    context.onBoardingSwiftGroups.Add(onboardingSwiftGroup);
+                    hmsSwiftGroup.RecCreatedAt = DateTime.Now;
+                    context.hmsSwiftGroups.AddOrUpdate(hmsSwiftGroup);
                     context.SaveChanges();
                 }
             }
