@@ -1132,7 +1132,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.getHFunds = function () {
 
         $http.get("/Home/GetAuthorizedFunds").then(function (response) {
-            var allDmaFunds = response.data;
+            var allDmaFunds = response.data.hFunds;
             $("#liFund").select2("destroy");
             $("#liFund").select2({
                 data: { results: allDmaFunds },
