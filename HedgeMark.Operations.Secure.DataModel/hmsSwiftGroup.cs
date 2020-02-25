@@ -14,6 +14,12 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class hmsSwiftGroup
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public hmsSwiftGroup()
+        {
+            this.onBoardingAccounts = new HashSet<onBoardingAccount>();
+        }
+    
         public long hmsSwiftGroupId { get; set; }
         public string SwiftGroup { get; set; }
         public string SendersBIC { get; set; }
@@ -26,5 +32,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> BrokerLegalEntityId { get; set; }
     
         public virtual hmsSwiftGroupStatusLkp hmsSwiftGroupStatusLkp { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<onBoardingAccount> onBoardingAccounts { get; set; }
     }
 }

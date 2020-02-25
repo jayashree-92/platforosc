@@ -104,7 +104,7 @@ namespace HMOSecureMiddleware.Models
         {
             get
             {
-                return SendingAccount.SwiftGroup == "Credit Suisse";
+                return SendingAccount.SwiftGroup.SwiftGroup == "Credit Suisse";
             }
         }
         public List<KeyValuePair<string, string>> SwiftMessages { get; set; }

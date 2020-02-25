@@ -73,6 +73,23 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'SwiftGroupId' AND TABLE_NAME = 'onBoardingAccount')
+BEGIN
+	ALTER TABLE onBoardingAccount ADD SwiftGroupId BIGINT NULL;
+
+		DECLARE @command4 varchar(Max);
+
+		SELECT @Command4 ='UPDATE TGT SET TGT.SwiftGroupId = SRC.hmsSwiftGroupId FROM onBoardingAccount TGT INNER JOIN hmsSwiftGroup SRC ON SRC.SwiftGroup = TGT.SwiftGroup 
+						WHERE SRC.SendersBIC = TGT.SendersBIC'
+
+		EXEC(@command4);
+	
+	ALTER TABLE [dbo].[onBoardingAccount]  WITH CHECK ADD  CONSTRAINT [FK_onBoardingAccount_SwiftGroupId] FOREIGN KEY([SwiftGroupId])
+    REFERENCES [dbo].[hmsSwiftGroup] ([hmsSwiftGroupId]);
+
+END
+GO
+
 --- Following are the columns to DROP - V 
 
 
@@ -87,6 +104,9 @@ GO
 --IF EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'UltimateBeneficiaryBankAddress' AND TABLE_NAME = 'onBoardingAccount') BEGIN ALTER TABLE onBoardingAccount DROP COLUMN UltimateBeneficiaryBankAddress; END
 --IF EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'CutoffTime' AND TABLE_NAME = 'onBoardingAccount') BEGIN ALTER TABLE onBoardingAccount DROP COLUMN CutoffTime; END
 --IF EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'DaystoWire' AND TABLE_NAME = 'onBoardingAccount') BEGIN ALTER TABLE onBoardingAccount DROP COLUMN DaystoWire; END
+--IF EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'SwiftGroup' AND TABLE_NAME = 'onBoardingAccount') BEGIN ALTER TABLE onBoardingAccount DROP COLUMN SwiftGroup; END
+--IF EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'SendersBIC' AND TABLE_NAME = 'onBoardingAccount') BEGIN ALTER TABLE onBoardingAccount DROP COLUMN SendersBIC; END
+
 
 
 --IF EXISTS(SELECT * FROM sys.default_constraints WHERE name LIKE 'DF__onBoardin__CutOf__%')

@@ -280,9 +280,9 @@ namespace HMOSecureWeb.Controllers
                     x.FFCNumber,
                     x.Reference,
                     x.onBoardingAccountStatus,
-                    x.SendersBIC,
+                    SendersBIC = x.SwiftGroup != null ? x.SwiftGroup.SendersBIC : string.Empty,
                     x.StatusComments,
-                    x.SwiftGroup,
+                    SwiftGroup = x.SwiftGroup != null ? x.SwiftGroup.SwiftGroup : string.Empty,
                     x.AccountPurpose,
                     x.AccountStatus,
                     x.HoldbackAmount,
@@ -536,9 +536,9 @@ namespace HMOSecureWeb.Controllers
                     x.Reference,
                     x.onBoardingAccountStatus,
                     x.hmFundId,
-                    x.SendersBIC,
+                    SendersBIC = x.SwiftGroup != null ? x.SwiftGroup.SendersBIC : string.Empty,
                     x.StatusComments,
-                    x.SwiftGroup,
+                    SwiftGroup = x.SwiftGroup != null ? x.SwiftGroup.SwiftGroup : string.Empty,
                     x.AccountPurpose,
                     x.AccountStatus,
                     x.HoldbackAmount,
@@ -1028,8 +1028,8 @@ namespace HMOSecureWeb.Controllers
                 row["Notes"] = account.Notes;
                 row["Authorized Party"] = account.AuthorizedParty;
                 row["Cash Instruction Mechanism"] = account.CashInstruction;
-                row["Swift Group"] = account.SwiftGroup;
-                row["Senders BIC"] = account.SendersBIC;
+                row["Swift Group"] = account.SwiftGroup.SwiftGroup;
+                row["Senders BIC"] = account.SwiftGroup.SendersBIC;
                 row["Cash Sweep"] = account.CashSweep;
 
                 if (account.CashSweepTime != null)
@@ -1237,6 +1237,7 @@ namespace HMOSecureWeb.Controllers
                             Intermediary = new onBoardingAccountBICorABA(),
                             UltimateBeneficiary = new onBoardingAccountBICorABA(),
                             WirePortalCutoff = new onBoardingWirePortalCutoff(),
+                            SwiftGroup = new hmsSwiftGroup(),
                             onBoardingAccountId = string.IsNullOrWhiteSpace(account["Account Id"]) ? 0 : long.Parse(account["Account Id"]),
                             AccountNumber = account["Account Number"],
                             AccountType = account["Entity Type"]
@@ -1281,11 +1282,11 @@ namespace HMOSecureWeb.Controllers
                         accountDetail.Notes = account["Notes"];
                         accountDetail.AuthorizedParty = account["Authorized Party"];
                         accountDetail.CashInstruction = account["Cash Instruction Mechanism"];
-                        accountDetail.SwiftGroup = account["Swift Group"];
-                        if (!string.IsNullOrWhiteSpace(accountDetail.SwiftGroup))
+                        accountDetail.SwiftGroup.SwiftGroup = account["Swift Group"];
+                        if (!string.IsNullOrWhiteSpace(account["Swift Group"]))
                         {
-                            var swiftGroup = swiftgroups.FirstOrDefault(x => x.SwiftGroup == accountDetail.SwiftGroup);
-                            accountDetail.SendersBIC = (swiftGroup != null) ? swiftGroup.SendersBIC : string.Empty;
+                            var swiftGroup = swiftgroups.FirstOrDefault(x => x.SwiftGroup == account["Swift Group"]);
+                            accountDetail.SwiftGroup.SendersBIC = (swiftGroup != null) ? swiftGroup.SendersBIC : string.Empty;
                         }
 
                         accountDetail.CashSweep = account["Cash Sweep"];

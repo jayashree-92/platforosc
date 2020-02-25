@@ -59,9 +59,9 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsWireCutoffTimeZone> hmsWireCutoffTimeZones { get; set; }
         public virtual DbSet<hmsSystemPreference> hmsSystemPreferences { get; set; }
         public virtual DbSet<hmsActionInProgress> hmsActionInProgresses { get; set; }
-        public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
         public virtual DbSet<hmsWire> hmsWires { get; set; }
         public virtual DbSet<hmsSwiftGroup> hmsSwiftGroups { get; set; }
         public virtual DbSet<hmsSwiftGroupStatusLkp> hmsSwiftGroupStatusLkps { get; set; }
+        public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
     }
 }

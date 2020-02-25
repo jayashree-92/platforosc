@@ -454,7 +454,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static void SetSenderAndReceiverFromHM(AbstractMT callingMethod, WireTicket wire)
         {
-            callingMethod.setSenderAndReceiver(HMBICSender, wire.SendingAccount.SendersBIC);
+            callingMethod.setSenderAndReceiver(HMBICSender, wire.SendingAccount.SwiftGroup.SendersBIC);
         }
 
         private static MT103 CreateMt103(WireTicket wire, string messageType, string referenceTag)

@@ -56,8 +56,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public bool IsDeleted { get; set; }
         public string AccountType { get; set; }
         public Nullable<long> BrokerId { get; set; }
-        public string SwiftGroup { get; set; }
-        public string SendersBIC { get; set; }
         public string AccountPurpose { get; set; }
         public string AccountStatus { get; set; }
         public Nullable<double> HoldbackAmount { get; set; }
@@ -74,7 +72,9 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> WirePortalCutoffId { get; set; }
         public Nullable<long> IntermediaryBICorABAId { get; set; }
         public Nullable<long> UltimateBeneficiaryBICorABAId { get; set; }
+        public Nullable<long> SwiftGroupId { get; set; }
     
+        public virtual hmsSwiftGroup SwiftGroup { get; set; }
         public virtual onBoardingAccountBICorABA Beneficiary { get; set; }
         public virtual onBoardingAccountBICorABA Intermediary { get; set; }
         public virtual onBoardingAccountBICorABA UltimateBeneficiary { get; set; }

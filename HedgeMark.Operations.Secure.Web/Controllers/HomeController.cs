@@ -769,12 +769,12 @@ namespace HMOSecureWeb.Controllers
             {
                 case "MT103":
                     if (isBookTransfer)
-                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
+                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SwiftGroup.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(receivingAccount.Currency) || string.IsNullOrWhiteSpace(receivingAccount.AccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.Description) || string.IsNullOrWhiteSpace(receivingAccount.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(receivingAccount.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BICorABA) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BankName) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BankAddress) ||
                                                    string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BICorABA) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BankName) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BankAddress));
                     else
-                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
+                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SwiftGroup.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(ssiTemplate.Currency) || string.IsNullOrWhiteSpace(ssiTemplate.AccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.ReasonDetail) || string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankAddress) ||
                                                    string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankAddress));
@@ -783,20 +783,20 @@ namespace HMOSecureWeb.Controllers
                 case "MT202":
                 case "MT202 COV":
                     if (isBookTransfer)
-                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
+                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SwiftGroup.SendersBIC) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(receivingAccount.Currency) || string.IsNullOrWhiteSpace(receivingAccount.AccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(receivingAccount.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BICorABA) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BankName) || string.IsNullOrWhiteSpace(receivingAccount.Intermediary.BankAddress) ||
                                                    string.IsNullOrWhiteSpace(receivingAccount.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BICorABA) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BankName) || string.IsNullOrWhiteSpace(receivingAccount.Beneficiary.BankAddress));
 
                     else
-                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
+                        isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SwiftGroup.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(ssiTemplate.Currency) || string.IsNullOrWhiteSpace(ssiTemplate.AccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankAddress) ||
                                                    string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankAddress));
                     validationMsg = "Sender's Account Institution, BIC & Receiver's Account Institution, Intermediary Institution, Benificiary Institution and Currency fields are required to initiate this wire";
                     break;
                 case "MT210":
-                    isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SendersBIC) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) || string.IsNullOrWhiteSpace(account.Currency));
+                    isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SwiftGroup.SendersBIC) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) || string.IsNullOrWhiteSpace(account.Currency));
                     validationMsg = "Sender's Account Institution, BIC and Currency fields are required to initiate this wire";
                     break;
                 case "MT540":
