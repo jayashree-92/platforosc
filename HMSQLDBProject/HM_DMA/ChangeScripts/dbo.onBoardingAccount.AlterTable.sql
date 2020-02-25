@@ -77,12 +77,12 @@ IF NOT EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Swif
 BEGIN
 	ALTER TABLE onBoardingAccount ADD SwiftGroupId BIGINT NULL;
 
-		DECLARE @command4 varchar(Max);
+		DECLARE @command5 varchar(Max);
 
-		SELECT @Command4 ='UPDATE TGT SET TGT.SwiftGroupId = SRC.hmsSwiftGroupId FROM onBoardingAccount TGT INNER JOIN hmsSwiftGroup SRC ON SRC.SwiftGroup = TGT.SwiftGroup 
+		SELECT @Command5 ='UPDATE TGT SET TGT.SwiftGroupId = SRC.hmsSwiftGroupId FROM onBoardingAccount TGT INNER JOIN hmsSwiftGroup SRC ON SRC.SwiftGroup = TGT.SwiftGroup 
 						WHERE SRC.SendersBIC = TGT.SendersBIC'
 
-		EXEC(@command4);
+		EXEC(@command5);
 	
 	ALTER TABLE [dbo].[onBoardingAccount]  WITH CHECK ADD  CONSTRAINT [FK_onBoardingAccount_SwiftGroupId] FOREIGN KEY([SwiftGroupId])
     REFERENCES [dbo].[hmsSwiftGroup] ([hmsSwiftGroupId]);
