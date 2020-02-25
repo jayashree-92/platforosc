@@ -893,7 +893,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetSwiftGroup = function (panelIndex) {
-        $http.get("/Accounts/GetAllRelatedSwiftGroup?broker=" + $scope.onBoardingAccountDetails[panelIndex].BrokerId).then(function (response) {
+        $http.get("/Accounts/GetAllRelatedSwiftGroup?brokerId=" + $scope.onBoardingAccountDetails[panelIndex].BrokerId).then(function (response) {
             $scope.SwiftGroups = response.data.swiftGroups;
             $scope.SwiftGroupData = response.data.SwiftGroupData;
 
