@@ -698,15 +698,15 @@ namespace HMOSecureWeb.Controllers
             AccountManager.AddAuthorizedParty(authorizedParty, UserName);
         }
 
-        public JsonResult GetAllSwiftGroup()
+        public JsonResult GetAllRelatedSwiftGroup(long brokerId)
         {
-            var swiftGroups = AccountManager.GetAllSwiftGroup();
+            var swiftGroups = AccountManager.GetAllSwiftGroup(brokerId);
             return Json(new
             {
                 swiftGroups,
                 SwiftGroupData = swiftGroups.Select(choice => new
                 {
-                    id = choice.SwiftGroup,
+                    id = choice.hmsSwiftGroupId,
                     text = choice.SwiftGroup
                 }).OrderBy(x => x.text).ToList()
             }, JsonContentType, JsonContentEncoding);

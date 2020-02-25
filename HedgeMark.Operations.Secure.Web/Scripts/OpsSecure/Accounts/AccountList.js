@@ -893,7 +893,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetSwiftGroup = function (panelIndex) {
-        $http.get("/Accounts/GetAllSwiftGroup").then(function (response) {
+        $http.get("/Accounts/GetAllRelatedSwiftGroup?broker=" + $scope.onBoardingAccountDetails[panelIndex].BrokerId).then(function (response) {
             $scope.SwiftGroups = response.data.swiftGroups;
             $scope.SwiftGroupData = response.data.SwiftGroupData;
 
@@ -904,8 +904,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     data: response.data.SwiftGroupData
                 });
 
-                if ($scope.onBoardingAccountDetails[panelIndex].SwiftGroup != null && $scope.onBoardingAccountDetails[panelIndex].SwiftGroup != 'undefined')
-                    $("#liSwiftGroup" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].SwiftGroup);
+                if ($scope.onBoardingAccountDetails[panelIndex].SwiftGroup != null && $scope.onBoardingAccountDetails[panelIndex].SwiftGroup != 'undefined') {
+                    $("#liSwiftGroup" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].SwiftGroupId);
+                    $scope.fnOnSwiftGroupChange($scope.onBoardingAccountDetails[panelIndex].SwiftGroupId, panelIndex);
+                }
             }
         });
     }

@@ -774,7 +774,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
+                Logger.Error(string.Format("{0} - Error Message : { 1}", methodName, ex.Message), ex);
             }
         }
 
@@ -896,13 +896,13 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<hmsSwiftGroup> GetAllSwiftGroup()
+        public static List<hmsSwiftGroup> GetAllSwiftGroup(long brokerId = -1)
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.hmsSwiftGroups.Where(s => !s.IsDeleted).AsNoTracking().ToList();
+                return context.hmsSwiftGroups.Where(s => !s.IsDeleted && (brokerId == -1 || s.BrokerLegalEntityId == brokerId)).AsNoTracking().ToList();
             }
         }
 
