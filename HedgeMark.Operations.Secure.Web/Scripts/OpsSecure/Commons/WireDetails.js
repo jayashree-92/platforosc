@@ -86,11 +86,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     { "data": "PreferredFundName", "sTitle": "Fund" },
                     { "data": "SendingAccount.AccountName", "sTitle": "Sending Account Name" },
                     { "data": "SendingAccount.AccountNumber", "sTitle": "Sending Account Number" },
-                    {
-                        "data": "SendingAccount.AccountNumber", "sTitle": "Module/Origin", "render": function (tdata, type, row) {
-                            return "";
-                        }
-                    },
+                    //{ "data": "SendingAccount.AccountNumber", "sTitle": "Module/Origin", "render": function (tdata, type, row) { return ""; } },
                     //{
                     //    "data": "Counterparty", "sTitle": "Counterparty/Service Provider",
                     //    "render": function (tdata) {
