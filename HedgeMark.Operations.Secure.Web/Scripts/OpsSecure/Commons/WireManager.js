@@ -1223,7 +1223,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     angular.element(document).on("change", "#liCurrency", function () {
         $timeout(function () {
-            if ($("#liFund").select2('val') != "" && $("#liCurrency").select2('val') != "") {
+            if ($("#liFund").select2('val') != "" && $("#liCurrency").select2('val') != "" && $scope.WireTicket.hmsWireId == 0) {
                 $scope.isFundsChanged = true;
                 $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2('val') + "&currency=" + $("#liCurrency").select2('val') + "&isBookTransfer=" + $scope.wireTicketObj.IsBookTransfer).then(function (response) {
                     $scope.sendingAccountsList = response.data.sendingAccountsList;
