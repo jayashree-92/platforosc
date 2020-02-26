@@ -35,6 +35,7 @@ namespace HMOSecureMiddleware
                     .Include(s => s.Intermediary)
                     .Include(s => s.UltimateBeneficiary)
                     .Include(s => s.WirePortalCutoff)
+                    .Include(s => s.SwiftGroup)
                     .Include(x => x.onBoardingAccountSSITemplateMaps).Where(x => !x.IsDeleted).Where(s => isPreviledgedUser || hmFundIds.Contains(s.hmFundId)).ToList();
             }
 
@@ -53,6 +54,7 @@ namespace HMOSecureMiddleware
                         .Include(s => s.Intermediary)
                         .Include(s => s.UltimateBeneficiary)
                         .Include(s => s.WirePortalCutoff)
+                        .Include(s => s.SwiftGroup)
                         .Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
                         .Where(account => account.dmaAgreementOnBoardingId == agreementId && !account.IsDeleted).ToList();
 
@@ -60,7 +62,8 @@ namespace HMOSecureMiddleware
                     .Include(s => s.Beneficiary)
                     .Include(s => s.Intermediary)
                     .Include(s => s.UltimateBeneficiary)
-                    .Include(s => s.WirePortalCutoff).Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
+                    .Include(s => s.WirePortalCutoff)
+                    .Include(s => s.SwiftGroup).Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
                     .Where(account => account.BrokerId == brokerId && account.hmFundId == fundId && account.AccountType != AgreementAccountType && !account.IsDeleted).ToList();
             }
         }
@@ -74,7 +77,8 @@ namespace HMOSecureMiddleware
                 var account = context.onBoardingAccounts.Include(s => s.Beneficiary)
                     .Include(s => s.Intermediary)
                     .Include(s => s.UltimateBeneficiary)
-                    .Include(s => s.WirePortalCutoff).FirstOrDefault(acnt => acnt.onBoardingAccountId == accountId);
+                    .Include(s => s.WirePortalCutoff)
+                    .Include(s => s.SwiftGroup).FirstOrDefault(acnt => acnt.onBoardingAccountId == accountId);
 
                 if (account.WirePortalCutoff == null)
                     account.WirePortalCutoff = new onBoardingWirePortalCutoff() { CutOffTimeZone = "EST" };
@@ -84,13 +88,14 @@ namespace HMOSecureMiddleware
                     account.Intermediary = new onBoardingAccountBICorABA();
                 if (account.UltimateBeneficiary == null)
                     account.UltimateBeneficiary = new onBoardingAccountBICorABA();
-
+                if (account.SwiftGroup == null)
+                    account.SwiftGroup = new hmsSwiftGroup();
                 //remove circular references
                 account.WirePortalCutoff.onBoardingAccounts = null;
                 account.Beneficiary.onBoardingAccounts = account.Beneficiary.onBoardingAccounts1 = account.Beneficiary.onBoardingAccounts2 = null;
                 account.Intermediary.onBoardingAccounts = account.Intermediary.onBoardingAccounts1 = account.Intermediary.onBoardingAccounts2 = null;
                 account.UltimateBeneficiary.onBoardingAccounts = account.UltimateBeneficiary.onBoardingAccounts1 = account.UltimateBeneficiary.onBoardingAccounts2 = null;
-
+                account.SwiftGroup.onBoardingAccounts = null;
                 return account;
             }
 
@@ -470,13 +475,13 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates(List<long> counterpartyIds, string currency = null)
+        public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates(List<long> counterpartyIds, List<string> messageTypes = null, string currency = null)
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved" && (counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType == "Fee/Expense Payment") && (currency == null || template.Currency == currency)).ToList();
+                return context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved" && (counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType == "Fee/Expense Payment") && (currency == null || template.Currency == currency) && (messageTypes == null || messageTypes.Contains(template.MessageType))).ToList();
             }
         }
 

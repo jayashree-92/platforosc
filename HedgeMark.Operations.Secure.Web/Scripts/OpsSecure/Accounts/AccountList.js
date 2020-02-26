@@ -904,10 +904,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     data: response.data.SwiftGroupData
                 });
 
-                if ($scope.onBoardingAccountDetails[panelIndex].SwiftGroup != null && $scope.onBoardingAccountDetails[panelIndex].SwiftGroup != 'undefined') {
+                if ($scope.onBoardingAccountDetails[panelIndex].SwiftGroupId != null && $scope.onBoardingAccountDetails[panelIndex].SwiftGroupId != 'undefined') {
                     $("#liSwiftGroup" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].SwiftGroupId);
-                    $scope.fnOnSwiftGroupChange($scope.onBoardingAccountDetails[panelIndex].SwiftGroupId, panelIndex);
                 }
+                else {
+                    $("#liSwiftGroup" + panelIndex).select2("val", response.data.SwiftGroupData[0] != undefined ? response.data.SwiftGroupData[0].id : null);
+                } 
+
+                $scope.fnOnSwiftGroupChange($("#liSwiftGroup" + panelIndex).select2("val"), panelIndex);
             }
         });
     }
@@ -926,9 +930,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         var swData = $.grep($scope.SwiftGroups, function (v) { return v.SwiftGroup == swiftGroup; })[0];
         if (swData != undefined) {
+            $scope.swiftGroupInfo = swData;
             $("#txtSender" + index).val(swData.SendersBIC);
         }
         else {
+            $scope.swiftGroupInfo = undefined;
             $("#txtSender" + index).val("");
         }
     }
@@ -1509,7 +1515,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnSsiTemplateMap = function (accountId, fundId, index, currency) {
-        $http.get("/Accounts/GetAccountSsiTemplateMap?accountId=" + accountId + "&fundId=" + fundId + "&currency=" + currency).then(function (response) {
+        var messages = $scope.swiftGroupInfo != undefined ? $scope.swiftGroupInfo.AcceptedMessages : "";
+        $http.get("/Accounts/GetAccountSsiTemplateMap?accountId=" + accountId + "&fundId=" + fundId + "&currency=" + currency + "&messages=" + messages).then(function (response) {
             $scope.ssiTemplates = response.data.ssiTemplates;
             $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
             if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined && $scope.ssiTemplateMaps.length > 0) {

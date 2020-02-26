@@ -511,7 +511,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetTimeToApproveTheWire(long onboardingAccountId, DateTime valueDate)
         {
-            var onboardAccount = WireDataManager.GetBoardingAccount(onboardingAccountId);
+            var onboardAccount = AccountManager.GetOnBoardingAccount(onboardingAccountId);
             var timeToApprove = GetDeadlineToApprove(onboardAccount, valueDate);
             return Json(timeToApprove);
         }
@@ -756,7 +756,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetBoardingAccount(long onBoardingAccountId, DateTime valueDate)
         {
-            var onboardAccount = WireDataManager.GetBoardingAccount(onBoardingAccountId);
+            var onboardAccount = AccountManager.GetOnBoardingAccount(onBoardingAccountId);
             var deadlineToApprove = GetDeadlineToApprove(onboardAccount, valueDate);
             return Json(new { onboardAccount, deadlineToApprove });
         }

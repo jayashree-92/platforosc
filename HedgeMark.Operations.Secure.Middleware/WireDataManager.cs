@@ -209,8 +209,11 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-
-                return context.onBoardingAccounts.AsNoTracking().FirstOrDefault(s => s.onBoardingAccountId == onBoardingAccountId) ?? new onBoardingAccount();
+                
+                var account = context.onBoardingAccounts.AsNoTracking().Include("SwiftGroup").First(s => s.onBoardingAccountId == onBoardingAccountId);
+                if (account.SwiftGroup != null)
+                    account.SwiftGroup.onBoardingAccounts = null;
+                return account;
             }
         }
 

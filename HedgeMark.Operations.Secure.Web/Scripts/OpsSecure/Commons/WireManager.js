@@ -461,8 +461,29 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         fnFocusOutCallback: function () {
             $scope.WireTicket.Amount = Math.abs($.convertToNumber($(this).text(), true));
             $(this).html($.convertToCurrency($scope.WireTicket.Amount, 2));
+            $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
         }
     });
+
+    $scope.validateWireInitiationofBIC = function () {
+        var isValid;
+        switch ($scope.accountDetail.SwiftGroup.Status) {
+            case "Requested": isValid = false;
+                              break;
+            case "Testing":   isValid = $scope.WireTicket.Amount <= 10;
+                              break;
+            case "Live":      isValid = true;
+                              break;
+        }
+        if (!isValid) {
+            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
+            if ($scope.accountDetail.SwiftGroup.Status == "Testing")
+                $scope.validationMsg = "Amount cannot exceed 10 for Sender's BIC of status Testing";
+            else
+                $scope.validationMsg = "Wire initiation is not allowed for Sender's BIC of status Requested";
+        }
+        return isValid;
+    }
 
     $scope.checkForCreatedWires = function () {
         var receivingAccountId = $scope.wireTicketObj.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : angular.copy($scope.ssiTemplate.onBoardingSSITemplateId);
@@ -1298,11 +1319,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         var wireMessageType = $filter('filter')($scope.MessageTypes, function (message) { return message.text == "MT210" }, true)[0];
                         angular.element("#liMessageType").select2('val', wireMessageType.id).trigger('change');
                     }
+                    $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
                 });
-
-
-
-
             }
             else {
                 $scope.isReceivingAccountEnabled = false;

@@ -398,13 +398,13 @@ namespace HMOSecureWeb.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
-        public JsonResult GetAccountSsiTemplateMap(long accountId, long fundId, string currency)
+        public JsonResult GetAccountSsiTemplateMap(long accountId, long fundId, string currency, string messages)
         {
             var ssiTemplateMaps = AccountManager.GetAccountSsiTemplateMap(accountId);
 
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
 
-            var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds, currency);
+            var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds, messages.Split(',').ToList(), currency);
 
             ssiTemplateMaps.ForEach(x => x.onBoardingSSITemplate = null);
 
