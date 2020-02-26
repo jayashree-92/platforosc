@@ -102,7 +102,8 @@ namespace HMOSecureMiddleware
                 }
                 catch(Exception ex)
                 {
-                    Logger.Error(string.Format("{0} - Error Message : {1}", MethodBase.GetCurrentMethod(), ex.Message), ex); 
+                    Logger.Error(string.Format("{0} - Error Message : {1}", MethodBase.GetCurrentMethod(), ex.Message), ex);
+                    return null;
                 }
             }
 
