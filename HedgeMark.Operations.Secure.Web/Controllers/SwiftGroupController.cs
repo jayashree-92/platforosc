@@ -29,7 +29,7 @@ namespace HMOSecureWeb.Controllers
             var swiftGroupStatusData = AccountManager.GetSwiftGroupStatus().Select(s => new { id = s.hmsSwiftGroupStatusLkpId, text = s.Status }).ToList();
             var counterpartyData = brokerLegalEntityData.GroupBy(s => s.id).ToDictionary(p => p.Key, v => v.FirstOrDefault().text);
             var swiftStatusData = swiftGroupStatusData.GroupBy(s => s.id).ToDictionary(p => p.Key, v => v.FirstOrDefault().text);
-            var wireMessageTypes = WireDataManager.GetWireMessageTypes().Select(s => new { id = s.MessageType, text = s.MessageType }).ToList();
+            var wireMessageTypes = WireDataManager.GetWireMessageTypes().Select(s => new { id = s.MessageType, text = s.MessageType, isOutBound = s.IsOutbound }).ToList();
             var swiftGroupData = swiftGroupInfo.Select(s => new SwiftGroupData
             {
                 hmsSwiftGroupId = s.hmsSwiftGroupId,
@@ -67,7 +67,7 @@ namespace HMOSecureWeb.Controllers
             AuditSwiftGroupChanges(swiftGroup, originalSwiftGroup);
         }
 
-        public void DeleteWirePortalCutoff(long swiftGroupId)
+        public void DeleteSwiftGroup(long swiftGroupId)
         {
             var swiftGroup = DeleteSwiftGroupData(swiftGroupId);
             var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(OpsSecureSessionVars.SwiftGroupData.ToString());
@@ -132,7 +132,7 @@ namespace HMOSecureWeb.Controllers
 
         private List<SwiftGroupData> GenerateSwiftGroupData(List<hmsSwiftGroup> hmsSwiftGroups, SwiftGroupInformation swiftGroupInfo)
         {
-            return hmsSwiftGroups.Select(s => new SwiftGroupData
+            return hmsSwiftGroups.Select(s => new SwiftGroupData()
             {
                 hmsSwiftGroupId = s.hmsSwiftGroupId,
                 SwiftGroup = s.SwiftGroup,

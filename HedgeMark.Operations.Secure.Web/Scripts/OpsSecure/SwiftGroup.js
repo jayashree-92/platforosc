@@ -35,6 +35,9 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
                     {
                         "sTitle": "Swift Messages",
                         "mData": "AcceptedMessages",
+                        "render": function (tdata) {
+                            return tdata != undefined ? tdata.replace(/,/g, ", ") : tdata;
+                        }
                     },
                     {
                         "sTitle": "Notes",
@@ -85,7 +88,9 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
                 placeholder: "Select a Broker",
                 data: $scope.wireMessageTypes,
                 multiple: true,
-                closeOnSelect: false
+                closeOnSelect: false,
+                formatResult: formatSelection,
+                formatSelection: formatSelection
             });
             $timeout(function () {
                 $scope.swiftGroupTable.columns.adjust().draw();
@@ -99,6 +104,10 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
 
     $scope.fnGetSwiftGroupData();
     $scope.enableSwiftGroupActions = false;
+    function formatSelection(selectData) {
+        var stat = $filter('filter')(angular.copy($scope.wireMessageTypes), { 'id': selectData.id }, true)[0];
+        return stat.text + "<label class='pull-right label " + (selectData.isOutBound ? "label-info" : "label-default") + " shadowBox'>" + (selectData.isOutBound ? "OutBound" : "InBound") + "</label>";
+    }
 
     $scope.fnAddOrUpdateSwiftGroup = function (isAdd) {
         $scope.isAdd = isAdd;

@@ -1601,7 +1601,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     // $scope.ssiTemplateDocuments.push(value);
                     $scope.accountDocuments.push(value);
                 });
-
+                $scope.onBoardingAccountDetails[key].onBoardingAccountDocuments = angular.copy($scope.accountDocuments);
                 viewAttachmentTable($scope.accountDocuments, key);
             },
             queuecomplete: function () {
