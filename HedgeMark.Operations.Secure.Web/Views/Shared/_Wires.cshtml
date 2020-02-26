@@ -284,10 +284,10 @@
                                 </div>
                                 <div class="col-sm-8 col-md-6 col-lg-7">
                                     <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
-                                        <input type="time" name="cutOffTime" ng-model="accountDetail.CutoffTime" class="form-control" readonly />
+                                        <input type="time" name="cutOffTime" ng-model="accountDetail.WirePortalCutoff.CutoffTime" class="form-control" readonly />
                                     </div>
                                     <div class="col-sm-8 col-md-4 col-lg-4" style="margin-top: 5px; padding-left: 0;">
-                                        <label class="label label-success" style="font-size: 12px; padding: 5px;">{{accountDetail.DaystoWire}} {{accountDetail.DaystoWire > 1 ? "Days" : "Day"}}</label>
+                                        <label class="label label-success" style="font-size: 12px; padding: 5px;">{{accountDetail.WirePortalCutoff.DaystoWire}} {{accountDetail.WirePortalCutoff.WirePortalCutoff.DaystoWire > 1 ? "Days" : "Day"}}</label>
                                     </div>
                                 </div>
                             </div>
@@ -333,7 +333,7 @@
                                     <label class="control-label">Swift Group </label>
                                 </div>
                                 <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input type="text" class="form-control" ng-model="acccountDetail.SwiftGroup" readonly />
+                                    <input type="text" class="form-control" ng-model="acccountDetail.SwiftGroup.SwiftGroup" readonly />
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-9 col-lg-6">
@@ -341,7 +341,7 @@
                                     <label class="control-label">Sender BIC </label>
                                 </div>
                                 <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input name="accountnumber" type="text" class="form-control" ng-model="accountDetail.SendersBIC" readonly />
+                                    <input name="accountnumber" type="text" class="form-control" ng-model="accountDetail.SwiftGroup.SendersBIC" readonly />
                                 </div>
                             </div>
                         </div>
@@ -395,13 +395,13 @@
                                 <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3 ">
-                                <input type="text" ng-model="accountDetail.IntermediaryBICorABA" class="form-control control-label" readonly />
+                                <input type="text" ng-model="accountDetail.Intermediary.BICorABA" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="accountDetail.BeneficiaryBICorABA" class="form-control control-label" readonly />
+                                <input type="text" ng-model="accountDetail.Beneficiary.BICorABA" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="accountDetail.UltimateBeneficiaryBICorABA" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
+                                <input type="text" ng-model="accountDetail.UltimateBeneficiary.BICorABA" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
                             </div>
                         </div>
                         <p />
@@ -410,13 +410,13 @@
                                 <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="accountDetail.IntermediaryBankName" class="form-control control-label" readonly />
+                                <input type="text" ng-model="accountDetail.Intermediary.BankName" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="accountDetail.BeneficiaryBankName" class="form-control control-label" readonly />
+                                <input type="text" ng-model="accountDetail.Beneficiary.BankName" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'">
-                                <input type="text" name="BankName" ng-model="accountDetail.UltimateBeneficiaryBankName" class="form-control control-label" readonly />
+                                <input type="text" name="BankName" ng-model="accountDetail.UltimateBeneficiary.BankName" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3" ng-show="accountDetail.UltimateBeneficiaryType == 'Account Name'">
                                 <input type="text" ng-model="accountDetail.UltimateBeneficiaryAccountName" class="form-control control-label" readonly />
@@ -428,13 +428,13 @@
                                 <label class="control-label" style="margin-left: 15px;">Bank Address </label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control" rows="3" cols="10" ng-model="accountDetail.IntermediaryBankAddress" readonly></textarea>
+                                <textarea class="form-control" rows="3" cols="10" ng-model="accountDetail.Intermediary.BankAddress" readonly></textarea>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control" rows="3" cols="10" ng-model="accountDetail.BeneficiaryBankAddress" readonly></textarea>
+                                <textarea class="form-control" rows="3" cols="10" ng-model="accountDetail.Beneficiary.BankAddress" readonly></textarea>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control modalInputWidth" rows="3" cols="10" ng-model="accountDetail.UltimateBeneficiaryBankAddress" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" readonly></textarea>
+                                <textarea class="form-control modalInputWidth" rows="3" cols="10" ng-model="accountDetail.UltimateBeneficiary.BankAddress" ng-show="accountDetail.UltimateBeneficiaryType != 'Account Name'" readonly></textarea>
                             </div>
                         </div>
                         <p />
@@ -516,10 +516,10 @@
                                 </div>
                                 <div class="col-sm-8 col-md-6 col-lg-7">
                                     <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
-                                        <input type="time" name="cutOffTime" ng-model="receivingAccountDetail.CutoffTime" class="form-control" readonly />
+                                        <input type="time" name="cutOffTime" ng-model="receivingAccountDetail.WirePortalCutoff.CutoffTime" class="form-control" readonly />
                                     </div>
                                     <div class="col-sm-8 col-md-4 col-lg-4" style="margin-top: 5px; padding-left: 0;">
-                                        <label class="label label-success" style="font-size: 12px; padding: 5px;">{{receivingAccountDetail.DaystoWire}} {{receivingAccountDetail.DaystoWire > 1 ? "Days" : "Day"}}</label>
+                                        <label class="label label-success" style="font-size: 12px; padding: 5px;">{{receivingAccountDetail.WirePortalCutoff.DaystoWire}} {{receivingAccountDetail.WirePortalCutoff.DaystoWire > 1 ? "Days" : "Day"}}</label>
                                     </div>
                                 </div>
                             </div>
@@ -563,7 +563,7 @@
                                     <label class="control-label">Swift Group </label>
                                 </div>
                                 <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input type="text" class="form-control" ng-model="receivingAcccountDetail.SwiftGroup" readonly />
+                                    <input type="text" class="form-control" ng-model="receivingAcccountDetail.SwiftGroup.SwiftGroup" readonly />
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-9 col-lg-6">
@@ -571,7 +571,7 @@
                                     <label class="control-label">Sender BIC </label>
                                 </div>
                                 <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input name="accountnumber" type="text" class="form-control" ng-model="receivingAccountDetail.SendersBIC" readonly />
+                                    <input name="accountnumber" type="text" class="form-control" ng-model="receivingAccountDetail.SwiftGroup.SendersBIC" readonly />
                                 </div>
                             </div>
                         </div>
@@ -625,13 +625,13 @@
                                 <label class="control-label" style="margin-left:15px;">ABA/BIC</label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="receivingAccountDetail.IntermediaryBICorABA" class="form-control control-label" readonly />
+                                <input type="text" ng-model="receivingAccountDetail.Intermediary.BICorABA" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="receivingAccountDetail.BeneficiaryBICorABA" class="form-control control-label" readonly />
+                                <input type="text" ng-model="receivingAccountDetail.Beneficiary.BICorABA" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="receivingAccountDetail.UltimateBeneficiaryBICorABA" ng-show="receivingAccountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
+                                <input type="text" ng-model="receivingAccountDetail.UltimateBeneficiary.BICorABA" ng-show="receivingAccountDetail.UltimateBeneficiaryType != 'Account Name'" class="form-control control-label" readonly />
                             </div>
                         </div>
                         <p />
@@ -640,13 +640,13 @@
                                 <label class="control-label" style="margin-left:15px;">Bank/Account Name </label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="receivingAccountDetail.IntermediaryBankName" class="form-control control-label" readonly />
+                                <input type="text" ng-model="receivingAccountDetail.Intermediary.BankName" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <input type="text" ng-model="receivingAccountDetail.BeneficiaryBankName" class="form-control control-label" readonly />
+                                <input type="text" ng-model="receivingAccountDetail.Beneficiary.BankName" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3" ng-show="receivingAccountDetail.UltimateBeneficiaryType != 'Account Name'">
-                                <input type="text" name="BankName" ng-model="receivingAccountDetail.UltimateBeneficiaryBankName" class="form-control control-label" readonly />
+                                <input type="text" name="BankName" ng-model="receivingAccountDetail.UltimateBeneficiary.BankName" class="form-control control-label" readonly />
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3" ng-show="receivingAccountDetail.UltimateBeneficiaryType == 'Account Name'">
                                 <input type="text" ng-model="receivingAccountDetail.UltimateBeneficiaryAccountName" class="form-control control-label" readonly />
@@ -658,13 +658,13 @@
                                 <label class="control-label" style="margin-left:15px;">Bank Address </label>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control" rows="3" cols="10" ng-model="receivingAccountDetail.IntermediaryBankAddress" readonly></textarea>
+                                <textarea class="form-control" rows="3" cols="10" ng-model="receivingAccountDetail.Intermediary.BankAddress" readonly></textarea>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control" rows="3" cols="10" ng-model="receivingAccountDetail.BeneficiaryBankAddress" readonly></textarea>
+                                <textarea class="form-control" rows="3" cols="10" ng-model="receivingAccountDetail.Beneficiary.BankAddress" readonly></textarea>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
-                                <textarea class="form-control modalInputWidth" rows="3" cols="10" ng-model="receivingAccountDetail.UltimateBeneficiaryBankAddress" ng-show="receivingAccountDetail.UltimateBeneficiaryType != 'Account Name'" readonly></textarea>
+                                <textarea class="form-control modalInputWidth" rows="3" cols="10" ng-model="receivingAccountDetail.UltimateBeneficiary.BankAddress" ng-show="receivingAccountDetail.UltimateBeneficiaryType != 'Account Name'" readonly></textarea>
                             </div>
                         </div>
                         <p />
