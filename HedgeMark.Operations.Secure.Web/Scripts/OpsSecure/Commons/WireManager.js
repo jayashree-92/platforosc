@@ -467,7 +467,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.validateWireInitiationofBIC = function () {
         var isValid;
-        switch ($scope.accountDetail.SwiftGroup.Status) {
+        switch ($scope.accountDetail.SwiftGroup.hmsSwiftGroupStatusLkp.Status)
+        {
             case "Requested": isValid = false;
                               break;
             case "Testing":   isValid = $scope.WireTicket.Amount <= 10;

@@ -404,7 +404,7 @@ namespace HMOSecureWeb.Controllers
 
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
 
-            var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds, messages.Split(',').ToList(), currency);
+            var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds, messages.Split(',').ToList(), false, currency);
 
             ssiTemplateMaps.ForEach(x => x.onBoardingSSITemplate = null);
 

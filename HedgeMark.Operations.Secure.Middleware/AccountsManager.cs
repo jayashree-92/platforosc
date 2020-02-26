@@ -98,6 +98,8 @@ namespace HMOSecureMiddleware
                     account.Intermediary.onBoardingAccounts = account.Intermediary.onBoardingAccounts1 = account.Intermediary.onBoardingAccounts2 = null;
                     account.UltimateBeneficiary.onBoardingAccounts = account.UltimateBeneficiary.onBoardingAccounts1 = account.UltimateBeneficiary.onBoardingAccounts2 = null;
                     account.SwiftGroup.onBoardingAccounts = null;
+                    if (account.SwiftGroup.hmsSwiftGroupStatusLkp != null)
+                        account.SwiftGroup.hmsSwiftGroupStatusLkp.hmsSwiftGroups = null;
                     return account;
                 }
                 catch(Exception ex)
@@ -483,13 +485,13 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates(List<long> counterpartyIds, List<string> messageTypes = null, string currency = null)
+        public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates(List<long> counterpartyIds, List<string> messageTypes = null,bool isAll = true, string currency = null)
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved" && (counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType == "Fee/Expense Payment") && (currency == null || template.Currency == currency) && (messageTypes == null || messageTypes.Contains(template.MessageType))).ToList();
+                return context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved" && (counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType == "Fee/Expense Payment") && (currency == null || template.Currency == currency) && (isAll || messageTypes.Contains(template.MessageType))).ToList();
             }
         }
 
