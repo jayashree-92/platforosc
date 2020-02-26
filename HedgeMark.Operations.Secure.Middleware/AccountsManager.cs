@@ -72,41 +72,34 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                try
-                {
-                    context.Configuration.LazyLoadingEnabled = false;
-                    context.Configuration.ProxyCreationEnabled = false;
-                    var account = context.onBoardingAccounts.Include(s => s.Beneficiary)
-                        .Include(s => s.Intermediary)
-                        .Include(s => s.UltimateBeneficiary)
-                        .Include(s => s.WirePortalCutoff)
-                        .Include(s => s.SwiftGroup).FirstOrDefault(acnt => acnt.onBoardingAccountId == accountId);
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                var account = context.onBoardingAccounts.Include(s => s.Beneficiary)
+                    .Include(s => s.Intermediary)
+                    .Include(s => s.UltimateBeneficiary)
+                    .Include(s => s.WirePortalCutoff)
+                    .Include(s => s.SwiftGroup).FirstOrDefault(acnt => acnt.onBoardingAccountId == accountId);
 
-                    if (account.WirePortalCutoff == null)
-                        account.WirePortalCutoff = new onBoardingWirePortalCutoff() { CutOffTimeZone = "EST" };
-                    if (account.Beneficiary == null)
-                        account.Beneficiary = new onBoardingAccountBICorABA();
-                    if (account.Intermediary == null)
-                        account.Intermediary = new onBoardingAccountBICorABA();
-                    if (account.UltimateBeneficiary == null)
-                        account.UltimateBeneficiary = new onBoardingAccountBICorABA();
-                    if (account.SwiftGroup == null)
-                        account.SwiftGroup = new hmsSwiftGroup();
-                    //remove circular references
-                    account.WirePortalCutoff.onBoardingAccounts = null;
-                    account.Beneficiary.onBoardingAccounts = account.Beneficiary.onBoardingAccounts1 = account.Beneficiary.onBoardingAccounts2 = null;
-                    account.Intermediary.onBoardingAccounts = account.Intermediary.onBoardingAccounts1 = account.Intermediary.onBoardingAccounts2 = null;
+                if (account.WirePortalCutoff == null)
+                    account.WirePortalCutoff = new onBoardingWirePortalCutoff() { CutOffTimeZone = "EST" };
+                if (account.Beneficiary == null)
+                    account.Beneficiary = new onBoardingAccountBICorABA();
+                if (account.Intermediary == null)
+                    account.Intermediary = new onBoardingAccountBICorABA();
+                if (account.UltimateBeneficiary == null && account.UltimateBeneficiaryType != "Account Name")
+                    account.UltimateBeneficiary = new onBoardingAccountBICorABA();
+                if (account.SwiftGroup == null)
+                    account.SwiftGroup = new hmsSwiftGroup();
+                //remove circular references
+                account.WirePortalCutoff.onBoardingAccounts = null;
+                account.Beneficiary.onBoardingAccounts = account.Beneficiary.onBoardingAccounts1 = account.Beneficiary.onBoardingAccounts2 = null;
+                account.Intermediary.onBoardingAccounts = account.Intermediary.onBoardingAccounts1 = account.Intermediary.onBoardingAccounts2 = null;
+                if (account.UltimateBeneficiary != null)
                     account.UltimateBeneficiary.onBoardingAccounts = account.UltimateBeneficiary.onBoardingAccounts1 = account.UltimateBeneficiary.onBoardingAccounts2 = null;
-                    account.SwiftGroup.onBoardingAccounts = null;
-                    if (account.SwiftGroup.hmsSwiftGroupStatusLkp != null)
-                        account.SwiftGroup.hmsSwiftGroupStatusLkp.hmsSwiftGroups = null;
-                    return account;
-                }
-                catch(Exception ex)
-                {
-                    Logger.Error(string.Format("{0} - Error Message : {1}", MethodBase.GetCurrentMethod(), ex.Message), ex);
-                    return null;
-                }
+                account.SwiftGroup.onBoardingAccounts = null;
+                if (account.SwiftGroup.hmsSwiftGroupStatusLkp != null)
+                    account.SwiftGroup.hmsSwiftGroupStatusLkp.hmsSwiftGroups = null;
+                return account;
             }
 
         }

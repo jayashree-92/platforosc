@@ -1602,6 +1602,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     $scope.accountDocuments.push(value);
                 });
                 $scope.onBoardingAccountDetails[key].onBoardingAccountDocuments = angular.copy($scope.accountDocuments);
+                $scope.watchAccountDetails = $scope.onBoardingAccountDetails;
                 viewAttachmentTable($scope.accountDocuments, key);
             },
             queuecomplete: function () {
@@ -1760,38 +1761,40 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             //    $("#btnPendingApproval").show();
             //    $("#btnSave").show();
             //
-            if ($("#spnAgrCurrentStatus").html() == "Saved as Draft") {
+            if (val[0].onBoardingAccountId == oldVal[0].onBoardingAccountId) {
+                if ($("#spnAgrCurrentStatus").html() == "Saved as Draft") {
 
-                $("#btnPendingApproval").show();
-                //$("#btnApprove").hide();
-                $("#btnRevert").hide();
-                $("#btnSave").show();
-            }
-            else if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val()) {
-
-                $("#btnPendingApproval").hide();
-                //$("#btnApprove").show();
-                $("#btnRevert").hide();
-                $("#btnSave").hide();
-            }
-            else if ($("#spnAgrCurrentStatus").html() == approvedStatus) {
-                if (val != oldVal) {
-                    $("#btnPendingApproval").hide();
+                    $("#btnPendingApproval").show();
                     //$("#btnApprove").hide();
-                    $("#btnRevert").show();
-                    $("#btnSave").hide();
+                    $("#btnRevert").hide();
+                    $("#btnSave").show();
                 }
-                else {
+                else if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val()) {
+
                     $("#btnPendingApproval").hide();
-                    //$("#btnApprove").hide();
+                    //$("#btnApprove").show();
                     $("#btnRevert").hide();
                     $("#btnSave").hide();
                 }
-            } else {
-                $("#btnPendingApproval").hide();
-                //$("#btnApprove").hide();
-                $("#btnRevert").hide();
-                $("#btnSave").show();
+                else if ($("#spnAgrCurrentStatus").html() == approvedStatus) {
+                    if (val != oldVal) {
+                        $("#btnPendingApproval").hide();
+                        //$("#btnApprove").hide();
+                        $("#btnRevert").show();
+                        $("#btnSave").hide();
+                    }
+                    else {
+                        $("#btnPendingApproval").hide();
+                        //$("#btnApprove").hide();
+                        $("#btnRevert").hide();
+                        $("#btnSave").hide();
+                    }
+                } else {
+                    $("#btnPendingApproval").hide();
+                    //$("#btnApprove").hide();
+                    $("#btnRevert").hide();
+                    $("#btnSave").show();
+                }
             }
 
         }, true);
