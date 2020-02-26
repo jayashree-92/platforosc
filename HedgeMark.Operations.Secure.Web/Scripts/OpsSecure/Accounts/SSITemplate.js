@@ -97,62 +97,38 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         });
     }
 
-    $scope.fnGetBankDetails = function (biCorAbaValue, id, index) {
+    $scope.fnGetBankDetails = function (biCorAbaValue, id) {
         $timeout(function () {
             var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
+         
             switch (id) {
                 case "Beneficiary":
-                    $scope.ssiTemplate.BeneficiaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
-                    $scope.ssiTemplate.BeneficiaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    $scope.ssiTemplate.Beneficiary = {};
+                    $scope.ssiTemplate.BeneficiaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.ssiTemplate.Beneficiary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.ssiTemplate.Beneficiary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
+                    $scope.ssiTemplate.Beneficiary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.ssiTemplate.Beneficiary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
                     break;
                 case "Intermediary":
-                    $scope.ssiTemplate.IntermediaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
-                    $scope.ssiTemplate.IntermediaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    $scope.ssiTemplate.Intermediary = {};
+                    $scope.ssiTemplate.IntermediaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.ssiTemplate.Intermediary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.ssiTemplate.Intermediary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
+                    $scope.ssiTemplate.Intermediary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.ssiTemplate.Intermediary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
                     break;
                 case "UltimateBeneficiary":
-                    $scope.ssiTemplate.UltimateBeneficiaryBankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
-                    $scope.ssiTemplate.UltimateBeneficiaryBankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    $scope.ssiTemplate.UltimateBeneficiary = {};
+                    $scope.ssiTemplate.UltimateBeneficiaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.ssiTemplate.UltimateBeneficiary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.ssiTemplate.UltimateBeneficiary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
+                    $scope.ssiTemplate.UltimateBeneficiary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.ssiTemplate.UltimateBeneficiary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
                     break;
             }
+
         }, 100);
-
-    }
-
-    $scope.fnGetBankDetails = function (biCorAbaValue, id) {
-
-        var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
-        switch (id) {
-            case "Beneficiary":
-                if (accountBicorAba != undefined) {
-                    $("#beneficiaryBankName").val(accountBicorAba.BankName);
-                    $("#beneficiaryBankAddress").val(accountBicorAba.BankAddress);
-
-                } else {
-                    $("#beneficiaryBankName").val("");
-                    $("#beneficiaryBankAddress").val("");
-                }
-                break;
-            case "Intermediary":
-                if (accountBicorAba != undefined) {
-                    $("#intermediaryBankName").val(accountBicorAba.BankName);
-                    $("#intermediaryBankAddress").val(accountBicorAba.BankAddress);
-
-                } else {
-                    $("#intermediaryBankName").val("");
-                    $("#intermediaryBankAddress").val("");
-                }
-                break;
-            case "UltimateBeneficiary":
-                if (accountBicorAba != undefined) {
-                    $("#ultimateBankName").val(accountBicorAba.BankName);
-                    $("#ultimateBankAddress").val(accountBicorAba.BankAddress);
-
-                } else {
-                    $("#ultimateBankName").val("");
-                    $("#ultimateBankAddress").val("");
-                }
-                break;
-        }
 
     }
 
@@ -208,10 +184,11 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     $("#divUltimateBeneficiaryBICorABA").hide();
                     $("#ultimateBankName").hide();
                     $("#ultimateBankAddress").hide();
-                    $("#accountName").show();   
-                    $scope.ssiTemplate.UltimateBeneficiaryBICorABA = null;
-                    $scope.ssiTemplate.UltimateBeneficiaryBankName = null;
-                    $scope.ssiTemplate.UltimateBeneficiaryBankAddress = null;
+                    $("#accountName").show();
+                    $scope.ssiTemplate.UltimateBeneficiary = {};
+                    //$scope.ssiTemplate.UltimateBeneficiaryBICorABA = null;
+                    //$scope.ssiTemplate.UltimateBeneficiaryBankName = null;
+                    //$scope.ssiTemplate.UltimateBeneficiaryBankAddress = null;
                     return;
                 } else {
                     $("#divUltimateBeneficiaryBICorABA").show();

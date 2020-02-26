@@ -20,6 +20,9 @@ namespace HedgeMark.Operations.Secure.DataModel
             this.onBoardingAccounts = new HashSet<onBoardingAccount>();
             this.onBoardingAccounts1 = new HashSet<onBoardingAccount>();
             this.onBoardingAccounts2 = new HashSet<onBoardingAccount>();
+            this.onBoardingSSITemplates = new HashSet<onBoardingSSITemplate>();
+            this.onBoardingSSITemplates1 = new HashSet<onBoardingSSITemplate>();
+            this.onBoardingSSITemplates2 = new HashSet<onBoardingSSITemplate>();
         }
     
         public long onBoardingAccountBICorABAId { get; set; }
@@ -39,5 +42,11 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual ICollection<onBoardingAccount> onBoardingAccounts1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccount> onBoardingAccounts2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<onBoardingSSITemplate> onBoardingSSITemplates { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<onBoardingSSITemplate> onBoardingSSITemplates1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<onBoardingSSITemplate> onBoardingSSITemplates2 { get; set; }
     }
 }

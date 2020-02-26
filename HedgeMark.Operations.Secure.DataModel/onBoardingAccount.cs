@@ -23,7 +23,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         }
     
         public long onBoardingAccountId { get; set; }
-        public long dmaFundOnBoardId { get; set; }
         public Nullable<long> dmaAgreementOnBoardingId { get; set; }
         public string AccountName { get; set; }
         public string AccountNumber { get; set; }

@@ -1,6 +1,15 @@
 IF NOT EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'hmFundId' AND TABLE_NAME = 'onBoardingAccount')
 BEGIN
 	ALTER TABLE onBoardingAccount ADD hmFundId BIGINT NOT NULL DEFAULT 0
+
+	DECLARE @command0 varchar(Max);
+
+	SELECT @command0 ='UPDATE tgt SET  tgt.hmFundId  =src.intFundId
+	FROM onBoardingAccount  tgt
+	INNER JOIN DMA_HM..vw_hFundOps src on tgt.dmaFundOnBoardId = src.OnBoardFundId
+	WHERE src.OnBoardFundId is not null'	
+	EXEC(@command0);
+
 END
 
 IF NOT EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'BeneficiaryBICorABAId' AND TABLE_NAME = 'onBoardingAccount')
@@ -92,7 +101,7 @@ GO
 
 --- Following are the columns to DROP - V 
 
-
+--IF EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'dmaFundOnBoardId' AND TABLE_NAME = 'onBoardingAccount') BEGIN ALTER TABLE onBoardingAccount DROP COLUMN dmaFundOnBoardId; END
 --IF EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'BeneficiaryBICorABA' AND TABLE_NAME = 'onBoardingAccount') BEGIN ALTER TABLE onBoardingAccount DROP COLUMN BeneficiaryBICorABA; END
 --IF EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'BeneficiaryBankName' AND TABLE_NAME = 'onBoardingAccount') BEGIN ALTER TABLE onBoardingAccount DROP COLUMN BeneficiaryBankName; END
 --IF EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'BeneficiaryBankAddress' AND TABLE_NAME = 'onBoardingAccount') BEGIN ALTER TABLE onBoardingAccount DROP COLUMN BeneficiaryBankAddress; END

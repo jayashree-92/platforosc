@@ -833,20 +833,20 @@ namespace HMOSecureWeb.Controllers
                     template.UpdatedBy,
                     template.ApprovedBy,
                     template.BeneficiaryType,
-                    template.BeneficiaryBICorABA,
-                    template.BeneficiaryBankName,
-                    template.BeneficiaryBankAddress,
+                    BeneficiaryBICorABA = template.Beneficiary != null ? template.Beneficiary.BICorABA : string.Empty,
+                    BeneficiaryBankName = template.Beneficiary != null ? template.Beneficiary.BankName : string.Empty,
+                    BeneficiaryBankAddress = template.Beneficiary != null ? template.Beneficiary.BankAddress : string.Empty,
                     template.BeneficiaryAccountNumber,
                     template.IntermediaryType,
-                    template.IntermediaryBICorABA,
-                    template.IntermediaryBankName,
-                    template.IntermediaryBankAddress,
+                    IntermediaryBICorABA = template.Intermediary != null ? template.Intermediary.BICorABA : string.Empty,
+                    IntermediaryBankName = template.Intermediary != null ? template.Intermediary.BankName : string.Empty,
+                    IntermediaryBankAddress = template.Intermediary != null ? template.Intermediary.BankAddress : string.Empty,
                     template.IntermediaryAccountNumber,
                     template.UltimateBeneficiaryType,
-                    template.UltimateBeneficiaryBICorABA,
-                    template.UltimateBeneficiaryBankName,
                     template.UltimateBeneficiaryAccountName,
-                    template.UltimateBeneficiaryBankAddress,
+                    UltimateBeneficiaryBICorABA = template.UltimateBeneficiary != null ? template.UltimateBeneficiary.BICorABA : string.Empty,
+                    UltimateBeneficiaryBankName = template.UltimateBeneficiary != null ? template.UltimateBeneficiary.BankName : string.Empty,
+                    UltimateBeneficiaryBankAddress = template.UltimateBeneficiary != null ? template.UltimateBeneficiary.BankAddress : string.Empty,
                     template.FFCName,
                     template.FFCNumber,
                     template.Reference,
@@ -977,7 +977,7 @@ namespace HMOSecureWeb.Controllers
             var contentToExport = new Dictionary<string, List<Row>>();
             var accountListRows = BuildAccountRows(onBoardingAccounts);
             //File name and path
-            var fileName = string.Format("AccountList_{1:yyyyMMdd}", DateTime.Now);
+            var fileName = string.Format("AccountList_{0:yyyyMMdd}", DateTime.Now);
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
             contentToExport.Add("List of Accounts", accountListRows);
             //Export the checklist file
@@ -1028,8 +1028,8 @@ namespace HMOSecureWeb.Controllers
                 row["Notes"] = account.Notes;
                 row["Authorized Party"] = account.AuthorizedParty;
                 row["Cash Instruction Mechanism"] = account.CashInstruction;
-                row["Swift Group"] = account.SwiftGroup.SwiftGroup;
-                row["Senders BIC"] = account.SwiftGroup.SendersBIC;
+                row["Swift Group"] = account.SwiftGroup != null ? account.SwiftGroup.SwiftGroup : string.Empty;
+                row["Senders BIC"] = account.SwiftGroup != null ? account.SwiftGroup.SendersBIC : string.Empty;
                 row["Cash Sweep"] = account.CashSweep;
 
                 if (account.CashSweepTime != null)
@@ -1072,19 +1072,19 @@ namespace HMOSecureWeb.Controllers
                 //row["Contact Email"] = account.ContactEmail;
                 //row["Contact Number"] = account.ContactNumber;
                 row["Beneficiary Type"] = account.BeneficiaryType;
-                row["Beneficiary BIC or ABA"] = account.Beneficiary.BICorABA;
-                row["Beneficiary Bank Name"] = account.Beneficiary.BankName;
-                row["Beneficiary Bank Address"] = account.Beneficiary.BankAddress;
-                row["Beneficiary Account Number"] = account.BeneficiaryAccountNumber;
+                row["Beneficiary BIC or ABA"] = account.Beneficiary != null ? account.Beneficiary.BICorABA : string.Empty;
+                row["Beneficiary Bank Name"] = account.Beneficiary != null ? account.Beneficiary.BankName : string.Empty;
+                row["Beneficiary Bank Address"] = account.Beneficiary != null ? account.Beneficiary.BankAddress : string.Empty;
+                row["Beneficiary Account Number"] = account.Beneficiary != null ? account.BeneficiaryAccountNumber : string.Empty;
                 row["Intermediary Beneficiary Type"] = account.IntermediaryType;
-                row["Intermediary BIC or ABA"] = account.Intermediary.BICorABA;
-                row["Intermediary Bank Name"] = account.Intermediary.BankName;
-                row["Intermediary Bank Address"] = account.Intermediary.BankAddress;
+                row["Intermediary BIC or ABA"] = account.Intermediary != null ? account.Intermediary.BICorABA : string.Empty;
+                row["Intermediary Bank Name"] = account.Intermediary != null ? account.Intermediary.BankName : string.Empty;
+                row["Intermediary Bank Address"] = account.Intermediary != null ? account.Intermediary.BankAddress : string.Empty;
                 row["Intermediary Account Number"] = account.IntermediaryAccountNumber;
                 row["Ultimate Beneficiary Type"] = account.UltimateBeneficiaryType;
-                row["Ultimate Beneficiary BIC or ABA"] = account.UltimateBeneficiary.BICorABA;
-                row["Ultimate Beneficiary Bank Name"] = account.UltimateBeneficiary.BankName;
-                row["Ultimate Beneficiary Bank Address"] = account.UltimateBeneficiary.BankAddress;
+                row["Ultimate Beneficiary BIC or ABA"] = account.UltimateBeneficiary != null ? account.UltimateBeneficiary.BICorABA : string.Empty;
+                row["Ultimate Beneficiary Bank Name"] = account.UltimateBeneficiary != null ? account.UltimateBeneficiary.BankName : string.Empty;
+                row["Ultimate Beneficiary Bank Address"] = account.UltimateBeneficiary != null ? account.UltimateBeneficiary.BankAddress : string.Empty;
                 row["Ultimate Beneficiary Account Name"] = account.UltimateBeneficiaryAccountName;
                 row["FFC Name"] = account.FFCName;
                 row["FFC Number"] = account.FFCNumber;
@@ -1149,19 +1149,19 @@ namespace HMOSecureWeb.Controllers
                 row["Other Reason"] = template.OtherReason;
                 row["Message Type"] = template.MessageType;
                 row["Beneficiary Type"] = template.BeneficiaryType;
-                row["Beneficiary BIC or ABA"] = template.BeneficiaryBICorABA;
-                row["Beneficiary Bank Name"] = template.BeneficiaryBankName;
-                row["Beneficiary Bank Address"] = template.BeneficiaryBankAddress;
+                row["Beneficiary BIC or ABA"] = template.Beneficiary != null ? template.Beneficiary.BICorABA : string.Empty;
+                row["Beneficiary Bank Name"] = template.Beneficiary != null ? template.Beneficiary.BankName : string.Empty;
+                row["Beneficiary Bank Address"] = template.Beneficiary != null ? template.Beneficiary.BankAddress : string.Empty;
                 row["Beneficiary Account Number"] = template.BeneficiaryAccountNumber;
                 row["Intermediary Beneficiary Type"] = template.IntermediaryType;
-                row["Intermediary BIC or ABA"] = template.IntermediaryBICorABA;
-                row["Intermediary Bank Name"] = template.IntermediaryBankName;
-                row["Intermediary Bank Address"] = template.IntermediaryBankAddress;
+                row["Intermediary BIC or ABA"] = template.Intermediary != null ? template.Intermediary.BICorABA : string.Empty;
+                row["Intermediary Bank Name"] = template.Intermediary != null ? template.Intermediary.BankName : string.Empty;
+                row["Intermediary Bank Address"] = template.Intermediary != null ? template.Intermediary.BankAddress : string.Empty;
                 row["Intermediary Account Number"] = template.IntermediaryAccountNumber;
                 row["Ultimate Beneficiary Type"] = template.UltimateBeneficiaryType;
-                row["Ultimate Beneficiary BIC or ABA"] = template.UltimateBeneficiaryBICorABA;
-                row["Ultimate Beneficiary Bank Name"] = template.UltimateBeneficiaryBankName;
-                row["Ultimate Beneficiary Bank Address"] = template.UltimateBeneficiaryBankAddress;
+                row["Ultimate Beneficiary BIC or ABA"] = template.UltimateBeneficiary != null ? template.UltimateBeneficiary.BICorABA : string.Empty;
+                row["Ultimate Beneficiary Bank Name"] = template.UltimateBeneficiary != null ? template.UltimateBeneficiary.BankName : string.Empty;
+                row["Ultimate Beneficiary Bank Address"] = template.UltimateBeneficiary != null ? template.UltimateBeneficiary.BankAddress : string.Empty;
                 row["Ultimate Beneficiary Account Name"] = template.UltimateBeneficiaryAccountName;
                 row["Ultimate Beneficiary Account Number"] = template.AccountNumber;
                 row["FFC Name"] = template.FFCName;
@@ -1538,6 +1538,11 @@ namespace HMOSecureWeb.Controllers
                     foreach (var template in templateListRows)
                     {
                         var templateDetail = new onBoardingSSITemplate();
+
+                        templateDetail.Beneficiary = new onBoardingAccountBICorABA();
+                        templateDetail.Intermediary = new onBoardingAccountBICorABA();
+                        templateDetail.UltimateBeneficiary = new onBoardingAccountBICorABA();
+
                         templateDetail.onBoardingSSITemplateId = string.IsNullOrWhiteSpace(template["SSI Template Id"]) ? 0 : long.Parse(template["SSI Template Id"]);
                         templateDetail.TemplateTypeId = AccountManager.BrokerTemplateTypeId;
                         templateDetail.TemplateEntityId = counterParties.FirstOrDefault(x => x.Value == template["Legal Entity"]).Key;
@@ -1554,55 +1559,57 @@ namespace HMOSecureWeb.Controllers
                             if (existsTemplate != null) continue;
                         }
                         templateDetail.BeneficiaryType = template["Beneficiary Type"];
-                        templateDetail.BeneficiaryBICorABA = template["Beneficiary BIC or ABA"];
-                        var beneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.BeneficiaryType == "ABA") && x.BICorABA == templateDetail.BeneficiaryBICorABA);
+
+
+                        templateDetail.Beneficiary.BICorABA = template["Beneficiary BIC or ABA"];
+                        var beneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.BeneficiaryType == "ABA") && x.BICorABA == templateDetail.Beneficiary.BICorABA);
                         if (beneficiaryBiCorAba != null)
                         {
-                            templateDetail.BeneficiaryBankName = beneficiaryBiCorAba.BankName;
-                            templateDetail.BeneficiaryBankAddress = beneficiaryBiCorAba.BankAddress;
+                            templateDetail.Beneficiary.BankName = beneficiaryBiCorAba.BankName;
+                            templateDetail.Beneficiary.BankAddress = beneficiaryBiCorAba.BankAddress;
                         }
                         else
                         {
-                            templateDetail.BeneficiaryBankName = string.Empty;
-                            templateDetail.BeneficiaryBankAddress = string.Empty;
-                            templateDetail.BeneficiaryBICorABA = string.Empty;
+                            templateDetail.Beneficiary.BankName = string.Empty;
+                            templateDetail.Beneficiary.BankAddress = string.Empty;
+                            templateDetail.Beneficiary.BICorABA = string.Empty;
                             templateDetail.BeneficiaryType = string.Empty;
                         }
 
                         templateDetail.BeneficiaryAccountNumber = template["Beneficiary Account Number"];
                         templateDetail.IntermediaryType = template["Intermediary Beneficiary Type"];
-                        templateDetail.IntermediaryBICorABA = template["Intermediary BIC or ABA"];
-                        var intermediaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.IntermediaryType == "ABA") && x.BICorABA == templateDetail.IntermediaryBICorABA);
+                        templateDetail.Intermediary.BICorABA = template["Intermediary BIC or ABA"];
+                        var intermediaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.IntermediaryType == "ABA") && x.BICorABA == templateDetail.Intermediary.BICorABA);
                         if (intermediaryBiCorAba != null)
                         {
-                            templateDetail.IntermediaryBankName = intermediaryBiCorAba.BankName;
-                            templateDetail.IntermediaryBankAddress = intermediaryBiCorAba.BankAddress;
+                            templateDetail.Intermediary.BankName = intermediaryBiCorAba.BankName;
+                            templateDetail.Intermediary.BankAddress = intermediaryBiCorAba.BankAddress;
                         }
                         else
                         {
-                            templateDetail.IntermediaryBankName = string.Empty;
-                            templateDetail.IntermediaryBankAddress = string.Empty;
-                            templateDetail.IntermediaryBICorABA = string.Empty;
+                            templateDetail.Intermediary.BankName = string.Empty;
+                            templateDetail.Intermediary.BankAddress = string.Empty;
+                            templateDetail.Intermediary.BICorABA = string.Empty;
                             templateDetail.IntermediaryType = string.Empty;
                         }
 
                         templateDetail.IntermediaryAccountNumber = template["Intermediary Account Number"];
 
                         templateDetail.UltimateBeneficiaryType = template["Ultimate Beneficiary Type"];
-                        templateDetail.UltimateBeneficiaryBICorABA = template["Ultimate Beneficiary BIC or ABA"];
+                        templateDetail.UltimateBeneficiary.BICorABA = template["Ultimate Beneficiary BIC or ABA"];
                         templateDetail.UltimateBeneficiaryAccountName = template["Ultimate Beneficiary Account Name"];
-                        var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == templateDetail.UltimateBeneficiaryBICorABA);
+                        var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == templateDetail.UltimateBeneficiary.BICorABA);
                         if (ultimateBeneficiaryBiCorAba != null && templateDetail.UltimateBeneficiaryType != "Account Name")
                         {
-                            templateDetail.UltimateBeneficiaryBankName = ultimateBeneficiaryBiCorAba.BankName;
-                            templateDetail.UltimateBeneficiaryBankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
+                            templateDetail.UltimateBeneficiary.BankName = ultimateBeneficiaryBiCorAba.BankName;
+                            templateDetail.UltimateBeneficiary.BankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
                             templateDetail.UltimateBeneficiaryAccountName = string.Empty;
                         }
                         else
                         {
-                            templateDetail.UltimateBeneficiaryBankName = string.Empty;
-                            templateDetail.UltimateBeneficiaryBankAddress = string.Empty;
-                            templateDetail.UltimateBeneficiaryBICorABA = string.Empty;
+                            templateDetail.UltimateBeneficiary.BankName = string.Empty;
+                            templateDetail.UltimateBeneficiary.BankAddress = string.Empty;
+                            templateDetail.UltimateBeneficiary.BICorABA = string.Empty;
                         }
                         templateDetail.AccountNumber = template["Ultimate Beneficiary Account Number"];
                         templateDetail.FFCName = template["FFC Name"];
@@ -2135,27 +2142,27 @@ namespace HMOSecureWeb.Controllers
             if (!string.IsNullOrWhiteSpace(ssiTemplate.AccountName))
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Account Name", "Added", "", ssiTemplate.AccountName, UserName));
 
-            if (!string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBICorABA))
+            if (ssiTemplate.Beneficiary != null && !string.IsNullOrWhiteSpace(ssiTemplate.Beneficiary.BICorABA))
             {
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Type", "Added", "", ssiTemplate.BeneficiaryType, UserName));
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary BIC or ABA", "Added", "", ssiTemplate.BeneficiaryBICorABA, UserName));
-                if (!string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankName))
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Name", "Added", "", ssiTemplate.BeneficiaryBankName, UserName));
-                if (!string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankAddress))
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Address", "Added", "", ssiTemplate.BeneficiaryBankAddress, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary BIC or ABA", "Added", "", ssiTemplate.Beneficiary.BICorABA, UserName));
+                if (!string.IsNullOrWhiteSpace(ssiTemplate.Beneficiary.BankName))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Name", "Added", "", ssiTemplate.Beneficiary.BankName, UserName));
+                if (!string.IsNullOrWhiteSpace(ssiTemplate.Beneficiary.BankAddress))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Address", "Added", "", ssiTemplate.Beneficiary.BankAddress, UserName));
             }
 
             if (!string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryAccountNumber))
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Account Number", "Added", "", ssiTemplate.BeneficiaryAccountNumber, UserName));
 
-            if (!string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBICorABA))
+            if (ssiTemplate.Intermediary != null && !string.IsNullOrWhiteSpace(ssiTemplate.Intermediary.BICorABA))
             {
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Type", "Added", "", ssiTemplate.IntermediaryType, UserName));
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary BIC or ABA", "Added", "", ssiTemplate.IntermediaryBICorABA, UserName));
-                if (!string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankName))
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Name", "Added", "", ssiTemplate.IntermediaryBankName, UserName));
-                if (!string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankAddress))
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Address", "Added", "", ssiTemplate.IntermediaryBankAddress, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary BIC or ABA", "Added", "", ssiTemplate.Intermediary.BICorABA, UserName));
+                if (!string.IsNullOrWhiteSpace(ssiTemplate.Intermediary.BankName))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Name", "Added", "", ssiTemplate.Intermediary.BankName, UserName));
+                if (!string.IsNullOrWhiteSpace(ssiTemplate.Intermediary.BankAddress))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Address", "Added", "", ssiTemplate.Intermediary.BankAddress, UserName));
             }
 
 
@@ -2163,14 +2170,14 @@ namespace HMOSecureWeb.Controllers
             if (!string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryAccountNumber))
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Account Number", "Added", "", ssiTemplate.IntermediaryAccountNumber, UserName));
 
-            if (!string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryBICorABA))
+            if (ssiTemplate.UltimateBeneficiary != null && !string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiary.BICorABA))
             {
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Type", "Added", "", ssiTemplate.UltimateBeneficiaryType, UserName));
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary BIC or ABA", "Added", "", ssiTemplate.UltimateBeneficiaryBICorABA, UserName));
-                if (!string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryBankName))
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Name", "Added", "", ssiTemplate.UltimateBeneficiaryBankName, UserName));
-                if (!string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryBankAddress))
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Address", "Added", "", ssiTemplate.UltimateBeneficiaryBankAddress, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary BIC or ABA", "Added", "", ssiTemplate.UltimateBeneficiary.BICorABA, UserName));
+                if (!string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiary.BankName))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Name", "Added", "", ssiTemplate.UltimateBeneficiary.BankName, UserName));
+                if (!string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiary.BankAddress))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Address", "Added", "", ssiTemplate.UltimateBeneficiary.BankAddress, UserName));
             }
             if (!string.IsNullOrWhiteSpace(ssiTemplate.AccountNumber))
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Account Number", "Added", "", ssiTemplate.AccountNumber, UserName));
@@ -2222,49 +2229,49 @@ namespace HMOSecureWeb.Controllers
 
 
 
-            if (ssiTemplate.BeneficiaryBICorABA != nonUpdatedSsiTemplate.BeneficiaryBICorABA)
+            if (ssiTemplate.Beneficiary.BICorABA != nonUpdatedSsiTemplate.Beneficiary.BICorABA)
             {
                 if (nonUpdatedSsiTemplate.BeneficiaryType != ssiTemplate.BeneficiaryType)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Type", "Edited", nonUpdatedSsiTemplate.BeneficiaryType, ssiTemplate.BeneficiaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary BIC or ABA", "Edited", nonUpdatedSsiTemplate.BeneficiaryBICorABA, ssiTemplate.BeneficiaryBICorABA, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary BIC or ABA", "Edited", nonUpdatedSsiTemplate.Beneficiary.BICorABA, ssiTemplate.Beneficiary.BICorABA, UserName));
 
-                if (ssiTemplate.BeneficiaryBankName != nonUpdatedSsiTemplate.BeneficiaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Name", "Edited", nonUpdatedSsiTemplate.BeneficiaryBankName, ssiTemplate.BeneficiaryBankName, UserName));
-                if (ssiTemplate.BeneficiaryBankAddress != nonUpdatedSsiTemplate.BeneficiaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Address", "Edited", nonUpdatedSsiTemplate.BeneficiaryBankAddress, ssiTemplate.BeneficiaryBankAddress, UserName));
+                if (ssiTemplate.Beneficiary.BankName != nonUpdatedSsiTemplate.Beneficiary.BankName)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Name", "Edited", nonUpdatedSsiTemplate.Beneficiary.BankName, ssiTemplate.Beneficiary.BankName, UserName));
+                if (ssiTemplate.Beneficiary.BankAddress != nonUpdatedSsiTemplate.Beneficiary.BankAddress)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Bank Address", "Edited", nonUpdatedSsiTemplate.Beneficiary.BankAddress, ssiTemplate.Beneficiary.BankAddress, UserName));
             }
 
             if (ssiTemplate.BeneficiaryAccountNumber != nonUpdatedSsiTemplate.BeneficiaryAccountNumber)
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Beneficiary Account Number", "Edited", nonUpdatedSsiTemplate.BeneficiaryAccountNumber, ssiTemplate.BeneficiaryAccountNumber, UserName));
 
-            if (ssiTemplate.IntermediaryBICorABA != nonUpdatedSsiTemplate.IntermediaryBICorABA)
+            if (ssiTemplate.Intermediary.BICorABA != nonUpdatedSsiTemplate.Intermediary.BICorABA)
             {
                 if (nonUpdatedSsiTemplate.IntermediaryType != ssiTemplate.IntermediaryType)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Type", "Edited", nonUpdatedSsiTemplate.IntermediaryType, ssiTemplate.IntermediaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary BIC or ABA", "Edited", nonUpdatedSsiTemplate.IntermediaryBICorABA, ssiTemplate.IntermediaryBICorABA, UserName));
-                if (ssiTemplate.IntermediaryBankName != nonUpdatedSsiTemplate.IntermediaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Name", "Edited", nonUpdatedSsiTemplate.IntermediaryBankName, ssiTemplate.IntermediaryBankName, UserName));
-                if (ssiTemplate.IntermediaryBankAddress != nonUpdatedSsiTemplate.IntermediaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Address", "Edited", nonUpdatedSsiTemplate.IntermediaryBankAddress, ssiTemplate.IntermediaryBankAddress, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary BIC or ABA", "Edited", nonUpdatedSsiTemplate.Intermediary.BICorABA, ssiTemplate.Intermediary.BICorABA, UserName));
+                if (ssiTemplate.Intermediary.BankName != nonUpdatedSsiTemplate.Intermediary.BankName)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Name", "Edited", nonUpdatedSsiTemplate.Intermediary.BankName, ssiTemplate.Intermediary.BankName, UserName));
+                if (ssiTemplate.Intermediary.BankAddress != nonUpdatedSsiTemplate.Intermediary.BankAddress)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Bank Address", "Edited", nonUpdatedSsiTemplate.Intermediary.BankAddress, ssiTemplate.Intermediary.BankAddress, UserName));
             }
 
             if (ssiTemplate.IntermediaryAccountNumber != nonUpdatedSsiTemplate.IntermediaryAccountNumber)
                 auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Intermediary Account Number", "Edited", nonUpdatedSsiTemplate.IntermediaryAccountNumber, ssiTemplate.IntermediaryAccountNumber, UserName));
 
-            if (ssiTemplate.UltimateBeneficiaryBICorABA != nonUpdatedSsiTemplate.UltimateBeneficiaryBICorABA)
+            if (ssiTemplate.UltimateBeneficiary.BICorABA != nonUpdatedSsiTemplate.UltimateBeneficiary.BICorABA)
             {
                 if (nonUpdatedSsiTemplate.UltimateBeneficiaryType != ssiTemplate.UltimateBeneficiaryType)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Type", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiaryType, ssiTemplate.UltimateBeneficiaryType, UserName));
 
-                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary BIC or ABA", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiaryBICorABA, ssiTemplate.UltimateBeneficiaryBICorABA, UserName));
+                auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary BIC or ABA", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiary.BICorABA, ssiTemplate.UltimateBeneficiary.BICorABA, UserName));
 
-                if (ssiTemplate.UltimateBeneficiaryBankName != nonUpdatedSsiTemplate.UltimateBeneficiaryBankName)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Name", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiaryBankName, ssiTemplate.UltimateBeneficiaryBankName, UserName));
+                if (ssiTemplate.UltimateBeneficiary.BankName != nonUpdatedSsiTemplate.UltimateBeneficiary.BankName)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Name", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiary.BankName, ssiTemplate.UltimateBeneficiary.BankName, UserName));
 
-                if (ssiTemplate.UltimateBeneficiaryBankAddress != nonUpdatedSsiTemplate.UltimateBeneficiaryBankAddress)
-                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Address", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiaryBankAddress, ssiTemplate.UltimateBeneficiaryBankAddress, UserName));
+                if (ssiTemplate.UltimateBeneficiary.BankAddress != nonUpdatedSsiTemplate.UltimateBeneficiary.BankAddress)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Ultimate Beneficiary Bank Address", "Edited", nonUpdatedSsiTemplate.UltimateBeneficiary.BankAddress, ssiTemplate.UltimateBeneficiary.BankAddress, UserName));
             }
 
             if (ssiTemplate.AccountNumber != nonUpdatedSsiTemplate.AccountNumber)

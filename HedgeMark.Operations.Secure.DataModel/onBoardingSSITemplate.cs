@@ -34,19 +34,10 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string AccountName { get; set; }
         public string AccountNumber { get; set; }
         public string BeneficiaryType { get; set; }
-        public string BeneficiaryBICorABA { get; set; }
-        public string BeneficiaryBankName { get; set; }
-        public string BeneficiaryBankAddress { get; set; }
         public string BeneficiaryAccountNumber { get; set; }
         public string IntermediaryType { get; set; }
-        public string IntermediaryBICorABA { get; set; }
-        public string IntermediaryBankName { get; set; }
-        public string IntermediaryBankAddress { get; set; }
         public string IntermediaryAccountNumber { get; set; }
         public string UltimateBeneficiaryType { get; set; }
-        public string UltimateBeneficiaryBICorABA { get; set; }
-        public string UltimateBeneficiaryBankName { get; set; }
-        public string UltimateBeneficiaryBankAddress { get; set; }
         public string FFCName { get; set; }
         public string FFCNumber { get; set; }
         public string Reference { get; set; }
@@ -60,7 +51,13 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string MessageType { get; set; }
         public string UltimateBeneficiaryAccountName { get; set; }
         public string ApprovedBy { get; set; }
+        public Nullable<long> BeneficiaryBICorABAId { get; set; }
+        public Nullable<long> IntermediaryBICorABAId { get; set; }
+        public Nullable<long> UltimateBeneficiaryBICorABAId { get; set; }
     
+        public virtual onBoardingAccountBICorABA Beneficiary { get; set; }
+        public virtual onBoardingAccountBICorABA Intermediary { get; set; }
+        public virtual onBoardingAccountBICorABA UltimateBeneficiary { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

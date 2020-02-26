@@ -524,25 +524,15 @@ namespace HMOSecureWeb.Controllers
                 var cashSweep = valueDate.Date.Add(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
                 var cutOff = valueDate.AddDays(onboardAccount.WirePortalCutoff.DaystoWire).Date.Add(onboardAccount.WirePortalCutoff.CutoffTime);
                 var baseTimeZone = timeZones[FileSystemManager.DefaultTimeZone];
-
                 var cashSweepTimeZone = onboardAccount.CashSweepTimeZone ?? "";
-                var cashSweepTime = new DateTime();
-                TimeZoneInfo customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cashSweepTimeZone) ? timeZones[cashSweepTimeZone] : baseTimeZone);
-                TimeZoneInfo destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones[FileSystemManager.DefaultTimeZone]);
+                var customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cashSweepTimeZone) ? timeZones[cashSweepTimeZone] : baseTimeZone);
+                var destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones[FileSystemManager.DefaultTimeZone]);
 
-                if (customTimeZone.Id != baseTimeZone)
-                    cashSweepTime = TimeZoneInfo.ConvertTime(new DateTime(cashSweep.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone);
-                else
-                    cashSweepTime = cashSweep;
-
+                var cashSweepTime = customTimeZone.Id != baseTimeZone ? TimeZoneInfo.ConvertTime(new DateTime(cashSweep.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone) : cashSweep;
                 var cutoffTimeZone = onboardAccount.WirePortalCutoff.CutOffTimeZone ?? "";
-                var cutOffTime = new DateTime();
-                customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cutoffTimeZone) ? timeZones[cutoffTimeZone] : baseTimeZone);
 
-                if (customTimeZone.Id != baseTimeZone)
-                    cutOffTime = TimeZoneInfo.ConvertTime(new DateTime(cutOff.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone);
-                else
-                    cutOffTime = cutOff;
+                customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cutoffTimeZone) ? timeZones[cutoffTimeZone] : baseTimeZone);
+                var cutOffTime = customTimeZone.Id != baseTimeZone ? TimeZoneInfo.ConvertTime(new DateTime(cutOff.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone) : cutOff;
 
                 var currentTime = DateTime.Now;
                 if (TimeZoneInfo.Local.Id != baseTimeZone)
@@ -556,7 +546,7 @@ namespace HMOSecureWeb.Controllers
 
                 return offSetTime;
             }
-            catch (TimeZoneNotFoundException e)
+            catch (TimeZoneNotFoundException)
             {
                 return new TimeSpan();
             }
@@ -652,10 +642,7 @@ namespace HMOSecureWeb.Controllers
             {
                 var authorizedFundIds = AuthorizedSessionData.HMFundIds.Select(s => s.Id).ToList();
                 var fundsWithApprovedAccounts = AccountManager.GetFundsOfApprovedAccounts();
-                if (authorizedFundIds.Count == 0)
-                    authorizedFundIds = fundsWithApprovedAccounts;
-                else 
-                    authorizedFundIds = authorizedFundIds.Intersect(fundsWithApprovedAccounts).ToList();
+                authorizedFundIds = authorizedFundIds.Count == 0 ? fundsWithApprovedAccounts : authorizedFundIds.Intersect(fundsWithApprovedAccounts).ToList();
                 var hFunds = AdminFundManager.GetUniversalDMAFundListQuery(context, PreferredFundNameInSession)
                     .Where(s => authorizedFundIds.Contains(s.hmFundId)).OrderBy(s => s.PreferredFundName)
                     .Select(s => new { id = s.hmFundId, text = s.PreferredFundName }).ToList();
@@ -690,18 +677,6 @@ namespace HMOSecureWeb.Controllers
             var receivingAccountsList = fundAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
             return Json(new { sendingAccountsList, receivingAccountsList });
         }
-
-        //public JsonResult GetApprovedAccountsForAgreement(long agreementId)
-        //{
-        //    using (var context = new OperationsSecureContext())
-        //    {
-        //        context.Configuration.LazyLoadingEnabled = false;
-        //        context.Configuration.ProxyCreationEnabled = false;
-        //        var sendingAccounts = context.onBoardingAccounts.Where(s => s.onBoardingAccountStatus == "Approved" && s.dmaAgreementOnBoardingId == agreementId).ToList();
-        //        var sendingAccountList = sendingAccounts.Select(s => new { id = s.onBoardingAccountId, text = string.Format("{0}-{1}", s.AccountNumber, s.AccountName) }).ToList();
-        //        return Json(new { sendingAccounts, sendingAccountList });
-        //    }
-        //}
 
         public JsonResult GetApprovedSSITemplatesForAccount(long accountId, bool isNormalTransfer)
         {
@@ -776,8 +751,8 @@ namespace HMOSecureWeb.Controllers
                     else
                         isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SwiftGroup.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(ssiTemplate.Currency) || string.IsNullOrWhiteSpace(ssiTemplate.AccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.ReasonDetail) || string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryAccountName) ||
-                                                   string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankAddress) ||
-                                                   string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankAddress));
+                                                   string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.Intermediary.BICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.Intermediary.BankName) || string.IsNullOrWhiteSpace(ssiTemplate.Intermediary.BankAddress) ||
+                                                   string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.Beneficiary.BICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.Beneficiary.BankName) || string.IsNullOrWhiteSpace(ssiTemplate.Beneficiary.BankAddress));
                     validationMsg = "Sender's Account Institution, BIC & Receiver's  Account Institution, Intermediary Institution, Benificiary Institution, Currency fields and Description are required to initiate this wire";
                     break;
                 case "MT202":
@@ -791,8 +766,8 @@ namespace HMOSecureWeb.Controllers
                     else
                         isMandatoryFieldsMissing = (string.IsNullOrWhiteSpace(account.SwiftGroup.SendersBIC) || string.IsNullOrWhiteSpace(account.Reference) || string.IsNullOrWhiteSpace(account.AccountNumber) || string.IsNullOrWhiteSpace(account.UltimateBeneficiaryAccountName) ||
                                                    string.IsNullOrWhiteSpace(ssiTemplate.Currency) || string.IsNullOrWhiteSpace(ssiTemplate.AccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryAccountName) ||
-                                                   string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryBankAddress) ||
-                                                   string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankName) || string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryBankAddress));
+                                                   string.IsNullOrWhiteSpace(ssiTemplate.IntermediaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.Intermediary.BICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.Intermediary.BankName) || string.IsNullOrWhiteSpace(ssiTemplate.Intermediary.BankAddress) ||
+                                                   string.IsNullOrWhiteSpace(ssiTemplate.BeneficiaryAccountNumber) || string.IsNullOrWhiteSpace(ssiTemplate.Beneficiary.BICorABA) || string.IsNullOrWhiteSpace(ssiTemplate.Beneficiary.BankName) || string.IsNullOrWhiteSpace(ssiTemplate.Beneficiary.BankAddress));
                     validationMsg = "Sender's Account Institution, BIC & Receiver's Account Institution, Intermediary Institution, Benificiary Institution and Currency fields are required to initiate this wire";
                     break;
                 case "MT210":

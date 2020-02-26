@@ -210,7 +210,7 @@ namespace HMOSecureMiddleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
                 
-                var account = context.onBoardingAccounts.AsNoTracking().Include("SwiftGroup").First(s => s.onBoardingAccountId == onBoardingAccountId);
+                var account = context.onBoardingAccounts.AsNoTracking().Include(s=>s.SwiftGroup).First(s => s.onBoardingAccountId == onBoardingAccountId);
                 if (account.SwiftGroup != null)
                     account.SwiftGroup.onBoardingAccounts = null;
                 return account;

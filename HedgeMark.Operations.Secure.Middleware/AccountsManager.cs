@@ -63,7 +63,8 @@ namespace HMOSecureMiddleware
                     .Include(s => s.Intermediary)
                     .Include(s => s.UltimateBeneficiary)
                     .Include(s => s.WirePortalCutoff)
-                    .Include(s => s.SwiftGroup).Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
+                    .Include(s => s.SwiftGroup)
+                    .Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
                     .Where(account => account.BrokerId == brokerId && account.hmFundId == fundId && account.AccountType != AgreementAccountType && !account.IsDeleted).ToList();
             }
         }
@@ -102,7 +103,7 @@ namespace HMOSecureMiddleware
                         account.SwiftGroup.hmsSwiftGroupStatusLkp.hmsSwiftGroups = null;
                     return account;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Logger.Error(string.Format("{0} - Error Message : {1}", MethodBase.GetCurrentMethod(), ex.Message), ex);
                     return null;
@@ -485,7 +486,7 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates(List<long> counterpartyIds, List<string> messageTypes = null,bool isAll = true, string currency = null)
+        public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates(List<long> counterpartyIds, List<string> messageTypes = null, bool isAll = true, string currency = null)
         {
             using (var context = new OperationsSecureContext())
             {
@@ -501,7 +502,10 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingSSITemplates.Where(template => template.TemplateTypeId == BrokerTemplateTypeId && !template.IsDeleted).ToList();
+                return context.onBoardingSSITemplates
+                    .Include(s => s.Beneficiary)
+                    .Include(s => s.Intermediary)
+                    .Include(s => s.UltimateBeneficiary).Where(template => template.TemplateTypeId == BrokerTemplateTypeId && !template.IsDeleted).ToList();
             }
         }
 
@@ -511,7 +515,20 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingSSITemplates.Include(x => x.onBoardingSSITemplateDocuments).FirstOrDefault(template => template.onBoardingSSITemplateId == templateId);
+                var ssiTemplate = context.onBoardingSSITemplates.Include(s => s.Beneficiary).Include(s => s.Intermediary).Include(s => s.UltimateBeneficiary).Include(x => x.onBoardingSSITemplateDocuments).First(template => template.onBoardingSSITemplateId == templateId);
+                if (ssiTemplate.Beneficiary == null)
+                    ssiTemplate.Beneficiary = new onBoardingAccountBICorABA();
+                if (ssiTemplate.Intermediary == null)
+                    ssiTemplate.Intermediary = new onBoardingAccountBICorABA();
+                if (ssiTemplate.UltimateBeneficiary == null)
+                    ssiTemplate.UltimateBeneficiary = new onBoardingAccountBICorABA();
+
+                //remove circular references
+                ssiTemplate.Beneficiary.onBoardingSSITemplates = ssiTemplate.Beneficiary.onBoardingSSITemplates1 = ssiTemplate.Beneficiary.onBoardingSSITemplates2 = null;
+                ssiTemplate.Intermediary.onBoardingSSITemplates = ssiTemplate.Intermediary.onBoardingSSITemplates1 = ssiTemplate.Intermediary.onBoardingSSITemplates2 = null;
+                ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates1 = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates2 = null;
+
+                return ssiTemplate;
             }
         }
 
@@ -789,7 +806,7 @@ namespace HMOSecureMiddleware
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : { 1}", methodName, ex.Message), ex);
+                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message), ex);
             }
         }
 
