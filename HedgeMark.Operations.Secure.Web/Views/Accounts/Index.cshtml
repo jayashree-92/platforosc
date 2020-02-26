@@ -144,494 +144,464 @@
 
                             </div>
 
-                            <div class="modal-body" style="padding: 0px">
-                                <div class="panel-body">
+                            <div class="panel-body">
                                     <input type="hidden" ng-model="accountDetail.onBoardingAccountId" />
-                                    <div class="row control-group" style="margin-left: 15px; margin-right: 10px;">
-                                        <legend class="small font-primary">Account Description:</legend>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Account Name </label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5">
-                                                <input type="text" class="form-control" ng-model="accountDetail.AccountName" />
-                                            </div>
+                                    <div class="panel panel-default ng-show-hide" id="accountBasicInfo_{{$index}}">
+                                        <div class="panel-heading" data-toggle="collapse" data-target="#accountBasicDetailDiv_{{$index}}" aria-expanded="false" aria-controls="accountBasicDetailDiv_{{$index}}">
+                                            <b>Basic Info</b>
                                         </div>
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Currency </label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input type="text" class="form-control" ng-model="accountDetail.Currency" id="liCurrency{{$index}}" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, $index)" />
-                                            </div>
-                                            <div class="col-sm-8 col-md-3 col-lg-3">
-                                                <a class="btn btn-sm btn-info" ng-click="fnAddCurrencyModal($index)" title="Add Currency"><i class="glyphicon glyphicon-plus"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        @*<div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                                <div class="col-sm-8 col-md-4 col-lg-4">
-                                                    <label class="control-label">Account Type</label>
-                                                </div>
-                                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                    <input type="text" class="form-control" ng-model="accountDetail.AccountPurpose" id="liAccountPurpose{{$index}}" />
-                                                </div>
-                                            </div>*@
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Account Status</label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input type="text" class="form-control" ng-model="accountDetail.AccountStatus" id="liAccountStatus{{$index}}" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Description </label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input ng-model="accountDetail.Description" class="form-control control-label" id="liAccountDescriptions{{$index}}">
-                                            </div>
-                                            <div class="col-sm-8 col-md-3 col-lg-3">
-                                                <a id="btnAccountDescription" class="btn btn-sm btn-info" ng-click="fnAddAccountDetailModal($index, 'Description')" title="Add Description"><i class="glyphicon glyphicon-plus"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Notes </label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <textarea cols="10" rows="3" ng-model="accountDetail.Notes" class="form-control control-label" placeholder="Notes"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="accountDetail.IsReceivingAccount">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Module </label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input ng-model="accountDetail.AccountModule" class="form-control control-label" id="liAccountModule_{{$index}}">
-                                            </div>
-                                            <div class="col-sm-8 col-md-3 col-lg-3">
-                                                <a id="btnAccountModule" class="btn btn-sm btn-info" ng-click="fnAddAccountDetailModal($index, 'Module')" title="Add Module"><i class="glyphicon glyphicon-plus"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Account Number </label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5">
-                                                <input ng-model="accountDetail.ContactNumber" class="form-control control-label">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row" ng-hide="accountDetail.IsReceivingAccount">
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Swift Group <span style="color: red"> *</span></label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input name="Swift Group" type="text" class="form-control" ng-model="accountDetail.SwiftGroupId" id="liSwiftGroup{{$index}}" ng-change="fnOnSwiftGroupChange(accountDetail.SwiftGroupId, $index)" />
-                                            </div>
-                                            <div class="col-sm-8 col-md-3 col-lg-3">
-                                                <a class="btn btn-sm btn-info" ng-click="fnAddSwiftGroupModal($index)" title="Add Swift Group"><i class="glyphicon glyphicon-plus"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Senders BIC</label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5">
-                                                <input type="text" class="form-control" id="txtSender{{$index}}" disabled />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Authorized Party</label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input ng-model="accountDetail.AuthorizedParty" class="form-control control-label" id="liAuthorizedParty{{$index}}" ng-change="fnAuthorizedPartyChange($index)">
-                                            </div>
-                                            <div class="col-sm-8 col-md-3 col-lg-3">
-                                                <a class="btn btn-sm btn-info" ng-click="fnAddAuthorizedPartyModal($index)" title="Add Authorized Party"><i class="glyphicon glyphicon-plus"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Cash Instruction Mechanism</label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input type="text" class="form-control" ng-model="accountDetail.CashInstruction" id="liCashInstruction{{$index}}" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, $index)" />
-                                            </div>
-                                            <div class="col-sm-8 col-md-3 col-lg-3">
-                                                <a class="btn btn-sm btn-info" ng-click="fnAddCashInstructionModal($index)" title="Add Cash Instruction"><i class="glyphicon glyphicon-plus"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="accountDetail.IsReceivingAccount">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Cash Sweep</label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input ng-model="accountDetail.CashSweep" class="form-control control-label" id="cashSweep{{$index}}" ng-change="fnCashSweep(accountDetail.CashSweep, $index)">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Cutoff Time Zone</label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-6 col-lg-7">
-                                                <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
-                                                    <input type="text" name="cutoffTimeZone" ng-model="accountDetail.WirePortalCutoff.CutOffTimeZone" class="form-control" id="liTimeZone{{$index}}" disabled style="padding: 5px;" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                        </div>
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Wire Portal Cutoff</label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-6 col-lg-7">
-                                                <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
-                                                    <input type="time" name="cutOffTime" ng-model="accountDetail.WirePortalCutoff.CutoffTime" class="form-control" id="cutOffTime{{$index}}" disabled style="padding: 5px;" />
-                                                </div>
-                                                <div class="col-sm-8 col-md-4 col-lg-4 AdjustDropDownWidth" style="margin-top: 5px; padding-left: 0;">
-                                                    <label class="label label-success" id="wireDays{{$index}}" style="font-size: 12px; padding: 5px;">{{accountDetail.WirePortalCutoff.DaystoWire}} {{accountDetail.WirePortalCutoff.DaystoWire > 1 ? "Days" : "Day"}}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="cashSweepTimeDiv cashSweepTimeDiv{{$index}}">
-                                        <div class="row control-group" ng-hide="accountDetail.IsReceivingAccount" style="margin-left: 15px; margin-right: 10px;">
-                                            <legend class="small font-primary">Cash Sweep:</legend>
-                                        </div>
-                                        <p></p>
-                                        <div class="row">
-                                            <div class="col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="accountDetail.IsReceivingAccount">
-                                                <div class="col-sm-8 col-md-4 col-lg-4">
-                                                    <label class="control-label">Cash Sweep Time</label>
-                                                </div>
-                                                <div class="col-sm-8 col-md-7 col-lg-7">
-                                                    <div class="col-sm-8 col-md-5 col-lg-5" style="padding-left: 0;">
-                                                        <input name="Cash Sweep Time" type="time" ng-model="accountDetail.CashSweepTime" class="form-control" id="cashSweepTime{{$index}}" ng-required="accountDetail.CashSweep == 'Yes'" style="padding: 2px;" />
+                                        <div id="accountBasicDetailDiv_{{$index}}" class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Account Name </label>
                                                     </div>
-                                                    <div class="col-sm-8 col-md-4 col-lg-4 AdjustDropDownWidth" style="padding-left: 0; padding-right: 20px;">
-                                                        <input name="Cash Sweep Time Zone" ng-model="accountDetail.CashSweepTimeZone" class="form-control control-label" id="cashSweepTimeZone{{$index}}" ng-required="accountDetail.CashSweep == 'Yes'">
+                                                    <div class="col-sm-8 col-md-5 col-lg-5">
+                                                        <input type="text" class="form-control" ng-model="accountDetail.AccountName" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Currency </label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                        <input type="text" class="form-control" ng-model="accountDetail.Currency" id="liCurrency{{$index}}" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, $index)" />
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-3 col-lg-3">
+                                                        <a class="btn btn-sm btn-info" ng-click="fnAddCurrencyModal($index)" title="Add Currency"><i class="glyphicon glyphicon-plus"></i></a>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                                <div class="col-sm-8 col-md-4 col-lg-4">
-                                                    <label class="control-label">Holdback Amount</label>
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Account Status</label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                        <input type="text" class="form-control" ng-model="accountDetail.AccountStatus" id="liAccountStatus{{$index}}" />
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                                    <input type="text" class="form-control txtHoldbackAmount" ng-model="accountDetail.HoldbackAmount" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p></p>
-                                        <div class="row">
-                                            <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                                <div class="col-sm-8 col-md-4 col-lg-4">
-                                                    <label class="control-label">Ticker/ISIN</label>
-                                                </div>
-                                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                                    <input type="text" class="form-control" ng-model="accountDetail.TickerorISIN" />
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                                <div class="col-sm-8 col-md-4 col-lg-4">
-                                                    <label class="control-label">Associated Custody Account</label>
-                                                </div>
-                                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                    <input type="text" class="form-control" ng-model="accountDetail.AssociatedCustodyAcct" id="liCustodyAcct{{$index}}" />
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Account Number </label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5">
+                                                        <input ng-model="accountDetail.ContactNumber" class="form-control control-label">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <p></p>
-                                        <div class="row">
-                                            <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                                <div class="col-sm-8 col-md-4 col-lg-4">
-                                                    <label class="control-label">Portfolio Selection</label>
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Description </label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                        <input ng-model="accountDetail.Description" class="form-control control-label" id="liAccountDescriptions{{$index}}">
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-3 col-lg-3">
+                                                        <a id="btnAccountDescription" class="btn btn-sm btn-info" ng-click="fnAddAccountDetailModal($index, 'Description')" title="Add Description"><i class="glyphicon glyphicon-plus"></i></a>
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                                    <input type="text" class="form-control" ng-model="accountDetail.PortfolioSelection" />
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                                <div class="col-sm-8 col-md-4 col-lg-4">
-                                                    <label class="control-label"> Currency</label>
-                                                </div>
-                                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                    <input type="text" class="form-control" id="liSweepCurrency{{$index}}" ng-model="accountDetail.SweepCurrency" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p></p>
-                                        <div class="row">
-                                            <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                                <div class="col-sm-8 col-md-4 col-lg-4">
-                                                    <label class="control-label">Sweep comments</label>
-                                                </div>
-                                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                                    <textarea cols="10" rows="3" ng-model="accountDetail.SweepComments" class="form-control control-label" placeholder="Sweep Comments"></textarea>
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Notes </label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                        <textarea cols="10" rows="3" ng-model="accountDetail.Notes" class="form-control control-label" placeholder="Notes"></textarea>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row control-group" style="margin-left: 15px; margin-right: 10px;">
-                                        <legend class="small font-primary">Account SSI:</legend>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">FFC Name</label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5">
-                                                <input type="text" name='FFCName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.FFCName" class="form-control control-label" placeholder="FFC Name" />
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">FFC Number </label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5">
-                                                <input type="text" name='FFCNumber' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.FFCNumber" class="form-control control-label" placeholder="FFC Number" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Reference </label>
-                                            </div>
-                                            <div class="col-sm-8 col-md-5 col-lg-5">
-                                                <input type="text" name='Reference' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Reference" class="form-control control-label" placeholder="Reference" />
-                                            </div>
-                                        </div>
-                                        @*<div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
-                                                <div class="col-sm-8 col-md-4 col-lg-4">
-                                                    <label class="control-label">Status Comments</label>
-                                                </div>
-                                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                                    <textarea cols="10" rows="3" ng-model="accountDetail.StatusComments" class="form-control control-label" placeholder="Status Comments"></textarea>
-                                                </div>
-                                            </div>*@
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <span class="row font-primary small">Intermediary</span>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <span class="row font-primary small">Beneficiary <span style="color: red"> *</span></span>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <span class="row font-primary small">Ultimate Beneficiary <span style="color: red"> *</span></span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
-                                            <label class="control-label" style="margin-left: 15px;">Account Number</label>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input type="text" class="form-control" ng-model="accountDetail.IntermediaryAccountNumber" placeholder="Account Number" />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input type="text" ng-model="accountDetail.BeneficiaryAccountNumber" class="form-control control-label" placeholder="Account Number" />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input name="Account Number" type="text" class="form-control" ng-model="accountDetail.AccountNumber" placeholder="Account Number" required />
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
-                                            <label for="liBeneficiaryType{{$index}}" class="control-label" style="margin-left: 15px;">Type:</label>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input type="text" class="form-control" ng-model="accountDetail.IntermediaryType" id="liIntermediaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.IntermediaryType,'Intermediary',$index)" />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input name="Beneficiary Type" type="text" class="form-control" ng-model="accountDetail.BeneficiaryType" id="liBeneficiaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.BeneficiaryType,'Beneficiary',$index)" required />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryType" id="liUltimateBeneficiaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.UltimateBeneficiaryType,'UltimateBeneficiary',$index)" />
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
-                                            <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
-                                            <a class="btn btn-sm btn-info" ng-click="fnAddBeneficiaryModal($index)" title="Add Beneficiary"><i class="glyphicon glyphicon-plus"></i></a>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input type="text" ng-model="accountDetail.Intermediary.BICorABA" class="form-control control-label" id="liIntermediaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.Intermediary.BICorABA,'Intermediary',$index)" />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input name="Beneficiary ABA/BIC" type="text" ng-model="accountDetail.Beneficiary.BICorABA" class="form-control control-label" id="liBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.Beneficiary.BICorABA,'Beneficiary',$index)" required />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth" id="divUltimateBeneficiaryBICorABA{{$index}}">
-                                            <input type="text" ng-model="accountDetail.UltimateBeneficiary.BICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.UltimateBeneficiary.BICorABA,'UltimateBeneficiary',$index)" />
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
-                                            <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input type="text" name='IntermediaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankName" class="form-control control-label" id="intermediaryBankName{{$index}}" placeholder="Bank Name" disabled />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName{{$index}}" disabled />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input type="text" name="BankName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankName" class="form-control control-label" placeholder="Bank/Bene Name" id="ultimateBankName{{$index}}" disabled />
-                                            <input type="text" name="AccountName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control" ng-model="accountDetail.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName{{$index}}" style="display: none;" />
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
-                                            <label for="beneficiaryBankAddress{{$index}}" class="control-label" style="margin-left: 15px;">Bank Address </label>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="IntermediaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankAddress" id="intermediaryBankAddress{{$index}}" disabled></textarea>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="BeneficiaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankAddress" id="beneficiaryBankAddress{{$index}}" disabled></textarea>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank/Bene Address" name="BankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankAddress" id="ultimateBankAddress{{$index}}" disabled></textarea>
+                                            <p></p>
+                                            <div class="row">
 
+                                            </div>
+                                            <p></p>
                                         </div>
                                     </div>
-                                    <p></p>
-
-                                    <div class="panel panel-default container-fluid" id="pnlContact{{$index}}" plindex="{{$index}}">
-                                        <div class="panel-heading row" style="cursor: pointer;">
-
-                                            <h4 class="panel-title">
-                                                Contact
-                                                <span class="pull-right">
-                                                    <a class="btn btn-sm btn-info" ng-click="$event.stopPropagation();fnCreateContact()"><i class="glyphicon glyphicon-phone"></i>&nbsp;Add Contact</a>&nbsp;&nbsp;
-                                                    <i class="indicator glyphicon glyphicon-chevron-down"></i>
-                                                </span>
-                                            </h4>
+                                    <div class="panel panel-default ng-show-hide" id="accountSwiftInfo_{{$index}}">
+                                        <div class="panel-heading" data-toggle="collapse" data-target="#accountSwiftDetailDiv_{{$index}}" aria-expanded="false" aria-controls="accountSwiftDetailDiv_{{$index}}">
+                                            <b>SWIFT Info</b>
                                         </div>
-                                        <div class="collapse row">
-                                            <div class="panel-body">
-                                                <div class="control-group">
-                                                    <p></p>
-                                                    <div class="row">
-                                                        <div class="col-sm-12 col-md-12 col-lg-12 paddingleft">
-                                                            <div class="col-sm-8 col-md-2 col-lg-2" style="text-align: right">
-                                                                <label class="control-label">Contact Type</label>
-                                                            </div>
-                                                            <div class="col-sm-8 col-md-3 col-lg-3 AdjustDropDownWidth">
-                                                                <input ng-model="accountDetail.ContactType" class="form-control control-label" id="contactType{{$index}}">
-                                                            </div>
-                                                            <div class="col-sm-8 col-md-2 col-lg-2" style="text-align: right">
-                                                                <label class="control-label">Contacts</label>
-                                                            </div>
-                                                            <div class="col-sm-8 col-md-3 col-lg-3 AdjustDropDownWidth liHMUsers">
-                                                                <input ng-model="accountDetail.ContactName" class="form-control control-label accountDetail_ContactName" id="liContacts{{$index}}" ng-change="fnOnContactNameChange(accountDetail.ContactName, $index)" />
-                                                            </div>
+                                        <div id="accountSwiftDetailDiv_{{$index}}" class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Authorized Party</label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                        <input ng-model="accountDetail.AuthorizedParty" class="form-control control-label" id="liAuthorizedParty{{$index}}" ng-change="fnAuthorizedPartyChange($index)">
+                                                    </div>
+                                                    @*<div class="col-sm-8 col-md-3 col-lg-3">
+                                                        <a class="btn btn-sm btn-info" ng-click="fnAddAuthorizedPartyModal($index)" title="Add Authorized Party"><i class="glyphicon glyphicon-plus"></i></a>
+                                                    </div>*@
+                                                </div>
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Cash Instruction Mechanism</label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                        <input type="text" class="form-control" ng-model="accountDetail.CashInstruction" id="liCashInstruction{{$index}}" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, $index)" />
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-3 col-lg-3">
+                                                        <a class="btn btn-sm btn-info" ng-click="fnAddCashInstructionModal($index)" title="Add Cash Instruction"><i class="glyphicon glyphicon-plus"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                            <div class="row" ng-hide="accountDetail.IsReceivingAccount">
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Swift Group <span style="color: red"> *</span></label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                        <input name="Swift Group" type="text" class="form-control" ng-model="accountDetail.SwiftGroupId" id="liSwiftGroup{{$index}}" ng-change="fnOnSwiftGroupChange(accountDetail.SwiftGroupId, $index)" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Senders BIC</label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5">
+                                                        <input type="text" class="form-control" id="txtSender{{$index}}" disabled />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                            <div class="row" ng-hide="accountDetail.IsReceivingAccount">
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Module </label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                        <input ng-model="accountDetail.AccountModule" class="form-control control-label" id="liAccountModule_{{$index}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Cutoff Time Zone</label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-6 col-lg-7">
+                                                        <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
+                                                            <input type="text" name="cutoffTimeZone" ng-model="accountDetail.WirePortalCutoff.CutOffTimeZone" class="form-control" id="liTimeZone{{$index}}" disabled style="padding: 5px;" />
                                                         </div>
                                                     </div>
-                                                    <p></p>
-                                                    <div class="row">
-                                                        <div class="col-sm-12 col-md-12 col-lg-12">
-                                                            <table id="contactTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+                                                </div>
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Wire Portal Cutoff</label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-6 col-lg-7">
+                                                        <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
+                                                            <input type="time" name="cutOffTime" ng-model="accountDetail.WirePortalCutoff.CutoffTime" class="form-control" id="cutOffTime{{$index}}" disabled style="padding: 5px;" />
+                                                        </div>
+                                                        <div class="col-sm-8 col-md-4 col-lg-4 AdjustDropDownWidth" style="margin-top: 5px; padding-left: 0;">
+                                                            <label class="label label-success" id="wireDays{{$index}}" style="font-size: 12px; padding: 5px;">{{accountDetail.WirePortalCutoff.DaystoWire}} {{accountDetail.WirePortalCutoff.DaystoWire > 1 ? "Days" : "Day"}}</label>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="panel panel-default container-fluid" id="Attachment{{$index}}" plindex="{{$index}}">
-                                        <div class="panel-heading row" style="cursor: pointer;">
-
-                                            <h4 class="panel-title">
-                                                Attachment
-                                                <span class="pull-right"><i class="indicator glyphicon glyphicon-chevron-down"></i></span>
-                                            </h4>
-
-                                        </div>
-                                        <div class="collapse row">
-                                            <div class="panel-body">
-                                                <div class="control-group">
-                                                    <div id="dropZoneDiv{{$index}}">
-                                                        @* ReSharper disable once Html.TagNotResolved *@
-                                                        <ng-form class="dropzone uploadFiles" enctype="multipart/form-data" id="uploadFiles{{$index}}" method="post" novalidate style="display: block" />
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="accountDetail.IsReceivingAccount">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Cash Sweep</label>
                                                     </div>
-                                                    <p></p>
-                                                    <table id="documentTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                        <input ng-model="accountDetail.CashSweep" class="form-control control-label" id="cashSweep{{$index}}" ng-change="fnCashSweep(accountDetail.CashSweep, $index)">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="panel panel-default container-fluid" id="ssiAssociated{{$index}}" plindex="{{$index}}" ng-if="!accountDetail.IsReceivingAccount">
-                                        <div class="panel-heading row" style="cursor: pointer;">
-
-                                            <h4 class="panel-title">
-                                                Associated Settlement Instructions
-                                                <span class="pull-right">
-                                                    @if (User.IsWireApprover())
-                                                    {
-                                                        <span class="btn-group" id="btnAccountMapStatusButtons" style="display: none;">
-                                                            @*<a id="accountMapRequestForApproval" title="Request for Approval" class="btn btn-warning btn-sm disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Pending Approval','Request for Approval')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</a>*@
-                                                            <a id="accountMapApprove" title="Approve" class="btn btn-success btn-sm disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Approved','Approve')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-ok"></i> Approve SSI Association</a>
-                                                            @*<a id="accountMapRevert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Created','Revert')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</a>*@
-                                                        </span>
-                                                    }
-                                                    <a class="btn btn-sm btn-primary" ng-click="$event.stopPropagation();fnAssociationSSI($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
-                                                    <i class="indicator glyphicon glyphicon-chevron-down"></i>
-                                                </span>
-                                            </h4>
-
-                                        </div>
-                                        <div class="collapse row">
-                                            <div class="panel-body">
-                                                <div class="control-group">
-                                                    <p></p>
-                                                    <div class="row">
-                                                        <div class="col-sm-12 col-md-12 col-lg-12">
-                                                            <table id="ssiTemplateTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover ssiTemplate table-highlighted" tindex="{{$index}}"><tfoot></tfoot></table>
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="accountDetail.IsReceivingAccount">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Cash Sweep Time</label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-7 col-lg-7">
+                                                        <div class="col-sm-8 col-md-5 col-lg-5" style="padding-left: 0;">
+                                                            <input name="Cash Sweep Time" type="time" ng-model="accountDetail.CashSweepTime" class="form-control" id="cashSweepTime{{$index}}" ng-required="accountDetail.CashSweep == 'Yes'" style="padding: 2px;" />
+                                                        </div>
+                                                        <div class="col-sm-8 col-md-4 col-lg-4 AdjustDropDownWidth" style="padding-left: 0; padding-right: 20px;">
+                                                            <input name="Cash Sweep Time Zone" ng-model="accountDetail.CashSweepTimeZone" class="form-control control-label" id="cashSweepTimeZone{{$index}}" ng-required="accountDetail.CashSweep == 'Yes'">
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <p></p>
+                                            <div class="cashSweepTimeDiv cashSweepTimeDiv{{$index}}">
+                                                @*<div class="row control-group" ng-hide="accountDetail.IsReceivingAccount" style="margin-left: 15px; margin-right: 10px;">
+                                                    <legend class="small font-primary">Cash Sweep:</legend>
+                                                </div>
+                                                <p></p>*@
+                                                <div class="row">
+
+                                                    <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                        <div class="col-sm-8 col-md-4 col-lg-4">
+                                                            <label class="control-label">Holdback Amount</label>
+                                                        </div>
+                                                        <div class="col-sm-8 col-md-5 col-lg-5">
+                                                            <input type="text" class="form-control txtHoldbackAmount" ng-model="accountDetail.HoldbackAmount" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                        <div class="col-sm-8 col-md-4 col-lg-4">
+                                                            <label class="control-label">Ticker/ISIN</label>
+                                                        </div>
+                                                        <div class="col-sm-8 col-md-5 col-lg-5">
+                                                            <input type="text" class="form-control" ng-model="accountDetail.TickerorISIN" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                        <div class="col-sm-8 col-md-4 col-lg-4">
+                                                            <label class="control-label">Associated Custody Account</label>
+                                                        </div>
+                                                        <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                            <input type="text" class="form-control" ng-model="accountDetail.AssociatedCustodyAcct" id="liCustodyAcct{{$index}}" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                        <div class="col-sm-8 col-md-4 col-lg-4">
+                                                            <label class="control-label">Portfolio Selection</label>
+                                                        </div>
+                                                        <div class="col-sm-8 col-md-5 col-lg-5">
+                                                            <input type="text" class="form-control" ng-model="accountDetail.PortfolioSelection" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                        <div class="col-sm-8 col-md-4 col-lg-4">
+                                                            <label class="control-label"> Currency</label>
+                                                        </div>
+                                                        <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                            <input type="text" class="form-control" id="liSweepCurrency{{$index}}" ng-model="accountDetail.SweepCurrency" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <p></p>
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                        <div class="col-sm-8 col-md-4 col-lg-4">
+                                                            <label class="control-label">Sweep comments</label>
+                                                        </div>
+                                                        <div class="col-sm-8 col-md-5 col-lg-5">
+                                                            <textarea cols="10" rows="3" ng-model="accountDetail.SweepComments" class="form-control control-label" placeholder="Sweep Comments"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p></p>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="panel panel-default ng-show-hide" id="accountSSIInfo_{{$index}}">
+                                        <div class="panel-heading" data-toggle="collapse" data-target="#accountSSIDetailInfo_{{$index}}" aria-expanded="false" aria-controls="accountSSIDetailInfo_{{$index}}">
+                                            <b>Account SSI</b>
+                                        </div>
+                                        <div id="accountSSIDetailInfo_{{$index}}" class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">FFC Name</label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5">
+                                                        <input type="text" name='FFCName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.FFCName" class="form-control control-label" placeholder="FFC Name" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">FFC Number </label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5">
+                                                        <input type="text" name='FFCNumber' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.FFCNumber" class="form-control control-label" placeholder="FFC Number" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                    <div class="col-sm-8 col-md-4 col-lg-4">
+                                                        <label class="control-label">Reference </label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5">
+                                                        <input type="text" name='Reference' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Reference" class="form-control control-label" placeholder="Reference" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <span class="row font-primary small">Intermediary</span>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <span class="row font-primary small">Beneficiary <span style="color: red"> *</span></span>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <span class="row font-primary small">Ultimate Beneficiary <span style="color: red"> *</span></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
+                                                    <label class="control-label" style="margin-left: 15px;">Account Number</label>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <input type="text" class="form-control" ng-model="accountDetail.IntermediaryAccountNumber" placeholder="Account Number" />
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <input type="text" ng-model="accountDetail.BeneficiaryAccountNumber" class="form-control control-label" placeholder="Account Number" />
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <input name="Account Number" type="text" class="form-control" ng-model="accountDetail.AccountNumber" placeholder="Account Number" required />
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
+                                                    <label for="liBeneficiaryType{{$index}}" class="control-label" style="margin-left: 15px;">Type:</label>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
+                                                    <input type="text" class="form-control" ng-model="accountDetail.IntermediaryType" id="liIntermediaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.IntermediaryType,'Intermediary',$index)" />
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
+                                                    <input name="Beneficiary Type" type="text" class="form-control" ng-model="accountDetail.BeneficiaryType" id="liBeneficiaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.BeneficiaryType,'Beneficiary',$index)" required />
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
+                                                    <input type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryType" id="liUltimateBeneficiaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.UltimateBeneficiaryType,'UltimateBeneficiary',$index)" />
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
+                                                    <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
+                                                    <a class="btn btn-sm btn-info" ng-click="fnAddBeneficiaryModal($index)" title="Add Beneficiary"><i class="glyphicon glyphicon-plus"></i></a>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
+                                                    <input type="text" ng-model="accountDetail.Intermediary.BICorABA" class="form-control control-label" id="liIntermediaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.Intermediary.BICorABA,'Intermediary',$index)" />
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
+                                                    <input name="Beneficiary ABA/BIC" type="text" ng-model="accountDetail.Beneficiary.BICorABA" class="form-control control-label" id="liBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.Beneficiary.BICorABA,'Beneficiary',$index)" required />
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth" id="divUltimateBeneficiaryBICorABA{{$index}}">
+                                                    <input type="text" ng-model="accountDetail.UltimateBeneficiary.BICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.UltimateBeneficiary.BICorABA,'UltimateBeneficiary',$index)" />
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
+                                                    <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <input type="text" name='IntermediaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankName" class="form-control control-label" id="intermediaryBankName{{$index}}" placeholder="Bank Name" disabled />
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName{{$index}}" disabled />
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <input type="text" name="BankName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankName" class="form-control control-label" placeholder="Bank/Bene Name" id="ultimateBankName{{$index}}" disabled />
+                                                    <input type="text" name="AccountName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control" ng-model="accountDetail.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName{{$index}}" style="display: none;" />
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
+                                                    <label for="beneficiaryBankAddress{{$index}}" class="control-label" style="margin-left: 15px;">Bank Address </label>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="IntermediaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankAddress" id="intermediaryBankAddress{{$index}}" disabled></textarea>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="BeneficiaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankAddress" id="beneficiaryBankAddress{{$index}}" disabled></textarea>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank/Bene Address" name="BankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankAddress" id="ultimateBankAddress{{$index}}" disabled></textarea>
+
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default ng-show-hide" id="accountContactInfo_{{$index}}">
+                                        <div class="panel-heading" data-toggle="collapse" data-target="#accountContactDetailInfo_{{$index}}" aria-expanded="false" aria-controls="accountContactDetailInfo_{{$index}}">
+                                            <b>Callback Check</b>
+                                            <span class="pull-right">
+                                                <a class="btn btn-xs btn-info" ng-click="$event.stopPropagation();fnCreateContact()"><i class="glyphicon glyphicon-phone"></i>&nbsp;Add Contact</a>&nbsp;&nbsp;
+                                                <i class="indicator glyphicon glyphicon-chevron-down"></i>
+                                            </span>
+                                        </div>
+                                        <div id="accountContactDetailInfo_{{$index}}" class="panel-body collapse">
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-12 col-lg-12 paddingleft">
+                                                    <div class="col-sm-8 col-md-2 col-lg-2" style="text-align: right">
+                                                        <label class="control-label">Contact Type</label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-3 col-lg-3 AdjustDropDownWidth">
+                                                        <input ng-model="accountDetail.ContactType" class="form-control control-label" id="contactType{{$index}}">
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-2 col-lg-2" style="text-align: right">
+                                                        <label class="control-label">Contacts</label>
+                                                    </div>
+                                                    <div class="col-sm-8 col-md-3 col-lg-3 AdjustDropDownWidth liHMUsers">
+                                                        <input ng-model="accountDetail.ContactName" class="form-control control-label accountDetail_ContactName" id="liContacts{{$index}}" ng-change="fnOnContactNameChange(accountDetail.ContactName, $index)" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                                    <table id="contactTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default ng-show-hide" id="accountAttachment_{{$index}}" plindex="{{$index}}">
+                                         <div class="panel-heading" data-toggle="collapse" data-target="#accountAttachmentDetailInfo_{{$index}}" aria-expanded="false" aria-controls="accountAttachmentDetailInfo_{{$index}}">
+                                             <b>Attachment</b><span class="pull-right"><i class="indicator glyphicon glyphicon-chevron-down"></i></span>
+                                         </div>
+                                         <div id="accountAttachmentDetailInfo_{{$index}}" class="panel-body collapse">
+                                             <div class="control-group">
+                                                 <div id="dropZoneDiv{{$index}}">
+                                                     @* ReSharper disable once Html.TagNotResolved *@
+                                                     <ng-form class="dropzone uploadFiles" enctype="multipart/form-data" id="uploadFiles{{$index}}" method="post" novalidate style="display: block" />
+                                                 </div>
+                                                 <p></p>
+                                                 <table id="documentTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+                                             </div>          
+                                         </div>
+                                    </div>        
+                                    <div class="panel panel-default ng-show-hide" id="accountSsiAssociation_{{$index}}" plindex="{{$index}}" ng-if="!accountDetail.IsReceivingAccount">
+                                        <div class="panel-heading" data-toggle="collapse" data-target="#accountSsiAssociationInfo_{{$index}}" aria-expanded="false" aria-controls="accountSsiAssociationInfo_{{$index}}">
+                                            <b>Associated Settlement Instructions</b>
+                                            <span class="pull-right">
+                                                @if (User.IsWireApprover())
+                                                {
+                                                    <span class="btn-group" id="btnAccountMapStatusButtons" style="display: none;">
+                                                        @*<a id="accountMapRequestForApproval" title="Request for Approval" class="btn btn-warning btn-sm disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Pending Approval','Request for Approval')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</a>*@
+                                                        <a id="accountMapApprove" title="Approve" class="btn btn-success btn-xs disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Approved','Approve')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-ok"></i> Approve SSI Association</a>
+                                                        @*<a id="accountMapRevert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Created','Revert')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</a>*@
+                                                    </span>
+                                                }
+                                                <a class="btn btn-xs btn-primary" ng-click="$event.stopPropagation();fnAssociationSSI($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
+                                                <i class="indicator glyphicon glyphicon-chevron-down"></i>
+                                            </span>
+                                        </div>
+                                         <div id="accountSsiAssociationInfo_{{$index}}" class="panel-body collapse">
+                                             <div class="control-group">
+                                                 <p></p>
+                                                 <div class="row">
+                                                     <div class="col-sm-12 col-md-12 col-lg-12">
+                                                         <table id="ssiTemplateTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover ssiTemplate table-highlighted" tindex="{{$index}}"><tfoot></tfoot></table>
+                                                     </div>
+                                                 </div>
+                                             </div>       
+                                         </div>
+                                    </div>        
                             </div>
                             <div class="modal-footer">
                                 @if (User.IsWireUser())
