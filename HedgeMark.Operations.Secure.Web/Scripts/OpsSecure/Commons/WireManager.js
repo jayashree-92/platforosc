@@ -758,12 +758,14 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.castToDate = function (account) {
         var cashSweepTime = angular.copy(account.CashSweepTime);
-        var cutOffTime = angular.copy(account.WirePortalCutoff.CutoffTime);
+        var cutOffTime = null;
+        if (account.WirePortalCutoff != null)
+         cutOffTime = angular.copy(account.WirePortalCutoff.CutoffTime);
         var date = new Date();
         if (cashSweepTime != null && cashSweepTime != "" && cashSweepTime != undefined) {
             account.CashSweepTime = new Date(date.getYear(), date.getMonth(), date.getDate(), cashSweepTime.Hours, cashSweepTime.Minutes, cashSweepTime.Seconds);
         }
-        if (cutOffTime != null && cutOffTime != "" && cutOffTime != undefined) {
+        if (account.WirePortalCutoff != null && cutOffTime != null && cutOffTime != "" && cutOffTime != undefined) {
             account.WirePortalCutoff.CutoffTime = new Date(date.getYear(), date.getMonth(), date.getDate(), cutOffTime.Hours, cutOffTime.Minutes, cutOffTime.Seconds);
         }
     }
@@ -875,7 +877,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             angular.element("#liCurrency").select2("destroy").val('');
             angular.element("#liCurrency").select2({
                 placeholder: "Select Currency",
-                data: $scope.currencies,
+                data: [],
                 allowClear: true,
                 closeOnSelect: false,
                 val: ""
@@ -1198,17 +1200,20 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
     angular.element(document).on("change", "#liFund", function () {
         $timeout(function () {
-            if ($("#liFund").select2('val') != "" && $("#liCurrency").select2('val') != "") {
+            if ($("#liFund").select2('val') != "") {
                 $scope.isFundsChanged = true;
-                $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2('val') + "&currency=" + $("#liCurrency").select2('val') + "&isBookTransfer=" + $scope.wireTicketObj.IsBookTransfer).then(function (response) {
-                    $scope.sendingAccountsList = response.data.sendingAccountsList;
-                    $scope.receivingAccountsList = response.data.receivingAccountsList;
-                    angular.element("#liSendingAccount").select2({
-                        placeholder: "Select Sending Account",
-                        data: $scope.sendingAccountsList,
+                $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2('val') + "&isBookTransfer=" + $scope.wireTicketObj.IsBookTransfer).then(function (response) {
+                    $scope.sendingAccountsListOfFund = response.data.sendingAccountsList;
+                    $scope.receivingAccountsListOfFund = response.data.receivingAccountsList;
+                    $scope.currencies = response.data.currencies;
+                    var currency = $scope.currencies.length == 0 ? null : $scope.currencies[0].id;
+                    angular.element("#liCurrency").select2({
+                        placeholder: "Select Currency",
+                        data: $scope.currencies,
                         allowClear: true,
                         closeOnSelect: false
                     });
+                    $("#liCurrency").select2('val', currency).trigger('change');
                     $scope.isSendingAccountEnabled = true;
                 });
             }
@@ -1224,19 +1229,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     angular.element(document).on("change", "#liCurrency", function () {
         $timeout(function () {
-            if ($("#liFund").select2('val') != "" && $("#liCurrency").select2('val') != "" && $scope.WireTicket.hmsWireId == 0) {
-                $scope.isFundsChanged = true;
-                $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2('val') + "&currency=" + $("#liCurrency").select2('val') + "&isBookTransfer=" + $scope.wireTicketObj.IsBookTransfer).then(function (response) {
-                    $scope.sendingAccountsList = response.data.sendingAccountsList;
-                    $scope.receivingAccountsList = response.data.receivingAccountsList;
-                    angular.element("#liSendingAccount").select2({
-                        placeholder: "Select Sending Account",
-                        data: $scope.sendingAccountsList,
-                        allowClear: true,
-                        closeOnSelect: false
-                    });
-                    $scope.isSendingAccountEnabled = true;
+            if ($("#liCurrency").select2('val') != "" && $scope.WireTicket.hmsWireId == 0) {
+                $scope.sendingAccountsList = $filter('filter')(angular.copy($scope.sendingAccountsListOfFund), { 'Currency': $("#liCurrency").select2('val') }, true);
+                angular.element("#liSendingAccount").select2({
+                    placeholder: "Select Sending Account",
+                    data: $scope.sendingAccountsList,
+                    allowClear: true,
+                    closeOnSelect: false
                 });
+                $scope.isSendingAccountEnabled = true;
             }
             else {
                 $scope.isFundsChanged = false;
@@ -1271,8 +1272,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         });
                     }
                     else {
-                        $scope.receivingBookAccountList = $filter('filter')(angular.copy($scope.receivingAccountsList), function (acc) {
-                            return acc.id != $scope.WireTicket.OnBoardAccountId;
+                        $scope.receivingBookAccountList = $filter('filter')(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
+                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2('val');
                         }, true);
                         angular.element("#liReceivingBookAccount").select2('destroy');
                         angular.element("#liReceivingBookAccount").select2({

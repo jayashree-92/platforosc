@@ -300,7 +300,7 @@ namespace HMOSecureWeb.Controllers
                     reportId = FileSystemManager.GetReportId(wireTicket.HMWire.hmsWirePurposeLkup.ReportName);
 
                 fundAccounts = isWirePurposeAdhoc
-                    ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, wireTicket.SendingAccount.Currency, wireTicket.IsBookTransfer)
+                    ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, wireTicket.IsBookTransfer, wireTicket.SendingAccount.Currency)
                     : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId, reportId);
             }
             var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
@@ -670,12 +670,13 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public JsonResult GetApprovedAccountsForFund(long fundId, string currency, bool isBookTransfer)
+        public JsonResult GetApprovedAccountsForFund(long fundId, bool isBookTransfer)
         {
-            var fundAccounts = WireDataManager.GetApprovedFundAccounts(fundId, currency, isBookTransfer);
-            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
+            var fundAccounts = WireDataManager.GetApprovedFundAccounts(fundId, isBookTransfer);
+            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber, Currency = s.Currency }).ToList();
             var receivingAccountsList = fundAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
-            return Json(new { sendingAccountsList, receivingAccountsList });
+            var currencies = sendingAccountsList.Select(s => new { id = s.Currency, text = s.Currency }).ToList();
+            return Json(new { sendingAccountsList, receivingAccountsList, currencies });
         }
 
         public JsonResult GetApprovedSSITemplatesForAccount(long accountId, bool isNormalTransfer)
