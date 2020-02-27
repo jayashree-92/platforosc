@@ -365,7 +365,7 @@
                                                             <label class="control-label">Associated Custody Account Number</label>
                                                         </div>
                                                         <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                            <input type="text" class="form-control" ng-model="accountDetail.AssociatedCustodyAcctNumber" id="liCustodyAcct{{$index}}" />
+                                                            <input type="text" class="form-control" ng-model="accountDetail.AssociatedCustodyAcctNumber" id="liCustodyAcctNumber{{$index}}" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -607,7 +607,7 @@
                                          </div>
                                     </div>        
                             </div>
-                            <div class="modal-footer">
+                            <div class="accntActions modal-footer">
                                 @if (User.IsWireUser())
                                 {
                                     <button type="submit" id="btnSave" ng-click="fnSaveAccount('Created')" title="Save the account" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Account</button>

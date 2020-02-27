@@ -90,9 +90,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
         });
 
-        window.setTimeout(function () {
+        $timeout(function () {
             accountDocumentTable[key].columns.adjust().draw(true);
+            $scope.onBoardingAccountDetails[key].onBoardingAccountDocuments = angular.copy(data);
         }, 50);
+
 
         $("#accountDetailCP tbody tr td:last-child button").on("click", function (event) {
             event.preventDefault();
@@ -351,6 +353,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.$on("onRepeatLast", function (scope, element, attrs) {
         $timeout(function () {
             $scope.fnIntialize();
+            $timeout(function () {
+                $scope.watchAccountDetails = $scope.onBoardingAccountDetails;
+            }, 3000);
         }, 100);
     });
 
@@ -626,7 +631,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
 
     $scope.fnEditAccountDetails = function (rowElement) {
-
+        $scope.watchAccountDetails = [];
         $scope.accountDetail = rowElement;
         $scope.onBoardingAccountId = rowElement.onBoardingAccountId;
         $scope.AgreementId = rowElement.dmaAgreementOnBoardingId;
@@ -643,7 +648,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             var account = response.data.OnBoardingAccount;
 
             console.log(account);
-
+            $(".accntActions button").hide();
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
             if (account.CashSweepTime != null && account.CashSweepTime != "" && account.CashSweepTime != undefined) {
                 //var times = account.CashSweepTime.split(':');
@@ -671,10 +676,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             else
                 account.IsReceivingAccount = false;
             $scope.onBoardingAccountDetails.push(account);
-            $timeout(function () {
-                $scope.validateAccountNumber(0, true);
-                $scope.watchAccountDetails = $scope.onBoardingAccountDetails;
-            }, 50);
         });
 
         $("#accountModal").modal({
@@ -910,7 +911,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 }
                 else {
                     $("#liSwiftGroup" + panelIndex).select2("val", response.data.SwiftGroupData[0] != undefined ? response.data.SwiftGroupData[0].id : null);
-                } 
+                }
 
                 $scope.fnOnSwiftGroupChange($("#liSwiftGroup" + panelIndex).select2("val"), panelIndex);
             }
@@ -1602,8 +1603,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     // $scope.ssiTemplateDocuments.push(value);
                     $scope.accountDocuments.push(value);
                 });
-                $scope.onBoardingAccountDetails[key].onBoardingAccountDocuments = angular.copy($scope.accountDocuments);
-                $scope.watchAccountDetails = $scope.onBoardingAccountDetails;
+
                 viewAttachmentTable($scope.accountDocuments, key);
             },
             queuecomplete: function () {
@@ -1729,9 +1729,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.fnSsiTemplateMap(value.onBoardingAccountId, $scope.FundId, key, value.Currency);
             attachment(key);
             $scope.fnAccountDocuments(value.onBoardingAccountId, key);
-
+            $scope.validateAccountNumber(0, true);
         });
-
 
         $("#accountDetailCP .panel-default .panel-heading").on("click", function (e) {
             $(this).parent().find("div.collapse").collapse("toggle");
@@ -1753,53 +1752,49 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 }, 10);
             }
         });
-        $scope.$watch('watchAccountDetails', function (val, oldVal) {
-            //if (val != oldVal && $("#spnAgrCurrentStatus").html() == pendingStatus) {
-            //    $("#btnApprove").hide();
-            //    $("#btnSave").show();
-            //}
-            //if (val != oldVal && $("#spnAgrCurrentStatus").html() == approvedStatus) {
-            //    $("#btnPendingApproval").show();
-            //    $("#btnSave").show();
-            //
-            if (val[0].onBoardingAccountId == oldVal[0].onBoardingAccountId) {
-                if ($("#spnAgrCurrentStatus").html() == "Saved as Draft") {
+    }
 
-                    $("#btnPendingApproval").show();
-                    //$("#btnApprove").hide();
-                    $("#btnRevert").hide();
-                    $("#btnSave").show();
-                }
-                else if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val()) {
+    $scope.$watch('watchAccountDetails', function (val, oldVal) {
+        if (val == undefined || val.length == 0 || oldVal == undefined)
+            return;
 
+        if (val[0].onBoardingAccountId == oldVal[0].onBoardingAccountId) {
+            if ($("#spnAgrCurrentStatus").html() == "Saved as Draft") {
+
+                $("#btnPendingApproval").show();
+                //$("#btnApprove").hide();
+                $("#btnRevert").hide();
+                $("#btnSave").show();
+            }
+            else if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val()) {
+
+                $("#btnPendingApproval").hide();
+                //$("#btnApprove").show();
+                $("#btnRevert").hide();
+                $("#btnSave").hide();
+            }
+            else if ($("#spnAgrCurrentStatus").html() == approvedStatus) {
+                if (val != oldVal) {
                     $("#btnPendingApproval").hide();
-                    //$("#btnApprove").show();
+                    //$("#btnApprove").hide();
+                    $("#btnRevert").show();
+                    $("#btnSave").hide();
+                }
+                else {
+                    $("#btnPendingApproval").hide();
+                    //$("#btnApprove").hide();
                     $("#btnRevert").hide();
                     $("#btnSave").hide();
                 }
-                else if ($("#spnAgrCurrentStatus").html() == approvedStatus) {
-                    if (val != oldVal) {
-                        $("#btnPendingApproval").hide();
-                        //$("#btnApprove").hide();
-                        $("#btnRevert").show();
-                        $("#btnSave").hide();
-                    }
-                    else {
-                        $("#btnPendingApproval").hide();
-                        //$("#btnApprove").hide();
-                        $("#btnRevert").hide();
-                        $("#btnSave").hide();
-                    }
-                } else {
-                    $("#btnPendingApproval").hide();
-                    //$("#btnApprove").hide();
-                    $("#btnRevert").hide();
-                    $("#btnSave").show();
-                }
+            } else {
+                $("#btnPendingApproval").hide();
+                //$("#btnApprove").hide();
+                $("#btnRevert").hide();
+                $("#btnSave").show();
             }
+        }
 
-        }, true);
-    }
+    }, true);
 
     $("#liSsiTemplate").change(function () {
 

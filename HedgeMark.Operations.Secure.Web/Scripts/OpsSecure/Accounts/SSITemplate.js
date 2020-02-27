@@ -77,7 +77,10 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 "sInfo": "Showing _START_ to _END_ of _TOTAL_ Files"
             }
         });
-        setTimeout(function () { $("#documentTable").dataTable().fnAdjustColumnSizing() }, 10);
+        $timeout(function () {
+            $("#documentTable").dataTable().fnAdjustColumnSizing();
+            $scope.ssiTemplate.onBoardingSSITemplateDocuments = angular.copy(data);
+        }, 100);
         $("#documentTable tbody td:last-child button").on("click", function (event) {
             event.preventDefault();
             var selectedRow = $(this).parents("tr");
