@@ -99,6 +99,12 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'AssociatedCustodyAcctNumber' AND TABLE_NAME = 'onBoardingAccount')
+BEGIN
+	ALTER TABLE onBoardingAccount ADD AssociatedCustodyAcctNumber VARCHAR(100) NULL;
+END
+GO
+
 --- Following are the columns to DROP - V 
 
 --IF EXISTS(SELECT 8 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'dmaFundOnBoardId' AND TABLE_NAME = 'onBoardingAccount') BEGIN ALTER TABLE onBoardingAccount DROP COLUMN dmaFundOnBoardId; END

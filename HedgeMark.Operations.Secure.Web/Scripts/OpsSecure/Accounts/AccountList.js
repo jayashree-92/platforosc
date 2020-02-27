@@ -671,9 +671,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             else
                 account.IsReceivingAccount = false;
             $scope.onBoardingAccountDetails.push(account);
-            $scope.watchAccountDetails = $scope.onBoardingAccountDetails;
-
-
+            $timeout(function () {
+                $scope.validateAccountNumber(0, true);
+                $scope.watchAccountDetails = $scope.onBoardingAccountDetails;
+            }, 50);
         });
 
         $("#accountModal").modal({
@@ -951,7 +952,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.onBoardingAccountDetails[index].CashSweep = 'No';
             $("#liAccountModule_" + index).select2("val", null);
             $("#liSwiftGroup" + index).select2("val", null);
-            $("#cashSweep" + index).select2("val", "No");
+            $("#cashSweep" + index).select2("val", "No").trigger('change');
         }
         else
             $scope.onBoardingAccountDetails[index].IsReceivingAccount = angular.copy($scope.onBoardingAccountDetails[index].IsReceivingAccountType);
@@ -2085,6 +2086,28 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
 
         $("#cashInstructionModal").modal("hide");
+    }
+
+    $scope.validateAccountNumber = function (index, isFFC) {
+        if ((isFFC && $scope.onBoardingAccountDetails[index].FFCNumber == "") || $scope.onBoardingAccountDetails[index].AccountNumber == "") {
+            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].AccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
+            return;
+        }
+
+        var acc = $filter('filter')(angular.copy($scope.allAccountList), function (account) {
+            return account.onBoardingAccountId != $scope.onBoardingAccountDetails[index].onBoardingAccountId &&
+                (isFFC ? account.FFCNumber == $scope.onBoardingAccountDetails[index].FFCNumber : account.AccountNumber == $scope.onBoardingAccountDetails[index].AccountNumber);
+        }, true)[0];
+        if (acc == undefined) {
+            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].AccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
+        }
+        else {
+            $("#btnPendingApproval").hide();
+            $("#btnApprove").hide();
+            $("#btnRevert").hide();
+            $("#btnSave").hide();
+            notifyError("Please choose a different Account Number or FFC Number as an account exists with same information.");
+        }
     }
 
     angular.element("#txtCashInstruction").on("focusin", function () { angular.element("#txtCashInstruction").popover("hide"); });

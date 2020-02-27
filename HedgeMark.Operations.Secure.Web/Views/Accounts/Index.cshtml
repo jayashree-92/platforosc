@@ -187,7 +187,7 @@
                                                         <label class="control-label">Account Number </label>
                                                     </div>
                                                     <div class="col-sm-8 col-md-5 col-lg-5">
-                                                        <input ng-model="accountDetail.ContactNumber" class="form-control control-label">
+                                                        <input ng-model="accountDetail.ContactNumber" class="form-control control-label" readonly>
                                                     </div>
                                                 </div>
                                             </div>
@@ -244,9 +244,9 @@
                                                     <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
                                                         <input type="text" class="form-control" ng-model="accountDetail.CashInstruction" id="liCashInstruction{{$index}}" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, $index)" />
                                                     </div>
-                                                    <div class="col-sm-8 col-md-3 col-lg-3">
+                                                    @*<div class="col-sm-8 col-md-3 col-lg-3">
                                                         <a class="btn btn-sm btn-info" ng-click="fnAddCashInstructionModal($index)" title="Add Cash Instruction"><i class="glyphicon glyphicon-plus"></i></a>
-                                                    </div>
+                                                    </div>*@
                                                 </div>
                                             </div>
                                             <p></p>
@@ -264,7 +264,7 @@
                                                         <label class="control-label">Senders BIC</label>
                                                     </div>
                                                     <div class="col-sm-8 col-md-5 col-lg-5">
-                                                        <input type="text" class="form-control" id="txtSender{{$index}}" disabled />
+                                                        <input type="text" class="form-control" id="txtSender{{$index}}" readonly />
                                                     </div>
                                                 </div>
                                             </div>
@@ -285,23 +285,19 @@
                                                     <div class="col-sm-8 col-md-4 col-lg-4">
                                                         <label class="control-label">Cutoff Time Zone</label>
                                                     </div>
-                                                    <div class="col-sm-8 col-md-6 col-lg-7">
-                                                        <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
-                                                            <input type="text" name="cutoffTimeZone" ng-model="accountDetail.WirePortalCutoff.CutOffTimeZone" class="form-control" id="liTimeZone{{$index}}" disabled style="padding: 5px;" />
-                                                        </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5">
+                                                        <input type="text" name="cutoffTimeZone" ng-model="accountDetail.WirePortalCutoff.CutOffTimeZone" class="form-control" id="liTimeZone{{$index}}" readonly style="padding: 5px;" />
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                                     <div class="col-sm-8 col-md-4 col-lg-4">
                                                         <label class="control-label">Wire Portal Cutoff</label>
                                                     </div>
-                                                    <div class="col-sm-8 col-md-6 col-lg-7">
-                                                        <div class="col-sm-8 col-md-6 col-lg-6" style="padding-left: 0;">
-                                                            <input type="time" name="cutOffTime" ng-model="accountDetail.WirePortalCutoff.CutoffTime" class="form-control" id="cutOffTime{{$index}}" disabled style="padding: 5px;" />
-                                                        </div>
-                                                        <div class="col-sm-8 col-md-4 col-lg-4 AdjustDropDownWidth" style="margin-top: 5px; padding-left: 0;">
-                                                            <label class="label label-success" id="wireDays{{$index}}" style="font-size: 12px; padding: 5px;">{{accountDetail.WirePortalCutoff.DaystoWire}} {{accountDetail.WirePortalCutoff.DaystoWire > 1 ? "Days" : "Day"}}</label>
-                                                        </div>
+                                                    <div class="col-sm-8 col-md-5 col-lg-5">
+                                                        <input type="time" name="cutOffTime" ng-model="accountDetail.WirePortalCutoff.CutoffTime" class="form-control" id="cutOffTime{{$index}}" readonly style="padding: 5px;" />
+                                                    </div>
+                                                    <div class="col-sm-6 col-md-3 col-lg-3">
+                                                        <label class="label label-success" id="wireDays{{$index}}" style="font-size: 12px; padding: 5px;">{{accountDetail.WirePortalCutoff.DaystoWire}} {{accountDetail.WirePortalCutoff.DaystoWire > 1 ? "Days" : "Day"}}</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -315,7 +311,7 @@
                                                         <input ng-model="accountDetail.CashSweep" class="form-control control-label" id="cashSweep{{$index}}" ng-change="fnCashSweep(accountDetail.CashSweep, $index)">
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="accountDetail.IsReceivingAccount">
+                                                <div class="cashSweepTimeDiv{{$index}} col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="accountDetail.IsReceivingAccount">
                                                     <div class="col-sm-8 col-md-4 col-lg-4">
                                                         <label class="control-label">Cash Sweep Time</label>
                                                     </div>
@@ -345,6 +341,14 @@
                                                             <input type="text" class="form-control txtHoldbackAmount" ng-model="accountDetail.HoldbackAmount" />
                                                         </div>
                                                     </div>
+                                                    <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                                        <div class="col-sm-8 col-md-4 col-lg-4">
+                                                            <label class="control-label">Associated Custody Account Name</label>
+                                                        </div>
+                                                        <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                            <input type="text" class="form-control" ng-model="accountDetail.AssociatedCustodyAcct" id="liCustodyAcct{{$index}}" />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <p></p>
                                                 <div class="row">
@@ -358,10 +362,10 @@
                                                     </div>
                                                     <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                                         <div class="col-sm-8 col-md-4 col-lg-4">
-                                                            <label class="control-label">Associated Custody Account</label>
+                                                            <label class="control-label">Associated Custody Account Number</label>
                                                         </div>
                                                         <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                            <input type="text" class="form-control" ng-model="accountDetail.AssociatedCustodyAcct" id="liCustodyAcct{{$index}}" />
+                                                            <input type="text" class="form-control" ng-model="accountDetail.AssociatedCustodyAcctNumber" id="liCustodyAcct{{$index}}" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -377,7 +381,7 @@
                                                     </div>
                                                     <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                                         <div class="col-sm-8 col-md-4 col-lg-4">
-                                                            <label class="control-label"> Currency</label>
+                                                            <label class="control-label">Cash Sweep Currency</label>
                                                         </div>
                                                         <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
                                                             <input type="text" class="form-control" id="liSweepCurrency{{$index}}" ng-model="accountDetail.SweepCurrency" />
@@ -418,7 +422,7 @@
                                                         <label class="control-label">FFC Number </label>
                                                     </div>
                                                     <div class="col-sm-8 col-md-5 col-lg-5">
-                                                        <input type="text" name='FFCNumber' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.FFCNumber" class="form-control control-label" placeholder="FFC Number" />
+                                                        <input type="text" name='FFCNumber' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.FFCNumber" ng-blur="validateAccountNumber($index, true)" class="form-control control-label" placeholder="FFC Number" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -458,7 +462,7 @@
                                                     <input type="text" ng-model="accountDetail.BeneficiaryAccountNumber" class="form-control control-label" placeholder="Account Number" />
                                                 </div>
                                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                                    <input name="Account Number" type="text" class="form-control" ng-model="accountDetail.AccountNumber" placeholder="Account Number" required />
+                                                    <input name="Account Number" type="text" class="form-control" ng-model="accountDetail.AccountNumber" ng-blur="validateAccountNumber($index, false)" placeholder="Account Number" required />
                                                 </div>
                                             </div>
                                             <p></p>
@@ -498,13 +502,13 @@
                                                     <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
                                                 </div>
                                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                                    <input type="text" name='IntermediaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankName" class="form-control control-label" id="intermediaryBankName{{$index}}" placeholder="Bank Name" disabled />
+                                                    <input type="text" name='IntermediaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankName" class="form-control control-label" id="intermediaryBankName{{$index}}" placeholder="Bank Name" readonly />
                                                 </div>
                                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                                    <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName{{$index}}" disabled />
+                                                    <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName{{$index}}" readonly />
                                                 </div>
                                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                                    <input type="text" name="BankName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankName" class="form-control control-label" placeholder="Bank/Bene Name" id="ultimateBankName{{$index}}" disabled />
+                                                    <input type="text" name="BankName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankName" class="form-control control-label" placeholder="Bank/Bene Name" id="ultimateBankName{{$index}}" readonly />
                                                     <input type="text" name="AccountName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control" ng-model="accountDetail.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName{{$index}}" style="display: none;" />
                                                 </div>
                                             </div>
@@ -514,13 +518,13 @@
                                                     <label for="beneficiaryBankAddress{{$index}}" class="control-label" style="margin-left: 15px;">Bank Address </label>
                                                 </div>
                                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="IntermediaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankAddress" id="intermediaryBankAddress{{$index}}" disabled></textarea>
+                                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="IntermediaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankAddress" id="intermediaryBankAddress{{$index}}" readonly></textarea>
                                                 </div>
                                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="BeneficiaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankAddress" id="beneficiaryBankAddress{{$index}}" disabled></textarea>
+                                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="BeneficiaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankAddress" id="beneficiaryBankAddress{{$index}}" readonly></textarea>
                                                 </div>
                                                 <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank/Bene Address" name="BankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankAddress" id="ultimateBankAddress{{$index}}" disabled></textarea>
+                                                    <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank/Bene Address" name="BankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankAddress" id="ultimateBankAddress{{$index}}" readonly></textarea>
 
                                                 </div>
                                             </div>

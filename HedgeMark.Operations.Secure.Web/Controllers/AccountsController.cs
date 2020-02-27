@@ -1063,6 +1063,7 @@ namespace HMOSecureWeb.Controllers
                 row["Holdback Amount"] = account.HoldbackAmount.HasValue ? account.HoldbackAmount.ToString() : string.Empty;
                 row["Sweep Comments"] = account.SweepComments;
                 row["Associated Custody Acct"] = account.AssociatedCustodyAcct;
+                row["Associated Custody Acct Number"] = account.AssociatedCustodyAcctNumber;
                 row["Portfolio Selection"] = account.PortfolioSelection;
                 row["Ticker/ISIN"] = account.TickerorISIN;
                 row["Sweep Currency"] = account.SweepCurrency;
@@ -1335,6 +1336,7 @@ namespace HMOSecureWeb.Controllers
 
                             accountDetail.SweepComments = account["Sweep Comments"];
                             accountDetail.AssociatedCustodyAcct = account["Associated Custody Acct"];
+                            accountDetail.AssociatedCustodyAcctNumber = account["Associated Custody Acct Number"];
                             accountDetail.PortfolioSelection = account["Portfolio Selection"];
                             accountDetail.TickerorISIN = account["Ticker/ISIN"];
                             accountDetail.SweepCurrency = account["Sweep Currency"];
@@ -1461,6 +1463,7 @@ namespace HMOSecureWeb.Controllers
             row["Holdback Amount"] = String.Empty;
             row["Sweep Comments"] = String.Empty;
             row["Associated Custody Acct"] = String.Empty;
+            row["Associated Custody Acct Number"] = String.Empty;
             row["Portfolio Selection"] = String.Empty;
             row["Ticker/ISIN"] = String.Empty;
             row["Sweep Currency"] = String.Empty;
@@ -2030,6 +2033,8 @@ namespace HMOSecureWeb.Controllers
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Sweep Comments", "Edited", nonUpdatedAccount.SweepComments, account.SweepComments, UserName));
                 if (account.AssociatedCustodyAcct != nonUpdatedAccount.AssociatedCustodyAcct)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Associated Custody Acct", "Edited", nonUpdatedAccount.AssociatedCustodyAcct, account.AssociatedCustodyAcct, UserName));
+                if (account.AssociatedCustodyAcctNumber != nonUpdatedAccount.AssociatedCustodyAcctNumber)
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Associated Custody Acct Number", "Edited", nonUpdatedAccount.AssociatedCustodyAcctNumber, account.AssociatedCustodyAcctNumber, UserName));
                 if (account.PortfolioSelection != nonUpdatedAccount.PortfolioSelection)
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Portfolio Selection", "Edited", nonUpdatedAccount.PortfolioSelection, account.PortfolioSelection, UserName));
                 if (account.TickerorISIN != nonUpdatedAccount.TickerorISIN)

@@ -72,6 +72,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> IntermediaryBICorABAId { get; set; }
         public Nullable<long> UltimateBeneficiaryBICorABAId { get; set; }
         public Nullable<long> SwiftGroupId { get; set; }
+        public string AssociatedCustodyAcctNumber { get; set; }
     
         public virtual hmsSwiftGroup SwiftGroup { get; set; }
         public virtual onBoardingAccountBICorABA Beneficiary { get; set; }
