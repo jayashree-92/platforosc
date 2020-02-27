@@ -2089,7 +2089,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.validateAccountNumber = function (index, isFFC) {
-        if ((isFFC && $scope.onBoardingAccountDetails[index].FFCNumber == "") || $scope.onBoardingAccountDetails[index].AccountNumber == "") {
+        if ((isFFC && $scope.onBoardingAccountDetails[index].FFCNumber == null || $scope.onBoardingAccountDetails[index].FFCNumber == "") || ($scope.onBoardingAccountDetails[index].AccountNumber == null || $scope.onBoardingAccountDetails[index].AccountNumber == ""))
+        {
             $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].AccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
             return;
         }
@@ -2106,6 +2107,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#btnApprove").hide();
             $("#btnRevert").hide();
             $("#btnSave").hide();
+            if (isFFC)
+                $scope.onBoardingAccountDetails[index].FFCNumber = "";
+            else
+                $scope.$scope.onBoardingAccountDetails[index].AccountNumber = "";
             notifyError("Please choose a different Account Number or FFC Number as an account exists with same information.");
         }
     }
