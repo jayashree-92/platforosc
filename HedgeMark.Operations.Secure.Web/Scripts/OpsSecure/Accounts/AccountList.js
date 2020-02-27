@@ -356,8 +356,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             $timeout(function () {
                 $scope.watchAccountDetails = $scope.onBoardingAccountDetails;
-                $scope.isLoad = false;
-            }, 3000);
+                $timeout(function () {
+                    $scope.isLoad = false;
+                }, 100);
+            }, 1000);
         }, 100);
     });
 
@@ -1774,14 +1776,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
             else if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val()) {
 
-                $("#btnPendingApproval").show();
+                $("#btnPendingApproval").hide();
                 //$("#btnApprove").show();
                 $("#btnRevert").show();
                 $("#btnSave").hide();
             }
             else if ($("#spnAgrCurrentStatus").html() == approvedStatus) {
                 if (val != oldVal) {
-                    $("#btnPendingApproval").show();
+                    $("#btnPendingApproval").hide();
                     //$("#btnApprove").hide();
                     $("#btnRevert").show();
                     $("#btnSave").hide();
@@ -1793,7 +1795,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     $("#btnSave").hide();
                 }
             } else {
-                $("#btnPendingApproval").hide();
+                $("#btnPendingApproval").show();
                 //$("#btnApprove").hide();
                 $("#btnRevert").hide();
                 $("#btnSave").show();

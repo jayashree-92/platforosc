@@ -367,11 +367,13 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $("#otherReason").hide();
 
     });
-
+    $scope.isLoad = false;
     if (ssiTemplateId !== 0 && ssiTemplateId !== "0") {
         $http.get("/Accounts/GetSsiTemplate?templateId=" + ssiTemplateId).then(function (response) {
             $scope.ssiTemplateId = ssiTemplateId;
             $scope.fnBrokerList();
+            $scope.isLoad = true;
+            $scope.isSSITemplateChanged = false;
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
             // $scope.fnPaymentOrReceiptReason();
             $scope.ssiTemplate = response.data.OnBoardingSsiTemplate;
@@ -407,7 +409,10 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
             $timeout(function () {
                 $scope.watchSSITemplate = $scope.ssiTemplate;
-            }, 3000);
+                $timeout(function () {
+                    $scope.isLoad = false;
+                }, 100);
+            }, 1000);
         });
 
     } else {
@@ -418,8 +423,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $scope.$watch('watchSSITemplate', function (val, oldVal) {
 
-        if (val == undefined && oldVal == undefined)
-            $scope.isSSITemplateChanged = true;
+        if (val == undefined && oldVal == undefined || $scope.isLoad)
+            $scope.isSSITemplateChanged = false;
 
         else if (val.SSITemplateStatus != "Approved" || (oldVal != undefined && val != oldVal)) {
             $scope.isSSITemplateChanged = true;
