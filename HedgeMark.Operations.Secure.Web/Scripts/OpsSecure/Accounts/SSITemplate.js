@@ -399,14 +399,15 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
             viewAttachmentTable($scope.ssiTemplateDocuments);
 
-            $scope.watchSSITemplate = $scope.ssiTemplate;
-
             if ($scope.ssiTemplateDocuments.length > 0 && $scope.ssiTemplate.SSITemplateStatus == "Approved") {
                 $(".dz-hidden-input").prop("disabled", true);
             } else {
                 $(".dz-hidden-input").prop("disabled", false);
             }
 
+            $timeout(function () {
+                $scope.watchSSITemplate = $scope.ssiTemplate;
+            }, 3000);
         });
 
     } else {
