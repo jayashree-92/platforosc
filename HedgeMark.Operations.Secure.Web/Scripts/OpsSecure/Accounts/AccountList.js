@@ -1338,11 +1338,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             allowClear: true,
             data: $scope.accountStatus
         });
-        $("#liCustodyAcct" + key).select2({
-            placeholder: "Select a Associated Custody Account",
-            allowClear: true,
-            data: $scope.cusodyAccountData
-        });
+        //$("#liCustodyAcct" + key).select2({
+        //    placeholder: "Select a Associated Custody Account",
+        //    allowClear: true,
+        //    data: $scope.cusodyAccountData
+        //});
     }
 
     function viewSsiTemplateTable(data, key) {
@@ -1646,9 +1646,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         //Custody account
         var cusodyAccountList = $.grep($scope.allAccountList, function (v) { return v.AccountType == "Custody"; });
         $scope.cusodyAccountData = [];
-        $.each(cusodyAccountList, function (key, value) {
-            $scope.cusodyAccountData.push({ "id": value.AccountName, "text": value.AccountName });
-        });
+        //$.each(cusodyAccountList, function (key, value) {
+        //    $scope.cusodyAccountData.push({ "id": value.AccountName, "text": value.AccountName });
+        //});
 
         $scope.fnGetAccountReports();
         $.each($scope.onBoardingAccountDetails, function (key, value) {
