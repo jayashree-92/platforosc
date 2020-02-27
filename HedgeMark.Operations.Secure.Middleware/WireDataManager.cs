@@ -113,6 +113,8 @@ namespace HMOSecureMiddleware
             wireSendingAccount = AccountManager.GetOnBoardingAccount(hmWire.OnBoardAccountId);
             if (hmWire.hmsWireTransferTypeLKup.TransferType == "Book Transfer")
                 wireReceivingAccount = AccountManager.GetOnBoardingAccount(hmWire.OnBoardSSITemplateId);
+            else
+                wireReceivingAccount = new onBoardingAccount();
 
             hmWire.hmsWireLogs.ForEach(s =>
             {
