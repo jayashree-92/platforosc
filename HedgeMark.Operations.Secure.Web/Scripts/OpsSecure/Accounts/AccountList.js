@@ -2103,15 +2103,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].AccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
         }
         else {
-            $("#btnPendingApproval").hide();
-            $("#btnApprove").hide();
-            $("#btnRevert").hide();
-            $("#btnSave").hide();
+            var accNo = angular.copy(isFFC ? $scope.onBoardingAccountDetails[index].FFCNumber : $scope.onBoardingAccountDetails[index].AccountNumber);
             if (isFFC)
                 $scope.onBoardingAccountDetails[index].FFCNumber = "";
             else
                 $scope.$scope.onBoardingAccountDetails[index].AccountNumber = "";
-            notifyError("Please choose a different Account Number or FFC Number as an account exists with same information.");
+            notifyError("Please choose a different FFC Number or Account Number as an account exists with same information - " + accNo);
         }
     }
 
