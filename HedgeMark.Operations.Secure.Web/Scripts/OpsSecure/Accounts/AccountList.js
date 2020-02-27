@@ -353,8 +353,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.$on("onRepeatLast", function (scope, element, attrs) {
         $timeout(function () {
             $scope.fnIntialize();
+
             $timeout(function () {
                 $scope.watchAccountDetails = $scope.onBoardingAccountDetails;
+                $scope.isLoad = false;
             }, 3000);
         }, 100);
     });
@@ -643,13 +645,16 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.broker = rowElement.Broker;
 
         $scope.fundName = rowElement.FundName;
-
+        $scope.isLoad = true;
         $http.get("/Accounts/GetOnBoardingAccount?accountId=" + $scope.onBoardingAccountId).then(function (response) {
             var account = response.data.OnBoardingAccount;
 
             console.log(account);
             $(".accntActions button").hide();
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
+            if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val())
+                $("#btnApprove").show();
+
             if (account.CashSweepTime != null && account.CashSweepTime != "" && account.CashSweepTime != undefined) {
                 //var times = account.CashSweepTime.split(':');
                 account.CashSweepTime = new Date(2014, 0, 1, account.CashSweepTime.Hours, account.CashSweepTime.Minutes, account.CashSweepTime.Seconds);
@@ -1755,10 +1760,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.$watch('watchAccountDetails', function (val, oldVal) {
-        if (val == undefined || val.length == 0 || oldVal == undefined)
+        if (val == undefined || val.length == 0 || oldVal == undefined || oldVal.length == 0 || $scope.isLoad)
             return;
 
         if (val[0].onBoardingAccountId == oldVal[0].onBoardingAccountId) {
+            $("#btnApprove").hide();
             if ($("#spnAgrCurrentStatus").html() == "Saved as Draft") {
 
                 $("#btnPendingApproval").show();
@@ -1768,14 +1774,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
             else if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val()) {
 
-                $("#btnPendingApproval").hide();
+                $("#btnPendingApproval").show();
                 //$("#btnApprove").show();
-                $("#btnRevert").hide();
+                $("#btnRevert").show();
                 $("#btnSave").hide();
             }
             else if ($("#spnAgrCurrentStatus").html() == approvedStatus) {
                 if (val != oldVal) {
-                    $("#btnPendingApproval").hide();
+                    $("#btnPendingApproval").show();
                     //$("#btnApprove").hide();
                     $("#btnRevert").show();
                     $("#btnSave").hide();
