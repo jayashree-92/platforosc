@@ -485,6 +485,8 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
+                if (messageTypes == null)
+                    messageTypes = new List<string>();
                 return context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved" && (counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType == "Fee/Expense Payment") && (currency == null || template.Currency == currency) && (isAll || messageTypes.Contains(template.MessageType))).ToList();
             }
         }

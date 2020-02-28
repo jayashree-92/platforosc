@@ -26,6 +26,7 @@ namespace HMOSecureMiddleware
         public long AgreementOnboardingId { get; set; }
         public string AgreementShortName { get; set; }
         public int AgreementTypeId { get; set; }
+        public long BrokerId { get; set; }
     }
 
     public class OnBoardingDataManager
@@ -60,7 +61,7 @@ namespace HMOSecureMiddleware
 
                 return context.vw_OnboardedAgreements
                     .Where(a => a.AgreementStatus != "Terminated – Agreement" && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || hmFundIds.Contains(a.hmFundId ?? 0)))
-                    .AsNoTracking().Select(x => new AgreementBaseData() { AgreementOnboardingId = x.dmaAgreementOnBoardingId, AgreementShortName = x.AgreementShortName, HMFundId = x.hmFundId ?? 0 }).ToList();
+                    .AsNoTracking().Select(x => new AgreementBaseData() { AgreementOnboardingId = x.dmaAgreementOnBoardingId, AgreementShortName = x.AgreementShortName, HMFundId = x.hmFundId ?? 0, AgreementTypeId = x.AgreementTypeId ?? 0, BrokerId = x.dmaCounterPartyFamilyId ?? 0 }).ToList();
             }
         }
 

@@ -465,6 +465,7 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
             $("#spnBroker").hide();
             $("#spnAgreement").hide();
         }
+        
     });
 
     $("#liFund").change(function () {
@@ -472,13 +473,13 @@ HmOpsApp.controller("AccountCtrl", function ($scope, $http, $timeout, $filter, $
         fundId = $(this).val();
         if (fundId > 0) {
 
-            var agreements = $.grep($scope.agreements, function (v) { return v.hmFundId == fundId; });
+            var agreements = $.grep($scope.agreements, function (v) { return v.hmFundId == parseInt(fundId); });
             var agreementData = [];
             $.each(agreements, function (key, value) {
                 agreementData.push({ "id": value.AgreementOnboardingId, "text": value.AgreementShortName });
             });
 
-            agreementData = $filter('orderBy')(agreementData, 'text');
+            agreementData = $filter('orderBy')($scope.agreements, 'text');
 
             if ($("#liAgreement").data("select2")) {
                 $("#liAgreement").select2("destroy");

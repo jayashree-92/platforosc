@@ -178,7 +178,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetCurrency = function (panelIndex) {
-        $http.get("/Accounts/GetAllCurrencies").then(function (response) {
+        return $http.get("/Accounts/GetAllCurrencies").then(function (response) {
             $scope.currencies = response.data.currencies;
 
             if (panelIndex != undefined && panelIndex != null) {
@@ -195,7 +195,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetCashInstruction = function (panelIndex) {
-        $http.get("/Accounts/GetAllCashInstruction").then(function (response) {
+        return $http.get("/Accounts/GetAllCashInstruction").then(function (response) {
             $scope.cashInstructions = response.data.cashInstructions;
             $scope.timeZones = response.data.timeZones;
             if (panelIndex != undefined && panelIndex != null) {
@@ -213,7 +213,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetBicorAba = function (panelIndex) {
-        $http.get("/Accounts/GetAllAccountBicorAba").then(function (response) {
+      return  $http.get("/Accounts/GetAllAccountBicorAba").then(function (response) {
             $scope.accountBicorAba = response.data.accountBicorAba;
             if (panelIndex != null) {
                 var isAba = $scope.isBicorAba == true ? "ABA" : "BIC";
@@ -223,15 +223,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
-
-
     $scope.fnPreloadAccountData = function () {
 
-        $http.get("/Accounts/GetAccountPreloadData").then(function (response) {
+       return $http.get("/Accounts/GetAccountPreloadData").then(function (response) {
             $scope.funds = response.data.funds;
+            $scope.fundsWithAgreements = response.data.fundsWithAgreements;
+            $scope.agreementData = response.data.agreementData;
             $scope.agreements = response.data.agreements;
             $scope.counterpartyFamilies = response.data.counterpartyFamilies;
-
         });
     }
 
@@ -273,35 +272,54 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             allowClear: true,
             data: []
         });
-
-        $("#liAccountType").change(function () {
-            accountType = $(this).val();
+        angular.element(document).on('change', "#liAccountType", function (event) {
+            event.stopPropagation();
+            $scope.accountType = $(this).val();
+            var thisFunds = [];
             if ($(this).val() != "" && $(this).val() != undefined) {
                 if ($(this).val() == "Agreement") {
                     $("#spnBroker").hide();
                     $("#spnAgreement").show();
+                    thisFunds = angular.copy($scope.fundsWithAgreements);
                 } else {
                     $("#spnBroker").show();
                     $("#spnAgreement").hide();
+                    thisFunds = angular.copy($scope.funds);
                 }
             } else {
                 $("#spnBroker").hide();
                 $("#spnAgreement").hide();
             }
+            
+            $("#liFund").select2({
+                placeholder: "Select a fund",
+                allowClear: true,
+                data: thisFunds
+            });
+            $("#liFund").select2('val', '');
+            $("#liAgreement").select2('val', '');
+            $("#liBroker").select2('val', '');
+            $scope.AgreementTypeId = 0;
+            $scope.BrokerId = 0;
+            $scope.broker = "";
         });
 
-        $("#liFund").change(function () {
+        angular.element(document).on('change', "#liFund", function (event) {
 
             fundId = $(this).val();
+            event.stopPropagation();
             if (fundId > 0) {
 
-                var agreements = $.grep($scope.agreements, function (v) { return v.hmFundId == fundId; });
-                var agreementData = [];
-                $.each(agreements, function (key, value) {
-                    agreementData.push({ "id": value.AgreementOnboardingId, "text": value.AgreementShortName });
-                });
+                var agreements = $filter('filter')(angular.copy($scope.agreements), { 'hmFundId': parseInt(fundId) }, true);
+                //var agreements = $.grep($scope.agreements, function (v) { return v.hmFundId == fundId; });
+                //var agreementData = [];
+                //$.each(agreements, function (key, value) {
+                //    agreementData.push({ "id": value.AgreementOnboardingId, "text": value.AgreementShortName });
+                //});
 
-                agreementData = $filter('orderBy')(agreementData, 'text');
+                //var agreementData = $filter('filter')($scope.)
+
+                agreements = $filter('orderBy')(agreements, 'text');
 
                 if ($("#liAgreement").data("select2")) {
                     $("#liAgreement").select2("destroy");
@@ -310,8 +328,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#liAgreement").select2({
                     placeholder: "Select the agreements",
                     allowClear: true,
-                    data: agreementData
+                    data: agreements
                 });
+                $scope.FundName = $(this).select2('data').LegalName;
             }
             else {
 
@@ -324,30 +343,71 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     data: []
                 });
             }
+            $scope.FundId = fundId;
+            
         });
 
-        $("#liAgreement").change(function () {
-            agreementId = $(this).val();
+        angular.element(document).on('change', "#liAgreement", function (event) {
+            event.stopPropagation();
+            $scope.AgreementId = $(this).val();
             if ($(this).val() > 0) {
                 // Get row details 
-                var rowElement = accountTable.row(this).data();
-                $scope.fnEditAccountDetails(rowElement);
+                $scope.AgreementTypeId = $(this).select2('data').AgreementTypeId;
+                $scope.BrokerId = $(this).select2('data').BrokerId;
+                var broker = $filter('filter')(angular.copy($scope.counterpartyFamilies), { 'BrokerId': $scope.BrokerId }, true)[0];
+                if (broker != undefined)
+                    $scope.broker = broker.text;
+                $scope.loadAccountData();
             }
 
         });
 
-        $("#liBroker").change(function () {
-
-            brokerId = $(this).val();
-            $scope.counterpartyFamilyId = $(this).val();
+        angular.element(document).on('change', "#liBroker", function (event) {
+            event.stopPropagation();
+            $scope.BrokerId = $(this).val();
 
             if ($(this).val() > 0) {
-                var rowElement = accountTable.row(this).data();
-                $scope.fnEditAccountDetails(rowElement);
+                $scope.broker = $(this).select2('data').text;
+                $scope.loadAccountData();
             }
         });
+        
+        angular.element(document).on('click', "#btnAgrExpandAllPanel", function (event) {
+            angular.element("#collapseContainer .panel-body").collapse("show");
+            angular.element("#collapseContainer .panel-heading i.glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+        });
 
+        angular.element(document).on('click', "#btnAgrCollapseAllPanel", function (event) {
+            angular.element("#collapseContainer .panel-body").collapse("hide");
+            angular.element("#collapseContainer .panel-heading i.glyphicon-chevron-up").addClass("glyphicon-chevron-down").removeClass("glyphicon-chevron-up");
+        });
 
+    }
+
+    $scope.loadAccountData = function () {
+        $scope.copyAccount = {};
+        $scope.onBoardingAccountDetails = [];
+
+        $scope.copyAccount.onBoardingAccountId = 0;
+        $scope.copyAccount.AccountType = $scope.accountType;
+        $scope.copyAccount.AccountName = $scope.FundName;
+
+        if ($scope.accountType == "Agreement") {
+            $scope.copyAccount.dmaAgreementOnBoardingId = $scope.agreementId;
+        }
+
+        $scope.copyAccount.hmFundId = $scope.FundId;
+        $scope.copyAccount.BrokerId = $scope.BrokerId;
+        $scope.copyAccount.onBoardingAccountSSITemplateMaps = [];
+        $scope.copyAccount.onBoardingAccountDocuments = [];
+        $scope.copyAccount.IsReceivingAccountType = $scope.accountType == "Agreement" && $.inArray($scope.agreementType, $scope.receivingAccountTypes) > -1;
+        if ($scope.copyAccount.IsReceivingAccountType || $scope.copyAccount.AuthorizedParty != "Hedgemark")
+            $scope.copyAccount.IsReceivingAccount = true;
+        else
+            $scope.copyAccount.IsReceivingAccount = false;
+        $timeout(function () {
+            $scope.onBoardingAccountDetails.push($scope.copyAccount);
+        }, 50);
     }
 
     $scope.$on("onRepeatLast", function (scope, element, attrs) {
@@ -374,8 +434,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (response.data.OnBoardingAccounts.length > 0)
                 $("#btnAccountStatusButtons").show();
             $scope.allAccountList = response.data.OnBoardingAccounts;
-
-
 
             if ($("#accountTable").hasClass("initialized")) {
                 accountTable.clear();
@@ -634,6 +692,25 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     });
 
 
+    $scope.fnAddAccountDetail = function () {
+        $scope.watchAccountDetails = [];
+        $scope.onBoardingAccountDetails = [];
+        $scope.fnPreloadAccountData().then($scope.fnInitPreLoadEvents());
+        $scope.isAuthorizedUserToApprove = false;
+        $scope.isEdit = false;
+        $("#accountModal").modal({
+            show: true,
+            keyboard: true
+        }).on("hidden.bs.modal", function () {
+
+            $scope.onBoardingAccountDetails = [];
+            $scope.accountDetail = {};
+
+            }).off("shown.bs.modal").on("shown.bs.modal", function () {
+            angular.element("#basicDetailCP").collapse("show");
+        });
+    }
+
     $scope.fnEditAccountDetails = function (rowElement) {
         $scope.watchAccountDetails = [];
         $scope.accountDetail = rowElement;
@@ -645,14 +722,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.counterpartyFamilyId = rowElement.BrokerId;
         $scope.AccountType = rowElement.AccountType;
         $scope.broker = rowElement.Broker;
-
+        $scope.isEdit = true;
         $scope.fundName = rowElement.FundName;
         $scope.isLoad = true;
         $http.get("/Accounts/GetOnBoardingAccount?accountId=" + $scope.onBoardingAccountId).then(function (response) {
             var account = response.data.OnBoardingAccount;
 
             console.log(account);
-            $(".accntActions button").hide();
+            //$(".accntActions button").hide();
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
             if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val())
                 $("#btnApprove").show();
@@ -696,7 +773,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             //var searchText = $('#accountListDiv input[type="search"]').val();
             //window.location.href = "/Accounts/Index?searchText=" + searchText;
 
-        }).off("shown.bs.modal").on("shown.bs.modal", function () {
+            }).off("shown.bs.modal").on("shown.bs.modal", function () {
+            angular.element("#basicDetailCP").collapse("hide");
             $scope.fnPreloadAccountData();
             $scope.fnInitPreLoadEvents();
         });
@@ -1662,7 +1740,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             $scope.fnGetAccountDescriptions(key);
             $scope.fnGetAccountModules(key);
-            $scope.fnLoadContactDetails($scope.BrokerId, value.ContactName, key);
+            if(value.OnboardingAccountId > 0)
+                $scope.fnLoadContactDetails($scope.BrokerId, value.ContactName, key);
             $scope.fnLoadDefaultDropDowns(key);
             $scope.fnGetAuthorizedParty(key);
             $scope.fnGetSwiftGroup(key);
@@ -1693,45 +1772,21 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.fnToggleBeneficiaryBICorABA(value.IntermediaryType, "Intermediary", key);
             $scope.fnToggleBeneficiaryBICorABA(value.UltimateBeneficiaryType, "UltimateBeneficiary", key);
 
-            //var contactEmailValue = "#contactEmail" + key;
-            //$(contactEmailValue).val(value.ContactEmail);        
-            //var contactNumberValue = "#contactNumber" + key;
-            //$(contactNumberValue).val(value.ContactNumber);
-            $("#btnPendingApproval").hide();
-            //$("#btnApprove").hide();
-            $("#btnRevert").hide();
-            $("#btnSave").hide();
             if (value.onBoardingAccountStatus == createdStatus) {
                 $("#spnAgrCurrentStatus").html("Saved as Draft");
                 $("#hmStatus").show();
-                //$("#btnPendingApproval").show();
-                ////$("#btnApprove").hide();
-                //$("#btnRevert").hide();
-                //$("#btnSave").show();
             }
             else if (value.onBoardingAccountStatus == pendingStatus && value.UpdatedBy != $("#userName").val()) {
                 $("#spnAgrCurrentStatus").html(value.onBoardingAccountStatus);
                 $("#hmStatus").show();
                 $("#spnAgrCurrentStatus").removeClass("text-default").removeClass("text-success").addClass("text-warning");
-                //$("#btnPendingApproval").hide();
-                ////$("#btnApprove").show();
-                //$("#btnRevert").hide();
-                //$("#btnSave").hide();
             }
             else if (value.onBoardingAccountStatus == approvedStatus) {
                 $("#spnAgrCurrentStatus").html(value.onBoardingAccountStatus);
                 $("#hmStatus").show();
                 $("#spnAgrCurrentStatus").parent().removeClass("text-default").removeClass("text-warning").addClass("text-success");
-                //$("#btnPendingApproval").hide();
-                ////$("#btnApprove").hide();
-                //$("#btnRevert").show();
-                //$("#btnSave").hide();
             } else {
                 $("#spnAgrCurrentStatus").html(value.onBoardingAccountStatus);
-                //$("#btnPendingApproval").hide();
-                ////$("#btnApprove").hide();
-                //$("#btnRevert").hide();
-                //$("#btnSave").show();
             }
             $scope.fnSsiTemplateMap(value.onBoardingAccountId, $scope.FundId, key, value.Currency);
             attachment(key);
@@ -1762,45 +1817,67 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.$watch('watchAccountDetails', function (val, oldVal) {
-        if (val == undefined || val.length == 0 || oldVal == undefined || oldVal.length == 0 || $scope.isLoad)
+        if (val == undefined || val.length == 0 || oldVal == undefined || oldVal.length == 0 || $scope.isLoad) {
+            $scope.isAccountChanged = false;
+            $scope.isApproved = false;
+            if ($("#spnAgrCurrentStatus").html() == "Saved as Draft" || !$scope.isEdit) {
+                $scope.isDrafted = true;
+            }
+            else if ($("#spnAgrCurrentStatus").html() == approvedStatus && $scope.isEdit) {
+                $scope.isDrafted = false;
+                $scope.isApproved = true;
+            }
             return;
+        }
 
         if (val[0].onBoardingAccountId == oldVal[0].onBoardingAccountId) {
-            $("#btnApprove").hide();
-            if ($("#spnAgrCurrentStatus").html() == "Saved as Draft") {
-
-                $("#btnPendingApproval").show();
-                //$("#btnApprove").hide();
-                $("#btnRevert").hide();
-                $("#btnSave").show();
+            $scope.isApproved = false;
+            $scope.isAccountChanged = true;
+            if ($("#spnAgrCurrentStatus").html() == "Saved as Draft" || !$scope.isEdit) {
+                $scope.isDrafted = true;
             }
-            else if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val()) {
-
-                $("#btnPendingApproval").hide();
-                //$("#btnApprove").show();
-                $("#btnRevert").show();
-                $("#btnSave").hide();
+            else if ($("#spnAgrCurrentStatus").html() == approvedStatus && $scope.isEdit) {
+                $scope.isDrafted = false;
+                $scope.isApproved = true;
             }
-            else if ($("#spnAgrCurrentStatus").html() == approvedStatus) {
-                if (val != oldVal) {
-                    $("#btnPendingApproval").hide();
-                    //$("#btnApprove").hide();
-                    $("#btnRevert").show();
-                    $("#btnSave").hide();
-                }
-                else {
-                    $("#btnPendingApproval").hide();
-                    //$("#btnApprove").hide();
-                    $("#btnRevert").hide();
-                    $("#btnSave").hide();
-                }
-            } else {
-                $("#btnPendingApproval").show();
-                //$("#btnApprove").hide();
-                $("#btnRevert").hide();
-                $("#btnSave").show();
-            }
+                
         }
+        //if (val[0].onBoardingAccountId == oldVal[0].onBoardingAccountId) {
+        //    $("#btnApprove").hide();
+        //    if ($("#spnAgrCurrentStatus").html() == "Saved as Draft") {
+
+        //        $("#btnPendingApproval").show();
+        //        //$("#btnApprove").hide();
+        //        $("#btnRevert").hide();
+        //        $("#btnSave").show();
+        //    }
+        //    else if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val()) {
+
+        //        $("#btnPendingApproval").hide();
+        //        //$("#btnApprove").show();
+        //        $("#btnRevert").show();
+        //        $("#btnSave").hide();
+        //    }
+        //    else if ($("#spnAgrCurrentStatus").html() == approvedStatus) {
+        //        if (val != oldVal) {
+        //            $("#btnPendingApproval").hide();
+        //            //$("#btnApprove").hide();
+        //            $("#btnRevert").show();
+        //            $("#btnSave").hide();
+        //        }
+        //        else {
+        //            $("#btnPendingApproval").hide();
+        //            //$("#btnApprove").hide();
+        //            $("#btnRevert").hide();
+        //            $("#btnSave").hide();
+        //        }
+        //    } else {
+        //        $("#btnPendingApproval").show();
+        //        //$("#btnApprove").hide();
+        //        $("#btnRevert").hide();
+        //        $("#btnSave").show();
+        //    }
+        //}
 
     }, true);
 
@@ -2100,7 +2177,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         var acc = $filter('filter')(angular.copy($scope.allAccountList), function (account) {
             return account.onBoardingAccountId != $scope.onBoardingAccountDetails[index].onBoardingAccountId &&
-                (isFFC ? account.FFCNumber == $scope.onBoardingAccountDetails[index].FFCNumber : account.AccountNumber == $scope.onBoardingAccountDetails[index].AccountNumber);
+                account.FFCNumber == $scope.onBoardingAccountDetails[index].FFCNumber && account.AccountNumber == $scope.onBoardingAccountDetails[index].AccountNumber;
         }, true)[0];
         if (acc == undefined) {
             $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].AccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
@@ -2110,7 +2187,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (isFFC)
                 $scope.onBoardingAccountDetails[index].FFCNumber = "";
             else
-                $scope.$scope.onBoardingAccountDetails[index].AccountNumber = "";
+                $scope.onBoardingAccountDetails[index].AccountNumber = "";
             notifyError("Please choose a different FFC Number or Account Number as an account exists with same information - " + accNo);
         }
     }
