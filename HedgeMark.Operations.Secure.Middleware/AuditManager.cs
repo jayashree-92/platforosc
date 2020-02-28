@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HedgeMark.Operations.Secure.DataModel;
 using System.Data.Entity.Migrations;
+using System.Reflection;
 using HMOSecureMiddleware.Models;
 
 namespace HMOSecureMiddleware
@@ -66,24 +67,117 @@ namespace HMOSecureMiddleware
                     }).ToList();
         }
 
+        public static readonly List<Type> QualifiedTypeToAudit = new List<Type> { typeof(string), typeof(short), typeof(short?), typeof(int), typeof(int?), typeof(long), typeof(long?), typeof(bool), typeof(bool?),
+            typeof(decimal), typeof(decimal?), typeof(float), typeof(float?), typeof(TimeSpan), typeof(TimeSpan?) };
+
+        public static List<hmsUserAuditLog> GetAuditLogs(onBoardingSSITemplate ssiTemplate, string accountType, string broker, string userName)
+        {
+            var nonUpdatedAccount = AccountManager.GetSsiTemplate(ssiTemplate.onBoardingSSITemplateId);
+
+            var propertyInfos = typeof(onBoardingSSITemplate).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(s => QualifiedTypeToAudit.Contains(s.PropertyType));
+            var isNewAccount = nonUpdatedAccount == null;
+
+            var list = (from propertyInfo in propertyInfos
+                        let propertyVal = (propertyInfo.GetValue(ssiTemplate, null) ?? string.Empty).ToString()
+                        let prevPropertyVal = isNewAccount ? string.Empty : (propertyInfo.GetValue(nonUpdatedAccount, null) ?? string.Empty).ToString()
+                        where !propertyVal.Equals(prevPropertyVal)
+                        select new hmsUserAuditLog
+                        {
+                            CreatedAt = DateTime.Now,
+                            UserName = userName,
+                            Module = "SSITemplate",
+                            PreviousStateValue = prevPropertyVal,
+                            ModifiedStateValue = propertyVal,
+                            Action = isNewAccount ? "Added" : "Edited",
+                            Field = propertyInfo.Name,
+                            Log = String.Format("Onboarding Name: <i>SSI Template</i><br/>SSI Template Name: <i>{0}</i>", ssiTemplate.TemplateName)
+                        }).ToList();
+
+
+            var auditLogList = new List<hmsUserAuditLog>();
+
+            if (isNewAccount)
+            {
+                if (!string.IsNullOrWhiteSpace(ssiTemplate.SSITemplateType))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "SSITemplate Type", "Added", "", ssiTemplate.SSITemplateType, userName));
+
+                if (!string.IsNullOrWhiteSpace(broker))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Broker", "Added", "", broker, userName));
+
+                if (!string.IsNullOrWhiteSpace(accountType))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("SSITemplate", ssiTemplate.TemplateName, "Account Type", "Added", "", accountType, userName));
+            }
+
+            auditLogList.AddRange(list);
+
+            return auditLogList;
+        }
+        public static List<hmsUserAuditLog> GetAuditLogs(onBoardingAccount account, string fundName, string agreement, string broker, string userName)
+        {
+            var nonUpdatedAccount = AccountManager.GetOnBoardingAccount(account.onBoardingAccountId);
+            var propertyInfos = typeof(onBoardingAccount).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(s => QualifiedTypeToAudit.Contains(s.PropertyType));
+            var isNewAccount = nonUpdatedAccount == null;
+
+            var list = (from propertyInfo in propertyInfos
+                        let propertyVal = (propertyInfo.GetValue(account, null) ?? string.Empty).ToString()
+                        let prevPropertyVal = isNewAccount ? string.Empty : (propertyInfo.GetValue(nonUpdatedAccount, null) ?? string.Empty).ToString()
+                        where !propertyVal.Equals(prevPropertyVal)
+                        select new hmsUserAuditLog
+                        {
+                            CreatedAt = DateTime.Now,
+                            UserName = userName,
+                            Module = "Account",
+                            PreviousStateValue = prevPropertyVal,
+                            ModifiedStateValue = propertyVal,
+                            Action = isNewAccount ? "Added" : "Edited",
+                            Field = propertyInfo.Name,
+                            Log = String.Format("Onboarding Name: <i>Account</i><br/>Account Name: <i>{0}</i>", account.AccountName)
+                        }).ToList();
+
+
+            var auditLogList = new List<hmsUserAuditLog>();
+
+            if (isNewAccount)
+            {
+                if (!string.IsNullOrWhiteSpace(fundName))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Fund",
+                        isNewAccount ? "Added" : "Edited", "", fundName, userName));
+
+                if (!string.IsNullOrWhiteSpace(agreement))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Agreement",
+                        isNewAccount ? "Added" : "Edited", "", agreement, userName));
+
+                if (!string.IsNullOrWhiteSpace(broker))
+                    auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Broker",
+                        isNewAccount ? "Added" : "Edited", "", broker, userName));
+
+            }
+
+            auditLogList.AddRange(list);
+
+            return auditLogList;
+        }
+
         public static hmsUserAuditLog BuildOnboardingAuditLog(string onboardingType, string onboardingName, string field, string action, string previousStateValue, string modifiedStateValue, string username)
         {
-            var auditLog = new hmsUserAuditLog();
+            var auditLog = new hmsUserAuditLog
+            {
+                CreatedAt = DateTime.Now,
+                UserName = username,
+                Module = onboardingType,
+                PreviousStateValue = previousStateValue,
+                ModifiedStateValue = modifiedStateValue,
+                Action = action,
+                Field = field
+            };
 
-            auditLog.CreatedAt = DateTime.Now;
-            auditLog.UserName = username;
-            auditLog.Module = onboardingType;
-            auditLog.PreviousStateValue = previousStateValue;
-            auditLog.ModifiedStateValue = modifiedStateValue;
-            auditLog.Action = action;
-            auditLog.Field = field;
             switch (onboardingType)
             {
                 case "Account":
-                    auditLog.Log = String.Format("Onboarding Name: <i>{0}</i><br/>Account Name: <i>{1}</i>", onboardingType, onboardingName);
+                    auditLog.Log = String.Format("Onboarding Name: <i>Account</i><br/>Account Name: <i>{0}</i>", onboardingName);
                     break;
                 case "SSITemplate":
-                    auditLog.Log = String.Format("Onboarding Name: <i>{0}</i><br/>SSI Template Name: <i>{1}</i>", onboardingType, onboardingName);
+                    auditLog.Log = String.Format("Onboarding Name: <i>SSITemplate</i><br/>SSI Template Name: <i>{0}</i>", onboardingName);
                     break;
 
             }
@@ -111,7 +205,6 @@ namespace HMOSecureMiddleware
 
         public static void LogAudit(hmsUserAuditLog auditLog)
         {
-
             using (var context = new OperationsSecureContext())
             {
                 context.hmsUserAuditLogs.AddOrUpdate(auditLog);

@@ -14,18 +14,23 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     // { id: "MT210", text: "MT210" }, { id: "MT540", text: "MT540" },{ id: "MT542", text: "MT542" }
     $scope.ssiTemplate.TemplateName = "";
     $scope.ssiTemplateDocuments = [];
-    var ssiDocumentTable;
+    var tblDocuments, tblAssociatedAccounts;
     var documentData = "\"FileName\": \"\",\"RecCreatedBy\": \"\",\"RecCreatedAt\": \"\"";
     $scope.beneficiaryType = [{ id: "BIC", text: "BIC" }, { id: "ABA", text: "ABA" }];
     $scope.ultimateBeneficiaryType = [{ id: "BIC", text: "BIC" }, { id: "ABA", text: "ABA" }, { id: "Account Name", text: "Account Name" }];
 
 
-    function viewAttachmentTable(data) {
+    $scope.fnConstructAssociatedAccountsTable = function (data) {
 
-        if ($("#documentTable").hasClass("initialized")) {
-            fnDestroyDataTable("#documentTable");
+    }
+
+
+    $scope.fnConstructDocumentTable = function (data) {
+
+        if ($("#tblDocuments").hasClass("initialized")) {
+            fnDestroyDataTable("#tblDocuments");
         }
-        ssiDocumentTable = $("#documentTable").not(".initialized").addClass("initialized").DataTable({
+        tblDocuments = $("#tblDocuments").not(".initialized").addClass("initialized").DataTable({
             "bDestroy": true,
             responsive: true,
             aaData: data,
@@ -67,10 +72,10 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             "order": [[2, "desc"]],
             "fnRowCallback": function (nRow, aData) {
                 if (aData.FileName != "") {
-                    $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/Accounts/DownloadSsiTemplateFile?fileName=" + getFormattedFileName(aData.FileName) + "&ssiTemplateId=" + ssiTemplateId + "'>" + aData.FileName + "</a>");
+                    $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/SSITemplate/DownloadSsiTemplateFile?fileName=" + getFormattedFileName(aData.FileName) + "&ssiTemplateId=" + ssiTemplateId + "'>" + aData.FileName + "</a>");
                 }
             },
-            "scrollY": $("#Attachment").offset().top + 300,
+            "scrollY": $("#panelAttachment").offset().top + 300,
             "oLanguage": {
                 "sSearch": "",
                 "sEmptyTable": "No files are available for the ssi templates",
@@ -78,19 +83,19 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             }
         });
         $timeout(function () {
-            $("#documentTable").dataTable().fnAdjustColumnSizing();
+            $("#tblDocuments").dataTable().fnAdjustColumnSizing();
             $scope.ssiTemplate.onBoardingSSITemplateDocuments = angular.copy(data);
         }, 100);
-        $("#documentTable tbody td:last-child button").on("click", function (event) {
+        $("#tblDocuments tbody td:last-child button").on("click", function (event) {
             event.preventDefault();
             var selectedRow = $(this).parents("tr");
-            var rowElement = ssiDocumentTable.row(selectedRow).data();
+            var rowElement = tblDocuments.row(selectedRow).data();
             bootbox.confirm("Are you sure you want to remove this document from ssi template?", function (result) {
                 if (!result) {
                     return;
                 } else {
-                    $http.post("/Accounts/RemoveSsiTemplateDocument", { fileName: rowElement.FileName, documentId: rowElement.onBoardingSSITemplateDocumentId }).then(function () {
-                        ssiDocumentTable.row(selectedRow).remove().draw();
+                    $http.post("/SSITemplate/RemoveSsiTemplateDocument", { documentId: rowElement.onBoardingSSITemplateDocumentId }).then(function () {
+                        tblDocuments.row(selectedRow).remove().draw();
                         $scope.ssiTemplateDocuments.pop(rowElement);
                         notifySuccess("Document removed succesfully");
                     });
@@ -103,7 +108,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.fnGetBankDetails = function (biCorAbaValue, id) {
         $timeout(function () {
             var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
-         
+
             switch (id) {
                 case "Beneficiary":
                     $scope.ssiTemplate.Beneficiary = {};
@@ -150,7 +155,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     accountBicorAbaData.push({ "id": value.BICorABA, "text": value.BICorABA });
                 });
 
-                accountBicorAbaData = $filter('orderBy')(accountBicorAbaData, 'text');
+                accountBicorAbaData = $filter("orderBy")(accountBicorAbaData, "text");
 
                 if ($("#liBeneficiaryBICorABA").data("select2")) {
                     $("#liBeneficiaryBICorABA").select2("destroy");
@@ -169,7 +174,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     intermediaryBicorAbaData.push({ "id": value.BICorABA, "text": value.BICorABA });
                 });
 
-                intermediaryBicorAbaData = $filter('orderBy')(intermediaryBicorAbaData, 'text');
+                intermediaryBicorAbaData = $filter("orderBy")(intermediaryBicorAbaData, "text");
 
                 if ($("#liIntermediaryBICorABA").data("select2")) {
                     $("#liIntermediaryBICorABA").select2("destroy");
@@ -206,7 +211,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     ultimateBicorAbaData.push({ "id": value.BICorABA, "text": value.BICorABA });
                 });
 
-                ultimateBicorAbaData = $filter('orderBy')(ultimateBicorAbaData, 'text');
+                ultimateBicorAbaData = $filter("orderBy")(ultimateBicorAbaData, "text");
 
                 if ($("#liUltimateBeneficiaryBICorABA").data("select2")) {
                     $("#liUltimateBeneficiaryBICorABA").select2("destroy");
@@ -230,7 +235,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 data: response.data.currencies
             });
 
-            if ($scope.ssiTemplate.Currency != null && $scope.ssiTemplate.Currency != 'undefined')
+            if ($scope.ssiTemplate.Currency != null && $scope.ssiTemplate.Currency != "undefined")
                 $("#liCurrency").select2("val", $scope.ssiTemplate.Currency);
         });
     }
@@ -242,21 +247,21 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
             if (isNew) {
                 var isAba = $scope.isBicorAba == true ? "ABA" : "BIC";
-                $scope.fnToggleBeneficiaryBICorABA(isAba, 'Beneficiary');
+                $scope.fnToggleBeneficiaryBICorABA(isAba, "Beneficiary");
                 $scope.ssiTemplate.BeneficiaryBICorABA = isAba;
                 $("#liBeneficiaryBICorABA").select2("val", isAba);
             } else {
                 if (ssiTemplateId !== 0 && ssiTemplateId !== "0") {
-                    $scope.fnToggleBeneficiaryBICorABA($scope.ssiTemplate.BeneficiaryType, 'Beneficiary');
-                    $scope.fnToggleBeneficiaryBICorABA($scope.ssiTemplate.IntermediaryType, 'Intermediary');
-                    $scope.fnToggleBeneficiaryBICorABA($scope.ssiTemplate.UltimateBeneficiaryType, 'UltimateBeneficiary');
+                    $scope.fnToggleBeneficiaryBICorABA($scope.ssiTemplate.BeneficiaryType, "Beneficiary");
+                    $scope.fnToggleBeneficiaryBICorABA($scope.ssiTemplate.IntermediaryType, "Intermediary");
+                    $scope.fnToggleBeneficiaryBICorABA($scope.ssiTemplate.UltimateBeneficiaryType, "UltimateBeneficiary");
                 }
             }
         });
     }
 
     $scope.fnBrokerList = function () {
-        $http.get("/Accounts/GetSsiTemplatePreloadData").then(function (response) {
+        $http.get("/SSITemplate/GetSsiTemplatePreloadData").then(function (response) {
             $scope.counterparties = response.data.counterParties;
             $scope.ssiTemplates = response.data.templates;
             $scope.AccountTypes = response.data.accountTypes;
@@ -369,7 +374,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     });
     $scope.isLoad = false;
     if (ssiTemplateId !== 0 && ssiTemplateId !== "0") {
-        $http.get("/Accounts/GetSsiTemplate?templateId=" + ssiTemplateId).then(function (response) {
+        $http.get("/SSITemplate/GetSsiTemplate?templateId=" + ssiTemplateId).then(function (response) {
             $scope.ssiTemplateId = ssiTemplateId;
             $scope.fnBrokerList();
             $scope.isLoad = true;
@@ -382,7 +387,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             // $scope.SSITemplateType = $scope.ssiTemplate.SSITemplateType;
             $scope.ssiTemplate.CreatedAt = moment($scope.ssiTemplate.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             if ($scope.ssiTemplate.SSITemplateType == "Broker") {
-                var templateList = $scope.ssiTemplate.TemplateName.split('-');
+                var templateList = $scope.ssiTemplate.TemplateName.split("-");
                 $scope.broker = templateList[0].trim();
                 $scope.accountType = templateList[1].trim();
                 $scope.currency = templateList[2].trim();
@@ -399,7 +404,9 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 $scope.ssiTemplateDocuments = JSON.parse("{" + documentData + "}");
             }
 
-            viewAttachmentTable($scope.ssiTemplateDocuments);
+            $scope.fnConstructDocumentTable($scope.ssiTemplateDocuments);
+
+            $scope.fnConstructAssociatedAccountsTable($scope.ssiTemplateDocuments);
 
             if ($scope.ssiTemplateDocuments.length > 0 && $scope.ssiTemplate.SSITemplateStatus == "Approved") {
                 $(".dz-hidden-input").prop("disabled", true);
@@ -418,10 +425,10 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     } else {
         $scope.ssiTemplateId = ssiTemplateId;
         $scope.fnBrokerList();
-        viewAttachmentTable(JSON.parse("{" + documentData + "}"));
+        $scope.fnConstructDocumentTable(JSON.parse("{" + documentData + "}"));
     }
 
-    $scope.$watch('watchSSITemplate', function (val, oldVal) {
+    $scope.$watch("watchSSITemplate", function (val, oldVal) {
 
         if (val == undefined && oldVal == undefined || $scope.isLoad)
             $scope.isSSITemplateChanged = false;
@@ -443,7 +450,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $scope.fnLoadServiceProvider = function () {
-        return $http.get("/Accounts/GetAllServiceProviderList").then(function (response) {
+        return $http.get("/SSITemplate/GetAllServiceProviderList").then(function (response) {
             $scope.serviceProviders = response.data;
             $("#liServiceProvider").select2({
                 placeholder: "Select Service Provider",
@@ -457,7 +464,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $scope.fnPaymentOrReceiptReason = function () {
         if ($("#liAccountType").val() > 0 || $("#liServiceProvider").val() != null) {
-            $http.get("/Accounts/PaymentOrReceiptReasonDetails?templateType=" + $("#liSSITemplateType").val() + "&agreementTypeId=" + $("#liAccountType").val() + "&serviceProviderName=" + encodeURIComponent($("#liServiceProvider").val())).then(function (response) {
+            $http.get("/SSITemplate/PaymentOrReceiptReasonDetails?templateType=" + $("#liSSITemplateType").val() + "&agreementTypeId=" + $("#liAccountType").val() + "&serviceProviderName=" + encodeURIComponent($("#liServiceProvider").val())).then(function (response) {
                 $scope.SSIPaymentReasons = response.data;
                 $scope.SSIPaymentReasons.push({ id: "Other", text: "Other" });
                 $("#liReasonDetail").select2({
@@ -471,7 +478,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $scope.fnAddSSITemplateDetail = function (panelIndex) {
-        if ($('#txtDescription').val() == undefined || $('#txtDescription').val() == "") {
+        if ($("#txtDescription").val() == undefined || $("#txtDescription").val() == "") {
             //pop-up    
             $("#txtDescription").popover({
                 placement: "right",
@@ -489,10 +496,10 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         $("#txtDescription").popover("hide");
         var isExists = false;
         if ($scope.detail == "Reason") {
-            isExists = $filter('filter')($scope.SSIPaymentReasons, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
+            isExists = $filter("filter")($scope.SSIPaymentReasons, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
         }
         else {
-            isExists = $filter('filter')($scope.serviceProviders, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
+            isExists = $filter("filter")($scope.serviceProviders, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
         }
 
         if (isExists) {
@@ -510,7 +517,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         }
         //PaymentOrReceiptReasonDetails?templateType=" + $("#liSSITemplateType").val() + "&agreementTypeId=" + $("#liAccountType").val() + "&serviceProviderName=" + $("#liServiceProvider").val()
         if ($scope.detail == "Reason") {
-            $http.post("/Accounts/AddPaymentOrReceiptReasonDetails", { reason: $('#txtDescription').val(), templateType: $('#liSSITemplateType').val(), agreementTypeId: $("#liAccountType").val(), serviceProviderName: $("#liServiceProvider").val() }).then(function (response) {
+            $http.post("/SSITemplate/AddPaymentOrReceiptReasonDetails", { reason: $("#txtDescription").val(), templateType: $("#liSSITemplateType").val(), agreementTypeId: $("#liAccountType").val(), serviceProviderName: $("#liServiceProvider").val() }).then(function (response) {
                 notifySuccess("Reason added successfully");
                 $scope.fnPaymentOrReceiptReason();
                 $("#liReasonDetail").val($("#txtDescription").val());
@@ -518,11 +525,11 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             });
         }
         else {
-            $http.post("/Accounts/AddServiceProvider", { serviceProviderName: $('#txtDescription').val() }).then(function (response) {
+            $http.post("/SSITemplate/AddServiceProvider", { serviceProviderName: $("#txtDescription").val() }).then(function (response) {
                 notifySuccess("Service Provider added successfully");
                 $scope.fnLoadServiceProvider().then(function () {
-                    var provider = $filter('filter')($scope.serviceProviders, { 'text': $('#txtDescription').val() }, true)[0];
-                    $("#liServiceProvider").select2('val', provider.id).trigger('change');
+                    var provider = $filter("filter")($scope.serviceProviders, { 'text': $("#txtDescription").val() }, true)[0];
+                    $("#liServiceProvider").select2("val", provider.id).trigger("change");
                 });
                 //$scope.onBoardingAccountDetails[panelIndex].Description = $('#txtDescription').val();  
             });
@@ -536,11 +543,11 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         //$scope.scrollPosition = $(window).scrollTop();
         //$("#txtGoverningLaw").prop("placeholder", "Enter a governing law");
         $scope.detail = detail;
-        $('#ssiTemplateDetailModal').modal({
+        $("#ssiTemplateDetailModal").modal({
             show: true,
             keyboard: true
         }).on("hidden.bs.modal", function () {
-            $("#txtDescription").popover("hide").val('');
+            $("#txtDescription").popover("hide").val("");
             // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
         });
     }
@@ -755,14 +762,14 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         $scope.ssiTemplate.UltimateBeneficiaryBankName = $("#ultimateBankName").val();
         $scope.ssiTemplate.UltimateBeneficiaryBankAddress = $("#ultimateBankAddress").val();
 
-        return $http.post("/Accounts/AddSsiTemplate", { ssiTemplate: $scope.ssiTemplate, accountType: $scope.accountType, broker: $scope.broker }).then(function (response) {
+        return $http.post("/SSITemplate/AddSsiTemplate", { ssiTemplate: $scope.ssiTemplate, accountType: $scope.accountType, broker: $scope.broker }).then(function (response) {
 
             //window.location.href = "/OnBoarding/SSITemplateList";
             ssiTemplateId = response.data;
 
             if (isNewTemplate) {
                 notifySuccess("SSI template saved successfully");
-                window.location.href = "/Accounts/SSITemplate?ssiTemplateId=" + ssiTemplateId;
+                window.location.href = "/SSITemplate/SSITemplate?ssiTemplateId=" + ssiTemplateId;
             }
             $(".glyphicon-refresh").removeClass("icon-rotate");
         });
@@ -807,8 +814,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $scope.fnBack = function () {
         var searchText = getUrlParameter("searchText");
-        searchText = (searchText == undefined || searchText == 'undefined') ? "" : searchText;
-        window.location.href = "/Accounts/SSITemplateList?searchText=" + searchText;
+        searchText = (searchText == undefined || searchText == "undefined") ? "" : searchText;
+        window.location.href = "/SSITemplate/SSITemplateList?searchText=" + searchText;
     }
 
     //Update SSI Template Status
@@ -854,15 +861,15 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.fnSaveSSITemplateStatus = function () {
 
         $q.all([$scope.fnUpdateSSITemplate(false)]).then(function () {
-            $http.post("/Accounts/UpdateSsiTemplateStatus", { ssiTemplateStatus: $scope.SSITemplateStatus, ssiTemplateId: $scope.ssiTemplateId, comments: $("#ssiTemplateCommentTextArea").val().trim() }).then(function () {
+            $http.post("/SSITemplate/UpdateSsiTemplateStatus", { ssiTemplateStatus: $scope.SSITemplateStatus, ssiTemplateId: $scope.ssiTemplateId, comments: $("#ssiTemplateCommentTextArea").val().trim() }).then(function () {
                 notifySuccess("SSI template " + $scope.SSITemplateStatus.toLowerCase() + " successfully");
                 //notifySuccess("SSI template saved successfully");
                 if ($scope.SSITemplateStatus == "Saved As Draft") {
                     $scope.ssiTemplate.SSITemplateStatus = angular.copy($scope.SSITemplateStatus);
                 } else {
                     var searchText = getUrlParameter("searchText");
-                    searchText = (searchText == undefined || searchText == 'undefined') ? "" : searchText;
-                    window.location.href = "/Accounts/SSITemplateList?searchText=" + searchText;
+                    searchText = (searchText == undefined || searchText == "undefined") ? "" : searchText;
+                    window.location.href = "/SSITemplate/SSITemplateList?searchText=" + searchText;
                 }
             })
         });
@@ -884,7 +891,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             .toggleClass("glyphicon-chevron-down glyphicon-chevron-up");
         $("html, body").animate({ scrollTop: $(e.target).offset().top - 5 }, "slow");
     }
-    $("#Attachment .panel-heading").on("click", function (e) {
+    $("#panelAttachment .panel-heading").on("click", function (e) {
         $(this).parent().find("div.collapse").collapse("toggle");
         toggleChevron(e);
     });
@@ -894,16 +901,16 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         toggleChevron(e);
     });
 
-    $("#Attachment .panel").css({
+    $("#panelAttachment .panel").css({
         "padding-top": "20px;"
     });
 
-    $("#Attachment .panel-heading").css({
+    $("#panelAttachment .panel-heading").css({
         "cursor": "pointer"
     });
 
     $("#uploadSSIFiles").dropzone({
-        url: "/Accounts/UploadSsiTemplateFiles?ssiTemplateId=" + ssiTemplateId,
+        url: "/SSITemplate/UploadSsiTemplateFiles?ssiTemplateId=" + ssiTemplateId,
         dictDefaultMessage: "<span style='font-size:20px;font-weight:normal;font-style:italic'>Drag/Drop SSI documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
         autoDiscover: false,
         acceptedFiles: ".msg,.csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
@@ -920,7 +927,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         init: function () {
             var myDropZone = this;
             this.on("processing", function (file) {
-                this.options.url = "/Accounts/UploadSsiTemplateFiles?ssiTemplateId=" + ssiTemplateId;
+                this.options.url = "/SSITemplate/UploadSsiTemplateFiles?ssiTemplateId=" + ssiTemplateId;
             });
         },
         processing: function (file, result) {
@@ -939,7 +946,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     $scope.ssiTemplateDocuments.push(value);
                 });
 
-                viewAttachmentTable($scope.ssiTemplateDocuments);
+                $scope.fnConstructDocumentTable($scope.ssiTemplateDocuments);
             }
         },
         queuecomplete: function () {
@@ -969,7 +976,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     //}
     $(".form-control").change(function () {
-        if ($scope.ssiTemplate.SSITemplateStatus == 'Pending Approval')
+        if ($scope.ssiTemplate.SSITemplateStatus == "Pending Approval")
             $("#approve").hide();
     });
 

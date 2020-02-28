@@ -131,6 +131,7 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
+        protected const string DefaultExportFileFormat = ".xlsx";
 
         protected static readonly string JsonContentType = "application/json";
         protected static readonly Encoding JsonContentEncoding = Encoding.UTF8;

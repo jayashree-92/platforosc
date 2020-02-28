@@ -12,7 +12,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
     $("#btnSSITemplateStatusButtons button").addClass("disabled");
     $("#btnUploadSource").removeClass("disabled");
     $scope.fnGetSSITemplates = function () {
-        $http.get("/Accounts/GetAllBrokerSsiTemplates").then(function (response) {
+        $http.get("/SSITemplate/GetAllBrokerSsiTemplates").then(function (response) {
 
             if (response.data.BrokerSsiTemplates.length > 0)
                 $("#btnSSITemplateStatusButtons").show();
@@ -207,7 +207,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         // $("#btnSSITemplateStatusButtons button").addClass("disabled");
         $("#btnEdit").prop("disabled", false);
 
-        $http.get("/Accounts/IsSsiTemplateDocumentExists?ssiTemplateId=" + $scope.onBoardingSSITemplateId).then(function (response) {
+        $http.get("/SSITemplate/IsSsiTemplateDocumentExists?ssiTemplateId=" + $scope.onBoardingSSITemplateId).then(function (response) {
             $scope.isExistsDocument = response.data;
         });
 
@@ -222,9 +222,9 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         var rowElement = ssiTemplateTable.row(this).data();
         $scope.onBoardingSSITemplateId = rowElement.onBoardingSSITemplateId;
         var searchText = $('#ssiTemplateListDiv input[type="search"]').val();
-        var ssiListUrl = "/Accounts/SSITemplateList?searchText=" + searchText;
+        var ssiListUrl = "/SSITemplate/SSITemplateList?searchText=" + searchText;
         window.history.pushState("", "", ssiListUrl);
-        window.location.assign("/Accounts/SSITemplate?ssiTemplateId=" + $scope.onBoardingSSITemplateId + "&searchText=" + searchText);
+        window.location.assign("/SSITemplate/SSITemplate?ssiTemplateId=" + $scope.onBoardingSSITemplateId + "&searchText=" + searchText);
     });
 
     //SSITemplate buttons approve,pending and revert
@@ -259,9 +259,9 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
     }
 
     $scope.fnSaveSSITemplateStatus = function () {
-        $http.post("/Accounts/UpdateSsiTemplateStatus", { ssiTemplateStatus: $scope.SSITemplateStatus, ssiTemplateId: $scope.onBoardingSSITemplateId, comments: $("#ssiTemplateCommentTextArea").val().trim() }).then(function () {
+        $http.post("/SSITemplate/UpdateSsiTemplateStatus", { ssiTemplateStatus: $scope.SSITemplateStatus, ssiTemplateId: $scope.onBoardingSSITemplateId, comments: $("#ssiTemplateCommentTextArea").val().trim() }).then(function () {
             notifySuccess("SSI template " + $scope.SSITemplateStatus.toLowerCase() + " successfully");
-            window.location.href = "/Accounts/SSITemplateList";
+            window.location.href = "/SSITemplate/SSITemplateList";
         });
         $("#btnSendApproval").hide();
         $("#updateSSITemplateModal").modal("hide");
@@ -273,13 +273,13 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
 
     $scope.fnEditSSITemplate = function () {
         var searchText = $('#ssiTemplateListDiv input[type="search"]').val();
-        var ssiListUrl = "/Accounts/SSITemplateList?searchText=" + searchText;
+        var ssiListUrl = "/SSITemplate/SSITemplateList?searchText=" + searchText;
         window.history.pushState("", "", ssiListUrl);
-        window.location.assign("/Accounts/SSITemplate?ssiTemplateId=" + $scope.onBoardingSSITemplateId + "&searchText=" + searchText);
+        window.location.assign("/SSITemplate/SSITemplate?ssiTemplateId=" + $scope.onBoardingSSITemplateId + "&searchText=" + searchText);
     }
 
     $scope.fnCreateSSITemplate = function () {
-        window.location.assign("/Accounts/SSITemplate");
+        window.location.assign("/SSITemplate/SSITemplate");
     }
 
     $scope.fnDeleteSSITemplate = function () {
@@ -288,7 +288,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                      label: "Delete",
                      className: "btn btn-sm btn-danger",
                      callback: function () {
-                         $http.post("/Accounts/DeleteSsiTemplate", { ssiTemplateId: $scope.onBoardingSSITemplateId }).then(function () {
+                         $http.post("/SSITemplate/DeleteSsiTemplate", { ssiTemplateId: $scope.onBoardingSSITemplateId }).then(function () {
                              ssiTemplateTable.row(".info").remove().draw();
                              notifySuccess("Delete successfull");
                              $scope.onBoardingAccountId = 0;
@@ -306,20 +306,20 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
 
     //Export all Accounts
     $scope.fnExportAllSSITemplate = function () {
-        window.location.assign("/Accounts/ExportAllSsiTemplatelist");
+        window.location.assign("/SSITemplate/ExportAllSsiTemplatelist");
     }
 
     $scope.fnGetSSITemplates();
 
     $scope.downloadSSITemplateSample = function () {
-        window.location.href = "/Accounts/ExportSampleSsiTemplatelist";
+        window.location.href = "/SSITemplate/ExportSampleSsiTemplatelist";
     }
 
     Dropzone.options.myAwesomeDropzone = false;
     Dropzone.autoDiscover = false;
 
     $("#uploadFiles").dropzone({
-        url: "/Accounts/UploadSsiTemplate",
+        url: "/SSITemplate/UploadSsiTemplate",
         dictDefaultMessage: "<span>Drag/Drop SSI template files to add/update here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
         autoDiscover: false,
         acceptedFiles: ".csv,.xls,.xlsx",
@@ -336,7 +336,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         init: function () {
 
             this.on("processing", function (file) {
-                this.options.url = "/Accounts/UploadSsiTemplate";
+                this.options.url = "/SSITemplate/UploadSsiTemplate";
             });
         },
         processing: function (file, result) {
