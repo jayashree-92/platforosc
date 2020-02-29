@@ -420,6 +420,8 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
                 var ssiTemplate = context.onBoardingSSITemplates
                     .Include(s => s.Beneficiary)
                     .Include(s => s.Intermediary)
@@ -458,7 +460,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                var ssiTemplateMap = context.onBoardingAccountSSITemplateMaps.FirstOrDefault(x => x.onBoardingAccountSSITemplateMapId == ssiTemplateMapId);
+                var ssiTemplateMap = context.onBoardingAccountSSITemplateMaps.First(x => x.onBoardingAccountSSITemplateMapId == ssiTemplateMapId);
                 context.onBoardingAccountSSITemplateMaps.Remove(ssiTemplateMap);
                 context.SaveChanges();
             }
