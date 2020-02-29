@@ -21,6 +21,112 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
 
     $scope.fnConstructAssociatedAccountsTable = function (data) {
+        if ($("#tblAssociatedAccounts").hasClass("initialized")) {
+            fnDestroyDataTable("#tblAssociatedAccounts");
+        }
+        tblAssociatedAccounts = $("#tblAssociatedAccounts").DataTable({
+            aaData: data,
+            "bDestroy": true,
+            "columns": [
+                { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
+                { "mData": "dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
+                { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
+                { "mData": "BrokerId", "sTitle": "BrokerId", visible: false },
+                {
+                    "mData": "AccountType", "sTitle": "Entity Type",
+                    "mRender": function (tdata) {
+                        if (tdata != null && tdata != "undefinied") {
+                            switch (tdata) {
+                                case "Agreement": return "<label class='label label-success'>" + tdata + "</label>";
+                                case "DDA": return "<label class='label label-warning'>" + tdata + "</label>";
+                                case "Custody": return "<label class='label label-info'>" + tdata + "</label>";
+                            }
+                            return "<label class='label label-default'>" + tdata + "</label>";
+                        }
+                        return "";
+                    }
+                },
+                {
+                    "mData": "FundName", "sTitle": "Fund Name"
+                },
+                { "mData": "AgreementName", "sTitle": "Agreement Name" },
+                { "mData": "Broker", "sTitle": "Broker" },
+                { "mData": "AccountNumber", "sTitle": "Account Number" },
+                {
+                    "mData": "onBoardingAccountStatus", "sTitle": "Account Status",
+                    "mRender": function (tdata) {
+                        if (tdata != null && tdata != "undefined") {
+                            switch (tdata) {
+                                case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
+                                case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
+                                case "Created": return "<label class='label label-default'>" + "Saved As Draft" + "</label>";
+                            }
+                            return "<label class='label label-default'>" + tdata + "</label>";
+                        }
+                        return "";
+                    }
+                },
+                {
+                    "mData": "CreatedBy", "sTitle": "Created By", "mRender": function (data) {
+                        return humanizeEmail(data);
+                    }
+                },
+                {
+                    "mData": "CreatedAt",
+                    "sTitle": "Created Date",
+                    "type": "dotnet-date",
+                    "mRender": function (tdata) {
+                        return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                    }
+                },
+                {
+                    "mData": "UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
+                        return humanizeEmail(data);
+                    }
+                },
+                {
+                    "mData": "UpdatedAt",
+                    "sTitle": "Last Modified",
+                    "type": "dotnet-date",
+                    "mRender": function (tdata) {
+                        return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                    }
+                }
+            ],
+            "oLanguage": {
+                "sSearch": "",
+                "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Onboarded Accounts",
+                "sInfoFiltered": " - filtering from _MAX_ Onboarded Accounts"
+            },
+            "createdRow": function (row, data) {
+                switch (data.onBoardingAccountStatus) {
+                    case "Approved":
+                        $(row).addClass("success");
+                        break;
+                    case "Pending Approval":
+                        $(row).addClass("warning");
+                        break;
+                }
+
+            },
+            //"scrollX": false,
+            "deferRender": true,
+            // "scroller": true,
+            "orderClasses": false,
+            "sScrollX": "100%",
+            //sDom: "ift",
+            "sScrollY": 450,
+            "sScrollXInner": "100%",
+            "bScrollCollapse": true,
+            "order": [[14, "desc"]],
+            //"bPaginate": false,
+            iDisplayLength: -1
+        });
+
+
+        window.setTimeout(function () {
+            tblAssociatedAccounts.columns.adjust().draw(true);
+        }, 50);
 
     }
 
@@ -406,7 +512,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
             $scope.fnConstructDocumentTable($scope.ssiTemplateDocuments);
 
-            $scope.fnConstructAssociatedAccountsTable($scope.ssiTemplateDocuments);
+            //$scope.fnConstructAssociatedAccountsTable($scope.associatedAccounts);
 
             if ($scope.ssiTemplateDocuments.length > 0 && $scope.ssiTemplate.SSITemplateStatus == "Approved") {
                 $(".dz-hidden-input").prop("disabled", true);

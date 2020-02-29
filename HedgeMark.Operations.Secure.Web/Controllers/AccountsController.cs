@@ -385,6 +385,9 @@ namespace HMOSecureWeb.Controllers
 
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
 
+            if (string.IsNullOrWhiteSpace(messages))
+                messages = string.Empty;
+
             var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds, messages.Split(',').ToList(), false, currency);
 
             ssiTemplateMaps.ForEach(x => x.onBoardingSSITemplate = null);
@@ -1069,6 +1072,7 @@ namespace HMOSecureWeb.Controllers
                         var beneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.BeneficiaryType == "ABA") && x.BICorABA == accountDetail.Beneficiary.BICorABA);
                         if (beneficiaryBiCorAba != null)
                         {
+                            accountDetail.Beneficiary.onBoardingAccountBICorABAId = beneficiaryBiCorAba.onBoardingAccountBICorABAId;
                             accountDetail.Beneficiary.BankName = beneficiaryBiCorAba.BankName;
                             accountDetail.Beneficiary.BankAddress = beneficiaryBiCorAba.BankAddress;
                         }
@@ -1086,6 +1090,7 @@ namespace HMOSecureWeb.Controllers
                         var intermediaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.IntermediaryType == "ABA") && x.BICorABA == accountDetail.Intermediary.BICorABA);
                         if (intermediaryBiCorAba != null)
                         {
+                            accountDetail.Intermediary.onBoardingAccountBICorABAId = intermediaryBiCorAba.onBoardingAccountBICorABAId;
                             accountDetail.Intermediary.BankName = intermediaryBiCorAba.BankName;
                             accountDetail.Intermediary.BankAddress = intermediaryBiCorAba.BankAddress;
                         }
@@ -1104,6 +1109,7 @@ namespace HMOSecureWeb.Controllers
                         var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == accountDetail.UltimateBeneficiary.BICorABA);
                         if (ultimateBeneficiaryBiCorAba != null && accountDetail.UltimateBeneficiaryType != "Account Name")
                         {
+                            accountDetail.UltimateBeneficiary.onBoardingAccountBICorABAId = ultimateBeneficiaryBiCorAba.onBoardingAccountBICorABAId;
                             accountDetail.UltimateBeneficiary.BankName = ultimateBeneficiaryBiCorAba.BankName;
                             accountDetail.UltimateBeneficiary.BankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
                             accountDetail.UltimateBeneficiaryAccountName = string.Empty;
@@ -1277,6 +1283,7 @@ namespace HMOSecureWeb.Controllers
                         var beneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.BeneficiaryType == "ABA") && x.BICorABA == templateDetail.Beneficiary.BICorABA);
                         if (beneficiaryBiCorAba != null)
                         {
+                            templateDetail.Beneficiary.onBoardingAccountBICorABAId = beneficiaryBiCorAba.onBoardingAccountBICorABAId;
                             templateDetail.Beneficiary.BankName = beneficiaryBiCorAba.BankName;
                             templateDetail.Beneficiary.BankAddress = beneficiaryBiCorAba.BankAddress;
                         }
@@ -1294,6 +1301,7 @@ namespace HMOSecureWeb.Controllers
                         var intermediaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.IntermediaryType == "ABA") && x.BICorABA == templateDetail.Intermediary.BICorABA);
                         if (intermediaryBiCorAba != null)
                         {
+                            templateDetail.Intermediary.onBoardingAccountBICorABAId = intermediaryBiCorAba.onBoardingAccountBICorABAId;
                             templateDetail.Intermediary.BankName = intermediaryBiCorAba.BankName;
                             templateDetail.Intermediary.BankAddress = intermediaryBiCorAba.BankAddress;
                         }
@@ -1313,6 +1321,7 @@ namespace HMOSecureWeb.Controllers
                         var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (templateDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == templateDetail.UltimateBeneficiary.BICorABA);
                         if (ultimateBeneficiaryBiCorAba != null && templateDetail.UltimateBeneficiaryType != "Account Name")
                         {
+                            templateDetail.UltimateBeneficiary.onBoardingAccountBICorABAId = ultimateBeneficiaryBiCorAba.onBoardingAccountBICorABAId;
                             templateDetail.UltimateBeneficiary.BankName = ultimateBeneficiaryBiCorAba.BankName;
                             templateDetail.UltimateBeneficiary.BankAddress = ultimateBeneficiaryBiCorAba.BankAddress;
                             templateDetail.UltimateBeneficiaryAccountName = string.Empty;

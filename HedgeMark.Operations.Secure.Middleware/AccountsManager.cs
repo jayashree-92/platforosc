@@ -420,9 +420,14 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                var ssiTemplate = context.onBoardingSSITemplates.Include(s => s.Beneficiary).Include(s => s.Intermediary).Include(s => s.UltimateBeneficiary).Include(x => x.onBoardingSSITemplateDocuments).First(template => template.onBoardingSSITemplateId == templateId);
+                var ssiTemplate = context.onBoardingSSITemplates
+                    .Include(s => s.Beneficiary)
+                    .Include(s => s.Intermediary)
+                    .Include(s => s.UltimateBeneficiary)
+                    .Include(x => x.onBoardingSSITemplateDocuments)
+                    .Include(x => x.onBoardingAccountSSITemplateMaps)
+                    .First(template => template.onBoardingSSITemplateId == templateId);
+
                 if (ssiTemplate.Beneficiary == null)
                     ssiTemplate.Beneficiary = new onBoardingAccountBICorABA();
                 if (ssiTemplate.Intermediary == null)
@@ -658,7 +663,7 @@ namespace HMOSecureMiddleware
                 return (document != null);
             }
         }
-     
+
         #endregion
     }
 }

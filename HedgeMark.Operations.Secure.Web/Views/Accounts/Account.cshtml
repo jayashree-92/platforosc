@@ -23,7 +23,7 @@
                                         <span class="col-sm-4 col-md-3 col-lg-3">
                                             <label class="control-label">Entity Type <span style="color: red">  *</span></label>
                                         </span>
-                                        <span class="col-sm-8 col-md-8 col-lg-8 liAgreement">
+                                        <span class="col-sm-8 col-md-8 col-lg-8">
                                             <input name="Account Type" type="text" class="form-control" id="liAccountType" required />
                                         </span>
                                     </span>
@@ -31,7 +31,7 @@
                                         <span class="col-sm-4 col-md-3 col-lg-3">
                                             <label class="control-label">Fund <span style="color: red">  *</span></label>
                                         </span>
-                                        <span class="col-sm-8 col-md-8 col-lg-8 liAgreement">
+                                        <span class="col-sm-8 col-md-8 col-lg-8">
                                             <input name="Fund" type="text" class="form-control" id="liFund" required />
                                         </span>
                                     </span>
@@ -39,7 +39,7 @@
                                         <span class="col-sm-4 col-md-3 col-lg-3">
                                             <label class="control-label">Broker <span style="color: red">  *</span></label>
                                         </span>
-                                        <span class="col-sm-8 col-md-8 col-lg-8 liAgreement">
+                                        <span class="col-sm-8 col-md-8 col-lg-8">
                                             <input name="Broker" type="text" class="form-control" id="liBroker" required />
                                         </span>
                                     </span>
@@ -47,7 +47,7 @@
                                         <span class="col-sm-4 col-md-3 col-lg-3">
                                             <label class="control-label">Agreement <span style="color: red">  *</span></label>
                                         </span>
-                                        <span class="col-sm-8 col-md-8 col-lg-8 liAgreement">
+                                        <span class="col-sm-8 col-md-8 col-lg-8">
                                             <input name="Agreement" type="text" class="form-control" id="liAgreement" required />
                                         </span>
                                     </span>
@@ -74,7 +74,7 @@
                                     <span class="control-label">{{accountDetail.AccountName}}</span>
                                     <span class="pull-right">
                                         <a class="btn btn-sm btn-danger" ng-click="fnRemoveAccountDetail(accountDetail)" style="display: none;"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete</a>
-                                        &nbsp;&nbsp;<i class="indicator glyphicon glyphicon-chevron-down"></i>
+                                        &nbsp;&nbsp;<i class="glyphicon glyphicon-chevron-down"></i>
                                     </span>
                                 </h4>
                             </div>
@@ -281,7 +281,7 @@
                                                     <label class="control-label">Holdback Amount</label>
                                                 </div>
                                                 <div class="col-sm-8 col-md-5 col-lg-5">
-                                                    <input type="text" class="form-control txtHoldbackAmount" ng-model="accountDetail.HoldbackAmount" />
+                                                    <input type="text" class="form-control" ng-model="accountDetail.HoldbackAmount" />
                                                 </div>
                                             </div>
                                         </div>
@@ -402,13 +402,13 @@
                                         <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
                                             <label for="liBeneficiaryType{{$index}}" class="control-label" style="margin-left: 15px;">Type:</label>
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft paddingright AdjustDropDownWidth">
+                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
                                             <input type="text" class="form-control" ng-model="accountDetail.IntermediaryType" id="liIntermediaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.IntermediaryType,'Intermediary',$index)" />
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft paddingright AdjustDropDownWidth">
+                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
                                             <input name="Beneficiary Type" type="text" class="form-control" ng-model="accountDetail.BeneficiaryType" id="liBeneficiaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.BeneficiaryType,'Beneficiary',$index)" required />
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft paddingright AdjustDropDownWidth">
+                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
                                             <input type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryType" id="liUltimateBeneficiaryType{{$index}}" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.UltimateBeneficiaryType,'UltimateBeneficiary',$index)" />
                                         </div>
                                     </div>
@@ -419,13 +419,13 @@
                                             <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
                                             <a class="btn btn-sm btn-info" ng-click="fnAddBeneficiaryModal($index)" title="Add Beneficiary"><i class="glyphicon glyphicon-plus"></i></a>
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft paddingright AdjustDropDownWidth">
+                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
                                             <input type="text" ng-model="accountDetail.Intermediary.BICorABA" class="form-control control-label" id="liIntermediaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.Intermediary.BICorABA,'Intermediary',$index)" />
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft paddingright AdjustDropDownWidth">
+                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
                                             <input name="Beneficiary ABA/BIC" type="text" ng-model="accountDetail.Beneficiary.BICorABA" class="form-control control-label" id="liBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.Beneficiary.BICorABA,'Beneficiary',$index)" required />
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft paddingright AdjustDropDownWidth" id="divUltimateBeneficiaryBICorABA{{$index}}">
+                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth" id="divUltimateBeneficiaryBICorABA{{$index}}">
                                             <input type="text" ng-model="accountDetail.UltimateBeneficiary.BICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA{{$index}}" ng-change="fnGetBankDetails(accountDetail.UltimateBeneficiary.BICorABA,'UltimateBeneficiary',$index)" />
                                         </div>
                                     </div>
@@ -470,7 +470,7 @@
                                             Contact
                                             <span class="pull-right">
                                                 <a class="btn btn-sm btn-info" ng-click="$event.stopPropagation();fnCreateContact()"><i class="glyphicon glyphicon-phone"></i>&nbsp;Add Contact</a>&nbsp;&nbsp;
-                                                <i class="indicator glyphicon glyphicon-chevron-down"></i>
+                                                <i class="glyphicon glyphicon-chevron-down"></i>
                                             </span>
                                         </h4>
                                     </div>
@@ -489,8 +489,8 @@
                                                         <div class="col-sm-8 col-md-2 col-lg-2" style="text-align: right">
                                                             <label class="control-label">Contacts</label>
                                                         </div>
-                                                        <div class="col-sm-8 col-md-3 col-lg-3 AdjustDropDownWidth liHMUsers">
-                                                            <input ng-model="accountDetail.ContactName" class="form-control control-label accountDetail_ContactName" id="liContacts{{$index}}" ng-change="fnOnContactNameChange(accountDetail.ContactName, $index)" />
+                                                        <div class="col-sm-8 col-md-3 col-lg-3 AdjustDropDownWidth">
+                                                            <input ng-model="accountDetail.ContactName" class="form-control control-labele" id="liContacts{{$index}}" ng-change="fnOnContactNameChange(accountDetail.ContactName, $index)" />
                                                             @*<select ng-model="accountDetail.ContactName" class="form-control control-label accountDetail_ContactName" id="liContacts{{$index}}" ng-change="fnOnContactNameChange(accountDetail.ContactName, $index)" ></select>*@
                                                         </div>
                                                     </div>
@@ -498,7 +498,7 @@
                                                 <p></p>
                                                 <div class="row">
                                                     <div class="col-sm-12 col-md-12 col-lg-12">
-                                                        <table id="contactTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+                                                        <table id="contactTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
                                                     </div>
                                                 </div>
                                             </div>
@@ -510,7 +510,7 @@
                                         <h4 class="panel-title">
                                             Attachment
                                             <span class="pull-right">
-                                                <i class="indicator glyphicon glyphicon-chevron-down"></i>
+                                                <i class="glyphicon glyphicon-chevron-down"></i>
                                             </span>
                                         </h4>
 
@@ -530,7 +530,7 @@
                                                 <p></p>
                                                 <div class="row">
                                                     <div class="col-sm-12 col-md-12 col-lg-12">
-                                                        <table id="documentTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+                                                        <table id="documentTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
                                                     </div>
                                                 </div>
                                             </div>
@@ -551,7 +551,7 @@
                                                     </span>
                                                 }
                                                 <a class="btn btn-sm btn-primary" ng-click="$event.stopPropagation();fnAssociationSSI($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
-                                                <i class="indicator glyphicon glyphicon-chevron-down"></i>
+                                                <i class="glyphicon glyphicon-chevron-down"></i>
                                             </span>
                                         </h4>
                                     </div>
@@ -561,7 +561,7 @@
                                                 <p></p>
                                                 <div class="row">
                                                     <div class="col-sm-12 col-md-12 col-lg-12">
-                                                        <table id="ssiTemplateTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover ssiTemplate table-highlighted" tindex="{{$index}}" ><tfoot></tfoot></table>
+                                                        <table id="ssiTemplateTable{{$index}}" class="table table-condensed table-bordered table-striped table-hover" tindex="{{$index}}" ><tfoot></tfoot></table>
                                                     </div>
                                                 </div>
                                             </div>

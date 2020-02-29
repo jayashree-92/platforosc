@@ -109,6 +109,9 @@ namespace HMOSecureWeb.Controllers
             var onBoardingSsiTemplate = AccountManager.GetSsiTemplate(templateId);
             var document = onBoardingSsiTemplate.onBoardingSSITemplateDocuments.ToList();
             onBoardingSsiTemplate.onBoardingSSITemplateDocuments = null;
+
+            //associatedAccounts
+
             return Json(new
             {
                 OnBoardingSsiTemplate = onBoardingSsiTemplate,
