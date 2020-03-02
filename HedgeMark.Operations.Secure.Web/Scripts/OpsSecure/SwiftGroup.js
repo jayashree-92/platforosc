@@ -112,10 +112,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
     $scope.formatSwiftGroup = function () {
         if ($scope.swiftGroup.SendersBIC == null || $scope.swiftGroup.SendersBIC == "")
             return;
-        var appendString = "";
-        for (var i = 0; i < (11 - $scope.swiftGroup.SendersBIC.trim().length); i++)
-            appendString += "X";
-        $scope.swiftGroup.SendersBIC = $scope.swiftGroup.SendersBIC.trim().toUpperCase() + appendString;
+        $scope.swiftGroup.SendersBIC = $scope.swiftGroup.SendersBIC.trim().toUpperCase();
     }
 
     $scope.fnAddOrUpdateSwiftGroup = function (isAdd) {
@@ -181,6 +178,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
             notifyError("Swift group data exists for selected Swift Group and Sender's BIC. Please select a new combination.")
             return;
         }
+        $scope.formatSwiftGroup();
         var hmsSwiftGroup = angular.copy($scope.swiftGroup);
         $http({
             method: "POST",
