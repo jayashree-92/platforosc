@@ -109,6 +109,15 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
         return stat.text + "<label class='pull-right label " + (selectData.isOutBound ? "label-info" : "label-default") + " shadowBox'>" + (selectData.isOutBound ? "OutBound" : "InBound") + "</label>";
     }
 
+    $scope.formatSwiftGroup = function () {
+        if ($scope.swiftGroup.SendersBIC == null || $scope.swiftGroup.SendersBIC == "")
+            return;
+        var appendString = "";
+        for (var i = 0; i < (11 - $scope.swiftGroup.SendersBIC.trim().length); i++)
+            appendString += "X";
+        $scope.swiftGroup.SendersBIC = $scope.swiftGroup.SendersBIC.trim().toUpperCase() + appendString;
+    }
+
     $scope.fnAddOrUpdateSwiftGroup = function (isAdd) {
         $scope.isAdd = isAdd;
         if (isAdd)
@@ -166,7 +175,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
 
     $scope.fnSaveSwiftGroup = function () {
         var existingSwiftGroup = $filter('filter')($scope.swiftGroupData, function (swift) {
-            return swift.SwiftGroup == $scope.swiftGroup.SwiftGroup && swift.SendersBIC == $scope.swiftGroup.hmsSwiftGroup;
+            return swift.SwiftGroup == $scope.swiftGroup.SwiftGroup && swift.SendersBIC == $scope.swiftGroup.SendersBIC;
         }, true)[0];
         if (existingSwiftGroup != undefined && $scope.isAdd) {
             notifyError("Swift group data exists for selected Swift Group and Sender's BIC. Please select a new combination.")

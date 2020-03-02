@@ -30,7 +30,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4>Add Swift Group</h4>
+                    <h4>Swift Group Details</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -56,7 +56,7 @@
                             <label for="sendersBIC" class="control-label">Sender's BIC:</label>
                         </div>
                         <div class="col-sm-8 col-md-3 col-lg-5">
-                            <input type="text" id="sendersBIC" ng-model="swiftGroup.SendersBIC" class="modalInputWidth form-control" />
+                            <input type="text" id="sendersBIC" maxlength="11" ng-blur="formatSwiftGroup()" ng-model="swiftGroup.SendersBIC" class="modalInputWidth form-control" />
                         </div>
                     </div>
                     <br />
