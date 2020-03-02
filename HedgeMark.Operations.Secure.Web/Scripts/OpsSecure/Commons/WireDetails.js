@@ -43,18 +43,16 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
             tblWireStatusDetails = $("#tblWireStatusDetails").DataTable({
                 aaData: wireDetails,
                 pageResize: true,
-                // dom: 'Bfrtip',
-                fixedHeader: {
-                    //headerOffset: 10
-                },
-                //"dom": "<'row'<'col-md-6'i><'#toolbar_tasklog'><'col-md-6 pull-right'f>>trI",
+                //fixedHeader: {
+                //    //headerOffset: 10
+                //},
+
                 "dom": "<'pull-right'f>itI",
                 rowId: "hmsWireId",
 
                 rowCallback: function (row, data, index) {
 
                 },
-                //"dom": "trI",
                 "bDestroy": true,
                 "columns": [
                     {
