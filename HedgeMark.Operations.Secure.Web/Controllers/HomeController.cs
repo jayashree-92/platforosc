@@ -199,12 +199,21 @@ namespace HMOSecureWeb.Controllers
                 else
                     thisWire.ReceivingAccount.UltimateBeneficiary = new onBoardingAccountBICorABA();
 
+
+                if (thisWire.SSITemplate.Beneficiary != null)
+                    thisWire.SSITemplate.Beneficiary.onBoardingAccounts = thisWire.SSITemplate.Beneficiary.onBoardingAccounts1 = thisWire.SSITemplate.Beneficiary.onBoardingAccounts2 = null;
+                if (thisWire.SSITemplate.Intermediary != null)
+                    thisWire.SSITemplate.Intermediary.onBoardingAccounts = thisWire.SSITemplate.Intermediary.onBoardingAccounts1 = thisWire.SSITemplate.Intermediary.onBoardingAccounts2 = null;
+                if (thisWire.SSITemplate.UltimateBeneficiary != null)
+                    thisWire.SSITemplate.UltimateBeneficiary.onBoardingAccounts = thisWire.SSITemplate.UltimateBeneficiary.onBoardingAccounts1 = thisWire.SSITemplate.UltimateBeneficiary.onBoardingAccounts2 = null;
+
                 if (thisWire.SSITemplate.Beneficiary != null)
                     thisWire.SSITemplate.Beneficiary.onBoardingSSITemplates = thisWire.SSITemplate.Beneficiary.onBoardingSSITemplates1 = thisWire.SSITemplate.Beneficiary.onBoardingSSITemplates2 = null;
                 if (thisWire.SSITemplate.Intermediary != null)
                     thisWire.SSITemplate.Intermediary.onBoardingSSITemplates = thisWire.SSITemplate.Intermediary.onBoardingSSITemplates1 = thisWire.SSITemplate.Intermediary.onBoardingSSITemplates2 = null;
                 if (thisWire.SSITemplate.UltimateBeneficiary != null)
                     thisWire.SSITemplate.UltimateBeneficiary.onBoardingSSITemplates = thisWire.SSITemplate.UltimateBeneficiary.onBoardingSSITemplates1 = thisWire.SSITemplate.UltimateBeneficiary.onBoardingSSITemplates2 = null;
+
 
                 if (thisWire.SendingAccount.Beneficiary != null)
                     thisWire.SendingAccount.Beneficiary.onBoardingAccounts = thisWire.SendingAccount.Beneficiary.onBoardingAccounts1 = thisWire.SendingAccount.Beneficiary.onBoardingAccounts2 = null;
@@ -219,6 +228,22 @@ namespace HMOSecureWeb.Controllers
                     thisWire.ReceivingAccount.Intermediary.onBoardingAccounts = thisWire.ReceivingAccount.Intermediary.onBoardingAccounts1 = thisWire.ReceivingAccount.Intermediary.onBoardingAccounts2 = null;
                 if (thisWire.ReceivingAccount.UltimateBeneficiary != null)
                     thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts = thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts1 = thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts2 = null;
+
+
+                if (thisWire.SendingAccount.Beneficiary != null)
+                    thisWire.SendingAccount.Beneficiary.onBoardingSSITemplates = thisWire.SendingAccount.Beneficiary.onBoardingSSITemplates1 = thisWire.SendingAccount.Beneficiary.onBoardingSSITemplates2 = null;
+                if (thisWire.SendingAccount.Intermediary != null)
+                    thisWire.SendingAccount.Intermediary.onBoardingSSITemplates = thisWire.SendingAccount.Intermediary.onBoardingSSITemplates1 = thisWire.SendingAccount.Intermediary.onBoardingSSITemplates2 = null;
+                if (thisWire.SendingAccount.UltimateBeneficiary != null)
+                    thisWire.SendingAccount.UltimateBeneficiary.onBoardingSSITemplates = thisWire.SendingAccount.UltimateBeneficiary.onBoardingSSITemplates1 = thisWire.SendingAccount.UltimateBeneficiary.onBoardingSSITemplates2 = null;
+
+                if (thisWire.ReceivingAccount.Beneficiary != null)
+                    thisWire.ReceivingAccount.Beneficiary.onBoardingSSITemplates = thisWire.ReceivingAccount.Beneficiary.onBoardingSSITemplates1 = thisWire.ReceivingAccount.Beneficiary.onBoardingSSITemplates2 = null;
+                if (thisWire.ReceivingAccount.Intermediary != null)
+                    thisWire.ReceivingAccount.Intermediary.onBoardingSSITemplates = thisWire.ReceivingAccount.Intermediary.onBoardingSSITemplates1 = thisWire.ReceivingAccount.Intermediary.onBoardingSSITemplates2 = null;
+                if (thisWire.ReceivingAccount.UltimateBeneficiary != null)
+                    thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingSSITemplates = thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingSSITemplates1 = thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingSSITemplates2 = null;
+
 
                 //Update User Details
                 thisWire.WireCreatedBy = users.First(s => s.Key == thisWire.HMWire.CreatedBy).Value.HumanizeEmail();
