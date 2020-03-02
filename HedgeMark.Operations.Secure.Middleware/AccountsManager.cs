@@ -340,7 +340,12 @@ namespace HMOSecureMiddleware
             {
                 var document = context.onBoardingAccountDocuments.FirstOrDefault(x => x.onBoardingAccountId == accountId && x.FileName == fileName);
                 if (document == null) return;
-                context.onBoardingAccountDocuments.Remove(document);
+                context.onBoardingAccountDocuments.Remove(document); 
+                var account = context.onBoardingAccounts.First(s => s.onBoardingAccountId == document.onBoardingAccountId);
+                account.onBoardingAccountStatus = "Created";
+                account.ApprovedBy = null;
+                account.UpdatedAt = DateTime.Now;
+                context.onBoardingAccounts.AddOrUpdate(account);
                 context.SaveChanges();
             }
         }
@@ -360,6 +365,11 @@ namespace HMOSecureMiddleware
             using (var context = new OperationsSecureContext())
             {
                 context.onBoardingAccountDocuments.Add(document);
+                var account = context.onBoardingAccounts.First(s => s.onBoardingAccountId == document.onBoardingAccountId);
+                account.onBoardingAccountStatus = "Created";
+                account.ApprovedBy = null;
+                account.UpdatedAt = DateTime.Now;
+                context.onBoardingAccounts.AddOrUpdate(account);
                 context.SaveChanges();
             }
         }

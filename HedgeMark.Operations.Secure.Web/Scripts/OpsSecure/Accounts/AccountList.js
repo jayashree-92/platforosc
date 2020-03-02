@@ -108,11 +108,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     if (rowElement.onBoardingAccountDocumentId > 0) {
                         $http.post("/Accounts/RemoveAccountDocument", { fileName: rowElement.FileName, documentId: rowElement.onBoardingAccountDocumentId }).then(function () {
                             accountDocumentTable[rowIndex].row(selectedRow).remove().draw();
+                            $("#spnAgrCurrentStatus").html("Saved as Draft");
+                            $("#hmStatus").show();
                             $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountDocuments.pop(rowElement);
                             notifySuccess("Account document has removed successfully");
                         });
                     } else {
                         accountDocumentTable[rowIndex].row(selectedRow).remove().draw();
+                        $("#spnAgrCurrentStatus").html("Saved as Draft");
+                        $("#hmStatus").show();
                         $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountDocuments.pop(rowElement);
                         notifySuccess("Account document has removed successfully");
                     }
@@ -1688,7 +1692,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     // $scope.ssiTemplateDocuments.push(value);
                     $scope.accountDocuments.push(value);
                 });
-
+                $("#spnAgrCurrentStatus").html("Saved as Draft");
+                $("#hmStatus").show();
                 viewAttachmentTable($scope.accountDocuments, key);
             },
             queuecomplete: function () {
@@ -1823,7 +1828,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if ($("#spnAgrCurrentStatus").html() == "Saved as Draft" || !$scope.isEdit) {
                 $scope.isDrafted = true;
             }
-            else if ($("#spnAgrCurrentStatus").html() == approvedStatus && $scope.isEdit) {
+            else if (($("#spnAgrCurrentStatus").html() == approvedStatus || $("#spnAgrCurrentStatus").html() == pendingStatus) && $scope.isEdit) {
                 $scope.isDrafted = false;
                 $scope.isApproved = true;
             }
@@ -1836,7 +1841,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if ($("#spnAgrCurrentStatus").html() == "Saved as Draft" || !$scope.isEdit) {
                 $scope.isDrafted = true;
             }
-            else if ($("#spnAgrCurrentStatus").html() == approvedStatus && $scope.isEdit) {
+            else if (($("#spnAgrCurrentStatus").html() == approvedStatus || $("#spnAgrCurrentStatus").html() == pendingStatus) && $scope.isEdit) {
                 $scope.isDrafted = false;
                 $scope.isApproved = true;
             }

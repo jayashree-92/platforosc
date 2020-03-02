@@ -46,7 +46,8 @@ namespace HMOSecureWeb.Controllers
                 RecCreatedBy = s.RecCreatedBy.HumanizeEmail()
             }).OrderByDescending(s => s.RecCreatedAt).ToList();
             var swiftGroupRelatedData = new SwiftGroupInformation() { SwiftGroupData = swiftGroupData, Brokers = counterpartyData, SwiftGroupStatus = swiftStatusData };
-            SetSessionValue(OpsSecureSessionVars.SwiftGroupData.ToString(), swiftGroupRelatedData);
+            var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
+            SetSessionValue(preferencesKey, swiftGroupRelatedData);
             return Json(new
             {
                 brokerLegalEntityData,
@@ -61,7 +62,8 @@ namespace HMOSecureWeb.Controllers
             var swiftGroupData = GetSwiftGroupData(hmsSwiftGroup.hmsSwiftGroupId);
             hmsSwiftGroup.RecCreatedBy = UserName;
             AccountManager.AddOrUpdateSwiftGroup(hmsSwiftGroup);
-            var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(OpsSecureSessionVars.SwiftGroupData.ToString());
+            var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
+            var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(preferencesKey);
             var originalSwiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { swiftGroupData }, swiftGroupInfo).FirstOrDefault();
             var swiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { hmsSwiftGroup }, swiftGroupInfo).FirstOrDefault();
             AuditSwiftGroupChanges(swiftGroup, originalSwiftGroup);
@@ -70,14 +72,16 @@ namespace HMOSecureWeb.Controllers
         public void DeleteSwiftGroup(long swiftGroupId)
         {
             var swiftGroup = DeleteSwiftGroupData(swiftGroupId);
-            var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(OpsSecureSessionVars.SwiftGroupData.ToString());
+            var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
+            var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(preferencesKey);
             var originalSwiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { swiftGroup }, swiftGroupInfo).FirstOrDefault();
             AuditSwiftGroupChanges(new SwiftGroupData() { hmsSwiftGroupId = swiftGroupId }, originalSwiftGroup, true);
         }
 
         public FileResult ExportData()
         {
-            var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(OpsSecureSessionVars.SwiftGroupData.ToString());
+            var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
+            var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(preferencesKey);
             var contentToExport = new Dictionary<string, List<Row>>();
             var accountListRows = BuildExportRows(swiftGroupInfo.SwiftGroupData);
             //File name and path
