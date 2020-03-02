@@ -139,9 +139,6 @@ namespace HMOSecureWeb.Controllers
                 wireStatusDetails = wireStatusDetails.Where(s => authorizedFundsIds.Contains(s.hmFundId)).ToList();
             }
 
-            // List<dmaAgreementOnBoarding> wireAgreements;
-
-            //  List<dmaCounterPartyOnBoarding> counterParties;
             Dictionary<int, string> users;
             var hFundIds = wireStatusDetails.Select(s => s.hmFundId).ToList();
 
@@ -151,19 +148,8 @@ namespace HMOSecureWeb.Controllers
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
-
-
                 var userIds = wireStatusDetails.Select(s => s.LastUpdatedBy).Union(wireStatusDetails.Select(s => s.CreatedBy)).Union(wireStatusDetails.Select(s => s.ApprovedBy ?? 0)).Distinct().ToList();
-
-                //var agreementIds = wireStatusDetails.Select(s => s.OnBoardAgreementId).Distinct().ToList();
-                //wireAgreements = context.dmaAgreementOnBoardings.Include("onboardingFund")
-                //                                                .Include("dmaCounterPartyOnBoarding")
-                //                                                .Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId)).ToList();
-
-
                 users = context.hLoginRegistrations.Where(s => UserDetails.Id == s.intLoginID || userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
-                //   var counterpartyIds = wireSSITemplates.Select(s => s.TemplateEntityId).ToList();
-                //    counterParties = context.dmaCounterPartyOnBoardings.Where(s => counterpartyIds.Contains(s.dmaCounterPartyOnBoardId)).ToList();
             }
 
             var hFunds = AdminFundManager.GetHFundsCreatedForDMA(hFundIds, PreferredFundNameInSession);
@@ -174,18 +160,11 @@ namespace HMOSecureWeb.Controllers
                 wire.hmsWirePurposeLkup.hmsWires = null;
                 wire.hmsWireStatusLkup.hmsWires = null;
                 wire.hmsWireTransferTypeLKup.hmsWires = null;
-                //     var counterpartyId = (wireSSITemplates.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate()).TemplateEntityId;
-
 
                 var fund = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) ?? new HFund();
                 var thisWire = new WireTicket
                 {
                     HMWire = wire,
-                    //Agreement = wireAgreements.FirstOrDefault(s => wire.OnBoardAgreementId == s.dmaAgreementOnBoardingId) ?? new dmaAgreementOnBoarding()
-                    //{
-                    //    onboardingFund = new onboardingFund() { FundShortName = string.Format("unknown agrId {0}", wire.OnBoardAgreementId) },
-                    //    dmaCounterPartyOnBoarding = new dmaCounterPartyOnBoarding() { CounterpartyName = string.Format("unknown agrId {0}", wire.OnBoardAgreementId) },
-                    //},
                     SendingAccount = wireAccounts.FirstOrDefault(s => wire.OnBoardAccountId == s.onBoardingAccountId) ?? new onBoardingAccount(),  //wire.onBoardingAccount
                     ReceivingAccount = wire.WireTransferTypeId == 2 ? wireAccounts.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingAccountId) ?? new onBoardingAccount() : new onBoardingAccount(),
                     SSITemplate = wire.WireTransferTypeId != 2 && wire.hmsWireTransferTypeLKup.TransferType != "Notice" ? wireSSITemplates.FirstOrDefault(s => wire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate() : new onBoardingSSITemplate(),
@@ -193,17 +172,7 @@ namespace HMOSecureWeb.Controllers
                     ShortFundName = fund.ShortFundName ?? string.Empty,
                     ClientLegalName = fund.ClientLegalName ?? string.Empty,
                     ClientShortName = fund.ClientShortName ?? string.Empty
-                    //  Counterparty = (wire.hmsWireTransferTypeLKup.TransferType != "Notice" ? counterParties.FirstOrDefault(s => counterpartyId == s.dmaCounterPartyOnBoardId) ?? new dmaCounterPartyOnBoarding() : new dmaCounterPartyOnBoarding()).CounterpartyName
                 };
-
-                //thisWire.Agreement.dmaAgreementDocuments = null;
-                //thisWire.Agreement.dmaAgreementSettlementInstructions = null;
-                //thisWire.Agreement.dmaAgreementOnBoardingChecklists = null;
-                //thisWire.Agreement.onBoardingAccounts = null;
-
-                //thisWire.Agreement.onboardingFund.dmaAgreementOnBoardings = null;
-                //thisWire.Agreement.onboardingFund.onBoardingAccounts = null;
-                //thisWire.Agreement.dmaCounterPartyOnBoarding.dmaAgreementOnBoardings = null;
 
                 if (thisWire.SendingAccount.UltimateBeneficiary != null)
                     thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts = thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts1 = thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts2 = null;
@@ -219,15 +188,7 @@ namespace HMOSecureWeb.Controllers
                 thisWire.WireLastUpdatedBy = users.First(s => s.Key == thisWire.HMWire.LastUpdatedBy).Value.HumanizeEmail();
                 thisWire.WireApprovedBy = thisWire.HMWire.ApprovedBy > 0 ? users.First(s => s.Key == thisWire.HMWire.ApprovedBy).Value.HumanizeEmail() : "-";
 
-                //approved wire
-                if (thisWire.HMWire.WireStatusId == 3 && thisWire.HMWire.ApprovedBy == null)
-                {
-                    thisWire.WireApprovedBy = thisWire.WireLastUpdatedBy;
-                    thisWire.HMWire.ApprovedAt = thisWire.HMWire.LastModifiedAt;
-                }
-
-                if (thisWire.HMWire.WireStatusId == 2 && thisWire.WireLastUpdatedBy == thisWire.WireCreatedBy)
-                    thisWire.WireLastUpdatedBy = "-";
+                SetUserTitles(thisWire);
 
                 wireData.Add(thisWire);
             }
@@ -236,6 +197,36 @@ namespace HMOSecureWeb.Controllers
             var customStatusOrder = new[] { 2, 5, 1, 4, 3 };
             wireData = wireData.OrderBy(s => Array.IndexOf(customStatusOrder, s.HMWire.WireStatusId)).ToList();
             return Json(new { wireData, AuthorizedSessionData.IsPrivilegedUser, isAdmin = User.IsInRole(OpsSecureUserRoles.DMAAdmin) });
+        }
+
+        private static void SetUserTitles(WireTicket thisWire)
+        {
+            //When wire is Drafted - hide Last Modified by
+            if (thisWire.HMWire.WireStatusId == 1)
+            {
+                thisWire.WireLastUpdatedBy = "-";
+                thisWire.HMWire.LastModifiedAt = new DateTime(1, 1, 1);
+                thisWire.WireApprovedBy = "-";
+                thisWire.HMWire.ApprovedAt = null;
+            }
+
+            //approved wire
+            if (thisWire.HMWire.WireStatusId == 3 && thisWire.HMWire.ApprovedBy == null)
+            {
+                thisWire.WireApprovedBy = thisWire.WireLastUpdatedBy;
+                thisWire.HMWire.ApprovedAt = thisWire.HMWire.LastModifiedAt;
+            }
+
+            //approved wire - MT210 -This has auto approval
+            if (thisWire.HMWire.WireMessageTypeId == 5 && thisWire.HMWire.WireStatusId == 3 && thisWire.WireApprovedBy == "-")
+            {
+                thisWire.WireApprovedBy = "System";
+            }
+
+
+
+            if (thisWire.HMWire.WireStatusId == 2 && thisWire.WireLastUpdatedBy == thisWire.WireCreatedBy)
+                thisWire.WireLastUpdatedBy = "-";
         }
 
         public JsonResult GetWireMessageTypeDetails(string module)
@@ -270,8 +261,7 @@ namespace HMOSecureWeb.Controllers
                 if (isNoticePending)
                     validationMsg = "The notice with same amount, value date and currency is already Processing with SWIFT.You cannot notice the same untill it gets a Confirmation";
             }
-            var usersInvolvedInWire = wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated || s.WireStatusId == (int)WireDataManager.WireStatus.Drafted).Select(s => s.CreatedBy).Distinct().ToList();
-            var isAuthorizedUserToApprove = WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && !usersInvolvedInWire.Contains(UserDetails.Id) && !isDeadlineCrossed && User.IsWireApprover() && !isNoticePending;
+
             var isEditEnabled = WireDataManager.WireStatus.Drafted == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && !isDeadlineCrossed;
             var isApprovedOrFailed = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId
                                      || (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId
@@ -308,6 +298,10 @@ namespace HMOSecureWeb.Controllers
 
             //Also include who is currently viewing this wire 
             var currentlyViewedBy = GetCurrentlyViewingUsers(wireId);
+
+            var usersInvolvedInWire = wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated || s.WireStatusId == (int)WireDataManager.WireStatus.Drafted).Select(s => s.CreatedBy).Distinct().ToList();
+            usersInvolvedInWire.AddRange(new List<int>() { wireTicket.HMWire.CreatedBy, wireTicket.HMWire.LastUpdatedBy });
+            var isAuthorizedUserToApprove = WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && !usersInvolvedInWire.Contains(UserDetails.Id) && !isDeadlineCrossed && User.IsWireApprover() && !isNoticePending;
 
             return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser, isWirePurposeAdhoc, validationMsg, sendingAccountsList, receivingAccountsList, IsWireCreated = false, currentlyViewedBy });
         }

@@ -6,7 +6,6 @@ using System.Data.Entity.Migrations;
 using HMOSecureMiddleware.Models;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler;
-using HedgeMark.SwiftMessageHandler.Model;
 using HMOSecureMiddleware.Util;
 using log4net;
 using System.Data.Entity;
@@ -112,10 +111,7 @@ namespace HMOSecureMiddleware
             }
 
             wireSendingAccount = AccountManager.GetOnBoardingAccount(hmWire.OnBoardAccountId);
-            if (hmWire.hmsWireTransferTypeLKup.TransferType == "Book Transfer")
-                wireReceivingAccount = AccountManager.GetOnBoardingAccount(hmWire.OnBoardSSITemplateId);
-            else
-                wireReceivingAccount = new onBoardingAccount();
+            wireReceivingAccount = hmWire.hmsWireTransferTypeLKup.TransferType == "Book Transfer" ? AccountManager.GetOnBoardingAccount(hmWire.OnBoardSSITemplateId) : new onBoardingAccount();
 
             hmWire.hmsWireLogs.ForEach(s =>
             {
@@ -151,7 +147,7 @@ namespace HMOSecureMiddleware
             if (hmWire.hmsWireSenderInformation != null)
                 hmWire.hmsWireSenderInformation.hmsWires = null;
             hmWire.hmsWireWorkflowLogs = hmWire.hmsWireWorkflowLogs.OrderByDescending(s => s.CreatedAt).ToList();
-            //dmaAgreementOnBoarding wireAgreement;
+            
             dmaCounterPartyOnBoarding counterparty;
             List<string> workflowUsers;
             List<string> attachmentUsers;
@@ -163,10 +159,6 @@ namespace HMOSecureMiddleware
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
-                //wireAgreement = context.dmaAgreementOnBoardings.Include("onboardingFund")
-                //                                                .Include("dmaCounterPartyOnBoarding")
-                //                                                .FirstOrDefault(s => hmWire.OnBoardAgreementId == s.dmaAgreementOnBoardingId) ?? new dmaAgreementOnBoarding();
-
                 var userIds = hmWire.hmsWireWorkflowLogs.Select(s => s.CreatedBy).ToList();
                 userIds.AddRange(hmWire.hmsWireDocuments.Select(s => s.CreatedBy).ToList());
                 var users = context.hLoginRegistrations.Where(s => userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
@@ -176,18 +168,6 @@ namespace HMOSecureMiddleware
                 attachmentUsers = hmWire.hmsWireDocuments.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
                 counterparty = context.dmaCounterPartyOnBoardings.FirstOrDefault(s => wireSSITemplate.TemplateEntityId == s.dmaCounterPartyOnBoardId);
             }
-
-            //wireAgreement.dmaAgreementDocuments = null;
-            //wireAgreement.dmaAgreementSettlementInstructions = null;
-            //wireAgreement.dmaAgreementOnBoardingChecklists = null;
-            //wireAgreement.onBoardingAccounts = null;
-            //if (wireAgreement.onboardingFund != null)
-            //{
-            //    wireAgreement.onboardingFund.dmaAgreementOnBoardings = null;
-            //    wireAgreement.onboardingFund.onBoardingAccounts = null;
-            //}
-            //if (wireAgreement.dmaCounterPartyOnBoarding != null)
-            //    wireAgreement.dmaCounterPartyOnBoarding.dmaAgreementOnBoardings = null;
 
             return new WireTicket()
             {
@@ -203,21 +183,6 @@ namespace HMOSecureMiddleware
                 ShortFundName = hFund != null ? hFund.ShortFundName : string.Empty
             };
         }
-
-        public static onBoardingAccount GetBoardingAccount(long onBoardingAccountId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                
-                var account = context.onBoardingAccounts.AsNoTracking().Include(s=>s.SwiftGroup).First(s => s.onBoardingAccountId == onBoardingAccountId);
-                if (account.SwiftGroup != null)
-                    account.SwiftGroup.onBoardingAccounts = null;
-                return account;
-            }
-        }
-
 
         public static List<WireAccountBaseData> GetApprovedFundAccounts(long hmFundId, bool isBookTransfer, string currency = null)
         {
@@ -391,7 +356,7 @@ namespace HMOSecureMiddleware
         }
 
 
-        public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus wireStatus, string comment, int userId, string purpose = null, string reportName = "Adhoc Report")
+        public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus wireStatus, string comment, int userId)
         {
             using (var context = new OperationsSecureContext())
             {
@@ -496,16 +461,6 @@ namespace HMOSecureMiddleware
             using (var context = new OperationsSecureContext())
             {
                 context.hmsWireJobSchedules.AddOrUpdate(schedule);
-                context.SaveChanges();
-            }
-        }
-
-        public static void RemoveJobSchedule(hmsWireJobSchedule schedule)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                var scheduleToDelete = context.hmsWireJobSchedules.FirstOrDefault(s => s.hmsWireJobSchedulerId == schedule.hmsWireJobSchedulerId);
-                context.hmsWireJobSchedules.Remove(scheduleToDelete);
                 context.SaveChanges();
             }
         }

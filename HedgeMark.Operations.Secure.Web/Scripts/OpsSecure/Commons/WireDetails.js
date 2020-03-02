@@ -186,7 +186,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 "sScrollX": "100%",
                 "sScrollXInner": "100%",
                 //"sScrollY": false,
-                //"scrollY": $("#pageMainContent").offset().top + 600,
+                "scrollY": window.innerHeight - 250,
                 //stateSave: true,
                 //"scrollX": true,
                 "order": [],
