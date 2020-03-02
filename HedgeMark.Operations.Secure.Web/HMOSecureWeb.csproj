@@ -1489,7 +1489,6 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="Scripts\OpsSecure\Accounts\Account.js" />
     <Content Include="Scripts\OpsSecure\Accounts\AccountList.js" />
     <Content Include="Scripts\OpsSecure\Accounts\SSITemplate.js" />
     <Content Include="Scripts\OpsSecure\Accounts\SSITemplateList.js" />
@@ -1577,7 +1576,6 @@
     <Content Include="Views\WireLog\Index.cshtml" />
     <Content Include="Views\Audit\MqLogs.cshtml" />
     <Content Include="Views\Home\WirePurpose.cshtml" />
-    <Content Include="Views\Accounts\Account.cshtml" />
     <Content Include="Views\Accounts\Index.cshtml" />
     <Content Include="Views\SSITemplate\SSITemplateList.cshtml" />
     <Content Include="Views\SSITemplate\SSITemplate.cshtml" />

@@ -90,6 +90,7 @@
     <div class="modal fade" id="accountModal" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-xlg" role="document">
             <div id="accountDetailCP" class="modal-content">
+
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <p class="" id="basicDetail" data-toggle="collapse" data-target="#basicDetailCP" aria-expanded="false" aria-controls="basicDetailCP">
@@ -98,7 +99,7 @@
                     <div id="basicDetailCP" class="control-group collapse">
                         <span class="row">
                             <span class="col-md-1">
-                                <label class="control-label">Entity Type <span style="color: red">  *</span></label>
+                                <label class="control-label">Entity Type <span style="color: red"> *</span></label>
                             </span>
                             <span class="col-md-4">
                                 <input name="Account Type" type="text" class="form-control" id="liAccountType" />
@@ -106,7 +107,7 @@
                         </span>
                         <span class="row">
                             <span class="col-md-1">
-                                <label class="control-label">Fund <span style="color: red">  *</span></label>
+                                <label class="control-label">Fund <span style="color: red"> *</span></label>
                             </span>
                             <span class="col-md-4">
                                 <input name="Fund" type="text" class="form-control" id="liFund" />
@@ -114,7 +115,7 @@
                         </span>
                         <span class="row" style="display: none;" id="spnBroker">
                             <span class="col-md-1">
-                                <label class="control-label">Broker <span style="color: red">  *</span></label>
+                                <label class="control-label">Broker <span style="color: red"> *</span></label>
                             </span>
                             <span class="col-md-4">
                                 <input name="Broker" type="text" class="form-control" id="liBroker" />
@@ -122,7 +123,7 @@
                         </span>
                         <span class="row" style="display: none;" id="spnAgreement">
                             <span class="col-md-1">
-                                <label class="control-label">Agreement <span style="color: red">  *</span></label>
+                                <label class="control-label">Agreement <span style="color: red"> *</span></label>
                             </span>
                             <span class="col-md-4">
                                 <input name="Agreement" type="text" class="form-control" id="liAgreement" />
@@ -131,21 +132,24 @@
                         <br />
                     </div>
                 </div>
-                <div class="modal-body">
+
+                <div class="modal-body" style="padding: 0px 15px;">
                     <div ng-repeat="accountDetail in onBoardingAccountDetails track by $index" on-last-repeat>
                         <input type="hidden" ng-model="accountDetail.onBoardingAccountId" />
-                        <div class="panel panel-default">
-                            <div class="panel-heading" style="min-height: 45px;">
-                                <b ng-show="accountDetail.onBoardingAccountId > 0" style="cursor: pointer; background: #F5F5F5; margin: 0px">
-                                    <span style="font-size: 15px; font-weight: bold">{{accountDetail.AccountName}}  </span>
-                                    | Broker:<span style="font-size: 15px; font-weight: bold"> {{broker}}  </span>
-                                    <span id="hmStatus" style="display: none;">| Status: <b><span id="spnAgrCurrentStatus" class=""></span></b></span>
-                                </b>
-                                <b ng-show="accountDetail.onBoardingAccountId == 0" style="cursor: pointer;  background: #F5F5F5; margin: 0px" class="control-label">{{accountDetail.AccountName}}</b>
-                                <span class="pull-right">
-                                    <a id="btnAgrExpandAllPanel" class="btn btn-sm btn-default"><i class="glyphicon glyphicon-chevron-down"></i>&nbsp;Expand All</a>&nbsp;&nbsp;
-                                    <a id="btnAgrCollapseAllPanel" class="btn btn-sm btn-default"><i class="glyphicon glyphicon-chevron-up"></i>&nbsp;Collapse All</a>
-                                </span>
+                        <div class="row" style="position: sticky;top: 0;z-index:2;">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" style="min-height: 45px;">
+                                    <b ng-show="accountDetail.onBoardingAccountId > 0" style="cursor: pointer; background: #F5F5F5; margin: 0px">
+                                        <span style="font-size: 15px; font-weight: bold">{{accountDetail.AccountName}} </span>
+                                        | Broker:<span style="font-size: 15px; font-weight: bold"> {{broker}} </span>
+                                        <span id="hmStatus" style="display: none;">| Status: <b><span id="spnAgrCurrentStatus" class=""></span></b></span>
+                                    </b>
+                                    <b ng-show="accountDetail.onBoardingAccountId == 0" style="cursor: pointer; background: #F5F5F5; margin: 0px" class="control-label">{{accountDetail.AccountName}}</b>
+                                    <span class="pull-right">
+                                        <a id="btnAgrExpandAllPanel" class="btn btn-sm btn-default"><i class="glyphicon glyphicon-chevron-down"></i>&nbsp;Expand All</a>&nbsp;&nbsp;
+                                        <a id="btnAgrCollapseAllPanel" class="btn btn-sm btn-default"><i class="glyphicon glyphicon-chevron-up"></i>&nbsp;Collapse All</a>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div id="collapseContainer">
@@ -237,8 +241,8 @@
                                                 <input ng-model="accountDetail.AuthorizedParty" class="form-control control-label" id="liAuthorizedParty{{$index}}" ng-change="fnAuthorizedPartyChange($index)">
                                             </div>
                                             @*<div class="col-sm-8 col-md-3 col-lg-3">
-                                        <a class="btn btn-sm btn-info" ng-click="fnAddAuthorizedPartyModal($index)" title="Add Authorized Party"><i class="glyphicon glyphicon-plus"></i></a>
-                                    </div>*@
+                                                    <a class="btn btn-sm btn-info" ng-click="fnAddAuthorizedPartyModal($index)" title="Add Authorized Party"><i class="glyphicon glyphicon-plus"></i></a>
+                                                </div>*@
                                         </div>
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
@@ -248,8 +252,8 @@
                                                 <input type="text" class="form-control" ng-model="accountDetail.CashInstruction" id="liCashInstruction{{$index}}" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, $index)" />
                                             </div>
                                             @*<div class="col-sm-8 col-md-3 col-lg-3">
-                                        <a class="btn btn-sm btn-info" ng-click="fnAddCashInstructionModal($index)" title="Add Cash Instruction"><i class="glyphicon glyphicon-plus"></i></a>
-                                    </div>*@
+                                                    <a class="btn btn-sm btn-info" ng-click="fnAddCashInstructionModal($index)" title="Add Cash Instruction"><i class="glyphicon glyphicon-plus"></i></a>
+                                                </div>*@
                                         </div>
                                     </div>
                                     <p></p>
@@ -331,9 +335,9 @@
                                     <p></p>
                                     <div class="cashSweepTimeDiv cashSweepTimeDiv{{$index}}">
                                         @*<div class="row control-group" ng-hide="accountDetail.IsReceivingAccount" style="margin-left: 15px; margin-right: 10px;">
-                                    <legend class="small font-primary">Cash Sweep:</legend>
-                                </div>
-                                <p></p>*@
+                                                <legend class="small font-primary">Cash Sweep:</legend>
+                                            </div>
+                                            <p></p>*@
                                         <div class="row">
 
                                             <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
@@ -627,326 +631,326 @@
                     <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Dismiss</a>
                 </div>
             </div>
-            </div>
         </div>
+    </div>
 
-        <div class="modal fade" id="UpdateAccountStatusModal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="UpdateAccountStatusModal" aria-hidden="true" style="width: 100%">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Add Comments</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p class="text-left" id="pMsg"></p>
-                        <textarea placeholder="Enter Comments" id="statusComments" style="width: 90%; max-width: none;" class="form-control"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="btnSaveComment" class="btn btn-warning btn-sm" ng-click="fnSaveAccountStatus()"><i class="glyphicon glyphicon-flag"></i>&nbsp;Proceed</button>
-                        <button id="btnSendApproval" class="btn btn-sm btn-warning" ng-click="fnSendApprovalAccountStatus()" style="display: none;"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
-                        <a href="#" class="btn btn-default btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i>Cancel</a>
-                    </div>
+    <div class="modal fade" id="UpdateAccountStatusModal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="UpdateAccountStatusModal" aria-hidden="true" style="width: 100%">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Comments</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-left" id="pMsg"></p>
+                    <textarea placeholder="Enter Comments" id="statusComments" style="width: 90%; max-width: none;" class="form-control"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSaveComment" class="btn btn-warning btn-sm" ng-click="fnSaveAccountStatus()"><i class="glyphicon glyphicon-flag"></i>&nbsp;Proceed</button>
+                    <button id="btnSendApproval" class="btn btn-sm btn-warning" ng-click="fnSendApprovalAccountStatus()" style="display: none;"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
+                    <a href="#" class="btn btn-default btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i>Cancel</a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="modal fade" id="accountSSITemplateMapModal" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Add SSI Template Association</h4>
+    <div class="modal fade" id="accountSSITemplateMapModal" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add SSI Template Association</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-3 col-lg-3">
+                            <label for="liSsiTemplate" class="control-label">SSI Template:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <span id="spnSsi"> <input type="text" id="liSsiTemplate" class="modalInputWidth form-control" placeholder="Select a SSI Template" /></span>
+                        </div>
                     </div>
-                    <div class="modal-body">
+                    <input type="hidden" id="accountNumber" />
+                    <input type="hidden" id="templateType" />
+                    @*<p></p>
                         <div class="row">
                             <div class="col-sm-8 col-md-3 col-lg-3">
-                                <label for="liSsiTemplate" class="control-label">SSI Template:</label>
+                                <label class="control-label">FFC Name</label>
                             </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <span id="spnSsi"> <input type="text" id="liSsiTemplate" class="modalInputWidth form-control" placeholder="Select a SSI Template" /></span>
-                            </div>
-                        </div>
-                        <input type="hidden" id="accountNumber" />
-                        <input type="hidden" id="templateType" />
-                        @*<p></p>
-                            <div class="row">
-                                <div class="col-sm-8 col-md-3 col-lg-3">
-                                    <label class="control-label">FFC Name</label>
-                                </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input type="text" id="FFCName" ng-model="onBoardingAccountSSITemplateMap.FFCName" class="form-control control-label" placeholder="FFC Name"/>
-                                </div>
-                            </div>
-                            <p></p>
-                            <div class="row">
-                                <div class="col-sm-8 col-md-3 col-lg-3">
-                                    <label class="control-label">FFC Number</label>
-                                </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input type="text" id="FFCNumber" ng-model="onBoardingAccountSSITemplateMap.FFCNumber" class="form-control control-label" placeholder="FFC Number"/>
-                                </div>
-                            </div>
-                            <p></p>
-                            <div class="row">
-                                <div class="col-sm-8 col-md-3 col-lg-3">
-                                    <label class="control-label">Reference</label>
-
-                                </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input type="text" id="Reference" ng-model="onBoardingAccountSSITemplateMap.Reference" class="form-control control-label" placeholder="Reference"/>
-
-                                </div>
-                            </div>*@
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddAccountSSITemplateMap()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Association
-                        </button>
-                        <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="accountDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Add {{ detail }}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row" ng-show="detail == 'Module'">
-                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                <label for="txtDetail" class="control-label">Report:</label>
-                            </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <input type="text" id="liAccountReport" class="modalInputWidth form-control" placeholder="{{ detail }}" />
-                            </div>
-                        </div>
-                        <br ng-show="detail == 'Module'" />
-                        <div class="row">
-                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                <label for="txtDetail" class="control-label">{{ detail }}:</label>
-                            </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <input type="text" id="txtDetail" class="modalInputWidth form-control" placeholder="{{ detail }}" />
-                            </div>
-                        </div>
-                        @*<div class="row" style="margin-top: 10px;">
-                                <div class="col-sm-4 col-md-4 col-lg-4">
-                                </div>
-                                <div class="col-sm-8 col-md-8 col-lg-8">
-                                    <label class="control-label">&nbsp;&nbsp;Example: US – New York</label>
-                                </div>
-                            </div>*@
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="addAccountDetail()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add {{ detail }}
-                        </button>
-                        <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="currencyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Add Currency</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                <label for="txtCurrency" class="control-label">Currency:</label>
-                            </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <input type="text" id="txtCurrency" class="modalInputWidth form-control" placeholder="Currency" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddCurrency()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Currency
-                        </button>
-                        <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="cashInstructionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Add Cash Instruction Mechanism</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
                             <div class="col-sm-8 col-md-5 col-lg-5">
-                                <label for="txtCashInstruction" class="control-label">Cash Instruction Mechanism:</label>
-                            </div>
-                            <div class="col-sm-8 col-md-7 col-lg-7">
-                                <input type="text" id="txtCashInstruction" class="modalInputWidth form-control" placeholder="Cash Instruction Mechanism" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddCashInstruction()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Cash Instruction
-                        </button>
-                        <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="beneficiaryABABICModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Add Beneficiary ABA / BIC</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                <label for="txtBICorABA" class="control-label">BIC or ABA Name:</label>
-                            </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <input type="text" id="txtBICorABA" class="modalInputWidth form-control" placeholder="BIC or ABA Name" />
+                                <input type="text" id="FFCName" ng-model="onBoardingAccountSSITemplateMap.FFCName" class="form-control control-label" placeholder="FFC Name"/>
                             </div>
                         </div>
                         <p></p>
                         <div class="row">
-                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                <label for="btnBICorABA" class="control-label">BIC or ABA Type:</label>
+                            <div class="col-sm-8 col-md-3 col-lg-3">
+                                <label class="control-label">FFC Number</label>
                             </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <input id="btnBICorABA" class="form-control" type="checkbox" data-offstyle="btn btn-sm btn-success" data-width="90" data-height="28" style="line-height: 21px" data-onstyle="btn btn-sm btn-primary" data-toggle="toggle" data-off="BIC" data-on="ABA" />
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                <label for="txtBankName" class="control-label">Bank Name:</label>
-                            </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <input type="text" id="txtBankName" class="modalInputWidth form-control" placeholder="Bank Name" />
+                            <div class="col-sm-8 col-md-5 col-lg-5">
+                                <input type="text" id="FFCNumber" ng-model="onBoardingAccountSSITemplateMap.FFCNumber" class="form-control control-label" placeholder="FFC Number"/>
                             </div>
                         </div>
                         <p></p>
                         <div class="row">
-                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                <label for="txtBankAddress" class="control-label">Bank Address:</label>
+                            <div class="col-sm-8 col-md-3 col-lg-3">
+                                <label class="control-label">Reference</label>
+
                             </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <textarea class="form-control modalInputWidth" rows="6" cols="10" placeholder="Bank Address" id="txtBankAddress"></textarea>
+                            <div class="col-sm-8 col-md-5 col-lg-5">
+                                <input type="text" id="Reference" ng-model="onBoardingAccountSSITemplateMap.Reference" class="form-control control-label" placeholder="Reference"/>
+
                             </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddBICorABA()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add BIC / ABA
-                        </button>
-                        <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
-                    </div>
+                        </div>*@
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddAccountSSITemplateMap()">
+                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Association
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                 </div>
             </div>
         </div>
-
-        <div class="modal fade" id="UpdateAccountMapStatusModal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="UpdateAccountMapStatusModal" aria-hidden="true" style="width: 100%">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Add Comments</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p class="text-left" id="pAccountMapMsg"></p>
-                        <textarea placeholder="Enter Comments" id="statusMapComments" style="width: 90%; max-width: none;" class="form-control"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="btnMapSaveComment" class="btn btn-warning btn-sm" ng-click="fnSaveAccountMapStatus()"><i class="glyphicon glyphicon-flag"></i>&nbsp;Proceed</button>
-                        <a href="#" class="btn btn-default btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> Cancel</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="authorizedPartyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Add Authorized Party</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                <label for="txtAuthorizedParty" class="control-label">Authorized Party:</label>
-                            </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <input type="text" id="txtAuthorizedParty" class="modalInputWidth form-control" placeholder="Authorized Party" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddAuthorizedParty()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Authorized Party
-                        </button>
-                        <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="swiftGroupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Add Swift Group</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                <label for="txtSwiftGroup" class="control-label">Swift Group:</label>
-                            </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <input type="text" id="txtSwiftGroup" class="modalInputWidth form-control" placeholder="Swift Group" />
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-sm-8 col-md-4 col-lg-4">
-                                <label for="txtSendersBIC" class="control-label">Senders BIC:</label>
-                            </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <input type="text" id="txtSendersBIC" class="modalInputWidth form-control" placeholder="Senders BIC" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddSwiftGroup()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Swift Group
-                        </button>
-                        <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
+
+    <div class="modal fade" id="accountDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add {{ detail }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" ng-show="detail == 'Module'">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtDetail" class="control-label">Report:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="liAccountReport" class="modalInputWidth form-control" placeholder="{{ detail }}" />
+                        </div>
+                    </div>
+                    <br ng-show="detail == 'Module'" />
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtDetail" class="control-label">{{ detail }}:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtDetail" class="modalInputWidth form-control" placeholder="{{ detail }}" />
+                        </div>
+                    </div>
+                    @*<div class="row" style="margin-top: 10px;">
+                            <div class="col-sm-4 col-md-4 col-lg-4">
+                            </div>
+                            <div class="col-sm-8 col-md-8 col-lg-8">
+                                <label class="control-label">&nbsp;&nbsp;Example: US – New York</label>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="addAccountDetail()">
+                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Add {{ detail }}
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="currencyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Currency</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtCurrency" class="control-label">Currency:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtCurrency" class="modalInputWidth form-control" placeholder="Currency" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddCurrency()">
+                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Currency
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cashInstructionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Cash Instruction Mechanism</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-5 col-lg-5">
+                            <label for="txtCashInstruction" class="control-label">Cash Instruction Mechanism:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-7 col-lg-7">
+                            <input type="text" id="txtCashInstruction" class="modalInputWidth form-control" placeholder="Cash Instruction Mechanism" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddCashInstruction()">
+                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Cash Instruction
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="beneficiaryABABICModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Beneficiary ABA / BIC</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtBICorABA" class="control-label">BIC or ABA Name:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtBICorABA" class="modalInputWidth form-control" placeholder="BIC or ABA Name" />
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="btnBICorABA" class="control-label">BIC or ABA Type:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input id="btnBICorABA" class="form-control" type="checkbox" data-offstyle="btn btn-sm btn-success" data-width="90" data-height="28" style="line-height: 21px" data-onstyle="btn btn-sm btn-primary" data-toggle="toggle" data-off="BIC" data-on="ABA" />
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtBankName" class="control-label">Bank Name:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtBankName" class="modalInputWidth form-control" placeholder="Bank Name" />
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtBankAddress" class="control-label">Bank Address:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <textarea class="form-control modalInputWidth" rows="6" cols="10" placeholder="Bank Address" id="txtBankAddress"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddBICorABA()">
+                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Add BIC / ABA
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="UpdateAccountMapStatusModal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="UpdateAccountMapStatusModal" aria-hidden="true" style="width: 100%">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Comments</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-left" id="pAccountMapMsg"></p>
+                    <textarea placeholder="Enter Comments" id="statusMapComments" style="width: 90%; max-width: none;" class="form-control"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnMapSaveComment" class="btn btn-warning btn-sm" ng-click="fnSaveAccountMapStatus()"><i class="glyphicon glyphicon-flag"></i>&nbsp;Proceed</button>
+                    <a href="#" class="btn btn-default btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="authorizedPartyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Authorized Party</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtAuthorizedParty" class="control-label">Authorized Party:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtAuthorizedParty" class="modalInputWidth form-control" placeholder="Authorized Party" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddAuthorizedParty()">
+                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Authorized Party
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="swiftGroupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Swift Group</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtSwiftGroup" class="control-label">Swift Group:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtSwiftGroup" class="modalInputWidth form-control" placeholder="Swift Group" />
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtSendersBIC" class="control-label">Senders BIC:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtSendersBIC" class="modalInputWidth form-control" placeholder="Senders BIC" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddSwiftGroup()">
+                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Swift Group
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 </div>
 
 
-    @section javascript
+@section javascript
 {
-        <script src="~/Scripts/OpsSecure/Accounts/AccountList.js"></script>
-    }
+    <script src="~/Scripts/OpsSecure/Accounts/AccountList.js"></script>
+}
 

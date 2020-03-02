@@ -147,9 +147,10 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                var onBoardingAccountDescription = new OnBoardingAccountDescription();
-                onBoardingAccountDescription.AccountDescription = accountDescription;
-                onBoardingAccountDescription.dmaAgreementTypeId = agreementTypeId;
+                var onBoardingAccountDescription = new OnBoardingAccountDescription
+                {
+                    AccountDescription = accountDescription, dmaAgreementTypeId = agreementTypeId
+                };
                 context.OnBoardingAccountDescriptions.Add(onBoardingAccountDescription);
                 context.SaveChanges();
             }

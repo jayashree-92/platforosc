@@ -29,7 +29,8 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
             'Last 30 Days': [moment().subtract(29, "days"), moment()],
             'This Month': [moment().startOf("month"), moment()],
             'Last Month': [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")],
-            'This Year': [moment().startOf("year"), moment()]
+            'This Year': [moment().startOf("year"), moment()],
+            'Last Year': [moment().subtract(1, "year").startOf("year"), moment().subtract(1, "year").endOf("year")]
         }
     }, dateRangeOnChangeCallback);
 
