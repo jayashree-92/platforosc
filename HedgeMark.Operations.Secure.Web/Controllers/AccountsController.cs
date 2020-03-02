@@ -63,22 +63,30 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAccountPreloadData()
         {
-            var hmFundIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
-            var hFunds = AdminFundManager.GetHFundsCreatedForDMA(hmFundIds, PreferredFundNameInSession);
-            var funds = hFunds.Select(s => new { id = s.HFundId, text = s.PerferredFundName, LegalName = s.LegalFundName });
-            var agreementData = OnBoardingDataManager.GetAgreementsForOnboardingAccountPreloadData(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
-            var counterpartyFamilies = OnBoardingDataManager.GetAllCounterpartyFamilies().Select(x => new { id = x.dmaCounterpartyFamilyId, text = x.CounterpartyFamily }).OrderBy(x => x.text).ToList();
-            var agreementFundIds = agreementData.Where(s => s.HMFundId > 0).Select(s => s.HMFundId).ToList();
-            var fundsWithAgreements = funds.Where(s => agreementFundIds.Contains(s.id)).ToList();
-            var agreements = agreementData.Select(s => new { id = s.AgreementOnboardingId, text = s.AgreementShortName, AgreementTypeId = s.AgreementTypeId, hmFundId = s.HMFundId, BrokerId = s.BrokerId }).ToList();
-            return Json(new
+            using (var context = new OperationsContext())
             {
-                agreementData,
-                agreements,
-                funds,
-                fundsWithAgreements,
-                counterpartyFamilies
-            });
+                var hFundIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
+                var intFundIds = AdminFundManager.GetUniversalDMAFundListQuery(context, PreferredFundNameInSession)
+                    .Where(s => AuthorizedSessionData.IsPrivilegedUser || hFundIds.Contains(s.hmFundId)).OrderBy(s => s.PreferredFundName)
+                    .Select(s => s.hmFundId).ToList();
+                var hmFundIds = intFundIds.Select(s => Convert.ToInt64(s)).ToList();
+                var hFunds = AdminFundManager.GetHFundsCreatedForDMA(hmFundIds, PreferredFundNameInSession);
+                var funds = hFunds.Select(s => new { id = s.HFundId, text = s.PerferredFundName, LegalName = s.LegalFundName });
+                var agreementData = OnBoardingDataManager.GetAgreementsForOnboardingAccountPreloadData(hFundIds, AuthorizedSessionData.IsPrivilegedUser);
+                var counterpartyFamilies = OnBoardingDataManager.GetAllCounterpartyFamilies().Select(x => new { id = x.dmaCounterpartyFamilyId, text = x.CounterpartyFamily }).OrderBy(x => x.text).ToList();
+                var agreementFundIds = agreementData.Where(s => s.HMFundId > 0).Select(s => s.HMFundId).ToList();
+                var fundsWithAgreements = funds.Where(s => agreementFundIds.Contains(s.id)).ToList();
+                var agreements = agreementData.Select(s => new { id = s.AgreementOnboardingId, text = s.AgreementShortName, AgreementTypeId = s.AgreementTypeId, hmFundId = s.HMFundId, BrokerId = s.BrokerId }).ToList();
+                return Json(new
+                {
+                    agreementData,
+                    agreements,
+                    funds,
+                    fundsWithAgreements,
+                    counterpartyFamilies
+                });
+            }
+            
         }
 
         public JsonResult GetAccountAssociationPreloadData()
