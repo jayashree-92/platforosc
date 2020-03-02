@@ -39,6 +39,10 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
 
     });
 
+    $scope.fnRemoveActionInProgres = function (wireId) {
+        $http.post("/Home/RemoveActionInProgress?wireId=" + wireId);
+    }
+
     $scope.IsWireTicketModelOpen = false;
     $scope.$on("wireTicketModelClosed", function (event, args) {
 

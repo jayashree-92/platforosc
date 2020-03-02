@@ -146,7 +146,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     },
                     {
                         "data": "HMWire.ApprovedAt",
-                        "sTitle": "ApprovedAt At",
+                        "sTitle": "Approved At",
                         "render": renderDotNetDateAndTime
                     }
 
