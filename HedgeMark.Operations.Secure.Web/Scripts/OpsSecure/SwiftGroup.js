@@ -181,6 +181,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
             notifyError("Swift group data exists for selected Swift Group and Sender's BIC. Please select a new combination.")
             return;
         }
+        $scope.formatSwiftGroup();
         var hmsSwiftGroup = angular.copy($scope.swiftGroup);
         $http({
             method: "POST",

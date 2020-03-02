@@ -105,21 +105,23 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 if (!result) {
                     return;
                 } else {
-                    if (rowElement.onBoardingAccountDocumentId > 0) {
-                        $http.post("/Accounts/RemoveAccountDocument", { fileName: rowElement.FileName, documentId: rowElement.onBoardingAccountDocumentId }).then(function () {
+                    $timeout(function () {
+                        if (rowElement.onBoardingAccountDocumentId > 0) {
+                            $http.post("/Accounts/RemoveAccountDocument", { fileName: rowElement.FileName, documentId: rowElement.onBoardingAccountDocumentId }).then(function () {
+                                accountDocumentTable[rowIndex].row(selectedRow).remove().draw();
+                                $("#spnAgrCurrentStatus").html("Saved as Draft");
+                                $("#hmStatus").show();
+                                $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountDocuments.pop(rowElement);
+                                notifySuccess("Account document has removed successfully");
+                            });
+                        } else {
                             accountDocumentTable[rowIndex].row(selectedRow).remove().draw();
                             $("#spnAgrCurrentStatus").html("Saved as Draft");
                             $("#hmStatus").show();
                             $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountDocuments.pop(rowElement);
                             notifySuccess("Account document has removed successfully");
-                        });
-                    } else {
-                        accountDocumentTable[rowIndex].row(selectedRow).remove().draw();
-                        $("#spnAgrCurrentStatus").html("Saved as Draft");
-                        $("#hmStatus").show();
-                        $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountDocuments.pop(rowElement);
-                        notifySuccess("Account document has removed successfully");
-                    }
+                        }
+                    }, 100);
                 }
             });
         });
