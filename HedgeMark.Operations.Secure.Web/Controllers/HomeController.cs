@@ -184,8 +184,10 @@ namespace HMOSecureWeb.Controllers
                 else
                     thisWire.ReceivingAccount.UltimateBeneficiary = new onBoardingAccountBICorABA();
 
-                thisWire.SendingAccount.Beneficiary.onBoardingAccounts = thisWire.SendingAccount.Beneficiary.onBoardingAccounts1 = thisWire.SendingAccount.Beneficiary.onBoardingAccounts2 = null;
-                thisWire.SendingAccount.Intermediary.onBoardingAccounts = thisWire.SendingAccount.Intermediary.onBoardingAccounts1 = thisWire.SendingAccount.Intermediary.onBoardingAccounts2 = null;
+                if (thisWire.SendingAccount.Beneficiary != null)
+                    thisWire.SendingAccount.Beneficiary.onBoardingAccounts = thisWire.SendingAccount.Beneficiary.onBoardingAccounts1 = thisWire.SendingAccount.Beneficiary.onBoardingAccounts2 = null;
+                if (thisWire.SendingAccount.Intermediary != null)
+                    thisWire.SendingAccount.Intermediary.onBoardingAccounts = thisWire.SendingAccount.Intermediary.onBoardingAccounts1 = thisWire.SendingAccount.Intermediary.onBoardingAccounts2 = null;
                 if (thisWire.SendingAccount.UltimateBeneficiary != null)
                     thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts = thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts1 = thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts2 = null;
 
