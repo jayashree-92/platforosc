@@ -86,22 +86,10 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     { "data": "PreferredFundName", "sTitle": "Fund" },
                     { "data": "SendingAccount.AccountName", "sTitle": "Sending Account Name" },
                     { "data": "SendingAccount.AccountNumber", "sTitle": "Sending Account Number" },
-                    //{ "data": "SendingAccount.AccountNumber", "sTitle": "Module/Origin", "render": function (tdata, type, row) { return ""; } },
-                    //{
-                    //    "data": "Counterparty", "sTitle": "Counterparty/Service Provider",
-                    //    "render": function (tdata) {
-                    //        return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
-                    //    }
-                    //},
                     {
                         "data": "TransferType", "sTitle": "Transfer Type"
                     },
-                    //{
-                    //    "mData": "Agreement.AgreementShortName", "sTitle": "Agreement",
-                    //    "mRender": function (tdata) {
-                    //        return "<div>" + (tdata != null ? tdata : "N/A") + "</div>";
-                    //    }
-                    //},
+
                     { "data": "HMWire.hmsWirePurposeLkup.Purpose", "sTitle": "Wire Purpose" },
                     {
                         "data": "HMWire.ValueDate", "sTitle": "Value Date",
@@ -181,17 +169,13 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     "sInfo": "Showing _START_ to _END_ of _TOTAL_ wire tickets",
                     "sInfoFiltered": " - filtering from _MAX_ tickets"
                 },
-                //"scrollX": false,
+
                 scroller: true,
                 "sScrollX": "100%",
-                "sScrollXInner": "100%",
-                //"sScrollY": false,
                 "scrollY": window.innerHeight - 250,
-                //stateSave: true,
-                //"scrollX": true,
+                "sScrollXInner": "100%",
+                "bScrollCollapse": true,
                 "order": [],
-                //"bSort": false,
-                //"bPaginate": false,
                 iDisplayLength: -1,
                 sRowSelect: false,
                 "preDrawCallback": function (settings) {
