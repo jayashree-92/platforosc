@@ -45,11 +45,6 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
                 "deferRender": false,
                 "bScrollCollapse": true,
                 scroller: true,
-                //sortable: false,
-                "searching": true,
-                "bInfo": false,
-                //"sDom": "ift",
-                //pagination: true,
                 "sScrollX": "100%",
                 "sScrollXInner": "100%",
                 "scrollY": window.innerHeight - 400,
@@ -57,7 +52,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
                 "oLanguage": {
                     "sSearch": "",
                     "sEmptyTable": "No Wire Portal Cut Offs available.",
-                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ Files"
+                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ Wire Portal Cut Offs"
                 }
             });
             $("html, body").animate({ scrollTop: $("#tblWirePortalCutoffData").offset().top }, "slow");

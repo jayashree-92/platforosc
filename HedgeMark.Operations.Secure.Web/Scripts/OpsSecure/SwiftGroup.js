@@ -56,11 +56,6 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
                 "deferRender": false,
                 "bScrollCollapse": true,
                 scroller: true,
-                //sortable: false,
-                "searching": true,
-                "bInfo": false,
-                //"sDom": "ift",
-                //pagination: true,
                 "sScrollX": "100%",
                 "sScrollXInner": "100%",
                 "scrollY": window.innerHeight - 400,
@@ -68,7 +63,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
                 "oLanguage": {
                     "sSearch": "",
                     "sEmptyTable": "No Swift Group Data available.",
-                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ Files"
+                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ Swift Groups"
                 }
             });
             $("html, body").animate({ scrollTop: $("#tblSwiftGroupData").offset().top }, "slow");

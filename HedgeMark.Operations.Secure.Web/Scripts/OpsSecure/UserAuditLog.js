@@ -92,12 +92,6 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                 ],
                 "deferRender": false,
                 "bScrollCollapse": true,
-                //scroller: true,
-                //sortable: false,
-                "searching": true,
-                "bInfo": false,
-                //"sDom": "ift",
-                //pagination: true,
                 "sScrollX": "100%",
                 "sScrollXInner": "100%",
                 "scrollY": window.innerHeight - 400,
@@ -111,7 +105,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                 "oLanguage": {
                     "sSearch": "",
                     "sEmptyTable": "No logs available.",
-                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ Files"
+                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ uploads"
                 }
             });
             $("html, body").animate({ scrollTop: $(containerId).offset().top }, "slow");
