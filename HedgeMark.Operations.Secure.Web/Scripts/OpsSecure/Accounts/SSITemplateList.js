@@ -141,7 +141,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                //"scrollX": false,
                "sScrollX": "100%",
                //sDom: "ift",
-               "scrollY": window.innerHeight - 400,
+               "scrollY": window.innerHeight - 350,
                "sScrollXInner": "100%",
                "bScrollCollapse": true,
                "order": [[33, "desc"]],
