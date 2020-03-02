@@ -538,7 +538,13 @@ function getDateForDisplay(dateTime) {
 function getDateAndTimeForDisplay(dateTime) {
     if (dateTime == null)
         return '-';
-    return moment(dateTime).format("lll");
+
+    var momentDate = moment(dateTime);
+
+    if (momentDate.year == 1)
+        return '-';
+
+    return momentDate.format("lll");
 }
 
 function validateEmailAddress(mailIds) {
