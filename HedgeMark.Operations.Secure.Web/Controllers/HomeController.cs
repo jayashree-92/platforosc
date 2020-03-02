@@ -161,7 +161,6 @@ namespace HMOSecureWeb.Controllers
                 wire.hmsWireStatusLkup.hmsWires = null;
                 wire.hmsWireTransferTypeLKup.hmsWires = null;
 
-
                 var fund = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) ?? new HFund();
                 var thisWire = new WireTicket
                 {
@@ -175,6 +174,22 @@ namespace HMOSecureWeb.Controllers
                     ClientShortName = fund.ClientShortName ?? string.Empty
                 };
 
+                thisWire.SendingAccount.onBoardingAccountSSITemplateMaps = null;
+                thisWire.ReceivingAccount.onBoardingAccountSSITemplateMaps = null;
+                thisWire.SSITemplate.onBoardingAccountSSITemplateMaps = null;
+
+                if (thisWire.SendingAccount.SwiftGroup != null)
+                    thisWire.SendingAccount.SwiftGroup.onBoardingAccounts = null;
+
+                if (thisWire.SendingAccount.WirePortalCutoff != null)
+                    thisWire.SendingAccount.WirePortalCutoff.onBoardingAccounts = null;
+
+                if (thisWire.ReceivingAccount.SwiftGroup != null)
+                    thisWire.ReceivingAccount.SwiftGroup.onBoardingAccounts = null;
+
+                if (thisWire.ReceivingAccount.WirePortalCutoff != null)
+                    thisWire.ReceivingAccount.WirePortalCutoff.onBoardingAccounts = null;
+
                 if (thisWire.SendingAccount.UltimateBeneficiary != null)
                     thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts = thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts1 = thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts2 = null;
                 else
@@ -183,7 +198,6 @@ namespace HMOSecureWeb.Controllers
                     thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts = thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts1 = thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts2 = null;
                 else
                     thisWire.ReceivingAccount.UltimateBeneficiary = new onBoardingAccountBICorABA();
-
 
                 if (thisWire.SSITemplate.Beneficiary != null)
                     thisWire.SSITemplate.Beneficiary.onBoardingAccounts = thisWire.SSITemplate.Beneficiary.onBoardingAccounts1 = thisWire.SSITemplate.Beneficiary.onBoardingAccounts2 = null;
