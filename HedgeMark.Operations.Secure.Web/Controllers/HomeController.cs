@@ -675,7 +675,7 @@ namespace HMOSecureWeb.Controllers
             var fundAccounts = WireDataManager.GetApprovedFundAccounts(fundId, isBookTransfer);
             var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber, Currency = s.Currency }).ToList();
             var receivingAccountsList = fundAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
-            var currencies = sendingAccountsList.Select(s => new { id = s.Currency, text = s.Currency }).ToList();
+            var currencies = sendingAccountsList.Select(s => new { id = s.Currency, text = s.Currency }).Distinct().ToList();
             return Json(new { sendingAccountsList, receivingAccountsList, currencies });
         }
 
