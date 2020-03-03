@@ -412,7 +412,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.copyAccount.AccountName = $scope.FundName;
 
         if ($scope.accountType == "Agreement") {
-            $scope.copyAccount.dmaAgreementOnBoardingId = $scope.agreementId;
+            $scope.copyAccount.dmaAgreementOnBoardingId = $scope.AgreementId;
         }
 
         $scope.copyAccount.hmFundId = $scope.FundId;
