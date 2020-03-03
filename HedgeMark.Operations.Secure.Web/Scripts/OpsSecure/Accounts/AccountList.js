@@ -280,6 +280,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             allowClear: true,
             data: []
         });
+        $("#liFund").select2('val', '');
+        $("#liAgreement").select2('val', '');
+        $("#liBroker").select2('val', '');
+        $scope.AgreementTypeId = 0;
+        $scope.BrokerId = 0;
+        $scope.AgrementType = "";
+        $scope.broker = "";
+        $("#spnBroker").hide();
+        $("#spnAgreement").hide();
         angular.element(document).on('change', "#liAccountType", function (event) {
             event.stopPropagation();
             $scope.accountType = $(this).val();
@@ -309,6 +318,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#liBroker").select2('val', '');
             $scope.AgreementTypeId = 0;
             $scope.BrokerId = 0;
+            $scope.AgrementType = "";
             $scope.broker = "";
         });
 
@@ -361,6 +371,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if ($(this).val() > 0) {
                 // Get row details 
                 $scope.AgreementTypeId = $(this).select2('data').AgreementTypeId;
+                $scope.AgreementType = $(this).select2('data').AgreementType;
                 $scope.BrokerId = $(this).select2('data').BrokerId;
                 var broker = $filter('filter')(angular.copy($scope.counterpartyFamilies), { 'BrokerId': $scope.BrokerId }, true)[0];
                 if (broker != undefined)
@@ -408,7 +419,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.copyAccount.BrokerId = $scope.BrokerId;
         $scope.copyAccount.onBoardingAccountSSITemplateMaps = [];
         $scope.copyAccount.onBoardingAccountDocuments = [];
-        $scope.copyAccount.IsReceivingAccountType = $scope.accountType == "Agreement" && $.inArray($scope.agreementType, $scope.receivingAccountTypes) > -1;
+        $scope.copyAccount.IsReceivingAccountType = $scope.accountType == "Agreement" && $.inArray($scope.AgreementType, $scope.receivingAccountTypes) > -1;
         if ($scope.copyAccount.IsReceivingAccountType || $scope.copyAccount.AuthorizedParty != "Hedgemark")
             $scope.copyAccount.IsReceivingAccount = true;
         else
@@ -1023,7 +1034,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
     $scope.fnOnSwiftGroupChange = function (swiftGroup, index) {
 
-        var swData = $.grep($scope.SwiftGroups, function (v) { return v.SwiftGroup == swiftGroup; })[0];
+        var swData = $.grep($scope.SwiftGroups, function (v) { return v.hmsSwiftGroupId == swiftGroup; })[0];
         if (swData != undefined) {
             $scope.swiftGroupInfo = swData;
             $("#txtSender" + index).val(swData.SendersBIC);

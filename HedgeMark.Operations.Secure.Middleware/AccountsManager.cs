@@ -234,39 +234,53 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                if (account.onBoardingAccountId == 0)
+                try
                 {
-                    account.CreatedAt = DateTime.Now;
-                    account.CreatedBy = userName;
-                    account.UpdatedAt = DateTime.Now;
-                    account.UpdatedBy = userName;
-                    account.onBoardingAccountStatus = "Created";
-                    context.onBoardingAccounts.Add(account);
-                }
-                else
-                {
-                    account.UpdatedAt = DateTime.Now;
-                    account.UpdatedBy = userName;
+                    if (account.onBoardingAccountId == 0)
+                    {
+                        account.CreatedAt = DateTime.Now;
+                        account.CreatedBy = userName;
+                        account.UpdatedAt = DateTime.Now;
+                        account.UpdatedBy = userName;
+                        account.onBoardingAccountStatus = "Created";
+                    }
+                    else
+                    {
+                        account.UpdatedAt = DateTime.Now;
+                        account.UpdatedBy = userName;
+                        
+                        if (account.onBoardingAccountModuleAssociations != null && account.onBoardingAccountModuleAssociations.Count > 0)
+                        {
+                            var accountToBeDeleted = context.onBoardingAccountModuleAssociations.Where(x => x.onBoardingAccountId == account.onBoardingAccountId).ToList();
+                            context.onBoardingAccountModuleAssociations.RemoveRange(accountToBeDeleted);
+                            context.onBoardingAccountModuleAssociations.AddRange(account.onBoardingAccountModuleAssociations);
+
+                            //new Repository<onBoardingAccountSSITemplateMap>().BulkInsert(account.onBoardingAccountSSITemplateMaps, dbSchemaName: "HMADMIN.");
+                        }
+
+                        if (account.onBoardingAccountSSITemplateMaps != null && account.onBoardingAccountSSITemplateMaps.Count > 0)
+                        {
+                            var ssiTemplateMapToBeDeleted = context.onBoardingAccountSSITemplateMaps.Where(x => x.onBoardingAccountId == account.onBoardingAccountId).ToList();
+                            context.onBoardingAccountSSITemplateMaps.RemoveRange(ssiTemplateMapToBeDeleted);
+                            context.onBoardingAccountSSITemplateMaps.AddRange(account.onBoardingAccountSSITemplateMaps);
+
+                            //new Repository<onBoardingAccountSSITemplateMap>().BulkInsert(account.onBoardingAccountSSITemplateMaps, dbSchemaName: "HMADMIN.");
+                        }
+                    }
+                    account.WirePortalCutoff = null;
+                    account.SwiftGroup = null;
+                    account.hmsAccountCallbacks = null;
+                    account.Beneficiary = null;
+                    account.UltimateBeneficiary = null;
+                    account.Intermediary = null;
                     context.onBoardingAccounts.AddOrUpdate(s => s.onBoardingAccountId, account);
-                    if (account.onBoardingAccountModuleAssociations != null && account.onBoardingAccountModuleAssociations.Count > 0)
-                    {
-                        var accountToBeDeleted = context.onBoardingAccountModuleAssociations.Where(x => x.onBoardingAccountId == account.onBoardingAccountId).ToList();
-                        context.onBoardingAccountModuleAssociations.RemoveRange(accountToBeDeleted);
-                        context.onBoardingAccountModuleAssociations.AddRange(account.onBoardingAccountModuleAssociations);
-
-                        //new Repository<onBoardingAccountSSITemplateMap>().BulkInsert(account.onBoardingAccountSSITemplateMaps, dbSchemaName: "HMADMIN.");
-                    }
-
-                    if (account.onBoardingAccountSSITemplateMaps != null && account.onBoardingAccountSSITemplateMaps.Count > 0)
-                    {
-                        var ssiTemplateMapToBeDeleted = context.onBoardingAccountSSITemplateMaps.Where(x => x.onBoardingAccountId == account.onBoardingAccountId).ToList();
-                        context.onBoardingAccountSSITemplateMaps.RemoveRange(ssiTemplateMapToBeDeleted);
-                        context.onBoardingAccountSSITemplateMaps.AddRange(account.onBoardingAccountSSITemplateMaps);
-
-                        //new Repository<onBoardingAccountSSITemplateMap>().BulkInsert(account.onBoardingAccountSSITemplateMaps, dbSchemaName: "HMADMIN.");
-                    }
+                    context.SaveChanges();
                 }
-                context.SaveChanges();
+                catch(Exception e)
+                {
+                    Logger.Error(e.Message, e);
+                    throw;
+                }
             }
 
             return account.onBoardingAccountId;
