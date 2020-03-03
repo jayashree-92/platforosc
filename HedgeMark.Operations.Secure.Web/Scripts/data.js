@@ -536,9 +536,9 @@ function getDateForDisplay(dateTime) {
 
 
 function getDateAndTimeForDisplay(dateTime) {
-    if (dateTime == null)
+    if (dateTime == null || dateTime.year == 1)
         return '-';
-
+    
     var momentDate = moment(dateTime);
 
     if (momentDate.year == 1)
