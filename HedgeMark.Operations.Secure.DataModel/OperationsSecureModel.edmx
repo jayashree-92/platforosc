@@ -5,6 +5,21 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="OperationsSecureModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="hmsAccountCallback">
+          <Key>
+            <PropertyRef Name="hmsAccountCallbackId" />
+          </Key>
+          <Property Name="hmsAccountCallbackId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="onBoardingAccountId" Type="bigint" Nullable="false" />
+          <Property Name="ContactName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ContactNumber" Type="varchar" MaxLength="30" />
+          <Property Name="Title" Type="varchar" MaxLength="200" />
+          <Property Name="IsCallbackConfirmed" Type="bit" Nullable="false" />
+          <Property Name="RecCreatedBy" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="RecCreatedDt" Type="datetime" Nullable="false" />
+          <Property Name="ConfirmedBy" Type="varchar" MaxLength="50" />
+          <Property Name="ConfirmedAt" Type="datetime" />
+        </EntityType>
         <EntityType Name="hmsActionInProgress">
           <Key>
             <PropertyRef Name="hmsActionInProgressId" />
@@ -486,6 +501,18 @@
           <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
           <Property Name="CutOffTimeZone" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
+        <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
+          <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
+          <End Role="hmsAccountCallback" Type="Self.hmsAccountCallback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccount">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Principal>
+            <Dependent Role="hmsAccountCallback">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_hmsActionInProgress_hmsWireId">
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
           <End Role="hmsActionInProgress" Type="Self.hmsActionInProgress" Multiplicity="*" />
@@ -883,6 +910,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="OperationsSecureModelStoreContainer">
+          <EntitySet Name="hmsAccountCallback" EntityType="Self.hmsAccountCallback" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsActionInProgress" EntityType="Self.hmsActionInProgress" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsBulkUploadLog" EntityType="Self.hmsBulkUploadLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsMQLogs" EntityType="Self.hmsMQLogs" Schema="dbo" store:Type="Tables" />
@@ -921,6 +949,10 @@
           <EntitySet Name="onBoardingSSITemplateDocument" EntityType="Self.onBoardingSSITemplateDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OnBoardingSSITemplateServiceProvider" EntityType="Self.OnBoardingSSITemplateServiceProvider" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingWirePortalCutoff" EntityType="Self.onBoardingWirePortalCutoff" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_hmsAccountCallback_onBoardingAccountId" Association="Self.FK_hmsAccountCallback_onBoardingAccountId">
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccount" />
+            <End Role="hmsAccountCallback" EntitySet="hmsAccountCallback" />
+          </AssociationSet>
           <AssociationSet Name="FK_hmsActionInProgress_hmsWireId" Association="Self.FK_hmsActionInProgress_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsActionInProgress" EntitySet="hmsActionInProgress" />
@@ -1228,6 +1260,11 @@
           <AssociationSet Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" Association="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
             <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
             <End Role="onBoardingSSITemplateDocument" EntitySet="onBoardingSSITemplateDocuments" />
+          </AssociationSet>
+          <EntitySet Name="hmsAccountCallbacks" EntityType="OperationsSecureModel.hmsAccountCallback" />
+          <AssociationSet Name="FK_hmsAccountCallback_onBoardingAccountId" Association="OperationsSecureModel.FK_hmsAccountCallback_onBoardingAccountId">
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+            <End Role="hmsAccountCallback" EntitySet="hmsAccountCallbacks" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
@@ -1973,6 +2010,7 @@
           <NavigationProperty Name="onBoardingAccountModuleAssociations" Relationship="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountModuleAssociation" />
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
           <Property Name="AssociatedCustodyAcctNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hmsAccountCallbacks" Relationship="OperationsSecureModel.FK_hmsAccountCallback_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="hmsAccountCallback" />
         </EntityType>
         <EntityType Name="onBoardingSSITemplate">
           <Key>
@@ -2170,6 +2208,34 @@
             </Principal>
             <Dependent Role="onBoardingSSITemplateDocument">
               <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsAccountCallback">
+          <Key>
+            <PropertyRef Name="hmsAccountCallbackId" />
+          </Key>
+          <Property Name="hmsAccountCallbackId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="onBoardingAccountId" Type="Int64" Nullable="false" />
+          <Property Name="ContactName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactNumber" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Title" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IsCallbackConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="RecCreatedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ConfirmedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ConfirmedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="onBoardingAccount" Relationship="OperationsSecureModel.FK_hmsAccountCallback_onBoardingAccountId" FromRole="hmsAccountCallback" ToRole="onBoardingAccount" />
+        </EntityType>
+        <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
+          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsAccountCallback" Role="hmsAccountCallback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccount">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Principal>
+            <Dependent Role="hmsAccountCallback">
+              <PropertyRef Name="onBoardingAccountId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2695,6 +2761,22 @@
                 <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
                 <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
                 <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsAccountCallbacks">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsAccountCallback">
+              <MappingFragment StoreEntitySet="hmsAccountCallback">
+                <ScalarProperty Name="ConfirmedAt" ColumnName="ConfirmedAt" />
+                <ScalarProperty Name="ConfirmedBy" ColumnName="ConfirmedBy" />
+                <ScalarProperty Name="RecCreatedDt" ColumnName="RecCreatedDt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="IsCallbackConfirmed" ColumnName="IsCallbackConfirmed" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
+                <ScalarProperty Name="hmsAccountCallbackId" ColumnName="hmsAccountCallbackId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

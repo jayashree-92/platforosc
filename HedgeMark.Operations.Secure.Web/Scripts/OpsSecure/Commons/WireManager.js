@@ -1273,7 +1273,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     }
                     else {
                         $scope.receivingBookAccountList = $filter('filter')(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
-                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2('val');
+                            return acc.id != $scope.WireTicket.OnBoardAccountId;
                         }, true);
                         angular.element("#liReceivingBookAccount").select2('destroy');
                         angular.element("#liReceivingBookAccount").select2({

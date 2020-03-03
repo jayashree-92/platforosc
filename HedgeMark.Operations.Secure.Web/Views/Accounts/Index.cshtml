@@ -538,9 +538,28 @@
                                     <p></p>
                                 </div>
                             </div>
+                            <div class="panel panel-default ng-show-hide" id="accountCallback_{{$index}}" plindex="{{$index}}" data-toggle='collapse'>
+                                <div class="panel-heading" data-toggle="collapse" data-target="#accountCallbackInfo_{{$index}}" aria-expanded="false" aria-controls="accountCallbackInfo_{{$index}}" ng-click="adjustCallback($index)">
+                                    <b>Callback Check</b>
+                                    <span class="pull-right">
+                                        <a class="btn btn-xs btn-primary" ng-click="fnAddCallbackModal($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Callback</a>&nbsp;&nbsp;
+                                        <i class="indicator glyphicon glyphicon-chevron-down"></i>
+                                    </span>
+                                </div>
+                                <div id="accountCallbackInfo_{{$index}}" class="panel-body collapse">
+                                    <div class="control-group">
+                                        <p></p>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                                <table id="accountCallbackTbl_{{$index}}" class="table table-condensed table-bordered table-striped table-hover ssiTemplate table-highlighted" tindex="{{$index}}"><tfoot></tfoot></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="panel panel-default ng-show-hide" id="accountContactInfo_{{$index}}" data-toggle='collapse'>
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountContactDetailInfo_{{$index}}" aria-expanded="false" aria-controls="accountContactDetailInfo_{{$index}}">
-                                    <b>Callback Check</b>
+                                    <b>Contact</b>
                                     <span class="pull-right">
                                         <a class="btn btn-xs btn-info" ng-click="$event.stopPropagation();fnCreateContact()"><i class="glyphicon glyphicon-phone"></i>&nbsp;Add Contact</a>&nbsp;&nbsp;
                                         <i class="indicator glyphicon glyphicon-chevron-down"></i>
@@ -571,6 +590,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="panel panel-default ng-show-hide" id="accountAttachment_{{$index}}" plindex="{{$index}}" data-toggle='collapse'>
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountAttachmentDetailInfo_{{$index}}" aria-expanded="false" aria-controls="accountAttachmentDetailInfo_{{$index}}">
                                     <b>Attachment</b><span class="pull-right"><i class="indicator glyphicon glyphicon-chevron-down"></i></span>
@@ -945,7 +965,51 @@
         </div>
     </div>
 
-</div>
+    <div class="modal fade" id="callbackModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Callback</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtContactName" class="control-label">Contact Name:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtContactName" ng-model="callback.ContactName" class="modalInputWidth form-control" placeholder="Contact Name" />
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtContactNumber" class="control-label">Contact Number:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtContactNumber" ng-model="callback.ContactNumber" class="modalInputWidth form-control" placeholder="Contact Number" />
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtTitle" class="control-label">Title:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtTitle" ng-model="callback.Title" class="modalInputWidth form-control" placeholder="Title" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnSaveCallback()">
+                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Save Callback
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 

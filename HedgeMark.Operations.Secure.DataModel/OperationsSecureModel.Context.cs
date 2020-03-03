@@ -63,5 +63,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsSwiftGroupStatusLkp> hmsSwiftGroupStatusLkps { get; set; }
         public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
         public virtual DbSet<onBoardingSSITemplate> onBoardingSSITemplates { get; set; }
+        public virtual DbSet<hmsAccountCallback> hmsAccountCallbacks { get; set; }
     }
 }

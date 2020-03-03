@@ -20,6 +20,7 @@ namespace HedgeMark.Operations.Secure.DataModel
             this.onBoardingAccountDocuments = new HashSet<onBoardingAccountDocument>();
             this.onBoardingAccountModuleAssociations = new HashSet<onBoardingAccountModuleAssociation>();
             this.onBoardingAccountSSITemplateMaps = new HashSet<onBoardingAccountSSITemplateMap>();
+            this.hmsAccountCallbacks = new HashSet<hmsAccountCallback>();
         }
     
         public long onBoardingAccountId { get; set; }
@@ -85,5 +86,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual ICollection<onBoardingAccountModuleAssociation> onBoardingAccountModuleAssociations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsAccountCallback> hmsAccountCallbacks { get; set; }
     }
 }
