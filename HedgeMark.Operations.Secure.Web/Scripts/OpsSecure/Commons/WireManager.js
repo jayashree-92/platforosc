@@ -11,7 +11,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.loadAdhocWireRelatedData();
     }
 
-
     $scope.promise = {};
 
     $scope.loadWireRelatedData = function () {
@@ -137,7 +136,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             else if (allusers.length == 2)
                 $scope.currentlyViewedBy = allusers[0] + ", " + allusers[1];
             else if (allusers.length > 2)
-                $scope.currentlyViewedBy = allusers[0] + ", " + allusers[1] + " and " + allusers.length - 2 + " other(s).";
+                $scope.currentlyViewedBy = allusers[0] + ", " + allusers[1] + " and " + (allusers.length - 2) + " other(s).";
 
             $("#wireCurrentlyViewedBy").collapse("show");
         }

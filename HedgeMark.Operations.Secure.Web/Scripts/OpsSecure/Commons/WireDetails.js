@@ -15,8 +15,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
         $scope.$emit("wireTicketModelOpen");
     }).on("hide.bs.modal", function () {
         $scope.IsWireTicketModelOpen = false;
-        console.log($scope.wireObj);
-
+        $("#wireCurrentlyViewedBy").collapse("hide");
         if ($scope.wireObj.WireId > 0)
             $scope.fnRemoveActionInProgres($scope.wireObj.WireId);
         $scope.$emit("wireTicketModelClosed", { statusId: $scope.SelectedStatusId });

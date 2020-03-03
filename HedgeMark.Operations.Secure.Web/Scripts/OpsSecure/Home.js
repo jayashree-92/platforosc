@@ -58,6 +58,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
 
     $scope.$on("wireTicketModelOpen", function (event, args) {
         $scope.IsWireTicketModelOpen = true;
+        $("#wireCurrentlyViewedBy").collapse("hide");
     });
 
     $scope.SelectedStatusId = 0;
