@@ -462,6 +462,35 @@ namespace HMOSecureWeb.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
+        public JsonResult GetAccountCallbackData(long accountId)
+        {
+            var callbacks = AccountManager.GetAccountCallbacks(accountId);
+            return Json(callbacks, JsonContentType, JsonContentEncoding);
+        }
+
+        public void AddOrUpdateCallback(hmsAccountCallback callback)
+        {
+            hmsAccountCallback existingCallback;
+            if (callback.hmsAccountCallbackId > 0)
+            {
+                existingCallback = AccountManager.GetCallbackData(callback.hmsAccountCallbackId);
+                callback.RecCreatedDt = existingCallback.RecCreatedDt;
+                callback.RecCreatedBy = existingCallback.RecCreatedBy;
+                if (callback.IsCallbackConfirmed)
+                {
+                    callback.ConfirmedBy = UserName;
+                    callback.ConfirmedAt = DateTime.Now;
+                }
+            }
+            else
+            {
+                callback.RecCreatedBy = UserName;
+                callback.RecCreatedDt = DateTime.Now;
+            }
+            
+            AccountManager.AddOrUpdateCallback(callback);
+        }
+
         public JsonResult GetAllAccountBicorAba()
         {
             var accountBicorAba = AccountManager.GetAllAccountBicorAba();

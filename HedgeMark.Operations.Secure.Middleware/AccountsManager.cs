@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
+using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
 using log4net;
 
@@ -32,6 +33,7 @@ namespace HMOSecureMiddleware
                     .Include(s => s.UltimateBeneficiary)
                     .Include(s => s.WirePortalCutoff)
                     .Include(s => s.SwiftGroup)
+                    .Include(s => s.hmsAccountCallbacks)
                     .Include(x => x.onBoardingAccountSSITemplateMaps).Where(x => !x.IsDeleted).Where(s => isPreviledgedUser || hmFundIds.Contains(s.hmFundId)).ToList();
             }
 
@@ -60,6 +62,7 @@ namespace HMOSecureMiddleware
                     .Include(s => s.UltimateBeneficiary)
                     .Include(s => s.WirePortalCutoff)
                     .Include(s => s.SwiftGroup)
+                    .Include(s => s.hmsAccountCallbacks)
                     .Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
                     .Where(account => account.BrokerId == brokerId && account.hmFundId == fundId && account.AccountType != AgreementAccountType && !account.IsDeleted).ToList();
             }
@@ -75,7 +78,9 @@ namespace HMOSecureMiddleware
                     .Include(s => s.Intermediary)
                     .Include(s => s.UltimateBeneficiary)
                     .Include(s => s.WirePortalCutoff)
-                    .Include(s => s.SwiftGroup).FirstOrDefault(acnt => acnt.onBoardingAccountId == accountId);
+                    .Include(s => s.SwiftGroup)
+                    .Include(s => s.hmsAccountCallbacks)
+                    .FirstOrDefault(acnt => acnt.onBoardingAccountId == accountId);
 
                 if (account == null)
                     return null;
@@ -90,6 +95,8 @@ namespace HMOSecureMiddleware
                     account.UltimateBeneficiary = new onBoardingAccountBICorABA();
                 if (account.SwiftGroup == null)
                     account.SwiftGroup = new hmsSwiftGroup();
+                if (account.hmsAccountCallbacks == null)
+                    account.hmsAccountCallbacks = new List<hmsAccountCallback>();
                 //remove circular references
                 account.WirePortalCutoff.onBoardingAccounts = null;
                 account.Beneficiary.onBoardingAccounts = account.Beneficiary.onBoardingAccounts1 = account.Beneficiary.onBoardingAccounts2 = null;
@@ -99,6 +106,7 @@ namespace HMOSecureMiddleware
                 account.SwiftGroup.onBoardingAccounts = null;
                 if (account.SwiftGroup.hmsSwiftGroupStatusLkp != null)
                     account.SwiftGroup.hmsSwiftGroupStatusLkp.hmsSwiftGroups = null;
+                account.hmsAccountCallbacks.ForEach(s => s.onBoardingAccount = null);
                 return account;
             }
 
@@ -330,6 +338,11 @@ namespace HMOSecureMiddleware
                     File.Delete(fileinfo.FullName);
 
                 context.onBoardingAccountDocuments.Remove(document);
+                var account = context.onBoardingAccounts.First(s => s.onBoardingAccountId == document.onBoardingAccountId);
+                account.onBoardingAccountStatus = "Created";
+                account.ApprovedBy = null;
+                account.UpdatedAt = DateTime.Now;
+                context.onBoardingAccounts.AddOrUpdate(account);
                 context.SaveChanges();
             }
         }
@@ -642,6 +655,35 @@ namespace HMOSecureMiddleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
                 return context.hmsSwiftGroups.Where(s => !s.IsDeleted && (brokerId == -1 || s.BrokerLegalEntityId == brokerId)).AsNoTracking().ToList();
+            }
+        }
+
+        public static List<hmsAccountCallback> GetAccountCallbacks(long accountId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.hmsAccountCallbacks.Where(s => s.onBoardingAccountId == accountId).AsNoTracking().ToList();
+            }
+        }
+
+        public static hmsAccountCallback GetCallbackData(long callbackId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.hmsAccountCallbacks.First(s => s.hmsAccountCallbackId == callbackId);
+            }
+        }
+
+        public static void AddOrUpdateCallback(hmsAccountCallback callback)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+               context.hmsAccountCallbacks.AddOrUpdate(callback);
+                context.SaveChanges();
             }
         }
 

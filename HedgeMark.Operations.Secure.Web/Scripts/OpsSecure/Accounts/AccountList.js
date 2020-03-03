@@ -113,6 +113,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                                 $("#hmStatus").show();
                                 $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountDocuments.pop(rowElement);
                                 notifySuccess("Account document has removed successfully");
+                                
                             });
                         } else {
                             accountDocumentTable[rowIndex].row(selectedRow).remove().draw();
@@ -121,6 +122,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                             $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountDocuments.pop(rowElement);
                             notifySuccess("Account document has removed successfully");
                         }
+                        $scope.fnGetAccounts();
                     }, 100);
                 }
             });
@@ -1364,6 +1366,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         //}
     }
 
+    $scope.fnGetAccountCallbackData = function (accountId, index) {
+        $http.get("/Accounts/GetAccountCallbackData?accountId=" + accountId).then(function (response) {
+            $scope.onBoardingAccountDetails[index].hmsAccountCallbacks = response.data;
+            $scope.viewCallbackTable(response.data, index);
+        });
+    } 
+
     $scope.fnLoadDefaultDropDowns = function (key) {
 
         $("#liBeneficiaryType" + key).select2({
@@ -1697,6 +1706,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#spnAgrCurrentStatus").html("Saved as Draft");
                 $("#hmStatus").show();
                 viewAttachmentTable($scope.accountDocuments, key);
+                $scope.fnGetAccounts();
             },
             queuecomplete: function () {
             },
@@ -1747,8 +1757,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             $scope.fnGetAccountDescriptions(key);
             $scope.fnGetAccountModules(key);
-            if(value.OnboardingAccountId > 0)
+            if (value.OnboardingAccountId > 0) {
                 $scope.fnLoadContactDetails($scope.BrokerId, value.ContactName, key);
+                
+            }
+            if (value.onBoardingAccountId > 0)
+            $scope.fnGetAccountCallbackData(value.onBoardingAccountId, key);
             $scope.fnLoadDefaultDropDowns(key);
             $scope.fnGetAuthorizedParty(key);
             $scope.fnGetSwiftGroup(key);
@@ -2501,6 +2515,216 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             "<table id=\"accountRowTable" + aId + "\" class=\"table table-bordered table-condensed\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\" width=\"100%\"></table>" +
             "</div>";
     }
+
+    $scope.fnSaveCallback = function () {
+        if ($("#txtContactName").val() == undefined || $("#txtContactName").val() == "") {
+            //pop-up    
+            $("#txtContactName").popover({
+                placement: "right",
+                trigger: "manual",
+                container: "body",
+                content: "Contact Name cannot be empty. Please add a valid name",
+                html: true,
+                width: "250px"
+            });
+
+            $("#txtContactName").popover("show");
+            return;
+        }
+
+        $("#txtContactName").popover("hide");
+        if ($("#txtContactNumber").val() == undefined || $("#txtContactNumber").val() == "") {
+            //pop-up    
+            $("#txtContactNumber").popover({
+                placement: "right",
+                trigger: "manual",
+                container: "body",
+                content: "Contact Number cannot be empty. Please add a valid number",
+                html: true,
+                width: "250px"
+            });
+
+            $("#txtContactNumber").popover("show");
+            return;
+        }
+
+        $("#txtContactNumber").popover("hide");
+        var isExists = false;
+        $($scope.callbackData).each(function (i, v) {
+            if ($("#txtContactNumber").val() == v.ContactNumber && ("#txtContactName").val() == v.ContactName) {
+                isExists = true;
+                return false;
+            }
+        });
+        if (isExists) {
+            $("#txtContactName").popover({
+                placement: "right",
+                trigger: "manual",
+                container: "body",
+                content: "Contact Name & Contact Number already exists. Please enter a different combination.",
+                html: true,
+                width: "250px"
+            });
+            $("#txtContactName").popover("show");
+            return;
+        }
+
+        $http({
+            method: "POST",
+            url: "/Accounts/AddOrUpdateCallback",
+            type: "json",
+            data: JSON.stringify({
+                callback: $scope.callback
+            })
+        }).then(function (response) {
+            notifySuccess("Account Call back added successfully");
+            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[$scope.PanelIndex].onBoardingAccountId, $scope.PanelIndex);
+        });
+
+        $("#callbackModal").modal("hide");
+    }
+
+    $scope.fnAddCallbackModal = function (panelIndex) {
+        $scope.PanelIndex = panelIndex;
+        $scope.callback = { onBoardingAccountId: $scope.onBoardingAccountDetails[panelIndex].onBoardingAccountId };
+        $("#callbackModal").modal({
+            show: true,
+            keyboard: true
+        }).on("hidden.bs.modal", function () {
+            $("#txtContactName").popover("hide");
+            $("#txtContactNumber").popover("hide");
+            });
+    }
+
+    $scope.accountCallbackTable = [];
+    $scope.adjustCallback = function (index) {
+        if ($scope.accountCallbackTable[index] != undefined)
+        $scope.accountCallbackTable[index].columns.adjust().draw(true);
+    }
+    $scope.viewCallbackTable = function (data, index) {
+
+        if ($("#accountCallbackTbl_" + index).hasClass("initialized")) {
+            fnDestroyDataTable("#accountCallbackTbl_" + index);
+        }
+        $scope.accountCallbackTable[index] = $("#accountCallbackTbl_" + index).DataTable(
+            {
+                aaData: data,
+                "bDestroy": true,
+                "columns": [
+                    { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
+                    { "mData": "hmsAccountCallbackId", "sTitle": "hmsAccountCallbackId", visible: false },
+                    {
+                        "mData": "ContactName", "sTitle": "Contact Name"
+                    },
+                    {
+                        "mData": "ContactNumber", "sTitle": "Contact Number"
+                    },
+                    {
+                        "mData": "Title", "sTitle": "Title"
+                    },
+
+                    {
+                        "mData": "IsCallbackConfirmed", "sTitle": "Callback Confirmation",
+                        "mRender": function (tdata) {
+                            if (tdata)
+                                return "<label class='label label-success'>Confirmed</label>";
+
+                            return "<button class='btn btn-primary btn-xs btnCallbackConfirm' title='Confirm'>Confirm</button>";
+                        }
+                    },
+
+                    {
+                        "mData": "ConfirmedBy", "sTitle": "Confirmed By", "mRender": function (data, row) {
+                            return row.IsCallbackConfirmed ? humanizeEmail(data) : "";
+                        }
+                    },
+                    {
+                        "mData": "CreatedAt",
+                        "sTitle": "Created Date",
+                        "type": "dotnet-date",
+                        "mRender": function (tdata, row) {
+                            if (!row.IsCallbackConfirmed)
+                                return "";
+
+                            return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                        }
+                    },
+                    {
+                        "mData": "RecCreatedBy", "sTitle": "Created By", "mRender": function (data) {
+                            return humanizeEmail(data);
+                        }
+                    },
+                    {
+                        "mData": "RecCreatedDt",
+                        "sTitle": "Created At",
+                        "type": "dotnet-date",
+                        "mRender": function (tdata) {
+                            return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                        }
+                    }
+                ],
+                "oLanguage": {
+                    "sSearch": "",
+                    "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Callbacks",
+                    "sInfoFiltered": " - filtering from _MAX_ Callbacks"
+                },
+                "createdRow": function (row, data) {
+                    switch (data.IsCallbackConfirmed) {
+                        case true:
+                            $(row).addClass("success");
+                            break;
+                        case false:
+                            $(row).addClass("warning");
+                            break;
+                    }
+
+                },
+                //"scrollX": false,
+                "deferRender": true,
+                // "scroller": true,
+                "orderClasses": false,
+                "sScrollX": "100%",
+                //sDom: "ift",
+                "sScrollY": 450,
+                "sScrollXInner": "100%",
+                "bScrollCollapse": true,
+                "order": [],
+                //"bPaginate": false,
+                iDisplayLength: -1
+            });
+
+        $(document).on("click", ".btnCallbackConfirm", function (event) {
+            event.preventDefault();
+            var selectedRow = $(this).parents("tr");
+            var rowElement = $scope.accountCallbackTable[index].row(selectedRow).data();
+            bootbox.confirm("Are you sure to confirm the call back?", function (result) {
+                if (!result) {
+                    return;
+                } else {
+                    $timeout(function () {
+                        rowElement.IsCallbackConfirmed = true;
+                        $http({
+                            method: "POST",
+                            url: "/Accounts/AddOrUpdateCallback",
+                            type: "json",
+                            data: JSON.stringify({
+                                callback: rowElement
+                            })
+                        }).then(function (response) {
+                            notifySuccess("Account Call back added successfully");
+                            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[index].onBoardingAccountId, index);
+                            notifySuccess("Account callback confirmed successfully");
+                        });
+                    }, 100);
+                }
+            });
+        });
+
+        $timeout(function () {
+            $scope.accountCallbackTable[index].columns.adjust().draw(true);
+        }, 1000);
+
+    } 
 
     function viewAssociationTable(data) {
 

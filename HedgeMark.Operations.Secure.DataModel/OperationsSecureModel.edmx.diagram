@@ -76,6 +76,8 @@
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsAccountCallback" Width="1.5" PointX="24.125" PointY="14.75" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsAccountCallback_onBoardingAccountId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
