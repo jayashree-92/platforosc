@@ -215,6 +215,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }, 100);
 
             $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
+            $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
         });
     }
 
@@ -466,15 +467,14 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
 
     $scope.validateWireInitiationofBIC = function () {
-        var isValid;
-        switch ($scope.accountDetail.SwiftGroup.SwiftGroupStatusId)
-        {
+        var isValid = false;
+        switch ($scope.accountDetail.SwiftGroup.SwiftGroupStatusId) {
             case 1: isValid = false;
-                              break;
-            case 2:   isValid = $scope.WireTicket.Amount <= 10;
-                              break;
-            case 3:      isValid = true;
-                              break;
+                break;
+            case 2: isValid = $scope.WireTicket.Amount <= 10;
+                break;
+            case 3: isValid = true;
+                break;
         }
         if (!isValid) {
             $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
@@ -760,7 +760,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         var cashSweepTime = angular.copy(account.CashSweepTime);
         var cutOffTime = null;
         if (account.WirePortalCutoff != null)
-         cutOffTime = angular.copy(account.WirePortalCutoff.CutoffTime);
+            cutOffTime = angular.copy(account.WirePortalCutoff.CutoffTime);
         var date = new Date();
         if (cashSweepTime != null && cashSweepTime != "" && cashSweepTime != undefined) {
             account.CashSweepTime = new Date(date.getYear(), date.getMonth(), date.getDate(), cashSweepTime.Hours, cashSweepTime.Minutes, cashSweepTime.Seconds);
@@ -1247,7 +1247,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $("#liReceivingAccount").select2('val', '').trigger('change');
             }
         }, 50);
-    });    
+    });
 
     angular.element(document).on("change", "#liSendingAccount", function () {
         $timeout(function () {

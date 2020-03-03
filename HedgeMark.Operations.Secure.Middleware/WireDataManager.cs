@@ -245,10 +245,9 @@ namespace HMOSecureMiddleware
 
             var lastMessageStatus = 0;
             var lastKey = string.Empty;
-            var lastMessageType = string.Empty;
             foreach (var log in wireLogs)
             {
-                lastMessageType = log.hmsWireMessageType.MessageType;
+                var lastMessageType = log.hmsWireMessageType.MessageType;
 
                 lastKey = !isMultiMessage
                     ? log.hmsWireLogTypeLkup.LogType
