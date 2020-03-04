@@ -1984,7 +1984,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             Status: pendingStatus
         };
 
-        $http.post("/Accounts/AddAccountSsiTemplateMap", { accountSsiTemplateMap: $scope.onBoardingAccountSSITemplateMap }).then(function () {
+        $http.post("/Accounts/AddAccountSsiTemplateMap", { accountSsiTemplateMap: [$scope.onBoardingAccountSSITemplateMap] }).then(function () {
             notifySuccess("Ssi template mapped to account successfully");
             $scope.ssiTemplateMaps.push($scope.onBoardingAccountSSITemplateMap);
             //$scope.onBoardingAccountDetails[$scope.PanelIndex].onBoardingAccountSSITemplateMaps.push($scope.onBoardingAccountSSITemplateMap);

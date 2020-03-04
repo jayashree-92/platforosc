@@ -10,292 +10,290 @@
         <legend>
             SSI Template
             <span class="label label-primary shadowBox" style="font-size: 12px;vertical-align: middle">{{ssiTemplate.TemplateName}}</span>
+            <span id="hmStatus" class="label ng-scope pull-right" ng-class="{'label-default': ssiTemplate.SSITemplateStatus == 'Saved As Draft','label-warning': ssiTemplate.SSITemplateStatus == 'Pending Approval','label-success': ssiTemplate.SSITemplateStatus == 'Approved' }" ng-if="ssiTemplateId!=0"><i class="glyphicon glyphicon-tag"></i>&nbsp;<span id="spnSSITempCurrentStatus">{{ssiTemplate.SSITemplateStatus}}</span></span>
         </legend>
 
         <div id="ssiTemplateOnBoardContainer">
             <form name="ssiTemplateForm">
-
-                <div class="panel panel-default container-fluid" id="plnSsiTemplate">
-
+                <div class="panel panel-default" id="plnSsiTemplate">
                     <div class="panel-body" id="ssiTemplateDetailDiv">
                         <input type="hidden" ng-model="ssiTemplate.onBoardingSSITemplateId" />
-                        <span id="hmStatus" class="label ng-scope pull-right" ng-class="{'label-default': ssiTemplate.SSITemplateStatus == 'Saved As Draft','label-warning': ssiTemplate.SSITemplateStatus == 'Pending Approval','label-success': ssiTemplate.SSITemplateStatus == 'Approved' }" ng-if="ssiTemplateId!=0"><i class="glyphicon glyphicon-tag"></i>&nbsp;<span id="spnSSITempCurrentStatus">{{ssiTemplate.SSITemplateStatus}}</span></span>
-                        <div class="row control-group">
-                            <legend class="small font-primary">SSI Template Detail:</legend>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-12 col-md-9 col-lg-6">
-                                <div class="col-md-3">
-                                    <label class="control-label">SSI Template Type <span style="color: red">  *</span></label>
-                                </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                    <input name="Template Type" type="text" class="form-control" ng-model="ssiTemplate.SSITemplateType" id="liSSITemplateType" ng-change="fnSSITemplateType(ssiTemplate.SSITemplateType)" required />
-                                </div>
+                        
+                        <div class="panel panel-default " id="accountBasicInfo" data-toggle='collapse'>
+                            <div class="panel-heading" data-toggle="collapse" data-target="#accountBasicDetailDiv" aria-expanded="false" aria-controls="accountBasicDetailDiv">
+                                <b>Basic Info</b>
                             </div>
-                            <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker'">
-                                <div class="col-md-2">
-                                    <label class="control-label">Legal Entity <span style="color: red">  *</span></label>
+                            <div id="accountBasicDetailDiv" class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-9 col-lg-6">
+                                        <div class="col-md-3">
+                                            <label class="control-label">SSI Template Type <span style="color: red">  *</span></label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                            <input name="Template Type" type="text" class="form-control" ng-model="ssiTemplate.SSITemplateType" id="liSSITemplateType" ng-change="fnSSITemplateType(ssiTemplate.SSITemplateType)" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker'">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Legal Entity <span style="color: red">  *</span></label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                            <input type="text" class="form-control" ng-model="ssiTemplate.TemplateEntityId" id="liBroker" name="Legal Entity" ng-required="ssiTemplate.SSITemplateType == 'Broker'" />
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                    <input type="text" class="form-control" ng-model="ssiTemplate.TemplateEntityId" id="liBroker" name="Legal Entity" ng-required="ssiTemplate.SSITemplateType == 'Broker'" />
+                                <p></p>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker'">
+                                        <div class="col-md-3">
+                                            <label class="control-label">Account Type <span style="color: red">  *</span></label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                            <input type="text" class="form-control" ng-model="ssiTemplate.dmaAgreementTypeId" id="liAccountType" name="Account Type" ng-required="ssiTemplate.SSITemplateType == 'Broker'" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Fee/Expense Payment'">
+                                        <div class="col-md-3">
+                                            <label class="control-label">Service Provider<span style="color: red">  *</span></label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                            <input type="text" class="form-control" ng-model="ssiTemplate.ServiceProvider" id="liServiceProvider" name="Service Provider" ng-required="ssiTemplate.SSITemplateType == 'Fee/Expense Payment'" />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a id="btnSSITemplateServiceProvider" class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Service Provider')" title="Add Service Provider"><i class="glyphicon glyphicon-plus"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-9 col-lg-6">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Currency <span style="color: red">  *</span></label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                            <input type="text" class="form-control" ng-model="ssiTemplate.Currency" id="liCurrency" name="Currency" required />
+                                        </div>
+                                        <div class="col-sm-8 col-md-3 col-lg-3">
+                                            <a class="btn btn-sm btn-info" ng-click="fnAddCurrencyModal()" title="Add Currency"><i class="glyphicon glyphicon-plus"></i></a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker'">
-                                <div class="col-md-3">
-                                    <label class="control-label">Account Type <span style="color: red">  *</span></label>
-                                </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                    <input type="text" class="form-control" ng-model="ssiTemplate.dmaAgreementTypeId" id="liAccountType" name="Account Type" ng-required="ssiTemplate.SSITemplateType == 'Broker'" />
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Fee/Expense Payment'">
-                                <div class="col-md-3">
-                                    <label class="control-label">Service Provider<span style="color: red">  *</span></label>
-                                </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                    <input type="text" class="form-control" ng-model="ssiTemplate.ServiceProvider" id="liServiceProvider" name="Service Provider" ng-required="ssiTemplate.SSITemplateType == 'Fee/Expense Payment'" />
-                                </div>
-                                <div class="col-md-2">
-                                    <a id="btnSSITemplateServiceProvider" class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Service Provider')" title="Add Service Provider"><i class="glyphicon glyphicon-plus"></i></a>
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-9 col-lg-6">
-                                <div class="col-md-2">
-                                    <label class="control-label">Currency <span style="color: red">  *</span></label>
-                                </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                    <input type="text" class="form-control" ng-model="ssiTemplate.Currency" id="liCurrency" name="Currency" required />
-                                </div>
-                                <div class="col-sm-8 col-md-3 col-lg-3">
-                                    <a class="btn btn-sm btn-info" ng-click="fnAddCurrencyModal()" title="Add Currency"><i class="glyphicon glyphicon-plus"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-9 col-lg-6">
-                                <div class="col-md-3">
-                                    <label class="control-label">Payment/Receipt Reason<span style="color: red"> *</span></label>
-                                </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                    <input type="text" ng-model="ssiTemplate.ReasonDetail" class="form-control" id="liReasonDetail" name="Payment Reason" required />
-                                </div>
-                                <div class="col-md-2">
-                                    <a id="btnSSITemplateReason" class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Reason')" title="Add Reason"><i class="glyphicon glyphicon-plus"></i></a>
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-9 col-lg-6 cashSweepTimeDiv" id="otherReason" style="display: none;">
-                                <div class="col-md-2">
-                                    <label class="control-label">Other Reason</label>
-                                </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input type="text" ng-model="ssiTemplate.OtherReason" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row control-group">
-                            <legend class="small font-primary">Additional Details:</legend>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-9 col-lg-6">
-                                <div class="col-md-2">
-                                    <label class="control-label">FFC Name </label>
-                                </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input type="text" ng-model="ssiTemplate.FFCName" name="FFCName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control control-label" placeholder="FFC Name" />
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-9 col-lg-6">
-                                <div class="col-md-2">
-                                    <label class="control-label">FFC Number </label>
-                                </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input type="text" name='FFCNumber' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.FFCNumber" class="form-control control-label" placeholder="FFC Number" />
+                                <p></p>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-9 col-lg-6">
+                                        <div class="col-md-3">
+                                            <label class="control-label">Payment/Receipt Reason<span style="color: red"> *</span></label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                            <input type="text" ng-model="ssiTemplate.ReasonDetail" class="form-control" id="liReasonDetail" name="Payment Reason" required />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a id="btnSSITemplateReason" class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Reason')" title="Add Reason"><i class="glyphicon glyphicon-plus"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-9 col-lg-6 cashSweepTimeDiv" id="otherReason" style="display: none;">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Other Reason</label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5">
+                                            <input type="text" ng-model="ssiTemplate.OtherReason" class="form-control" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-9 col-lg-6">
-                                <div class="col-md-2">
-                                    <label class="control-label">Reference </label>
+                        <div class="panel panel-default ng-show-hide" id="accountSSIInfo" data-toggle='collapse'>
+                            <div class="panel-heading" data-toggle="collapse" data-target="#accountSSIDetailInfo" aria-expanded="false" aria-controls="accountSSIDetailInfo">
+                                <b>Account SSI</b>
+                            </div>
+                            <div id="accountSSIDetailInfo" class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-9 col-lg-6">
+                                        <div class="col-md-2">
+                                            <label class="control-label">FFC Name </label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5">
+                                            <input type="text" ng-model="ssiTemplate.FFCName" name="FFCName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control control-label" placeholder="FFC Name" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-9 col-lg-6">
+                                        <div class="col-md-2">
+                                            <label class="control-label">FFC Number </label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5">
+                                            <input type="text" name='FFCNumber' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.FFCNumber" class="form-control control-label" placeholder="FFC Number" />
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input type="text" name='Reference' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.Reference" class="form-control control-label" placeholder="Reference" />
+                                <p></p>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-9 col-lg-6">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Reference </label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5">
+                                            <input type="text" name='Reference' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.Reference" class="form-control control-label" placeholder="Reference" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-9 col-lg-6">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Message Type <span style="color: red">  *</span></label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                            <input type="text" ng-model="ssiTemplate.MessageType" class="form-control control-label" id="liMessageType" name="Message Type" required />
+                                        </div>
+                                    </div>
+                                </div>
+                                <p></p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="row small font-primary">Intermediary</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="row small font-primary">Beneficiary <span style="color: red">  *</span></span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="row small font-primary">Ultimate Beneficiary <span style="color: red">  *</span></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label" style="margin-left: 15px;">Account Number</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control" ng-model="ssiTemplate.IntermediaryAccountNumber" placeholder="Account Number" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" ng-model="ssiTemplate.BeneficiaryAccountNumber" class="form-control control-label" placeholder="Account Number" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input name="Account Number" type="text" class="form-control" ng-model="ssiTemplate.AccountNumber" placeholder="Account Number" id="txtAccountNumber" required />
+                                    </div>
+                                </div>
+                                <p></p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label" style="margin-left: 15px;">Type:</label>
+                                    </div>
+                                    <div class="col-md-2 paddingright AdjustDropDownWidth">
+                                        <input type="text" class="form-control" ng-model="ssiTemplate.IntermediaryType" id="liIntermediaryType" ng-change="fnToggleBeneficiaryBICorABA(ssiTemplate.IntermediaryType,'Intermediary')" />
+                                    </div>
+                                    <div class="col-md-2 paddingright AdjustDropDownWidth">
+                                        <input type="text" name="Beneficiary Type" class="form-control" ng-model="ssiTemplate.BeneficiaryType" id="liBeneficiaryType" ng-change="fnToggleBeneficiaryBICorABA(ssiTemplate.BeneficiaryType,'Beneficiary')" required />
+                                    </div>
+                                    <div class="col-md-2 paddingright AdjustDropDownWidth">
+                                        <input type="text" class="form-control" ng-model="ssiTemplate.UltimateBeneficiaryType" id="liUltimateBeneficiaryType" ng-change="fnToggleBeneficiaryBICorABA(ssiTemplate.UltimateBeneficiaryType,'UltimateBeneficiary')" />
+                                    </div>
+                                </div>
+                                <p></p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
+                                        <a class="btn btn-sm btn-info" ng-click="fnAddBeneficiaryModal()" title="Add Beneficiary"><i class="glyphicon glyphicon-plus"></i></a>
+                                    </div>
+                                    <div class="col-md-2 paddingright AdjustDropDownWidth">
+                                        <input type="text" ng-model="ssiTemplate.Intermediary.BICorABA" class="form-control control-label" id="liIntermediaryBICorABA" ng-change="fnGetBankDetails(ssiTemplate.Intermediary.BICorABA,'Intermediary')" />
+                                    </div>
+                                    <div class="col-md-2 paddingright AdjustDropDownWidth">
+                                        <input type="text" name="Beneficiary ABA/BIC" ng-model="ssiTemplate.Beneficiary.BICorABA" class="form-control control-label" id="liBeneficiaryBICorABA" ng-change="fnGetBankDetails(ssiTemplate.Beneficiary.BICorABA,'Beneficiary')" required />
+                                    </div>
+                                    <div class="col-md-2 paddingright AdjustDropDownWidth" id="divUltimateBeneficiaryBICorABA">
+                                        <input type="text" ng-model="ssiTemplate.UltimateBeneficiary.BICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA" ng-change="fnGetBankDetails(ssiTemplate.UltimateBeneficiary.BICorABA,'UltimateBeneficiary')" />
+                                    </div>
+                                </div>
+                                <p></p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" name='IntermediaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.Intermediary.BankName" class="form-control control-label" id="intermediaryBankName" placeholder="Bank Name" disabled />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.Beneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName" disabled />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" name='BankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.UltimateBeneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="ultimateBankName" disabled />
+                                        <input type="text" name='AccountName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control" ng-model="ssiTemplate.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName" style="display: none;" />
+                                    </div>
+                                </div>
+                                <p></p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label" style="margin-left: 15px;">Bank Address </label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name='IntermediaryBankAddress' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.Intermediary.BankAddress" id="intermediaryBankAddress" disabled></textarea>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name='BeneficiaryBankAddress' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.Beneficiary.BankAddress" id="beneficiaryBankAddress" disabled></textarea>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name='UltimateBeneficiaryBankAddress' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.UltimateBeneficiary.BankAddress" id="ultimateBankAddress" disabled></textarea>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12 col-md-9 col-lg-6">
-                                <div class="col-md-2">
-                                    <label class="control-label">Message Type <span style="color: red">  *</span></label>
+                        </div>
+                        <div class="panel panel-default ng-show-hide" id="panelAttachment" ng-show="ssiTemplateId != 0">
+                            <div class="panel-heading" data-toggle="collapse" data-target="#ssiAttachmentInfo" aria-expanded="false" aria-controls="ssiAttachmentInfo">
+                                <b>Attachment</b>
+                                    <span class="pull-right">
+                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                    </span>
+                            </div>
+                            <div class="panel-body collapse" id="ssiAttachmentInfo">
+                                <div class="row">
+                                    <div id="dropZoneDiv" style="width: 100%;">
+                                        <ng-form class="dropzone" enctype="multipart/form-data" id="uploadSSIFiles" method="post" novalidate style="min-height: 50px !important;display: block;" />
+                                    </div>
                                 </div>
-                                <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                    <input type="text" ng-model="ssiTemplate.MessageType" class="form-control control-label" id="liMessageType" name="Message Type" required />
+                                <p></p>
+                                <div class="row">
+                                    <table id="tblDocuments" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
                                 </div>
                             </div>
                         </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-md-2">
+                        <div class="panel panel-default ng-show-hide" id="panelAssociatedAccounts" ng-if="ssiTemplateId != 0">
+                            <div class="panel-heading" data-toggle="collapse" data-target="#accountSsiAssociationInfo" aria-expanded="false" aria-controls="accountSsiAssociationInfo">                                
+                                <b>Associated Settlement Instructions</b> 
+                                    <span class="pull-right">
+                                        @if (User.IsWireApprover())
+                                        {
+                                            <span class="btn-group" id="btnAccountMapStatusButtons" style="display: none;">
+                                                <a id="accountMapApprove" title="Approve" class="btn btn-success btn-xs disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Approved','Approve')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-ok"></i> Approve Account Association</a>
+                                                @*<a id="accountMapRevert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Created','Revert')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</a>*@
+                                            </span>
+                                        }
+                                        <a class="btn btn-xs btn-primary" ng-click="$event.stopPropagation();fnAssociationSSI($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
+                                        <i class="indicator glyphicon glyphicon-chevron-down"></i>
+                                    </span>
+                                
                             </div>
-                            <div class="col-md-2">
-                                <span class="row small font-primary">Intermediary</span>
-                            </div>
-                            <div class="col-md-2">
-                                <span class="row small font-primary">Beneficiary <span style="color: red">  *</span></span>
-                            </div>
-                            <div class="col-md-2">
-                                <span class="row small font-primary">Ultimate Beneficiary <span style="color: red">  *</span></span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label class="control-label" style="margin-left: 15px;">Account Number</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" class="form-control" ng-model="ssiTemplate.IntermediaryAccountNumber" placeholder="Account Number" />
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" ng-model="ssiTemplate.BeneficiaryAccountNumber" class="form-control control-label" placeholder="Account Number" />
-                            </div>
-                            <div class="col-md-2">
-                                <input name="Account Number" type="text" class="form-control" ng-model="ssiTemplate.AccountNumber" placeholder="Account Number" id="txtAccountNumber" required />
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label class="control-label" style="margin-left: 15px;">Type:</label>
-                            </div>
-                            <div class="col-md-2 paddingright AdjustDropDownWidth">
-                                <input type="text" class="form-control" ng-model="ssiTemplate.IntermediaryType" id="liIntermediaryType" ng-change="fnToggleBeneficiaryBICorABA(ssiTemplate.IntermediaryType,'Intermediary')" />
-                            </div>
-                            <div class="col-md-2 paddingright AdjustDropDownWidth">
-                                <input type="text" name="Beneficiary Type" class="form-control" ng-model="ssiTemplate.BeneficiaryType" id="liBeneficiaryType" ng-change="fnToggleBeneficiaryBICorABA(ssiTemplate.BeneficiaryType,'Beneficiary')" required />
-                            </div>
-                            <div class="col-md-2 paddingright AdjustDropDownWidth">
-                                <input type="text" class="form-control" ng-model="ssiTemplate.UltimateBeneficiaryType" id="liUltimateBeneficiaryType" ng-change="fnToggleBeneficiaryBICorABA(ssiTemplate.UltimateBeneficiaryType,'UltimateBeneficiary')" />
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
-                                <a class="btn btn-sm btn-info" ng-click="fnAddBeneficiaryModal()" title="Add Beneficiary"><i class="glyphicon glyphicon-plus"></i></a>
-                            </div>
-                            <div class="col-md-2 paddingright AdjustDropDownWidth">
-                                <input type="text" ng-model="ssiTemplate.Intermediary.BICorABA" class="form-control control-label" id="liIntermediaryBICorABA" ng-change="fnGetBankDetails(ssiTemplate.Intermediary.BICorABA,'Intermediary')" />
-                            </div>
-                            <div class="col-md-2 paddingright AdjustDropDownWidth">
-                                <input type="text" name="Beneficiary ABA/BIC" ng-model="ssiTemplate.Beneficiary.BICorABA" class="form-control control-label" id="liBeneficiaryBICorABA" ng-change="fnGetBankDetails(ssiTemplate.Beneficiary.BICorABA,'Beneficiary')" required />
-                            </div>
-                            <div class="col-md-2 paddingright AdjustDropDownWidth" id="divUltimateBeneficiaryBICorABA">
-                                <input type="text" ng-model="ssiTemplate.UltimateBeneficiary.BICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA" ng-change="fnGetBankDetails(ssiTemplate.UltimateBeneficiary.BICorABA,'UltimateBeneficiary')" />
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" name='IntermediaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.Intermediary.BankName" class="form-control control-label" id="intermediaryBankName" placeholder="Bank Name" disabled />
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.Beneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName" disabled />
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" name='BankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.UltimateBeneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="ultimateBankName" disabled />
-                                <input type="text" name='AccountName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control" ng-model="ssiTemplate.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName" style="display: none;" />
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label class="control-label" style="margin-left: 15px;">Bank Address </label>
-                            </div>
-                            <div class="col-md-2">
-                                <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name='IntermediaryBankAddress' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.Intermediary.BankAddress" id="intermediaryBankAddress" disabled></textarea>
-                            </div>
-                            <div class="col-md-2">
-                                <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name='BeneficiaryBankAddress' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.Beneficiary.BankAddress" id="beneficiaryBankAddress" disabled></textarea>
-                            </div>
-                            <div class="col-md-2">
-                                <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name='UltimateBeneficiaryBankAddress' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.UltimateBeneficiary.BankAddress" id="ultimateBankAddress" disabled></textarea>
+                            <div class="panel-body collapse" id="accountSsiAssociationInfo">
+                                <div class="row">
+                                    <table id="tblAssociatedAccounts" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    @*</div>*@
-                    <p></p>
-                </div>
-
-                <div class="panel panel-default container-fluid" id="panelAttachment" ng-show="ssiTemplateId != 0">
-                    <div class="panel-heading row">
-                        <h4 class="panel-title">
-                            Attachment
-                            <span class="pull-right">
-                                <i class="glyphicon glyphicon-chevron-down"></i>
-                            </span>
-                        </h4>
-
-                    </div>
-                    <div class="panel-body collapse in">
-                        <div class="row">
-                            <div id="dropZoneDiv" style="width: 100%;">
-                                <ng-form class="dropzone" enctype="multipart/form-data" id="uploadSSIFiles" method="post" novalidate style="min-height: 50px !important;display: block;" />
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <table id="tblDocuments" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="panel panel-default container-fluid" id="panelAssociatedAccounts" ng-show="ssiTemplateId != 0">
-                    <div class="panel-heading row">
-                        <h4 class="panel-title">
-                            Accounts Associated
-                            <span class="pull-right">
-                                <i class="glyphicon glyphicon-chevron-down"></i>
-                            </span>
-                        </h4>
-                            
-                    </div>
-                    <div class="panel-body collapse in">
-                        <div class="row">
-                            <table id="tblAssociatedAccounts" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="well well-sm row">
-                    <div class="pull-right">
-                        <a class="btn btn-default" ng-click="fnBack()"><i class="glyphicon glyphicon-step-backward"></i>&nbsp;Back</a>
-                        @if (User.IsWireUser())
-                        {
-                            <button type="submit" title="Save SSI Template" class="btn btn-primary" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' || ssiTemplateId==0)" style="" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;Save SSI Template</button>
-                            @*<button type="submit" class="btn btn-primary" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save SSI Template</button>*@
-                            <a id="requestForApproval" title="Request for Approval" class="btn btn-warning" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' && ssiTemplateId != 0)" style="" ng-click="fnUpdateSSITemplateStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</a>
-                            if (User.IsWireApprover())
+                    <div class="panel-footer" style="min-height:55px;">
+                        <div class="pull-right">
+                            <a class="btn btn-default" ng-click="fnBack()"><i class="glyphicon glyphicon-step-backward"></i>&nbsp;Back</a>
+                            @if (User.IsWireUser())
                             {
-                                <a id="approve" title="Approve" class="btn btn-success" ng-if="isAuthorizedUserToApprove" ng-show="!isSSITemplateChanged" ng-click="fnUpdateSSITemplateStatus('Approved','Approve')"><i class="glyphicon glyphicon-ok"></i> Approve</a>
+                                <button type="submit" title="Save SSI Template" class="btn btn-primary" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' || ssiTemplateId==0)" style="" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;Save SSI Template</button>
+                                @*<button type="submit" class="btn btn-primary" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save SSI Template</button>*@
+                                <a id="requestForApproval" title="Request for Approval" class="btn btn-warning" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' && ssiTemplateId != 0)" style="" ng-click="fnUpdateSSITemplateStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</a>
+                                if (User.IsWireApprover())
+                                {
+                                    <a id="approve" title="Approve" class="btn btn-success" ng-if="isAuthorizedUserToApprove" ng-show="!isSSITemplateChanged" ng-click="fnUpdateSSITemplateStatus('Approved','Approve')"><i class="glyphicon glyphicon-ok"></i> Approve</a>
+                                }
+                                <a id="revert" title="Revert" class="btn btn-info" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Approved'||ssiTemplate.SSITemplateStatus == 'Pending Approval')" ng-click="fnUpdateSSITemplateStatus('Saved As Draft','Revert')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Save and Update</a>
                             }
-                            <a id="revert" title="Revert" class="btn btn-info" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Approved'||ssiTemplate.SSITemplateStatus == 'Pending Approval')" ng-click="fnUpdateSSITemplateStatus('Saved As Draft','Revert')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Save and Update</a>
-                        }
+                        </div>
                     </div>
                 </div>
-
             </form>
         </div>
-
 
         <div class="modal fade" id="updateSSITemplateModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="UpdateSSITemplateModal" aria-hidden="true" style="width: 100%">
             <div class="modal-dialog" role="document">
@@ -414,16 +412,44 @@
                             </div>
                         </div>
                         @*<div class="row" style="margin-top: 10px;">
-                                <div class="col-sm-4 col-md-4 col-lg-4">
-                                </div>
-                                <div class="col-sm-8 col-md-8 col-lg-8">
-                                    <label class="control-label">&nbsp;&nbsp;Example: US – New York</label>
-                                </div>
-                            </div>*@
+                            <div class="col-sm-4 col-md-4 col-lg-4">
+                            </div>
+                            <div class="col-sm-8 col-md-8 col-lg-8">
+                                <label class="control-label">&nbsp;&nbsp;Example: US – New York</label>
+                            </div>
+                        </div>*@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddSSITemplateDetail($index)">
                             <i class="glyphicon glyphicon-copy"></i>&nbsp;Add {{ detail }}
+                        </button>
+                        <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="accountSSITemplateMapModal" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>Add Account Associations</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-8 col-md-3 col-lg-3">
+                                <label for="liSsiTemplate" class="control-label">Account:</label>
+                            </div>
+                            <div class="col-sm-8 col-md-8 col-lg-8">
+                               <input type="text" id="liFundAccount" class="modalInputWidth form-control" placeholder="Select Accounts" />
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddAccountSSITemplateMap()">
+                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Associations
                         </button>
                         <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                     </div>

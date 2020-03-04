@@ -511,6 +511,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             }
 
             $scope.fnConstructDocumentTable($scope.ssiTemplateDocuments);
+            $scope.fnGetAssociatedAccounts();
 
             //$scope.fnConstructAssociatedAccountsTable($scope.associatedAccounts);
 
@@ -581,6 +582,246 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             });
         }
         if ($scope.ssiTemplate.ReasonDetail != "") $scope.ReasonDetail = $scope.ssiTemplate.ReasonDetail;
+    }
+
+    $scope.fnGetAssociatedAccounts = function () {
+        var brokerId = $scope.ssiTemplate.SSITemplateType == "Broker" ? $scope.ssiTemplate.TemplateEntityId : 0;
+        var isServiceType = $scope.ssiTemplate.SSITemplateType != "Broker";
+        $http.get("/Accounts/GetSsiTemplateAccountMap?ssiTemplateId=" + $scope.ssiTemplateId + "&brokerId=" + brokerId + "&currency=" + $scope.ssiTemplate.Currency + "&message=" + $scope.ssiTemplate.MessageType + "&isServiceType=" + isServiceType).then(function (response) {
+            $scope.fundAccounts = response.data.fundaccounts;
+            $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
+            if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined && $scope.ssiTemplateMaps.length > 0) {
+                //$scope.onBoardingAccountDetails[index].onBoardingAccountSSITemplateMaps = $scope.ssiTemplateMaps;
+                viewSsiTemplateTable($scope.ssiTemplateMaps, index);
+            }
+        });
+    }
+
+    function viewSsiTemplateTable(data) {
+
+        if ($("$tblAssociatedAccounts").hasClass("initialized")) {
+            fnDestroyDataTable("#tblAssociatedAccounts");
+        }
+
+        if (data.length > 0)
+            $("#btnAccountMapStatusButtons").show();
+        else
+            $("#btnAccountMapStatusButtons").hide();
+
+        ssiMapTable = $("#tblAssociatedAccounts").not(".initialized").addClass("initialized").DataTable({
+            "bDestroy": true,
+            //responsive: true,
+            aaData: data,
+            "aoColumns": [
+                {
+                    "sTitle": "Template Name",
+                    "mData": "AccountName"
+                },
+                {
+                    "mData": "AccountType",
+                    "sTitle": "Account Type",
+                    "mRender": function (tdata) {
+                        if (tdata === "Agreement")
+                            return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Agreement</label>";
+                        if (tdata === "DDA")
+                            return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">DDA</label>";
+                        if (tdata == "Custody")
+                            return "<label class=\"label ng-show-only label-primary\" style=\"font-size: 12px;\">Custody</label>";
+                        return "";
+                    }
+                },
+                {
+                    "sTitle": "Account Number",
+                    "mData": "AccountNumber",
+                },
+                {
+                    "sTitle": "Created By",
+                    "mData": "CreatedBy",
+                    "mRender": function (data) {
+                        return humanizeEmail(data);
+                    }
+                },
+                {
+                    "sTitle": "Updated By",
+                    "mData": "UpdatedBy",
+                    "mRender": function (data) {
+                        return humanizeEmail(data);
+                    }
+                },
+                {
+                    "mData": "Status",
+                    "sTitle": "Status",
+                    "mRender": function (data) {
+                        if (data === "Pending Approval")
+                            return "<label class=\"label ng-show-only label-warning\" style=\"font-size: 12px;\">Pending Approval</label>";
+                        if (data === "Approved")
+                            return "<label class=\"label ng-show-only label-success\" style=\"font-size: 12px;\">Approved</label>";
+                        return "";
+                    }
+                },
+                //{
+                //    "mData": "onBoardingSSITemplateId", "sTitle": "Go to SSI Template", "className": "dt-center",
+                //    "mRender": function (data, type, row) {
+                //        // return " <label class=\"label ng-show-only  label-success\" style=\"font-size: 12px;\">" + row.CompletedCount + "</label> <label class=\"label ng-show-only  label-warning\"  style=\"font-size: 12px;\">" + row.InProcessCount + "</label> <label class=\"label ng-show-only  label-info\" style=\"font-size: 12px;\">" + row.TbdCount + "</label>";
+                //        return "<a class=\"btn btn-primary btn-xs\" id=\"" + data + "\" ><i class=\"glyphicon glyphicon-share-alt\"></i></a>";
+                //    }
+
+                //},
+                {
+                    "mData": "onBoardingAccountSSITemplateMapId", "className": "dt-center",
+                    "sTitle": "Remove", "mRender": function (tdata) {
+                        return "<a class='btn btn-danger btn-xs' title='Remove SSI'><i class='glyphicon glyphicon-trash'></i></a>";
+                    }
+                }
+            ],
+            "createdRow": function (row, rowData) {
+                switch (rowData.Status) {
+                    case "Approved":
+                        $(row).addClass("success");
+                        break;
+                    case "Pending Approval":
+                        $(row).addClass("warning");
+                        break;
+                }
+
+            },
+            "deferRender": false,
+            "bScrollCollapse": true,
+            "bPaginate": false,
+            //"scroller": false,
+            "scrollX": data.length > 0,
+            "scrollY": "350px",
+            //sortable: false,
+            //"sDom": "ift",
+            //pagination: true,
+            "sScrollX": "100%",
+            "sScrollXInner": "100%",
+            "order": [[0, "desc"]],
+            "oLanguage": {
+                "sSearch": "",
+                "sEmptyTable": "No fund accounts are available for the SSI Template",
+                "sInfo": "Showing _START_ to _END_ of _TOTAL_ SSI Templates"
+            }
+        });
+
+        window.setTimeout(function () {
+            ssiMapTable.columns.adjust().draw(true);
+        }, 10);
+
+
+        $("#tblAssociatedAccounts tbody tr td:last-child a").on("click", function (event) {
+            event.preventDefault();
+            var selectedRow = $(this).parents("tr");
+            var rowElement = ssiMapTable.row(selectedRow).data();
+            bootbox.confirm("Are you sure you want to remove this account from ssi template?", function (result) {
+                if (!result) {
+                    return;
+                } else {
+                    if (rowElement.onBoardingAccountSSITemplateMapId > 0) {
+                        $http.post("/Accounts/RemoveSsiTemplateMap", { ssiTemplateMapId: rowElement.onBoardingAccountSSITemplateMapId }).then(function () {
+                            ssiMapTable.row(selectedRow).remove().draw();
+                            //$scope.ssiTemplateDocuments.pop(rowElement);             
+                            notifySuccess("Fund account removed succesfully");
+                            $scope.fnGetAssociatedAccounts();
+                        });
+                    } else {
+                        ssiMapTable.row(selectedRow).remove().draw();
+                        //$scope.onBoardingAccountDetails[rowIndex].onBoardingAccountSSITemplateMaps.pop(rowElement);
+                        notifySuccess("Fund account removed succesfully");
+                    }
+                }
+            });
+
+        });
+        //$("#accountDetailCP tbody tr td a.btn-primary").on("click", function (event) {
+        //    event.preventDefault();
+        //    var ssitemplateId = $(this).attr("id");
+        //    window.open("/Accounts/SSITemplate?ssiTemplateId=" + ssitemplateId, "_blank");
+        //});
+
+        $("#tblAssociatedAccounts tbody tr").on("click", function (event) {
+            event.preventDefault();
+
+            $("#tblAssociatedAccounts tbody tr").removeClass("info");
+            if (!$(this).hasClass("info")) {
+                $(this).addClass("info");
+            }
+
+            var selectedRow = $(this);
+            //var rowIndex = $(this).parents("table").attr("tIndex");
+            var rowElement = ssiMapTable.row(selectedRow).data();
+
+            $scope.onBoardingAccountSSITemplateMapId = rowElement.onBoardingAccountSSITemplateMapId;
+            //$scope.plIndex = rowIndex;
+
+            if (rowElement.Status == "Pending Approval" && rowElement.onBoardingAccountSSITemplateMapId > 0 && rowElement.UpdatedBy != $("#userName").val()) {
+                $("#btnAccountMapStatusButtons a[title='Approve']").removeClass("disabled");
+            }
+            //if (rowElement.onBoardingAccountStatus == createdStatus) {
+            //    $("#btnAccountStatusButtons button[id='requestForApproval']").removeClass("disabled");
+            //}
+            //if (rowElement.onBoardingAccountStatus != createdStatus) {
+            //    $("#btnAccountStatusButtons button[id='revert']").removeClass("disabled");
+            //}
+
+        });
+    }
+
+    $scope.fnAddAccountSSITemplateMap = function () {
+
+        $scope.onBoardingAccountSSITemplateMap = [];
+        angular.forEach([$("#liFundAccount").select2("val")], function (val, i) {
+            $scope.onBoardingAccountSSITemplateMap.push({
+                onBoardingAccountSSITemplateMapId: 0,
+                onBoardingSSITemplateId: $scope.ssiTemplateId,
+                onBoardingAccountId: parseInt(val),
+                CreatedBy: $("#userName").val(),
+                UpdatedBy: $("#userName").val(),
+                Status: "Pending Approval"
+            });
+        });
+        
+
+        $http.post("/Accounts/AddAccountSsiTemplateMap", { accountSsiTemplateMap: $scope.onBoardingAccountSSITemplateMap }).then(function () {
+            notifySuccess("Accounts mapped to SSI Template successfully");
+            $scope.fnGetAssociatedAccounts();
+        });
+
+        $("#accountSSITemplateMapModal").modal("hide");
+    }
+
+    $scope.fnAssociationSSI = function () {
+
+        var ssiData = [];
+        $.each($scope.fundAccounts, function (key, value) {
+            ssiData.push({ "id": value.onBoardingAccountId, "text": value.AccountName });
+        });
+
+        ssiData = $filter('orderBy')(ssiData, 'text');
+
+        if ($("#liFundAccount").data("select2")) {
+            $("#liFundAccount").select2("destroy");
+        }
+
+        $("#liFundAccount").select2({
+            placeholder: "Select Accounts",
+            allowClear: true,
+            multiple: true,
+            closeOnSelect: false,
+            data: ssiData
+        });
+
+        $("#accountSSITemplateMapModal").modal({
+            show: true,
+            keyboard: true
+        }).on("hidden.bs.modal", function () {
+            $("#FFCName").val("");
+            $("#FFCNumber").val("");
+            $("#Reference").val("");
+            $("#liFundAccount").select2("val", []);
+            $("#spnSsi").popover("hide");
+            // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
+        });
     }
 
     $scope.fnAddSSITemplateDetail = function (panelIndex) {

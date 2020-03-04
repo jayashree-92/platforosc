@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO;  
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
@@ -191,6 +191,42 @@ namespace HMOSecureWeb.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
+        public JsonResult GetSsiTemplateAccountMap(long ssiTemplateId, long brokerId, string currency, string message, bool isServiceType)
+        {
+            var ssiTemplateMaps = AccountManager.GetSsiTemplateAccountMap(ssiTemplateId);
+            var hmFundIds = OnBoardingDataManager.GetFundIdsbyCounterparty(brokerId);
+            if (string.IsNullOrWhiteSpace(message))
+                message = string.Empty;
+            var fundAccounts = AccountManager.GetAllApprovedAccounts(hmFundIds, message, currency, isServiceType);
+            fundAccounts.ForEach(s => s.SwiftGroup = null);
+
+            return Json(new
+            {
+                ssiTemplateMaps = ssiTemplateMaps.Select(ssi =>
+                {
+                    var account = fundAccounts.FirstOrDefault(acc => acc.onBoardingAccountId == ssi.onBoardingAccountId);
+                    return account != null ? new
+                    {
+                        ssi.onBoardingAccountSSITemplateMapId,
+                        ssi.onBoardingAccountId,
+                        ssi.onBoardingSSITemplateId,
+                        ssi.FFCName,
+                        ssi.FFCNumber,
+                        ssi.Reference,
+                        ssi.CreatedAt,
+                        ssi.CreatedBy,
+                        ssi.UpdatedAt,
+                        ssi.UpdatedBy,
+                        ssi.Status,
+                        ssi.StatusComments,
+                        account.AccountType,
+                        account.AccountName,
+                        account.AccountNumber
+                    } : null;
+                }).Where(temp => temp != null).OrderBy(y => y.AccountName).ToList(),
+                fundAccounts = fundAccounts.Where(s => !ssiTemplateMaps.Select(p => p.onBoardingAccountId).Contains(s.onBoardingAccountId)).ToList(),
+            }, JsonContentType, JsonContentEncoding);
+        }
         public JsonResult GetAccountDocuments(long accountId)
         {
             var accountDocuments = AccountManager.GetAccountDocuments(accountId);
