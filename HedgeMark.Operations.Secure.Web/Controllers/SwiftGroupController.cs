@@ -59,16 +59,16 @@ namespace HMOSecureWeb.Controllers
 
         public void AddOrUpdateSwiftGroup(hmsSwiftGroup hmsSwiftGroup)
         {
+            SwiftGroupData originalSwiftGroup;
             var swiftGroupData = GetSwiftGroupData(hmsSwiftGroup.hmsSwiftGroupId);
-            hmsSwiftGroup.RecCreatedBy = UserName;
-            AccountManager.AddOrUpdateSwiftGroup(hmsSwiftGroup);
             var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
             var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(preferencesKey);
-            SwiftGroupData originalSwiftGroup;
             if (hmsSwiftGroup.hmsSwiftGroupId > 0)
                 originalSwiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { swiftGroupData }, swiftGroupInfo).FirstOrDefault();
             else
                 originalSwiftGroup = new SwiftGroupData();
+            hmsSwiftGroup.RecCreatedBy = UserName;
+            AccountManager.AddOrUpdateSwiftGroup(hmsSwiftGroup);
             var swiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { hmsSwiftGroup }, swiftGroupInfo).FirstOrDefault();
             AuditSwiftGroupChanges(swiftGroup, originalSwiftGroup);
         }
