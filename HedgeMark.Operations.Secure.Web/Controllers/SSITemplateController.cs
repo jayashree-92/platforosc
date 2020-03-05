@@ -55,7 +55,7 @@ namespace HMOSecureWeb.Controllers
             var brokerSsiTemplates = AccountManager.GetAllBrokerSsiTemplates();
             var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties();
             var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
-
+            var serviceProviders = AccountManager.GetAllServiceProviderList().Select(y => new { id = y.ServiceProvider, text = y.ServiceProvider }).DistinctBy(x => x.id).OrderBy(x => x.id).ToList();
             return Json(new
             {
                 BrokerSsiTemplates = brokerSsiTemplates.Select(template => new
@@ -100,7 +100,9 @@ namespace HMOSecureWeb.Controllers
                     template.Reference,
                     AgreementType = (agreementTypes.ContainsKey(template.dmaAgreementTypeId) && string.IsNullOrEmpty(template.ServiceProvider)) ? agreementTypes[template.dmaAgreementTypeId] : string.Empty,
                     Broker = (counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty)
-                }).ToList()
+                }).ToList(),
+                counterParties = counterParties.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
+                serviceProviders
             });
         }
 
