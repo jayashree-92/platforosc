@@ -569,13 +569,12 @@ namespace HMOSecureMiddleware
                     ssiTemplate.UpdatedAt = DateTime.Now;
                     ssiTemplate.UpdatedBy = userName;
                     ssiTemplate.SSITemplateStatus = "Saved As Draft";
-                    context.onBoardingSSITemplates.Add(ssiTemplate);
                 }
                 else
                 {
                     ssiTemplate.UpdatedAt = DateTime.Now;
                     ssiTemplate.UpdatedBy = userName;
-                    context.onBoardingSSITemplates.AddOrUpdate(ssiTemplate);
+                    
 
                     if (ssiTemplate.onBoardingSSITemplateDocuments != null && ssiTemplate.onBoardingSSITemplateDocuments.Count > 0)
                     {
@@ -583,6 +582,10 @@ namespace HMOSecureMiddleware
                         //new Repository<onBoardingSSITemplateDocument>().BulkInsert(, dbSchemaName: "HMADMIN.");
                     }
                 }
+                ssiTemplate.Beneficiary = null;
+                ssiTemplate.Intermediary = null;
+                ssiTemplate.UltimateBeneficiary = null;
+                context.onBoardingSSITemplates.AddOrUpdate(ssiTemplate);
                 context.SaveChanges();
             }
             return ssiTemplate.onBoardingSSITemplateId;
