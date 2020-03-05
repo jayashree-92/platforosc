@@ -163,7 +163,7 @@ namespace HMOSecureWeb.Controllers
             if (originalSwiftGroup.SwiftGroup != swiftGroup.SwiftGroup)
                 fieldsChanged.Add("Swift Group");
             if (originalSwiftGroup.SendersBIC != swiftGroup.SendersBIC)
-                fieldsChanged.Add("Cutoff Time");
+                fieldsChanged.Add("Sender's BIC");
             if (originalSwiftGroup.Broker != swiftGroup.Broker)
                 fieldsChanged.Add("Broker");
             if (originalSwiftGroup.SwiftGroupStatus != swiftGroup.SwiftGroupStatus)
