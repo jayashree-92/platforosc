@@ -149,7 +149,7 @@ namespace HMOSecureWeb.Controllers
                 IsDeleted = s.IsDeleted,
                 Notes = s.Notes,
                 RecCreatedAt = s.RecCreatedAt.Value,
-                RecCreatedBy = s.RecCreatedBy.HumanizeEmail()
+                RecCreatedBy = (s.RecCreatedBy ?? string.Empty).HumanizeEmail()
             }).OrderByDescending(s => s.RecCreatedAt).ToList();
         }
         private void AuditSwiftGroupChanges(SwiftGroupData swiftGroup, SwiftGroupData originalSwiftGroup, bool isDeleted = false)
