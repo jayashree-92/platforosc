@@ -103,6 +103,16 @@ namespace HMOSecureMiddleware
             }
         }
 
+
+        public static List<long> GetFundIdsbyCounterparty(long brokerId)
+        {
+            using (var context = new AdminContext())
+            {
+                var intFundIds = context.vw_OnboardedAgreements.Where(x => (x.dmaCounterPartyOnBoardId ?? 0) == brokerId && x.hmFundId.HasValue && x.HMOpsStatus == "Approved").Select(x => x.hmFundId.Value).Distinct().ToList();
+                return intFundIds.Select(s => Convert.ToInt64(s)).ToList();
+            }
+        }
+
         public static string GetCounterpartyFamilyName(long counterpartyFamilyId)
         {
             using (var context = new AdminContext())

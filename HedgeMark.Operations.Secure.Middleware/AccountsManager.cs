@@ -122,6 +122,16 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static List<onBoardingAccountSSITemplateMap> GetSsiTemplateAccountMap(long ssiTemplateId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.onBoardingAccountSSITemplateMaps.Where(x => x.onBoardingSSITemplateId == ssiTemplateId).ToList();
+            }
+        }
+
         public static List<OnBoardingAccountDescription> GetAccountDescriptionsByAgreementTypeId(long agreementTypeId)
         {
             using (var context = new OperationsSecureContext())
@@ -441,6 +451,22 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static List<onBoardingAccount> GetAllApprovedAccounts(List<long> hmFundIds, string messageType, string currency, bool isServiceType)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                
+                return (from account in context.onBoardingAccounts
+                        join swift in context.hmsSwiftGroups on account.SwiftGroupId equals swift.hmsSwiftGroupId
+                        where !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && (hmFundIds.Contains(account.hmFundId) || isServiceType) && (currency == null || account.Currency == currency) && swift.AcceptedMessages.Contains(messageType)
+                        select account).ToList();
+
+                //return context.onBoardingAccounts.Include(s => s.SwiftGroup).Where(account => !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && (hmFundIds.Contains(account.hmFundId) || isServiceType) && (currency == null || account.Currency == currency) && ((account.SwiftGroup ?? new hmsSwiftGroup()).AcceptedMessages.Contains(messageType))).ToList();
+            }
+        }
+
         public static List<onBoardingSSITemplate> GetAllBrokerSsiTemplates()
         {
             using (var context = new OperationsSecureContext())
@@ -474,11 +500,17 @@ namespace HMOSecureMiddleware
                     ssiTemplate.Intermediary = new onBoardingAccountBICorABA();
                 if (ssiTemplate.UltimateBeneficiary == null)
                     ssiTemplate.UltimateBeneficiary = new onBoardingAccountBICorABA();
+                if (ssiTemplate.onBoardingSSITemplateDocuments == null)
+                    ssiTemplate.onBoardingSSITemplateDocuments = new List<onBoardingSSITemplateDocument>();
+                if (ssiTemplate.onBoardingAccountSSITemplateMaps == null)
+                    ssiTemplate.onBoardingAccountSSITemplateMaps = new List<onBoardingAccountSSITemplateMap>();
 
                 //remove circular references
                 ssiTemplate.Beneficiary.onBoardingSSITemplates = ssiTemplate.Beneficiary.onBoardingSSITemplates1 = ssiTemplate.Beneficiary.onBoardingSSITemplates2 = null;
                 ssiTemplate.Intermediary.onBoardingSSITemplates = ssiTemplate.Intermediary.onBoardingSSITemplates1 = ssiTemplate.Intermediary.onBoardingSSITemplates2 = null;
                 ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates1 = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates2 = null;
+                ssiTemplate.onBoardingSSITemplateDocuments.ForEach(s => s.onBoardingSSITemplate = null);
+                ssiTemplate.onBoardingAccountSSITemplateMaps.ForEach(s => { s.onBoardingSSITemplate = null; s.onBoardingAccount = null; });
 
                 return ssiTemplate;
             }
@@ -537,13 +569,12 @@ namespace HMOSecureMiddleware
                     ssiTemplate.UpdatedAt = DateTime.Now;
                     ssiTemplate.UpdatedBy = userName;
                     ssiTemplate.SSITemplateStatus = "Saved As Draft";
-                    context.onBoardingSSITemplates.Add(ssiTemplate);
                 }
                 else
                 {
                     ssiTemplate.UpdatedAt = DateTime.Now;
                     ssiTemplate.UpdatedBy = userName;
-                    context.onBoardingSSITemplates.AddOrUpdate(ssiTemplate);
+                    
 
                     if (ssiTemplate.onBoardingSSITemplateDocuments != null && ssiTemplate.onBoardingSSITemplateDocuments.Count > 0)
                     {
@@ -551,6 +582,10 @@ namespace HMOSecureMiddleware
                         //new Repository<onBoardingSSITemplateDocument>().BulkInsert(, dbSchemaName: "HMADMIN.");
                     }
                 }
+                ssiTemplate.Beneficiary = null;
+                ssiTemplate.Intermediary = null;
+                ssiTemplate.UltimateBeneficiary = null;
+                context.onBoardingSSITemplates.AddOrUpdate(ssiTemplate);
                 context.SaveChanges();
             }
             return ssiTemplate.onBoardingSSITemplateId;

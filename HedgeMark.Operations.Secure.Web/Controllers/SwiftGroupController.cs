@@ -59,12 +59,16 @@ namespace HMOSecureWeb.Controllers
 
         public void AddOrUpdateSwiftGroup(hmsSwiftGroup hmsSwiftGroup)
         {
+            SwiftGroupData originalSwiftGroup;
             var swiftGroupData = GetSwiftGroupData(hmsSwiftGroup.hmsSwiftGroupId);
-            hmsSwiftGroup.RecCreatedBy = UserName;
-            AccountManager.AddOrUpdateSwiftGroup(hmsSwiftGroup);
             var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
             var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(preferencesKey);
-            var originalSwiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { swiftGroupData }, swiftGroupInfo).FirstOrDefault();
+            if (hmsSwiftGroup.hmsSwiftGroupId > 0)
+                originalSwiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { swiftGroupData }, swiftGroupInfo).FirstOrDefault();
+            else
+                originalSwiftGroup = new SwiftGroupData();
+            hmsSwiftGroup.RecCreatedBy = UserName;
+            AccountManager.AddOrUpdateSwiftGroup(hmsSwiftGroup);
             var swiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { hmsSwiftGroup }, swiftGroupInfo).FirstOrDefault();
             AuditSwiftGroupChanges(swiftGroup, originalSwiftGroup);
         }
@@ -149,7 +153,7 @@ namespace HMOSecureWeb.Controllers
                 IsDeleted = s.IsDeleted,
                 Notes = s.Notes,
                 RecCreatedAt = s.RecCreatedAt.Value,
-                RecCreatedBy = s.RecCreatedBy.HumanizeEmail()
+                RecCreatedBy = (s.RecCreatedBy ?? string.Empty).HumanizeEmail()
             }).OrderByDescending(s => s.RecCreatedAt).ToList();
         }
         private void AuditSwiftGroupChanges(SwiftGroupData swiftGroup, SwiftGroupData originalSwiftGroup, bool isDeleted = false)
@@ -159,7 +163,7 @@ namespace HMOSecureWeb.Controllers
             if (originalSwiftGroup.SwiftGroup != swiftGroup.SwiftGroup)
                 fieldsChanged.Add("Swift Group");
             if (originalSwiftGroup.SendersBIC != swiftGroup.SendersBIC)
-                fieldsChanged.Add("Cutoff Time");
+                fieldsChanged.Add("Sender's BIC");
             if (originalSwiftGroup.Broker != swiftGroup.Broker)
                 fieldsChanged.Add("Broker");
             if (originalSwiftGroup.SwiftGroupStatus != swiftGroup.SwiftGroupStatus)

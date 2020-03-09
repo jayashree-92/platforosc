@@ -26,7 +26,7 @@
                             </ul>
                         </div>
 
-                        <div class="pull-right btn-group" id="btnAccountStatusButtons" style="display: none;">
+                        @*<div class="pull-right btn-group" id="btnAccountStatusButtons" style="display: none;">
                             &nbsp;&nbsp;<button id="requestForApproval" title="Request for Approval" class="btn btn-warning btn-sm disabled" ng-click="fnUpdateAccountStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
                             @if (User.IsWireApprover())
                             {
@@ -34,7 +34,7 @@
                             }
 
                             <button id="revert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="fnUpdateAccountStatus('Created','Revert')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Save and Update</button>
-                        </div>
+                        </div>*@
                     }
                     <div class="pull-right btn-group">
                         &nbsp;&nbsp; <button class=" btn btn-primary btn-sm" id="btnEdit" disabled ng-click="fnEditAccount()">
