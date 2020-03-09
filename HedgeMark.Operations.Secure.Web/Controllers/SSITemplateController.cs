@@ -297,6 +297,10 @@ namespace HMOSecureWeb.Controllers
                     System.IO.File.Delete(fileinfo.FullName);
 
                 context.onBoardingSSITemplateDocuments.Remove(document);
+                var ssiTemplate = context.onBoardingSSITemplates.FirstOrDefault(s => s.onBoardingSSITemplateId == document.onBoardingSSITemplateId);
+                ssiTemplate.SSITemplateStatus = "Created";
+                ssiTemplate.UpdatedAt = DateTime.Now;
+                ssiTemplate.UpdatedBy = UserName;
                 context.SaveChanges();
             }
 
@@ -440,6 +444,10 @@ namespace HMOSecureWeb.Controllers
                     using (var context = new OperationsSecureContext())
                     {
                         context.onBoardingSSITemplateDocuments.Add(document);
+                        var ssiTemplate = context.onBoardingSSITemplates.FirstOrDefault(s => s.onBoardingSSITemplateId == document.onBoardingSSITemplateId);
+                        ssiTemplate.SSITemplateStatus = "Created";
+                        ssiTemplate.UpdatedAt = DateTime.Now;
+                        ssiTemplate.UpdatedBy = UserName;
                         context.SaveChanges();
                     }
 

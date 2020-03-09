@@ -196,17 +196,20 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             event.preventDefault();
             var selectedRow = $(this).parents("tr");
             var rowElement = tblDocuments.row(selectedRow).data();
-            bootbox.confirm("Are you sure you want to remove this document from ssi template?", function (result) {
-                if (!result) {
-                    return;
-                } else {
-                    $http.post("/SSITemplate/RemoveSsiTemplateDocument", { documentId: rowElement.onBoardingSSITemplateDocumentId }).then(function () {
-                        tblDocuments.row(selectedRow).remove().draw();
-                        $scope.ssiTemplateDocuments.pop(rowElement);
-                        notifySuccess("Document removed succesfully");
-                    });
-                }
-            });
+            $timeout(function () {
+                bootbox.confirm("Are you sure you want to remove this document from ssi template?", function (result) {
+                    if (!result) {
+                        return;
+                    } else {
+                        $http.post("/SSITemplate/RemoveSsiTemplateDocument", { documentId: rowElement.onBoardingSSITemplateDocumentId }).then(function () {
+                            tblDocuments.row(selectedRow).remove().draw();
+                            $scope.ssiTemplateDocuments.pop(rowElement);
+                            $scope.ssiTemplate.onBoardingSSITemplateDocuments.pop(rowElement);
+                            notifySuccess("Document removed succesfully");
+                        });
+                    }
+                });
+            }, 50);
 
         });
     }
