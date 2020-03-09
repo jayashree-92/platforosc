@@ -540,10 +540,12 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $scope.$watch("watchSSITemplate", function (val, oldVal) {
 
-        if (val == undefined && oldVal == undefined || $scope.isLoad)
+        if (val == undefined || oldVal == undefined || $scope.isLoad) {
             $scope.isSSITemplateChanged = false;
+            return;
+        }
 
-        else if (val.SSITemplateStatus != "Approved" || (oldVal != undefined && val != oldVal)) {
+       if (val != oldVal) {
             $scope.isSSITemplateChanged = true;
         }
         else {
@@ -600,6 +602,12 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         });
     }
 
+    $scope.showAssociations = function () {
+        $timeout(function () {
+            $scope.ssiMapTable.columns.adjust().draw(true);
+        }, 100);
+    }
+
     function viewSsiTemplateTable(data) {
 
         if ($("#tblAssociatedAccounts").hasClass("initialized")) {
@@ -611,13 +619,13 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         else
             $("#btnAccountMapStatusButtons").hide();
 
-        ssiMapTable = $("#tblAssociatedAccounts").not(".initialized").addClass("initialized").DataTable({
+        $scope.ssiMapTable = $("#tblAssociatedAccounts").not(".initialized").addClass("initialized").DataTable({
             "bDestroy": true,
             //responsive: true,
             aaData: data,
             "aoColumns": [
                 {
-                    "sTitle": "Template Name",
+                    "sTitle": "Account Name",
                     "mData": "AccountName"
                 },
                 {
@@ -708,7 +716,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         });
 
         window.setTimeout(function () {
-            ssiMapTable.columns.adjust().draw(true);
+            $scope.ssiMapTable.columns.adjust().draw(true);
         }, 10);
 
 

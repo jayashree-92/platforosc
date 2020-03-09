@@ -253,7 +253,7 @@
                             </div>
                         </div>
                         <div class="panel panel-default ng-show-hide" id="panelAssociatedAccounts" ng-if="ssiTemplateId != 0">
-                            <div class="panel-heading" data-toggle="collapse" data-target="#accountSsiAssociationInfo" aria-expanded="false" aria-controls="accountSsiAssociationInfo">                                
+                            <div class="panel-heading" data-toggle="collapse" data-target="#accountSsiAssociationInfo" aria-expanded="false" aria-controls="accountSsiAssociationInfo" ng-click="showAssociations()">                                
                                 <b>Associated Settlement Instructions</b> 
                                     <span class="pull-right">
                                         @if (User.IsWireApprover())
@@ -280,14 +280,14 @@
                             <a class="btn btn-default" ng-click="fnBack()"><i class="glyphicon glyphicon-step-backward"></i>&nbsp;Back</a>
                             @if (User.IsWireUser())
                             {
-                                <button type="submit" title="Save SSI Template" class="btn btn-primary" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' || ssiTemplateId==0)" style="" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;Save SSI Template</button>
+                                <button type="submit" title="Save SSI Template" class="btn btn-sm btn-primary" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' || ssiTemplateId==0)" style="" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;Save SSI Template</button>
                                 @*<button type="submit" class="btn btn-primary" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save SSI Template</button>*@
-                                <a id="requestForApproval" title="Request for Approval" class="btn btn-warning" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' && ssiTemplateId != 0)" style="" ng-click="fnUpdateSSITemplateStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</a>
+                                <a id="requestForApproval" title="Request for Approval" class="btn btn-sm btn-warning" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' && ssiTemplateId != 0)" style="" ng-click="fnUpdateSSITemplateStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</a>
                                 if (User.IsWireApprover())
                                 {
-                                    <a id="approve" title="Approve" class="btn btn-success" ng-if="isAuthorizedUserToApprove" ng-show="!isSSITemplateChanged" ng-click="fnUpdateSSITemplateStatus('Approved','Approve')"><i class="glyphicon glyphicon-ok"></i> Approve</a>
+                                    <a id="approve" title="Approve" class="btn btn-sm btn-success" ng-if="isAuthorizedUserToApprove" ng-show="!isSSITemplateChanged" ng-click="fnUpdateSSITemplateStatus('Approved','Approve')"><i class="glyphicon glyphicon-ok"></i> Approve</a>
                                 }
-                                <a id="revert" title="Revert" class="btn btn-info" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Approved'||ssiTemplate.SSITemplateStatus == 'Pending Approval')" ng-click="fnUpdateSSITemplateStatus('Saved As Draft','Revert')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Save and Update</a>
+                                <a id="revert" title="Revert" class="btn btn-sm btn-info" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Approved'||ssiTemplate.SSITemplateStatus == 'Pending Approval')" ng-click="fnUpdateSSITemplateStatus('Saved As Draft','Revert')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Save and Update</a>
                             }
                         </div>
                     </div>
