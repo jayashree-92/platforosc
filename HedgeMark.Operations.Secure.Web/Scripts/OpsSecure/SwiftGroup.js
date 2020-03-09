@@ -108,6 +108,10 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
         if ($scope.swiftGroup.SendersBIC == null || $scope.swiftGroup.SendersBIC == "")
             return;
         $scope.swiftGroup.SendersBIC = $scope.swiftGroup.SendersBIC.trim().toUpperCase();
+        if ($scope.swiftGroup.SendersBIC.length < 8) {
+            $scope.swiftGroup.SendersBIC = "";
+            notifyError("Sender's BIC should contain minimum 8 characters");
+        }
     }
 
     $scope.fnAddOrUpdateSwiftGroup = function (isAdd) {
