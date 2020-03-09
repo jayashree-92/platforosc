@@ -277,7 +277,7 @@
                     </div>
                     <div class="panel-footer" style="min-height:55px;">
                         <div class="pull-right">
-                            <a class="btn btn-default" ng-click="fnBack()"><i class="glyphicon glyphicon-step-backward"></i>&nbsp;Back</a>
+                            <a class="btn btn-sm btn-default" ng-click="fnBack()"><i class="glyphicon glyphicon-step-backward"></i>&nbsp;Back</a>
                             @if (User.IsWireUser())
                             {
                                 <button type="submit" title="Save SSI Template" class="btn btn-sm btn-primary" ng-show="isSSITemplateChanged && (ssiTemplate.SSITemplateStatus == 'Saved As Draft' || ssiTemplateId==0)" style="" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;Save SSI Template</button>
