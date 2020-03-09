@@ -38,7 +38,7 @@ namespace HMOSecureWeb.Controllers
                 var counterpartyFamilies = OnBoardingDataManager.GetAllCounterpartyFamilies().Select(x => new { id = x.dmaCounterpartyFamilyId, text = x.CounterpartyFamily }).OrderBy(x => x.text).ToList();
                 var agreementFundIds = agreementData.Where(s => s.HMFundId > 0).Select(s => s.HMFundId).ToList();
                 var fundsWithAgreements = funds.Where(s => agreementFundIds.Contains(s.id)).ToList();
-                var agreements = agreementData.Select(s => new { id = s.AgreementOnboardingId, text = s.AgreementShortName, AgreementTypeId = s.AgreementTypeId, hmFundId = s.HMFundId, BrokerId = s.BrokerId }).ToList();
+                var agreements = agreementData.Select(s => new { id = s.AgreementOnboardingId, text = s.AgreementShortName, AgreementTypeId = s.AgreementTypeId, hmFundId = s.HMFundId, BrokerId = s.BrokerId, AgreementType = s.AgreementType }).ToList();
                 return Json(new
                 {
                     agreementData,
