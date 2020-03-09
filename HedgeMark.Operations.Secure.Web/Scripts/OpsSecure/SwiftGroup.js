@@ -197,22 +197,27 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
     }
 
     $scope.fnDeleteSwiftGroup = function () {
-        showMessage("Are you sure do you want to delete this Swift Group? ", "Delete Swift Group", [
-            {
-                label: "Delete",
-                className: "btn btn-sm btn-danger",
-                callback: function () {
-                    $http.post("/SwiftGroup/DeleteSwiftGroup", { swiftGroupId: $scope.selectedRowData.hmsSwiftGroupId }).then(function () {
-                        notifySuccess("Wire cutoff deleted successfully");
-                        $scope.fnGetSwiftGroupData();
-                    });
+        if ($scope.selectedRowData.AccountsAssociated == 0) {
+            showMessage("Are you sure do you want to delete this Swift Group? ", "Delete Swift Group", [
+                {
+                    label: "Delete",
+                    className: "btn btn-sm btn-danger",
+                    callback: function () {
+                        $http.post("/SwiftGroup/DeleteSwiftGroup", { swiftGroupId: $scope.selectedRowData.hmsSwiftGroupId }).then(function () {
+                            notifySuccess("Swift group deleted successfully");
+                            $scope.fnGetSwiftGroupData();
+                        });
+                    }
+                },
+                {
+                    label: "Cancel",
+                    className: "btn btn-sm btn-default"
                 }
-            },
-            {
-                label: "Cancel",
-                className: "btn btn-sm btn-default"
-            }
-        ]);
+            ]);
+        }
+        else {
+            notifyError("Swift group cannot be deleted as it is associated to 1 or more fund accounts.");
+        }
     }
 
     $scope.fnExportData = function () {

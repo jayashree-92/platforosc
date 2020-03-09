@@ -460,7 +460,7 @@ namespace HMOSecureMiddleware
                 
                 return (from account in context.onBoardingAccounts
                         join swift in context.hmsSwiftGroups on account.SwiftGroupId equals swift.hmsSwiftGroupId
-                        where !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && (hmFundIds.Contains(account.hmFundId) || isServiceType) && (currency == null || account.Currency == currency) && swift.AcceptedMessages.Contains(messageType)
+                        where !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && (isServiceType || hmFundIds.Contains(account.hmFundId)) && (currency == null || account.Currency == currency) && swift.AcceptedMessages.Contains(messageType)
                         select account).ToList();
 
                 //return context.onBoardingAccounts.Include(s => s.SwiftGroup).Where(account => !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && (hmFundIds.Contains(account.hmFundId) || isServiceType) && (currency == null || account.Currency == currency) && ((account.SwiftGroup ?? new hmsSwiftGroup()).AcceptedMessages.Contains(messageType))).ToList();
@@ -703,7 +703,7 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.hmsSwiftGroups.Where(s => !s.IsDeleted && (brokerId == -1 || s.BrokerLegalEntityId == brokerId)).AsNoTracking().ToList();
+                return context.hmsSwiftGroups.Include(s => s.onBoardingAccounts).Where(s => !s.IsDeleted && (brokerId == -1 || s.BrokerLegalEntityId == brokerId)).AsNoTracking().ToList();
             }
         }
 

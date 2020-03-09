@@ -20,6 +20,7 @@ namespace HMOSecureMiddleware.Models
         public bool IsDeleted { get; set; }
         public string RecCreatedBy { get; set; }
         public DateTime RecCreatedAt { get; set; }
+        public int AccountsAssociated { get; set; }
 
     }
 

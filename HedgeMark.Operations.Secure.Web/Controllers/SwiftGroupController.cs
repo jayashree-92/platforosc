@@ -43,7 +43,8 @@ namespace HMOSecureWeb.Controllers
                 IsDeleted = s.IsDeleted,
                 Notes = s.Notes,
                 RecCreatedAt = s.RecCreatedAt.Value,
-                RecCreatedBy = s.RecCreatedBy.HumanizeEmail()
+                RecCreatedBy = s.RecCreatedBy.HumanizeEmail(),
+                AccountsAssociated = s.onBoardingAccounts.Where(p => p.IsDeleted).Count()
             }).OrderByDescending(s => s.RecCreatedAt).ToList();
             var swiftGroupRelatedData = new SwiftGroupInformation() { SwiftGroupData = swiftGroupData, Brokers = counterpartyData, SwiftGroupStatus = swiftStatusData };
             var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
@@ -102,7 +103,8 @@ namespace HMOSecureWeb.Controllers
             using (var context = new OperationsSecureContext())
             {
                 var swiftGroup = context.hmsSwiftGroups.FirstOrDefault(s => s.hmsSwiftGroupId == swiftGroupId) ?? new hmsSwiftGroup();
-                context.hmsSwiftGroups.Remove(swiftGroup);
+                swiftGroup.IsDeleted = true;
+                swiftGroup.RecCreatedAt = DateTime.Now;
                 context.SaveChanges();
                 return swiftGroup;
             }

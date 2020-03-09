@@ -595,14 +595,14 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
             if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined && $scope.ssiTemplateMaps.length > 0) {
                 //$scope.onBoardingAccountDetails[index].onBoardingAccountSSITemplateMaps = $scope.ssiTemplateMaps;
-                viewSsiTemplateTable($scope.ssiTemplateMaps, index);
+                viewSsiTemplateTable($scope.ssiTemplateMaps);
             }
         });
     }
 
     function viewSsiTemplateTable(data) {
 
-        if ($("$tblAssociatedAccounts").hasClass("initialized")) {
+        if ($("#tblAssociatedAccounts").hasClass("initialized")) {
             fnDestroyDataTable("#tblAssociatedAccounts");
         }
 
