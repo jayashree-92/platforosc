@@ -266,8 +266,8 @@ namespace HMOSecureWeb.Controllers
             //When wire is Drafted - hide Last Modified by
             if (thisWire.HMWire.WireStatusId == 1)
             {
-                thisWire.WireLastUpdatedBy = "-";
-                thisWire.HMWire.LastModifiedAt = new DateTime(1, 1, 1);
+                //thisWire.WireLastUpdatedBy = "-";
+                //thisWire.HMWire.LastModifiedAt = new DateTime(1, 1, 1);
                 thisWire.WireApprovedBy = "-";
                 thisWire.HMWire.ApprovedAt = null;
             }
@@ -285,11 +285,11 @@ namespace HMOSecureWeb.Controllers
                 thisWire.WireApprovedBy = "System";
             }
 
-            if (thisWire.WireLastUpdatedBy == thisWire.WireCreatedBy)
-            {
-                thisWire.WireLastUpdatedBy = "-";
-                thisWire.HMWire.LastModifiedAt = new DateTime(1, 1, 1);
-            }
+            //if (thisWire.WireLastUpdatedBy == thisWire.WireCreatedBy)
+            //{
+            //    thisWire.WireLastUpdatedBy = "-";
+            //    thisWire.HMWire.LastModifiedAt = new DateTime(1, 1, 1);
+            //}
         }
 
         public JsonResult GetWireMessageTypeDetails(string module)
