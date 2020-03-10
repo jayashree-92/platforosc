@@ -319,7 +319,7 @@ namespace HMOSecureMiddleware
                     wire.LastModifiedAt = DateTime.Now;
                 }
 
-                if (wireStatus == WireStatus.Approved)
+                if (wireStatus == WireStatus.Approved && userId != -1)
                 {
                     wire.ApprovedAt = DateTime.Now;
                     wire.ApprovedBy = userId;
