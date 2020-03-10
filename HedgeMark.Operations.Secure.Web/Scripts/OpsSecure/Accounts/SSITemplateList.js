@@ -347,7 +347,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                             aaData: response.data.ssiTemplateMaps,
                             "aoColumns": [
                                 {
-                                    "sTitle": "Template Name",
+                                    "sTitle": "Account Name",
                                     "mData": "AccountName"
                                 },
                                 {
@@ -392,20 +392,6 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                                         return "";
                                     }
                                 },
-                                //{
-                                //    "mData": "onBoardingSSITemplateId", "sTitle": "Go to SSI Template", "className": "dt-center",
-                                //    "mRender": function (data, type, row) {
-                                //        // return " <label class=\"label ng-show-only  label-success\" style=\"font-size: 12px;\">" + row.CompletedCount + "</label> <label class=\"label ng-show-only  label-warning\"  style=\"font-size: 12px;\">" + row.InProcessCount + "</label> <label class=\"label ng-show-only  label-info\" style=\"font-size: 12px;\">" + row.TbdCount + "</label>";
-                                //        return "<a class=\"btn btn-primary btn-xs\" id=\"" + data + "\" ><i class=\"glyphicon glyphicon-share-alt\"></i></a>";
-                                //    }
-
-                                //},
-                                {
-                                    "mData": "onBoardingAccountSSITemplateMapId", "className": "dt-center",
-                                    "sTitle": "Remove", "mRender": function (tdata) {
-                                        return "<a class='btn btn-danger btn-xs' title='Remove SSI'><i class='glyphicon glyphicon-trash'></i></a>";
-                                    }
-                                }
                             ],
                             "createdRow": function (row, rowData) {
                                 switch (rowData.Status) {

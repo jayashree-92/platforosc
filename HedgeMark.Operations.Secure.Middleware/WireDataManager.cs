@@ -324,7 +324,7 @@ namespace HMOSecureMiddleware
                     wire.ApprovedAt = DateTime.Now;
                     wire.ApprovedBy = userId;
                 }
-                else
+                else if(swiftStatus == SwiftStatus.NotInitiated)
                 {
                     wire.ApprovedAt = null;
                     wire.ApprovedBy = null;
