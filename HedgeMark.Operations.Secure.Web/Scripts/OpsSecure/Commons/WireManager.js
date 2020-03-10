@@ -1238,7 +1238,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 });
                 $scope.isSendingAccountEnabled = true;
             }
-            else {
+            else if ($scope.WireTicket.hmsWireId == 0)
+            {
                 $scope.isFundsChanged = false;
                 $("#liAgreement").select2('val', '').trigger('change');
                 $("#liSendingAccount").select2('val', '').trigger('change');

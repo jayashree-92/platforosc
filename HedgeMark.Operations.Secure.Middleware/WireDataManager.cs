@@ -330,8 +330,8 @@ namespace HMOSecureMiddleware
                     wire.ApprovedBy = null;
                 }
 
-                if (wireStatus == WireStatus.Initiated)
-                    wire.CreatedBy = userId;
+                //if (wireStatus == WireStatus.Initiated)
+                //    wire.CreatedBy = userId;
 
                 context.hmsWires.AddOrUpdate(wire);
                 context.SaveChanges();
