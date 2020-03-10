@@ -198,7 +198,9 @@ namespace HMOSecureWeb.Controllers
             if (string.IsNullOrWhiteSpace(message))
                 message = string.Empty;
             var fundAccounts = AccountManager.GetAllApprovedAccounts(hmFundIds, message, currency, isServiceType);
-            fundAccounts.ForEach(s => s.SwiftGroup = null);
+            var existingAccountMaps = ssiTemplateMaps.Select(p => p.onBoardingAccountId).ToList();
+            var availableFundAccounts = fundAccounts.Where(s => !existingAccountMaps.Contains(s.onBoardingAccountId)).ToList();
+            availableFundAccounts.ForEach(s => s.SwiftGroup = null);
 
             return Json(new
             {
@@ -224,7 +226,7 @@ namespace HMOSecureWeb.Controllers
                         account.AccountNumber
                     } : null;
                 }).Where(temp => temp != null).OrderBy(y => y.AccountName).ToList(),
-                fundAccounts = fundAccounts.Where(s => !ssiTemplateMaps.Select(p => p.onBoardingAccountId).Contains(s.onBoardingAccountId)).ToList(),
+              fundAccounts = availableFundAccounts,
             }, JsonContentType, JsonContentEncoding);
         }
         public JsonResult GetAccountDocuments(long accountId)
@@ -487,6 +489,7 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetAllRelatedSwiftGroup(long brokerId)
         {
             var swiftGroups = AccountManager.GetAllSwiftGroup(brokerId);
+            swiftGroups.ForEach(s => s.onBoardingAccounts = null);
             return Json(new
             {
                 swiftGroups,
@@ -571,7 +574,7 @@ namespace HMOSecureWeb.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
-        public void AddAccountSsiTemplateMap(onBoardingAccountSSITemplateMap accountSsiTemplateMap)
+        public void AddAccountSsiTemplateMap(List<onBoardingAccountSSITemplateMap> accountSsiTemplateMap)
         {
             AccountManager.AddAccountSsiTemplateMap(accountSsiTemplateMap, UserName);
         }

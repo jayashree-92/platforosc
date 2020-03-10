@@ -296,25 +296,27 @@ namespace HMOSecureMiddleware
             return account.onBoardingAccountId;
         }
 
-        public static void AddAccountSsiTemplateMap(onBoardingAccountSSITemplateMap accountSsiTemplateMap, string userName)
+        public static void AddAccountSsiTemplateMap(List<onBoardingAccountSSITemplateMap> accountSsiTemplateMap, string userName)
         {
             using (var context = new OperationsSecureContext())
             {
-                if (accountSsiTemplateMap.onBoardingAccountSSITemplateMapId == 0)
+                accountSsiTemplateMap.ForEach(aMap =>
                 {
-                    accountSsiTemplateMap.CreatedAt = DateTime.Now;
-                    accountSsiTemplateMap.CreatedBy = userName;
-                    accountSsiTemplateMap.UpdatedAt = DateTime.Now;
-                    accountSsiTemplateMap.UpdatedBy = userName;
-                    accountSsiTemplateMap.Status = "Pending Approval";
-                    context.onBoardingAccountSSITemplateMaps.Add(accountSsiTemplateMap);
-                }
-                else
-                {
-                    accountSsiTemplateMap.UpdatedAt = DateTime.Now;
-                    accountSsiTemplateMap.UpdatedBy = userName;
-                    context.onBoardingAccountSSITemplateMaps.AddOrUpdate(accountSsiTemplateMap);
-                }
+                    if (aMap.onBoardingAccountSSITemplateMapId == 0)
+                    {
+                        aMap.CreatedAt = DateTime.Now;
+                        aMap.CreatedBy = userName;
+                        aMap.UpdatedAt = DateTime.Now;
+                        aMap.UpdatedBy = userName;
+                        aMap.Status = "Pending Approval";
+                    }
+                    else
+                    {
+                        aMap.UpdatedAt = DateTime.Now;
+                        aMap.UpdatedBy = userName;
+                    }
+                    context.onBoardingAccountSSITemplateMaps.AddOrUpdate(aMap);
+                });
                 context.SaveChanges();
             }
         }

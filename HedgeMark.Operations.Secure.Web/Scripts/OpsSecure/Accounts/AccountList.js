@@ -1983,8 +1983,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             UpdatedBy: $("#userName").val(),
             Status: pendingStatus
         };
-
-        $http.post("/Accounts/AddAccountSsiTemplateMap", { accountSsiTemplateMap: [$scope.onBoardingAccountSSITemplateMap] }).then(function () {
+        $http({
+            method: "POST",
+            url: "/Accounts/AddAccountSsiTemplateMap",
+            type: "json",
+            data: JSON.stringify({
+                accountSsiTemplateMap: [$scope.onBoardingAccountSSITemplateMap]
+            })
+        }).then(function () {
             notifySuccess("Ssi template mapped to account successfully");
             $scope.ssiTemplateMaps.push($scope.onBoardingAccountSSITemplateMap);
             //$scope.onBoardingAccountDetails[$scope.PanelIndex].onBoardingAccountSSITemplateMaps.push($scope.onBoardingAccountSSITemplateMap);

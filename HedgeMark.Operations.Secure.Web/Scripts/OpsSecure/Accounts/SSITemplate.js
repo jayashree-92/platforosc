@@ -593,7 +593,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         var brokerId = $scope.ssiTemplate.SSITemplateType == "Broker" ? $scope.ssiTemplate.TemplateEntityId : 0;
         var isServiceType = $scope.ssiTemplate.SSITemplateType != "Broker";
         $http.get("/Accounts/GetSsiTemplateAccountMap?ssiTemplateId=" + $scope.ssiTemplateId + "&brokerId=" + brokerId + "&currency=" + $scope.ssiTemplate.Currency + "&message=" + $scope.ssiTemplate.MessageType + "&isServiceType=" + isServiceType).then(function (response) {
-            $scope.fundAccounts = response.data.fundaccounts;
+            $scope.fundAccounts = response.data.fundAccounts;
             $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
             if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined && $scope.ssiTemplateMaps.length > 0) {
                 //$scope.onBoardingAccountDetails[index].onBoardingAccountSSITemplateMaps = $scope.ssiTemplateMaps;
@@ -781,19 +781,25 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.fnAddAccountSSITemplateMap = function () {
 
         $scope.onBoardingAccountSSITemplateMap = [];
-        angular.forEach([$("#liFundAccount").select2("val")], function (val, i) {
+        angular.forEach($("#liFundAccount").select2("val"), function (val, i) {
             $scope.onBoardingAccountSSITemplateMap.push({
                 onBoardingAccountSSITemplateMapId: 0,
-                onBoardingSSITemplateId: $scope.ssiTemplateId,
+                onBoardingSSITemplateId: parseInt($scope.ssiTemplateId),
                 onBoardingAccountId: parseInt(val),
                 CreatedBy: $("#userName").val(),
                 UpdatedBy: $("#userName").val(),
                 Status: "Pending Approval"
             });
         });
-        
 
-        $http.post("/Accounts/AddAccountSsiTemplateMap", { accountSsiTemplateMap: $scope.onBoardingAccountSSITemplateMap }).then(function () {
+        $http({
+            method: "POST",
+            url: "/Accounts/AddAccountSsiTemplateMap",
+            type: "json",
+            data: JSON.stringify({
+                accountSsiTemplateMap: $scope.onBoardingAccountSSITemplateMap
+            })
+        }).then(function () {
             notifySuccess("Accounts mapped to SSI Template successfully");
             $scope.fnGetAssociatedAccounts();
         });
