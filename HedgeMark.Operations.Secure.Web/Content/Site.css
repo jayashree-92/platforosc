@@ -1992,12 +1992,12 @@ div.DTCR_pointer {
     padding-bottom: 5px;
 }
 
-[data-toggle='collapse'] {
+/*[data-toggle='collapse'] {
     position: -webkit-sticky;
     position: sticky;
     top: 40px;
     z-index: 1;
-}
+}*/
 
 .modal-footer {
     /*padding: 8px 20px 8px 20px;*/

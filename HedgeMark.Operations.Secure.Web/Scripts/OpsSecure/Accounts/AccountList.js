@@ -3005,7 +3005,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $(document).on("click", "#accountSSITemplateTable tbody tr td a.btn-primary", function (event) {
         event.preventDefault();
         var ssitemplateId = $(this).attr("id");
-        window.open("/Accounts/SSITemplate?ssiTemplateId=" + ssitemplateId, "_blank");
+        window.open("/SSITemplate/SSITemplate?ssiTemplateId=" + ssitemplateId, "_blank");
     });
 
 });
