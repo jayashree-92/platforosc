@@ -105,13 +105,16 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
     }
 
     $scope.formatSwiftGroup = function () {
-        if ($scope.swiftGroup.SendersBIC == null || $scope.swiftGroup.SendersBIC == "")
+        if ($scope.swiftGroup.SendersBIC == null || $scope.swiftGroup.SendersBIC == "") {
+            $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
             return;
+        }
         $scope.swiftGroup.SendersBIC = $scope.swiftGroup.SendersBIC.trim().toUpperCase();
         if ($scope.swiftGroup.SendersBIC.length < 8) {
             $scope.swiftGroup.SendersBIC = "";
             notifyError("Sender's BIC should contain minimum 8 characters");
         }
+        $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
     }
 
     $scope.fnAddOrUpdateSwiftGroup = function (isAdd) {
@@ -166,14 +169,15 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
     }
 
     $scope.$watch("isSwiftGroupRequirementsFilled", function (newValue, oldValue) {
-        $scope.isSwiftGroupRequirementsFilled = $("#liBrokerEntity").select2('val') != "" && $("#liSwiftGroupStatus").select2('val') != "" && $("#liMessageTypes").select2('val') != "";
+        if(oldValue != undefined)
+            $scope.isSwiftGroupRequirementsFilled = $("#liBrokerEntity").select2('val') != "" && $("#liSwiftGroupStatus").select2('val') != "" && $("#liMessageTypes").select2('val') != "" && $scope.swiftGroup.SwiftGroup != null && $scope.swiftGroup.SwiftGroup != "" && $scope.swiftGroup.SendersBIC != null && $scope.swiftGroup.SendersBIC != "";
     });
 
     $scope.fnSaveSwiftGroup = function () {
         var existingSwiftGroup = $filter('filter')($scope.swiftGroupData, function (swift) {
-            return swift.SwiftGroup == $scope.swiftGroup.SwiftGroup && swift.SendersBIC == $scope.swiftGroup.SendersBIC;
+            return swift.hmsSwiftGroupId != $scope.swiftGroup.hmsSwiftGroupId && (swift.SwiftGroup == $scope.swiftGroup.SwiftGroup || swift.SendersBIC == $scope.swiftGroup.SendersBIC);
         }, true)[0];
-        if (existingSwiftGroup != undefined && $scope.isAdd) {
+        if (existingSwiftGroup != undefined) {
             notifyError("Swift group data exists for selected Swift Group and Sender's BIC. Please select a new combination.")
             return;
         }
