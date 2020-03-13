@@ -253,6 +253,7 @@ namespace HMOSecureMiddleware
                         account.UpdatedAt = DateTime.Now;
                         account.UpdatedBy = userName;
                         account.onBoardingAccountStatus = "Created";
+                        account.dmaFundOnboardId = 0;
                     }
                     else
                     {

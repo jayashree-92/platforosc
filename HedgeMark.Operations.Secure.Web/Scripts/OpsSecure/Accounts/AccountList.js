@@ -280,13 +280,17 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             allowClear: true,
             data: []
         });
+
+        $("#liAccountType").select2('val', '');
         $("#liFund").select2('val', '');
         $("#liAgreement").select2('val', '');
         $("#liBroker").select2('val', '');
-        $scope.AgreementTypeId = 0;
-        $scope.BrokerId = 0;
-        $scope.AgrementType = "";
-        $scope.broker = "";
+        if (!$scope.isEdit) {
+            $scope.AgreementTypeId = 0;
+            $scope.BrokerId = 0;
+            $scope.AgrementType = "";
+            $scope.broker = "";          
+        }
         $("#spnBroker").hide();
         $("#spnAgreement").hide();
         angular.element(document).on('change', "#liAccountType", function (event) {

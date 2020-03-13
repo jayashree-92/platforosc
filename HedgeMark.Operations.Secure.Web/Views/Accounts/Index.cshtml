@@ -538,7 +538,7 @@
                                     <p></p>
                                 </div>
                             </div>
-                            <div class="panel panel-default ng-show-hide" id="accountCallback_{{$index}}" plindex="{{$index}}" data-toggle='collapse'>
+                            <div class="panel panel-default ng-show-hide" id="accountCallback_{{$index}}" plindex="{{$index}}" data-toggle='collapse' ng-if="isEdit">
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountCallbackInfo_{{$index}}" aria-expanded="false" aria-controls="accountCallbackInfo_{{$index}}" ng-click="adjustCallback($index)">
                                     <b>Callback Check</b>
                                     <span class="pull-right">
@@ -591,7 +591,7 @@
                                 </div>
                             </div>
                             
-                            <div class="panel panel-default ng-show-hide" id="accountAttachment_{{$index}}" plindex="{{$index}}" data-toggle='collapse'>
+                            <div class="panel panel-default ng-show-hide" id="accountAttachment_{{$index}}" plindex="{{$index}}" data-toggle='collapse' ng-if="isEdit">
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountAttachmentDetailInfo_{{$index}}" aria-expanded="false" aria-controls="accountAttachmentDetailInfo_{{$index}}">
                                     <b>Attachment</b><span class="pull-right"><i class="indicator glyphicon glyphicon-chevron-down"></i></span>
                                 </div>
