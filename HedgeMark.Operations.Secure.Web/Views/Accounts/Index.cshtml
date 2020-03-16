@@ -683,44 +683,10 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-8 col-md-3 col-lg-3">
-                            <label for="liSsiTemplate" class="control-label">SSI Template:</label>
-                        </div>
-                        <div class="col-sm-8 col-md-8 col-lg-8">
-                            <span id="spnSsi"> <input type="text" id="liSsiTemplate" class="modalInputWidth form-control" placeholder="Select a SSI Template" /></span>
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <table id="ssiTemplateTableMap" class="table table-condensed table-bordered table-striped table-hover ssiTemplate table-highlighted" tindex="{{$index}}"><tfoot></tfoot></table>
                         </div>
                     </div>
-                    <input type="hidden" id="accountNumber" />
-                    <input type="hidden" id="templateType" />
-                    @*<p></p>
-                        <div class="row">
-                            <div class="col-sm-8 col-md-3 col-lg-3">
-                                <label class="control-label">FFC Name</label>
-                            </div>
-                            <div class="col-sm-8 col-md-5 col-lg-5">
-                                <input type="text" id="FFCName" ng-model="onBoardingAccountSSITemplateMap.FFCName" class="form-control control-label" placeholder="FFC Name"/>
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-sm-8 col-md-3 col-lg-3">
-                                <label class="control-label">FFC Number</label>
-                            </div>
-                            <div class="col-sm-8 col-md-5 col-lg-5">
-                                <input type="text" id="FFCNumber" ng-model="onBoardingAccountSSITemplateMap.FFCNumber" class="form-control control-label" placeholder="FFC Number"/>
-                            </div>
-                        </div>
-                        <p></p>
-                        <div class="row">
-                            <div class="col-sm-8 col-md-3 col-lg-3">
-                                <label class="control-label">Reference</label>
-
-                            </div>
-                            <div class="col-sm-8 col-md-5 col-lg-5">
-                                <input type="text" id="Reference" ng-model="onBoardingAccountSSITemplateMap.Reference" class="form-control control-label" placeholder="Reference"/>
-
-                            </div>
-                        </div>*@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddAccountSSITemplateMap()">

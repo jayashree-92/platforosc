@@ -1566,9 +1566,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
         });
 
-        window.setTimeout(function () {
+        $timeout(function () {
             ssiMapTable[key].columns.adjust().draw(true);
-        }, 10);
+        }, 1000);
 
 
         $("#accountDetailCP tbody tr td:last-child a").on("click", function (event) {
@@ -1973,6 +1973,21 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $("#spnSsi").popover("hide");
 
+        $scope.onBoardingAccountSSITemplateMap = [];
+        angular.forEach($("#ssiTemplateTableMap .checkMap:checked"), function (val, i) {
+            var data = $scope.ssiTemplateTableMap.row($(val).closest('tr')).data();
+            if (data != undefined) {
+                $scope.onBoardingAccountSSITemplateMap.push({
+                    onBoardingAccountSSITemplateMapId: 0,
+                    onBoardingAccountId: parseInt($scope.onBoardingAccountId),
+                    onBoardingSSITemplateId: parseInt(val.onBoardingSSITemplateId),
+                    CreatedBy: $("#userName").val(),
+                    UpdatedBy: $("#userName").val(),
+                    Status: "Pending Approval"
+                });
+            }
+        });
+
         $scope.onBoardingAccountSSITemplateMap = {
             onBoardingAccountSSITemplateMapId: 0,
             onBoardingSSITemplateId: $("#liSsiTemplate").val(),
@@ -1992,11 +2007,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             url: "/Accounts/AddAccountSsiTemplateMap",
             type: "json",
             data: JSON.stringify({
-                accountSsiTemplateMap: [$scope.onBoardingAccountSSITemplateMap]
+                accountSsiTemplateMap: $scope.onBoardingAccountSSITemplateMap
             })
         }).then(function () {
             notifySuccess("Ssi template mapped to account successfully");
-            $scope.ssiTemplateMaps.push($scope.onBoardingAccountSSITemplateMap);
             //$scope.onBoardingAccountDetails[$scope.PanelIndex].onBoardingAccountSSITemplateMaps.push($scope.onBoardingAccountSSITemplateMap);
             var thisAccount = $filter('filter')($scope.onBoardingAccountDetails, { 'onBoardingAccountId': $scope.onBoardingAccountId }, true)[0];
             if (thisAccount != undefined)
@@ -2009,22 +2023,79 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnAssociationSSI = function (panelIndex) {
         $scope.PanelIndex = panelIndex;
 
-        var ssiData = [];
-        $.each($scope.ssiTemplates, function (key, value) {
-            ssiData.push({ "id": value.onBoardingSSITemplateId, "text": value.TemplateName });
+        $scope.ssiTemplateTableMap = $("#ssiTemplateTableMap").not(".initialized").addClass("initialized").DataTable({
+            "bDestroy": true,
+            //responsive: true,
+            aaData: $scope.ssiTemplates,
+            "aoColumns": [
+                {
+                    "mDataProp": "onBoardingSSITemplateId",
+                    "sTitle": "",
+                    "type": "checkbox",
+                    "mRender": function (tData, type, row) { return '<input type="checkbox" class="checkMap" />' }
+                },
+                {
+                    "sTitle": "Template Name",
+                    "mData": "TemplateName"
+                },
+                {
+                    "mData": "SSITemplateType",
+                    "sTitle": "SSI Template Type",
+                    "mRender": function (tdata) {
+                        if (tdata === "Broker")
+                            return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
+                        if (tdata === "Fee/Expense Payment")
+                            return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
+                        return "";
+                    }
+                },
+                {
+                    "sTitle": "Account Number",
+                    "mData": "AccountNumber",
+                },
+                {
+                    "sTitle": "FFC Number",
+                    "mData": "FFCNumber",
+                },
+                {
+                    "sTitle": "FFC Name",
+                    "mData": "FFCName",
+                },
+
+            ],
+            //"createdRow": function (row, rowData) {
+            //    switch (rowData.Status) {
+            //        case "Approved":
+            //            $(row).addClass("success");
+            //            break;
+            //        case "Pending Approval":
+            //            $(row).addClass("warning");
+            //            break;
+            //    }
+
+            //},
+            "deferRender": false,
+            "bScrollCollapse": true,
+            "bPaginate": false,
+            //"scroller": false,
+            "scrollX": $scope.ssiTemplates.length > 0,
+            "scrollY": "350px",
+            //sortable: false,
+            //"sDom": "ift",
+            //pagination: true,
+            "sScrollX": "100%",
+            "sScrollXInner": "100%",
+            "order": [[1, "asc"]],
+            "oLanguage": {
+                "sSearch": "",
+                "sEmptyTable": "No ssi templates are available for the account",
+                "sInfo": "Showing _START_ to _END_ of _TOTAL_ SSI Templates"
+            }
         });
 
-        ssiData = $filter('orderBy')(ssiData, 'text');
-
-        if ($("#liSsiTemplate").data("select2")) {
-            $("#liSsiTemplate").select2("destroy");
-        }
-
-        $("#liSsiTemplate").select2({
-            placeholder: "Select the Ssi Template",
-            allowClear: true,
-            data: ssiData
-        });
+        $timeout(function () {
+            $scope.ssiTemplateTableMap.columns.adjust().draw(true);
+        }, 1000);
 
         $("#accountSSITemplateMapModal").modal({
             show: true,
@@ -2717,28 +2788,22 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $(document).on("click", ".btnCallbackConfirm", function (event) {
             event.preventDefault();
             var selectedRow = $(this).parents("tr");
-            var rowElement = $scope.accountCallbackTable[index].row(selectedRow).data();
-            bootbox.confirm("Are you sure to confirm the call back?", function (result) {
-                if (!result) {
-                    return;
-                } else {
-                    $timeout(function () {
-                        rowElement.IsCallbackConfirmed = true;
-                        $http({
-                            method: "POST",
-                            url: "/Accounts/AddOrUpdateCallback",
-                            type: "json",
-                            data: JSON.stringify({
-                                callback: rowElement
-                            })
-                        }).then(function (response) {
-                            notifySuccess("Account Call back added successfully");
-                            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[index].onBoardingAccountId, index);
-                            notifySuccess("Account callback confirmed successfully");
-                        });
-                    }, 100);
-                }
-            });
+            $scope.rowElement = $scope.accountCallbackTable[index].row(selectedRow).data();
+            $scope.tdEle = $(this).parent();
+            angular.element($scope.tdEle).popover({
+                trigger: 'click',
+                title: "Are you sure to confirm the call back?",
+                placement: 'top',
+                container: 'body',
+                content: function () {
+                    return "<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
+                        + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i>&nbsp;Yes</button>"
+                        + "&nbsp;&nbsp;<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i>&nbsp;No</button>"
+                        + "</div>";
+                },
+                html: true
+            }).popover('show');
+            return;
         });
 
         $timeout(function () {
@@ -2746,6 +2811,29 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }, 1000);
 
     } 
+
+$(document).on('click', ".confirmCallback", function () {
+    angular.element($scope.tdEle).popover("destroy");
+    $timeout(function () {
+        $scope.rowElement.IsCallbackConfirmed = true;
+        $http({
+            method: "POST",
+            url: "/Accounts/AddOrUpdateCallback",
+            type: "json",
+            data: JSON.stringify({
+                callback: $scope.rowElement
+            })
+        }).then(function (response) {
+            notifySuccess("Account Call back added successfully");
+            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[index].onBoardingAccountId, index);
+            notifySuccess("Account callback confirmed successfully");
+        });
+    }, 100);
+});
+
+$(document).on('click', ".dismissAgreedMovement", function () {
+    angular.element($scope.tdEle).popover("destroy");
+});
 
     function viewAssociationTable(data) {
 

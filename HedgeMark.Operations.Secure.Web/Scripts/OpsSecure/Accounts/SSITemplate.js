@@ -715,9 +715,9 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             }
         });
 
-        window.setTimeout(function () {
+         $timeout(function () {
             $scope.ssiMapTable.columns.adjust().draw(true);
-        }, 10);
+        }, 100);
 
 
         $("#tblAssociatedAccounts tbody tr td:last-child a").on("click", function (event) {
@@ -781,15 +781,18 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.fnAddAccountSSITemplateMap = function () {
 
         $scope.onBoardingAccountSSITemplateMap = [];
-        angular.forEach($("#liFundAccount").select2("val"), function (val, i) {
-            $scope.onBoardingAccountSSITemplateMap.push({
-                onBoardingAccountSSITemplateMapId: 0,
-                onBoardingSSITemplateId: parseInt($scope.ssiTemplateId),
-                onBoardingAccountId: parseInt(val),
-                CreatedBy: $("#userName").val(),
-                UpdatedBy: $("#userName").val(),
-                Status: "Pending Approval"
-            });
+        angular.forEach($("#ssiTemplateTableMap .checkMap:checked"), function (val, i) {
+            var data = $scope.ssiTemplateTableMap.row($(val).closest('tr')).data();
+            if (data != undefined) {
+                $scope.onBoardingAccountSSITemplateMap.push({
+                    onBoardingAccountSSITemplateMapId: 0,
+                    onBoardingSSITemplateId: parseInt($scope.ssiTemplateId),
+                    onBoardingAccountId: parseInt(val.onBoardingAccountId),
+                    CreatedBy: $("#userName").val(),
+                    UpdatedBy: $("#userName").val(),
+                    Status: "Pending Approval"
+                });
+            }
         });
 
         $http({
@@ -809,24 +812,81 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $scope.fnAssociationSSI = function () {
 
-        var ssiData = [];
-        $.each($scope.fundAccounts, function (key, value) {
-            ssiData.push({ "id": value.onBoardingAccountId, "text": value.AccountName });
+        $scope.ssiTemplateTableMap = $("#ssiTemplateTableMap").not(".initialized").addClass("initialized").DataTable({
+            "bDestroy": true,
+            //responsive: true,
+            aaData: $scope.fundAccounts,
+            "aoColumns": [
+                {
+                    "mDataProp": "onBoardingAccountId",
+                    "sTitle": "",
+                    "type": "checkbox",
+                    "mRender": function (tData, type, row) { return '<input type="checkbox" class="checkMap" />' }
+                },
+                {
+                    "sTitle": "Account Name",
+                    "mData": "AccountName"
+                },
+                {
+                    "mData": "AccountType",
+                    "sTitle": "Account Type",
+                    "mRender": function (tdata) {
+                        if (tdata === "Agreement")
+                            return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Agreement</label>";
+                        if (tdata === "DDA")
+                            return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">DDA</label>";
+                        if (tdata == "Custody")
+                            return "<label class=\"label ng-show-only label-primary\" style=\"font-size: 12px;\">Custody</label>";
+                        return "";
+                    }
+                },
+                {
+                    "sTitle": "Account Number",
+                    "mData": "AccountNumber",
+                },
+                {
+                    "sTitle": "FFC Number",
+                    "mData": "FFCNumber",
+                },
+                {
+                    "sTitle": "FFC Name",
+                    "mData": "FFCName",
+                },
+
+            ],
+            //"createdRow": function (row, rowData) {
+            //    switch (rowData.Status) {
+            //        case "Approved":
+            //            $(row).addClass("success");
+            //            break;
+            //        case "Pending Approval":
+            //            $(row).addClass("warning");
+            //            break;
+            //    }
+
+            //},
+            "deferRender": false,
+            "bScrollCollapse": true,
+            "bPaginate": false,
+            //"scroller": false,
+            "scrollX": $scope.fundAccounts.length > 0,
+            "scrollY": "350px",
+            //sortable: false,
+            //"sDom": "ift",
+            //pagination: true,
+            "sScrollX": "100%",
+            "sScrollXInner": "100%",
+            "order": [[1, "asc"]],
+            "oLanguage": {
+                "sSearch": "",
+                "sEmptyTable": "No fund accounts are available for the SSI Template",
+                "sInfo": "Showing _START_ to _END_ of _TOTAL_ SSI Templates"
+            }
         });
 
-        ssiData = $filter('orderBy')(ssiData, 'text');
-
-        if ($("#liFundAccount").data("select2")) {
-            $("#liFundAccount").select2("destroy");
-        }
-
-        $("#liFundAccount").select2({
-            placeholder: "Select Accounts",
-            allowClear: true,
-            multiple: true,
-            closeOnSelect: false,
-            data: ssiData
-        });
+        $timeout(function () {
+            $scope.ssiTemplateTableMap.columns.adjust().draw(true);
+        }, 1000);
 
         $("#accountSSITemplateMapModal").modal({
             show: true,
