@@ -156,7 +156,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isDraftEnabled = response.data.isDraftEnabled;
             $scope.wireTicketObj.HMWire.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.sendingAccountsList = response.data.sendingAccountsList;
-            $scope.receivingAccountsList = response.data.receivingAccountsList;
+            $scope.receivingAccountsListOfFund = response.data.receivingAccountsList;
             $scope.isWirePurposeAdhoc = response.data.isWirePurposeAdhoc;
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
             $scope.castToDate($scope.wireTicketObj.SendingAccount);
