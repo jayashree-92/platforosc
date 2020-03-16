@@ -1022,7 +1022,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 if ($scope.onBoardingAccountDetails[panelIndex].SwiftGroupId != null && $scope.onBoardingAccountDetails[panelIndex].SwiftGroupId != 'undefined') {
                     $("#liSwiftGroup" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].SwiftGroupId);
                 }
-                else {
+                else if(!$scope.isEdit) {
                     $("#liSwiftGroup" + panelIndex).select2("val", response.data.SwiftGroupData[0] != undefined ? response.data.SwiftGroupData[0].id : null);
                 }
 
