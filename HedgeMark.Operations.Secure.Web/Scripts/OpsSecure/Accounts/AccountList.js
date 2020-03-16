@@ -239,6 +239,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.agreementData = response.data.agreementData;
             $scope.agreements = response.data.agreements;
             $scope.counterpartyFamilies = response.data.counterpartyFamilies;
+            $scope.ddaAgreementTypeId = response.data.ddaAgreementTypeId;
+            $scope.custodyAgreementTypeId = response.data.custodyAgreementTypeId;
         });
     }
 
@@ -297,17 +299,20 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             event.stopPropagation();
             $scope.accountType = $(this).val();
             var thisFunds = [];
+            $scope.AgreementTypeId = 0;
             if ($(this).val() != "" && $(this).val() != undefined) {
                 if ($(this).val() == "Agreement") {
                     $("#spnBroker").hide();
                     $("#spnAgreement").show();
                     thisFunds = angular.copy($scope.fundsWithAgreements);
                 } else {
+                    $scope.AgreementTypeId = angular.copy($(this).val() == "DDA" ? $scope.ddaAgreementTypeId : $scope.custodyAgreementTypeId);
                     $("#spnBroker").show();
                     $("#spnAgreement").hide();
                     thisFunds = angular.copy($scope.funds);
                 }
             } else {
+                $scope.AgreementTypeId = 0;
                 $("#spnBroker").hide();
                 $("#spnAgreement").hide();
             }
@@ -320,7 +325,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#liFund").select2('val', '');
             $("#liAgreement").select2('val', '');
             $("#liBroker").select2('val', '');
-            $scope.AgreementTypeId = 0;
+            
             $scope.BrokerId = 0;
             $scope.AgrementType = "";
             $scope.broker = "";
@@ -2172,6 +2177,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     });
 
     $scope.fnCreateContact = function () {
+        var subDomain = $("#subDomain").val();
         window.open("/" + subDomain + "Contact/OnboardContact?onBoardingTypeId=3&entityId=" + $scope.BrokerId + "&contactId=0", "_blank");
     }
 
@@ -2690,8 +2696,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.accountCallbackTable = [];
     $scope.adjustCallback = function (index) {
-        if ($scope.accountCallbackTable[index] != undefined)
-        $scope.accountCallbackTable[index].columns.adjust().draw(true);
+        $timeout(function () {
+            if ($scope.accountCallbackTable[index] != undefined)
+                $scope.accountCallbackTable[index].columns.adjust().draw(true);
+        }, 100);
     }
     $scope.viewCallbackTable = function (data, index) {
 
@@ -2726,15 +2734,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     },
 
                     {
-                        "mData": "ConfirmedBy", "sTitle": "Confirmed By", "mRender": function (data, row) {
+                        "mData": "ConfirmedBy", "sTitle": "Confirmed By", "mRender": function (data, type, row) {
                             return row.IsCallbackConfirmed ? humanizeEmail(data) : "";
                         }
                     },
                     {
-                        "mData": "CreatedAt",
-                        "sTitle": "Created Date",
+                        "mData": "ConfirmedAt",
+                        "sTitle": "Confirmed At",
                         "type": "dotnet-date",
-                        "mRender": function (tdata, row) {
+                        "mRender": function (tdata, type, row) {
                             if (!row.IsCallbackConfirmed)
                                 return "";
 
@@ -2789,8 +2797,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             event.preventDefault();
             var selectedRow = $(this).parents("tr");
             $scope.rowElement = $scope.accountCallbackTable[index].row(selectedRow).data();
-            $scope.tdEle = $(this).parent();
-            angular.element($scope.tdEle).popover({
+            $scope.tdEle = $(this).closest('td');
+            angular.element($scope.tdEle).attr('title', 'Are you sure to confirm the call back?').popover('destroy').popover({
                 trigger: 'click',
                 title: "Are you sure to confirm the call back?",
                 placement: 'top',
@@ -2803,6 +2811,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 },
                 html: true
             }).popover('show');
+            $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
+                + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
+                + "<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
+                + "</div>");
             return;
         });
 
@@ -2825,13 +2837,13 @@ $(document).on('click', ".confirmCallback", function () {
             })
         }).then(function (response) {
             notifySuccess("Account Call back added successfully");
-            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[index].onBoardingAccountId, index);
+            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId, index);
             notifySuccess("Account callback confirmed successfully");
         });
     }, 100);
 });
 
-$(document).on('click', ".dismissAgreedMovement", function () {
+    $(document).on('click', ".dismissCallback", function () {
     angular.element($scope.tdEle).popover("destroy");
 });
 

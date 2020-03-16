@@ -136,11 +136,13 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static Dictionary<int, string> GetAllAgreementTypes()
+        public static Dictionary<int, string> GetAllAgreementTypes(List<string> agreementTypes = null)
         {
             using (var context = new AdminContext())
             {
-                return context.dmaAgreementTypes.ToDictionary(x => x.dmaAgreementTypeId, x => x.AgreementType);
+                if (agreementTypes == null)
+                    agreementTypes = new List<string>();
+                return context.dmaAgreementTypes.Where(s => agreementTypes.Count == 0 || agreementTypes.Contains(s.AgreementType)).ToDictionary(x => x.dmaAgreementTypeId, x => x.AgreementType);
             }
         }
 

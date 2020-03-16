@@ -39,13 +39,16 @@ namespace HMOSecureWeb.Controllers
                 var agreementFundIds = agreementData.Where(s => s.HMFundId > 0).Select(s => s.HMFundId).ToList();
                 var fundsWithAgreements = funds.Where(s => agreementFundIds.Contains(s.id)).ToList();
                 var agreements = agreementData.Select(s => new { id = s.AgreementOnboardingId, text = s.AgreementShortName, AgreementTypeId = s.AgreementTypeId, hmFundId = s.HMFundId, BrokerId = s.BrokerId, AgreementType = s.AgreementType }).ToList();
+                var accountTypes = OnBoardingDataManager.GetAllAgreementTypes(new List<string> { "DDA", "Custody" });
                 return Json(new
                 {
                     agreementData,
                     agreements,
                     funds,
                     fundsWithAgreements,
-                    counterpartyFamilies
+                    counterpartyFamilies,
+                    ddaAgreementTypeId = accountTypes.First(s => s.Value == "DDA").Key,
+                    custodyAgreementTypeId = accountTypes.First(s => s.Value == "Custody").Key,
                 });
             }
             

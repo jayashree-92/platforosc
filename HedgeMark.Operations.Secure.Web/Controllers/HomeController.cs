@@ -427,7 +427,8 @@ namespace HMOSecureWeb.Controllers
             {
                 wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
                 var deadlineToApprove = GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
-                SaveWireScheduleInfo(wireTicket, (WireDataManager.WireStatus)statusId, UserDetails.Id, deadlineToApprove);
+                var daysToAdd = deadlineToApprove.Hours % 24;
+                SaveWireScheduleInfo(wireTicket, (WireDataManager.WireStatus)statusId, UserDetails.Id, daysToAdd);
                 var tempFilePath = string.Format("Temp\\{0}", UserName);
 
                 foreach (var file in wireTicket.HMWire.hmsWireDocuments)
@@ -459,7 +460,7 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        private static void SaveWireScheduleInfo(WireTicket wire, WireDataManager.WireStatus workflowStatus, int userId, TimeSpan deadlineToApprove)
+        private static void SaveWireScheduleInfo(WireTicket wire, WireDataManager.WireStatus workflowStatus, int userId, int daysToAdd)
         {
 
             var thisWireSchedule = WireDataManager.GetJobSchedule(wire.WireId);
@@ -483,14 +484,13 @@ namespace HMOSecureWeb.Controllers
                 thisWireSchedule.UpdatedBy = userId;
                 thisWireSchedule.IsJobCreated = true;
                 thisWireSchedule.IsJobInActive = false;
-                thisWireSchedule.ScheduledDate = wire.HMWire.ValueDate.AddDays(1).Date.Add(deadlineToApprove);
+                
             }
             else
             {
                 thisWireSchedule = new hmsWireJobSchedule
                 {
                     hmsWireId = wire.WireId,
-                    ScheduledDate = wire.HMWire.ValueDate.AddDays(1).Date.Add(deadlineToApprove),
                     IsJobCreated = true,
                     IsJobInActive = false,
                     CreatedBy = userId,
@@ -499,6 +499,7 @@ namespace HMOSecureWeb.Controllers
                     LastModifiedAt = DateTime.Now
                 };
             }
+            thisWireSchedule.ScheduledDate = wire.HMWire.ValueDate.AddDays(daysToAdd).Date.Add(new TimeSpan(23, 59, 0));
             WireDataManager.EditJobSchedule(thisWireSchedule);
             var jobId = BackgroundJob.Schedule(() => OverdueWireCancellationScheduleManager.CancelThisWire(wire.WireId, thisWireSchedule), new DateTimeOffset(thisWireSchedule.ScheduledDate));
             if (thisWireSchedule.IsJobInActive)
