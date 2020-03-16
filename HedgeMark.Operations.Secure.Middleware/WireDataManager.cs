@@ -106,13 +106,11 @@ namespace HMOSecureMiddleware
                 hmWire.hmsWireDocuments = context.hmsWireDocuments.Where(s => s.hmsWireId == wireId).ToList();
                 hmWire.hmsWireWorkflowLogs = context.hmsWireWorkflowLogs.Where(s => s.hmsWireId == wireId).ToList();
                 hmWire.hmsWireLogs = context.hmsWireLogs.Where(s => s.hmsWireId == wireId).ToList();
-
-                wireSSITemplate = context.onBoardingSSITemplates.FirstOrDefault(s => hmWire.OnBoardSSITemplateId == s.onBoardingSSITemplateId) ?? new onBoardingSSITemplate();
             }
 
             wireSendingAccount = AccountManager.GetOnBoardingAccount(hmWire.OnBoardAccountId);
             wireReceivingAccount = hmWire.hmsWireTransferTypeLKup.TransferType == "Book Transfer" ? AccountManager.GetOnBoardingAccount(hmWire.OnBoardSSITemplateId) : new onBoardingAccount();
-
+            wireSSITemplate = hmWire.hmsWireTransferTypeLKup.TransferType == "Normal Transfer" || hmWire.hmsWireTransferTypeLKup.TransferType == "Fee/Expense Payment" ? AccountManager.GetSsiTemplate(hmWire.OnBoardSSITemplateId) : new onBoardingSSITemplate();
             hmWire.hmsWireLogs.ForEach(s =>
             {
                 s.hmsWire = null;

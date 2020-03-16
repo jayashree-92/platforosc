@@ -1042,7 +1042,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
     }
     $scope.fnOnSwiftGroupChange = function (swiftGroup, index) {
-
+        $scope.onBoardingAccountDetails[index].SwiftGroupId = swiftGroup;
         var swData = $.grep($scope.SwiftGroups, function (v) { return v.hmsSwiftGroupId == swiftGroup; })[0];
         if (swData != undefined) {
             $scope.swiftGroupInfo = swData;
@@ -1059,8 +1059,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if ($scope.onBoardingAccountDetails[index].AuthorizedParty != "Hedgemark") {
             $scope.onBoardingAccountDetails[index].IsReceivingAccount = true;
             $scope.onBoardingAccountDetails[index].AccountModule = null;
+            $scope.onBoardingAccountDetails[index].SwiftGroupId = null;
             $scope.onBoardingAccountDetails[index].SwiftGroup = null;
-            $scope.onBoardingAccountDetails[index].SendersBIC = null;
             $scope.onBoardingAccountDetails[index].CashSweepTime = null;
             $scope.onBoardingAccountDetails[index].CashSweepTimeZone = null;
             $scope.onBoardingAccountDetails[index].CashSweep = 'No';
