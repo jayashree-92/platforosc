@@ -163,8 +163,7 @@ namespace HMOSecureWeb.Controllers
                 messages = string.Empty;
 
             var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds, messages.Split(',').ToList(), false, currency);
-
-            ssiTemplateMaps.ForEach(x => x.onBoardingSSITemplate = null);
+            var availableSSITemplates = ssiTemplates.Where(s => !ssiTemplateMaps.Select(p => p.onBoardingSSITemplateId).Contains(s.onBoardingSSITemplateId)).ToList();
 
             return Json(new
             {
@@ -190,7 +189,7 @@ namespace HMOSecureWeb.Controllers
                         onBoardingSsiTemplate.AccountNumber
                     } : null;
                 }).Where(temp => temp != null).OrderBy(y => y.TemplateName).ToList(),
-                ssiTemplates = ssiTemplates.Where(s => !ssiTemplateMaps.Select(p => p.onBoardingSSITemplateId).Contains(s.onBoardingSSITemplateId)).ToList(),
+                ssiTemplates = availableSSITemplates,
             }, JsonContentType, JsonContentEncoding);
         }
 
