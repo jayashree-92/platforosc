@@ -477,7 +477,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
         if (!isValid) {
             $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-            if ($scope.accountDetail.SwiftGroup.Status == "Testing")
+            if ($scope.accountDetail.SwiftGroup.SwiftStatusId == 2)
                 $scope.validationMsg = "Amount cannot exceed 10 for Sender's BIC of status Testing";
             else
                 $scope.validationMsg = "Wire initiation is not allowed for Sender's BIC of status Requested";

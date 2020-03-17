@@ -91,7 +91,7 @@ namespace HMOSecureMiddleware
                     account.Beneficiary = new onBoardingAccountBICorABA();
                 if (account.Intermediary == null)
                     account.Intermediary = new onBoardingAccountBICorABA();
-                if (account.UltimateBeneficiary == null && account.UltimateBeneficiaryType != "Account Name")
+                if (account.UltimateBeneficiary == null)
                     account.UltimateBeneficiary = new onBoardingAccountBICorABA();
                 if (account.SwiftGroup == null)
                     account.SwiftGroup = new hmsSwiftGroup();
