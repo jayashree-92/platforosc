@@ -25,6 +25,9 @@ namespace HMOSecureMiddleware
         {
             get
             {
+                if (string.IsNullOrWhiteSpace(FFCNumber))
+                    return string.Format("{0}-{1}", AccountNumber, AccountName);
+
                 return string.Format("{0}-{1}-{2}", FFCNumber, AccountNumber, AccountName);
             }
         }

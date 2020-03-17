@@ -428,7 +428,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $http.post("/Home/ValidateAccountDetails", JSON.stringify({ wireMessageType: $("#liMessageType").select2('data').text, account: $scope.accountDetail, receivingAccount: $scope.receivingAccountDetail, ssiTemplate: $scope.ssiTemplate, isBookTransfer: $scope.wireTicketObj.IsBookTransfer }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
             //$scope.isMandatoryFieldsMissing = response.data.isMandatoryFieldsMissing;
             $scope.isMandatoryFieldsMissing = false;
-            if (!$scope.isMandatoryFieldsMissing) {
+            if (!$scope.isMandatoryFieldsMissing && !$scope.isValidWireInitiation) {
                 if (!$scope.isWireCreated && !$scope.isDeadlineCrossed) {
                     $("#wireErrorStatus").collapse("hide");
                     $scope.validationMsg = "";
@@ -462,6 +462,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.WireTicket.Amount = Math.abs($.convertToNumber($(this).text(), true));
             $(this).html($.convertToCurrency($scope.WireTicket.Amount, 2));
             $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
+            angular.element("#liMessageType").trigger('change');
         }
     });
 
