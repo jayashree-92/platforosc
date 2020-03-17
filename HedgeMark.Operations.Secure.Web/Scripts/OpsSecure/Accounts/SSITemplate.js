@@ -884,6 +884,13 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             }
         });
 
+        $(document).on("change", "#ssiTemplateTableMap tbody tr .checkMap", function () {
+            if ($(this).prop('checked'))
+                $(this).closest('tr').addClass('info');
+            else
+                $(this).closest('tr').removeClass('info');
+        });
+        
         $timeout(function () {
             $scope.ssiTemplateTableMap.columns.adjust().draw(true);
         }, 1000);

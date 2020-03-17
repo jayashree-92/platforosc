@@ -743,6 +743,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnEditAccountDetails = function (rowElement) {
         $scope.watchAccountDetails = [];
+        $scope.onBoardingAccountDetails = [];
         $scope.accountDetail = rowElement;
         $scope.onBoardingAccountId = rowElement.onBoardingAccountId;
         $scope.AgreementId = rowElement.dmaAgreementOnBoardingId;
@@ -1789,11 +1790,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             $scope.fnGetAccountDescriptions(key);
             $scope.fnGetAccountModules(key);
-            if (value.OnboardingAccountId > 0) {
-                $scope.fnLoadContactDetails($scope.BrokerId, value.ContactName, key);                
+            if (value.onBoardingAccountId > 0) {
+                $scope.fnLoadContactDetails($scope.BrokerId, value.ContactName, key);
+                $scope.fnGetAccountCallbackData(value.onBoardingAccountId, key);
             }
-            if (value.onBoardingAccountId > 0)
-            $scope.fnGetAccountCallbackData(value.onBoardingAccountId, key);
+            
             $scope.fnLoadDefaultDropDowns(key);
             $scope.fnGetAuthorizedParty(key);
             $scope.fnGetSwiftGroup(key);
@@ -2038,7 +2039,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnAssociationSSI = function (panelIndex) {
         $scope.PanelIndex = panelIndex;
-
+        if ($("#ssiTemplateTableMap").hasClass("initialized")) {
+            fnDestroyDataTable("#ssiTemplateTableMap");
+        }
         $scope.ssiTemplateTableMap = $("#ssiTemplateTableMap").not(".initialized").addClass("initialized").DataTable({
             "bDestroy": true,
             //responsive: true,
@@ -2109,6 +2112,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
         });
 
+        $(document).on("change", "#ssiTemplateTableMap tbody tr .checkMap", function ()
+        {
+            if ($(this).prop('checked'))
+                $(this).closest('tr').addClass('info');
+            else
+                $(this).closest('tr').removeClass('info');
+        });   
+                     
         $timeout(function () {
             $scope.ssiTemplateTableMap.columns.adjust().draw(true);
         }, 1000);
@@ -2189,7 +2200,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnCreateContact = function () {
         var subDomain = $("#subDomain").val();
-        window.open("/" + subDomain + "Contact/OnboardContact?onBoardingTypeId=3&entityId=" + $scope.BrokerId + "&contactId=0", "_blank");
+        window.open(subDomain + "Contact/OnboardContact?onBoardingTypeId=3&entityId=" + $scope.BrokerId + "&contactId=0", "_blank");
     }
 
     $scope.fnAddCurrency = function () {
@@ -2850,8 +2861,7 @@ $(document).on('click', ".confirmCallback", function () {
                 callback: $scope.rowElement
             })
         }).then(function (response) {
-            notifySuccess("Account Call back added successfully");
-            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId, index);
+            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId, 0);
             notifySuccess("Account callback confirmed successfully");
         });
     }, 100);
