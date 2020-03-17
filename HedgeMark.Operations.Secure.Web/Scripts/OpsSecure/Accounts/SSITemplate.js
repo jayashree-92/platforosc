@@ -811,7 +811,9 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $scope.fnAssociationSSI = function () {
-
+        if ($("#ssiTemplateTableMap").hasClass("initialized")) {
+            fnDestroyDataTable("#ssiTemplateTableMap");
+        }
         $scope.ssiTemplateTableMap = $("#ssiTemplateTableMap").not(".initialized").addClass("initialized").DataTable({
             "bDestroy": true,
             //responsive: true,
