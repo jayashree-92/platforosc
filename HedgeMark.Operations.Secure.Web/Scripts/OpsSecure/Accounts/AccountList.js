@@ -1997,7 +1997,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $scope.onBoardingAccountSSITemplateMap.push({
                     onBoardingAccountSSITemplateMapId: 0,
                     onBoardingAccountId: parseInt($scope.onBoardingAccountId),
-                    onBoardingSSITemplateId: parseInt(val.onBoardingSSITemplateId),
+                    onBoardingSSITemplateId: parseInt(data.onBoardingSSITemplateId),
                     CreatedBy: $("#userName").val(),
                     UpdatedBy: $("#userName").val(),
                     Status: "Pending Approval"
