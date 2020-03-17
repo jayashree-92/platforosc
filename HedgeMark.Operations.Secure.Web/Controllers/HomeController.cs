@@ -755,7 +755,7 @@ namespace HMOSecureWeb.Controllers
             {
                 var entityIds = receivingAccounts.Select(s => s.TemplateEntityId).Distinct().ToList();
                 var counterparties = context.dmaCounterPartyOnBoardings.Where(s => entityIds.Contains(s.dmaCounterPartyOnBoardId)).ToDictionary(s => s.dmaCounterPartyOnBoardId.ToString(), v => v.CounterpartyName);
-                var receivingAccountList = receivingAccounts.Select(s => new { id = s.onBoardingSSITemplateId, text = string.Format("{0}-{1}", s.AccountNumber, s.TemplateName) }).ToList();
+                var receivingAccountList = receivingAccounts.Select(s => new { id = s.onBoardingSSITemplateId, text = string.Format("{0}-{1}-{2}", s.FFCNumber, s.AccountNumber, s.TemplateName) }).ToList();
                 return Json(new { receivingAccounts, receivingAccountList, counterparties });
             }
         }

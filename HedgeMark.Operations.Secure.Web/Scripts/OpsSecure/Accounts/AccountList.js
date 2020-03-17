@@ -726,16 +726,18 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.fnPreloadAccountData().then($scope.fnInitPreLoadEvents());
         $scope.isAuthorizedUserToApprove = false;
         $scope.isEdit = false;
+        $scope.isStatusUpdate = false;
         $("#accountModal").modal({
             show: true,
             keyboard: true
         }).on("hidden.bs.modal", function () {
-
-            $scope.onBoardingAccountDetails = [];
-            $scope.accountDetail = {};
-
+            if (!$scope.isStatusUpdate) {
+                $scope.onBoardingAccountDetails = [];
+                $scope.accountDetail = {};
+            }
             }).off("shown.bs.modal").on("shown.bs.modal", function () {
-            angular.element("#basicDetailCP").collapse("show");
+                if (!$scope.isStatusUpdate)
+                    angular.element("#basicDetailCP").collapse("show");
         });
     }
 
@@ -789,22 +791,24 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 account.IsReceivingAccount = false;
             $scope.onBoardingAccountDetails.push(account);
         });
-
+        $scope.isStatusUpdate = false;
         $("#accountModal").modal({
             show: true,
             keyboard: true
         }).on("hidden.bs.modal", function () {
 
-            $scope.onBoardingAccountDetails = [];
-            $scope.accountDetail = {};
+            //$scope.onBoardingAccountDetails = [];
+            //$scope.accountDetail = {};
             //$scope.fnGetAccounts();
             //var searchText = $('#accountListDiv input[type="search"]').val();
             //window.location.href = "/Accounts/Index?searchText=" + searchText;
 
             }).off("shown.bs.modal").on("shown.bs.modal", function () {
-            angular.element("#basicDetailCP").collapse("hide");
-            $scope.fnPreloadAccountData();
-            $scope.fnInitPreLoadEvents();
+                if (!$scope.isStatusUpdate) {
+                    angular.element("#basicDetailCP").collapse("hide");
+                    $scope.fnPreloadAccountData();
+                    $scope.fnInitPreLoadEvents();
+                }
         });
     }
 
@@ -830,7 +834,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
 
         $("#pMsg").html(confirmationMsg);
+        $scope.isStatusUpdate = true;
         $("#UpdateAccountStatusModal").modal("show");
+        $("#accountModal").modal('hide');
     }
 
     $scope.fnSaveAccountStatus = function () {
@@ -844,14 +850,20 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     $("#btnSendApproval").hide();
                     $("#UpdateAccountStatusModal").modal("hide");
                 });
-            else
+            else {
                 $("#UpdateAccountStatusModal").modal("hide");
+                $("#accountModal").modal('show');
+            }
         }, 100);
     }
 
     $scope.fnSendApprovalAccountStatus = function () {
         $scope.AccountStatus = pendingStatus;
         $scope.fnSaveAccountStatus();
+    }
+    $scope.fnOpenAccountModal = function () {
+        $scope.isStatusUpdate = true;
+        $("#accountModal").modal('show');
     }
     $scope.fnEditAccount = function () {
 
@@ -1778,8 +1790,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.fnGetAccountDescriptions(key);
             $scope.fnGetAccountModules(key);
             if (value.OnboardingAccountId > 0) {
-                $scope.fnLoadContactDetails($scope.BrokerId, value.ContactName, key);
-                
+                $scope.fnLoadContactDetails($scope.BrokerId, value.ContactName, key);                
             }
             if (value.onBoardingAccountId > 0)
             $scope.fnGetAccountCallbackData(value.onBoardingAccountId, key);
@@ -2798,24 +2809,27 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             var selectedRow = $(this).parents("tr");
             $scope.rowElement = $scope.accountCallbackTable[index].row(selectedRow).data();
             $scope.tdEle = $(this).closest('td');
-            angular.element($scope.tdEle).attr('title', 'Are you sure to confirm the call back?').popover('destroy').popover({
-                trigger: 'click',
-                title: "Are you sure to confirm the call back?",
-                placement: 'top',
-                container: 'body',
-                content: function () {
-                    return "<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
-                        + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i>&nbsp;Yes</button>"
-                        + "&nbsp;&nbsp;<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i>&nbsp;No</button>"
-                        + "</div>";
-                },
-                html: true
-            }).popover('show');
-            $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
-                + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
-                + "<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
-                + "</div>");
-            return;
+            $scope.tdEle.popover('destroy');
+            $timeout(function () {
+                angular.element($scope.tdEle).attr('title', 'Are you sure to confirm the call back?').popover('destroy').popover({
+                    trigger: 'click',
+                    title: "Are you sure to confirm the call back?",
+                    placement: 'top',
+                    container: 'body',
+                    content: function () {
+                        return "<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
+                            + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i>&nbsp;Yes</button>"
+                            + "&nbsp;&nbsp;<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i>&nbsp;No</button>"
+                            + "</div>";
+                    },
+                    html: true
+                }).popover('show');
+                $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
+                    + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
+                    + "<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
+                    + "</div>");
+                
+            }, 50);
         });
 
         $timeout(function () {
