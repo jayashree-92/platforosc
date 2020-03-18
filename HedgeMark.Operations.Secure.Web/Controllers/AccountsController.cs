@@ -169,24 +169,24 @@ namespace HMOSecureWeb.Controllers
             {
                 ssiTemplateMaps = ssiTemplateMaps.Select(ssi =>
                 {
-                    var onBoardingSsiTemplate = ssiTemplates.FirstOrDefault(template => template.onBoardingSSITemplateId == ssi.onBoardingSSITemplateId);
-                    return onBoardingSsiTemplate != null ? new
+                    var ssiTemplate = ssiTemplates.FirstOrDefault(template => template.onBoardingSSITemplateId == ssi.onBoardingSSITemplateId);
+                    return ssiTemplate != null ? new
                     {
                         ssi.onBoardingAccountSSITemplateMapId,
                         ssi.onBoardingAccountId,
                         ssi.onBoardingSSITemplateId,
-                        ssi.FFCName,
-                        ssi.FFCNumber,
-                        ssi.Reference,
+                        ssiTemplate.FFCName,
+                        ssiTemplate.FFCNumber,
+                        ssiTemplate.Reference,
                         ssi.CreatedAt,
                         ssi.CreatedBy,
                         ssi.UpdatedAt,
                         ssi.UpdatedBy,
                         ssi.Status,
                         ssi.StatusComments,
-                        onBoardingSsiTemplate.SSITemplateType,
-                        onBoardingSsiTemplate.TemplateName,
-                        onBoardingSsiTemplate.AccountNumber
+                        ssiTemplate.SSITemplateType,
+                        ssiTemplate.TemplateName,
+                        ssiTemplate.AccountNumber
                     } : null;
                 }).Where(temp => temp != null).OrderBy(y => y.TemplateName).ToList(),
                 ssiTemplates = availableSSITemplates,
@@ -214,9 +214,9 @@ namespace HMOSecureWeb.Controllers
                         ssi.onBoardingAccountSSITemplateMapId,
                         ssi.onBoardingAccountId,
                         ssi.onBoardingSSITemplateId,
-                        ssi.FFCName,
-                        ssi.FFCNumber,
-                        ssi.Reference,
+                        account.FFCName,
+                        account.FFCNumber,
+                        account.Reference,
                         ssi.CreatedAt,
                         ssi.CreatedBy,
                         ssi.UpdatedAt,

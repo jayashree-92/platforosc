@@ -180,9 +180,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
         });
 
-        window.setTimeout(function () {
+        $timeout(function () {
             contactTable[key].columns.adjust().draw(true);
-        }, 50);
+        }, 1000);
     }
 
     $scope.fnGetCurrency = function (panelIndex) {
@@ -446,7 +446,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $scope.watchAccountDetails = $scope.onBoardingAccountDetails;
                 $timeout(function () {
                     $scope.isLoad = false;
-                }, 100);
+                }, 1500);
             }, 1000);
         }, 100);
     });
@@ -738,6 +738,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }).off("shown.bs.modal").on("shown.bs.modal", function () {
                 if (!$scope.isStatusUpdate)
                     angular.element("#basicDetailCP").collapse("show");
+                $(window).scrollTop(0);
         });
     }
 
@@ -795,7 +796,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.isStatusUpdate = false;
         $("#accountModal").modal({
             show: true,
-            keyboard: true
+            keyboard: true,
+            backdrop: 'static'
         }).on("hidden.bs.modal", function () {
 
             //$scope.onBoardingAccountDetails = [];
@@ -810,6 +812,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     $scope.fnPreloadAccountData();
                     $scope.fnInitPreLoadEvents();
                 }
+                $timeout(function () {
+                    $(window).scrollTop(0);
+                }, 100);
+                
         });
     }
 
@@ -853,7 +859,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 });
             else {
                 $("#UpdateAccountStatusModal").modal("hide");
-                $("#accountModal").modal('show');
+                $("#accountModal").modal({
+                    show: true,
+                    keyboard: true,
+                    backdrop: 'static'
+                });
             }
         }, 100);
     }
@@ -864,7 +874,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
     $scope.fnOpenAccountModal = function () {
         $scope.isStatusUpdate = true;
-        $("#accountModal").modal('show');
+        $("#accountModal").modal({
+            show: true,
+            keyboard: true,
+            backdrop: 'static'
+        });
     }
     $scope.fnEditAccount = function () {
 
@@ -1391,7 +1405,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (contactName != null && contactName != undefined && contactName != "") {
                 $("#liContacts" + index).select2("val", contactName);
                 var onboardingContacts = $filter('filter')(($scope.OnBoardingContactsDetails), function (c) {
-                    return (contactName.indexOf(c.id) > -1);
+                    return $.inArray(c.id.toString(), [contactName]) > -1;
                 });
                 viewContactTable(onboardingContacts, index);
             }
@@ -1513,6 +1527,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 {
                     "sTitle": "Account Number",
                     "mData": "AccountNumber",
+                },
+                {
+                    "sTitle": "FFC Number",
+                    "mData": "FFCNumber",
+                },
+                {
+                    "sTitle": "FFC Name",
+                    "mData": "FFCName",
                 },
                 {
                     "sTitle": "Created By",
@@ -1862,9 +1884,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 }, 10);
             }
             if (contactTable != null && contactTable.length > 0 && tableIndex < contactTable.length) {
-                window.setTimeout(function () {
+                $timeout(function () {
                     contactTable[tableIndex].columns.adjust().draw(true);
-                }, 10);
+                }, 1000);
             }
         });
     }
@@ -2685,10 +2707,16 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.accountCallbackTable = [];
-    $scope.adjustCallback = function (index) {
+    $scope.adjustContainer = function (index, isCallback) {
         $timeout(function () {
-            if ($scope.accountCallbackTable[index] != undefined)
-                $scope.accountCallbackTable[index].columns.adjust().draw(true);
+            if (isCallback) {
+                if ($scope.accountCallbackTable[index] != undefined)
+                    $scope.accountCallbackTable[index].columns.adjust().draw(true);
+            }
+            else {
+                if (contactTable[index] != undefined)
+                    contactTable[index].columns.adjust.draw(true);
+            }
         }, 100);
     }
     $scope.viewCallbackTable = function (data, index) {
@@ -3031,6 +3059,14 @@ $(document).on('click', ".confirmCallback", function () {
                                 {
                                     "sTitle": "Account Number",
                                     "mData": "AccountNumber"
+                                },
+                                {
+                                    "sTitle": "FFC Number",
+                                    "mData": "FFCNumber",
+                                },
+                                {
+                                    "sTitle": "FFC Name",
+                                    "mData": "FFCName",
                                 },
                                 {
                                     "sTitle": "Created By",

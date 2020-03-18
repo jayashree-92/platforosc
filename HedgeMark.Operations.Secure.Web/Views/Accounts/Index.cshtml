@@ -99,35 +99,35 @@
                     </p>
                     <div id="basicDetailCP" class="control-group collapse">
                         <span class="row">
-                            <span class="col-md-1">
+                            <span class="col-md-2">
                                 <label class="control-label">Entity Type <span style="color: red"> *</span></label>
                             </span>
                             <span class="col-md-4">
-                                <input name="Account Type" type="text" class="form-control" id="liAccountType" />
+                                <input name="Account Type" type="text" class="form-control" id="liAccountType" ng-disabled="isEdit" />
                             </span>
                         </span>
                         <span class="row">
-                            <span class="col-md-1">
+                            <span class="col-md-2">
                                 <label class="control-label">Fund <span style="color: red"> *</span></label>
                             </span>
                             <span class="col-md-4">
-                                <input name="Fund" type="text" class="form-control" id="liFund" />
+                                <input name="Fund" type="text" class="form-control" id="liFund" ng-disabled="isEdit"/>
                             </span>
                         </span>
                         <span class="row" style="display: none;" id="spnBroker">
-                            <span class="col-md-1">
+                            <span class="col-md-2">
                                 <label class="control-label">Broker <span style="color: red"> *</span></label>
                             </span>
                             <span class="col-md-4">
-                                <input name="Broker" type="text" class="form-control" id="liBroker" />
+                                <input name="Broker" type="text" class="form-control" id="liBroker" ng-disabled="isEdit" />
                             </span>
                         </span>
                         <span class="row" style="display: none;" id="spnAgreement">
-                            <span class="col-md-1">
+                            <span class="col-md-2">
                                 <label class="control-label">Agreement <span style="color: red"> *</span></label>
                             </span>
                             <span class="col-md-4">
-                                <input name="Agreement" type="text" class="form-control" id="liAgreement" />
+                                <input name="Agreement" type="text" class="form-control" id="liAgreement" ng-disabled="isEdit" />
                             </span>
                         </span>
                         <br />
@@ -540,7 +540,7 @@
                                 </div>
                             </div>
                             <div class="panel panel-default ng-show-hide" id="accountCallback_{{$index}}" plindex="{{$index}}" data-toggle='collapse' ng-if="isEdit">
-                                <div class="panel-heading" data-toggle="collapse" data-target="#accountCallbackInfo_{{$index}}" aria-expanded="false" aria-controls="accountCallbackInfo_{{$index}}" ng-click="adjustCallback($index)">
+                                <div class="panel-heading" data-toggle="collapse" data-target="#accountCallbackInfo_{{$index}}" aria-expanded="false" aria-controls="accountCallbackInfo_{{$index}}" ng-click="adjustContainer($index, true)">
                                     <b>Callback Check</b>
                                     <span class="pull-right">
                                         <a class="btn btn-xs btn-primary" ng-click="fnAddCallbackModal($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Callback</a>&nbsp;&nbsp;
@@ -559,7 +559,7 @@
                                 </div>
                             </div>
                             <div class="panel panel-default ng-show-hide" id="accountContactInfo_{{$index}}" data-toggle='collapse'>
-                                <div class="panel-heading" data-toggle="collapse" data-target="#accountContactDetailInfo_{{$index}}" aria-expanded="false" aria-controls="accountContactDetailInfo_{{$index}}">
+                                <div class="panel-heading" data-toggle="collapse" data-target="#accountContactDetailInfo_{{$index}}" aria-expanded="false" aria-controls="accountContactDetailInfo_{{$index}}"  ng-click="adjustContainer($index, false)">
                                     <b>Contact</b>
                                     <span class="pull-right">
                                         <a class="btn btn-xs btn-info" ng-click="$event.stopPropagation();fnCreateContact()"><i class="glyphicon glyphicon-phone"></i>&nbsp;Add Contact</a>&nbsp;&nbsp;

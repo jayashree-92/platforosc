@@ -368,6 +368,14 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                                     "mData": "AccountNumber",
                                 },
                                 {
+                                    "sTitle": "FFC Number",
+                                    "mData": "FFCNumber",
+                                },
+                                {
+                                    "sTitle": "FFC Name",
+                                    "mData": "FFCName",
+                                },
+                                {
                                     "sTitle": "Created By",
                                     "mData": "CreatedBy",
                                     "mRender": function (data) {

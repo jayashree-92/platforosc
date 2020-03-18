@@ -2050,3 +2050,7 @@ div.DTCR_pointer {
     margin-right: 2%;
     font-size: 12px;
 }
+
+#accountModal.modal.in {
+    overflow: scroll;
+}

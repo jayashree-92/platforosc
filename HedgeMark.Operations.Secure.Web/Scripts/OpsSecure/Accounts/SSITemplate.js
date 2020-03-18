@@ -528,7 +528,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 $scope.watchSSITemplate = $scope.ssiTemplate;
                 $timeout(function () {
                     $scope.isLoad = false;
-                }, 100);
+                }, 1500);
             }, 1000);
         });
 
@@ -644,6 +644,14 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 {
                     "sTitle": "Account Number",
                     "mData": "AccountNumber",
+                },
+                {
+                    "sTitle": "FFC Number",
+                    "mData": "FFCNumber",
+                },
+                {
+                    "sTitle": "FFC Name",
+                    "mData": "FFCName",
                 },
                 {
                     "sTitle": "Created By",

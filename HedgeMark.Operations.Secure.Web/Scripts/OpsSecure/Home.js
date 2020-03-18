@@ -49,6 +49,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
         console.log(args);
 
         //Remove user viewing information
+        if (args.wireId != undefined && args.wireId > 0)
         $scope.fnRemoveActionInProgres(args.wireId);
 
         $scope.SelectedStatusId = args.statusId;
