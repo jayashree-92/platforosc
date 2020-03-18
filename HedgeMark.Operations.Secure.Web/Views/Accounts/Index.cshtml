@@ -640,8 +640,8 @@
                 <div class="accntActions modal-footer">
                     @if (User.IsWireUser())
                     {
-                        <button type="submit" id="btnSave" ng-click="fnSaveAccount('Created')" ng-show="!isEdit || isDrafted" ng-disabled="!isAccountChanged" title="Save the account" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Account</button>
-                        <button id="btnPendingApproval" ng-show="isEdit" ng-disabled="(!isAccountChanged || isApproved) && isEdit" ng-click="fnUpdateAccountStatus('Pending Approval','Request for Approval')" title="Pending approval the account" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
+                        <button type="submit" id="btnSave" ng-click="fnSaveAccount('Created')" ng-disabled="!isAccountChanged || isApproved" title="Save the account" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Account</button>
+                        <button id="btnPendingApproval" ng-show="isEdit" ng-disabled="isApproved" ng-click="fnUpdateAccountStatus('Pending Approval','Request for Approval')" title="Pending approval the account" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
                         <button id="btnRevert" ng-click="fnUpdateAccountStatus('Created','Revert')" ng-show="isEdit && !isDrafted" ng-disabled="!isAccountChanged" title="Revert the account" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-repeat"></i>&nbsp;Save and Update</button>
                         if (User.IsWireApprover())
                         {

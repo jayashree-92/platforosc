@@ -1994,21 +1994,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 });
             }
         });
-
-        $scope.onBoardingAccountSSITemplateMap = {
-            onBoardingAccountSSITemplateMapId: 0,
-            onBoardingSSITemplateId: $("#liSsiTemplate").val(),
-            onBoardingAccountId: $scope.onBoardingAccountId,
-            FFCName: $("#FFCName").val(),
-            FFCNumber: $("#FFCNumber").val(),
-            Reference: $("#Reference").val(),
-            TemplateName: $("#liSsiTemplate").select2("data").text,
-            AccountNumber: $("#accountNumber").val(),
-            SSITemplateType: $("#templateType").val(),
-            CreatedBy: $("#userName").val(),
-            UpdatedBy: $("#userName").val(),
-            Status: pendingStatus
-        };
         $http({
             method: "POST",
             url: "/Accounts/AddAccountSsiTemplateMap",
