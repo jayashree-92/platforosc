@@ -1650,7 +1650,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnSsiTemplateMap = function (accountId, fundId, index, currency) {
-        var messages = $scope.swiftGroupInfo != undefined ? $scope.swiftGroupInfo.AcceptedMessages : "";
+        var messages = $scope.onBoardingAccountDetails[index].SwiftGroup != undefined ? $scope.onBoardingAccountDetails[index].SwiftGroup.AcceptedMessages : "";
         $http.get("/Accounts/GetAccountSsiTemplateMap?accountId=" + accountId + "&fundId=" + fundId + "&currency=" + currency + "&messages=" + messages).then(function (response) {
             $scope.ssiTemplates = response.data.ssiTemplates;
             $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
@@ -1957,38 +1957,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     });
 
     $scope.fnAddAccountSSITemplateMap = function () {
-
-        if ($("#liSsiTemplate").val() == undefined || $("#liSsiTemplate").val() == "") {
-            //pop-up    
-            $("#spnSsi").popover({
-                placement: "right",
-                trigger: "manual",
-                container: "body",
-                content: "Ssi template cannot be empty. Please select a valid ssi template",
-                html: true,
-                width: "250px"
-            });
-
-            $("#spnSsi").popover("show");
-            return;
-        }
-        var ssiTemplateExists = $.grep($scope.ssiTemplateMaps, function (v) { return v.onBoardingSSITemplateId == $("#liSsiTemplate").val(); })[0];
-
-        if (ssiTemplateExists != null) {
-            $("#spnSsi").popover({
-                placement: "right",
-                trigger: "manual",
-                container: "body",
-                content: "Ssi template is already exists. Please select a valid ssi template",
-                html: true,
-                width: "250px"
-            });
-
-            $("#spnSsi").popover("show");
-            return;
-        }
-
-        $("#spnSsi").popover("hide");
 
         $scope.onBoardingAccountSSITemplateMap = [];
         angular.forEach($("#ssiTemplateTableMap .checkMap:checked"), function (val, i) {
