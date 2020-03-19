@@ -428,26 +428,28 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $http.post("/Home/ValidateAccountDetails", JSON.stringify({ wireMessageType: $("#liMessageType").select2('data').text, account: $scope.accountDetail, receivingAccount: $scope.receivingAccountDetail, ssiTemplate: $scope.ssiTemplate, isBookTransfer: $scope.wireTicketObj.IsBookTransfer }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
             //$scope.isMandatoryFieldsMissing = response.data.isMandatoryFieldsMissing;
             $scope.isMandatoryFieldsMissing = false;
-            if (!$scope.isMandatoryFieldsMissing && !$scope.isValidWireInitiation) {
-                if (!$scope.isWireCreated && !$scope.isDeadlineCrossed) {
-                    $("#wireErrorStatus").collapse("hide");
-                    $scope.validationMsg = "";
-                }
-                else if ($scope.isWireCreated) {
-                    $("#chkWireCreation").prop('checked', false).trigger('change');
-                    $scope.isUserActionDone = true;
-                    $scope.validationMsg = "An Initiated wire exists for the same value date, purpose, sending and receiving account.";
+            if ($scope.isValidWireInitiation) {
+                if (!$scope.isMandatoryFieldsMissing) {
+                    if (!$scope.isWireCreated && !$scope.isDeadlineCrossed) {
+                        $("#wireErrorStatus").collapse("hide");
+                        $scope.validationMsg = "";
+                    }
+                    else if ($scope.isWireCreated) {
+                        $("#chkWireCreation").prop('checked', false).trigger('change');
+                        $scope.isUserActionDone = true;
+                        $scope.validationMsg = "An Initiated wire exists for the same value date, purpose, sending and receiving account.";
+                    }
+                    else {
+                        $scope.validationMsg = "Note: Deadline crossed. Please select a future date for settlement.";
+                    }
                 }
                 else {
-                    $scope.validationMsg = "Note: Deadline crossed. Please select a future date for settlement.";
-                }
-            }
-            else {
 
-                $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-                //$scope.mandatoryFieldMsg = response.data.validationMsg;
-                $scope.mandatoryFieldMsg = "";
-                $scope.validationMsg = angular.copy($scope.mandatoryFieldMsg);
+                    $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
+                    //$scope.mandatoryFieldMsg = response.data.validationMsg;
+                    $scope.mandatoryFieldMsg = "";
+                    $scope.validationMsg = angular.copy($scope.mandatoryFieldMsg);
+                }
             }
         });
     }

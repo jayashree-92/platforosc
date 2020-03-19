@@ -295,122 +295,124 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
         $("#spnBroker").hide();
         $("#spnAgreement").hide();
-        angular.element(document).on('change', "#liAccountType", function (event) {
-            event.stopPropagation();
-            $scope.accountType = $(this).val();
-            var thisFunds = [];
-            $scope.AgreementTypeId = 0;
-            if ($(this).val() != "" && $(this).val() != undefined) {
-                if ($(this).val() == "Agreement") {
-                    $("#spnBroker").hide();
-                    $("#spnAgreement").show();
-                    thisFunds = angular.copy($scope.fundsWithAgreements);
-                } else {
-                    $scope.AgreementTypeId = angular.copy($(this).val() == "DDA" ? $scope.ddaAgreementTypeId : $scope.custodyAgreementTypeId);
-                    $("#spnBroker").show();
-                    $("#spnAgreement").hide();
-                    thisFunds = angular.copy($scope.funds);
-                }
-            } else {
-                $scope.AgreementTypeId = 0;
-                $("#spnBroker").hide();
-                $("#spnAgreement").hide();
-            }
-            
-            $("#liFund").select2({
-                placeholder: "Select a fund",
-                allowClear: true,
-                data: thisFunds
-            });
-            $("#liFund").select2('val', '');
-            $("#liAgreement").select2('val', '');
-            $("#liBroker").select2('val', '');
-            
-            $scope.BrokerId = 0;
-            $scope.AgrementType = "";
-            $scope.broker = "";
-        });
-
-        angular.element(document).on('change', "#liFund", function (event) {
-
-            fundId = $(this).val();
-            event.stopPropagation();
-            if (fundId > 0) {
-
-                var agreements = $filter('filter')(angular.copy($scope.agreements), { 'hmFundId': parseInt(fundId) }, true);
-                //var agreements = $.grep($scope.agreements, function (v) { return v.hmFundId == fundId; });
-                //var agreementData = [];
-                //$.each(agreements, function (key, value) {
-                //    agreementData.push({ "id": value.AgreementOnboardingId, "text": value.AgreementShortName });
-                //});
-
-                //var agreementData = $filter('filter')($scope.)
-
-                agreements = $filter('orderBy')(agreements, 'text');
-
-                if ($("#liAgreement").data("select2")) {
-                    $("#liAgreement").select2("destroy");
-                }
-
-                $("#liAgreement").select2({
-                    placeholder: "Select the agreements",
-                    allowClear: true,
-                    data: agreements
-                });
-                $scope.FundName = $(this).select2('data').LegalName;
-            }
-            else {
-
-                if ($("#liAgreement").data("select2")) {
-                    $("#liAgreement").select2("destroy");
-                }
-                $("#liAgreement").select2({
-                    placeholder: "Select the agreements",
-                    allowClear: true,
-                    data: []
-                });
-            }
-            $scope.FundId = fundId;
-            
-        });
-
-        angular.element(document).on('change', "#liAgreement", function (event) {
-            event.stopPropagation();
-            $scope.AgreementId = $(this).val();
-            if ($(this).val() > 0) {
-                // Get row details 
-                $scope.AgreementTypeId = $(this).select2('data').AgreementTypeId;
-                $scope.AgreementType = $(this).select2('data').AgreementType;
-                $scope.BrokerId = $(this).select2('data').BrokerId;
-                var broker = $filter('filter')(angular.copy($scope.counterpartyFamilies), { 'BrokerId': $scope.BrokerId }, true)[0];
-                if (broker != undefined)
-                    $scope.broker = broker.text;
-                $scope.loadAccountData();
-            }
-
-        });
-
-        angular.element(document).on('change', "#liBroker", function (event) {
-            event.stopPropagation();
-            $scope.BrokerId = $(this).val();
-
-            if ($(this).val() > 0) {
-                $scope.broker = $(this).select2('data').text;
-                $scope.loadAccountData();
-            }
-        });
-        
-        angular.element(document).on('click', "#btnAgrExpandAllPanel", function (event) {
-            angular.element("#collapseContainer .panel-body").collapse("show");
-            angular.element("#collapseContainer .panel-heading i.glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
-        });
-
-        angular.element(document).on('click', "#btnAgrCollapseAllPanel", function (event) {
-            angular.element("#collapseContainer .panel-body").collapse("hide");
-            angular.element("#collapseContainer .panel-heading i.glyphicon-chevron-up").addClass("glyphicon-chevron-down").removeClass("glyphicon-chevron-up");
-        });
+       
 
     }
+
+    angular.element(document).on('change', "#liAccountType", function (event) {
+        event.stopPropagation();
+        $scope.accountType = $(this).val();
+        var thisFunds = [];
+        $scope.AgreementTypeId = 0;
+        if ($(this).val() != "" && $(this).val() != undefined) {
+            if ($(this).val() == "Agreement") {
+                $("#spnBroker").hide();
+                $("#spnAgreement").show();
+                thisFunds = angular.copy($scope.fundsWithAgreements);
+            } else {
+                $scope.AgreementTypeId = angular.copy($(this).val() == "DDA" ? $scope.ddaAgreementTypeId : $scope.custodyAgreementTypeId);
+                $("#spnBroker").show();
+                $("#spnAgreement").hide();
+                thisFunds = angular.copy($scope.funds);
+            }
+        } else {
+            $scope.AgreementTypeId = 0;
+            $("#spnBroker").hide();
+            $("#spnAgreement").hide();
+        }
+
+        $("#liFund").select2({
+            placeholder: "Select a fund",
+            allowClear: true,
+            data: thisFunds
+        });
+        $("#liFund").select2('val', '');
+        $("#liAgreement").select2('val', '');
+        $("#liBroker").select2('val', '');
+
+        $scope.BrokerId = 0;
+        $scope.AgrementType = "";
+        $scope.broker = "";
+    });
+
+    angular.element(document).on('change', "#liFund", function (event) {
+
+        fundId = $(this).val();
+        event.stopPropagation();
+        if (fundId > 0) {
+
+            var agreements = $filter('filter')(angular.copy($scope.agreements), { 'hmFundId': parseInt(fundId) }, true);
+            //var agreements = $.grep($scope.agreements, function (v) { return v.hmFundId == fundId; });
+            //var agreementData = [];
+            //$.each(agreements, function (key, value) {
+            //    agreementData.push({ "id": value.AgreementOnboardingId, "text": value.AgreementShortName });
+            //});
+
+            //var agreementData = $filter('filter')($scope.)
+
+            agreements = $filter('orderBy')(agreements, 'text');
+
+            if ($("#liAgreement").data("select2")) {
+                $("#liAgreement").select2("destroy");
+            }
+
+            $("#liAgreement").select2({
+                placeholder: "Select the agreements",
+                allowClear: true,
+                data: agreements
+            });
+            $scope.FundName = $(this).select2('data').LegalName;
+        }
+        else {
+
+            if ($("#liAgreement").data("select2")) {
+                $("#liAgreement").select2("destroy");
+            }
+            $("#liAgreement").select2({
+                placeholder: "Select the agreements",
+                allowClear: true,
+                data: []
+            });
+        }
+        $scope.FundId = fundId;
+
+    });
+
+    angular.element(document).on('change', "#liAgreement", function (event) {
+        event.stopPropagation();
+        $scope.AgreementId = $(this).val();
+        if ($(this).val() > 0) {
+            // Get row details 
+            $scope.AgreementTypeId = $(this).select2('data').AgreementTypeId;
+            $scope.AgreementType = $(this).select2('data').AgreementType;
+            $scope.BrokerId = $(this).select2('data').BrokerId;
+            var broker = $filter('filter')(angular.copy($scope.counterpartyFamilies), { 'BrokerId': $scope.BrokerId }, true)[0];
+            if (broker != undefined)
+                $scope.broker = broker.text;
+            $scope.loadAccountData();
+        }
+
+    });
+
+    angular.element(document).on('change', "#liBroker", function (event) {
+        event.stopPropagation();
+        $scope.BrokerId = $(this).val();
+
+        if ($(this).val() > 0) {
+            $scope.broker = $(this).select2('data').text;
+            $scope.loadAccountData();
+        }
+    });
+
+    angular.element(document).on('click', "#btnAgrExpandAllPanel", function (event) {
+        angular.element("#collapseContainer .panel-body").collapse("show");
+        angular.element("#collapseContainer .panel-heading i.glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+    });
+
+    angular.element(document).on('click', "#btnAgrCollapseAllPanel", function (event) {
+        angular.element("#collapseContainer .panel-body").collapse("hide");
+        angular.element("#collapseContainer .panel-heading i.glyphicon-chevron-up").addClass("glyphicon-chevron-down").removeClass("glyphicon-chevron-up");
+    });
 
     $scope.loadAccountData = function () {
         $scope.copyAccount = {};
@@ -793,6 +795,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 account.IsReceivingAccount = false;
             $scope.onBoardingAccountDetails.push(account);
         });
+        $scope.fnPreloadAccountData().then($scope.fnInitPreLoadEvents());       
         $scope.isStatusUpdate = false;
         $("#accountModal").modal({
             show: true,
@@ -809,8 +812,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }).off("shown.bs.modal").on("shown.bs.modal", function () {
                 if (!$scope.isStatusUpdate) {
                     angular.element("#basicDetailCP").collapse("hide");
-                    $scope.fnPreloadAccountData();
-                    $scope.fnInitPreLoadEvents();
                 }
                 $timeout(function () {
                     $(window).scrollTop(0);
@@ -1640,7 +1641,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#accountDetailCP tbody tr td a.btn-primary").on("click", function (event) {
             event.preventDefault();
             var ssitemplateId = $(this).attr("id");
-            window.open("/Accounts/SSITemplate?ssiTemplateId=" + ssitemplateId, "_blank");
+            window.open("/SSITemplate/SSITemplate?ssiTemplateId=" + ssitemplateId, "_blank");
         });
 
         $("#accountDetailCP table.ssiTemplate tbody tr").on("click", function (event) {

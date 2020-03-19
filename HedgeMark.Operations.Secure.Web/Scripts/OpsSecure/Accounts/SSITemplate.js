@@ -731,20 +731,20 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         $("#tblAssociatedAccounts tbody tr td:last-child a").on("click", function (event) {
             event.preventDefault();
             var selectedRow = $(this).parents("tr");
-            var rowElement = ssiMapTable.row(selectedRow).data();
+            var rowElement = $scope.ssiMapTable.row(selectedRow).data();
             bootbox.confirm("Are you sure you want to remove this account from ssi template?", function (result) {
                 if (!result) {
                     return;
                 } else {
                     if (rowElement.onBoardingAccountSSITemplateMapId > 0) {
                         $http.post("/Accounts/RemoveSsiTemplateMap", { ssiTemplateMapId: rowElement.onBoardingAccountSSITemplateMapId }).then(function () {
-                            ssiMapTable.row(selectedRow).remove().draw();
+                            $scope.ssiMapTable.row(selectedRow).remove().draw();
                             //$scope.ssiTemplateDocuments.pop(rowElement);             
                             notifySuccess("Fund account removed succesfully");
                             $scope.fnGetAssociatedAccounts();
                         });
                     } else {
-                        ssiMapTable.row(selectedRow).remove().draw();
+                        $scope.ssiMapTable.row(selectedRow).remove().draw();
                         //$scope.onBoardingAccountDetails[rowIndex].onBoardingAccountSSITemplateMaps.pop(rowElement);
                         notifySuccess("Fund account removed succesfully");
                     }
@@ -767,21 +767,12 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             }
 
             var selectedRow = $(this);
-            //var rowIndex = $(this).parents("table").attr("tIndex");
-            var rowElement = ssiMapTable.row(selectedRow).data();
-
+            var rowElement = $scope.ssiMapTable.row(selectedRow).data();
             $scope.onBoardingAccountSSITemplateMapId = rowElement.onBoardingAccountSSITemplateMapId;
-            //$scope.plIndex = rowIndex;
 
             if (rowElement.Status == "Pending Approval" && rowElement.onBoardingAccountSSITemplateMapId > 0 && rowElement.UpdatedBy != $("#userName").val()) {
                 $("#btnAccountMapStatusButtons a[title='Approve']").removeClass("disabled");
             }
-            //if (rowElement.onBoardingAccountStatus == createdStatus) {
-            //    $("#btnAccountStatusButtons button[id='requestForApproval']").removeClass("disabled");
-            //}
-            //if (rowElement.onBoardingAccountStatus != createdStatus) {
-            //    $("#btnAccountStatusButtons button[id='revert']").removeClass("disabled");
-            //}
 
         });
     }
@@ -816,6 +807,46 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         });
 
         $("#accountSSITemplateMapModal").modal("hide");
+    }
+
+    $scope.fnUpdateAccountMapStatus = function (status, statusAction) {
+        $scope.AccountMapStatus = status;
+
+        var confirmationMsg = "Are you sure you want to " + ((statusAction === "Request for Approval") ? "<b>request</b> for approval of" : "<b>" + statusAction + "</b>") + " the selected account ssi template map?";
+        if (statusAction == "Request for Approval") {
+            $("#btnMapSaveComment").addClass("btn-warning").removeClass("btn-success").removeClass("btn-info");
+            $("#btnMapSaveComment").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
+        } else if (statusAction == "Approve") {
+            $("#btnMapSaveComment").removeClass("btn-warning").addClass("btn-success").removeClass("btn-info");
+            $("#btnMapSaveComment").html('<i class="glyphicon glyphicon-ok"></i>&nbsp;Approve');
+        }
+        else if (statusAction == "Revert") {
+            $("#btnMapSaveComment").removeClass("btn-warning").removeClass("btn-success").addClass("btn-info");
+            $("#btnMapSaveComment").html('<i class="glyphicon glyphicon-repeat"></i>&nbsp;Revert');
+        }
+
+        $("#pAccountMapMsg").html(confirmationMsg);
+        $("#UpdateAccountMapStatusModal").modal("show");
+    }
+
+    $scope.fnSaveAccountMapStatus = function () {
+        $http.post("/Accounts/UpdateAccountMapStatus", { status: $scope.AccountMapStatus, accountMapId: $scope.onBoardingAccountSSITemplateMapId, comments: $("#statusMapComments").val().trim() }).then(function () {
+            notifySuccess("Ssi template account map  " + $scope.AccountMapStatus.toLowerCase() + " successfully");
+
+            $("#btnAccountMapStatusButtons a[title='Approve']").addClass("disabled");
+
+            var rowElement = $scope.ssiMapTable.row(".info").data();
+            rowElement.Status = $scope.AccountMapStatus;
+            rowElement.UpdatedBy = $("#userName").val();
+            rowElement.Comments = $("#statusMapComments").val().trim();
+            rowElement.UpdatedAt = moment();
+            var selectedRowNode = $scope.ssiMapTable.row(".info").data(rowElement).draw().node();
+
+            $(selectedRowNode).addClass("success").removeClass("warning");
+
+        });
+        $("#UpdateAccountMapStatusModal").modal("hide");
+
     }
 
     $scope.fnAssociationSSI = function () {

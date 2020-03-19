@@ -18,7 +18,7 @@
                 <div class="panel panel-default" id="plnSsiTemplate">
                     <div class="panel-body" id="ssiTemplateDetailDiv">
                         <input type="hidden" ng-model="ssiTemplate.onBoardingSSITemplateId" />
-                        
+
                         <div class="panel panel-default " id="accountBasicInfo" data-toggle='collapse'>
                             <div class="panel-heading" data-toggle="collapse" data-target="#accountBasicDetailDiv" aria-expanded="false" aria-controls="accountBasicDetailDiv">
                                 <b>Basic Info</b>
@@ -236,9 +236,9 @@
                         <div class="panel panel-default ng-show-hide" id="panelAttachment" ng-show="ssiTemplateId != 0">
                             <div class="panel-heading" data-toggle="collapse" data-target="#ssiAttachmentInfo" aria-expanded="false" aria-controls="ssiAttachmentInfo">
                                 <b>Attachment</b>
-                                    <span class="pull-right">
-                                        <i class="glyphicon glyphicon-chevron-down"></i>
-                                    </span>
+                                <span class="pull-right">
+                                    <i class="glyphicon glyphicon-chevron-down"></i>
+                                </span>
                             </div>
                             <div class="panel-body collapse" id="ssiAttachmentInfo">
                                 <div class="row">
@@ -253,20 +253,20 @@
                             </div>
                         </div>
                         <div class="panel panel-default ng-show-hide" id="panelAssociatedAccounts" ng-if="ssiTemplateId != 0">
-                            <div class="panel-heading" data-toggle="collapse" data-target="#accountSsiAssociationInfo" aria-expanded="false" aria-controls="accountSsiAssociationInfo" ng-click="showAssociations()">                                
-                                <b>Associated Settlement Instructions</b> 
-                                    <span class="pull-right">
-                                        @if (User.IsWireApprover())
-                                        {
-                                            <span class="btn-group" id="btnAccountMapStatusButtons" style="display: none;">
-                                                <a id="accountMapApprove" title="Approve" class="btn btn-success btn-xs disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Approved','Approve')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-ok"></i> Approve Account Association</a>
-                                                @*<a id="accountMapRevert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Created','Revert')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</a>*@
-                                            </span>
-                                        }
-                                        <a class="btn btn-xs btn-primary" ng-click="$event.stopPropagation();fnAssociationSSI($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
-                                        <i class="indicator glyphicon glyphicon-chevron-down"></i>
-                                    </span>
-                                
+                            <div class="panel-heading" data-toggle="collapse" data-target="#accountSsiAssociationInfo" aria-expanded="false" aria-controls="accountSsiAssociationInfo" ng-click="showAssociations()">
+                                <b>Associated Settlement Instructions</b>
+                                <span class="pull-right">
+                                    @if (User.IsWireApprover())
+                                    {
+                                        <span class="btn-group" id="btnAccountMapStatusButtons" style="display: none;">
+                                            <a id="accountMapApprove" title="Approve" class="btn btn-success btn-xs disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Approved','Approve')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-ok"></i> Approve Account Association</a>
+                                            @*<a id="accountMapRevert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Created','Revert')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</a>*@
+                                        </span>
+                                    }
+                                    <a class="btn btn-xs btn-primary" ng-click="$event.stopPropagation();fnAssociationSSI($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
+                                    <i class="indicator glyphicon glyphicon-chevron-down"></i>
+                                </span>
+
                             </div>
                             <div class="panel-body collapse" id="accountSsiAssociationInfo">
                                 <div class="row">
@@ -448,6 +448,25 @@
                             <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Associations
                         </button>
                         <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="UpdateAccountMapStatusModal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="UpdateAccountMapStatusModal" aria-hidden="true" style="width: 100%">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>Add Comments</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-left" id="pAccountMapMsg"></p>
+                        <textarea placeholder="Enter Comments" id="statusMapComments" style="width: 90%; max-width: none;" class="form-control"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnMapSaveComment" class="btn btn-warning btn-sm" ng-click="fnSaveAccountMapStatus()"><i class="glyphicon glyphicon-flag"></i>&nbsp;Proceed</button>
+                        <a href="#" class="btn btn-default btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> Cancel</a>
                     </div>
                 </div>
             </div>
