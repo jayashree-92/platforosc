@@ -120,7 +120,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                                 else
                                     return row.SSITemplate.UltimateBeneficiary.BankName;
                             }
-                            return "";
+                            return "N/A";
                         }
                     },
                     {
@@ -138,7 +138,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                                 else
                                     return row.SSITemplate.UltimateBeneficiary.BICorABA;
                             }
-                            return "";
+                            return "N/A";
                         }
                     },
                     {
@@ -150,7 +150,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                             else if (!row.IsNotice) {
                                 return row.SSITemplate.AccountNumber;
                             }
-                            return "";
+                            return "N/A";
                         }
 
                     },
