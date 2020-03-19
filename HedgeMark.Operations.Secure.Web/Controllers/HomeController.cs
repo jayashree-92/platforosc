@@ -427,7 +427,7 @@ namespace HMOSecureWeb.Controllers
             {
                 wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
                 var deadlineToApprove = GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
-                var daysToAdd = deadlineToApprove.Hours % 24;
+                var daysToAdd = deadlineToApprove.Hours / 24;
                 SaveWireScheduleInfo(wireTicket, (WireDataManager.WireStatus)statusId, UserDetails.Id, daysToAdd);
                 var tempFilePath = string.Format("Temp\\{0}", UserName);
 

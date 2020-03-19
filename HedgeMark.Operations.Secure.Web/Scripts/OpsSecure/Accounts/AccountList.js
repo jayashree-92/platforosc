@@ -1066,6 +1066,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             var onboardingContacts = $filter('filter')(($scope.OnBoardingContactsDetails), function (c) {
                 return (contacts.indexOf(c.id) > -1);
             });
+            $scope.onBoardingAccountDetails[index].ContactName = contacts;
             viewContactTable(onboardingContacts, index);
         }
     }
@@ -1982,8 +1983,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnAddAccountSSITemplateMap = function () {
 
         $scope.onBoardingAccountSSITemplateMap = [];
-        angular.forEach($("#ssiTemplateTableMap .checkMap:checked"), function (val, i) {
-            var data = $scope.ssiTemplateTableMap.row($(val).closest('tr')).data();
+        angular.forEach($("#ssiTemplateTableMap tr.info"), function (val, i) {
+            var data = $scope.ssiTemplateTableMap.row($(val)).data();
             if (data != undefined) {
                 $scope.onBoardingAccountSSITemplateMap.push({
                     onBoardingAccountSSITemplateMapId: 0,
@@ -2023,12 +2024,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             //responsive: true,
             aaData: $scope.ssiTemplates,
             "aoColumns": [
-                {
-                    "mDataProp": "onBoardingSSITemplateId",
-                    "sTitle": "",
-                    "type": "checkbox",
-                    "mRender": function (tData, type, row) { return '<input type="checkbox" class="checkMap" />' }
-                },
+                
                 {
                     "sTitle": "Template Name",
                     "mData": "TemplateName"
@@ -2080,7 +2076,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             //pagination: true,
             "sScrollX": "100%",
             "sScrollXInner": "100%",
-            "order": [[1, "asc"]],
+            "order": [[0, "asc"]],
             "oLanguage": {
                 "sSearch": "",
                 "sEmptyTable": "No ssi templates are available for the account",
@@ -2088,12 +2084,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
         });
 
-        $(document).on("change", "#ssiTemplateTableMap tbody tr .checkMap", function ()
+        $(document).on("click", "#ssiTemplateTableMap tbody tr", function ()
         {
-            if ($(this).prop('checked'))
-                $(this).closest('tr').addClass('info');
+            if ($(this).hasClass('info'))
+                $(this).removeClass('info');
             else
-                $(this).closest('tr').removeClass('info');
+                $(this).addClass('info');
         });   
                      
         $timeout(function () {

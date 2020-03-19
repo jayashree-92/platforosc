@@ -780,8 +780,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.fnAddAccountSSITemplateMap = function () {
 
         $scope.onBoardingAccountSSITemplateMap = [];
-        angular.forEach($("#ssiTemplateTableMap .checkMap:checked"), function (val, i) {
-            var data = $scope.ssiTemplateTableMap.row($(val).closest('tr')).data();
+        angular.forEach($("#ssiTemplateTableMap tr.info"), function (val, i) {
+            var data = $scope.ssiTemplateTableMap.row($(val)).data();
             if (data != undefined) {
                 $scope.onBoardingAccountSSITemplateMap.push({
                     onBoardingAccountSSITemplateMapId: 0,
@@ -858,12 +858,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             //responsive: true,
             aaData: $scope.fundAccounts,
             "aoColumns": [
-                {
-                    "mDataProp": "onBoardingAccountId",
-                    "sTitle": "",
-                    "type": "checkbox",
-                    "mRender": function (tData, type, row) { return '<input type="checkbox" class="checkMap" />' }
-                },
+                
                 {
                     "sTitle": "Account Name",
                     "mData": "AccountName"
@@ -917,7 +912,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             //pagination: true,
             "sScrollX": "100%",
             "sScrollXInner": "100%",
-            "order": [[1, "asc"]],
+            "order": [[0, "asc"]],
             "oLanguage": {
                 "sSearch": "",
                 "sEmptyTable": "No fund accounts are available for the SSI Template",
@@ -925,12 +920,12 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             }
         });
 
-        $(document).on("change", "#ssiTemplateTableMap tbody tr .checkMap", function () {
-            if ($(this).prop('checked'))
-                $(this).closest('tr').addClass('info');
+        $(document).on("click", "#ssiTemplateTableMap tbody tr", function () {
+            if ($(this).hasClass('info'))
+                $(this).removeClass('info');
             else
-                $(this).closest('tr').removeClass('info');
-        });
+                $(this).addClass('info');
+        }); 
         
         $timeout(function () {
             $scope.ssiTemplateTableMap.columns.adjust().draw(true);
