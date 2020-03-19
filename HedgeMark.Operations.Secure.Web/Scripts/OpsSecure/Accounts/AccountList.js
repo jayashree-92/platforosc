@@ -128,13 +128,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             });
         });
     }
-
+    $scope.contactTable = [];
     function viewContactTable(data, key) {
 
         if ($("#contactTable" + key).hasClass("initialized")) {
             fnDestroyDataTable("#contactTable" + key);
         }
-        contactTable[key] = $("#contactTable" + key).not(".initialized").addClass("initialized").DataTable({
+        $scope.contactTable[key] = $("#contactTable" + key).not(".initialized").addClass("initialized").DataTable({
             "bDestroy": true,
             // responsive: true,
             aaData: data,
@@ -181,7 +181,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
 
         $timeout(function () {
-            contactTable[key].columns.adjust().draw(true);
+            $scope.contactTable[key].columns.adjust().draw(true);
         }, 1000);
     }
 
@@ -2697,8 +2697,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     $scope.accountCallbackTable[index].columns.adjust().draw(true);
             }
             else {
-                if (contactTable[index] != undefined)
-                    contactTable[index].columns.adjust.draw(true);
+                if ($scope.contactTable[index] != undefined)
+                    $scope.contactTable[index].columns.adjust().draw(true);
             }
         }, 100);
     }
