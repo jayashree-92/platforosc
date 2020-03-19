@@ -129,8 +129,8 @@ namespace HMOSecureWeb.Controllers
                 var accountIds = wireStatusDetails.Select(s => s.OnBoardAccountId).Union(wireStatusDetails.Where(s => s.WireTransferTypeId == 2).Select(s => s.OnBoardSSITemplateId)).Distinct().ToList();
                 var ssiTemplateIds = wireStatusDetails.Select(s => s.OnBoardSSITemplateId).Distinct().ToList();
 
-                wireAccounts = context.onBoardingAccounts.Include(s => s.UltimateBeneficiary).Where(s => accountIds.Contains(s.onBoardingAccountId)).ToList();
-                wireSSITemplates = context.onBoardingSSITemplates.Where(s => ssiTemplateIds.Contains(s.onBoardingSSITemplateId)).ToList();
+                wireAccounts = context.onBoardingAccounts.Include(s => s.UltimateBeneficiary).Include(s => s.Beneficiary).Where(s => accountIds.Contains(s.onBoardingAccountId)).ToList();
+                wireSSITemplates = context.onBoardingSSITemplates.Include(s => s.UltimateBeneficiary).Include(s => s.Beneficiary).Where(s => ssiTemplateIds.Contains(s.onBoardingSSITemplateId)).ToList();
             }
 
             if (!AuthorizedSessionData.IsPrivilegedUser)
@@ -202,6 +202,8 @@ namespace HMOSecureWeb.Controllers
 
                 if (thisWire.SSITemplate.Beneficiary != null)
                     thisWire.SSITemplate.Beneficiary.onBoardingAccounts = thisWire.SSITemplate.Beneficiary.onBoardingAccounts1 = thisWire.SSITemplate.Beneficiary.onBoardingAccounts2 = null;
+                else
+                    thisWire.SSITemplate.Beneficiary = new onBoardingAccountBICorABA();
                 if (thisWire.SSITemplate.Intermediary != null)
                     thisWire.SSITemplate.Intermediary.onBoardingAccounts = thisWire.SSITemplate.Intermediary.onBoardingAccounts1 = thisWire.SSITemplate.Intermediary.onBoardingAccounts2 = null;
                 if (thisWire.SSITemplate.UltimateBeneficiary != null)
@@ -224,6 +226,8 @@ namespace HMOSecureWeb.Controllers
 
                 if (thisWire.ReceivingAccount.Beneficiary != null)
                     thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts = thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts1 = thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts2 = null;
+                else
+                    thisWire.ReceivingAccount.Beneficiary = new onBoardingAccountBICorABA();
                 if (thisWire.ReceivingAccount.Intermediary != null)
                     thisWire.ReceivingAccount.Intermediary.onBoardingAccounts = thisWire.ReceivingAccount.Intermediary.onBoardingAccounts1 = thisWire.ReceivingAccount.Intermediary.onBoardingAccounts2 = null;
                 if (thisWire.ReceivingAccount.UltimateBeneficiary != null)
@@ -256,8 +260,9 @@ namespace HMOSecureWeb.Controllers
             }
 
             //Custom ordering as per HMOS-56
-            var customStatusOrder = new[] { 2, 5, 1, 4, 3 };
-            wireData = wireData.OrderBy(s => Array.IndexOf(customStatusOrder, s.HMWire.WireStatusId)).ToList();
+            var customWireStatusOrder = new[] { 2, 5, 1, 4, 3 };
+            var customSwiftStatusOrder = new[] { 2, 4, 6, 3, 5, 1 };
+            wireData = wireData.OrderBy(s => Array.IndexOf(customWireStatusOrder, s.HMWire.WireStatusId)).ThenBy(s => Array.IndexOf(customSwiftStatusOrder, s.HMWire.SwiftStatusId)).ToList();
             return Json(new { wireData, AuthorizedSessionData.IsPrivilegedUser, isAdmin = User.IsInRole(OpsSecureUserRoles.DMAAdmin) });
         }
 

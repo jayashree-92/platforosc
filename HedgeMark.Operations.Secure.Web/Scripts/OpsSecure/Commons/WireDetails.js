@@ -105,9 +105,55 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         }
                     },
 
-                    { "data": "ReceivingAccount.UltimateBeneficiary.BankName", "sTitle": "Beneficiary Bank" },
-                    { "data": "ReceivingAccount.UltimateBeneficiary.BICorABA", "sTitle": "Beneficiary" },
-                    { "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary A/C Number" },
+                    {
+                        "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary Bank",
+                        "render": function (tdata, type, row) {
+                            if (row.IsBookTransfer) {
+                                if (row.ReceivingAccount.UltimateBeneficiaryType == "Account Name")
+                                    return row.ReceivingAccount.Beneficiary.BankName;
+                                else
+                                    return row.ReceivingAccount.UltimateBeneficiary.BankName;
+                            }
+                            else if (!row.IsNotice) {
+                                if (row.SSITemplate.UltimateBeneficiaryType == "Account Name")
+                                    return row.SSITemplate.Beneficiary.BankName;
+                                else
+                                    return row.SSITemplate.UltimateBeneficiary.BankName;
+                            }
+                            return "";
+                        }
+                    },
+                    {
+                        "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary",
+                        "render": function (tdata, type, row) {
+                            if (row.IsBookTransfer) {
+                                if (row.ReceivingAccount.UltimateBeneficiaryType == "Account Name")
+                                    return row.ReceivingAccount.UltimateBeneficiaryAccountName;
+                                else
+                                    return row.ReceivingAccount.UltimateBeneficiary.BICorABA;
+                            }
+                            else if (!row.IsNotice) {
+                                if (row.SSITemplate.UltimateBeneficiaryType == "Account Name")
+                                    return row.SSITemplate.UltimateBeneficiaryAccountName;
+                                else
+                                    return row.SSITemplate.UltimateBeneficiary.BICorABA;
+                            }
+                            return "";
+                        }
+                    },
+                    {
+                        "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary A/C Number",
+                        "render": function (tdata, type, row) {
+                            if (row.IsBookTransfer) {
+                                return row.ReceivingAccount.AccountNumber;
+                            }
+                            else if (!row.IsNotice) {
+                                return row.SSITemplate.AccountNumber;
+                            }
+                            return "";
+                        }
+
+                    },
 
                     { "data": "HMWire.hmsWireMessageType.MessageType", "sTitle": "Wire Message Type" },
                     {

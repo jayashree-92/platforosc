@@ -1405,7 +1405,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 data: $scope.contactNames
             });
             if (contactName != null && contactName != undefined && contactName != "") {
-                $("#liContacts" + index).select2("val", contactName);
+                $("#liContacts" + index).select2("val", [contactName]);
                 var onboardingContacts = $filter('filter')(($scope.OnBoardingContactsDetails), function (c) {
                     return $.inArray(c.id.toString(), [contactName]) > -1;
                 });
