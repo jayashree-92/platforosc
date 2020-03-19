@@ -1062,9 +1062,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnOnContactNameChange = function (contacts, index) {
 
         if (contacts != "" && contacts != 'undefined') {
-
+            names = contacts.split(',');
             var onboardingContacts = $filter('filter')(($scope.OnBoardingContactsDetails), function (c) {
-                return (contacts.indexOf(c.id) > -1);
+                return $.inArray(c.id.toString(), names) > -1;
             });
             $scope.onBoardingAccountDetails[index].ContactName = contacts;
             viewContactTable(onboardingContacts, index);
@@ -1405,9 +1405,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 data: $scope.contactNames
             });
             if (contactName != null && contactName != undefined && contactName != "") {
-                $("#liContacts" + index).select2("val", [contactName]);
+                var names = contactName.split(',');
+                $("#liContacts" + index).select2("val", names);
                 var onboardingContacts = $filter('filter')(($scope.OnBoardingContactsDetails), function (c) {
-                    return $.inArray(c.id.toString(), [contactName]) > -1;
+                    return $.inArray(c.id.toString(), names) > -1;
                 });
                 viewContactTable(onboardingContacts, index);
             }
