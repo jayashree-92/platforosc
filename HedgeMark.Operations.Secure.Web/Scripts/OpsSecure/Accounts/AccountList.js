@@ -846,14 +846,18 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#UpdateAccountStatusModal").modal("show");
         $("#accountModal").modal('hide');
     }
-
+    $scope.isHigherStatus = false;
     $scope.fnSaveAccountStatus = function () {
         $timeout(function () {
+            $scope.isHigherStatus = true;
             if ($scope.validateAccount($scope.AccountStatus))
                 $q.all([$scope.fnUpdateAccount(false)]).then(function () {
                     $http.post("/Accounts/UpdateAccountStatus", { accountStatus: $scope.AccountStatus, accountId: $scope.onBoardingAccountId, comments: $("#statusComments").val().trim() }).then(function () {
                         notifySuccess("Account  " + $scope.AccountStatus.toLowerCase() + " successfully");
-                        window.location.href = "/Accounts/Index";
+                        $timeout(function () {
+                            window.location.href = "/Accounts/Index";
+                        }, 500);
+                        
                     });
                     $("#btnSendApproval").hide();
                     $("#UpdateAccountStatusModal").modal("hide");
@@ -988,6 +992,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     //Save Account
     $scope.fnSaveAccount = function (status) {
         $timeout(function () {
+            $scope.isHigherStatus = false;
             if ($scope.validateAccount(status))
                 $scope.fnUpdateAccount();
         }, 100);
@@ -997,6 +1002,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         console.log($scope.onBoardingAccountDetails);
 
         return $http.post("/Accounts/AddAccounts", { onBoardingAccounts: $scope.onBoardingAccountDetails }).then(function () {
+            if (!$scope.isHigherStatus)
             notifySuccess("Account Saved successfully");
 
             $scope.onBoardingAccountDetails = [];

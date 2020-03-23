@@ -1236,7 +1236,10 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
             if (isNewTemplate) {
                 notifySuccess("SSI template saved successfully");
-                window.location.href = "/SSITemplate/SSITemplate?ssiTemplateId=" + ssiTemplateId;
+                $timeout(function () {
+                    window.location.href = "/SSITemplate/SSITemplate?ssiTemplateId=" + ssiTemplateId;
+                }, 500);
+                
             }
             $(".glyphicon-refresh").removeClass("icon-rotate");
         });
@@ -1336,7 +1339,10 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 } else {
                     var searchText = getUrlParameter("searchText");
                     searchText = (searchText == undefined || searchText == "undefined") ? "" : searchText;
-                    window.location.href = "/SSITemplate/SSITemplateList?searchText=" + searchText;
+                    $timeout(function () {
+                        window.location.href = "/SSITemplate/SSITemplateList?searchText=" + searchText;
+                    }, 500);
+                    
                 }
             })
         });
