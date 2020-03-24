@@ -208,7 +208,8 @@ namespace HMOSecureWeb.Controllers
                     thisWire.SSITemplate.Intermediary.onBoardingAccounts = thisWire.SSITemplate.Intermediary.onBoardingAccounts1 = thisWire.SSITemplate.Intermediary.onBoardingAccounts2 = null;
                 if (thisWire.SSITemplate.UltimateBeneficiary != null)
                     thisWire.SSITemplate.UltimateBeneficiary.onBoardingAccounts = thisWire.SSITemplate.UltimateBeneficiary.onBoardingAccounts1 = thisWire.SSITemplate.UltimateBeneficiary.onBoardingAccounts2 = null;
-
+                else
+                    thisWire.SSITemplate.UltimateBeneficiary = new onBoardingAccountBICorABA();
                 if (thisWire.SSITemplate.Beneficiary != null)
                     thisWire.SSITemplate.Beneficiary.onBoardingSSITemplates = thisWire.SSITemplate.Beneficiary.onBoardingSSITemplates1 = thisWire.SSITemplate.Beneficiary.onBoardingSSITemplates2 = null;
                 if (thisWire.SSITemplate.Intermediary != null)
@@ -219,6 +220,8 @@ namespace HMOSecureWeb.Controllers
 
                 if (thisWire.SendingAccount.Beneficiary != null)
                     thisWire.SendingAccount.Beneficiary.onBoardingAccounts = thisWire.SendingAccount.Beneficiary.onBoardingAccounts1 = thisWire.SendingAccount.Beneficiary.onBoardingAccounts2 = null;
+                else
+                    thisWire.SendingAccount.Beneficiary = new onBoardingAccountBICorABA();
                 if (thisWire.SendingAccount.Intermediary != null)
                     thisWire.SendingAccount.Intermediary.onBoardingAccounts = thisWire.SendingAccount.Intermediary.onBoardingAccounts1 = thisWire.SendingAccount.Intermediary.onBoardingAccounts2 = null;
                 if (thisWire.SendingAccount.UltimateBeneficiary != null)
