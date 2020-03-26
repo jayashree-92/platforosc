@@ -213,9 +213,9 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     "sInfoFiltered": " - filtering from _MAX_ tickets"
                 },
 
-                scroller: true,
+                scroller: wireDetails.length > 5,
                 "sScrollX": "100%",
-                "scrollY": wireDetails.length > 5 ? (window.innerHeight - 250) : (wireDetails.length * 30),
+                "scrollY": window.innerHeight - 250,
                 "sScrollXInner": "76%",
                 //"sScrollYInner": "60%",
                 "bScrollCollapse": true,
