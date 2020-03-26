@@ -848,11 +848,12 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         $("#UpdateAccountMapStatusModal").modal("hide");
 
     }
-
+    $scope.isAssociationVisible = false;
     $scope.fnAssociationSSI = function () {
         if ($("#ssiTemplateTableMap").hasClass("initialized")) {
             fnDestroyDataTable("#ssiTemplateTableMap");
         }
+        $scope.isAssociationVisible = false;
         $scope.ssiTemplateTableMap = $("#ssiTemplateTableMap").not(".initialized").addClass("initialized").DataTable({
             "bDestroy": true,
             //responsive: true,
@@ -925,6 +926,9 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 $(this).removeClass('info');
             else
                 $(this).addClass('info');
+            $timeout(function () {
+                $scope.isAssociationVisible = ("#ssiTemplateTableMap tr.info").length > 0;
+            }, 50);
         }); 
         
         $timeout(function () {

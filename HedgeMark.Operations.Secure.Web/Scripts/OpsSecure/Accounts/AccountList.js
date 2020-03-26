@@ -2020,12 +2020,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $("#accountSSITemplateMapModal").modal("hide");
     }
-
+    $scope.isAssociationVisible = false;
     $scope.fnAssociationSSI = function (panelIndex) {
         $scope.PanelIndex = panelIndex;
         if ($("#ssiTemplateTableMap").hasClass("initialized")) {
             fnDestroyDataTable("#ssiTemplateTableMap");
         }
+        $scope.isAssociationVisible = false;
         $scope.ssiTemplateTableMap = $("#ssiTemplateTableMap").not(".initialized").addClass("initialized").DataTable({
             "bDestroy": true,
             //responsive: true,
@@ -2097,6 +2098,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $(this).removeClass('info');
             else
                 $(this).addClass('info');
+            $timeout(function () {
+                $scope.isAssociationVisible = ("#ssiTemplateTableMap tr.info").length > 0;
+            }, 50);
         });   
                      
         $timeout(function () {
