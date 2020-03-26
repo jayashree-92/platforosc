@@ -920,16 +920,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 "sInfo": "Showing _START_ to _END_ of _TOTAL_ SSI Templates"
             }
         });
-
-        $(document).on("click", "#ssiTemplateTableMap tbody tr", function () {
-            if ($(this).hasClass('info'))
-                $(this).removeClass('info');
-            else
-                $(this).addClass('info');
-            $timeout(function () {
-                $scope.isAssociationVisible = $("#ssiTemplateTableMap tr.info").length > 0;
-            }, 50);
-        }); 
         
         $timeout(function () {
             $scope.ssiTemplateTableMap.columns.adjust().draw(true);
@@ -947,6 +937,16 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
         });
     }
+
+    $(document).on("click", "#ssiTemplateTableMap tbody tr", function () {
+        if ($(this).hasClass('info'))
+            $(this).removeClass('info');
+        else
+            $(this).addClass('info');
+        $timeout(function () {
+            $scope.isAssociationVisible = $("#ssiTemplateTableMap tr.info").length > 0;
+        }, 50);
+    });
 
     $scope.fnAddSSITemplateDetail = function (panelIndex) {
         if ($("#txtDescription").val() == undefined || $("#txtDescription").val() == "") {

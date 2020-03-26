@@ -2092,16 +2092,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
         });
 
-        $(document).on("click", "#ssiTemplateTableMap tbody tr", function ()
-        {
-            if ($(this).hasClass('info'))
-                $(this).removeClass('info');
-            else
-                $(this).addClass('info');
-            $timeout(function () {
-                $scope.isAssociationVisible = $("#ssiTemplateTableMap tr.info").length > 0;
-            }, 50);
-        });   
+         
                      
         $timeout(function () {
             $scope.ssiTemplateTableMap.columns.adjust().draw(true);
@@ -2119,6 +2110,16 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
         });
     }
+
+    $(document).on("click", "#ssiTemplateTableMap tbody tr", function () {
+        if ($(this).hasClass('info'))
+            $(this).removeClass('info');
+        else
+            $(this).addClass('info');
+        $timeout(function () {
+            $scope.isAssociationVisible = $("#ssiTemplateTableMap tr.info").length > 0;
+        }, 50);
+    });
 
     $scope.downloadAccountSample = function () {
         window.location.href = "/Accounts/ExportSampleAccountlist";
