@@ -215,7 +215,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
 
                 scroller: true,
                 "sScrollX": "100%",
-                "scrollY": window.innerHeight - 250,
+                "scrollY": wireDetails.length > 5 ? (window.innerHeight - 250) : (wireDetails.length * 30),
                 "sScrollXInner": "76%",
                 //"sScrollYInner": "60%",
                 "bScrollCollapse": true,
