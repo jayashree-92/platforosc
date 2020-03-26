@@ -2099,7 +2099,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             else
                 $(this).addClass('info');
             $timeout(function () {
-                $scope.isAssociationVisible = ("#ssiTemplateTableMap tr.info").length > 0;
+                $scope.isAssociationVisible = $("#ssiTemplateTableMap tr.info").length > 0;
             }, 50);
         });   
                      

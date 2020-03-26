@@ -927,7 +927,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             else
                 $(this).addClass('info');
             $timeout(function () {
-                $scope.isAssociationVisible = ("#ssiTemplateTableMap tr.info").length > 0;
+                $scope.isAssociationVisible = $("#ssiTemplateTableMap tr.info").length > 0;
             }, 50);
         }); 
         
