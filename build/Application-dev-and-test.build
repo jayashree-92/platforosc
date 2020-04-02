@@ -33,7 +33,7 @@
     <properties>
 		<property name="sql.user" value="HMWIRESQA"/>
 		<property name="sql.pwd" value="Dh@wires123"/>
-		<property name="sql.svr" value="W0001ZN01\MSDMUQ05"/>
+		<property name="sql.svr" value="W0001ZN01\MSDMUQ04"/>
     </properties>
 	</nant>
 	
