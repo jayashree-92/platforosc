@@ -71,7 +71,7 @@
           <Property Name="RecCreatedBy" Type="varchar" MaxLength="100" />
           <Property Name="RecCreatedAt" Type="datetime" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="AcceptedMessages" Type="varchar" MaxLength="50" />
+          <Property Name="AcceptedMessages" Type="varchar" MaxLength="1000" />
           <Property Name="Notes" Type="varchar" MaxLength="500" />
           <Property Name="SwiftGroupStatusId" Type="int" />
           <Property Name="BrokerLegalEntityId" Type="bigint" />
@@ -88,7 +88,7 @@
             <PropertyRef Name="hmsSwiftStatusId" />
           </Key>
           <Property Name="hmsSwiftStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Status" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Status" Type="varchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="hmsSystemPreferences">
           <Key>
@@ -137,9 +137,9 @@
           </Key>
           <Property Name="hmsWireDocumentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hmsWireId" Type="bigint" Nullable="false" />
+          <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsWireInvoiceAssociation">
           <Key>
@@ -215,23 +215,23 @@
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="WirePurposeId" Type="int" Nullable="false" />
           <Property Name="ContextDate" Type="date" Nullable="false" />
+          <Property Name="OnBoardAccountId" Type="bigint" Nullable="false" />
+          <Property Name="OnBoardSSITemplateId" Type="bigint" Nullable="false" />
+          <Property Name="OnBoardAgreementId" Type="bigint" Nullable="false" />
+          <Property Name="hmFundId" Type="bigint" Nullable="false" />
           <Property Name="ValueDate" Type="date" Nullable="false" />
           <Property Name="PaymentOrReceipt" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="hmFundId" Type="bigint" Nullable="false" />
           <Property Name="SendingAccountNumber" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="SendingPlatform" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="ReceivingAccountNumber" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Currency" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="OnBoardAccountId" Type="bigint" Nullable="false" />
-          <Property Name="OnBoardSSITemplateId" Type="bigint" Nullable="false" />
-          <Property Name="OnBoardAgreementId" Type="bigint" Nullable="false" />
+          <Property Name="DeliveryCharges" Type="varchar" MaxLength="20" />
           <Property Name="WireMessageTypeId" Type="int" Nullable="false" />
           <Property Name="WireStatusId" Type="int" Nullable="false" />
+          <Property Name="SwiftStatusId" Type="int" Nullable="false" />
           <Property Name="LastModifiedAt" Type="datetime" Nullable="false" />
           <Property Name="LastUpdatedBy" Type="int" Nullable="false" />
-          <Property Name="DeliveryCharges" Type="varchar" MaxLength="20" />
-          <Property Name="SwiftStatusId" Type="int" Nullable="false" />
           <Property Name="WireTransferTypeId" Type="int" Nullable="false" />
           <Property Name="NotesToApprover" Type="varchar" MaxLength="1000" />
           <Property Name="SenderInformationId" Type="int" />
@@ -323,9 +323,9 @@
           <Property Name="ApprovedBy" Type="varchar" MaxLength="100" />
           <Property Name="hmFundId" Type="bigint" Nullable="false" />
           <Property Name="BeneficiaryBICorABAId" Type="bigint" />
-          <Property Name="WirePortalCutoffId" Type="bigint" />
           <Property Name="IntermediaryBICorABAId" Type="bigint" />
           <Property Name="UltimateBeneficiaryBICorABAId" Type="bigint" />
+          <Property Name="WirePortalCutoffId" Type="bigint" />
           <Property Name="SwiftGroupId" Type="bigint" />
           <Property Name="AssociatedCustodyAcctNumber" Type="varchar" MaxLength="100" />
         </EntityType>
@@ -497,9 +497,9 @@
           <Property Name="Currency" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="CutoffTime" Type="time" Precision="7" Nullable="false" />
           <Property Name="DaystoWire" Type="int" Nullable="false" />
+          <Property Name="CutOffTimeZone" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="RecCreatedBy" Type="int" Nullable="false" />
           <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
-          <Property Name="CutOffTimeZone" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
@@ -1201,18 +1201,9 @@
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
           </AssociationSet>
-          <EntitySet Name="hmsSwiftGroups" EntityType="OperationsSecureModel.hmsSwiftGroup" />
           <EntitySet Name="hmsSwiftGroupStatusLkps" EntityType="OperationsSecureModel.hmsSwiftGroupStatusLkp" />
-          <AssociationSet Name="FK_hmsSwiftGroup_SwiftGroupStatusId" Association="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId">
-            <End Role="hmsSwiftGroupStatusLkp" EntitySet="hmsSwiftGroupStatusLkps" />
-            <End Role="hmsSwiftGroup" EntitySet="hmsSwiftGroups" />
-          </AssociationSet>
           <EntitySet Name="onBoardingAccounts" EntityType="OperationsSecureModel.onBoardingAccount" />
           <EntitySet Name="onBoardingSSITemplates" EntityType="OperationsSecureModel.onBoardingSSITemplate" />
-          <AssociationSet Name="FK_onBoardingAccount_SwiftGroupId" Association="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId">
-            <End Role="hmsSwiftGroup" EntitySet="hmsSwiftGroups" />
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
-          </AssociationSet>
           <AssociationSet Name="FK_onBoardingAccount_BeneficiaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingAccount_BeneficiaryBICorABAId">
             <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
@@ -1266,6 +1257,15 @@
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
             <End Role="hmsAccountCallback" EntitySet="hmsAccountCallbacks" />
           </AssociationSet>
+          <EntitySet Name="hmsSwiftGroups" EntityType="OperationsSecureModel.hmsSwiftGroup" />
+          <AssociationSet Name="FK_hmsSwiftGroup_SwiftGroupStatusId" Association="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId">
+            <End Role="hmsSwiftGroupStatusLkp" EntitySet="hmsSwiftGroupStatusLkps" />
+            <End Role="hmsSwiftGroup" EntitySet="hmsSwiftGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccount_SwiftGroupId" Association="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId">
+            <End Role="hmsSwiftGroup" EntitySet="hmsSwiftGroups" />
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -1304,7 +1304,7 @@
             <PropertyRef Name="hmsSwiftStatusId" />
           </Key>
           <Property Name="hmsSwiftStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Status" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Status" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsSwiftStatusLkup" ToRole="hmsWireWorkflowLog" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsSwiftStatusLkup" ToRole="hmsWire" />
         </EntityType>
@@ -1910,23 +1910,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="hmsSwiftGroup">
-          <Key>
-            <PropertyRef Name="hmsSwiftGroupId" />
-          </Key>
-          <Property Name="hmsSwiftGroupId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SwiftGroup" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="SendersBIC" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="RecCreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="RecCreatedAt" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="AcceptedMessages" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="SwiftGroupStatusId" Type="Int32" />
-          <NavigationProperty Name="hmsSwiftGroupStatusLkp" Relationship="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" FromRole="hmsSwiftGroup" ToRole="hmsSwiftGroupStatusLkp" />
-          <Property Name="BrokerLegalEntityId" Type="Int64" />
-          <NavigationProperty Name="onBoardingAccounts" Relationship="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" FromRole="hmsSwiftGroup" ToRole="onBoardingAccount" />
-        </EntityType>
         <EntityType Name="hmsSwiftGroupStatusLkp">
           <Key>
             <PropertyRef Name="hmsSwiftGroupStatusLkpId" />
@@ -1935,18 +1918,6 @@
           <Property Name="Status" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsSwiftGroups" Relationship="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" FromRole="hmsSwiftGroupStatusLkp" ToRole="hmsSwiftGroup" />
         </EntityType>
-        <Association Name="FK_hmsSwiftGroup_SwiftGroupStatusId">
-          <End Type="OperationsSecureModel.hmsSwiftGroupStatusLkp" Role="hmsSwiftGroupStatusLkp" Multiplicity="0..1" />
-          <End Type="OperationsSecureModel.hmsSwiftGroup" Role="hmsSwiftGroup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsSwiftGroupStatusLkp">
-              <PropertyRef Name="hmsSwiftGroupStatusLkpId" />
-            </Principal>
-            <Dependent Role="hmsSwiftGroup">
-              <PropertyRef Name="SwiftGroupStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="onBoardingAccount">
           <Key>
             <PropertyRef Name="onBoardingAccountId" />
@@ -2001,7 +1972,6 @@
           <Property Name="IntermediaryBICorABAId" Type="Int64" />
           <Property Name="UltimateBeneficiaryBICorABAId" Type="Int64" />
           <Property Name="SwiftGroupId" Type="Int64" />
-          <NavigationProperty Name="SwiftGroup" Relationship="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" FromRole="onBoardingAccount" ToRole="hmsSwiftGroup" />
           <NavigationProperty Name="Beneficiary" Relationship="OperationsSecureModel.FK_onBoardingAccount_BeneficiaryBICorABAId" FromRole="onBoardingAccount" ToRole="onBoardingAccountBICorABA" />
           <NavigationProperty Name="Intermediary" Relationship="OperationsSecureModel.FK_onBoardingAccount_IntermediaryBICorABAId" FromRole="onBoardingAccount" ToRole="onBoardingAccountBICorABA" />
           <NavigationProperty Name="UltimateBeneficiary" Relationship="OperationsSecureModel.FK_onBoardingAccount_UltimateBeneficiaryBICorABAId" FromRole="onBoardingAccount" ToRole="onBoardingAccountBICorABA" />
@@ -2011,6 +1981,7 @@
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
           <Property Name="AssociatedCustodyAcctNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsAccountCallbacks" Relationship="OperationsSecureModel.FK_hmsAccountCallback_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="hmsAccountCallback" />
+          <NavigationProperty Name="SwiftGroup" Relationship="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" FromRole="onBoardingAccount" ToRole="hmsSwiftGroup" />
         </EntityType>
         <EntityType Name="onBoardingSSITemplate">
           <Key>
@@ -2055,18 +2026,6 @@
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountSSITemplateMap" />
           <NavigationProperty Name="onBoardingSSITemplateDocuments" Relationship="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingSSITemplateDocument" />
         </EntityType>
-        <Association Name="FK_onBoardingAccount_SwiftGroupId">
-          <End Type="OperationsSecureModel.hmsSwiftGroup" Role="hmsSwiftGroup" Multiplicity="0..1" />
-          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsSwiftGroup">
-              <PropertyRef Name="hmsSwiftGroupId" />
-            </Principal>
-            <Dependent Role="onBoardingAccount">
-              <PropertyRef Name="SwiftGroupId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_onBoardingAccount_BeneficiaryBICorABAId">
           <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
           <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="*" />
@@ -2236,6 +2195,47 @@
             </Principal>
             <Dependent Role="hmsAccountCallback">
               <PropertyRef Name="onBoardingAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsSwiftGroup">
+          <Key>
+            <PropertyRef Name="hmsSwiftGroupId" />
+          </Key>
+          <Property Name="hmsSwiftGroupId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SwiftGroup" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="SendersBIC" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="AcceptedMessages" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SwiftGroupStatusId" Type="Int32" />
+          <Property Name="BrokerLegalEntityId" Type="Int64" />
+          <NavigationProperty Name="hmsSwiftGroupStatusLkp" Relationship="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" FromRole="hmsSwiftGroup" ToRole="hmsSwiftGroupStatusLkp" />
+          <NavigationProperty Name="onBoardingAccounts" Relationship="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" FromRole="hmsSwiftGroup" ToRole="onBoardingAccount" />
+        </EntityType>
+        <Association Name="FK_hmsSwiftGroup_SwiftGroupStatusId">
+          <End Type="OperationsSecureModel.hmsSwiftGroupStatusLkp" Role="hmsSwiftGroupStatusLkp" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.hmsSwiftGroup" Role="hmsSwiftGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSwiftGroupStatusLkp">
+              <PropertyRef Name="hmsSwiftGroupStatusLkpId" />
+            </Principal>
+            <Dependent Role="hmsSwiftGroup">
+              <PropertyRef Name="SwiftGroupStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingAccount_SwiftGroupId">
+          <End Type="OperationsSecureModel.hmsSwiftGroup" Role="hmsSwiftGroup" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSwiftGroup">
+              <PropertyRef Name="hmsSwiftGroupId" />
+            </Principal>
+            <Dependent Role="onBoardingAccount">
+              <PropertyRef Name="SwiftGroupId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2644,22 +2644,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="hmsSwiftGroups">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsSwiftGroup">
-              <MappingFragment StoreEntitySet="hmsSwiftGroup">
-                <ScalarProperty Name="BrokerLegalEntityId" ColumnName="BrokerLegalEntityId" />
-                <ScalarProperty Name="SwiftGroupStatusId" ColumnName="SwiftGroupStatusId" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="AcceptedMessages" ColumnName="AcceptedMessages" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
-                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
-                <ScalarProperty Name="SendersBIC" ColumnName="SendersBIC" />
-                <ScalarProperty Name="SwiftGroup" ColumnName="SwiftGroup" />
-                <ScalarProperty Name="hmsSwiftGroupId" ColumnName="hmsSwiftGroupId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="hmsSwiftGroupStatusLkps">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsSwiftGroupStatusLkp">
               <MappingFragment StoreEntitySet="hmsSwiftGroupStatusLkp">
@@ -2777,6 +2761,22 @@
                 <ScalarProperty Name="ContactName" ColumnName="ContactName" />
                 <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
                 <ScalarProperty Name="hmsAccountCallbackId" ColumnName="hmsAccountCallbackId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsSwiftGroups">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsSwiftGroup">
+              <MappingFragment StoreEntitySet="hmsSwiftGroup">
+                <ScalarProperty Name="BrokerLegalEntityId" ColumnName="BrokerLegalEntityId" />
+                <ScalarProperty Name="SwiftGroupStatusId" ColumnName="SwiftGroupStatusId" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="AcceptedMessages" ColumnName="AcceptedMessages" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="SendersBIC" ColumnName="SendersBIC" />
+                <ScalarProperty Name="SwiftGroup" ColumnName="SwiftGroup" />
+                <ScalarProperty Name="hmsSwiftGroupId" ColumnName="hmsSwiftGroupId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

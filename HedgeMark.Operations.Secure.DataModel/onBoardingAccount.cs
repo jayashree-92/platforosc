@@ -24,7 +24,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         }
     
         public long onBoardingAccountId { get; set; }
-        public long dmaFundOnboardId { get; set; }
         public Nullable<long> dmaAgreementOnBoardingId { get; set; }
         public string AccountName { get; set; }
         public string AccountNumber { get; set; }
@@ -76,7 +75,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> SwiftGroupId { get; set; }
         public string AssociatedCustodyAcctNumber { get; set; }
     
-        public virtual hmsSwiftGroup SwiftGroup { get; set; }
         public virtual onBoardingAccountBICorABA Beneficiary { get; set; }
         public virtual onBoardingAccountBICorABA Intermediary { get; set; }
         public virtual onBoardingAccountBICorABA UltimateBeneficiary { get; set; }
@@ -89,5 +87,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual ICollection<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsAccountCallback> hmsAccountCallbacks { get; set; }
+        public virtual hmsSwiftGroup SwiftGroup { get; set; }
     }
 }

@@ -92,7 +92,7 @@ namespace HMOSecureWeb
 
             if (userSso == null)
             {
-                Logger.Error(string.Format("access denied to user '{0}', user not registered", smUserId));
+                Logger.Warn(string.Format("access denied to user '{0}', user not registered", smUserId));
                 SiteMinderLogOff("access denied, user not registered");
                 return;
             }
@@ -101,7 +101,7 @@ namespace HMOSecureWeb
 
             if (AccountController.AllowedDomains.All(domain => !email.EndsWith(domain, StringComparison.InvariantCultureIgnoreCase)))
             {
-                Logger.Error(string.Format("access denied to user '{0}', invalid user domain", email));
+                Logger.Warn(string.Format("access denied to user '{0}', invalid user domain", email));
                 SiteMinderLogOff("User domain is invalid/not authorized");
                 return;
             }

@@ -167,7 +167,8 @@ namespace HMOSecureMiddleware
             {
                 var onBoardingAccountDescription = new OnBoardingAccountDescription
                 {
-                    AccountDescription = accountDescription, dmaAgreementTypeId = agreementTypeId
+                    AccountDescription = accountDescription,
+                    dmaAgreementTypeId = agreementTypeId
                 };
                 context.OnBoardingAccountDescriptions.Add(onBoardingAccountDescription);
                 context.SaveChanges();
@@ -253,13 +254,12 @@ namespace HMOSecureMiddleware
                         account.UpdatedAt = DateTime.Now;
                         account.UpdatedBy = userName;
                         account.onBoardingAccountStatus = "Created";
-                        account.dmaFundOnboardId = 0;
                     }
                     else
                     {
                         account.UpdatedAt = DateTime.Now;
                         account.UpdatedBy = userName;
-                        
+
                         if (account.onBoardingAccountModuleAssociations != null && account.onBoardingAccountModuleAssociations.Count > 0)
                         {
                             var accountToBeDeleted = context.onBoardingAccountModuleAssociations.Where(x => x.onBoardingAccountId == account.onBoardingAccountId).ToList();
@@ -287,7 +287,7 @@ namespace HMOSecureMiddleware
                     context.onBoardingAccounts.AddOrUpdate(s => s.onBoardingAccountId, account);
                     context.SaveChanges();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Logger.Error(e.Message, e);
                     throw;
@@ -380,7 +380,7 @@ namespace HMOSecureMiddleware
             {
                 var document = context.onBoardingAccountDocuments.FirstOrDefault(x => x.onBoardingAccountId == accountId && x.FileName == fileName);
                 if (document == null) return;
-                context.onBoardingAccountDocuments.Remove(document); 
+                context.onBoardingAccountDocuments.Remove(document);
                 var account = context.onBoardingAccounts.First(s => s.onBoardingAccountId == document.onBoardingAccountId);
                 account.onBoardingAccountStatus = "Created";
                 account.ApprovedBy = null;
@@ -460,7 +460,7 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                
+
                 return (from account in context.onBoardingAccounts
                         join swift in context.hmsSwiftGroups on account.SwiftGroupId equals swift.hmsSwiftGroupId
                         where !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && (isServiceType || hmFundIds.Contains(account.hmFundId)) && (currency == null || account.Currency == currency) && swift.AcceptedMessages.Contains(messageType)
@@ -577,7 +577,7 @@ namespace HMOSecureMiddleware
                 {
                     ssiTemplate.UpdatedAt = DateTime.Now;
                     ssiTemplate.UpdatedBy = userName;
-                    
+
 
                     if (ssiTemplate.onBoardingSSITemplateDocuments != null && ssiTemplate.onBoardingSSITemplateDocuments.Count > 0)
                     {
@@ -734,7 +734,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-               context.hmsAccountCallbacks.AddOrUpdate(callback);
+                context.hmsAccountCallbacks.AddOrUpdate(callback);
                 context.SaveChanges();
             }
         }
