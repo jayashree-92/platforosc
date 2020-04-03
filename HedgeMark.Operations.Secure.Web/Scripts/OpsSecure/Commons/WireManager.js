@@ -1278,6 +1278,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         $scope.receivingBookAccountList = $filter('filter')(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
                             return acc.id != $scope.WireTicket.OnBoardAccountId;
                         }, true);
+                        $scope.receivingBookAccountList = $filter('filter')(angular.copy($scope.receivingAccountsListOfFund), { 'Currency': $("#liCurrency").select2('val') }, true);
                         angular.element("#liReceivingBookAccount").select2('destroy');
                         angular.element("#liReceivingBookAccount").select2({
                             placeholder: "Select Receiving Account",
