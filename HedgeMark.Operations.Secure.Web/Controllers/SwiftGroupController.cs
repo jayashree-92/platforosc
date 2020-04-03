@@ -27,8 +27,8 @@ namespace HMOSecureWeb.Controllers
             var swiftGroupInfo = AccountManager.GetAllSwiftGroup();
             var brokerLegalEntityData = OnBoardingDataManager.GetAllCounterpartyFamilies().Select(x => new { id = x.dmaCounterpartyFamilyId, text = x.CounterpartyFamily }).OrderBy(x => x.text).ToList();
             var swiftGroupStatusData = AccountManager.GetSwiftGroupStatus().Select(s => new { id = s.hmsSwiftGroupStatusLkpId, text = s.Status }).ToList();
-            var counterpartyData = brokerLegalEntityData.GroupBy(s => s.id).ToDictionary(p => p.Key, v => v.FirstOrDefault().text);
-            var swiftStatusData = swiftGroupStatusData.GroupBy(s => s.id).ToDictionary(p => p.Key, v => v.FirstOrDefault().text);
+            var counterpartyData = brokerLegalEntityData.GroupBy(s => s.id).ToDictionary(p => p.Key, v => v.First().text);
+            var swiftStatusData = swiftGroupStatusData.GroupBy(s => s.id).ToDictionary(p => p.Key, v => v.First().text);
             var wireMessageTypes = WireDataManager.GetWireMessageTypes().Select(s => new { id = s.MessageType, text = s.MessageType, isOutBound = s.IsOutbound }).ToList();
             var swiftGroupData = swiftGroupInfo.Select(s => new SwiftGroupData
             {
@@ -44,7 +44,7 @@ namespace HMOSecureWeb.Controllers
                 Notes = s.Notes,
                 RecCreatedAt = s.RecCreatedAt.Value,
                 RecCreatedBy = s.RecCreatedBy.HumanizeEmail(),
-                AccountsAssociated = s.onBoardingAccounts.Where(p => p.IsDeleted).Count()
+                AccountsAssociated = s.onBoardingAccounts.Count(p => p.IsDeleted)
             }).OrderByDescending(s => s.RecCreatedAt).ToList();
             var swiftGroupRelatedData = new SwiftGroupInformation() { SwiftGroupData = swiftGroupData, Brokers = counterpartyData, SwiftGroupStatus = swiftStatusData };
             var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
@@ -60,14 +60,10 @@ namespace HMOSecureWeb.Controllers
 
         public void AddOrUpdateSwiftGroup(hmsSwiftGroup hmsSwiftGroup)
         {
-            SwiftGroupData originalSwiftGroup;
             var swiftGroupData = GetSwiftGroupData(hmsSwiftGroup.hmsSwiftGroupId);
             var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
             var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(preferencesKey);
-            if (hmsSwiftGroup.hmsSwiftGroupId > 0)
-                originalSwiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { swiftGroupData }, swiftGroupInfo).FirstOrDefault();
-            else
-                originalSwiftGroup = new SwiftGroupData();
+            var originalSwiftGroup = hmsSwiftGroup.hmsSwiftGroupId > 0 ? GenerateSwiftGroupData(new List<hmsSwiftGroup>() { swiftGroupData }, swiftGroupInfo).FirstOrDefault() : new SwiftGroupData();
             hmsSwiftGroup.RecCreatedBy = UserName;
             AccountManager.AddOrUpdateSwiftGroup(hmsSwiftGroup);
             var swiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { hmsSwiftGroup }, swiftGroupInfo).FirstOrDefault();

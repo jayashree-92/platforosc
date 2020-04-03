@@ -16,7 +16,7 @@ namespace HMOSecureWeb.Controllers
     public class SSITemplateController : BaseController
     {
 
-        public ActionResult SSITemplateList()
+        public ActionResult Index()
         {
             return View();
         }

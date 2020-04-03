@@ -1577,7 +1577,7 @@
     <Content Include="Views\Audit\MqLogs.cshtml" />
     <Content Include="Views\Home\WirePurpose.cshtml" />
     <Content Include="Views\Accounts\Index.cshtml" />
-    <Content Include="Views\SSITemplate\SSITemplateList.cshtml" />
+    <Content Include="Views\SSITemplate\Index.cshtml" />
     <Content Include="Views\SSITemplate\SSITemplate.cshtml" />
     <Content Include="Views\WirePortalCutoff\Index.cshtml" />
     <Content Include="Views\SwiftGroup\Index.cshtml" />
