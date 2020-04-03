@@ -21,13 +21,13 @@
   <target name="cleanAndDeployPackage" >	
 	<nant buildfile="TestBuildAndPublish.build" />  
 	
-<!--	<nant buildfile="SQL.Build">
+<nant buildfile="SQL.Build">
     <properties>
 	  <property name="sql.user" value="HMWIRESDEV"/>
 	  <property name="sql.pwd" value="5$#2wires@1"/>
 	  <property name="sql.svr" value="W00001N00\MSDMUT06"/>
     </properties>
-	</nant>-->
+</nant>
 
 	
 	<nant buildfile="SQL.Build">

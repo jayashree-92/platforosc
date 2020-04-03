@@ -751,23 +751,41 @@ namespace HMOSecureWeb.Controllers
             using (var context = new OperationsSecureContext())
             {
                 var templateType = isNormalTransfer ? "Broker" : "Fee/Expense Payment";
+
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                receivingAccounts = (from oTemplate in context.onBoardingSSITemplates.Include(s => s.Beneficiary).Include(s => s.Intermediary).Include(s => s.UltimateBeneficiary)
-                                     join oMap in context.onBoardingAccountSSITemplateMaps on oTemplate.onBoardingSSITemplateId equals oMap.onBoardingSSITemplateId
-                                     where oMap.onBoardingAccountId == accountId && oMap.Status == "Approved" && oTemplate.SSITemplateType == templateType
-                                     select oTemplate).ToList();
+
+                receivingAccounts = context.onBoardingSSITemplates.Include(s => s.Beneficiary)
+                    .Include(s => s.Intermediary)
+                    .Include(s => s.UltimateBeneficiary)
+                    .Include(x => x.onBoardingSSITemplateDocuments)
+                    .Include(x => x.onBoardingAccountSSITemplateMaps)
+                    .Where(s => s.onBoardingAccountSSITemplateMaps.Any(s1 => s1.Status == "Approved" && s1.onBoardingAccountId == accountId))
+                    .Where(s => s.SSITemplateType == templateType)
+                    .ToList();
             }
 
             //remove proxies to avoid circular dependency issue
             receivingAccounts.ForEach(ssiTemplate =>
             {
-                if (ssiTemplate.Beneficiary != null)
-                    ssiTemplate.Beneficiary.onBoardingSSITemplates = ssiTemplate.Beneficiary.onBoardingSSITemplates1 = ssiTemplate.Beneficiary.onBoardingSSITemplates2 = null;
-                if (ssiTemplate.Intermediary != null)
-                    ssiTemplate.Intermediary.onBoardingSSITemplates = ssiTemplate.Intermediary.onBoardingSSITemplates1 = ssiTemplate.Intermediary.onBoardingSSITemplates2 = null;
-                if (ssiTemplate.UltimateBeneficiary != null)
-                    ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates1 = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates2 = null;
+                if (ssiTemplate.Beneficiary == null)
+                    ssiTemplate.Beneficiary = new onBoardingAccountBICorABA();
+                if (ssiTemplate.Intermediary == null)
+                    ssiTemplate.Intermediary = new onBoardingAccountBICorABA();
+                if (ssiTemplate.UltimateBeneficiary == null)
+                    ssiTemplate.UltimateBeneficiary = new onBoardingAccountBICorABA();
+                if (ssiTemplate.onBoardingSSITemplateDocuments == null)
+                    ssiTemplate.onBoardingSSITemplateDocuments = new List<onBoardingSSITemplateDocument>();
+                if (ssiTemplate.onBoardingAccountSSITemplateMaps == null)
+                    ssiTemplate.onBoardingAccountSSITemplateMaps = new List<onBoardingAccountSSITemplateMap>();
+
+                //remove circular references
+                ssiTemplate.Beneficiary.onBoardingSSITemplates = ssiTemplate.Beneficiary.onBoardingSSITemplates1 = ssiTemplate.Beneficiary.onBoardingSSITemplates2 = null;
+                ssiTemplate.Intermediary.onBoardingSSITemplates = ssiTemplate.Intermediary.onBoardingSSITemplates1 = ssiTemplate.Intermediary.onBoardingSSITemplates2 = null;
+                ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates1 = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates2 = null;
+                ssiTemplate.onBoardingSSITemplateDocuments.ForEach(s => s.onBoardingSSITemplate = null);
+                ssiTemplate.onBoardingAccountSSITemplateMaps.ForEach(s => { s.onBoardingSSITemplate = null; s.onBoardingAccount = null; });
+
             });
 
             using (var context = new AdminContext())
