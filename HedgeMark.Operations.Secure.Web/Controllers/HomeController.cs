@@ -129,8 +129,8 @@ namespace HMOSecureWeb.Controllers
                 var accountIds = wireStatusDetails.Select(s => s.OnBoardAccountId).Union(wireStatusDetails.Where(s => s.WireTransferTypeId == 2).Select(s => s.OnBoardSSITemplateId)).Distinct().ToList();
                 var ssiTemplateIds = wireStatusDetails.Select(s => s.OnBoardSSITemplateId).Distinct().ToList();
 
-                wireAccounts = context.onBoardingAccounts.Include(s => s.UltimateBeneficiary).Include(s => s.Beneficiary).Where(s => accountIds.Contains(s.onBoardingAccountId)).ToList();
-                wireSSITemplates = context.onBoardingSSITemplates.Include(s => s.UltimateBeneficiary).Include(s => s.Beneficiary).Where(s => ssiTemplateIds.Contains(s.onBoardingSSITemplateId)).ToList();
+                wireAccounts = context.onBoardingAccounts.Include(s => s.UltimateBeneficiary).Include(s => s.Intermediary).Include(s => s.Beneficiary).Where(s => accountIds.Contains(s.onBoardingAccountId)).ToList();
+                wireSSITemplates = context.onBoardingSSITemplates.Include(s => s.UltimateBeneficiary).Include(s => s.Intermediary).Include(s => s.Beneficiary).Where(s => ssiTemplateIds.Contains(s.onBoardingSSITemplateId)).ToList();
             }
 
             if (!AuthorizedSessionData.IsPrivilegedUser)
@@ -492,7 +492,7 @@ namespace HMOSecureWeb.Controllers
                 thisWireSchedule.UpdatedBy = userId;
                 thisWireSchedule.IsJobCreated = true;
                 thisWireSchedule.IsJobInActive = false;
-                
+
             }
             else
             {
@@ -753,11 +753,22 @@ namespace HMOSecureWeb.Controllers
                 var templateType = isNormalTransfer ? "Broker" : "Fee/Expense Payment";
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                receivingAccounts = (from oTemplate in context.onBoardingSSITemplates
+                receivingAccounts = (from oTemplate in context.onBoardingSSITemplates.Include(s => s.Beneficiary).Include(s => s.Intermediary).Include(s => s.UltimateBeneficiary)
                                      join oMap in context.onBoardingAccountSSITemplateMaps on oTemplate.onBoardingSSITemplateId equals oMap.onBoardingSSITemplateId
                                      where oMap.onBoardingAccountId == accountId && oMap.Status == "Approved" && oTemplate.SSITemplateType == templateType
                                      select oTemplate).ToList();
             }
+
+            //remove proxies to avoid circular dependency issue
+            receivingAccounts.ForEach(ssiTemplate =>
+            {
+                if (ssiTemplate.Beneficiary != null)
+                    ssiTemplate.Beneficiary.onBoardingSSITemplates = ssiTemplate.Beneficiary.onBoardingSSITemplates1 = ssiTemplate.Beneficiary.onBoardingSSITemplates2 = null;
+                if (ssiTemplate.Intermediary != null)
+                    ssiTemplate.Intermediary.onBoardingSSITemplates = ssiTemplate.Intermediary.onBoardingSSITemplates1 = ssiTemplate.Intermediary.onBoardingSSITemplates2 = null;
+                if (ssiTemplate.UltimateBeneficiary != null)
+                    ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates1 = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates2 = null;
+            });
 
             using (var context = new AdminContext())
             {
