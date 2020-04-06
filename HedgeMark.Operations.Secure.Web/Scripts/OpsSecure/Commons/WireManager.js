@@ -1241,8 +1241,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 });
                 $scope.isSendingAccountEnabled = true;
             }
-            else if ($scope.WireTicket.hmsWireId == 0)
-            {
+            else if ($scope.WireTicket.hmsWireId == 0) {
                 $scope.isFundsChanged = false;
                 $("#liAgreement").select2('val', '').trigger('change');
                 $("#liSendingAccount").select2('val', '').trigger('change');
@@ -1276,9 +1275,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     }
                     else {
                         $scope.receivingBookAccountList = $filter('filter')(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
-                            return acc.id != $scope.WireTicket.OnBoardAccountId;
+                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2('val');
                         }, true);
-                        $scope.receivingBookAccountList = $filter('filter')(angular.copy($scope.receivingAccountsListOfFund), { 'Currency': $("#liCurrency").select2('val') }, true);
+                        
                         angular.element("#liReceivingBookAccount").select2('destroy');
                         angular.element("#liReceivingBookAccount").select2({
                             placeholder: "Select Receiving Account",
