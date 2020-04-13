@@ -28,9 +28,8 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
                         "sTitle": "Cutoff Time",
                         "mData": "CutoffTime",
                         "mRender": function (tData, type, row) {
-                            return ((tData.Hours >= 10 ? tData.Hours : tData.Hours >= 0 ? ("0" + tData.Hours) : tData.Hours)) + " : " + (tData.Minutes >= 10 ? tData.Minutes : ("0" + tData.Minutes)) + " : " + (tData.Seconds >= 10 ? tData.Seconds : ("0" + tData.Seconds));
+                            return moment(tData).format("hh:mm A");
                         }
-
                     },
                     {
                         "sTitle": "Days to wire",
@@ -56,7 +55,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
                 }
             });
             $("html, body").animate({ scrollTop: $("#tblWirePortalCutoffData").offset().top }, "slow");
-            
+
             $timeout(function () {
                 $scope.cutOffTable.columns.adjust().draw();
                 $scope.enableWireActions = false;
@@ -88,7 +87,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
             placeholder: "Select a Time Zone",
             data: $scope.timeZones,
             closeOnSelect: false
-        }); 
+        });
 
     });
 
@@ -112,7 +111,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
         $timeout(function () {
             $scope.isWireCutoffRequirementsFilled = !$scope.isWireCutoffRequirementsFilled;
         }, 50);
-     }
+    }
 
     $(document).on("click", "#tblWirePortalCutoffData tbody tr ", function () {
         $("#tblWirePortalCutoffData tbody tr").removeClass("info");
@@ -121,9 +120,9 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
         }
         $scope.selectedRowData = $scope.cutOffTable.row(this).data();
         $timeout(function () {
-            $scope.enableWireActions = true;          
+            $scope.enableWireActions = true;
         }, 50);
-        
+
     });
 
     $(document).on("dblclick", "#tblWirePortalCutoffData tbody tr", function () {
@@ -174,9 +173,9 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
             $scope.fnGetWirePortalCutoffs();
             angular.element("#wirePortalCutoffModal").modal('hide');
         },
-         function (error) {
-           notifyError("Changes failed to save with error :" + error.data);
-         });   
+            function (error) {
+                notifyError("Changes failed to save with error :" + error.data);
+            });
     }
 
     $scope.fnDeleteWireCutoff = function () {

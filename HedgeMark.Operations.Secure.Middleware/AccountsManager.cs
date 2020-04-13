@@ -278,6 +278,20 @@ namespace HMOSecureMiddleware
                             //new Repository<onBoardingAccountSSITemplateMap>().BulkInsert(account.onBoardingAccountSSITemplateMaps, dbSchemaName: "HMADMIN.");
                         }
                     }
+
+                    //if (account.WirePortalCutoffId == 0 && !string.IsNullOrWhiteSpace(account.Currency) && !string.IsNullOrWhiteSpace(account.CashInstruction))
+                    //{
+                    //    var wirePortalCutoff = new onBoardingWirePortalCutoff()
+                    //    {
+                    //        CashInstruction = account.CashInstruction,
+
+                    //    };
+                    //}
+
+                    if (account.WirePortalCutoffId == 0)
+                        account.WirePortalCutoffId = null;
+
+
                     account.WirePortalCutoff = null;
                     account.SwiftGroup = null;
                     account.hmsAccountCallbacks = null;
