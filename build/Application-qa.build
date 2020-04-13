@@ -18,7 +18,7 @@
    <property name="sql.DB" value="HM_WIRES"/>
    <property name="sql.user" value="HMWIRESUAT"/> 
    <property name="sql.pwd" value="t8#24@B8"/> 
-   <property name="sql.svr" value="WSOMQCLDMUSQL01\MSDMUQ06"/> 
+   <property name="sql.svr" value="WSOMQCLDMUSQL02\MSDMUQ07"/> 
 
   <target name="cleanAndDeployPackage" >	
 	<nant buildfile="TestBuildAndPublish.build" />  
