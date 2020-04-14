@@ -1235,7 +1235,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
         return $http.post("/SSITemplate/AddSsiTemplate", { ssiTemplate: $scope.ssiTemplate, accountType: $scope.accountType, broker: $scope.broker }).then(function (response) {
 
-            //window.location.href = "/OnBoarding/SSITemplateList";
             ssiTemplateId = response.data;
 
             if (isNewTemplate) {
@@ -1289,7 +1288,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.fnBack = function () {
         var searchText = getUrlParameter("searchText");
         searchText = (searchText == undefined || searchText == "undefined") ? "" : searchText;
-        window.location.href = "/SSITemplate/SSITemplateList?searchText=" + searchText;
+        window.location.href = "/SSITemplate/Index?searchText=" + searchText;
     }
 
     //Update SSI Template Status
@@ -1344,7 +1343,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     var searchText = getUrlParameter("searchText");
                     searchText = (searchText == undefined || searchText == "undefined") ? "" : searchText;
                     $timeout(function () {
-                        window.location.href = "/SSITemplate/SSITemplateList?searchText=" + searchText;
+                        window.location.href = "/SSITemplate/Index?searchText=" + searchText;
                     }, 500);
                     
                 }

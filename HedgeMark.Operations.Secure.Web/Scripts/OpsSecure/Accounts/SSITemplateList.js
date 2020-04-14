@@ -503,7 +503,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         var rowElement = ssiTemplateTable.row(this).data();
         $scope.onBoardingSSITemplateId = rowElement.onBoardingSSITemplateId;
         var searchText = $('#ssiTemplateListDiv input[type="search"]').val();
-        var ssiListUrl = "/SSITemplate/SSITemplateList?searchText=" + searchText;
+        var ssiListUrl = "/SSITemplate/Index?searchText=" + searchText;
         window.history.pushState("", "", ssiListUrl);
         window.location.assign("/SSITemplate/SSITemplate?ssiTemplateId=" + $scope.onBoardingSSITemplateId + "&searchText=" + searchText);
     });
@@ -542,7 +542,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
     $scope.fnSaveSSITemplateStatus = function () {
         $http.post("/SSITemplate/UpdateSsiTemplateStatus", { ssiTemplateStatus: $scope.SSITemplateStatus, ssiTemplateId: $scope.onBoardingSSITemplateId, comments: $("#ssiTemplateCommentTextArea").val().trim() }).then(function () {
             notifySuccess("SSI template " + $scope.SSITemplateStatus.toLowerCase() + " successfully");
-            window.location.href = "/SSITemplate/SSITemplateList";
+            window.location.href = "/SSITemplate/Index";
         });
         $("#btnSendApproval").hide();
         $("#updateSSITemplateModal").modal("hide");
@@ -554,7 +554,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
 
     $scope.fnEditSSITemplate = function () {
         var searchText = $('#ssiTemplateListDiv input[type="search"]').val();
-        var ssiListUrl = "/SSITemplate/SSITemplateList?searchText=" + searchText;
+        var ssiListUrl = "/SSITemplate/Index?searchText=" + searchText;
         window.history.pushState("", "", ssiListUrl);
         window.location.assign("/SSITemplate/SSITemplate?ssiTemplateId=" + $scope.onBoardingSSITemplateId + "&searchText=" + searchText);
     }
