@@ -803,6 +803,28 @@ function PrintSwiftMessage(htmlContent) {
     return true;
 }
 
+
+function deSelectAllText() {
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+}
+
+function selectText(className) {
+    var node = document.getElementsByClassName(className)[0];
+    var selection = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(node);
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+
+function CopyToClipBoardByClassName(className) {
+    selectText(className);
+    window.document.execCommand("copy");
+    deSelectAllText();
+}
+
+
 function isEquivalent(a, b) {
 
     var aProps = Object.getOwnPropertyNames(a);

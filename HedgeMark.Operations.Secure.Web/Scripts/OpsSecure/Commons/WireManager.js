@@ -269,6 +269,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         PrintSwiftMessage($(".swiftMessgeBlock").html());
     }
 
+    $scope.fnCopySwiftMessageToClipboard = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        CopyToClipBoardByClassName("swiftMessgeBlock");
+        notifySuccess("FIN message copied to Clipboard");
+
+    }
+
     //$("#wireSwiftMessagesDiv").on("shown.bs.collapse", function () {
     //    $scope.fnShowFormattedSwiftMsg("Outbound", $scope.wireTicketObj.SwiftMessages["Outbound"]);
     //});
