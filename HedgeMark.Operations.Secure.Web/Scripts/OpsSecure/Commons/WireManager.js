@@ -1208,14 +1208,24 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     $scope.sendingAccountsListOfFund = response.data.sendingAccountsList;
                     $scope.receivingAccountsListOfFund = response.data.receivingAccountsList;
                     $scope.currencies = response.data.currencies;
-                    var currency = $scope.currencies.length == 0 ? null : $scope.currencies[0].id;
+
                     angular.element("#liCurrency").select2({
                         placeholder: "Select Currency",
                         data: $scope.currencies,
                         allowClear: true,
                         closeOnSelect: false
                     });
-                    $("#liCurrency").select2('val', currency).trigger('change');
+
+                    var currency = $scope.currencies.length == 0 ? null : $scope.currencies[0].id;
+
+                    var isUsdAvailable = false;
+                    $.each($scope.currencies,
+                        function (i, v) {
+                            if (v.id == "USD")
+                                isUsdAvailable = true;
+                        });
+
+                    $("#liCurrency").select2('val', isUsdAvailable ? "USD" : currency).trigger('change');
                     $scope.isSendingAccountEnabled = true;
                 });
             }
@@ -1277,7 +1287,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         $scope.receivingBookAccountList = $filter('filter')(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
                             return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2('val');
                         }, true);
-                        
+
                         angular.element("#liReceivingBookAccount").select2('destroy');
                         angular.element("#liReceivingBookAccount").select2({
                             placeholder: "Select Receiving Account",
