@@ -149,7 +149,7 @@ namespace HMOSecureMiddleware
             if (hmWire.hmsWireSenderInformation != null)
                 hmWire.hmsWireSenderInformation.hmsWires = null;
             hmWire.hmsWireWorkflowLogs = hmWire.hmsWireWorkflowLogs.OrderByDescending(s => s.CreatedAt).ToList();
-            
+
             dmaCounterPartyOnBoarding counterparty;
             List<string> workflowUsers;
             List<string> attachmentUsers;
@@ -195,9 +195,10 @@ namespace HMOSecureMiddleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
                 var fundAccounts = (from oAccnt in context.onBoardingAccounts
-                                    let isAuthorizedSendingAccount = ((currency == null || oAccnt.Currency == currency) && oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0)))
-                                    where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && (isBookTransfer || isAuthorizedSendingAccount)
-                                    select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber, FFCNumber = oAccnt.FFCNumber, IsAuthorizedSendingAccount = isAuthorizedSendingAccount, Currency = oAccnt.Currency  }).Distinct().ToList();
+                                    where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed"
+                                    let isAuthorizedSendingAccount = (currency == null || oAccnt.Currency == currency) && oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
+                                    where (isBookTransfer || isAuthorizedSendingAccount)
+                                    select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber, FFCNumber = oAccnt.FFCNumber, IsAuthorizedSendingAccount = isAuthorizedSendingAccount, Currency = oAccnt.Currency }).Distinct().ToList();
                 return fundAccounts;
             }
         }
@@ -212,10 +213,11 @@ namespace HMOSecureMiddleware
                 context.Configuration.ProxyCreationEnabled = false;
 
                 var fundAccounts = (from oAccnt in context.onBoardingAccounts
+                                    where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed"
                                     join oMap in context.onBoardingAccountSSITemplateMaps on oAccnt.onBoardingAccountId equals oMap.onBoardingAccountId
                                     let dmaReports = oAccnt.onBoardingAccountModuleAssociations.Select(s => s.onBoardingModule).Select(s => s.dmaReportsId)
                                     let isAuthorizedSendingAccount = (oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0)))
-                                    where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved" && oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && isAuthorizedSendingAccount && dmaReports.Contains(reportId)
+                                    where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved" && isAuthorizedSendingAccount && dmaReports.Contains(reportId)
                                     select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.AccountNumber, FFCNumber = oAccnt.FFCNumber, IsAuthorizedSendingAccount = isAuthorizedSendingAccount, Currency = oAccnt.Currency }).ToList();
                 return fundAccounts;
             }
@@ -326,7 +328,7 @@ namespace HMOSecureMiddleware
                     wire.ApprovedAt = DateTime.Now;
                     wire.ApprovedBy = userId;
                 }
-                else if(swiftStatus == SwiftStatus.NotInitiated)
+                else if (swiftStatus == SwiftStatus.NotInitiated)
                 {
                     wire.ApprovedAt = null;
                     wire.ApprovedBy = null;
