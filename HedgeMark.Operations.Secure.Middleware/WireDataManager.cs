@@ -33,6 +33,13 @@ namespace HMOSecureMiddleware
         }
     }
 
+    public class FormattedSwiftMessage
+    {
+        public string Key { get; set; }
+        public string OriginalFinMsg { get; set; }
+        public string FormatedMsg { get; set; }
+    }
+
     public class WireDataManager
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(WireDataManager));
@@ -231,9 +238,9 @@ namespace HMOSecureMiddleware
             }
         }
 
-        private static List<KeyValuePair<string, string>> GetFormattedSwiftMessages(long wireId)
+        private static List<FormattedSwiftMessage> GetFormattedSwiftMessages(long wireId)
         {
-            var swiftMessages = new List<KeyValuePair<string, string>>();
+            var swiftMessages = new List<FormattedSwiftMessage>();
 
             List<hmsWireLog> wireLogs;
 
@@ -259,21 +266,20 @@ namespace HMOSecureMiddleware
 
                 lastMessageStatus = log.hmsWireLogTypeId;
 
-                swiftMessages.Add(new KeyValuePair<string, string>(lastKey, SwiftMessageInterpreter.GetDetailedFormatted(log.SwiftMessage, true)));
+                swiftMessages.Add(new FormattedSwiftMessage() { Key = lastKey, FormatedMsg = SwiftMessageInterpreter.GetDetailedFormatted(log.SwiftMessage, false), OriginalFinMsg = log.SwiftMessage });
             }
 
             //Outbound
             if (lastMessageStatus == 1)
             {
-                swiftMessages.Add(new KeyValuePair<string, string>(lastKey.Replace("Outbound", isMultiMessage ? "Ack" : "Acknowledged"), string.Empty));
-                swiftMessages.Add(new KeyValuePair<string, string>(lastKey.Replace("Outbound", "Confirmation"), string.Empty));
+                swiftMessages.Add(new FormattedSwiftMessage() { Key = lastKey.Replace("Outbound", isMultiMessage ? "Ack" : "Acknowledged"), FormatedMsg = string.Empty, OriginalFinMsg = string.Empty });
+                swiftMessages.Add(new FormattedSwiftMessage() { Key = lastKey.Replace("Outbound", "Confirmation"), FormatedMsg = string.Empty, OriginalFinMsg = string.Empty });
             }
-
 
             //Acknowledgment
             else if (lastMessageStatus == 2)
             {
-                swiftMessages.Add(new KeyValuePair<string, string>(lastKey.Replace(isMultiMessage ? "Ack" : "Acknowledged", "Confirmation"), string.Empty));
+                swiftMessages.Add(new FormattedSwiftMessage() { Key = lastKey.Replace(isMultiMessage ? "Ack" : "Acknowledged", "Confirmation"), FormatedMsg = string.Empty, OriginalFinMsg = string.Empty });
             }
 
             return swiftMessages;

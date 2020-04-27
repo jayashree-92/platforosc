@@ -178,7 +178,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
             $scope.wireTicketObj.SwiftMessages = {};
             $(keyValuePair).each(function (i, v) {
-                $scope.wireTicketObj.SwiftMessages[v.Key] = v.Value;
+                $scope.wireTicketObj.SwiftMessages[v.Key] = v;
             });
 
             $scope.IsSwiftMessagesPresent = $scope.wireTicketObj.SwiftMessages != null && Object.keys($scope.wireTicketObj.SwiftMessages).length > 0;
@@ -260,20 +260,21 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.isSwiftMessagesCollapsed = false;
 
         //$scope.SwiftFormatMessageActiveTag = key;
-        $scope.TrustedSwiftMessage = $sce.trustAsHtml(value);
+        $scope.TrustedSwiftFINMessage = $sce.trustAsHtml(value.OriginalFinMsg);
+        $scope.TrustedSwiftMessage = $sce.trustAsHtml(value.FormatedMsg);
     }
 
     $scope.fnPrintSwiftMessage = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
-        PrintSwiftMessage($(".swiftMessgeBlock").html());
+        PrintSwiftMessage($(".swiftMessgeBlock").text());
     }
 
     $scope.fnCopySwiftMessageToClipboard = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
 
-        CopyToClipBoardByClassName("swiftMessgeBlock");
+        CopyToClipBoardByClassName("originalFINMessage");
         notifySuccess("FIN message copied to Clipboard");
 
     }
