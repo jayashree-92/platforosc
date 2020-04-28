@@ -6,6 +6,7 @@ using HMOSecureMiddleware.Util;
 using HMOSecureMiddleware.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -24,67 +25,85 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetSwiftGroupData()
         {
-            var swiftGroupInfo = AccountManager.GetAllSwiftGroup();
-            var brokerLegalEntityData = OnBoardingDataManager.GetAllCounterpartyFamilies().Select(x => new { id = x.dmaCounterpartyFamilyId, text = x.CounterpartyFamily }).OrderBy(x => x.text).ToList();
-            var swiftGroupStatusData = AccountManager.GetSwiftGroupStatus().Select(s => new { id = s.hmsSwiftGroupStatusLkpId, text = s.Status }).ToList();
-            var counterpartyData = brokerLegalEntityData.GroupBy(s => s.id).ToDictionary(p => p.Key, v => v.First().text);
-            var swiftStatusData = swiftGroupStatusData.GroupBy(s => s.id).ToDictionary(p => p.Key, v => v.First().text);
+            Dictionary<long, string> brokerLegalEntityData;
+            var swiftGroupData = GetAllSwiftGroupData(out brokerLegalEntityData);
             var wireMessageTypes = WireDataManager.GetWireMessageTypes().Select(s => new { id = s.MessageType, text = s.MessageType, isOutBound = s.IsOutbound }).ToList();
-            var swiftGroupData = swiftGroupInfo.Select(s => new SwiftGroupData
-            {
-                hmsSwiftGroupId = s.hmsSwiftGroupId,
-                SwiftGroup = s.SwiftGroup,
-                SendersBIC = s.SendersBIC,
-                BrokerLegalEntityId = s.BrokerLegalEntityId ?? 0,
-                Broker = counterpartyData.ContainsKey(s.BrokerLegalEntityId ?? 0) ? counterpartyData[s.BrokerLegalEntityId ?? 0] : string.Empty,
-                SwiftGroupStatusId = s.SwiftGroupStatusId ?? 0,
-                SwiftGroupStatus = swiftStatusData.ContainsKey(s.SwiftGroupStatusId ?? 0) ? swiftStatusData[s.SwiftGroupStatusId ?? 0] : string.Empty,
-                AcceptedMessages = s.AcceptedMessages,
-                IsDeleted = s.IsDeleted,
-                Notes = s.Notes,
-                RecCreatedAt = s.RecCreatedAt.Value,
-                RecCreatedBy = s.RecCreatedBy.HumanizeEmail(),
-                AccountsAssociated = s.onBoardingAccounts.Count(p => p.IsDeleted)
-            }).OrderByDescending(s => s.RecCreatedAt).ToList();
-            var swiftGroupRelatedData = new SwiftGroupInformation() { SwiftGroupData = swiftGroupData, Brokers = counterpartyData, SwiftGroupStatus = swiftStatusData };
-            var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
-            SetSessionValue(preferencesKey, swiftGroupRelatedData);
             return Json(new
             {
-                brokerLegalEntityData,
-                swiftGroupStatusData,
+                brokerLegalEntityData = brokerLegalEntityData.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
+                swiftGroupStatusData = AccountManager.GetSwiftGroupStatus().Select(s => new { id = s.hmsSwiftGroupStatusLkpId, text = s.Status }).ToList(),
                 wireMessageTypes,
-                swiftGroupData
+                swiftGroupData = swiftGroupData.OrderByDescending(s => s.SwiftGroup.RecCreatedAt).ToList()
             }, JsonRequestBehavior.AllowGet);
         }
 
+        private static List<SwiftGroupData> GetAllSwiftGroupData(out Dictionary<long, string> brokerLegalEntityData)
+        {
+            var swiftGroupInfo = AccountManager.GetAllSwiftGroup();
+            brokerLegalEntityData = OnBoardingDataManager.GetAllCounterpartyFamilies().ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
+
+            var swiftGroupData = new List<SwiftGroupData>();
+            foreach (var s in swiftGroupInfo)
+            {
+                if (s.hmsSwiftGroupStatusLkp != null)
+                    s.hmsSwiftGroupStatusLkp.hmsSwiftGroups = null;
+                var swiftGrpData = new SwiftGroupData
+                {
+                    SwiftGroup = s,
+                    Broker = s.BrokerLegalEntityId != null && brokerLegalEntityData.ContainsKey(s.BrokerLegalEntityId ?? 0) ? brokerLegalEntityData[s.BrokerLegalEntityId ?? 0] : string.Empty,
+                    SwiftGroupStatus = s.hmsSwiftGroupStatusLkp != null ? s.hmsSwiftGroupStatusLkp.Status : "Requested",
+                    IsAssociatedToAccount = s.onBoardingAccounts.Any(),
+                };
+                swiftGrpData.SwiftGroup.onBoardingAccounts = null;
+                swiftGroupData.Add(swiftGrpData);
+
+            }
+
+            return swiftGroupData;
+        }
+
+        private hmsSwiftGroup GetSwiftGroupData(long swiftGroupId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                //context.Configuration.ProxyCreationEnabled = false;
+                var swiftGroup = context.hmsSwiftGroups.Include(s => s.hmsSwiftGroupStatusLkp).FirstOrDefault(s => s.hmsSwiftGroupId == swiftGroupId) ?? new hmsSwiftGroup();
+                return swiftGroup;
+            }
+        }
+
+
         public void AddOrUpdateSwiftGroup(hmsSwiftGroup hmsSwiftGroup)
         {
-            var swiftGroupData = GetSwiftGroupData(hmsSwiftGroup.hmsSwiftGroupId);
-            var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
-            var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(preferencesKey);
-            var originalSwiftGroup = hmsSwiftGroup.hmsSwiftGroupId > 0 ? GenerateSwiftGroupData(new List<hmsSwiftGroup>() { swiftGroupData }, swiftGroupInfo).FirstOrDefault() : new SwiftGroupData();
+            var originalSwiftGroup = GetSwiftGroupData(hmsSwiftGroup.hmsSwiftGroupId);
             hmsSwiftGroup.RecCreatedBy = UserName;
+            hmsSwiftGroup.RecCreatedAt = DateTime.Now;
             AccountManager.AddOrUpdateSwiftGroup(hmsSwiftGroup);
-            var swiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { hmsSwiftGroup }, swiftGroupInfo).FirstOrDefault();
-            AuditSwiftGroupChanges(swiftGroup, originalSwiftGroup);
+            AuditSwiftGroupChanges(hmsSwiftGroup, originalSwiftGroup);
         }
 
         public void DeleteSwiftGroup(long swiftGroupId)
         {
-            var swiftGroup = DeleteSwiftGroupData(swiftGroupId);
-            var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
-            var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(preferencesKey);
-            var originalSwiftGroup = GenerateSwiftGroupData(new List<hmsSwiftGroup>() { swiftGroup }, swiftGroupInfo).FirstOrDefault();
-            AuditSwiftGroupChanges(new SwiftGroupData() { hmsSwiftGroupId = swiftGroupId }, originalSwiftGroup, true);
+            hmsSwiftGroup swiftGroup;
+
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                swiftGroup = context.hmsSwiftGroups.Include(s => s.hmsSwiftGroupStatusLkp).FirstOrDefault(s => s.hmsSwiftGroupId == swiftGroupId) ?? new hmsSwiftGroup();
+                swiftGroup.IsDeleted = true;
+                swiftGroup.RecCreatedAt = DateTime.Now;
+                context.SaveChanges();
+            }
+
+            AuditSwiftGroupChanges(new hmsSwiftGroup(), swiftGroup, true);
         }
 
         public FileResult ExportData()
         {
-            var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.SwiftGroupData);
-            var swiftGroupInfo = (SwiftGroupInformation)GetSessionValue(preferencesKey);
+            var swiftGroupData = GetAllSwiftGroupData(out _);
             var contentToExport = new Dictionary<string, List<Row>>();
-            var accountListRows = BuildExportRows(swiftGroupInfo.SwiftGroupData);
+            var accountListRows = BuildExportRows(swiftGroupData);
             //File name and path
             var fileName = string.Format("{0}_{1:yyyyMMdd}", "SwiftGroupData", DateTime.Now);
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, ".xlsx"));
@@ -94,27 +113,6 @@ namespace HMOSecureWeb.Controllers
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
-        private hmsSwiftGroup DeleteSwiftGroupData(long swiftGroupId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                var swiftGroup = context.hmsSwiftGroups.FirstOrDefault(s => s.hmsSwiftGroupId == swiftGroupId) ?? new hmsSwiftGroup();
-                swiftGroup.IsDeleted = true;
-                swiftGroup.RecCreatedAt = DateTime.Now;
-                context.SaveChanges();
-                return swiftGroup;
-            }
-        }
-
-        private hmsSwiftGroup GetSwiftGroupData(long swiftGroupId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                var swiftGroup = context.hmsSwiftGroups.FirstOrDefault(s => s.hmsSwiftGroupId == swiftGroupId) ?? new hmsSwiftGroup();
-                return swiftGroup;
-            }
-        }
-
         private List<Row> BuildExportRows(List<SwiftGroupData> swiftGroupData)
         {
             var swiftGroupRows = new List<Row>();
@@ -122,71 +120,87 @@ namespace HMOSecureWeb.Controllers
             foreach (var swift in swiftGroupData)
             {
                 var row = new Row();
-                row["Swift Group"] = swift.SwiftGroup;
-                row["Sender's BIC"] = swift.SendersBIC;
+                row["Swift Group"] = swift.SwiftGroup.SwiftGroup;
+                row["Sender's BIC"] = swift.SwiftGroup.SendersBIC;
                 row["Broker"] = swift.Broker;
                 row["Status"] = swift.SwiftGroupStatus;
-                row["MT Messages"] = swift.AcceptedMessages;
-                row["Notes"] = swift.Notes;
-                row["Created By"] = swift.RecCreatedBy;
-                row["Created At"] = swift.RecCreatedAt + "";
+                row["MT Messages"] = swift.SwiftGroup.AcceptedMessages;
+                row["Notes"] = swift.SwiftGroup.Notes;
+                row["Created By"] = swift.SwiftGroup.RecCreatedBy;
+                row["Created At"] = swift.SwiftGroup.RecCreatedAt + "";
                 swiftGroupRows.Add(row);
             }
 
             return swiftGroupRows;
         }
 
-        private List<SwiftGroupData> GenerateSwiftGroupData(List<hmsSwiftGroup> hmsSwiftGroups, SwiftGroupInformation swiftGroupInfo)
-        {
-            return hmsSwiftGroups.Select(s => new SwiftGroupData()
-            {
-                hmsSwiftGroupId = s.hmsSwiftGroupId,
-                SwiftGroup = s.SwiftGroup,
-                SendersBIC = s.SendersBIC,
-                BrokerLegalEntityId = s.BrokerLegalEntityId ?? 0,
-                Broker = swiftGroupInfo.Brokers.ContainsKey(s.BrokerLegalEntityId ?? 0) ? swiftGroupInfo.Brokers[s.BrokerLegalEntityId ?? 0] : string.Empty,
-                SwiftGroupStatusId = s.SwiftGroupStatusId ?? 0,
-                SwiftGroupStatus = swiftGroupInfo.SwiftGroupStatus.ContainsKey(s.SwiftGroupStatusId ?? 0) ? swiftGroupInfo.SwiftGroupStatus[s.SwiftGroupStatusId ?? 0] : string.Empty,
-                AcceptedMessages = s.AcceptedMessages,
-                IsDeleted = s.IsDeleted,
-                Notes = s.Notes,
-                RecCreatedAt = s.RecCreatedAt.Value,
-                RecCreatedBy = (s.RecCreatedBy ?? string.Empty).HumanizeEmail()
-            }).OrderByDescending(s => s.RecCreatedAt).ToList();
-        }
-        private void AuditSwiftGroupChanges(SwiftGroupData swiftGroup, SwiftGroupData originalSwiftGroup, bool isDeleted = false)
+        private void AuditSwiftGroupChanges(hmsSwiftGroup swiftGroup, hmsSwiftGroup originalSwiftGroup, bool isDeleted = false)
         {
             var fieldsChanged = new List<string>();
 
+            string previousState = string.Empty, modifiedState = string.Empty;
+
             if (originalSwiftGroup.SwiftGroup != swiftGroup.SwiftGroup)
+            {
                 fieldsChanged.Add("Swift Group");
+                previousState += string.Format("Swift Group: <i>{0}</i><br/>", originalSwiftGroup.SwiftGroup);
+                modifiedState += string.Format("Swift Group: <i>{0}</i><br/>", swiftGroup.SwiftGroup);
+            }
+
             if (originalSwiftGroup.SendersBIC != swiftGroup.SendersBIC)
+            {
                 fieldsChanged.Add("Sender's BIC");
-            if (originalSwiftGroup.Broker != swiftGroup.Broker)
+                previousState += string.Format("Sender's BIC: <i>{0}</i><br/>", originalSwiftGroup.SendersBIC);
+                modifiedState += string.Format("Sender's BIC: <i>{0}</i><br/>", swiftGroup.SendersBIC);
+            }
+
+            if (originalSwiftGroup.BrokerLegalEntityId != swiftGroup.BrokerLegalEntityId)
+            {
+                var originalFamilyName = OnBoardingDataManager.GetCounterpartyFamilyName(originalSwiftGroup.BrokerLegalEntityId ?? 0);
+                var modifiedFamilyName = OnBoardingDataManager.GetCounterpartyFamilyName(swiftGroup.BrokerLegalEntityId ?? 0);
+
                 fieldsChanged.Add("Broker");
-            if (originalSwiftGroup.SwiftGroupStatus != swiftGroup.SwiftGroupStatus)
+                previousState += string.Format("Broker: <i>{0}</i><br/>", originalFamilyName);
+                modifiedState += string.Format("Broker: <i>{0}</i><br/>", modifiedFamilyName);
+            }
+
+            if (originalSwiftGroup.SwiftGroupStatusId != swiftGroup.SwiftGroupStatusId)
+            {
                 fieldsChanged.Add("Swift Group Status");
+                previousState += string.Format("Swift Group Status: <i>{0}</i><br/>", originalSwiftGroup.hmsSwiftGroupStatusLkp != null ? originalSwiftGroup.hmsSwiftGroupStatusLkp.Status : string.Empty);
+                modifiedState += string.Format("Swift Group Status: <i>{0}</i><br/>", swiftGroup.hmsSwiftGroupStatusLkp != null ? swiftGroup.hmsSwiftGroupStatusLkp.Status : string.Empty);
+            }
+
             if (originalSwiftGroup.AcceptedMessages != swiftGroup.AcceptedMessages)
+            {
                 fieldsChanged.Add("Swift Messages");
+                previousState += string.Format("Swift Messages: <i>{0}</i><br/>", originalSwiftGroup.AcceptedMessages ?? string.Empty);
+                modifiedState += string.Format("Swift Messages: <i>{0}</i><br/>", swiftGroup.AcceptedMessages ?? string.Empty);
+            }
+
             if (originalSwiftGroup.Notes != swiftGroup.Notes)
+            {
                 fieldsChanged.Add("Notes");
+                previousState += string.Format("Notes: <i>{0}</i><br/>", originalSwiftGroup.Notes ?? string.Empty);
+                modifiedState += string.Format("Notes: <i>{0}</i><br/>", swiftGroup.Notes ?? string.Empty);
+            }
+
+            if (!fieldsChanged.Any())
+                return;
 
             //Log the changes in user audits
             var auditData = new hmsUserAuditLog
             {
                 Action = isDeleted ? "Deleted" : originalSwiftGroup.hmsSwiftGroupId > 0 ? "Edited" : "Added",
                 Module = "Swift Group",
-                Log = string.Format("Swift Group: <i>{0}</i><br/>Broker: <i>{1}</i><br/>Sender's BIC: <i>{2}</i>", swiftGroup.SwiftGroup,
-                    swiftGroup.Broker, swiftGroup.SendersBIC),
+                Log = isDeleted
+                    ? string.Format("Swift Group: <i>{0}</i><br/>Sender's BIC: <i>{1}</i>", originalSwiftGroup.SwiftGroup, originalSwiftGroup.SendersBIC)
+                    : string.Format("Swift Group: <i>{0}</i><br/>Sender's BIC: <i>{1}</i>", swiftGroup.SwiftGroup, swiftGroup.SendersBIC),
                 Field = string.Join(",<br>", fieldsChanged),
-                PreviousStateValue =
-                    string.Format("Swift Group Status: <i>{0}</i><br/>Swift Messages: <i>{1}</i><br/>Notes:<i>{2}</i>",
-                        originalSwiftGroup.SwiftGroupStatus, originalSwiftGroup.AcceptedMessages, originalSwiftGroup.Notes),
-                ModifiedStateValue =
-                    string.Format("Swift Group Status: <i>{0}</i><br/>Swift Messages: <i>{1}</i><br/>Notes:<i>{2}</i>",
-                        swiftGroup.SwiftGroupStatus, swiftGroup.AcceptedMessages, swiftGroup.Notes),
+                PreviousStateValue = previousState,
+                ModifiedStateValue = modifiedState,
                 CreatedAt = DateTime.Now,
-                UserName = User.Identity.Name
+                UserName = UserName
             };
             AuditManager.LogAudit(auditData);
         }

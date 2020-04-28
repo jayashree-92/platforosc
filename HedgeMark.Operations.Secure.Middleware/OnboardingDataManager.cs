@@ -52,6 +52,16 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static string GetCounterpartyFamilyName(long counterpartyFamilyId)
+        {
+            using (var context = new AdminContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.dmaCounterpartyFamilies.Where(s => s.dmaCounterpartyFamilyId == counterpartyFamilyId).Select(s => s.CounterpartyFamily).FirstOrDefault() ?? string.Empty;
+            }
+        }
+
         public static List<AgreementBaseData> GetAgreementsForOnboardingAccountPreloadData(List<long> hmFundIds, bool isPreviledgedUser)
         {
             var permittedAgreementTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.AllowedAgreementTypesForAccounts).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
@@ -63,25 +73,6 @@ namespace HMOSecureMiddleware
                 return context.vw_OnboardedAgreements
                     .Where(a => a.AgreementStatus != "Terminated – Agreement" && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || hmFundIds.Contains(a.hmFundId ?? 0)))
                     .AsNoTracking().Select(x => new AgreementBaseData() { AgreementOnboardingId = x.dmaAgreementOnBoardingId, AgreementShortName = x.AgreementShortName, HMFundId = x.hmFundId ?? 0, AgreementTypeId = x.AgreementTypeId ?? 0, AgreementType = x.AgreementType, BrokerId = x.dmaCounterPartyFamilyId ?? 0 }).ToList();
-            }
-        }
-
-        public static vw_OnboardedAgreements GetOnBoardedAgreement(long agreementId)
-        {
-            using (var context = new AdminContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.vw_OnboardedAgreements.FirstOrDefault(x => x.dmaAgreementOnBoardingId == agreementId);
-            }
-        }
-
-        public static int GetAgreementTypeId(string agreementType)
-        {
-            using (var context = new AdminContext())
-            {
-                var dmaAgreementType = context.dmaAgreementTypes.FirstOrDefault(x => x.AgreementType == agreementType);
-                return dmaAgreementType != null ? dmaAgreementType.dmaAgreementTypeId : 0;
             }
         }
 
@@ -109,30 +100,7 @@ namespace HMOSecureMiddleware
             using (var context = new AdminContext())
             {
                 var intFundIds = context.vw_OnboardedAgreements.Where(x => (x.dmaCounterPartyOnBoardId ?? 0) == brokerId && x.hmFundId.HasValue && x.HMOpsStatus == "Approved").Select(x => x.hmFundId.Value).Distinct().ToList();
-                return intFundIds.Select(s => Convert.ToInt64(s)).ToList();
-            }
-        }
-
-        public static string GetCounterpartyFamilyName(long counterpartyFamilyId)
-        {
-            using (var context = new AdminContext())
-            {
-
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                var counterpartyFamily = context.dmaCounterpartyFamilies.FirstOrDefault(x => x.dmaCounterpartyFamilyId == counterpartyFamilyId);
-                return (counterpartyFamily != null) ? counterpartyFamily.CounterpartyFamily : string.Empty;
-            }
-        }
-
-        public static string GetFundLegalName(long hmFundId)
-        {
-            using (var context = new AdminContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                var onboardingFund = context.vw_HFund.FirstOrDefault(x => x.intFundID == hmFundId);
-                return (onboardingFund != null) ? onboardingFund.LegalFundName : string.Empty;
+                return intFundIds.Select(Convert.ToInt64).ToList();
             }
         }
 

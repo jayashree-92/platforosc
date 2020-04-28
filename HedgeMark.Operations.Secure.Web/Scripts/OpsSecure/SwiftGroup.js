@@ -18,11 +18,11 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
                 "aoColumns": [
                     {
                         "sTitle": "Swift Group",
-                        "mData": "SwiftGroup"
+                        "mData": "SwiftGroup.SwiftGroup"
                     },
                     {
                         "sTitle": "Sender's BIC",
-                        "mData": "SendersBIC",
+                        "mData": "SwiftGroup.SendersBIC",
                     },
                     {
                         "sTitle": "Broker",
@@ -34,22 +34,22 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
                     },
                     {
                         "sTitle": "Swift Messages",
-                        "mData": "AcceptedMessages",
+                        "mData": "SwiftGroup.AcceptedMessages",
                         "render": function (tdata) {
                             return tdata != undefined ? tdata.replace(/,/g, ", ") : tdata;
                         }
                     },
                     {
                         "sTitle": "Notes",
-                        "mData": "Notes",
+                        "mData": "SwiftGroup.Notes",
                     },
                     {
                         "sTitle": "Created By",
-                        "mData": "RecCreatedBy",
+                        "mData": "SwiftGroup.RecCreatedBy",
                     },
                     {
                         "sTitle": "Created At",
-                        "mData": "RecCreatedAt",
+                        "mData": "SwiftGroup.RecCreatedAt",
                         "mRender": renderDotNetDateAndTime
                     }
                 ],
@@ -87,6 +87,18 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
                 formatResult: formatSelection,
                 formatSelection: formatSelection
             });
+            $scope.dummySwiftGroup = {
+                SwiftGroup: {
+                    hmsSwiftGroupId: 0,
+                    SwiftGroup: null,
+                    SendersBIC: null,
+                    AcceptedMessages: [],
+                    Notes: null,
+                    BrokerLegalEntityId: $scope.brokerLegalEntityData[0].id,
+                    SwiftGroupStatusId: $scope.swiftGroupStatusData[0].id,
+                }
+            }
+
             $timeout(function () {
                 $scope.swiftGroupTable.columns.adjust().draw();
                 $scope.enableSwiftGroupActions = false;
@@ -104,18 +116,19 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
         return stat.text + "<label class='pull-right label " + (selectData.isOutBound ? "label-info" : "label-default") + " shadowBox'>" + (selectData.isOutBound ? "OutBound" : "InBound") + "</label>";
     }
 
-    $scope.formatSwiftGroup = function () {
-        if ($scope.swiftGroup.SendersBIC == null || $scope.swiftGroup.SendersBIC == "") {
-            $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
-            return;
-        }
-        $scope.swiftGroup.SendersBIC = $scope.swiftGroup.SendersBIC.trim().toUpperCase();
-        if ($scope.swiftGroup.SendersBIC.length < 8) {
-            $scope.swiftGroup.SendersBIC = "";
-            notifyError("Sender's BIC should contain minimum 8 characters");
-        }
-        $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
-    }
+
+    //$scope.formatSwiftGroup = function () {
+    //    if ($scope.swiftGroup.SwiftGroup.SendersBIC == null || $scope.swiftGroup.SwiftGroup.SendersBIC == "") {
+    //        $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
+    //        return;
+    //    }
+    //    $scope.swiftGroup.SwiftGroup.SendersBIC = $scope.swiftGroup.SwiftGroup.SendersBIC.trim().toUpperCase();
+    //    if ($scope.swiftGroup.SwiftGroup.SendersBIC.length < 8) {
+    //        $scope.swiftGroup.SwiftGroup.SendersBIC = "";
+    //        notifyError("Sender's BIC should contain minimum 8 characters");
+    //    }
+    //    $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
+    //}
 
     $scope.fnAddOrUpdateSwiftGroup = function (isAdd) {
         $scope.isAdd = isAdd;
@@ -125,13 +138,14 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
             $scope.swiftGroup = angular.copy($scope.selectedRowData);
         }
         angular.element("#swiftGroupModal").modal({ backdrop: 'static', keyboard: true }).on("shown.bs.modal", function () {
-            $("#liBrokerEntity").select2("val", $scope.swiftGroup.BrokerLegalEntityId);
-            $("#liSwiftGroupStatus").select2("val", $scope.swiftGroup.SwiftGroupStatusId);
-            $("#liMessageTypes").select2("val", [$scope.swiftGroup.AcceptedMessages]);
+
+            $("#liBrokerEntity").select2("val", $scope.swiftGroup.SwiftGroup.BrokerLegalEntityId);
+            $("#liSwiftGroupStatus").select2("val", $scope.swiftGroup.SwiftGroup.SwiftGroupStatusId);
+            $("#liMessageTypes").select2("val", [$scope.swiftGroup.SwiftGroup.AcceptedMessages]);
         });
-        $timeout(function () {
-            $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
-        }, 50);
+        //$timeout(function () {
+        //    $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
+        //}, 50);
     }
 
     $(document).on("click", "#tblSwiftGroupData tbody tr ", function () {
@@ -152,37 +166,29 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
         $scope.fnAddOrUpdateSwiftGroup(false);
     });
 
-    $(document).on("change", ".dropDown", function () {
-        $timeout(function () {
-            $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
-        }, 50);
-    });
+    //$(document).on("change", ".dropDown", function () {
+    //    $timeout(function () {
+    //        $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
+    //    }, 50);
+    //});
 
-    $scope.dummySwiftGroup = {
-        hmsSwiftGroupId: 0,
-        SwiftGroup: null,
-        SendersBIC: null,
-        AcceptedMessages: null,
-        Notes: null,
-        BrokerLegalEntityId: null,
-        SwiftGroupStatusId: null,
-    }
-
-    $scope.$watch("isSwiftGroupRequirementsFilled", function (newValue, oldValue) {
-        if(oldValue != undefined)
-            $scope.isSwiftGroupRequirementsFilled = $("#liBrokerEntity").select2('val') != "" && $("#liSwiftGroupStatus").select2('val') != "" && $("#liMessageTypes").select2('val') != "" && $scope.swiftGroup.SwiftGroup != null && $scope.swiftGroup.SwiftGroup != "" && $scope.swiftGroup.SendersBIC != null && $scope.swiftGroup.SendersBIC != "";
-    });
+    //$scope.$watch("isSwiftGroupRequirementsFilled", function (newValue, oldValue) {
+    //    if (oldValue != undefined)
+    //        $scope.isSwiftGroupRequirementsFilled = $("#liBrokerEntity").select2('val') != "" && $("#liSwiftGroupStatus").select2('val') != "" && $("#liMessageTypes").select2('val') != "" && $scope.swiftGroup.SwiftGroup != null && $scope.swiftGroup.SwiftGroup.SwiftGroup != "" && $scope.swiftGroup.SwiftGroup.SendersBIC != null && $scope.swiftGroup.SwiftGroup.SendersBIC != "";
+    //});
 
     $scope.fnSaveSwiftGroup = function () {
         var existingSwiftGroup = $filter('filter')($scope.swiftGroupData, function (swift) {
-            return swift.hmsSwiftGroupId != $scope.swiftGroup.hmsSwiftGroupId && (swift.SwiftGroup == $scope.swiftGroup.SwiftGroup || swift.SendersBIC == $scope.swiftGroup.SendersBIC);
+            return swift.SwiftGroup.hmsSwiftGroupId != $scope.swiftGroup.SwiftGroup.hmsSwiftGroupId && (swift.SwiftGroup.SwiftGroup == $scope.swiftGroup.SwiftGroup.SwiftGroup || swift.SwiftGroup.SendersBIC == $scope.swiftGroup.SwiftGroup.SendersBIC);
         }, true)[0];
         if (existingSwiftGroup != undefined) {
             notifyError("Swift group data exists for selected Swift Group and Sender's BIC. Please select a new combination.")
             return;
         }
-        $scope.formatSwiftGroup();
-        var hmsSwiftGroup = angular.copy($scope.swiftGroup);
+        //$scope.formatSwiftGroup();
+        $scope.swiftGroup.SwiftGroup.SendersBIC = $scope.swiftGroup.SwiftGroup.SendersBIC.toUpperCase();
+        var hmsSwiftGroup = angular.copy($scope.swiftGroup.SwiftGroup);
+
         $http({
             method: "POST",
             url: "/SwiftGroup/AddOrUpdateSwiftGroup",
@@ -201,13 +207,13 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
     }
 
     $scope.fnDeleteSwiftGroup = function () {
-        if ($scope.selectedRowData.AccountsAssociated == 0) {
+        if (!$scope.selectedRowData.IsAssociatedToAccount) {
             showMessage("Are you sure do you want to delete this Swift Group? ", "Delete Swift Group", [
                 {
                     label: "Delete",
                     className: "btn btn-sm btn-danger",
                     callback: function () {
-                        $http.post("/SwiftGroup/DeleteSwiftGroup", { swiftGroupId: $scope.selectedRowData.hmsSwiftGroupId }).then(function () {
+                        $http.post("/SwiftGroup/DeleteSwiftGroup", { swiftGroupId: $scope.selectedRowData.SwiftGroup.hmsSwiftGroupId }).then(function () {
                             notifySuccess("Swift group deleted successfully");
                             $scope.fnGetSwiftGroupData();
                         });

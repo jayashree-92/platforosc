@@ -491,7 +491,11 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetAllRelatedSwiftGroup(long brokerId)
         {
             var swiftGroups = AccountManager.GetAllSwiftGroup(brokerId);
-            swiftGroups.ForEach(s => s.onBoardingAccounts = null);
+            swiftGroups.ForEach(s =>
+            {
+                s.onBoardingAccounts = null;
+                s.hmsSwiftGroupStatusLkp.hmsSwiftGroups = null;
+            });
             return Json(new
             {
                 swiftGroups,

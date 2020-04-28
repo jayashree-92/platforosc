@@ -720,7 +720,7 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.hmsSwiftGroups.Include(s => s.onBoardingAccounts).Where(s => !s.IsDeleted && (brokerId == -1 || s.BrokerLegalEntityId == brokerId)).AsNoTracking().ToList();
+                return context.hmsSwiftGroups.Include(s => s.hmsSwiftGroupStatusLkp).Include(s => s.onBoardingAccounts).Where(s => !s.IsDeleted && (brokerId == -1 || s.BrokerLegalEntityId == brokerId)).AsNoTracking().ToList();
             }
         }
 
@@ -765,7 +765,7 @@ namespace HMOSecureMiddleware
 
         public static void AddOrUpdateSwiftGroup(hmsSwiftGroup hmsSwiftGroup)
         {
-
+            hmsSwiftGroup.SendersBIC = hmsSwiftGroup.SendersBIC.ToUpper();
             using (var context = new OperationsSecureContext())
             {
                 hmsSwiftGroup.RecCreatedAt = DateTime.Now;
