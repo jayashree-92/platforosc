@@ -101,7 +101,8 @@ namespace HMOSecureWeb.Controllers
 
         public FileResult ExportData()
         {
-            var swiftGroupData = GetAllSwiftGroupData(out _);
+            Dictionary<long, string> brokerLegalEntityData;
+            var swiftGroupData = GetAllSwiftGroupData(out brokerLegalEntityData);
             var contentToExport = new Dictionary<string, List<Row>>();
             var accountListRows = BuildExportRows(swiftGroupData);
             //File name and path
