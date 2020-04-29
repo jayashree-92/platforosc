@@ -31,7 +31,7 @@ namespace HMOSecureWeb.Controllers
             return Json(new
             {
                 brokerLegalEntityData = brokerLegalEntityData.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
-                swiftGroupStatusData = AccountManager.GetSwiftGroupStatus().Select(s => new { id = s.hmsSwiftGroupStatusLkpId, text = s.Status }).ToList(),
+                swiftGroupStatusData = AccountManager.GetSwiftGroupStatus().Select(s => new { id = s.Key, text = s.Value }).ToList(),
                 wireMessageTypes,
                 swiftGroupData = swiftGroupData.OrderByDescending(s => s.SwiftGroup.RecCreatedAt).ToList()
             }, JsonRequestBehavior.AllowGet);
@@ -166,9 +166,11 @@ namespace HMOSecureWeb.Controllers
 
             if (originalSwiftGroup.SwiftGroupStatusId != swiftGroup.SwiftGroupStatusId)
             {
+                var statusLkup = AccountManager.GetSwiftGroupStatus();
+
                 fieldsChanged.Add("Swift Group Status");
-                previousState += string.Format("Swift Group Status: <i>{0}</i><br/>", originalSwiftGroup.hmsSwiftGroupStatusLkp != null ? originalSwiftGroup.hmsSwiftGroupStatusLkp.Status : string.Empty);
-                modifiedState += string.Format("Swift Group Status: <i>{0}</i><br/>", swiftGroup.hmsSwiftGroupStatusLkp != null ? swiftGroup.hmsSwiftGroupStatusLkp.Status : string.Empty);
+                previousState += string.Format("Swift Group Status: <i>{0}</i><br/>", statusLkup.ContainsKey(originalSwiftGroup.SwiftGroupStatusId ?? 0) ? statusLkup[originalSwiftGroup.SwiftGroupStatusId ?? 0] : string.Empty);
+                modifiedState += string.Format("Swift Group Status: <i>{0}</i><br/>", statusLkup.ContainsKey(swiftGroup.SwiftGroupStatusId ?? 0) ? statusLkup[swiftGroup.SwiftGroupStatusId ?? 0] : string.Empty);
             }
 
             if (originalSwiftGroup.AcceptedMessages != swiftGroup.AcceptedMessages)

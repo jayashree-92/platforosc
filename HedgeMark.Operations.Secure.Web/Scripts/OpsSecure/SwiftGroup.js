@@ -236,3 +236,6 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
 
 });
 
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})

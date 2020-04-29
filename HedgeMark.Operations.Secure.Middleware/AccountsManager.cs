@@ -753,13 +753,13 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<hmsSwiftGroupStatusLkp> GetSwiftGroupStatus()
+        public static Dictionary<int, string> GetSwiftGroupStatus()
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.hmsSwiftGroupStatusLkps.ToList();
+                return context.hmsSwiftGroupStatusLkps.ToDictionary(s => s.hmsSwiftGroupStatusLkpId, v => v.Status);
             }
         }
 

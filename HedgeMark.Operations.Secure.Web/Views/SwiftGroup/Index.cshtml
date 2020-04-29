@@ -52,11 +52,11 @@
                     </div>
                     <br />
                     <div class="row">
-                        <div class="col-sm-8 col-md-3 col-lg-3">
+                        <div class="col-md-3">
                             <label for="sendersBIC" class="control-label">Sender's BIC:</label>
                         </div>
-                        <div class="col-sm-8 col-md-3 col-lg-5">
-                            <input type="text" id="sendersBIC" maxlength="11" required pattern="^[A-Za-z0-9]{8,11}$" autocomplete="false" style="text-transform: uppercase;"  minlength="8" oninvalid="Please enter valid BIC" ng-model="swiftGroup.SwiftGroup.SendersBIC" class="modalInputWidth form-control" />
+                        <div class="col-md-5" >
+                            <input type="text" id="sendersBIC"  data-toggle="tooltip" data-placement="right" title="only alpha-numeric and between 8 to 11 characters allowed" maxlength="11" required pattern="^[A-Za-z0-9]{8,11}$" autocomplete="false" style="text-transform: uppercase;"  minlength="8" ng-model="swiftGroup.SwiftGroup.SendersBIC" class="modalInputWidth form-control" />
                         </div>
                     </div>
                     <br />
