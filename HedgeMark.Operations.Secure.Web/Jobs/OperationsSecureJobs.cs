@@ -106,6 +106,18 @@ namespace HMOSecureWeb.Jobs
             ScheduleReceiptOfInboundMessages(false);
             ScheduleReceiptOfInboundAckMessages(false);
             ScheduleAutoApprovalOfNoticeWires(false);
+            ScheduleSSITemplateDeactivation(false);
+        }
+
+        public static void ScheduleSSITemplateDeactivation(bool isDisabled)
+        {
+            if (isDisabled)
+            {
+                RecurringJob.RemoveIfExists(SSITemplateDeactivator.JobName);
+                return;
+            }
+
+            RecurringJob.AddOrUpdate(SSITemplateDeactivator.JobName, () => SSITemplateDeactivator.DeacitvateStaleSSITemplates(), new CronHelper().Every().Day(new TimeSpan(23, 00, 00)));
         }
 
         public static void ScheduleOverdueWireCancellation(bool isDisabled)

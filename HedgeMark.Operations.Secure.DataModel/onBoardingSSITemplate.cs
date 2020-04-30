@@ -54,6 +54,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> BeneficiaryBICorABAId { get; set; }
         public Nullable<long> IntermediaryBICorABAId { get; set; }
         public Nullable<long> UltimateBeneficiaryBICorABAId { get; set; }
+        public System.DateTime LastUsedAt { get; set; }
     
         public virtual onBoardingAccountBICorABA Beneficiary { get; set; }
         public virtual onBoardingAccountBICorABA Intermediary { get; set; }

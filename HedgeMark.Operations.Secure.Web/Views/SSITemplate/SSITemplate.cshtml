@@ -10,7 +10,7 @@
         <legend>
             SSI Template
             <span class="label label-primary shadowBox" style="font-size: 12px;vertical-align: middle">{{ssiTemplate.TemplateName}}</span>
-            <span id="hmStatus" class="label ng-scope pull-right" ng-class="{'label-default': ssiTemplate.SSITemplateStatus == 'Saved As Draft','label-warning': ssiTemplate.SSITemplateStatus == 'Pending Approval','label-success': ssiTemplate.SSITemplateStatus == 'Approved' }" ng-if="ssiTemplateId!=0"><i class="glyphicon glyphicon-tag"></i>&nbsp;<span id="spnSSITempCurrentStatus">{{ssiTemplate.SSITemplateStatus}}</span></span>
+            <span id="hmStatus" class="label ng-scope pull-right" ng-class="{'label-default': ssiTemplate.SSITemplateStatus == 'Saved As Draft' || ssiTemplate.SSITemplateStatus == 'De-Activated','label-warning': ssiTemplate.SSITemplateStatus == 'Pending Approval','label-success': ssiTemplate.SSITemplateStatus == 'Approved' }" ng-if="ssiTemplateId!=0"><i class="glyphicon glyphicon-tag"></i>&nbsp;<span id="spnSSITempCurrentStatus">{{ssiTemplate.SSITemplateStatus}}</span></span>
         </legend>
 
         <div id="ssiTemplateOnBoardContainer">

@@ -586,12 +586,13 @@ namespace HMOSecureMiddleware
                     ssiTemplate.UpdatedAt = DateTime.Now;
                     ssiTemplate.UpdatedBy = userName;
                     ssiTemplate.SSITemplateStatus = "Saved As Draft";
+                    ssiTemplate.LastUsedAt = DateTime.Now;
                 }
                 else
                 {
                     ssiTemplate.UpdatedAt = DateTime.Now;
                     ssiTemplate.UpdatedBy = userName;
-
+                    ssiTemplate.LastUsedAt = DateTime.Now;
 
                     if (ssiTemplate.onBoardingSSITemplateDocuments != null && ssiTemplate.onBoardingSSITemplateDocuments.Count > 0)
                     {

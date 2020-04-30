@@ -13,11 +13,6 @@ namespace HMOSecureWeb.Jobs
 
         private static readonly ILog Logger = LogManager.GetLogger(typeof(NoticeWiresApprovalManager));
 
-        public static string GetJobName(long wireId)
-        {
-            return string.Format("Notice wire approval schedule for > {0}", wireId);
-        }
-
         [DisplayName("Notice wire approval schedule for > {0}")]
         public static void ApproveNoticeWire(long wireId)
         {

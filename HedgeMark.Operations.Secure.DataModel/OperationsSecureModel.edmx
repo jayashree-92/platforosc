@@ -88,7 +88,7 @@
             <PropertyRef Name="hmsSwiftStatusId" />
           </Key>
           <Property Name="hmsSwiftStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Status" Type="varchar" MaxLength="30" />
+          <Property Name="Status" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsSystemPreferences">
           <Key>
@@ -226,12 +226,12 @@
           <Property Name="ReceivingAccountNumber" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Currency" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="DeliveryCharges" Type="varchar" MaxLength="20" />
           <Property Name="WireMessageTypeId" Type="int" Nullable="false" />
           <Property Name="WireStatusId" Type="int" Nullable="false" />
-          <Property Name="SwiftStatusId" Type="int" Nullable="false" />
           <Property Name="LastModifiedAt" Type="datetime" Nullable="false" />
           <Property Name="LastUpdatedBy" Type="int" Nullable="false" />
+          <Property Name="DeliveryCharges" Type="varchar" MaxLength="20" />
+          <Property Name="SwiftStatusId" Type="int" Nullable="false" />
           <Property Name="WireTransferTypeId" Type="int" Nullable="false" />
           <Property Name="NotesToApprover" Type="varchar" MaxLength="1000" />
           <Property Name="SenderInformationId" Type="int" />
@@ -460,6 +460,7 @@
           <Property Name="BeneficiaryBICorABAId" Type="bigint" />
           <Property Name="IntermediaryBICorABAId" Type="bigint" />
           <Property Name="UltimateBeneficiaryBICorABAId" Type="bigint" />
+          <Property Name="LastUsedAt" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="OnBoardingSSITemplateAccountType">
           <Key>
@@ -1304,7 +1305,7 @@
             <PropertyRef Name="hmsSwiftStatusId" />
           </Key>
           <Property Name="hmsSwiftStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Status" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsSwiftStatusLkup" ToRole="hmsWireWorkflowLog" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsSwiftStatusLkup" ToRole="hmsWire" />
         </EntityType>
@@ -2025,6 +2026,7 @@
           <NavigationProperty Name="UltimateBeneficiary" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountBICorABA" />
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountSSITemplateMap" />
           <NavigationProperty Name="onBoardingSSITemplateDocuments" Relationship="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingSSITemplateDocument" />
+          <Property Name="LastUsedAt" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <Association Name="FK_onBoardingAccount_BeneficiaryBICorABAId">
           <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
@@ -2712,6 +2714,7 @@
           <EntitySetMapping Name="onBoardingSSITemplates">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingSSITemplate">
               <MappingFragment StoreEntitySet="onBoardingSSITemplate">
+                <ScalarProperty Name="LastUsedAt" ColumnName="LastUsedAt" />
                 <ScalarProperty Name="UltimateBeneficiaryBICorABAId" ColumnName="UltimateBeneficiaryBICorABAId" />
                 <ScalarProperty Name="IntermediaryBICorABAId" ColumnName="IntermediaryBICorABAId" />
                 <ScalarProperty Name="BeneficiaryBICorABAId" ColumnName="BeneficiaryBICorABAId" />
