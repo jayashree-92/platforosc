@@ -389,6 +389,7 @@ namespace HMOSecureWeb.Controllers
                             ? DateTime.Parse(template["ModifiedDate"])
                             : DateTime.Now;
                         templateDetail.IsDeleted = false;
+                        templateDetail.LastUsedAt = DateTime.Now;
                         //templateDetail.TemplateName = template["SSI Template Type"] == "Broker" ? template["Broker"] + " - " + template["Account Type"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : (!string.IsNullOrWhiteSpace(template["SSI Template Type"]) ? template["Service Provider"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : template["Template Name"]);
                         AccountManager.AddSsiTemplate(templateDetail, UserName);
                     }
