@@ -37,6 +37,7 @@ namespace HMOSecureWeb
             var options = new DashboardOptions
             {
                 Authorization = new[] { new HangFireAuthorizationFilter() },
+                DashboardTitle = "HM-Operations-Secure Jobs Dashboard"
             };
 
             app.UseHangfireDashboard("/jobs", options);
