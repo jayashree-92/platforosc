@@ -27,11 +27,21 @@ namespace HMOSecureWeb
     public class Startup
     {
         public static readonly int HangFireWorkerCount = ConfigurationManagerWrapper.IntegerSetting("HangFireWorkerCount", Environment.ProcessorCount * 4);
-        public static readonly int HangFirePollingInterval = ConfigurationManagerWrapper.IntegerSetting("hangfirePollingInterval", 30);
+
         public void Configuration(IAppBuilder app)
         {
-            var sqlOptions = new SqlServerStorageOptions { QueuePollInterval = TimeSpan.FromSeconds(HangFirePollingInterval) };
-            GlobalConfiguration.Configuration.UseSqlServerStorage(new OperationsSecureSettings().ConnectionString, sqlOptions);
+            GlobalConfiguration.Configuration.UseSqlServerStorage(new OperationsSecureSettings().ConnectionString,
+                     new SqlServerStorageOptions
+                     {
+                         CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                         SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                         QueuePollInterval = TimeSpan.Zero,
+                         UseRecommendedIsolationLevel = true,
+                         UsePageLocksOnDequeue = true,
+                         DisableGlobalLocks = true
+                     });
+
+
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 5 });
 
             var options = new DashboardOptions
