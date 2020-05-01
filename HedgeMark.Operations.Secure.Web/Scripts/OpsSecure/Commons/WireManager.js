@@ -499,9 +499,14 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.checkForCreatedWires = function () {
-        var receivingAccountId = $scope.wireTicketObj.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : angular.copy($scope.ssiTemplate.onBoardingSSITemplateId);
-        if ($scope.accountDetail.onBoardingAccountId != 0 && $scope.WireTicket.OnBoardSSITemplateId != 0) {
-            $http.post("/Home/IsWireCreated", JSON.stringify({ valueDate: $("#wireValueDate").text(), purpose: $scope.wireObj.Purpose, sendingAccountId: $scope.accountDetail.onBoardingAccountId, receivingAccountId: receivingAccountId, wireId: $scope.WireTicket.hmsWireId }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
+        if ($scope.accountDetail.onBoardingAccountId != 0 && ($scope.WireTicket.OnBoardSSITemplateId != 0 || $scope.WireTicket.receivingAccountId != 0)) {
+            $http.post("/Home/IsWireCreated", JSON.stringify({
+                valueDate: $("#wireValueDate").text(),
+                purpose: $scope.wireObj.Purpose, sendingAccountId: $scope.accountDetail.onBoardingAccountId,
+                receivingAccountId: angular.copy($scope.receivingAccountDetail.onBoardingAccountId),
+                receivingSSITemplateId: angular.copy($scope.ssiTemplate.onBoardingSSITemplateId),
+                wireId: $scope.WireTicket.hmsWireId
+            }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
                 if ($scope.WireTicket.hmsWireId == 0)
                     $scope.isWireCreated = response.data;
                 else
@@ -719,7 +724,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         else {
             $scope.WireTicket.ReceivingAccountNumber = $scope.wireTicketObj.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.AccountNumber) : angular.copy($scope.ssiTemplate.AccountNumber);
             $scope.WireTicket.Currency = $scope.wireTicketObj.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.Currency) : angular.copy($scope.ssiTemplate.Currency);
-            $scope.WireTicket.OnBoardSSITemplateId = $scope.wireTicketObj.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : angular.copy($scope.ssiTemplate.onBoardingSSITemplateId);
+            $scope.WireTicket.OnBoardSSITemplateId = angular.copy($scope.ssiTemplate.onBoardingSSITemplateId);
+            $scope.WireTicket.ReceivingOnBoardAccountId = $scope.wireTicketObj.IsBookTransfer ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : 0;
         }
         //$scope.WireTicket.OnBoardAgreementId = !$scope.wireTicketObj.IsBookTransfer && $scope.wireObj.IsAdhocWire ? $("#liAgreement").select2('val') : angular.copy($scope.wireObj.AgreementId);
         $scope.WireTicket.WireMessageTypeId = angular.element("#liMessageType").select2('val');
@@ -933,6 +939,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isReceivingAccountEnabled = false;
             $scope.WireTicket.OnBoardAccountId = '';
             $scope.WireTicket.OnBoardSSITemplateId = '';
+            $scope.WireTicket.ReceivingOnBoardAccountId = '';
         }
         else if ($scope.WireTicket.hmsWireId == 0) {
             angular.element("#liSendingAccount").select2("destroy").val('');
@@ -963,7 +970,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }, 50);
             //$timeout(function () {
             //    if ($scope.wireTicketObj.IsBookTransfer)
-            //        angular.element("#liReceivingBookAccount").select2('val', $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
+            //        angular.element("#liReceivingBookAccount").select2('val', $scope.WireTicket.ReceivingOnBoardAccountId).trigger('change');
             //    else
             //        angular.element("#liReceivingAccount").select2('val', $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
             //}, 50);
@@ -1307,7 +1314,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         });
                         $scope.isReceivingAccountEnabled = true;
                         if ($scope.WireTicket.hmsWireId > 0)
-                            angular.element("#liReceivingBookAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
+                            angular.element("#liReceivingBookAccount").select2("val", $scope.WireTicket.ReceivingOnBoardAccountId).trigger('change');
                     }
                 }
                 //var account = $filter('filter')(angular.copy($scope.sendingAccounts), function (account) {
@@ -1361,16 +1368,16 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     angular.element(document).on("change", "#liReceivingBookAccount", function () {
         $timeout(function () {
-            $scope.WireTicket.OnBoardSSITemplateId = angular.copy($("#liReceivingBookAccount").select2('val'));
-            if ($scope.WireTicket.OnBoardSSITemplateId != "") {
+            $scope.WireTicket.ReceivingOnBoardAccountId = angular.copy($("#liReceivingBookAccount").select2('val'));
+            if ($scope.WireTicket.ReceivingOnBoardAccountId != "") {
                 if ($scope.wireTicketObj.IsBookTransfer) {
 
-                    $http.get("/Home/GetBoardingAccount?onBoardingAccountId=" + $scope.WireTicket.OnBoardSSITemplateId + "&valueDate=" + $("#wireValueDate").text()).then(function (response) {
+                    $http.get("/Home/GetBoardingAccount?onBoardingAccountId=" + $scope.WireTicket.ReceivingOnBoardAccountId + "&valueDate=" + $("#wireValueDate").text()).then(function (response) {
 
                         var receivingAccount = response.data.onboardAccount;
 
                         //var receivingAccount = $filter('filter')(angular.copy($scope.sendingAccounts), function (template) {
-                        //    return template.onBoardingAccountId == $scope.WireTicket.OnBoardSSITemplateId;
+                        //    return template.onBoardingAccountId == $scope.WireTicket.ReceivingOnBoardAccountId;
                         //}, true)[0];
 
 

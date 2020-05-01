@@ -87,10 +87,6 @@ namespace HMOSecureMiddleware
         public static WireTicket GetWireData(long wireId)
         {
             hmsWire hmWire;
-            onBoardingAccount wireSendingAccount;
-            onBoardingAccount wireReceivingAccount;
-            onBoardingSSITemplate wireSSITemplate;
-
 
             using (var context = new OperationsSecureContext())
             {
@@ -102,15 +98,18 @@ namespace HMOSecureMiddleware
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
-                hmWire = context.hmsWires.Include("hmsWireMessageType")
+                hmWire = context.hmsWires.Include(s => s.hmsWireMessageType)
                                          //.Include("hmsWireDocuments")
                                          //.Include("hmsWireWorkflowLogs")
-                                         .Include("hmsWireStatusLkup")
-                                         .Include("hmsWirePurposeLkup")
-                                         .Include("hmsWireTransferTypeLKup")
-                                         .Include("hmsWireSenderInformation")
-                                         .Include("hmsWireInvoiceAssociations")
-                                         .Include("hmsWireCollateralAssociations")
+                                         .Include(s => s.hmsWireStatusLkup)
+                                         .Include(s => s.hmsWirePurposeLkup)
+                                         .Include(s => s.hmsWireTransferTypeLKup)
+                                         .Include(s => s.hmsWireSenderInformation)
+                                         .Include(s => s.hmsWireInvoiceAssociations)
+                                         .Include(s => s.hmsWireCollateralAssociations)
+                                         .Include(s => s.SendingAccount)
+                                         .Include(s => s.ReceivingAccount)
+                                         .Include(s => s.ReceivingSSITemplate)
                                          //.Include("hmsWireLogs")
                                          .First(s => s.hmsWireId == wireId);
 
@@ -119,9 +118,9 @@ namespace HMOSecureMiddleware
                 hmWire.hmsWireLogs = context.hmsWireLogs.Where(s => s.hmsWireId == wireId).ToList();
             }
 
-            wireSendingAccount = AccountManager.GetOnBoardingAccount(hmWire.OnBoardAccountId);
-            wireReceivingAccount = hmWire.hmsWireTransferTypeLKup.TransferType == "Book Transfer" ? AccountManager.GetOnBoardingAccount(hmWire.OnBoardSSITemplateId) : new onBoardingAccount();
-            wireSSITemplate = hmWire.hmsWireTransferTypeLKup.TransferType == "Normal Transfer" || hmWire.hmsWireTransferTypeLKup.TransferType == "Fee/Expense Payment" ? AccountManager.GetSsiTemplate(hmWire.OnBoardSSITemplateId) : new onBoardingSSITemplate();
+            var wireSendingAccount = AccountManager.SetAccountDefaults(hmWire.SendingAccount);
+            var wireReceivingAccount = AccountManager.SetAccountDefaults(hmWire.ReceivingAccount) ?? new onBoardingAccount();
+            var wireSSITemplate = AccountManager.SetSSITemplateDefaults(hmWire.ReceivingSSITemplate) ?? new onBoardingSSITemplate();
             hmWire.hmsWireLogs.ForEach(s =>
             {
                 s.hmsWire = null;
@@ -377,6 +376,13 @@ namespace HMOSecureMiddleware
                     wireTicket.HMWire.CreatedAt = DateTime.Now;
                     wireTicket.HMWire.LastModifiedAt = DateTime.Now;
                     wireTicket.HMWire.LastUpdatedBy = userId;
+
+                    if (wireTicket.HMWire.OnBoardSSITemplateId == 0)
+                        wireTicket.HMWire.OnBoardSSITemplateId = null;
+
+                    if (wireTicket.HMWire.ReceivingOnBoardAccountId == 0)
+                        wireTicket.HMWire.ReceivingOnBoardAccountId = null;
+
                     context.hmsWires.AddOrUpdate(wireTicket.HMWire);
                     context.SaveChanges();
                 }
@@ -402,13 +408,17 @@ namespace HMOSecureMiddleware
             return existingWireTicket;
         }
 
-        public static bool IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId)
+        public static bool IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId, long receivingSSITemplateId, long wireId)
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.hmsWires.Any(s => s.ValueDate == valueDate && s.OnBoardAccountId == sendingAccountId && s.OnBoardSSITemplateId == receivingAccountId && s.hmsWirePurposeLkup.Purpose == purpose);
+                return context.hmsWires.Any(s =>
+                    s.ValueDate == valueDate && s.hmsWirePurposeLkup.Purpose == purpose && s.hmsWireId != wireId &&
+                    s.OnBoardAccountId == sendingAccountId &&
+                    (receivingSSITemplateId > 0 && s.OnBoardSSITemplateId == receivingSSITemplateId
+                    || receivingAccountId > 0 && s.ReceivingOnBoardAccountId == receivingAccountId));
             }
         }
         public static List<hmsWireMessageType> GetWireMessageTypes()

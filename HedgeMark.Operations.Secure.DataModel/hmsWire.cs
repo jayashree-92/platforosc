@@ -31,17 +31,17 @@ namespace HedgeMark.Operations.Secure.DataModel
         public int CreatedBy { get; set; }
         public int WirePurposeId { get; set; }
         public System.DateTime ContextDate { get; set; }
+        public Nullable<long> OnBoardAccountId { get; set; }
+        public Nullable<long> OnBoardSSITemplateId { get; set; }
+        public long OnBoardAgreementId { get; set; }
+        public long hmFundId { get; set; }
         public System.DateTime ValueDate { get; set; }
         public string PaymentOrReceipt { get; set; }
-        public long hmFundId { get; set; }
         public string SendingAccountNumber { get; set; }
         public string SendingPlatform { get; set; }
         public string ReceivingAccountNumber { get; set; }
         public string Currency { get; set; }
         public decimal Amount { get; set; }
-        public long OnBoardAccountId { get; set; }
-        public long OnBoardSSITemplateId { get; set; }
-        public long OnBoardAgreementId { get; set; }
         public int WireMessageTypeId { get; set; }
         public int WireStatusId { get; set; }
         public System.DateTime LastModifiedAt { get; set; }
@@ -54,6 +54,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string SenderDescription { get; set; }
         public Nullable<System.DateTime> ApprovedAt { get; set; }
         public Nullable<int> ApprovedBy { get; set; }
+        public Nullable<long> ReceivingOnBoardAccountId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsActionInProgress> hmsActionInProgresses { get; set; }
@@ -73,6 +74,9 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual hmsWireSenderInformation hmsWireSenderInformation { get; set; }
         public virtual hmsWireStatusLkup hmsWireStatusLkup { get; set; }
         public virtual hmsWireTransferTypeLKup hmsWireTransferTypeLKup { get; set; }
+        public virtual onBoardingAccount SendingAccount { get; set; }
+        public virtual onBoardingSSITemplate ReceivingSSITemplate { get; set; }
+        public virtual onBoardingAccount ReceivingAccount { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
     }

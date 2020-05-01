@@ -82,34 +82,42 @@ namespace HMOSecureMiddleware
                     .Include(s => s.hmsAccountCallbacks)
                     .FirstOrDefault(acnt => acnt.onBoardingAccountId == accountId);
 
-                if (account == null)
-                    return null;
-
-                if (account.WirePortalCutoff == null)
-                    account.WirePortalCutoff = new onBoardingWirePortalCutoff() { CutOffTimeZone = "EST" };
-                if (account.Beneficiary == null)
-                    account.Beneficiary = new onBoardingAccountBICorABA();
-                if (account.Intermediary == null)
-                    account.Intermediary = new onBoardingAccountBICorABA();
-                if (account.UltimateBeneficiary == null)
-                    account.UltimateBeneficiary = new onBoardingAccountBICorABA();
-                if (account.SwiftGroup == null)
-                    account.SwiftGroup = new hmsSwiftGroup();
-                if (account.hmsAccountCallbacks == null)
-                    account.hmsAccountCallbacks = new List<hmsAccountCallback>();
-                //remove circular references
-                account.WirePortalCutoff.onBoardingAccounts = null;
-                account.Beneficiary.onBoardingAccounts = account.Beneficiary.onBoardingAccounts1 = account.Beneficiary.onBoardingAccounts2 = null;
-                account.Intermediary.onBoardingAccounts = account.Intermediary.onBoardingAccounts1 = account.Intermediary.onBoardingAccounts2 = null;
-                if (account.UltimateBeneficiary != null)
-                    account.UltimateBeneficiary.onBoardingAccounts = account.UltimateBeneficiary.onBoardingAccounts1 = account.UltimateBeneficiary.onBoardingAccounts2 = null;
-                account.SwiftGroup.onBoardingAccounts = null;
-                if (account.SwiftGroup.hmsSwiftGroupStatusLkp != null)
-                    account.SwiftGroup.hmsSwiftGroupStatusLkp.hmsSwiftGroups = null;
-                account.hmsAccountCallbacks.ForEach(s => s.onBoardingAccount = null);
-                return account;
+                return SetAccountDefaults(account);
             }
 
+        }
+
+        public static onBoardingAccount SetAccountDefaults(onBoardingAccount account)
+        {
+            if (account == null)
+                return null;
+
+            if (account.WirePortalCutoff == null)
+                account.WirePortalCutoff = new onBoardingWirePortalCutoff() { CutOffTimeZone = "EST" };
+            if (account.Beneficiary == null)
+                account.Beneficiary = new onBoardingAccountBICorABA();
+            if (account.Intermediary == null)
+                account.Intermediary = new onBoardingAccountBICorABA();
+            if (account.UltimateBeneficiary == null)
+                account.UltimateBeneficiary = new onBoardingAccountBICorABA();
+            if (account.SwiftGroup == null)
+                account.SwiftGroup = new hmsSwiftGroup();
+            if (account.hmsAccountCallbacks == null)
+                account.hmsAccountCallbacks = new List<hmsAccountCallback>();
+            //remove circular references
+            account.WirePortalCutoff.onBoardingAccounts = null;
+            account.Beneficiary.onBoardingAccounts = account.Beneficiary.onBoardingAccounts1 = account.Beneficiary.onBoardingAccounts2 = null;
+            account.Intermediary.onBoardingAccounts = account.Intermediary.onBoardingAccounts1 = account.Intermediary.onBoardingAccounts2 = null;
+            if (account.UltimateBeneficiary != null)
+                account.UltimateBeneficiary.onBoardingAccounts = account.UltimateBeneficiary.onBoardingAccounts1 = account.UltimateBeneficiary.onBoardingAccounts2 = null;
+            account.SwiftGroup.onBoardingAccounts = null;
+            if (account.SwiftGroup.hmsSwiftGroupStatusLkp != null)
+                account.SwiftGroup.hmsSwiftGroupStatusLkp.hmsSwiftGroups = null;
+            account.hmsAccountCallbacks.ForEach(s => s.onBoardingAccount = null);
+
+            account.hmsWires = null;
+            account.hmsWires1 = null;
+            return account;
         }
 
         public static List<onBoardingAccountSSITemplateMap> GetAccountSsiTemplateMap(long accountId)
@@ -511,26 +519,36 @@ namespace HMOSecureMiddleware
                     .Include(x => x.onBoardingAccountSSITemplateMaps)
                     .First(template => template.onBoardingSSITemplateId == templateId);
 
-                if (ssiTemplate.Beneficiary == null)
-                    ssiTemplate.Beneficiary = new onBoardingAccountBICorABA();
-                if (ssiTemplate.Intermediary == null)
-                    ssiTemplate.Intermediary = new onBoardingAccountBICorABA();
-                if (ssiTemplate.UltimateBeneficiary == null)
-                    ssiTemplate.UltimateBeneficiary = new onBoardingAccountBICorABA();
-                if (ssiTemplate.onBoardingSSITemplateDocuments == null)
-                    ssiTemplate.onBoardingSSITemplateDocuments = new List<onBoardingSSITemplateDocument>();
-                if (ssiTemplate.onBoardingAccountSSITemplateMaps == null)
-                    ssiTemplate.onBoardingAccountSSITemplateMaps = new List<onBoardingAccountSSITemplateMap>();
-
-                //remove circular references
-                ssiTemplate.Beneficiary.onBoardingSSITemplates = ssiTemplate.Beneficiary.onBoardingSSITemplates1 = ssiTemplate.Beneficiary.onBoardingSSITemplates2 = null;
-                ssiTemplate.Intermediary.onBoardingSSITemplates = ssiTemplate.Intermediary.onBoardingSSITemplates1 = ssiTemplate.Intermediary.onBoardingSSITemplates2 = null;
-                ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates1 = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates2 = null;
-                ssiTemplate.onBoardingSSITemplateDocuments.ForEach(s => s.onBoardingSSITemplate = null);
-                ssiTemplate.onBoardingAccountSSITemplateMaps.ForEach(s => { s.onBoardingSSITemplate = null; s.onBoardingAccount = null; });
-
-                return ssiTemplate;
+                return SetSSITemplateDefaults(ssiTemplate);
             }
+        }
+
+        public static onBoardingSSITemplate SetSSITemplateDefaults(onBoardingSSITemplate ssiTemplate)
+        {
+            if (ssiTemplate == null)
+                return null;
+
+            if (ssiTemplate.Beneficiary == null)
+                ssiTemplate.Beneficiary = new onBoardingAccountBICorABA();
+            if (ssiTemplate.Intermediary == null)
+                ssiTemplate.Intermediary = new onBoardingAccountBICorABA();
+            if (ssiTemplate.UltimateBeneficiary == null)
+                ssiTemplate.UltimateBeneficiary = new onBoardingAccountBICorABA();
+            if (ssiTemplate.onBoardingSSITemplateDocuments == null)
+                ssiTemplate.onBoardingSSITemplateDocuments = new List<onBoardingSSITemplateDocument>();
+            if (ssiTemplate.onBoardingAccountSSITemplateMaps == null)
+                ssiTemplate.onBoardingAccountSSITemplateMaps = new List<onBoardingAccountSSITemplateMap>();
+
+            //remove circular references
+            ssiTemplate.Beneficiary.onBoardingSSITemplates = ssiTemplate.Beneficiary.onBoardingSSITemplates1 = ssiTemplate.Beneficiary.onBoardingSSITemplates2 = null;
+            ssiTemplate.Intermediary.onBoardingSSITemplates = ssiTemplate.Intermediary.onBoardingSSITemplates1 = ssiTemplate.Intermediary.onBoardingSSITemplates2 = null;
+            ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates1 = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates2 = null;
+            ssiTemplate.onBoardingSSITemplateDocuments.ForEach(s => s.onBoardingSSITemplate = null);
+            ssiTemplate.onBoardingAccountSSITemplateMaps.ForEach(s => { s.onBoardingSSITemplate = null; s.onBoardingAccount = null; });
+
+            ssiTemplate.hmsWires = null;
+
+            return ssiTemplate;
         }
 
         public static List<OnBoardingSSITemplateServiceProvider> GetAllServiceProviderList()

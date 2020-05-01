@@ -44,20 +44,6 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireCutoffTimeZone" Width="1.5" PointX="13.375" PointY="15.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsSystemPreference" Width="1.5" PointX="15.375" PointY="14.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsActionInProgress" Width="1.5" PointX="16.25" PointY="18.25" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsWire" Width="1.5" PointX="19" PointY="7.5" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsActionInProgress_hmsWireId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireSenderInformation_SenderInformationId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsSwiftGroupStatusLkp" Width="1.5" PointX="10.375" PointY="19.625" />
         <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAccount" Width="1.5" PointX="21.875" PointY="10" />
         <EntityTypeShape EntityType="OperationsSecureModel.onBoardingSSITemplate" Width="1.5" PointX="4.375" PointY="16.625" />
@@ -78,6 +64,23 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsSwiftGroup" Width="1.5" PointX="12.625" PointY="18.75" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsWire" Width="1.5" PointX="27.125" PointY="6.375" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsActionInProgress_hmsWireId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireSenderInformation_SenderInformationId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_OnBoardAccountId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

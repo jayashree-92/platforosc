@@ -708,7 +708,7 @@ $.fn.pulse = function (options) {
 
     var pulseOptions = $.extend({
         times: 2,
-        duration: 250,
+        duration: 150,
         minOpacity: 0
     }, options);
 
