@@ -329,47 +329,21 @@ namespace HMOSecureWeb.Controllers
             { ReportName.Invoices, new List<string>() { "MT103", "MT202", "MT202 COV" } }
         };
 
+
+
         public JsonResult GetWireDetails(long wireId)
         {
             var wireTicket = WireDataManager.GetWireData(wireId);
-            var isDeadlineCrossed = DateTime.Now.Date > wireTicket.HMWire.ValueDate.Date;
-            var isNoticePending = false;
-            var validationMsg = "";
-            if (wireTicket.IsNotice)
-            {
-                isNoticePending = WireDataManager.IsNoticeWirePendingAcknowledgement(wireTicket.HMWire);
-                if (isNoticePending)
-                    validationMsg = "The notice with same amount, value date and currency is already Processing with SWIFT.You cannot notice the same untill it gets a Confirmation";
-            }
-
-            var isEditEnabled = WireDataManager.WireStatus.Drafted == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && !isDeadlineCrossed;
-            var isApprovedOrFailed = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId
-                                     || (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId
-                                     || (int)WireDataManager.WireStatus.Failed == wireTicket.HMWire.WireStatusId;
-
-            var isSwiftCancelDisabled = (int)WireDataManager.SwiftStatus.Processing == wireTicket.HMWire.SwiftStatusId
-                                      || (int)WireDataManager.SwiftStatus.Completed == wireTicket.HMWire.SwiftStatusId
-                                      || (int)WireDataManager.SwiftStatus.NegativeAcknowledged == wireTicket.HMWire.SwiftStatusId
-                                      || (int)WireDataManager.SwiftStatus.Failed == wireTicket.HMWire.SwiftStatusId;
-
-            var isCancelled = (int)WireDataManager.WireStatus.Cancelled == wireTicket.HMWire.WireStatusId;
-            var isApprovalMet = (int)WireDataManager.WireStatus.Approved == wireTicket.HMWire.WireStatusId || wireTicket.HMWire.SwiftStatusId > 1;
-            var isCancelEnabled = (!isApprovalMet && !isDeadlineCrossed || !isSwiftCancelDisabled) && !isCancelled;
-            var isInitiationEnabled = !isDeadlineCrossed && (WireDataManager.WireStatus.Drafted == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId);
-            var isDraftEnabled = !isDeadlineCrossed && (WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId || WireDataManager.WireStatus.Failed == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId
-                                                        || (WireDataManager.WireStatus.Cancelled == (WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId && WireDataManager.SwiftStatus.NotInitiated == (WireDataManager.SwiftStatus)wireTicket.HMWire.SwiftStatusId));
-
-            var deadlineToApprove = GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
-            var isLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == UserDetails.Id;
-            var isWirePurposeAdhoc = wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocReport;
+            var wireTicketStatus = new WireTicketStatus(wireTicket, UserId, User.IsWireApprover());
             var fundAccounts = new List<WireAccountBaseData>();
             long reportId = 0;
-            if (isEditEnabled)
+
+            if (wireTicketStatus.IsEditEnabled)
             {
-                if (!isWirePurposeAdhoc)
+                if (!wireTicketStatus.IsWirePurposeAdhoc)
                     reportId = FileSystemManager.GetReportId(wireTicket.HMWire.hmsWirePurposeLkup.ReportName);
 
-                fundAccounts = isWirePurposeAdhoc
+                fundAccounts = wireTicketStatus.IsWirePurposeAdhoc
                     ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, wireTicket.IsBookTransfer, wireTicket.SendingAccount.Currency)
                     : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId ?? 0, reportId);
             }
@@ -378,12 +352,27 @@ namespace HMOSecureWeb.Controllers
 
             //Also include who is currently viewing this wire 
             var currentlyViewedBy = GetCurrentlyViewingUsers(wireId);
+            var deadlineToApprove = GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
 
-            var usersInvolvedInWire = wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated || s.WireStatusId == (int)WireDataManager.WireStatus.Drafted).Select(s => s.CreatedBy).Distinct().ToList();
-            usersInvolvedInWire.AddRange(new List<int>() { wireTicket.HMWire.CreatedBy, wireTicket.HMWire.LastUpdatedBy });
-            var isAuthorizedUserToApprove = WireDataManager.WireStatus.Initiated == (WireDataManager.WireStatus)(wireTicket.HMWire.WireStatusId) && !usersInvolvedInWire.Contains(UserDetails.Id) && !isDeadlineCrossed && User.IsWireApprover() && !isNoticePending;
+            return Json(new { wireTicket, wireTicketStatus, deadlineToApprove, sendingAccountsList, receivingAccountsList, IsWireCreated = false, currentlyViewedBy });
+        }
 
-            return Json(new { wireTicket, isEditEnabled, isAuthorizedUserToApprove, isCancelEnabled, isApprovedOrFailed, isInitiationEnabled, isDraftEnabled, deadlineToApprove, isLastModifiedUser, isWirePurposeAdhoc, validationMsg, sendingAccountsList, receivingAccountsList, IsWireCreated = false, currentlyViewedBy });
+
+
+        public JsonResult GetNewWireDetails()
+        {
+            var wireTicket = new WireTicket()
+            {
+                HMWire = new hmsWire(),
+                SendingAccount = new onBoardingAccount(),
+                ReceivingAccount = new onBoardingAccount(),
+                SSITemplate = new onBoardingSSITemplate(),
+                Counterparty = "",
+                AttachmentUsers = new List<string>(),
+                WorkflowUsers = new List<string>()
+            };
+            var wireTicketStatus = new WireTicketStatus(wireTicket, UserId, User.IsWireApprover(), true);
+            return Json(new { wireTicket, wireTicketStatus, IsWireCreated = false });
         }
 
         private List<string> GetCurrentlyViewingUsers(long wireId)
@@ -806,33 +795,6 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public JsonResult GetNewWireDetails()
-        {
-            var wireTicket = new WireTicket()
-            {
-                HMWire = new hmsWire(),
-                SendingAccount = new onBoardingAccount(),
-                ReceivingAccount = new onBoardingAccount(),
-                SSITemplate = new onBoardingSSITemplate(),
-                Counterparty = "",
-                AttachmentUsers = new List<string>(),
-                WorkflowUsers = new List<string>()
-            };
-
-            return Json(new
-            {
-                wireTicket,
-                isEditEnabled = true,
-                isInitiationEnabled = true,
-                isDraftEnabled = false,
-                isCancelEnabled = false,
-                isAuthorizedUserToApprove = false,
-                isApprovedOrFailed = false,
-                isWireCreated = false,
-                isLastModifiedUser = false,
-                isWirePurposeAdhoc = true
-            });
-        }
 
         public JsonResult GetBoardingAccount(long onBoardingAccountId, DateTime valueDate)
         {

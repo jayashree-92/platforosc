@@ -40,6 +40,83 @@ namespace HMOSecureMiddleware
         public string FormatedMsg { get; set; }
     }
 
+
+    public class WireTicketStatus
+    {
+        public WireTicketStatus(WireTicket wireTicket, int userId, bool isWireApprover, bool isAdHocWire = false)
+        {
+            var wireStatusId = wireTicket.HMWire.WireStatusId;
+
+            IsWireStatusDrafted = (int)WireDataManager.WireStatus.Drafted == wireStatusId;
+            IsWireStatusCancelled = (int)WireDataManager.WireStatus.Cancelled == wireStatusId;
+            IsWireStatusApproved = (int)WireDataManager.WireStatus.Approved == wireStatusId;
+            IsWireStatusFailed = (int)WireDataManager.WireStatus.Failed == wireStatusId;
+            IsWireStatusInitiated = (int)WireDataManager.WireStatus.Initiated == wireStatusId;
+            IsWireStatusOnHold = (int)WireDataManager.WireStatus.OnHold == wireStatusId;
+
+            var swiftStatusId = wireTicket.HMWire.WireStatusId;
+
+            IsSwiftStatusNotInitiated = (int)WireDataManager.SwiftStatus.NotInitiated == swiftStatusId;
+            IsSwiftStatusProcessing = (int)WireDataManager.SwiftStatus.Processing == swiftStatusId;
+            IsSwiftStatusAcknowledged = (int)WireDataManager.SwiftStatus.Acknowledged == swiftStatusId;
+            IsSwiftStatusNegativeAcknowledged = (int)WireDataManager.SwiftStatus.NegativeAcknowledged == swiftStatusId;
+            IsSwiftStatusCompleted = (int)WireDataManager.SwiftStatus.Completed == swiftStatusId;
+            IsSwiftStatusFailed = (int)WireDataManager.SwiftStatus.Failed == swiftStatusId;
+
+            ValidationMessage = string.Empty;
+
+            if (wireTicket.IsNotice)
+            {
+                IsNoticePending = WireDataManager.IsNoticeWirePendingAcknowledgement(wireTicket.HMWire);
+                if (IsNoticePending)
+                    ValidationMessage = "The notice with same amount, value date and currency is already Processing with SWIFT.You cannot notice the same untill it gets a Confirmation";
+            }
+
+            IsDeadlineCrossed = DateTime.Now.Date > wireTicket.HMWire.ValueDate.Date;
+
+            IsEditEnabled = IsWireStatusDrafted && !IsDeadlineCrossed;
+            IsApprovedOrFailed = IsWireStatusCancelled || IsWireStatusApproved || IsWireStatusFailed;
+            IsSwiftCancelDisabled = IsSwiftStatusProcessing || IsSwiftStatusCompleted || IsSwiftStatusNegativeAcknowledged || IsSwiftStatusFailed;
+            IsCancelEnabled = !IsWireStatusCancelled && (!(IsWireStatusApproved || swiftStatusId > 1) && !IsDeadlineCrossed || !IsSwiftCancelDisabled);
+
+            IsDraftEnabled = !IsDeadlineCrossed && (IsWireStatusInitiated || IsWireStatusFailed || IsWireStatusCancelled && IsSwiftStatusNotInitiated);
+            IsWirePurposeAdhoc = isAdHocWire || wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocReport;
+
+            var isUserInvolvedInInitation = wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated || s.WireStatusId == (int)WireDataManager.WireStatus.Drafted).Any(s => s.CreatedBy == userId)
+                || wireTicket.HMWire.CreatedBy == userId || wireTicket.HMWire.LastUpdatedBy == userId;
+
+            IsAuthorizedUserToApprove = IsWireStatusInitiated && !isUserInvolvedInInitation && !IsDeadlineCrossed && isWireApprover && !IsNoticePending;
+
+            IsLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == userId;
+        }
+
+        public bool IsWireStatusDrafted { get; private set; }
+        public bool IsWireStatusCancelled { get; private set; }
+        public bool IsWireStatusApproved { get; private set; }
+        public bool IsWireStatusFailed { get; private set; }
+        public bool IsWireStatusInitiated { get; private set; }
+        public bool IsWireStatusOnHold { get; private set; }
+        public bool IsSwiftStatusNotInitiated { get; private set; }
+        public bool IsSwiftStatusProcessing { get; private set; }
+        public bool IsSwiftStatusAcknowledged { get; private set; }
+        public bool IsSwiftStatusNegativeAcknowledged { get; private set; }
+        public bool IsSwiftStatusCompleted { get; private set; }
+        public bool IsSwiftStatusFailed { get; private set; }
+
+
+        public bool IsDeadlineCrossed { get; private set; }
+        public bool IsEditEnabled { get; private set; }
+        public bool IsApprovedOrFailed { get; private set; }
+        public bool IsSwiftCancelDisabled { get; private set; }
+        public bool IsCancelEnabled { get; private set; }
+        public bool IsWirePurposeAdhoc { get; private set; }
+        public bool IsDraftEnabled { get; private set; }
+        public bool IsAuthorizedUserToApprove { get; private set; }
+        public bool IsLastModifiedUser { get; private set; }
+        public bool IsNoticePending { get; private set; }
+        public string ValidationMessage { get; private set; }
+    }
+
     public class WireDataManager
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(WireDataManager));
@@ -50,6 +127,7 @@ namespace HMOSecureMiddleware
             Approved,
             Cancelled,
             Failed,
+            OnHold
         }
 
         public enum SwiftStatus
@@ -338,6 +416,11 @@ namespace HMOSecureMiddleware
                     wire.ApprovedAt = null;
                     wire.ApprovedBy = null;
                 }
+
+                if (wire.ReceivingOnBoardAccountId == 0)
+                    wire.ReceivingOnBoardAccountId = null;
+                if (wire.OnBoardSSITemplateId == 0)
+                    wire.OnBoardSSITemplateId = null;
 
                 //if (wireStatus == WireStatus.Initiated)
                 //    wire.CreatedBy = userId;

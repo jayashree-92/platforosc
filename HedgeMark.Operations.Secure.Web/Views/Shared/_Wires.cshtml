@@ -8,7 +8,7 @@
                         <img src="..\Images\spinner.gif" alt="Loading..." class="triggerTasklogLoadSpinner" ng-style="{ 'display': isWireLoadingInProgress ? 'inline' : 'none' }" />
                         @*<i class="glyphicon glyphicon-usd"></i>*@
                         <span style="font-size: 15px;font-weight: bold">Wire Ticket Details  </span>
-                        <span ng-if="!isApprovedOrFailed">
+                        <span ng-if="!WireTicketStatus.IsApprovedOrFailed">
                             <span style="padding-top: 5px;font-size: 12px;">
                                 | &nbsp;<span ng-style="{'color': isDeadlineCrossed ? 'darkred' : 'black' }">Deadline To Approve:</span>
                             </span>
@@ -17,8 +17,8 @@
                                 <span class="col-md-2" style="font-size: 13px;padding: 0px;"><label class="label label-success">{{ timeToShow }}</label></span>
                             </span>|&nbsp;
                         </span>
-                        <span ng-style="{'margin-left': isApprovedOrFailed ? '0px' : '55px' }">|&nbsp;Wire Status: <span id="spnwireStatus" style="font-size: 12px;" class="label"><b>{{ getWireStatus() }}</b></span></span>
-                        <span ng-style="{'margin-left': isApprovedOrFailed ? '0px' : '55px' }" ng-show="WireTicket.SwiftStatusId > 1">|&nbsp;Swift Status: <span id="spnswiftStatus" style="font-size: 12px;" class="label"><b>{{ getSwiftStatus() }}</b></span></span>
+                        <span ng-style="{'margin-left': WireTicketStatus.IsApprovedOrFailed ? '0px' : '55px' }">|&nbsp;Wire Status: <span id="spnwireStatus" style="font-size: 12px;" class="label"><b>{{ getWireStatus() }}</b></span></span>
+                        <span ng-style="{'margin-left': WireTicketStatus.IsApprovedOrFailed ? '0px' : '55px' }" ng-show="WireTicket.SwiftStatusId > 1">|&nbsp;Swift Status: <span id="spnswiftStatus" style="font-size: 12px;" class="label"><b>{{ getSwiftStatus() }}</b></span></span>
                     </p>
                 </span>
                 <span class="pull-right" style="padding: 5px; position: absolute; margin: 5px 0px 0px -50px">
@@ -47,34 +47,34 @@
                             <div class="col-md-3">
                                 <label>Sending Account:</label>
                             </div>
-                            <div class="col-md-3" ng-show="!isEditEnabled">
+                            <div class="col-md-3" ng-show="!WireTicketStatus.IsEditEnabled">
                                 <input type="text" id="liWireAccount" class="form-control primary-info" ng-model="accountDetail.AccountName" readonly />
                             </div>
-                            <div class="col-md-3" ng-show="isEditEnabled">
+                            <div class="col-md-3" ng-show="WireTicketStatus.IsEditEnabled">
                                 <input id="liSendingAccount" type="text" class="form-control primary-info" name="liSendingAccount" ng-disabled="!isSendingAccountEnabled" />
                             </div>
                         </div>
                     </div>
-                    <p ng-show="!isEditEnabled" />
-                    <p style="height:5px;" ng-show="isEditEnabled" />
+                    <p ng-show="!WireTicketStatus.IsEditEnabled" />
+                    <p style="height:5px;" ng-show="WireTicketStatus.IsEditEnabled" />
                     <div class="row" ng-if="!wireTicketObj.IsNotice">
                         <div class="col-md-12">
                             <div class="col-md-3">
                                 <label>Receiving Account:</label>
                             </div>
-                            <div class="col-md-3" ng-show="!(isWirePurposeAdhoc && isEditEnabled)">
+                            <div class="col-md-3" ng-show="!(WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled)">
                                 <input type="text" id="liSSITemplate" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
                             </div>
-                            <div class="col-md-3" ng-if="isWirePurposeAdhoc && isEditEnabled && !wireTicketObj.IsBookTransfer">
+                            <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && !wireTicketObj.IsBookTransfer">
                                 <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" ng-disabled="!isReceivingAccountEnabled" />
                             </div>
-                            <div class="col-md-3" ng-if="isWirePurposeAdhoc && isEditEnabled && wireTicketObj.IsBookTransfer">
+                            <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && wireTicketObj.IsBookTransfer">
                                 <input id="liReceivingBookAccount" type="text" class="form-control primary-info" name="liReceivingBookAccount" ng-disabled="!isReceivingAccountEnabled" />
                             </div>
                         </div>
                     </div>
-                    <p ng-show="!(isWirePurposeAdhoc && isEditEnabled)" />
-                    <p style="height:5px;" ng-show="isWirePurposeAdhoc && isEditEnabled" />
+                    <p ng-show="!(WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled)" />
+                    <p style="height:5px;" ng-show="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled" />
                 </div>
                 <div ng-if="WireTicket.hmsWireId == 0">
                     <div class="row" ng-show="wireObj.IsAdhocWire">
@@ -116,7 +116,7 @@
                                 <label>Select Currency:</label>
                             </div>
                             <div class="col-md-3">
-                                <input id="liCurrency" type="text" name="liCurrency" class="form-control primary-info" ng-disabled="!isEditEnabled"/>
+                                <input id="liCurrency" type="text" name="liCurrency" class="form-control primary-info" ng-disabled="!WireTicketStatus.IsEditEnabled" />
                             </div>
                         </div>
                     </div>
@@ -164,7 +164,7 @@
                             <label>Amount:</label>
                         </div>
                         <div class="col-md-3">
-                            <span type="text" id="wireAmount" class="form-control primary-info" ng-disabled="!(isWirePurposeAdhoc && isEditEnabled)" />
+                            <span type="text" id="wireAmount" class="form-control primary-info" ng-disabled="!(WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled)" />
                         </div>
                         <div class="col-md-1" style="width:5px !important;margin-left:-15px;margin-top:5px;">-</div>
                         <div class="col-md-1">
@@ -869,13 +869,13 @@
                         <div class="">
                             <p />
                             <div class="row">
-                                <div class="col-sm-12 col-md-12 col-lg-12" ng-show="isEditEnabled">
+                                <div class="col-sm-12 col-md-12 col-lg-12" ng-show="WireTicketStatus.IsEditEnabled">
                                     <div id="wireDropZone" style="width: 100%;">
                                         <form class="dropzone" enctype="multipart/form-data" id="uploadWireFiles" method="post" novalidate style="min-height: 60px !important;" />
                                     </div>
                                 </div>
                             </div>
-                            <br ng-show="isEditEnabled" />
+                            <br ng-show="WireTicketStatus.IsEditEnabled" />
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
                                     <table id="documentTable" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
@@ -936,16 +936,22 @@
                     </div>
                 </div>
                 <textarea type="text" placeholder="Enter Comments" id="wireComment" ng-model="wireComments" class="form-control" rows="2" style="width:50%;float:left;"></textarea>
-                <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save" ng-disabled="isMandatoryFieldsMissing || !isWireRequirementsFilled || !isValidWireInitiation || isUserActionDone" ng-if="isDraftEnabled" ng-click="fnUpdateWireWithStatus(1)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ isLastModifiedUser ?  'Modifying' : 'Reverting to Draft' }}...</span>">
-                    <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;{{ isLastModifiedUser ? "Modify" : "Save as Draft" }}
+                <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save" ng-disabled="isMandatoryFieldsMissing || !isWireRequirementsFilled || !isValidWireInitiation || isUserActionDone" ng-if="WireTicketStatus.IsDraftEnabled" ng-click="fnUpdateWireWithStatus(1)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ WireTicketStatus.IsLastModifiedUser ?  'Modifying' : 'Reverting to Draft' }}...</span>">
+                    <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;{{ WireTicketStatus.IsLastModifiedUser ? "Modify" : "Save as Draft" }}
                 </button>
-                <button id="initiateWire" type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="isMandatoryFieldsMissing || !isWireRequirementsFilled || !isValidWireInitiation || isUserActionDone" ng-if="isInitiationEnabled" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Initiating...</span>">
+                <button id="initiateWire" type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="isMandatoryFieldsMissing || !isWireRequirementsFilled || !isValidWireInitiation || isUserActionDone" ng-if="WireTicketStatus.IsEditEnabled" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Initiating...</span>">
                     <i class="glyphicon glyphicon-open"></i>&nbsp;{{ getInitiateButtonText() }}
                 </button>
-                <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-disabled="isUserActionDone" ng-if="isAuthorizedUserToApprove" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
+                <button id="holdWire" type="button" class="btn btn-sm btn-info ng-show-only" title="Save" ng-if="WireTicketStatus.IsWireStatusInitiated" ng-click="fnUpdateWireWithStatus(6)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Holding...</span>">
+                    <i class="glyphicon glyphicon-ban-circle"></i>&nbsp;Hold
+                </button>
+                <button id="unHoldWire" type="button" class="btn btn-sm btn-info ng-show-only" title="Save" ng-if="WireTicketStatus.IsWireStatusOnHold" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Un holding...</span>">
+                    <i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Un-Hold and {{getInitiateButtonText()}}
+                </button>
+                <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-disabled="isUserActionDone" ng-if="WireTicketStatus.IsAuthorizedUserToApprove" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
                     <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
                 </button>
-                <button id="cancelWire" type="button" class="btn btn-sm btn-info ng-show-only cancelWire" ng-disabled="isUserActionDone" ng-if="isCancelEnabled" ng-click="confirmCancellation()" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ getCancelButtonText(true) }}...</span>">
+                <button id="cancelWire" type="button" class="btn btn-sm btn-info ng-show-only cancelWire" ng-disabled="isUserActionDone" ng-if="WireTicketStatus.IsCancelEnabled" ng-click="confirmCancellation()" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ getCancelButtonText(true) }}...</span>">
                     <i class="glyphicon glyphicon-repeat"></i>&nbsp;{{ getCancelButtonText(false) }}
                 </button>
                 <a href="#" class="btn btn-sm btn-default" style="vertical-align:-webkit-baseline-middle;" data-dismiss="modal">Dismiss</a>

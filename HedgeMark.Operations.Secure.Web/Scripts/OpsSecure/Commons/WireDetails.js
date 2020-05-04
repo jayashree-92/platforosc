@@ -63,6 +63,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                                 case 3: return "<label class='label label-success'>Approved</label>";
                                 case 4: return row.HMWire.SwiftStatusId == 1 ? "<label class='label label-danger'>Rejected</label>" : "<label class='label label-default'>Cancelled</label>";
                                 case 5: return "<label class='label label-danger'>Failed</label>";
+                                case 6: return "<label class='label label-info'>On-Hold</label>";
                             }
                         }
                     }, {
@@ -203,6 +204,9 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                             break;
                         case "Failed":
                             $(row).addClass("danger");
+                            break;
+                        case "On Hold":
+                            $(row).addClass("blockedSection");
                             break;
                     }
 
