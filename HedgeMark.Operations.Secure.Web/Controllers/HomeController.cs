@@ -460,7 +460,7 @@ namespace HMOSecureWeb.Controllers
             }
             catch (Exception ex)
             {
-                //Response.Status = ex.Message; ;
+                Logger.Error(ex.Message, ex);
                 Response.StatusCode = 500;
                 Response.StatusDescription = ex.Message;
             }
