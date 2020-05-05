@@ -31,7 +31,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public int CreatedBy { get; set; }
         public int WirePurposeId { get; set; }
         public System.DateTime ContextDate { get; set; }
-        public Nullable<long> OnBoardAccountId { get; set; }
+        public long OnBoardAccountId { get; set; }
         public Nullable<long> OnBoardSSITemplateId { get; set; }
         public long OnBoardAgreementId { get; set; }
         public long hmFundId { get; set; }

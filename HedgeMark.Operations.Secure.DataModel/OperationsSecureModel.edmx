@@ -215,7 +215,7 @@
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="WirePurposeId" Type="int" Nullable="false" />
           <Property Name="ContextDate" Type="date" Nullable="false" />
-          <Property Name="OnBoardAccountId" Type="bigint" />
+          <Property Name="OnBoardAccountId" Type="bigint" Nullable="false" />
           <Property Name="OnBoardSSITemplateId" Type="bigint" />
           <Property Name="OnBoardAgreementId" Type="bigint" Nullable="false" />
           <Property Name="hmFundId" Type="bigint" Nullable="false" />
@@ -708,7 +708,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_hmsWires_OnBoardAccountId">
-          <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="0..1" />
+          <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="onBoardingAccount">
@@ -2112,7 +2112,7 @@
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
           <Property Name="WirePurposeId" Type="Int32" Nullable="false" />
           <Property Name="ContextDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="OnBoardAccountId" Type="Int64" />
+          <Property Name="OnBoardAccountId" Type="Int64" Nullable="false" />
           <Property Name="OnBoardSSITemplateId" Type="Int64" />
           <Property Name="OnBoardAgreementId" Type="Int64" Nullable="false" />
           <Property Name="hmFundId" Type="Int64" Nullable="false" />
@@ -2298,7 +2298,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_hmsWires_OnBoardAccountId">
-          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
           <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="onBoardingAccount">

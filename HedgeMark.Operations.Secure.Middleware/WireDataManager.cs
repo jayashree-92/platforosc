@@ -173,7 +173,6 @@ namespace HMOSecureMiddleware
                 //    Logger.Debug(s);
                 //};
 
-                context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
                 hmWire = context.hmsWires.Include(s => s.hmsWireMessageType)
@@ -185,9 +184,9 @@ namespace HMOSecureMiddleware
                                          .Include(s => s.hmsWireSenderInformation)
                                          .Include(s => s.hmsWireInvoiceAssociations)
                                          .Include(s => s.hmsWireCollateralAssociations)
-                                         .Include(s => s.SendingAccount)
-                                         .Include(s => s.ReceivingAccount)
-                                         .Include(s => s.ReceivingSSITemplate)
+                                         //.Include(s => s.SendingAccount)
+                                         //.Include(s => s.ReceivingAccount)
+                                         //.Include(s => s.ReceivingSSITemplate)
                                          //.Include("hmsWireLogs")
                                          .First(s => s.hmsWireId == wireId);
 
@@ -196,9 +195,14 @@ namespace HMOSecureMiddleware
                 hmWire.hmsWireLogs = context.hmsWireLogs.Where(s => s.hmsWireId == wireId).ToList();
             }
 
-            var wireSendingAccount = AccountManager.SetAccountDefaults(hmWire.SendingAccount);
-            var wireReceivingAccount = AccountManager.SetAccountDefaults(hmWire.ReceivingAccount) ?? new onBoardingAccount();
-            var wireSSITemplate = AccountManager.SetSSITemplateDefaults(hmWire.ReceivingSSITemplate) ?? new onBoardingSSITemplate();
+            hmWire.SendingAccount = AccountManager.GetOnBoardingAccount(hmWire.OnBoardAccountId);
+
+            if (hmWire.ReceivingOnBoardAccountId != null)
+                hmWire.ReceivingAccount = AccountManager.GetOnBoardingAccount(hmWire.ReceivingOnBoardAccountId ?? 0);
+
+            if (hmWire.OnBoardSSITemplateId != null)
+                hmWire.ReceivingSSITemplate = AccountManager.GetSsiTemplate(hmWire.OnBoardSSITemplateId ?? 0);
+
             hmWire.hmsWireLogs.ForEach(s =>
             {
                 s.hmsWire = null;
@@ -234,7 +238,7 @@ namespace HMOSecureMiddleware
                 hmWire.hmsWireSenderInformation.hmsWires = null;
             hmWire.hmsWireWorkflowLogs = hmWire.hmsWireWorkflowLogs.OrderByDescending(s => s.CreatedAt).ToList();
 
-            dmaCounterPartyOnBoarding counterparty;
+            dmaCounterPartyOnBoarding counterparty = null;
             List<string> workflowUsers;
             List<string> attachmentUsers;
 
@@ -252,16 +256,17 @@ namespace HMOSecureMiddleware
 
                 workflowUsers = hmWire.hmsWireWorkflowLogs.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
                 attachmentUsers = hmWire.hmsWireDocuments.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
-                counterparty = context.dmaCounterPartyOnBoardings.FirstOrDefault(s => wireSSITemplate.TemplateEntityId == s.dmaCounterPartyOnBoardId);
+                if (hmWire.ReceivingSSITemplate != null)
+                    counterparty = context.dmaCounterPartyOnBoardings.FirstOrDefault(s => hmWire.ReceivingSSITemplate.TemplateEntityId == s.dmaCounterPartyOnBoardId);
             }
 
             return new WireTicket()
             {
                 HMWire = hmWire,
                 //Agreement = wireAgreement,
-                SendingAccount = wireSendingAccount,
-                ReceivingAccount = hmWire.WireTransferTypeId == 2 ? wireReceivingAccount : new onBoardingAccount(),
-                SSITemplate = wireSSITemplate,
+                SendingAccount = hmWire.SendingAccount,
+                ReceivingAccount = hmWire.WireTransferTypeId == 2 ? hmWire.ReceivingAccount : new onBoardingAccount(),
+                SSITemplate = hmWire.ReceivingSSITemplate ?? new onBoardingSSITemplate(),
                 AttachmentUsers = attachmentUsers,
                 WorkflowUsers = workflowUsers,
                 Counterparty = (counterparty ?? new dmaCounterPartyOnBoarding()).CounterpartyName,

@@ -74,7 +74,8 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                var account = context.onBoardingAccounts.Include(s => s.Beneficiary)
+                var account = context.onBoardingAccounts
+                    .Include(s => s.Beneficiary)
                     .Include(s => s.Intermediary)
                     .Include(s => s.UltimateBeneficiary)
                     .Include(s => s.WirePortalCutoff)
