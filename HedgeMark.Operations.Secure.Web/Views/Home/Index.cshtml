@@ -26,10 +26,16 @@
             </div>
 
             <div class="col-md-2">
-                <div class="thumbnail dashBoardTile" ng-click="fnRetriveAllWireTickets(2)" style="border-left: 2px solid #F6BD0C;">
+                <div class="thumbnail dashBoardTile" ng-click="fnRetriveAllWireTickets([2,6])" style="border-left: 2px solid #F6BD0C;">
                     <div class="caption dashBoardCaption" style="background-color: #FEF9E7">
                         <h5 class="">Pending Approval</h5>
-                        <h1><label class="label text-warning number-counter" data-count="{{WireStatusCounts.Pending}}">0</label><i class="glyphicon glyphicon-time dashboardIcon"></i></h1>
+                        <h1>
+                            <label class="label text-warning number-counter" data-count="{{WireStatusCounts.Pending}}">0</label>
+                            <span class="small ng-show-hide" ng-show="WireStatusCounts.OnHold>0">
+                                |&nbsp;<label class="label text-blocked number-counter" style="padding: 0px !important;font-size: 20px" data-count="{{WireStatusCounts.OnHold}}">0</label><span style="font-size: 70%">&nbsp;On Hold</span>
+                            </span>
+                            <i class="glyphicon glyphicon-time dashboardIcon"></i>
+                        </h1>
                     </div>
                 </div>
             </div>

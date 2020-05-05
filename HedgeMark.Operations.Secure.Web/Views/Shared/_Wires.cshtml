@@ -19,6 +19,7 @@
                         </span>
                         <span ng-style="{'margin-left': WireTicketStatus.IsApprovedOrFailed ? '0px' : '55px' }">|&nbsp;Wire Status: <span id="spnwireStatus" style="font-size: 12px;" class="label"><b>{{ getWireStatus() }}</b></span></span>
                         <span ng-style="{'margin-left': WireTicketStatus.IsApprovedOrFailed ? '0px' : '55px' }" ng-show="WireTicket.SwiftStatusId > 1">|&nbsp;Swift Status: <span id="spnswiftStatus" style="font-size: 12px;" class="label"><b>{{ getSwiftStatus() }}</b></span></span>
+                        <span ng-show="WireTicket.WireStatusId == 6" style="font-weight: bold"> - by {{workflowUsers[0]}}</span>
                     </p>
                 </span>
                 <span class="pull-right" style="padding: 5px; position: absolute; margin: 5px 0px 0px -50px">

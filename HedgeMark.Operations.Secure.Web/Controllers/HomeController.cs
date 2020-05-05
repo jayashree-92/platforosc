@@ -39,12 +39,13 @@ namespace HMOSecureWeb.Controllers
             public int Approved { get; set; }
             public int Acknowledged { get; set; }
             public int CancelledAndProcessing { get; set; }
+            public int OnHold { get; set; }
 
             public int Total
             {
                 get
                 {
-                    return Pending + Approved + Cancelled + Completed + Failed + CancelledAndProcessing;
+                    return Pending + Approved + Cancelled + Completed + Failed + CancelledAndProcessing + OnHold;
                 }
             }
         }
@@ -93,6 +94,9 @@ namespace HMOSecureWeb.Controllers
                     //Acknowledged
                     if (statusCount.SwiftStatusId == 3)
                         wireStatusCount.Acknowledged += 1;
+
+                    if (statusCount.WireStatusId == 6)
+                        wireStatusCount.OnHold += 1;
                 }
             }
             return Json(wireStatusCount);
