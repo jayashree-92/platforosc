@@ -93,7 +93,18 @@ $.extend($.fn.dataTable.defaults, {
     'language': {
         //search: '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>',
         search: "",
-        searchPlaceholder: "Search"
+        searchPlaceholder: "Search",
+        searchPanes: {
+            title: {
+                _: 'Filters Selected - %d',
+                0: 'No Filters Selected',
+                //1: 'One Filter Selected',
+            },
+            //count: '{total} items',
+            countFiltered: '{shown} / {total}',
+            clearMessage: 'Clear Filters',
+            //collapse: 'Filter',
+        },
     }
 });
 

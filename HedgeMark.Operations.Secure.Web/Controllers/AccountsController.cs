@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;  
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
@@ -17,7 +17,7 @@ namespace HMOSecureWeb.Controllers
 {
     public class AccountsController : BaseController
     {
-        
+
         public ActionResult Index()
         {
             return View();
@@ -51,7 +51,7 @@ namespace HMOSecureWeb.Controllers
                     custodyAgreementTypeId = accountTypes.First(s => s.Value == "Custody").Key,
                 });
             }
-            
+
         }
 
         public JsonResult GetAccountAssociationPreloadData()
@@ -228,7 +228,7 @@ namespace HMOSecureWeb.Controllers
                         account.AccountNumber
                     } : null;
                 }).Where(temp => temp != null).OrderBy(y => y.AccountName).ToList(),
-              fundAccounts = availableFundAccounts,
+                fundAccounts = availableFundAccounts,
             }, JsonContentType, JsonContentEncoding);
         }
         public JsonResult GetAccountDocuments(long accountId)
@@ -273,74 +273,18 @@ namespace HMOSecureWeb.Controllers
             {
                 accountTypes = accountTypes.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
                 receivingAccountTypes,
-                OnBoardingAccounts = onBoardingAccounts.Select(x => new
+                OnBoardingAccounts = onBoardingAccounts.Select(account => new
                 {
-                    AgreementName = x.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)x.dmaAgreementOnBoardingId) ? agreements[(long)x.dmaAgreementOnBoardingId].AgreementShortName : string.Empty,
+                    Account = AccountManager.SetAccountDefaults(account),
+                    AgreementName = account.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)account.dmaAgreementOnBoardingId) ? agreements[(long)account.dmaAgreementOnBoardingId].AgreementShortName : string.Empty,
+                    AgreementTypeId = account.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)account.dmaAgreementOnBoardingId) ? agreements[(long)account.dmaAgreementOnBoardingId].AgreementTypeId :
+                                      (accountTypes.ContainsValue(account.AccountType) ? accountTypes.FirstOrDefault(y => y.Value == account.AccountType).Key : 0),
 
-                    AgreementTypeId = x.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)x.dmaAgreementOnBoardingId) ? agreements[(long)x.dmaAgreementOnBoardingId].AgreementTypeId :
-                                      (accountTypes.ContainsValue(x.AccountType) ? accountTypes.FirstOrDefault(y => y.Value == x.AccountType).Key : 0),
+                    Broker = account.BrokerId != null && counterparties.ContainsKey((long)account.BrokerId) ? counterparties[(long)account.BrokerId] : string.Empty,
+                    FundName = funds.ContainsKey((int)account.hmFundId) ? funds[(int)account.hmFundId] : string.Empty,
+                    ApprovedMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Approved"),
+                    PendingApprovalMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Pending Approval"),
 
-                    Broker = x.BrokerId != null && counterparties.ContainsKey((long)x.BrokerId) ? counterparties[(long)x.BrokerId] : string.Empty,
-                    FundName = funds.ContainsKey((int)x.hmFundId) ? funds[(int)x.hmFundId] : string.Empty,
-                    ApprovedMaps = x.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Approved"),
-                    PendingApprovalMaps = x.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Pending Approval"),
-                    x.onBoardingAccountId,
-                    x.dmaAgreementOnBoardingId,
-                    x.AccountType,
-                    x.BrokerId,
-                    CutoffTime = x.WirePortalCutoff != null ? x.WirePortalCutoff.CutoffTime : new TimeSpan(),
-                    DaystoWire = x.WirePortalCutoff != null ? x.WirePortalCutoff.DaystoWire : 0,
-                    x.AccountName,
-                    x.AccountNumber,
-                    x.AuthorizedParty,
-                    x.CashInstruction,
-                    x.CashSweep,
-                    x.CashSweepTime,
-                    x.CashSweepTimeZone,
-                    x.ContactEmail,
-                    x.ContactName,
-                    x.Currency,
-                    x.ContactNumber,
-                    x.ContactType,
-                    x.Description,
-                    x.AccountModule,
-                    x.CreatedAt,
-                    x.CreatedBy,
-                    x.Notes,
-                    x.UpdatedAt,
-                    x.UpdatedBy,
-                    x.ApprovedBy,
-                    x.BeneficiaryType,
-                    BeneficiaryBICorABA = x.Beneficiary != null ? x.Beneficiary.BICorABA : string.Empty,
-                    BeneficiaryBankName = x.Beneficiary != null ? x.Beneficiary.BankName : string.Empty,
-                    BeneficiaryBankAddress = x.Beneficiary != null ? x.Beneficiary.BankAddress : string.Empty,
-                    x.BeneficiaryAccountNumber,
-                    x.IntermediaryType,
-                    IntermediaryBICorABA = x.Intermediary != null ? x.Intermediary.BICorABA : string.Empty,
-                    IntermediaryBankName = x.Intermediary != null ? x.Intermediary.BankName : string.Empty,
-                    IntermediaryBankAddress = x.Intermediary != null ? x.Intermediary.BankAddress : string.Empty,
-                    x.IntermediaryAccountNumber,
-                    x.UltimateBeneficiaryType,
-                    UltimateBeneficiaryBICorABA = x.UltimateBeneficiary != null ? x.UltimateBeneficiary.BICorABA : string.Empty,
-                    UltimateBeneficiaryBankName = x.UltimateBeneficiary != null ? x.UltimateBeneficiary.BankName : string.Empty,
-                    UltimateBeneficiaryBankAddress = x.UltimateBeneficiary != null ? x.UltimateBeneficiary.BankAddress : string.Empty,
-                    x.UltimateBeneficiaryAccountName,
-                    x.FFCName,
-                    x.FFCNumber,
-                    x.Reference,
-                    x.onBoardingAccountStatus,
-                    x.hmFundId,
-                    SendersBIC = x.SwiftGroup != null ? x.SwiftGroup.SendersBIC : string.Empty,
-                    x.StatusComments,
-                    SwiftGroup = x.SwiftGroup != null ? x.SwiftGroup.SwiftGroup : string.Empty,
-                    x.AccountPurpose,
-                    x.AccountStatus,
-                    x.HoldbackAmount,
-                    x.SweepComments,
-                    x.AssociatedCustodyAcct,
-                    x.PortfolioSelection,
-                    x.TickerorISIN,
-                    x.SweepCurrency
                 }).ToList()
             });
         }
@@ -532,7 +476,7 @@ namespace HMOSecureWeb.Controllers
                 callback.RecCreatedBy = UserName;
                 callback.RecCreatedDt = DateTime.Now;
             }
-            
+
             AccountManager.AddOrUpdateCallback(callback);
         }
 
@@ -600,7 +544,7 @@ namespace HMOSecureWeb.Controllers
             return AccountManager.IsAccountDocumentExists(accountId);
         }
 
-        
+
         #region Export and Upload
 
         public FileResult ExportAllAccountlist()
@@ -950,7 +894,7 @@ namespace HMOSecureWeb.Controllers
                             accountDetail.Intermediary.BICorABA = string.Empty;
                             accountDetail.IntermediaryType = string.Empty;
                             accountDetail.IntermediaryBICorABAId = null;
-                        }        
+                        }
                         accountDetail.UltimateBeneficiaryAccountName = account["Ultimate Beneficiary Account Name"];
                         accountDetail.UltimateBeneficiaryType = account["Ultimate Beneficiary Type"];
                         accountDetail.UltimateBeneficiary.BICorABA = account["Ultimate Beneficiary BIC or ABA"];

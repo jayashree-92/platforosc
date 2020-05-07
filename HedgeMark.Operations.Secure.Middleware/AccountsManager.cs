@@ -116,6 +116,10 @@ namespace HMOSecureMiddleware
                 account.SwiftGroup.hmsSwiftGroupStatusLkp.hmsSwiftGroups = null;
             account.hmsAccountCallbacks.ForEach(s => s.onBoardingAccount = null);
 
+            account.onBoardingAccountDocuments.ForEach(s => s.onBoardingAccount = null);
+            account.onBoardingAccountSSITemplateMaps.ForEach(s => s.onBoardingAccount = null);
+            account.onBoardingAccountModuleAssociations.ForEach(s => s.onBoardingAccount = null);
+
             account.hmsWires = null;
             account.hmsWires1 = null;
             return account;

@@ -2055,10 +2055,7 @@ div.DTCR_pointer {
     overflow: scroll;
 }
 
-div.dt-searchPanes {
-    flex-direction: column;
-    height: 600px;
-}
+
 
 .dtsp-name {
     cursor: pointer

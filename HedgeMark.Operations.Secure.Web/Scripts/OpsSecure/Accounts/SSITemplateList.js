@@ -44,17 +44,6 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         "sSearch": "",
                         "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Onboarded SSI Templates",
                         "sInfoFiltered": " - filtering from _MAX_ Onboarded SSI Templates",
-                        searchPanes: {
-                            title: {
-                                _: 'Filters Selected - %d',
-                                0: 'No Filters Selected',
-                                //1: 'One Filter Selected',
-                            },
-                            //count: '{total} items',
-                            countFiltered: '{shown} / {total}',
-                            clearMessage: 'Clear Filters',
-                            //collapse: 'Filter',
-                        },
                     },
 
                     "fixedColumns": {
@@ -109,23 +98,20 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         { "mData": "SSITemplate.Reference", "sTitle": "Reference" },
                         {
                             "mData": "SSITemplate.SSITemplateStatus", "sTitle": "SSI Template Status",
-                            render: {
-                                _: function (tdata) {
-                                    if (tdata != null && tdata != "undefinied") {
-                                        switch (tdata) {
-                                            case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
-                                            case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
-                                            case "Saved As Draft": return "<label class='label label-default'>" + "Saved As Draft" + "</label>";
-                                        }
-                                        return "<label class='label label-default'>" + tdata + "</label>";
+                            "mRender": function (tdata) {
+                                if (tdata != null && tdata != "undefinied") {
+                                    switch (tdata) {
+                                        case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
+                                        case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
+                                        case "Saved As Draft":
+                                        case "Created":
+                                            return "<label class='label label-info'>" + "Saved As Draft" + "</label>";
                                     }
-                                    return "";
-                                },
-                                sp: function (tdata) { return tdata; }
+                                    return "<label class='label label-default'>" + tdata + "</label>";
+                                }
+                                return "";
                             },
-                            searchPanes: {
-                                orthogonal: 'sp'
-                            }
+
                         },
                         { "mData": "SSITemplate.StatusComments", "sTitle": "Comments" },
                         {
