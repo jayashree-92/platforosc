@@ -6,9 +6,9 @@
 <legend>Wire Cutoffs</legend>
 
 <div id="wireCutoffsDiv" ng-controller="WirePortalCutoffCtrl">
-    <div class="well well-sm sticky-header" style="min-height: 50px;">
-        @if (User.IsWireUser())
-        {
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
             <button ng-click="fnAddOrUpdateWirePortalCutoff(true)" id="btnAddWireCutoff" class="btn btn-success btn-sm" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Wire Cutoff</button>
             <div class="pull-right btn-group">
                 &nbsp;&nbsp; <button class=" btn btn-primary btn-sm" id="btnEdit" ng-disabled="!enableWireActions" ng-click="fnAddOrUpdateWirePortalCutoff(false)">
@@ -22,9 +22,12 @@
                     &nbsp;&nbsp;<a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportData()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
                 </div>
             </div>
-        }
+        </div>
+        <div class="panel-body">
+            <table id="tblWirePortalCutoffData" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+        </div>
     </div>
-    <table id="tblWirePortalCutoffData" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+
     <div class="modal fade" id="wirePortalCutoffModal" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

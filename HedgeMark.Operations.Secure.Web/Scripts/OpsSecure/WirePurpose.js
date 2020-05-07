@@ -72,13 +72,20 @@ HmOpsApp.controller("WirePurposeMgmtCtrl", function ($scope, $http, $timeout) {
                     "sInfo": "Showing _START_ to _END_ of _TOTAL_ wire tickets",
                     "sInfoFiltered": " - filtering from _MAX_ tickets"
                 },
-                "scrollX": false,
+                //"scrollX": false,
+                //"sScrollX": "100%",
+                //"sScrollXInner": "100%",
+                //"sScrollY": false,
+                
+                "deferRender": true,
+                "scroller": true,
+                "orderClasses": false,
                 "sScrollX": "100%",
-                "sScrollXInner": "100%",
-                "sScrollY": false,
-                //"bSort": false,
+                //sDom: "ift",
+                "scrollY": window.innerHeight - 350,
+
                 order: [1, 'asc'],
-                "bPaginate": false,
+                //"bPaginate": false,
                 iDisplayLength: -1
             });
         });
