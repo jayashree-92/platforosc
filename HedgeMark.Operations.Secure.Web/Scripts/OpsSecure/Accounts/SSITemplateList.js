@@ -1,16 +1,20 @@
 ﻿$("#liSSITemplates").addClass("active");
+
+var ssiTemplateTable;
+var tblonBoardAccountRow, accountSsiTemplateTable;
+var myDropZone;
+
+
 HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeout, $filter) {
     $("#onboardingMenu").addClass("active");
     $("#loading").show();
-    var ssiTemplateTable;
-    var myDropZone;
-    var approvedStatus = "Approved";
-    //var rejectedStatus = "Rejected";
+
     var pendingStatus = "Pending Approval";
     var createdStatus = "Saved As Draft";
     $scope.isExistsDocument = "False";
     $("#btnSSITemplateStatusButtons button").addClass("disabled");
     $("#btnUploadSource").removeClass("disabled");
+
     $scope.fnGetSSITemplates = function () {
         $http.get("/SSITemplate/GetAllBrokerSsiTemplates").then(function (response) {
 
@@ -19,110 +23,140 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
             $scope.ssiTemplateList = response.data.BrokerSsiTemplates;
             $scope.brokers = response.data.counterParties;
             $scope.serviceProviders = response.data.serviceProviders;
+
+
             ssiTemplateTable = $("#ssiTemplateTable").DataTable(
                 {
                     aaData: response.data.BrokerSsiTemplates,
                     "bDestroy": true,
+                    "dom": "<'#ssiSearchPane.collapse'P><'row'<'col-md-6'i><'col-md-6 pull-right'f>>trI",
+                    searchPanes: {
+                        cascadePanes: true,
+                        viewTotal: true,
+                        //controls: false,
+                        layout: 'columns-4',
+                        columns: [2, 3, 4, 28],
+                        orderable: false,
+                        //clear: false
+                    },
+                    language: {
+                        "sSearch": "",
+                        "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Onboarded SSI Templates",
+                        "sInfoFiltered": " - filtering from _MAX_ Onboarded SSI Templates",
+                        searchPanes: {
+                            title: {
+                                _: 'Filters Selected - %d',
+                                0: 'No Filters Selected',
+                                //1: 'One Filter Selected',
+                            },
+                            //count: '{total} items',
+                            countFiltered: '{shown} / {total}',
+                            clearMessage: 'Clear Filters',
+                            //collapse: 'Filter',
+                        },
+                    },
+
                     "fixedColumns": {
                         leftColumns: 2
                     },
                     "columns": [
-                        { "mData": "onBoardingSSITemplateId", "sTitle": "onBoardingSSITemplateId", visible: false },
-                        { "mData": "TemplateName", "sTitle": "Template Name" },
+                        { "mData": "SSITemplate.onBoardingSSITemplateId", "sTitle": "onBoardingSSITemplateId", visible: false },
+                        { "mData": "SSITemplate.TemplateName", "sTitle": "Template Name" },
                         {
-                            "mData": "SSITemplateType",
+                            "mData": "SSITemplate.SSITemplateType",
                             "sTitle": "SSI Template Type",
-                            "mRender": function (tdata) {
-                                if (tdata === "Broker")
-                                    return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
-                                if (tdata === "Fee/Expense Payment")
-                                    return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
-                                return "";
+                            render: {
+                                _: function (tdata) {
+                                    if (tdata === "Broker")
+                                        return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
+                                    if (tdata === "Fee/Expense Payment")
+                                        return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
+                                    return "";
+                                },
+                                sp: function (tdata) { return tdata; }
+                            },
+
+                            searchPanes: {
+                                orthogonal: 'sp'
                             }
                         },
                         { "mData": "Broker", "sTitle": "Legal Entity" },
                         { "mData": "AgreementType", "sTitle": "Account Type" },
-                        { "mData": "ServiceProvider", "sTitle": "Service Provider" },
-                        { "mData": "Currency", "sTitle": "Currency" },
-                        { "mData": "ReasonDetail", "sTitle": "Payment/Receipt Reason" },
-                        { "mData": "MessageType", "sTitle": "Message Type" },
-                        // { "mData": "InstructionType", "sTitle": "Instruction Type" },
-                        //// { "mData": "Account", "sTitle": "Account" },
+                        { "mData": "SSITemplate.ServiceProvider", "sTitle": "Service Provider" },
+                        { "mData": "SSITemplate.Currency", "sTitle": "Currency" },
+                        { "mData": "SSITemplate.ReasonDetail", "sTitle": "Payment/Receipt Reason" },
+                        { "mData": "SSITemplate.MessageType", "sTitle": "Message Type" },
+                        { "mData": "SSITemplate.BeneficiaryType", "sTitle": "Beneficiary Type" },
+                        { "mData": "SSITemplate.Beneficiary", "sTitle": "Beneficiary BIC or ABA", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BICorABA : ""; } },
+                        { "mData": "SSITemplate.Beneficiary", "sTitle": "Beneficiary Bank/Account Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
+                        { "mData": "SSITemplate.Beneficiary", "sTitle": "Beneficiary Bank Address", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankAddress : ""; } },
+                        { "mData": "SSITemplate.BeneficiaryAccountNumber", "sTitle": "Beneficiary Account Number" },
+                        { "mData": "SSITemplate.IntermediaryType", "sTitle": "Intermediary Beneficiary Type" },
+                        { "mData": "SSITemplate.Intermediary", "sTitle": "Intermediary BIC or ABA", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BICorABA : ""; } },
+                        { "mData": "SSITemplate.Intermediary", "sTitle": "Intermediary Bank/Account Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
+                        { "mData": "SSITemplate.Intermediary", "sTitle": "Intermediary Bank Address", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankAddress : ""; } },
+                        { "mData": "SSITemplate.IntermediaryAccountNumber", "sTitle": "Intermediary Account Number" },
+                        { "mData": "SSITemplate.UltimateBeneficiaryType", "sTitle": "Ultimate Beneficiary Type" },
+                        { "mData": "SSITemplate.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary BIC or ABA", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BICorABA : ""; } },
+                        { "mData": "SSITemplate.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
+                        { "mData": "SSITemplate.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Address", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankAddress : ""; } },
+                        { "mData": "SSITemplate.UltimateBeneficiaryAccountName", "sTitle": "Ultimate Beneficiary Account Name" },
+                        { "mData": "SSITemplate.AccountNumber", "sTitle": "Ultimate Beneficiary Account Number" },
 
-                        // { "mData": "InstName", "sTitle": "Account with Inst Name" },
-                        // { "mData": "InstBIC", "sTitle": "Account with Inst BIC" },
-                        // //{ "mData": "InstABA", "sTitle": "Account with Inst ABA" },
-                        // { "mData": "BeneficiaryName", "sTitle": "Beneficiary Name" },
-                        // { "mData": "BeneficiaryBIC", "sTitle": "Beneficiary BIC" },
-                        // { "mData": "BeneficiaryAccount", "sTitle": "Beneficiary Account" },
-
-                        //{ "mData": "FurtherCredit", "sTitle": "FFC Name" },
-                        //{ "mData": "FurtherCreditNumber", "sTitle": "FFC Number" },
-                        { "mData": "BeneficiaryType", "sTitle": "Beneficiary Type" },
-                        { "mData": "BeneficiaryBICorABA", "sTitle": "Beneficiary BIC or ABA" },
-                        { "mData": "BeneficiaryBankName", "sTitle": "Beneficiary Bank/Account Name" },
-                        { "mData": "BeneficiaryBankAddress", "sTitle": "Beneficiary Bank Address" },
-                        { "mData": "BeneficiaryAccountNumber", "sTitle": "Beneficiary Account Number" },
-                        { "mData": "IntermediaryType", "sTitle": "Intermediary Beneficiary Type" },
-                        { "mData": "IntermediaryBICorABA", "sTitle": "Intermediary BIC or ABA" },
-                        { "mData": "IntermediaryBankName", "sTitle": "Intermediary Bank/Account Name" },
-                        { "mData": "IntermediaryBankAddress", "sTitle": "Intermediary Bank Address" },
-                        { "mData": "IntermediaryAccountNumber", "sTitle": "Intermediary Account Number" },
-                        { "mData": "UltimateBeneficiaryType", "sTitle": "Ultimate Beneficiary Type" },
-                        { "mData": "UltimateBeneficiaryBICorABA", "sTitle": "Ultimate Beneficiary BIC or ABA" },
-                        { "mData": "UltimateBeneficiaryBankName", "sTitle": "Ultimate Beneficiary Bank Name" },
-                        { "mData": "UltimateBeneficiaryBankAddress", "sTitle": "Ultimate Beneficiary Bank Address" },
-                        { "mData": "UltimateBeneficiaryAccountName", "sTitle": "Ultimate Beneficiary Account Name" },
-                        { "mData": "AccountNumber", "sTitle": "Ultimate Beneficiary Account Number" },
-
-                        { "mData": "FFCName", "sTitle": "FFC Name" },
-                        { "mData": "FFCNumber", "sTitle": "FFC Number" },
-                        { "mData": "Reference", "sTitle": "Reference" },
+                        { "mData": "SSITemplate.FFCName", "sTitle": "FFC Name" },
+                        { "mData": "SSITemplate.FFCNumber", "sTitle": "FFC Number" },
+                        { "mData": "SSITemplate.Reference", "sTitle": "Reference" },
                         {
-                            "mData": "SSITemplateStatus", "sTitle": "SSI Template Status",
-                            "mRender": function (tdata) {
-                                if (tdata != null && tdata != "undefinied") {
-                                    switch (tdata) {
-                                        case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
-                                        case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
-                                        case "Saved As Draft": return "<label class='label label-default'>" + "Saved As Draft" + "</label>";
+                            "mData": "SSITemplate.SSITemplateStatus", "sTitle": "SSI Template Status",
+                            render: {
+                                _: function (tdata) {
+                                    if (tdata != null && tdata != "undefinied") {
+                                        switch (tdata) {
+                                            case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
+                                            case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
+                                            case "Saved As Draft": return "<label class='label label-default'>" + "Saved As Draft" + "</label>";
+                                        }
+                                        return "<label class='label label-default'>" + tdata + "</label>";
                                     }
-                                    return "<label class='label label-default'>" + tdata + "</label>";
-                                }
-                                return "";
+                                    return "";
+                                },
+                                sp: function (tdata) { return tdata; }
+                            },
+                            searchPanes: {
+                                orthogonal: 'sp'
                             }
                         },
-                        { "mData": "StatusComments", "sTitle": "Comments" },
+                        { "mData": "SSITemplate.StatusComments", "sTitle": "Comments" },
                         {
-                            "mData": "CreatedBy", "sTitle": "Created By",
+                            "mData": "SSITemplate.CreatedBy", "sTitle": "Created By",
                             "mRender": function (data) {
                                 return humanizeEmail(data);
                             }
                         },
                         {
-                            "mData": "CreatedAt",
+                            "mData": "SSITemplate.CreatedAt",
                             "sTitle": "Created Date",
                             "mRender": renderDotNetDateAndTime
                         },
                         {
-                            "mData": "UpdatedBy", "sTitle": "Last Modified By",
+                            "mData": "SSITemplate.UpdatedBy", "sTitle": "Last Modified By",
                             "mRender": function (data) {
                                 return humanizeEmail(data);
                             }
                         },
                         {
-                            "mData": "UpdatedAt",
+                            "mData": "SSITemplate.UpdatedAt",
                             "sTitle": "Last Modified",
                             "mRender": renderDotNetDateAndTime
                         },
                         {
-                            "mData": "ApprovedBy", "sTitle": "Approved By", "mRender": function (data) {
+                            "mData": "SSITemplate.ApprovedBy", "sTitle": "Approved By", "mRender": function (data) {
                                 return humanizeEmail(data == null ? "" : data);
                             }
                         }
                     ],
                     "createdRow": function (row, data) {
-                        switch (data.SSITemplateStatus) {
+                        switch (data.SSITemplate.SSITemplateStatus) {
                             case "Approved":
                                 $(row).addClass("success");
                                 break;
@@ -135,11 +169,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         }
 
                     },
-                    "oLanguage": {
-                        "sSearch": "",
-                        "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Onboarded SSI Templates",
-                        "sInfoFiltered": " - filtering from _MAX_ Onboarded SSI Templates"
-                    },
+
                     "deferRender": true,
                     "scroller": true,
                     "orderClasses": false,
@@ -319,10 +349,13 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         var tr = $(this).parent();
         var row = accountSsiTemplateTable.row(tr);
         if (row.data() != undefined) {
-            var ssiTemplateId = row.data().onBoardingSSITemplateId;
-            var brokerId = row.data().TemplateEntityId;
-            var currency = row.data().Currency;
-            var message = row.data().MessageType;
+
+            var ssiTemplate = row.data().SSITemplate;
+
+            var ssiTemplateId = ssiTemplate.onBoardingSSITemplateId;
+            var brokerId = ssiTemplate.TemplateEntityId;
+            var currency = ssiTemplate.Currency;
+            var message = ssiTemplate.MessageType;
             var icon = $(this).find("i");
             if ($("#accountRowTable").hasClass("initialized")) {
                 fnDestroyDataTable("#accountRowTable");
@@ -345,17 +378,13 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                     fnDestroyDataTable(rowTableId);
                 }
                 $http.get("/Accounts/GetSsiTemplateAccountMap?ssiTemplateId=" + ssiTemplateId + "&brokerId=" + brokerId + "&currency=" + currency + "&message=" + message + "&isServiceType=" + $scope.isServiceType).then(function (response) {
-
                     tblonBoardAccountRow = $(rowTableId).not(".initialized").addClass("initialized").DataTable(
                         {
                             "bDestroy": true,
                             //responsive: true,
                             aaData: response.data.ssiTemplateMaps,
                             "aoColumns": [
-                                {
-                                    "sTitle": "Account Name",
-                                    "mData": "AccountName"
-                                },
+                                { "sTitle": "Account Name", "mData": "AccountName" },
                                 {
                                     "mData": "AccountType",
                                     "sTitle": "Account Type",
@@ -369,35 +398,22 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                                         return "";
                                     }
                                 },
+                                { "sTitle": "Account Number", "mData": "AccountNumber", },
+                                { "sTitle": "FFC Number", "mData": "FFCNumber", },
+                                { "sTitle": "FFC Name", "mData": "FFCName", },
                                 {
-                                    "sTitle": "Account Number",
-                                    "mData": "AccountNumber",
+                                    "sTitle": "Created By", "mData": "CreatedBy", "mRender": function (data) {
+                                        return humanizeEmail(data);
+                                    }
                                 },
                                 {
-                                    "sTitle": "FFC Number",
-                                    "mData": "FFCNumber",
-                                },
-                                {
-                                    "sTitle": "FFC Name",
-                                    "mData": "FFCName",
-                                },
-                                {
-                                    "sTitle": "Created By",
-                                    "mData": "CreatedBy",
+                                    "sTitle": "Updated By", "mData": "UpdatedBy",
                                     "mRender": function (data) {
                                         return humanizeEmail(data);
                                     }
                                 },
                                 {
-                                    "sTitle": "Updated By",
-                                    "mData": "UpdatedBy",
-                                    "mRender": function (data) {
-                                        return humanizeEmail(data);
-                                    }
-                                },
-                                {
-                                    "mData": "Status",
-                                    "sTitle": "Status",
+                                    "mData": "Status", "sTitle": "Status",
                                     "mRender": function (data) {
                                         if (data === "Pending Approval")
                                             return "<label class=\"label ng-show-only label-warning\" style=\"font-size: 12px;\">Pending Approval</label>";
@@ -482,7 +498,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
 
 
         $("#btnSSITemplateStatusButtons button").addClass("disabled");
-        var rowElement = ssiTemplateTable.row(this).data();
+        var rowElement = ssiTemplateTable.row(this).data().SSITemplate;
         $scope.onBoardingSSITemplateId = rowElement.onBoardingSSITemplateId;
         $scope.listSSITemplateStatus = rowElement.SSITemplateStatus;
         $scope.updatedBy = rowElement.UpdatedBy;
@@ -512,7 +528,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
 
     $(document).on("dblclick", "#ssiTemplateTable tbody tr,.DTFC_Cloned tbody tr", function () {
 
-        var rowElement = ssiTemplateTable.row(this).data();
+        var rowElement = ssiTemplateTable.row(this).data().SSITemplate;
         $scope.onBoardingSSITemplateId = rowElement.onBoardingSSITemplateId;
         var searchText = $('#ssiTemplateListDiv input[type="search"]').val();
         var ssiListUrl = "/SSITemplate/Index?searchText=" + searchText;
@@ -663,7 +679,6 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         if (myDropZone != undefined) {
             myDropZone.removeAllFiles(true);
         }
-
     });
 
 });

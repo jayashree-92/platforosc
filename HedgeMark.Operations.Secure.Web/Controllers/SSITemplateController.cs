@@ -15,7 +15,6 @@ namespace HMOSecureWeb.Controllers
 {
     public class SSITemplateController : BaseController
     {
-
         public ActionResult Index()
         {
             return View();
@@ -55,54 +54,19 @@ namespace HMOSecureWeb.Controllers
             var brokerSsiTemplates = AccountManager.GetAllBrokerSsiTemplates();
             var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties();
             var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
-            var serviceProviders = AccountManager.GetAllServiceProviderList().Select(y => new { id = y.ServiceProvider, text = y.ServiceProvider }).DistinctBy(x => x.id).OrderBy(x => x.id).ToList();
+            var serviceProviders = AccountManager.GetAllServiceProviderList();
             return Json(new
             {
                 BrokerSsiTemplates = brokerSsiTemplates.Select(template => new
                 {
-                    template.onBoardingSSITemplateId,
-                    template.SSITemplateType,
-                    template.TemplateName,
-                    template.TemplateEntityId,
-                    template.dmaAgreementTypeId,
-                    template.TemplateTypeId,
-                    template.Currency,
-                    template.AccountNumber,
-                    template.AccountName,
-                    template.ReasonDetail,
-                    template.ServiceProvider,
-                    template.SSITemplateStatus,
-                    template.OtherReason,
-                    template.MessageType,
-                    template.StatusComments,
-                    template.CreatedAt,
-                    template.CreatedBy,
-                    template.UpdatedAt,
-                    template.UpdatedBy,
-                    template.ApprovedBy,
-                    template.BeneficiaryType,
-                    BeneficiaryBICorABA = template.Beneficiary != null ? template.Beneficiary.BICorABA : string.Empty,
-                    BeneficiaryBankName = template.Beneficiary != null ? template.Beneficiary.BankName : string.Empty,
-                    BeneficiaryBankAddress = template.Beneficiary != null ? template.Beneficiary.BankAddress : string.Empty,
-                    template.BeneficiaryAccountNumber,
-                    template.IntermediaryType,
-                    IntermediaryBICorABA = template.Intermediary != null ? template.Intermediary.BICorABA : string.Empty,
-                    IntermediaryBankName = template.Intermediary != null ? template.Intermediary.BankName : string.Empty,
-                    IntermediaryBankAddress = template.Intermediary != null ? template.Intermediary.BankAddress : string.Empty,
-                    template.IntermediaryAccountNumber,
-                    template.UltimateBeneficiaryType,
-                    template.UltimateBeneficiaryAccountName,
-                    UltimateBeneficiaryBICorABA = template.UltimateBeneficiary != null ? template.UltimateBeneficiary.BICorABA : string.Empty,
-                    UltimateBeneficiaryBankName = template.UltimateBeneficiary != null ? template.UltimateBeneficiary.BankName : string.Empty,
-                    UltimateBeneficiaryBankAddress = template.UltimateBeneficiary != null ? template.UltimateBeneficiary.BankAddress : string.Empty,
-                    template.FFCName,
-                    template.FFCNumber,
-                    template.Reference,
+                    SSITemplate = AccountManager.SetSSITemplateDefaults(template),
                     AgreementType = (agreementTypes.ContainsKey(template.dmaAgreementTypeId) && string.IsNullOrEmpty(template.ServiceProvider)) ? agreementTypes[template.dmaAgreementTypeId] : string.Empty,
                     Broker = (counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty)
                 }).ToList(),
                 counterParties = counterParties.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
-                serviceProviders
+                serviceProviders = serviceProviders.Select(y => new { id = y.ServiceProvider, text = y.ServiceProvider }).DistinctBy(x => x.id).OrderBy(x => x.id).ToList(),
+                //AllSSITemplateTypes = brokerSsiTemplates.Select(s => s.SSITemplateType).Distinct().OrderBy(s => s).ToList(),
+                //AllStatus = brokerSsiTemplates.Select(s => s.SSITemplateStatus).Distinct().OrderBy(s => s).ToList(),
             });
         }
 
@@ -174,7 +138,7 @@ namespace HMOSecureWeb.Controllers
 
                 ssiTemplate.onBoardingSSITemplateDocuments = document;
             }
-        
+
             var ssiTemplateId = AccountManager.AddSsiTemplate(ssiTemplate, UserName);
             if (ssiTemplateId > 0)
             {

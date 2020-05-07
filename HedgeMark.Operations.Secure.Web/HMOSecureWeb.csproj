@@ -336,6 +336,8 @@
     <Content Include="Content\DataTables\css\scroller.jqueryui.min.css" />
     <Content Include="Content\DataTables\css\scroller.semanticui.css" />
     <Content Include="Content\DataTables\css\scroller.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\searchPanes.bootstrap.css" />
+    <Content Include="Content\DataTables\css\searchPanes.dataTables.min.css" />
     <Content Include="Content\DataTables\css\select.bootstrap.css" />
     <Content Include="Content\DataTables\css\select.bootstrap.min.css" />
     <Content Include="Content\DataTables\css\select.bootstrap4.css" />
@@ -561,6 +563,8 @@
     <Content Include="Scripts\DataTables\dataTables.rowReorder.min.js" />
     <Content Include="Scripts\DataTables\dataTables.scroller.js" />
     <Content Include="Scripts\DataTables\dataTables.scroller.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.searchPanes.js" />
+    <Content Include="Scripts\DataTables\dataTables.searchPanes.min.js" />
     <Content Include="Scripts\DataTables\dataTables.select.js" />
     <Content Include="Scripts\DataTables\dataTables.select.min.js" />
     <Content Include="Scripts\DataTables\dataTables.semanticui.js" />
@@ -579,6 +583,7 @@
     <Content Include="Scripts\DataTables\responsive.jqueryui.min.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
+    <Content Include="Scripts\DataTables\searchPanes.bootstrap.js" />
     <Content Include="Scripts\daterangepicker.js" />
     <Content Include="Scripts\dropzone\basic.css" />
     <Content Include="Scripts\dropzone\basic.min.css" />

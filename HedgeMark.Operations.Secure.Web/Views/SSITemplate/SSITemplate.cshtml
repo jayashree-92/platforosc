@@ -281,7 +281,7 @@
                             @if (User.IsWireUser())
                             {
                                 <button type="submit" title="Save SSI Template" class="btn btn-sm btn-primary" ng-disabled=" ssiTemplateId > 0 && (!isSSITemplateChanged || ssiTemplate.SSITemplateStatus == 'Approved')" style="" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;Save SSI Template</button>
-                                @*<button type="submit" class="btn btn-primary" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save SSI Template</button>*@
+                                
                                 <a id="requestForApproval" title="Request for Approval" class="btn btn-sm btn-warning" ng-show="ssiTemplateId != 0" ng-disabled="ssiTemplate.SSITemplateStatus == 'Approved'" style="" ng-click="fnUpdateSSITemplateStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</a>
                                 if (User.IsWireApprover())
                                 {

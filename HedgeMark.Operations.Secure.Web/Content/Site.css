@@ -1969,8 +1969,8 @@ div.DTCR_pointer {
     padding-left: 20px;
 }
 
-#accountOnBoardContainer .input-group[class*="col-"], 
-#contactOnBoardContainer .input-group[class*="col-"], 
+#accountOnBoardContainer .input-group[class*="col-"],
+#contactOnBoardContainer .input-group[class*="col-"],
 #contactListDiv .input-group[class*="col-"] {
     float: none;
     padding-right: 0;
@@ -2053,4 +2053,40 @@ div.DTCR_pointer {
 
 #accountModal.modal.in {
     overflow: scroll;
+}
+
+div.dt-searchPanes {
+    flex-direction: column;
+    height: 600px;
+}
+
+.dtsp-name {
+    cursor: pointer
+}
+
+div[class^="dtsp-subRow"] {
+    width: -webkit-fill-available;
+}
+
+.dtsp-search{
+    font-size: small !important;
+    background-color: #efefef !important;
+    border-radius: 6px !important;
+}
+
+.dtsp-clearAll{
+    -webkit-box-shadow: 0 1px 3px 0 rgba(0,0,0,.55);
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.55);
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,background-color ease-in-out .15s,color ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,background-color ease-in-out .15s,color ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,background-color ease-in-out .15s,color ease-in-out .15s;
+    text-transform: capitalize;
+    padding: 7px !important;
+    border: inherit;
+    border-radius: 4px !important;
+}
+
+
+.dtsp-paneInputButton::-webkit-input-placeholder {
+    font-size: 12px !important;
 }

@@ -751,7 +751,7 @@ function initiateNumberCounter() {
         $({ countNum: $this.text() }).animate({
             countNum: countTo == "" ? 0 : countTo
         }, {
-            duration: 1000,
+            duration: 300,
             easing: 'linear',
             step: function () {
                 if (Math.floor(this.countNum) === NaN)

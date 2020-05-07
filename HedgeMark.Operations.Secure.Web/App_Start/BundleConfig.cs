@@ -55,6 +55,8 @@ namespace HMOSecureWeb
                 "~/Scripts/DataTables/dataTables.colReorder.js",
                 "~/Scripts/DataTables/dataTables.keyTable.js",
                 "~/Scripts/DataTables/datatables.mark.js",
+                "~/Scripts/DataTables/dataTables.searchPanes.js",
+                //"~/Scripts/DataTables/searchPanes.bootstrap.js",
                 "~/Scripts/dataTables-extentions.js"));
 
 
@@ -118,6 +120,8 @@ namespace HMOSecureWeb
                       .Include("~/Content/DataTables/css/rowReorder.bootstrap.css", new CssRewriteUrlTransform())
                       .Include("~/Content/DataTables/css/colReorder.bootstrap.css", new CssRewriteUrlTransform())
                       .Include("~/Content/DataTables/css/keyTable.bootstrap.css", new CssRewriteUrlTransform())
+                      .Include("~/Content/DataTables/css/searchPanes.bootstrap.css", new CssRewriteUrlTransform())
+                      .Include("~/Content/DataTables/css/searchPanes.dataTables.min.css", new CssRewriteUrlTransform())
                       .Include("~/Content/DataTables/css/datatables.mark.css", new CssRewriteUrlTransform())
                 .Include("~/Content/bootstrap3-editable/css/bootstrap-editable.css", new CssRewriteUrlTransform())
                 .Include("~/Content/bootstrap-datepicker.css", new CssRewriteUrlTransform())
