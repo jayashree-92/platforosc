@@ -33,6 +33,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                     searchPanes: {
                         cascadePanes: true,
                         viewTotal: true,
+                        dataLength: false,
                         //controls: false,
                         layout: 'columns-4',
                         columns: [2, 3, 4, 28],
