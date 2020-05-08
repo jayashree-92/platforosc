@@ -21,7 +21,7 @@
                     @if (User.IsWireUser())
                     {
                         <button ng-click="fnAddAccountDetail()" id="btnAddNewAccount" class="btn btn-info btn-sm" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Account</button>
-                        <button class="btn btn-default btn-sm" data-toggle="collapse" data-target="#fundAccountSearchPane"><i class="glyphicon glyphicon-filter"></i>&nbsp;Advance Filter</button>
+                        <button class="btn btn-default btn-sm" ng-click="fnClearAdvanceSearch()" data-toggle="collapse" data-target="#fundAccountSearchPane"><i class="glyphicon glyphicon-filter"></i>&nbsp;Advance Filter</button>
                         <div class="pull-right btn-group" style="padding-right: 2px;">
                             <button id="btnUploadSource" class="btn btn-default btn-sm editableTool dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-upload"></i>&nbsp;Bulk Upload <b class="caret"></b></button>
                             <ul class="dropdown-menu dropdown-menu-right" id="ulBulkUpload">

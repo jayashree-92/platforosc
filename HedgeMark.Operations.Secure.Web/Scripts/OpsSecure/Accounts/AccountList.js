@@ -453,6 +453,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }, 100);
     });
 
+    $scope.fnClearAdvanceSearch = function () {
+
+        if ($("#fundAccountSearchPane").hasClass("in")) {
+            $timeout(function () {
+                accountTable.searchPanes.clearSelections();
+            }, 500);
+        }
+    }
+
     $scope.fnGetAccounts = function () {
 
         $("#btnAddNewAccount").button("loading");

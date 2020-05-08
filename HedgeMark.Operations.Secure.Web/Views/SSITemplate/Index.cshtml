@@ -22,7 +22,7 @@
                     @if (User.IsWireUser())
                     {
                         <button ng-click="fnCreateSSITemplate()" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-plus"></i>&nbsp; Add SSI Template</button>
-                        <button class="btn btn-default btn-sm" data-toggle="collapse" data-target="#ssiSearchPane"><i class="glyphicon glyphicon-filter"></i>&nbsp;Advance Filter</button>
+                        <button class="btn btn-default btn-sm" ng-click="fnClearAdvanceSearch()" data-toggle="collapse" data-target="#ssiSearchPane"><i class="glyphicon glyphicon-filter"></i>&nbsp;Advance Filter</button>
 
                         <div class="pull-right btn-group" style="padding-right: 2px;">
                             <button id="btnUploadSource" class="btn btn-default btn-sm editableTool dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-upload"></i>&nbsp;Bulk Upload <b class="caret"></b></button>

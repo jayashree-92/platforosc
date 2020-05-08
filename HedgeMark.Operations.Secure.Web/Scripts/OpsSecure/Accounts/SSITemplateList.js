@@ -15,6 +15,16 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
     $("#btnSSITemplateStatusButtons button").addClass("disabled");
     $("#btnUploadSource").removeClass("disabled");
 
+
+    $scope.fnClearAdvanceSearch = function () {
+
+        if ($("#ssiSearchPane").hasClass("in")) {
+            $timeout(function () {
+                ssiTemplateTable.searchPanes.clearSelections();
+            }, 500);
+        }
+    }
+
     $scope.fnGetSSITemplates = function () {
         $http.get("/SSITemplate/GetAllBrokerSsiTemplates").then(function (response) {
 
