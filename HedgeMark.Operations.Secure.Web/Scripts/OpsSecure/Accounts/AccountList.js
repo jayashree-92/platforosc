@@ -30,6 +30,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     var pendingStatus = "Pending Approval";
     var createdStatus = "Created";
 
+    $scope.DisabledAgreementForCashInstructions = ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"];
 
     function viewAttachmentTable(data, key) {
 
@@ -451,6 +452,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 }, 1500);
             }, 1000);
         }, 100);
+        $scope.fnSetupSideMenu();
     });
 
     $scope.fnClearAdvanceSearch = function () {
@@ -473,6 +475,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (response.data.OnBoardingAccounts.length > 0)
                 $("#btnAccountStatusButtons").show();
             $scope.allAccountList = response.data.OnBoardingAccounts;
+            $scope.accountDetail = response.data.OnBoardingAccounts[0];
 
             if ($("#accountTable").hasClass("initialized")) {
                 accountTable.clear();
@@ -750,8 +753,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (!$scope.isStatusUpdate)
                 angular.element("#basicDetailCP").collapse("show");
             $(window).scrollTop(0);
+
+            $scope.fnSetupSideMenu();
         });
     }
+
 
     $scope.fnEditAccountDetails = function (rowElement) {
         $scope.watchAccountDetails = [];
@@ -3151,4 +3157,79 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         window.open("/SSITemplate/SSITemplate?ssiTemplateId=" + ssitemplateId, "_blank");
     });
 
+
+    $scope.fnSetupSideMenu = function () {
+
+        //*Starting of live filter functions*//
+        $('#navListSideBarHelp li').each(function () {
+            $(this).attr('data-search-term', $(this).text().toLowerCase());
+        });
+        $("#accountDetailCP label").each(function () {
+            $(this).attr('data-search-term', $(this).text().toLowerCase());
+        });
+
+
+        $(".live-search-box").on('keyup', function (event) {
+            var searchTerm = $(this).val().toLowerCase();
+            $(".live-search-highlight-rules").removeClass("active");
+            if (searchTerm == "" && event.keyCode == 8) {
+
+                if (searchTerm == "") {
+                    $(".live-search-highlight-rules").removeClass("active");
+                }
+
+                $("#navListSideBarHelp li ul").hide(200);
+                $("#navListSideBarHelp li").show(200);
+                return;
+            }
+
+            var regexOfSystemConfig = RegExp("\(" + searchTerm.replace(/[^a-zA-Z0-9()]/g, "\\$&") + "\)", "ig");
+            $('#navListSideBarHelp li').each(function (index, li) {
+                if ($(li).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                    $(li).show(200);
+                    $(li).find("ul").show(200);
+                    $($(li).find("a")).each(function (i, v) {
+                        $(v).html($(v).text().replace(regexOfSystemConfig, "<font class='live-search-highlight-rules active'>$&</font>"));
+                    });
+                } else {
+                    $(li).hide();
+                    $(li).find("ul").hide();
+                }
+            });
+
+            $("#accountDetailCP label").each(function (index, li) {
+                if ($(li).filter('[data-search-term *= ' + searchTerm.trim() + ']').length > 0 || searchTerm.length < 1) {
+                    $(li).html($(li).text().replace(regexOfSystemConfig, "<font class='live-search-highlight-rules active'>$&</font>"));
+
+                    var parentTarget = $(li).parentsUntil(".panel").parent().attr("id");
+                    $("#navListSideBarHelp li a[href='#" + parentTarget + "']").parent().show();
+                }
+            });
+        });
+        //*Ending of live filter functions*//
+
+        /* smooth scrolling sections */
+        $("#navListSideBarHelp a:not([href='#'])").click(function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+            var $dataTarget = $($($(this).attr("href") + " div").attr("data-target"));
+            $dataTarget.collapse("show");
+
+            if (location.pathname.replace(/^\//, '') != this.pathname.replace(/^\//, '') || location.hostname != this.hostname)
+                return false;
+
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+
+            if (!target.length)
+                return false;
+
+            $("#accountModal").animate({
+                scrollTop: target.position().top + 100
+            });
+        });
+    }
 });
