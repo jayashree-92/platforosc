@@ -47,7 +47,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<onBoardingCurrency> onBoardingCurrencies { get; set; }
         public virtual DbSet<OnBoardingSSITemplateAccountType> OnBoardingSSITemplateAccountTypes { get; set; }
         public virtual DbSet<onBoardingSSITemplateDocument> onBoardingSSITemplateDocuments { get; set; }
-        public virtual DbSet<OnBoardingSSITemplateServiceProvider> OnBoardingSSITemplateServiceProviders { get; set; }
         public virtual DbSet<onBoardingWirePortalCutoff> onBoardingWirePortalCutoffs { get; set; }
         public virtual DbSet<hmsWireSenderInformation> hmsWireSenderInformations { get; set; }
         public virtual DbSet<onBoardingAccountModuleAssociation> onBoardingAccountModuleAssociations { get; set; }

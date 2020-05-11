@@ -481,14 +481,6 @@
           <Property Name="RecCreatedBy" Type="varchar" MaxLength="100" />
           <Property Name="RecCreatedAt" Type="datetime" />
         </EntityType>
-        <EntityType Name="OnBoardingSSITemplateServiceProvider">
-          <Key>
-            <PropertyRef Name="OnBoardingSSITemplateServiceProviderId" />
-          </Key>
-          <Property Name="OnBoardingSSITemplateServiceProviderId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Reason" Type="varchar" MaxLength="200" />
-          <Property Name="ServiceProvider" Type="varchar" MaxLength="200" />
-        </EntityType>
         <EntityType Name="onBoardingWirePortalCutoff">
           <Key>
             <PropertyRef Name="onBoardingWirePortalCutoffId" />
@@ -985,7 +977,6 @@
           <EntitySet Name="onBoardingSSITemplate" EntityType="Self.onBoardingSSITemplate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OnBoardingSSITemplateAccountType" EntityType="Self.OnBoardingSSITemplateAccountType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingSSITemplateDocument" EntityType="Self.onBoardingSSITemplateDocument" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="OnBoardingSSITemplateServiceProvider" EntityType="Self.OnBoardingSSITemplateServiceProvider" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingWirePortalCutoff" EntityType="Self.onBoardingWirePortalCutoff" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_hmsAccountCallback_onBoardingAccountId" Association="Self.FK_hmsAccountCallback_onBoardingAccountId">
             <End Role="onBoardingAccount" EntitySet="onBoardingAccount" />
@@ -1183,7 +1174,6 @@
           <EntitySet Name="onBoardingCurrencies" EntityType="OperationsSecureModel.onBoardingCurrency" />
           <EntitySet Name="OnBoardingSSITemplateAccountTypes" EntityType="OperationsSecureModel.OnBoardingSSITemplateAccountType" />
           <EntitySet Name="onBoardingSSITemplateDocuments" EntityType="OperationsSecureModel.onBoardingSSITemplateDocument" />
-          <EntitySet Name="OnBoardingSSITemplateServiceProviders" EntityType="OperationsSecureModel.OnBoardingSSITemplateServiceProvider" />
           <EntitySet Name="onBoardingWirePortalCutoffs" EntityType="OperationsSecureModel.onBoardingWirePortalCutoff" />
           <EntitySet Name="hmsWireSenderInformations" EntityType="OperationsSecureModel.hmsWireSenderInformation" />
           <EntitySet Name="onBoardingAccountModuleAssociations" EntityType="OperationsSecureModel.onBoardingAccountModuleAssociation" />
@@ -1647,14 +1637,6 @@
           <Property Name="RecCreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="RecCreatedAt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="onBoardingSSITemplate" Relationship="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplateDocument" ToRole="onBoardingSSITemplate" />
-        </EntityType>
-        <EntityType Name="OnBoardingSSITemplateServiceProvider">
-          <Key>
-            <PropertyRef Name="OnBoardingSSITemplateServiceProviderId" />
-          </Key>
-          <Property Name="OnBoardingSSITemplateServiceProviderId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Reason" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ServiceProvider" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="onBoardingWirePortalCutoff">
           <Key>
@@ -2600,15 +2582,6 @@
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
                 <ScalarProperty Name="onBoardingSSITemplateDocumentId" ColumnName="onBoardingSSITemplateDocumentId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OnBoardingSSITemplateServiceProviders">
-            <EntityTypeMapping TypeName="OperationsSecureModel.OnBoardingSSITemplateServiceProvider">
-              <MappingFragment StoreEntitySet="OnBoardingSSITemplateServiceProvider">
-                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
-                <ScalarProperty Name="Reason" ColumnName="Reason" />
-                <ScalarProperty Name="OnBoardingSSITemplateServiceProviderId" ColumnName="OnBoardingSSITemplateServiceProviderId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

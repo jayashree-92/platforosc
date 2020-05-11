@@ -32,7 +32,6 @@
         <EntityTypeShape EntityType="OperationsSecureModel.onBoardingCurrency" Width="1.5" PointX="7.75" PointY="10.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.OnBoardingSSITemplateAccountType" Width="1.5" PointX="10.75" PointY="9.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.onBoardingSSITemplateDocument" Width="1.5" PointX="8" PointY="19" />
-        <EntityTypeShape EntityType="OperationsSecureModel.OnBoardingSSITemplateServiceProvider" Width="1.5" PointX="2.75" PointY="11.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.onBoardingWirePortalCutoff" Width="1.5" PointX="10.75" PointY="12.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireSenderInformation" Width="1.5" PointX="0.75" PointY="15.125" />
         <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAccountModuleAssociation" Width="1.5" PointX="8" PointY="29.625" />

@@ -556,13 +556,13 @@ namespace HMOSecureMiddleware
             return ssiTemplate;
         }
 
-        public static List<OnBoardingSSITemplateServiceProvider> GetAllServiceProviderList()
+        public static List<OnBoardingServiceProvider> GetAllServiceProviderList()
         {
-            using (var context = new OperationsSecureContext())
+            using (var context = new AdminContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.OnBoardingSSITemplateServiceProviders.ToList();
+                return context.OnBoardingServiceProviders.ToList();
             }
         }
 
@@ -586,13 +586,13 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<OnBoardingSSITemplateServiceProvider> GetAllSsiTemplateServiceProviders(string serviceProviderName)
+        public static List<OnBoardingServiceProvider> GetAllSsiTemplateServiceProviders(string serviceProviderName)
         {
-            using (var context = new OperationsSecureContext())
+            using (var context = new AdminContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.OnBoardingSSITemplateServiceProviders.Where(x => x.ServiceProvider == serviceProviderName).ToList();
+                return context.OnBoardingServiceProviders.Where(x => x.ServiceProvider == serviceProviderName).ToList();
             }
         }
 

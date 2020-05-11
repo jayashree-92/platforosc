@@ -202,6 +202,9 @@
     <Compile Include="onBoardingModule.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="OnBoardingServiceProvider.cs">
+      <DependentUpon>AdminModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="onBoardingSSITemplate.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
@@ -209,9 +212,6 @@
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingSSITemplateDocument.cs">
-      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="OnBoardingSSITemplateServiceProvider.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingWirePortalCutoff.cs">

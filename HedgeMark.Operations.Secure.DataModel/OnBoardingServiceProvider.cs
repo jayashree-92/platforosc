@@ -12,10 +12,10 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class OnBoardingSSITemplateServiceProvider
+    public partial class OnBoardingServiceProvider
     {
-        public long OnBoardingSSITemplateServiceProviderId { get; set; }
-        public string Reason { get; set; }
+        public long OnBoardingServiceProviderId { get; set; }
+        public string FeeType { get; set; }
         public string ServiceProvider { get; set; }
     }
 }

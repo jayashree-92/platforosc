@@ -126,6 +126,7 @@
           <Property Name="CreatedAt" Type="datetime" />
           <Property Name="UpdatedBy" Type="varchar" MaxLength="100" />
           <Property Name="UpdatedAt" Type="datetime" />
+          <Property Name="CounterpartyRegistrationNumber" Type="varchar" MaxLength="2000" />
         </EntityType>
         <EntityType Name="dmaFundOnBoardPermissions">
           <Key>
@@ -190,6 +191,14 @@
           <Property Name="Trading" Type="bit" Nullable="false" />
           <Property Name="ClientSubCategory" Type="varchar" MaxLength="20" />
           <Property Name="ComplainceCert" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OnBoardingServiceProvider">
+          <Key>
+            <PropertyRef Name="OnBoardingServiceProviderId" />
+          </Key>
+          <Property Name="OnBoardingServiceProviderId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FeeType" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="ServiceProvider" Type="varchar" MaxLength="300" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -296,12 +305,14 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="TargetCompletionDate" Type="datetime" />
           <Property Name="RelativeDays" Type="int" />
           <Property Name="RelativeOptions" Type="varchar" MaxLength="50" />
-          <Property Name="Notes" Type="varchar" MaxLength="8000" />
-          <Property Name="HistoricalNotes" Type="varchar" MaxLength="8000" />
+          <Property Name="Notes" Type="varchar(max)" />
+          <Property Name="HistoricalNotes" Type="varchar(max)" />
           <Property Name="NotesModifiedDate" Type="datetime" />
           <Property Name="FullyExecutedDate" Type="datetime" />
           <Property Name="StatusDate" Type="date" />
           <Property Name="Responsibility" Type="varchar" MaxLength="500" />
+          <Property Name="IACalculationAgent" Type="varchar" MaxLength="25" />
+          <Property Name="MTMChangeThresholdPercentage" Type="float" />
           <Property Name="CounterpartyFamily" Type="varchar" MaxLength="100" />
           <Property Name="CounterpartyName" Type="nvarchar" MaxLength="500" />
           <Property Name="CounterpartyShortCode" Type="nvarchar" MaxLength="500" />
@@ -364,6 +375,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <EntitySet Name="dmaCounterPartyOnBoarding" EntityType="Self.dmaCounterPartyOnBoarding" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaFundOnBoardPermissions" EntityType="Self.dmaFundOnBoardPermissions" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaOnBoardingContactDetail" EntityType="Self.dmaOnBoardingContactDetail" Schema="HMADMIN" store:Type="Tables" />
+          <EntitySet Name="OnBoardingServiceProvider" EntityType="Self.OnBoardingServiceProvider" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="vw_HFund" EntityType="Self.vw_HFund" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vw_HFund].[intFundID] AS [intFundID], 
@@ -453,6 +465,8 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
     [vw_OnboardedAgreements].[FullyExecutedDate] AS [FullyExecutedDate], 
     [vw_OnboardedAgreements].[StatusDate] AS [StatusDate], 
     [vw_OnboardedAgreements].[Responsibility] AS [Responsibility], 
+    [vw_OnboardedAgreements].[IACalculationAgent] AS [IACalculationAgent], 
+    [vw_OnboardedAgreements].[MTMChangeThresholdPercentage] AS [MTMChangeThresholdPercentage], 
     [vw_OnboardedAgreements].[CounterpartyFamily] AS [CounterpartyFamily], 
     [vw_OnboardedAgreements].[CounterpartyName] AS [CounterpartyName], 
     [vw_OnboardedAgreements].[CounterpartyShortCode] AS [CounterpartyShortCode], 
@@ -594,6 +608,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <EntitySet Name="dmaOnBoardingContactDetails" EntityType="AdminModel.dmaOnBoardingContactDetail" />
           <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
           <EntitySet Name="vw_OnboardedAgreements" EntityType="AdminModel.vw_OnboardedAgreements" />
+          <EntitySet Name="OnBoardingServiceProviders" EntityType="AdminModel.OnBoardingServiceProvider" />
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -682,6 +697,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="UpdatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="dmaCounterpartyFamily" Relationship="AdminModel.FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId" FromRole="dmaCounterPartyOnBoarding" ToRole="dmaCounterpartyFamily" />
+          <Property Name="CounterpartyRegistrationNumber" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="dmaFundOnBoardPermission">
           <Key>
@@ -872,8 +888,8 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="TargetCompletionDate" Type="DateTime" Precision="3" />
           <Property Name="RelativeDays" Type="Int32" />
           <Property Name="RelativeOptions" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Notes" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
-          <Property Name="HistoricalNotes" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="HistoricalNotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="NotesModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="FullyExecutedDate" Type="DateTime" Precision="3" />
           <Property Name="StatusDate" Type="DateTime" Precision="0" />
@@ -889,6 +905,16 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="AgreementShortName" Type="String" Nullable="false" MaxLength="1106" FixedLength="false" Unicode="true" />
           <Property Name="FundManagerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="IACalculationAgent" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="MTMChangeThresholdPercentage" Type="Double" />
+        </EntityType>
+        <EntityType Name="OnBoardingServiceProvider">
+          <Key>
+            <PropertyRef Name="OnBoardingServiceProviderId" />
+          </Key>
+          <Property Name="OnBoardingServiceProviderId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FeeType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ServiceProvider" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1066,6 +1092,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <EntitySetMapping Name="dmaCounterPartyOnBoardings">
             <EntityTypeMapping TypeName="AdminModel.dmaCounterPartyOnBoarding">
               <MappingFragment StoreEntitySet="dmaCounterPartyOnBoarding">
+                <ScalarProperty Name="CounterpartyRegistrationNumber" ColumnName="CounterpartyRegistrationNumber" />
                 <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
                 <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
@@ -1191,6 +1218,8 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <EntitySetMapping Name="vw_OnboardedAgreements">
             <EntityTypeMapping TypeName="AdminModel.vw_OnboardedAgreements">
               <MappingFragment StoreEntitySet="vw_OnboardedAgreements">
+                <ScalarProperty Name="MTMChangeThresholdPercentage" ColumnName="MTMChangeThresholdPercentage" />
+                <ScalarProperty Name="IACalculationAgent" ColumnName="IACalculationAgent" />
                 <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
                 <ScalarProperty Name="FundManagerName" ColumnName="FundManagerName" />
                 <ScalarProperty Name="AgreementShortName" ColumnName="AgreementShortName" />
@@ -1263,6 +1292,15 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
                 <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
                 <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
                 <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OnBoardingServiceProviders">
+            <EntityTypeMapping TypeName="AdminModel.OnBoardingServiceProvider">
+              <MappingFragment StoreEntitySet="OnBoardingServiceProvider">
+                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
+                <ScalarProperty Name="FeeType" ColumnName="FeeType" />
+                <ScalarProperty Name="OnBoardingServiceProviderId" ColumnName="OnBoardingServiceProviderId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

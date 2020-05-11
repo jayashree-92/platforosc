@@ -94,7 +94,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult PaymentOrReceiptReasonDetails(string templateType, int? agreementTypeId, string serviceProviderName)
         {
-            var reasonDetail = templateType == "Broker" ? AccountManager.GetAllSsiTemplateAccountTypes(agreementTypeId).Select(x => new { id = x.Reason, text = x.Reason }).OrderBy(x => x.text).ToList() : AccountManager.GetAllSsiTemplateServiceProviders(serviceProviderName).Select(x => new { id = x.Reason, text = x.Reason }).OrderBy(x => x.text).ToList();
+            var reasonDetail = templateType == "Broker" ? AccountManager.GetAllSsiTemplateAccountTypes(agreementTypeId).Select(x => new { id = x.Reason, text = x.Reason }).OrderBy(x => x.text).ToList() : AccountManager.GetAllSsiTemplateServiceProviders(serviceProviderName).Select(x => new { id = x.FeeType, text = x.FeeType }).OrderBy(x => x.text).ToList();
             return Json(reasonDetail, JsonRequestBehavior.AllowGet);
         }
 
@@ -419,36 +419,43 @@ namespace HMOSecureWeb.Controllers
 
         public void AddPaymentOrReceiptReasonDetails(string reason, string templateType, int? agreementTypeId, string serviceProviderName)
         {
-            using (var context = new OperationsSecureContext())
+            if (templateType == "Broker")
             {
-                if (templateType == "Broker")
+                using (var context = new OperationsSecureContext())
                 {
+
                     var onBoardingSsiTemplateAccountType = new OnBoardingSSITemplateAccountType
                     {
                         Reason = reason,
                         dmaAgreementTypeId = agreementTypeId ?? 0
                     };
                     context.OnBoardingSSITemplateAccountTypes.Add(onBoardingSsiTemplateAccountType);
+
+                    context.SaveChanges();
                 }
-                else
+            }
+            else
+            {
+                using (var context = new AdminContext())
                 {
-                    var onBoardingSsiTemplateServiceProvider = new OnBoardingSSITemplateServiceProvider
+
+                    var onBoardingSsiTemplateServiceProvider = new OnBoardingServiceProvider()
                     {
-                        Reason = reason,
+                        FeeType = reason,
                         ServiceProvider = serviceProviderName
                     };
-                    context.OnBoardingSSITemplateServiceProviders.Add(onBoardingSsiTemplateServiceProvider);
+                    context.OnBoardingServiceProviders.Add(onBoardingSsiTemplateServiceProvider);
+                    context.SaveChanges();
                 }
-                context.SaveChanges();
             }
         }
 
         public void AddServiceProvider(string serviceProviderName)
         {
-            using (var context = new OperationsSecureContext())
+            using (var context = new AdminContext())
             {
-                var onboardingServiceProvider = new OnBoardingSSITemplateServiceProvider() { Reason = "Vendor Expenses", ServiceProvider = serviceProviderName };
-                context.OnBoardingSSITemplateServiceProviders.Add(onboardingServiceProvider);
+                var onboardingServiceProvider = new OnBoardingServiceProvider() { FeeType = "Vendor Expenses", ServiceProvider = serviceProviderName };
+                context.OnBoardingServiceProviders.Add(onboardingServiceProvider);
                 context.SaveChanges();
             }
         }

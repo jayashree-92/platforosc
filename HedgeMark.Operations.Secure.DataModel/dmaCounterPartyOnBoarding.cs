@@ -23,6 +23,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<System.DateTime> CreatedAt { get; set; }
         public string UpdatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedAt { get; set; }
+        public string CounterpartyRegistrationNumber { get; set; }
     
         public virtual dmaCounterpartyFamily dmaCounterpartyFamily { get; set; }
     }
