@@ -44,7 +44,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             "aoColumns": [
                 {
                     "sTitle": "File Name",
-                    "mData": "FileName"
+                    "mData": "FileName",
+                    "mRender": function (data) {
+                        var href = "/Accounts/DownloadAccountFile?accountId=" + $scope.onBoardingAccountId + "&fileName=" + escape(data);
+                        return "<a target='_blank' title='click to download this file' href='" + href + "'><i class='glyphicon glyphicon-file' ></i>&nbsp;" + data + "</a>";
+                    }
                 },
                 {
                     "sTitle": "Uploaded By",
@@ -79,11 +83,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             "scrollY": 350,
             "order": [[2, "desc"]],
 
-            "fnRowCallback": function (nRow, aData) {
-                if (aData.FileName != "") {
-                    $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/Accounts/DownloadAccountFile?fileName=" + getFormattedFileName(aData.FileName) + "&accountId=" + $scope.onBoardingAccountId + "'>" + aData.FileName + "</a>");
-                }
-            },
+            //"fnRowCallback": function (nRow, aData) {
+            //    if (aData.FileName != "") {
+            //        $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/Accounts/DownloadAccountFile?fileName=" + getFormattedFileName(aData.FileName) + "&accountId=" + $scope.onBoardingAccountId + "'>" + aData.FileName + "</a>");
+            //    }
+            //},
             "oLanguage": {
                 "sSearch": "",
                 "sEmptyTable": "No files are available for the ssi templates",
@@ -96,6 +100,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.onBoardingAccountDetails[key].onBoardingAccountDocuments = angular.copy(data);
         }, 50);
 
+
+        $("#documentTable0 tbody a").on("click",
+            function (event) {
+                event.preventDefault();
+                window.location = $(this).attr("href");
+            });
 
         $("#accountDetailCP tbody tr td:last-child button").on("click", function (event) {
             event.preventDefault();
@@ -704,6 +714,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         var account = rowElement.Account;
 
+        console.log(account);
+
         $scope.onBoardingAccountId = account.onBoardingAccountId;
         $scope.FundId = account.hmFundId;
         $scope.AgreementId = account.dmaAgreementOnBoardingId;
@@ -776,6 +788,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.isEdit = true;
         $scope.fundName = accDetails.FundName;
         $scope.isLoad = true;
+
         $http.get("/Accounts/GetOnBoardingAccount?accountId=" + $scope.onBoardingAccountId).then(function (response) {
             var account = response.data.OnBoardingAccount;
             //$(".accntActions button").hide();
@@ -1426,10 +1439,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (contactName != null && contactName != undefined && contactName != "") {
                 var names = contactName.split(',');
                 $("#liContacts" + index).select2("val", names);
-                var onboardingContacts = $filter('filter')(($scope.OnBoardingContactsDetails), function (c) {
+                $scope.onboardingContacts = $filter('filter')(($scope.OnBoardingContactsDetails), function (c) {
                     return $.inArray(c.id.toString(), names) > -1;
                 });
-                viewContactTable(onboardingContacts, index);
+                viewContactTable($scope.onboardingContacts, index);
             }
         });
         //}
@@ -1438,7 +1451,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnGetAccountCallbackData = function (accountId, index) {
         $http.get("/Accounts/GetAccountCallbackData?accountId=" + accountId).then(function (response) {
             $scope.onBoardingAccountDetails[index].hmsAccountCallbacks = response.data;
-            $scope.viewCallbackTable(response.data, index);
+            $scope.CallBackChecks = response.data;
+            $scope.viewCallbackTable($scope.CallBackChecks, index);
         });
     }
 

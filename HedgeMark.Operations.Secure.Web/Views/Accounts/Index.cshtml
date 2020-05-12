@@ -161,10 +161,10 @@
                                 <li><a href="#accountBasicInfo_0">Basic Info</a></li>
                                 <li><a href="#accountSwiftInfo_0">Swift Info</a></li>
                                 <li><a href="#accountSSIInfo_0">Account SSI</a></li>
-                                <li ng-if="isEdit"><a href="#accountCallback_0">Callback Check</a></li>
-                                <li><a href="#accountContactInfo_0">Contacts</a></li>
-                                <li ng-if="isEdit"><a href="#accountAttachment_0">Attachments</a></li>
-                                <li ng-if="!accountDetail.IsReceivingAccount"><a href="#accountSsiAssociation_0">Associated Settlement Instructions</a></li>
+                                <li ng-if="isEdit"><a href="#accountCallback_0">Callback Check&nbsp;<span class="label label-info">{{ CallBackChecks.length }}</span>  </a></li>
+                                <li><a href="#accountContactInfo_0">Contacts&nbsp;<span class="label label-info">{{ onboardingContacts.length }}</span>   </a></li>
+                                <li ng-if="isEdit"><a href="#accountAttachment_0">Attachments&nbsp;<span class="label label-info">{{ accountDocuments.length }}</span></a></li>
+                                <li ng-if="!accountDetail.IsReceivingAccount"><a href="#accountSsiAssociation_0">Associated SSI&nbsp;<span class="label label-info">{{ ssiTemplateMaps.length }}</span></a></li>
 
                             </ul>
                         </div>
