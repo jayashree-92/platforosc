@@ -45,8 +45,8 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         viewTotal: true,
                         dataLength: false,
                         //controls: false,
-                        layout: 'columns-4',
-                        columns: [2, 3, 4, 28],
+                        layout: 'columns-5',
+                        columns: [2, 3, 4, 5, 28],
                         orderable: false,
                         //clear: false
                     },
