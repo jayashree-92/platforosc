@@ -764,7 +764,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.onBoardingAccountDetails = [];
 
         var accDetails = rowElement.Account;
-
         $scope.accountDetail = accDetails;
         $scope.onBoardingAccountId = accDetails.onBoardingAccountId;
         $scope.AgreementId = accDetails.dmaAgreementOnBoardingId;
@@ -773,14 +772,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.BrokerId = accDetails.BrokerId;
         $scope.counterpartyFamilyId = accDetails.BrokerId;
         $scope.AccountType = accDetails.AccountType;
-        $scope.broker = accDetails.Broker;
+        $scope.broker = rowElement.Broker;
         $scope.isEdit = true;
         $scope.fundName = accDetails.FundName;
         $scope.isLoad = true;
         $http.get("/Accounts/GetOnBoardingAccount?accountId=" + $scope.onBoardingAccountId).then(function (response) {
             var account = response.data.OnBoardingAccount;
-
-            console.log(account);
             //$(".accntActions button").hide();
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
             if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val())
@@ -1016,8 +1013,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }, 100);
     }
     $scope.fnUpdateAccount = function () {
-
-        console.log($scope.onBoardingAccountDetails);
 
         return $http.post("/Accounts/AddAccounts", { onBoardingAccounts: $scope.onBoardingAccountDetails }).then(function () {
             if (!$scope.isHigherStatus)
