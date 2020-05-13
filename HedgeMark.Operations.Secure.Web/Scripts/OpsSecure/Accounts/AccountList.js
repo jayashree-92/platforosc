@@ -775,6 +775,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.watchAccountDetails = [];
         $scope.onBoardingAccountDetails = [];
 
+        console.log(rowElement);
+
+
+
         var accDetails = rowElement.Account;
         $scope.accountDetail = accDetails;
         $scope.onBoardingAccountId = accDetails.onBoardingAccountId;
@@ -808,8 +812,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             account.CreatedAt = moment(account.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
 
             var agreementType = {};
-            if ($scope.AgreementTypeId > 0)
+            if ($scope.AgreementTypeId > 0) {
+
                 agreementType = $.grep($scope.agreementTypes, function (v) { return v.id == $scope.AgreementTypeId; })[0];
+                $scope.AgreementType = agreementType.text;
+            }
 
             if (agreementType != undefined && (agreementType.text == "PB" || agreementType.text == "FCM" || $scope.AccountType == "DDA")) {
                 $scope.accountPurpose = [{ id: "Cash", text: "Cash" }, { id: "Margin", text: "Margin" }];
