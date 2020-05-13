@@ -225,9 +225,6 @@ namespace HMOSecureWeb.Controllers
 
                 var fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "SSITemplate", DateTime.Now.ToString("yyyy-MM-dd"), file.FileName));
 
-                if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
-                    Directory.CreateDirectory(fileInfo.Directory.FullName);
-
                 var newFileName = file.FileName;
                 var splitFileNames = file.FileName.Split('.');
                 var ind = 1;
@@ -236,6 +233,10 @@ namespace HMOSecureWeb.Controllers
                     newFileName = string.Format("{0}_{1}.{2}", splitFileNames[0], ind++, splitFileNames[1]);
                     fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", DateTime.Now.ToString("yyyy-MM-dd"), newFileName));
                 }
+
+
+                if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
+                    Directory.CreateDirectory(fileInfo.Directory.FullName);
 
                 file.SaveAs(fileInfo.FullName);
                 var templateListRows = new Parser().ParseAsRows(fileInfo, "List of SSI Template", string.Empty, true);

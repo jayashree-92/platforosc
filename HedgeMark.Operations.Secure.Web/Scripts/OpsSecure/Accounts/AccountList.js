@@ -626,7 +626,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         "sInfoFiltered": " - filtering from _MAX_ Accounts"
                     },
                     "createdRow": function (row, data) {
-                        switch (data.onBoardingAccountStatus) {
+
+                        switch (data.Account.onBoardingAccountStatus) {
                             case "Approved":
                                 $(row).addClass("success");
                                 break;

@@ -652,7 +652,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
             $(".dzFileProgress").removeClass("progress-bar-striped").removeClass("active").removeClass("progress-bar-warning").addClass("progress-bar-success");
             $(".dzFileProgress").html("Upload Successful");
             $("#loading").show();
-            fnDestroyDataTable("#ssiTemplateTable");
+            //fnDestroyDataTable("#ssiTemplateTable");
             $scope.fnGetSSITemplates();
         },
         queuecomplete: function () {
