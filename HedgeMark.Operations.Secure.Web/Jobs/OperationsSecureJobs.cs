@@ -166,15 +166,12 @@ namespace HMOSecureWeb.Jobs
 
         public static void ScheduleReceiptOfInboundAckMessages(bool isDisabled)
         {
-
-            RecurringJob.RemoveIfExists(InboundAckMessagesReceiptJobName);
-
             if (isDisabled)
             {
                 RecurringJob.RemoveIfExists(InboundAckMessagesReceiptJobName);
                 return;
             }
-    //        RecurringJob.AddOrUpdate(InboundAckMessagesReceiptJobName, () => QueueSystemManager.GetAndProcessAcknowledgement(-1), new CronHelper().Every().Minute);
+            RecurringJob.AddOrUpdate(InboundAckMessagesReceiptJobName, () => QueueSystemManager.GetAndProcessAcknowledgement(-1), new CronHelper().Every().Minute);
 
             ////We need to find a way to add Listener through XMS in a way where scheduling is not required 
             //var timer = new Timer { Interval = 30 * 1000 };

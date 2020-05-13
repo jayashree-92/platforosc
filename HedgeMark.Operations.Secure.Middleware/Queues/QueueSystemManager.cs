@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Com.HedgeMark.Commons;
 using HedgeMark.Operations.Secure.DataModel;
 using HMOSecureMiddleware.Util;
@@ -40,7 +40,6 @@ namespace HMOSecureMiddleware.Queues
         {
             Environment.SetEnvironmentVariable("MQCCSID", QueueManagerCcIdProperty);
             ConnectMQ();
-            ConnectInBoundMQAndListen();
         }
 
         private static void ConnectMQ()
@@ -76,11 +75,13 @@ namespace HMOSecureMiddleware.Queues
             //Send this Swift Message
             SendMessageInQueue(swiftMessage);
 
-            //sleep for 2 second
-            Thread.Sleep(1000 * 2);
+            new TaskFactory().StartNew(() =>
+            {
+                Task.Delay(1000 * 3);
 
-            //Look out for FEACK or ACK
-            GetAndProcessAcknowledgement();
+                //Look out for FEACK or ACK
+                GetAndProcessAcknowledgement();
+            });
         }
 
         private static void SendMessageInQueue(string swiftMessage, bool isRetry = false)
@@ -248,53 +249,52 @@ namespace HMOSecureMiddleware.Queues
 
 
 
+        //public static void ConnectInBoundMQAndListen()
+        //{
+        //    XMSFactoryFactory xff = XMSFactoryFactory.GetInstance(XMSC.CT_WMQ);
+        //    IConnectionFactory cf = xff.CreateConnectionFactory();
+        //    cf.SetStringProperty(XMSC.WMQ_HOST_NAME, HostName);//"10.87.188.156(7111)"
+        //    cf.SetIntProperty(XMSC.WMQ_PORT, ChannelConnectionPort);
+        //    cf.SetStringProperty(XMSC.WMQ_CHANNEL, ClientChannelName);
+        //    cf.SetIntProperty(XMSC.WMQ_CONNECTION_MODE, XMSC.WMQ_CM_CLIENT);
+        //    cf.SetStringProperty(XMSC.WMQ_QUEUE_MANAGER, QueueManagerName);
+        //    cf.SetIntProperty(XMSC.WMQ_BROKER_VERSION, XMSC.WMQ_BROKER_V1);
 
-        public static void ConnectInBoundMQAndListen()
-        {
-            XMSFactoryFactory xff = XMSFactoryFactory.GetInstance(XMSC.CT_WMQ);
-            IConnectionFactory cf = xff.CreateConnectionFactory();
-            cf.SetStringProperty(XMSC.WMQ_HOST_NAME, HostName);//"10.87.188.156(7111)"
-            cf.SetIntProperty(XMSC.WMQ_PORT, ChannelConnectionPort);
-            cf.SetStringProperty(XMSC.WMQ_CHANNEL, ClientChannelName);
-            cf.SetIntProperty(XMSC.WMQ_CONNECTION_MODE, XMSC.WMQ_CM_CLIENT);
-            cf.SetStringProperty(XMSC.WMQ_QUEUE_MANAGER, QueueManagerName);
-            cf.SetIntProperty(XMSC.WMQ_BROKER_VERSION, XMSC.WMQ_BROKER_V1);
+        //    IConnection conn = cf.CreateConnection();
+        //    Console.WriteLine("connection created");
+        //    ISession sess = conn.CreateSession(false, AcknowledgeMode.AutoAcknowledge);
+        //    IDestination dest = sess.CreateQueue(ReceiverAckQueueName);
+        //    IMessageConsumer consumer = sess.CreateConsumer(dest);
+        //    MessageListener ml = new MessageListener(OnMessage);
+        //    consumer.MessageListener = ml;
+        //    conn.Start();
+        //    Console.WriteLine("Consumer started");
+        //}
 
-            IConnection conn = cf.CreateConnection();
-            Console.WriteLine("connection created");
-            ISession sess = conn.CreateSession(false, AcknowledgeMode.AutoAcknowledge);
-            IDestination dest = sess.CreateQueue(ReceiverAckQueueName);
-            IMessageConsumer consumer = sess.CreateConsumer(dest);
-            MessageListener ml = new MessageListener(OnMessage);
-            consumer.MessageListener = ml;
-            conn.Start();
-            Console.WriteLine("Consumer started");
-        }
-
-        private static void OnMessage(IMessage msg)
-        {
-            //ITextMessage textMsg = (ITextMessage)msg;
-            //Console.Write("Got a message: ");
-            //Console.WriteLine(textMsg.Text);
+        //private static void OnMessage(IMessage msg)
+        //{
+        //    //ITextMessage textMsg = (ITextMessage)msg;
+        //    //Console.Write("Got a message: ");
+        //    //Console.WriteLine(textMsg.Text);
 
 
-            IBytesMessage bytesMessage = (IBytesMessage)msg;
+        //    IBytesMessage bytesMessage = (IBytesMessage)msg;
 
-            var buffer = new byte[bytesMessage.BodyLength];
-            bytesMessage.ReadBytes(buffer, (int)bytesMessage.BodyLength);
-            var messageAsText = Encoding.Unicode.GetString(buffer);
+        //    var buffer = new byte[bytesMessage.BodyLength];
+        //    bytesMessage.ReadBytes(buffer, (int)bytesMessage.BodyLength);
+        //    var messageAsText = Encoding.Unicode.GetString(buffer);
 
-            Logger.Debug("Message Received from Listener:" + messageAsText);
+        //    Logger.Debug("Message Received from Listener:" + messageAsText);
 
-            //var messageAsText = textMsg.Text.ReadString(message.MessageLength);
+        //    //var messageAsText = textMsg.Text.ReadString(message.MessageLength);
 
-            //Log all Incoming messages
-            LogMQMessage(messageAsText, ReceiverAckQueueName, false);
+        //    //Log all Incoming messages
+        //    LogMQMessage(messageAsText, ReceiverAckQueueName, false);
 
-            WireTransactionManager.ProcessInboundMessage(messageAsText);
-            Logger.Debug("Message Processing Complete");
+        //    WireTransactionManager.ProcessInboundMessage(messageAsText);
+        //    Logger.Debug("Message Processing Complete");
 
-        }
+        //}
 
 
         //private static void ConnectInBoundMQAndListen()
