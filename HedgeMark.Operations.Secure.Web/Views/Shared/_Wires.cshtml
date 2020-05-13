@@ -66,10 +66,10 @@
                             <div class="col-md-3" ng-show="!(WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled)">
                                 <input type="text" id="liSSITemplate" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
                             </div>
-                            <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && !wireTicketObj.IsBookTransfer">
+                            <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && !wireTicketObj.IsFundTransfer">
                                 <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" ng-disabled="!isReceivingAccountEnabled" />
                             </div>
-                            <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && wireTicketObj.IsBookTransfer">
+                            <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && wireTicketObj.IsFundTransfer">
                                 <input id="liReceivingBookAccount" type="text" class="form-control primary-info" name="liReceivingBookAccount" ng-disabled="!isReceivingAccountEnabled" />
                             </div>
                         </div>
@@ -125,7 +125,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="col-md-3">
-                                <label>Select Sending Account:</label>
+                                <label>Select {{wireTicketObj.IsNotice?'Receiving':'Sending'}} Account:</label>
                             </div>
                             <div class="col-md-3">
                                 <input id="liSendingAccount" type="text" class="form-control primary-info" name="liSendingAccount" ng-disabled="!isSendingAccountEnabled" />
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                     <p style="height:5px;" />
-                    <div class="row" ng-show="wireTicketObj.IsBookTransfer">
+                    <div class="row" ng-show="wireTicketObj.IsFundTransfer">
                         <div class="col-md-12">
                             <div class="col-md-3">
                                 <label>Select Receiving Account:</label>
@@ -143,8 +143,8 @@
                             </div>
                         </div>
                     </div>
-                    <p style="height:5px;" ng-show="wireTicketObj.IsBookTransfer" />
-                    <div class="row" ng-show="!wireTicketObj.IsBookTransfer && !wireTicketObj.IsNotice">
+                    <p style="height:5px;" ng-show="wireTicketObj.IsFundTransfer" />
+                    <div class="row" ng-show="!wireTicketObj.IsFundTransfer && !wireTicketObj.IsNotice">
                         <div class="col-md-12">
                             <div class="col-md-3">
                                 <label>Select Receiving Account:</label>
@@ -157,7 +157,7 @@
                             </div>
                         </div>
                     </div>
-                    <p style="height:5px;" ng-show="!wireTicketObj.IsBookTransfer && !wireTicketObj.IsNotice" />
+                    <p style="height:5px;" ng-show="!wireTicketObj.IsFundTransfer && !wireTicketObj.IsNotice" />
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -442,7 +442,7 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default ng-show-hide" id="panelReceivingAccountSelector" ng-if="wireTicketObj.IsBookTransfer && WireTicket.ReceivingOnBoardAccountId != ''">
+                <div class="panel panel-default ng-show-hide" id="panelReceivingAccountSelector" ng-if="wireTicketObj.IsFundTransfer && WireTicket.ReceivingOnBoardAccountId != ''">
                     <div class="panel-heading" data-toggle="collapse" data-target="#receivingAccountDetailDiv" ng-click="collapseContainer('ReceivingAccount')" aria-expanded="false" aria-controls="receivingAccountDetailDiv">
                         <span class="">Receiving Account Details</span>&nbsp;&nbsp;<span class="label label-primary">{{ receivingAccountDetail.AccountNumber + " - " + receivingAccountDetail.AccountName }}</span>
                         <span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isReceivingAccountCollapsed , 'glyphicon-chevron-down': isReceivingAccountCollapsed }"></span>
@@ -672,7 +672,7 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default ng-show-hide" id="panelSSITemplateSelector" ng-if="!wireTicketObj.IsBookTransfer && !wireTicketObj.IsNotice && WireTicket.OnboardSSITemplateId != ''">
+                <div class="panel panel-default ng-show-hide" id="panelSSITemplateSelector" ng-if="!wireTicketObj.IsFundTransfer && !wireTicketObj.IsNotice && WireTicket.OnboardSSITemplateId != ''">
                     <div class="panel-heading" data-toggle="collapse" data-target="#ssiTemplateDetailDiv" ng-click="collapseContainer('SSITemplate')" aria-expanded="false" aria-controls="ssiTemplateDetailDiv">
                         <span class=""> Receiving Account Details</span>&nbsp;&nbsp;<span class="label label-primary prewrap">{{ ssiTemplate.AccountNumber + " - " + ssiTemplate.TemplateName }}</span>
                         <span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isSSITemplateCollapsed , 'glyphicon-chevron-down': isSSITemplateCollapsed }"></span>
@@ -917,7 +917,7 @@
                             &nbsp;<button class="btn btn-default btn-xs ng-show-hide" ng-hide="SwiftFormatMessageActiveTag==''" ng-click="fnCopySwiftMessageToClipboard($event)"><i class="glyphicon glyphicon-copy"></i>&nbsp;Copy to Clipboard</button>
                         </span>
                         <ol class="status-track" style="text-align: center;    padding-bottom: 0px;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ">
-                            <li class="{{value ==''?'status-track-todo': key.indexOf('N-Ack')>=0 ? 'status-track-failed' : 'status-track-done'}}" ng-class="{'status-active': SwiftFormatMessageActiveTag==key}" ng-repeat="(key, value) in wireTicketObj.SwiftMessages" ng-click="fnShowFormattedSwiftMsg($event,key,value)">{{key}}</li>
+                            <li class="{{value.OriginalFinMsg ==''?'status-track-todo': key.indexOf('N-Ack')>=0 ? 'status-track-failed' : 'status-track-done'}}" ng-class="{'status-active': SwiftFormatMessageActiveTag==key}" ng-repeat="(key, value) in wireTicketObj.SwiftMessages" ng-click="fnShowFormattedSwiftMsg($event,key,value)">{{key}}</li>
                         </ol>
                         <span class="glyphicon  pull-right" style="top:-15px" ng-class="{ 'glyphicon-chevron-right': !isSwiftMessagesCollapsed , 'glyphicon-chevron-down': isSwiftMessagesCollapsed }"></span>
                     </div>

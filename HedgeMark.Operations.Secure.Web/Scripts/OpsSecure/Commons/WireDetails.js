@@ -109,7 +109,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     {
                         "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary Bank",
                         "render": function (tdata, type, row) {
-                            if (row.IsBookTransfer) {
+                            if (row.IsFundTransfer) {
                                 if (row.ReceivingAccount.UltimateBeneficiaryType == "Account Name")
                                     return row.ReceivingAccount.Beneficiary.BankName;
                                 else
@@ -127,7 +127,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     {
                         "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary",
                         "render": function (tdata, type, row) {
-                            if (row.IsBookTransfer) {
+                            if (row.IsFundTransfer) {
                                 if (row.ReceivingAccount.UltimateBeneficiaryType == "Account Name")
                                     return row.ReceivingAccount.UltimateBeneficiaryAccountName;
                                 else
@@ -145,7 +145,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     {
                         "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary A/C Number",
                         "render": function (tdata, type, row) {
-                            if (row.IsBookTransfer) {
+                            if (row.IsFundTransfer) {
                                 return row.ReceivingAccount.AccountNumber;
                             }
                             else if (!row.IsNotice) {
@@ -282,7 +282,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
             Report: "Adhoc Report",
             IsAdhocWire: true,
             ReportMapId: 0,
-            IsBookTransfer: false,
+            IsFundTransfer: false,
             AgreementName: "",
             IsAdhocPage: true
         };

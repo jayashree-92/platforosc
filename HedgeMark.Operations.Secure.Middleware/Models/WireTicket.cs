@@ -19,9 +19,9 @@ namespace HMOSecureMiddleware.Models
                 return HMWire == null ? 0 : HMWire.hmsWireId;
             }
         }
-        public bool IsBookTransfer
+        public bool IsFundTransfer
         {
-            get { return HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.TransferType == "Book Transfer"; }
+            get { return HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.WireTransferTypeId == 2; }
         }
 
         public bool IsNotice
@@ -31,7 +31,7 @@ namespace HMOSecureMiddleware.Models
 
         public string TransferType
         {
-            get { return HMWire.hmsWireTransferTypeLKup == null ? "Normal Transfer" : HMWire.hmsWireTransferTypeLKup.TransferType; }
+            get { return HMWire.hmsWireTransferTypeLKup == null ? "3rd Party Transfer" : HMWire.hmsWireTransferTypeLKup.TransferType; }
         }
 
         public bool IsSenderInformationRequired
@@ -50,8 +50,8 @@ namespace HMOSecureMiddleware.Models
             {
                 switch (TransferType)
                 {
-                    case "Normal Transfer": return _counterparty;
-                    case "Book Transfer": return "BNY";
+                    case "3rd Party Transfer": return _counterparty;
+                    case "Fund Transfer": return "BNY";
                     case "Fee/Expense Payment": return SSITemplate.ServiceProvider;
                     default: return _counterparty;
                 }
@@ -89,14 +89,14 @@ namespace HMOSecureMiddleware.Models
         {
             get
             {
-                return IsBookTransfer ? ReceivingAccount.AccountName : SSITemplate.TemplateName;
+                return IsFundTransfer ? ReceivingAccount.AccountName : SSITemplate.TemplateName;
             }
         }
         public string ReceivingAccountCurrency
         {
             get
             {
-                return IsNotice ? SendingAccount.Currency : IsBookTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
+                return IsNotice ? SendingAccount.Currency : IsFundTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
             }
         }
 
