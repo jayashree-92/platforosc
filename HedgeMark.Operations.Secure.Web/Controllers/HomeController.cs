@@ -422,13 +422,13 @@ namespace HMOSecureWeb.Controllers
                 }
             }
 
-            else
-            {
-                wireSourceModule.SourceModuleName = "Sample Header";
-                wireSourceModule.AttachmentName = "SampleFile.xls";
-                wireSourceModule.Details.Add("Service Provider", "CastorOil");
-                wireSourceModule.Details.Add("Pay Date", "2332333"); 
-            }
+            //else
+            //{
+            //    wireSourceModule.SourceModuleName = "Sample Header";
+            //    wireSourceModule.AttachmentName = "SampleFile.xls";
+            //    wireSourceModule.Details.Add("Service Provider", "CastorOil");
+            //    wireSourceModule.Details.Add("Pay Date", "2332333"); 
+            //}
 
             return wireSourceModule;
         }
