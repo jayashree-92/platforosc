@@ -372,6 +372,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 allowClear: true,
                 data: agreements
             });
+            $("#liAgreement").select2('val', '');
             $scope.FundName = $(this).select2('data').LegalName;
         }
         else {
@@ -384,6 +385,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 allowClear: true,
                 data: []
             });
+            $("#liAgreement").select2('val', '');
         }
         $scope.FundId = fundId;
 
