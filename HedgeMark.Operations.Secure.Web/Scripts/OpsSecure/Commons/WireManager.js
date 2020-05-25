@@ -13,6 +13,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.promise = {};
     $scope.WireTicketStatus = {};
+    $scope.WireSourceModuleDetails = {};
 
     $scope.loadWireRelatedData = function () {
         $scope.promise = $interval(timer, 1000);
@@ -162,9 +163,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.attachmentUsers = $scope.wireTicketObj.AttachmentUsers;
             $scope.WireTicketStatus.IsWirePurposeAdhoc = response.data.isWirePurposeAdhoc;
 
-
+            $scope.WireSourceModuleDetails = response.data.wireSourceModule;
             $scope.fnSetCurrentlyViewedInfo(response.data.currentlyViewedBy);
-
 
             var keyValuePair = $scope.wireTicketObj.SwiftMessages;
 
@@ -208,6 +208,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
             $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
         });
+    }
+
+    $scope.fnDownloadWireSourceFile = function(sourceModuleName,attachmentName) {
+
     }
 
     $scope.SwiftFormatMessageActiveTag = "";
@@ -1162,6 +1166,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 }, 100);
                 break;
             case "Workflow": $scope.isWorkflowLogsCollapsed = !$scope.isWorkflowLogsCollapsed;
+                break;
+            case "SourceModule": $scope.isWireSourceCollapsed = !$scope.isWireSourceCollapsed;
                 break;
             case "SwiftMessage": $scope.isSwiftMessagesCollapsed = !$scope.isSwiftMessagesCollapsed;
                 break;

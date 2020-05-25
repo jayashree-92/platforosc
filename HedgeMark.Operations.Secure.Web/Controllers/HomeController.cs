@@ -333,6 +333,19 @@ namespace HMOSecureWeb.Controllers
             { ReportName.Invoices, new List<string>() { "MT103", "MT202", "MT202 COV" } }
         };
 
+        private class WireSourceDetails
+        {
+            public WireSourceDetails()
+            {
+                Details = new Dictionary<string, string>();
+            }
+
+            public string SourceModuleName { get; set; }
+            public string AttachmentName { get; set; }
+            public Dictionary<string, string> Details { get; set; }
+
+            public bool IsSourceAvailable { get { return !string.IsNullOrWhiteSpace(SourceModuleName); } }
+        }
 
 
         public JsonResult GetWireDetails(long wireId)
@@ -351,6 +364,7 @@ namespace HMOSecureWeb.Controllers
                     ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, wireTicket.IsFundTransfer, wireTicket.SendingAccount.Currency)
                     : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId ?? 0, reportId);
             }
+
             var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
             var receivingAccountsList = fundAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
 
@@ -358,10 +372,66 @@ namespace HMOSecureWeb.Controllers
             var currentlyViewedBy = GetCurrentlyViewingUsers(wireId);
             var deadlineToApprove = GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
 
-            return Json(new { wireTicket, wireTicketStatus, deadlineToApprove, sendingAccountsList, receivingAccountsList, IsWireCreated = false, currentlyViewedBy });
+            var wireSourceModule = GetWireSourceDetails(wireTicket);
+
+            return Json(new { wireTicket, wireTicketStatus, deadlineToApprove, sendingAccountsList, receivingAccountsList, IsWireCreated = false, currentlyViewedBy, wireSourceModule });
         }
 
+        private WireSourceDetails GetWireSourceDetails(WireTicket wireTicket)
+        {
+            var wireSourceModule = new WireSourceDetails();
 
+            if (wireTicket.HMWire.hmsWireInvoiceAssociations.Any())
+            {
+                wireSourceModule.SourceModuleName = "Invoices";
+
+                using (var context = new OperationsContext())
+                {
+                    var invoiceId = wireTicket.HMWire.hmsWireInvoiceAssociations.First().InvoiceId;
+                    var invoiceReport = context.vw_dmaInvoiceReport.First(s => s.dmaInvoiceReportId == invoiceId);
+
+                    wireSourceModule.AttachmentName = invoiceReport.FileName;
+
+                    wireSourceModule.Details.Add("Invoice No", invoiceReport.Vendor);
+                    wireSourceModule.Details.Add("Invoice Date", invoiceReport.InvoiceDate.ToShortDateString());
+                    wireSourceModule.Details.Add("Amount", invoiceReport.Amount.ToCurrency());
+                    wireSourceModule.Details.Add("Fee Type", invoiceReport.Vendor);
+                    wireSourceModule.Details.Add("Currency", invoiceReport.Currency);
+                    wireSourceModule.Details.Add("Pay Date", invoiceReport.PaidDate.ToDateString());
+                    wireSourceModule.Details.Add("Service Provider", invoiceReport.Vendor);
+                }
+
+            }
+            else if (wireTicket.HMWire.hmsWireCollateralAssociations.Any())
+            {
+                wireSourceModule.SourceModuleName = "Collateral Report";
+
+                using (var context = new OperationsContext())
+                {
+                    var collateralId = wireTicket.HMWire.hmsWireCollateralAssociations.First().dmaCashCollateralId;
+                    var collateralReport = context.dmaCollateralDatas.First(s => s.dmaCollateralDataId == collateralId);
+
+                    wireSourceModule.Details.Add("Counterparty", collateralReport.BrokerName);
+                    wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (System Balance)", collateralReport.CollateralPledgedToByFundSystemBalance.ToCurrency());
+                    wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (Verified Balance)", collateralReport.CollateralPledgedToByFundVerifiedBalance.ToCurrency());
+                    wireSourceModule.Details.Add("Collateral Pending to / (from) Fund", collateralReport.CollateralPendingToFromFund.ToCurrency());
+                    wireSourceModule.Details.Add("Exposure / MTM", collateralReport.ExposureOrMtm.ToCurrency());
+                    wireSourceModule.Details.Add("Independent Amount (CounterParty)", collateralReport.IndependentAmount.ToCurrency());
+                    wireSourceModule.Details.Add("Credit Support Amount", collateralReport.CreditSupportAmount.ToCurrency());
+                    wireSourceModule.Details.Add("Agreed Movement to / (from) Fund", collateralReport.AgreedMovementToFromFund.ToCurrency());
+                }
+            }
+
+            else
+            {
+                wireSourceModule.SourceModuleName = "Sample Header";
+                wireSourceModule.AttachmentName = "SampleFile.xls";
+                wireSourceModule.Details.Add("Service Provider", "CastorOil");
+                wireSourceModule.Details.Add("Pay Date", "2332333"); 
+            }
+
+            return wireSourceModule;
+        }
 
         public JsonResult GetNewWireDetails()
         {

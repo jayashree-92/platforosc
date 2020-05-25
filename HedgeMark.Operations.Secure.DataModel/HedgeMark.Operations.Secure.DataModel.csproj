@@ -77,6 +77,9 @@
     <Compile Include="dmaAgreementType.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dmaCollateralData.cs">
+      <DependentUpon>OperationsContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="dmaCounterpartyFamily.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
@@ -250,6 +253,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="USP_NEXEN_GetUserDetails_Result.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vw_dmaInvoiceReport.cs">
+      <DependentUpon>OperationsContext.tt</DependentUpon>
     </Compile>
     <Compile Include="vw_HFund.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
