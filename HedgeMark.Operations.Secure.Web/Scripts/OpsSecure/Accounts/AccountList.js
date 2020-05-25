@@ -1845,7 +1845,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         // $("#btnAccountDescription").hide();
 
         //Custody account
-        var cusodyAccountList = $.grep($scope.allAccountList, function (v) { return v.AccountType == "Custody"; });
+        var cusodyAccountList = $.grep($scope.allAccountList, function (v) { return v.Account.AccountType == "Custody"; });
         $scope.cusodyAccountData = [];
         //$.each(cusodyAccountList, function (key, value) {
         //    $scope.cusodyAccountData.push({ "id": value.AccountName, "text": value.AccountName });
@@ -2329,14 +2329,17 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.validateAccountNumber = function (index, isFFC) {
+
+        var onBoardingAccount = $scope.onBoardingAccountDetails[index];
+
         if ((isFFC && $scope.onBoardingAccountDetails[index].FFCNumber == null || $scope.onBoardingAccountDetails[index].FFCNumber == "") || ($scope.onBoardingAccountDetails[index].AccountNumber == null || $scope.onBoardingAccountDetails[index].AccountNumber == "")) {
             $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].AccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
             return;
         }
 
         var acc = $filter('filter')(angular.copy($scope.allAccountList), function (account) {
-            return account.onBoardingAccountId != $scope.onBoardingAccountDetails[index].onBoardingAccountId &&
-                account.FFCNumber == $scope.onBoardingAccountDetails[index].FFCNumber && account.AccountNumber == $scope.onBoardingAccountDetails[index].AccountNumber;
+            return account.Account.onBoardingAccountId != $scope.onBoardingAccountDetails[index].onBoardingAccountId &&
+                account.Account.FFCNumber == $scope.onBoardingAccountDetails[index].FFCNumber && account.Account.AccountNumber == $scope.onBoardingAccountDetails[index].AccountNumber;
         }, true)[0];
         if (acc == undefined) {
             $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].AccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
@@ -3026,7 +3029,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         var fundId = $(this).val();
         var accountList = [];
         if (fundId > 0) {
-            accountList = $.grep($scope.allAccountList, function (v) { return v.hmFundId == fundId; });
+            accountList = $.grep($scope.allAccountList, function (v) { return v.Account.hmFundId == fundId; });
         }
         viewAssociationTable(accountList);
     });
