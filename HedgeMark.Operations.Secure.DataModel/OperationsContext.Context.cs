@@ -28,7 +28,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<dmaUserPreference> dmaUserPreferences { get; set; }
         public virtual DbSet<dmaReport> dmaReports { get; set; }
         public virtual DbSet<vw_HFundOps> vw_HFundOps { get; set; }
-        public virtual DbSet<vw_dmaInvoiceReport> vw_dmaInvoiceReport { get; set; }
         public virtual DbSet<dmaCollateralData> dmaCollateralDatas { get; set; }
+        public virtual DbSet<dmaInvoiceFileAttachment> dmaInvoiceFileAttachments { get; set; }
+        public virtual DbSet<dmaInvoiceReport> dmaInvoiceReports { get; set; }
     }
 }

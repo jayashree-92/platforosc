@@ -387,17 +387,17 @@ namespace HMOSecureWeb.Controllers
 
                 using (var context = new OperationsContext())
                 {
-                    var invoiceId = wireTicket.HMWire.hmsWireInvoiceAssociations.First().InvoiceId;
-                    var invoiceReport = context.vw_dmaInvoiceReport.First(s => s.dmaInvoiceReportId == invoiceId);
+                    var invoiceId = wireTicket.HMWire.hmsWireInvoiceAssociations.Last().InvoiceId;
+                    var invoiceReport = context.dmaInvoiceReports.Include(s=>s.dmaInvoiceFileAttachments).First(s => s.dmaInvoiceReportId == invoiceId);
 
-                    wireSourceModule.AttachmentName = invoiceReport.FileName;
+                    //wireSourceModule.AttachmentName = invoiceReport.FileName;
 
                     wireSourceModule.Details.Add("Invoice No", invoiceReport.Vendor);
                     wireSourceModule.Details.Add("Invoice Date", invoiceReport.InvoiceDate.ToShortDateString());
                     wireSourceModule.Details.Add("Amount", invoiceReport.Amount.ToCurrency());
                     wireSourceModule.Details.Add("Fee Type", invoiceReport.Vendor);
                     wireSourceModule.Details.Add("Currency", invoiceReport.Currency);
-                    wireSourceModule.Details.Add("Pay Date", invoiceReport.PaidDate.ToDateString());
+                    wireSourceModule.Details.Add("Pay Date", invoiceReport.PayDate.ToDateString());
                     wireSourceModule.Details.Add("Service Provider", invoiceReport.Vendor);
                 }
 
