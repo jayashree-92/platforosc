@@ -1248,16 +1248,16 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         closeOnSelect: false
                     });
 
-                    var currency = $scope.currencies.length == 0 ? null : $scope.currencies[0].id;
+                    //var currency = $scope.currencies.length == 0 ? null : $scope.currencies[0].id;
 
-                    var isUsdAvailable = false;
-                    $.each($scope.currencies,
-                        function (i, v) {
-                            if (v.id == "USD")
-                                isUsdAvailable = true;
-                        });
+                    //var isUsdAvailable = false;
+                    //$.each($scope.currencies,
+                    //    function (i, v) {
+                    //        if (v.id == "USD")
+                    //            isUsdAvailable = true;
+                    //    });
 
-                    $("#liCurrency").select2('val', isUsdAvailable ? "USD" : currency).trigger('change');
+                   // $("#liCurrency").select2('val', isUsdAvailable ? "USD" : currency).trigger('change');
                     $scope.isSendingAccountEnabled = true;
                 });
             }
