@@ -1466,6 +1466,24 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
+    $("#liUltimateBeneficiaryType0").on("change", function (e) {
+        $("#liUltimateBeneficiaryBICorABA0").select2("val", '').trigger("change");
+        $("#ultimateBankName0").val("");
+        $("#ultimateBankAddress0").val("");
+    });
+
+    $("#liBeneficiaryType0").on("change", function (e) {
+        $("#liBeneficiaryBICorABA0").select2("val", '').trigger("change");
+        $("#beneficiaryBankName0").val("");
+        $("#beneficiaryBankAddress0").val("");
+    });
+
+    $("#liIntermediaryType0").on("change", function (e) {
+        $("#liIntermediaryBICorABA0").select2("val", '').trigger("change");
+        $("#intermediaryBankName0").val("");
+        $("#intermediaryBankAddress0").val("");
+    });
+
     $scope.fnLoadDefaultDropDowns = function (key) {
 
         $("#liBeneficiaryType" + key).select2({

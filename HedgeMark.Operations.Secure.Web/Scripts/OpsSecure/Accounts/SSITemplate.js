@@ -369,6 +369,25 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         });
     }
 
+    
+    $("#liUltimateBeneficiaryType").on("change", function (e) {
+        $("#liUltimateBeneficiaryBICorABA").select2("val", '').trigger("change");
+        $("#ultimateBankName").val("");
+        $("#ultimateBankAddress").val("");
+    });
+
+    $("#liBeneficiaryType").on("change", function (e) {
+        $("#liBeneficiaryBICorABA").select2("val", '').trigger("change");
+        $("#beneficiaryBankName").val("");
+        $("#beneficiaryBankAddress").val("");
+    });
+
+    $("#liIntermediaryType").on("change", function (e) {
+        $("#liIntermediaryBICorABA").select2("val", '').trigger("change");
+        $("#intermediaryBankName").val("");
+        $("#intermediaryBankAddress").val("");
+    });
+
     $scope.fnBrokerList = function () {
         $http.get("/SSITemplate/GetSsiTemplatePreloadData").then(function (response) {
             $scope.counterparties = response.data.counterParties;
