@@ -895,7 +895,7 @@
                     <div class="panel-body collapse" id="wireSourceDiv" style="padding: 10px 15px 0px 15px; overflow-y: scroll; max-height: 270px; margin-bottom: 2px;">
                         <span id="spnWireSource">
                             <p class="messgeBlock" ng-show="WireSourceModuleDetails.AttachmentName!=''">
-                                File Attachment:<a ng-click="fnDownloadWireSourceFile(WireSourceModuleDetails.SourceModuleName,WireSourceModuleDetails.AttachmentName)">{{WireSourceModuleDetails.AttachmentName}}</a>
+                                File Attachment:<a ng-click="fnDownloadWireSourceFile(WireSourceModuleDetails.SourceModuleName,WireSourceModuleDetails.AttachmentName,WireSourceModuleDetails.FileSource)">{{WireSourceModuleDetails.AttachmentName}}</a>
                             </p>
                             <p ng-repeat="(key, value) in WireSourceModuleDetails.Details" class="messgeBlock">
                                 {{key}}:{{value}}

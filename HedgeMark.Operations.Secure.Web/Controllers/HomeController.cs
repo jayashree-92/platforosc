@@ -342,6 +342,7 @@ namespace HMOSecureWeb.Controllers
 
             public string SourceModuleName { get; set; }
             public string AttachmentName { get; set; }
+            public string FileSource { get; set; }
             public Dictionary<string, string> Details { get; set; }
 
             public bool IsSourceAvailable { get { return !string.IsNullOrWhiteSpace(SourceModuleName); } }
@@ -391,6 +392,7 @@ namespace HMOSecureWeb.Controllers
                     var invoiceReport = context.vw_dmaInvoiceReport.First(s => s.dmaInvoiceReportId == invoiceId);
 
                     wireSourceModule.AttachmentName = invoiceReport.FileName;
+                    wireSourceModule.FileSource = invoiceReport.FileSource;
 
                     wireSourceModule.Details.Add("Invoice No", invoiceReport.InvoiceNo);
                     wireSourceModule.Details.Add("Invoice Date", invoiceReport.InvoiceDate.ToShortDateString());
@@ -408,17 +410,28 @@ namespace HMOSecureWeb.Controllers
 
                 using (var context = new OperationsContext())
                 {
-                    var collateralId = wireTicket.HMWire.hmsWireCollateralAssociations.First().dmaCashCollateralId;
-                    var collateralReport = context.dmaCollateralDatas.First(s => s.dmaCollateralDataId == collateralId);
+                    var opsCashCollateralId = wireTicket.HMWire.hmsWireCollateralAssociations.First().dmaCashCollateralId;
+                    var collateralReport = context.dmaOpsCashCollaterals.Include(a => a.dmaCollateralData).First(s => s.dmaCollateralDataId == opsCashCollateralId);
 
-                    wireSourceModule.Details.Add("Counterparty", collateralReport.BrokerName);
-                    wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (System Balance)", collateralReport.CollateralPledgedToByFundSystemBalance.ToCurrency());
-                    wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (Verified Balance)", collateralReport.CollateralPledgedToByFundVerifiedBalance.ToCurrency());
-                    wireSourceModule.Details.Add("Collateral Pending to / (from) Fund", collateralReport.CollateralPendingToFromFund.ToCurrency());
-                    wireSourceModule.Details.Add("Exposure / MTM", collateralReport.ExposureOrMtm.ToCurrency());
-                    wireSourceModule.Details.Add("Independent Amount (CounterParty)", collateralReport.IndependentAmount.ToCurrency());
-                    wireSourceModule.Details.Add("Credit Support Amount", collateralReport.CreditSupportAmount.ToCurrency());
-                    wireSourceModule.Details.Add("Agreed Movement to / (from) Fund", collateralReport.AgreedMovementToFromFund.ToCurrency());
+                    wireSourceModule.Details.Add("Counterparty", collateralReport.dmaCollateralData.BrokerName);
+                    wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (System Balance)", collateralReport.dmaCollateralData.CollateralPledgedToByFundSystemBalance.ToCurrency());
+                    wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (Verified Balance)", collateralReport.dmaCollateralData.CollateralPledgedToByFundVerifiedBalance.ToCurrency());
+                    wireSourceModule.Details.Add("Collateral Pending to / (from) Fund", collateralReport.dmaCollateralData.CollateralPendingToFromFund.ToCurrency());
+                    wireSourceModule.Details.Add("Exposure / MTM", collateralReport.dmaCollateralData.ExposureOrMtm.ToCurrency());
+                    wireSourceModule.Details.Add("Independent Amount (CounterParty)", collateralReport.dmaCollateralData.IndependentAmount.ToCurrency());
+                    wireSourceModule.Details.Add("Credit Support Amount", collateralReport.dmaCollateralData.CreditSupportAmount.ToCurrency());
+                    wireSourceModule.Details.Add("Agreed Movement to / (from) Fund", collateralReport.dmaCollateralData.AgreedMovementToFromFund.ToCurrency());
+
+                    //Cash Collateral details
+                    wireSourceModule.Details.Add("Eligible Currency", collateralReport.EligibleCurrency);
+                    wireSourceModule.Details.Add("Settlement Date", collateralReport.SettlementDate.ToShortDateString());
+                    wireSourceModule.Details.Add("Agreed Movement Type", collateralReport.AgreedMovementType);
+                    wireSourceModule.Details.Add("Local Collateral Value", collateralReport.CollateralValue.ToCurrency());
+                    wireSourceModule.Details.Add("Base Collateral Value", collateralReport.BaseCollateralValue.ToCurrency());
+                    wireSourceModule.Details.Add("FX Rate", collateralReport.FXRate.ToCurrency());
+                    wireSourceModule.Details.Add("Deliver Amount", collateralReport.PledgeAmount.ToCurrency());
+                    wireSourceModule.Details.Add("Return Amount", collateralReport.ReturnAmount.ToCurrency());
+
                 }
             }
 

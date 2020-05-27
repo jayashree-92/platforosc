@@ -92,6 +92,9 @@
     <Compile Include="dmaOnBoardingContactDetail.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dmaOpsCashCollateral.cs">
+      <DependentUpon>OperationsContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="dmaReport.cs">
       <DependentUpon>OperationsContext.tt</DependentUpon>
     </Compile>

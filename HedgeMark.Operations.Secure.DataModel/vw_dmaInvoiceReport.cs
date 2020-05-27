@@ -35,5 +35,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public System.DateTime InvoiceCreatedTimestamp { get; set; }
         public Nullable<System.DateTime> ApprovedTimestamp { get; set; }
         public Nullable<int> Child { get; set; }
+        public System.DateTime OriginalContextMonth { get; set; }
+        public bool SendToClientPortalForApproval { get; set; }
     }
 }

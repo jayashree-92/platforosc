@@ -14,6 +14,12 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class dmaCollateralData
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public dmaCollateralData()
+        {
+            this.dmaOpsCashCollaterals = new HashSet<dmaOpsCashCollateral>();
+        }
+    
         public long dmaCollateralDataId { get; set; }
         public System.DateTime ContextDate { get; set; }
         public long dmaFundsId { get; set; }
@@ -89,5 +95,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string BrokerStatus { get; set; }
         public bool IsReportStatusOverridden { get; set; }
         public string AcadiaCallStatus { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<dmaOpsCashCollateral> dmaOpsCashCollaterals { get; set; }
     }
 }

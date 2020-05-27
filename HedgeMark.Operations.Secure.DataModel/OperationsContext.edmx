@@ -4,27 +4,27 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Alias="Self" Namespace="DMA_HMModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012">
+    <Schema Namespace="DMA_HMModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="dmaCollateralData">
           <Key>
             <PropertyRef Name="dmaCollateralDataId" />
           </Key>
-          <Property Name="dmaCollateralDataId" Nullable="false" StoreGeneratedPattern="Identity" Type="bigint" />
-          <Property Name="ContextDate" Nullable="false" Type="date" />
-          <Property Name="dmaFundsId" Nullable="false" Type="bigint" />
-          <Property Name="BrokerName" Nullable="false" MaxLength="200" Type="varchar" />
-          <Property Name="CallStatus" MaxLength="50" Type="varchar" />
-          <Property Name="CallSubStatus" MaxLength="50" Type="varchar" />
+          <Property Name="dmaCollateralDataId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ContextDate" Type="date" Nullable="false" />
+          <Property Name="dmaFundsId" Type="bigint" Nullable="false" />
+          <Property Name="BrokerName" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="CallStatus" Type="varchar" MaxLength="50" />
+          <Property Name="CallSubStatus" Type="varchar" MaxLength="50" />
           <Property Name="CollateralPledgedToByFundVerifiedBalance" Type="float" />
           <Property Name="ExposureOrMtm" Type="float" />
-          <Property Name="AdditionalIaOrFxnop" Nullable="false" Type="float" />
+          <Property Name="AdditionalIaOrFxnop" Type="float" Nullable="false" />
           <Property Name="CollateralCallFromBroker" Type="float" />
           <Property Name="AgreedMovementToFromFund" Type="float" />
-          <Property Name="EndingTotalCollateralBalance" Nullable="false" Type="float" />
-          <Property Name="overrideCollateralBalanceFlag" Nullable="false" Type="bit" />
+          <Property Name="EndingTotalCollateralBalance" Type="float" Nullable="false" />
+          <Property Name="overrideCollateralBalanceFlag" Type="bit" Nullable="false" />
           <Property Name="CollateralDueToFromFund" Type="float" />
           <Property Name="IndependentAmount" Type="float" />
-          <Property Name="DataCallStatus" MaxLength="50" Type="varchar" />
+          <Property Name="DataCallStatus" Type="varchar" MaxLength="50" />
           <Property Name="CollateralPledgedToByFundCounterpartyStatement" Type="float" />
           <Property Name="DisputeAging" Type="int" />
           <Property Name="EndingCollateralPledgedToOrByFund" Type="float" />
@@ -32,78 +32,99 @@
           <Property Name="CollateralComment" Type="varchar(max)" />
           <Property Name="CollateralPledgedToByFundSystemBalance" Type="float" />
           <Property Name="BeginningTotalCollatBalanceSettledPlusPending" Type="float" />
-          <Property Name="CallDeadline" Precision="7" Type="time" />
+          <Property Name="CallDeadline" Type="time" Precision="7" />
           <Property Name="CollateralCallFromFund" Type="float" />
-          <Property Name="CollateralDirection" MaxLength="500" Type="varchar" />
+          <Property Name="CollateralDirection" Type="varchar" MaxLength="500" />
           <Property Name="CollateralPendingToFromFund" Type="float" />
           <Property Name="CollateralPledgedToByFundAdminBalance" Type="float" />
           <Property Name="CreditSupportAmount" Type="float" />
           <Property Name="DeliverRoundingAmount" Type="float" />
-          <Property Name="DeliverRoundingMethod" MaxLength="500" Type="varchar" />
+          <Property Name="DeliverRoundingMethod" Type="varchar" MaxLength="500" />
           <Property Name="DiffVsAdminFile" Type="float" />
           <Property Name="DiffVsBroker" Type="float" />
           <Property Name="FileIdentifierId" Type="bigint" />
           <Property Name="intFundId" Type="int" />
-          <Property Name="MarginTransferTiming" MaxLength="500" Type="varchar" />
+          <Property Name="MarginTransferTiming" Type="varchar" MaxLength="500" />
           <Property Name="MtaWithRespectToCounterparty" Type="float" />
           <Property Name="MtaWithRespectToFund" Type="float" />
           <Property Name="NetCollateralDueToFromFund" Type="float" />
-          <Property Name="RecordCreatedDate" Nullable="false" Type="datetime" />
+          <Property Name="RecordCreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ReportMapId" Type="bigint" />
           <Property Name="ReturnRoundingAmount" Type="float" />
-          <Property Name="ReturnRoundingMethod" MaxLength="500" Type="varchar" />
-          <Property Name="RiskType" MaxLength="500" Type="varchar" />
+          <Property Name="ReturnRoundingMethod" Type="varchar" MaxLength="500" />
+          <Property Name="RiskType" Type="varchar" MaxLength="500" />
           <Property Name="Threshold" Type="float" />
           <Property Name="ThresholdWithRespectToCounterparty" Type="float" />
           <Property Name="ThresholdWithRespectToFund" Type="float" />
           <Property Name="Tplus1CollateralMovementToFromFund" Type="float" />
-          <Property Name="isLocked" Nullable="false" Type="bit" />
-          <Property Name="IsCounterpartyStatementOverridden" Nullable="false" Type="bit" />
-          <Property Name="IsCollateralCallFromBrokerOverridden" Nullable="false" Type="bit" />
-          <Property Name="IsVerifiedBalanceOverridden" Nullable="false" Type="bit" />
-          <Property Name="IsAdditionalIaOrFxnopOverridden" Nullable="false" Type="bit" />
-          <Property Name="Currency" MaxLength="100" Type="varchar" />
-          <Property Name="IsCollateralFundCallSent" Nullable="false" Type="bit" />
-          <Property Name="IsCollateralBrokerCallResponded" Nullable="false" Type="bit" />
+          <Property Name="isLocked" Type="bit" Nullable="false" />
+          <Property Name="IsCounterpartyStatementOverridden" Type="bit" Nullable="false" />
+          <Property Name="IsCollateralCallFromBrokerOverridden" Type="bit" Nullable="false" />
+          <Property Name="IsVerifiedBalanceOverridden" Type="bit" Nullable="false" />
+          <Property Name="IsAdditionalIaOrFxnopOverridden" Type="bit" Nullable="false" />
+          <Property Name="Currency" Type="varchar" MaxLength="100" />
+          <Property Name="IsCollateralFundCallSent" Type="bit" Nullable="false" />
+          <Property Name="IsCollateralBrokerCallResponded" Type="bit" Nullable="false" />
           <Property Name="dmaFundBrokerAgreementMapId" Type="bigint" />
-          <Property Name="IsPBFXNettingEnabled" Nullable="false" Type="bit" />
+          <Property Name="IsPBFXNettingEnabled" Type="bit" Nullable="false" />
           <Property Name="PBFXNettingAmount" Type="float" />
-          <Property Name="IsAgreedMovementToFromFundOverridden" Nullable="false" Type="bit" />
+          <Property Name="IsAgreedMovementToFromFundOverridden" Type="bit" Nullable="false" />
           <Property Name="InterestPending" Type="float" />
-          <Property Name="RecCreatedBy" MaxLength="200" Type="varchar" />
+          <Property Name="RecCreatedBy" Type="varchar" MaxLength="200" />
           <Property Name="IsCompleted" Type="bit" />
           <Property Name="CollateralExposureOrMtm" Type="float" />
-          <Property Name="ReasonToAgree" MaxLength="1000" Type="varchar" />
+          <Property Name="ReasonToAgree" Type="varchar" MaxLength="1000" />
           <Property Name="MTMDifference" Type="float" />
           <Property Name="IADifference" Type="float" />
-          <Property Name="DeliverAmountToFromFund" Nullable="false" Type="float" />
-          <Property Name="ReturnAmountToFromFund" Nullable="false" Type="float" />
-          <Property Name="IsDeliverAmountToFromFundOverridden" Nullable="false" Type="bit" />
-          <Property Name="IsBrokerResponseConfirmed" Nullable="false" Type="bit" />
-          <Property Name="IsCollateralCallFromFundOverridden" Nullable="false" Type="bit" />
-          <Property Name="BrokerStatus" MaxLength="100" Type="varchar" />
-          <Property Name="IsReportStatusOverridden" Nullable="false" Type="bit" />
-          <Property Name="AcadiaCallStatus" MaxLength="100" Type="varchar" />
+          <Property Name="DeliverAmountToFromFund" Type="float" Nullable="false" />
+          <Property Name="ReturnAmountToFromFund" Type="float" Nullable="false" />
+          <Property Name="IsDeliverAmountToFromFundOverridden" Type="bit" Nullable="false" />
+          <Property Name="IsBrokerResponseConfirmed" Type="bit" Nullable="false" />
+          <Property Name="IsCollateralCallFromFundOverridden" Type="bit" Nullable="false" />
+          <Property Name="BrokerStatus" Type="varchar" MaxLength="100" />
+          <Property Name="IsReportStatusOverridden" Type="bit" Nullable="false" />
+          <Property Name="AcadiaCallStatus" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="dmaOpsCashCollateral">
+          <Key>
+            <PropertyRef Name="dmaOpsCashCollateralId" />
+          </Key>
+          <Property Name="dmaOpsCashCollateralId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EligibleCurrency" Type="varchar" MaxLength="20" />
+          <Property Name="SettlementDate" Type="date" Nullable="false" />
+          <Property Name="AgreedMovementType" Type="varchar" MaxLength="30" />
+          <Property Name="BaseCollateralValue" Type="float" />
+          <Property Name="CollateralValue" Type="float" />
+          <Property Name="PledgeAmount" Type="float" />
+          <Property Name="ReturnAmount" Type="float" />
+          <Property Name="RecCreatedDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="RecCreatedBy" Type="varchar" MaxLength="500" />
+          <Property Name="IsPledgeCancelledOrRejected" Type="bit" Nullable="false" />
+          <Property Name="IsBalanceOverriden" Type="bit" Nullable="false" />
+          <Property Name="IsCurrencyPledged" Type="bit" Nullable="false" />
+          <Property Name="FXRate" Type="float" />
+          <Property Name="FXRateValue" Type="float" />
+          <Property Name="dmaCollateralDataId" Type="bigint" />
         </EntityType>
         <EntityType Name="dmaReports">
           <Key>
             <PropertyRef Name="dmaReportsId" />
           </Key>
-          <Property Name="dmaReportsId" Nullable="false" StoreGeneratedPattern="Identity" Type="bigint" />
-          <Property Name="ReportName" MaxLength="100" Type="varchar" />
-          <Property Name="DisplayOrder" Nullable="false" Type="int" />
-          <Property Name="IsFundPrimaryReport" Nullable="false" Type="bit" />
+          <Property Name="dmaReportsId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReportName" Type="varchar" MaxLength="100" />
+          <Property Name="DisplayOrder" Type="int" Nullable="false" />
+          <Property Name="IsFundPrimaryReport" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="dmaUserPreference">
           <Key>
             <PropertyRef Name="dmaUserPreferenceId" />
           </Key>
-          <Property Name="dmaUserPreferenceId" Nullable="false" StoreGeneratedPattern="Identity" Type="bigint" />
-          <Property Name="UserId" MaxLength="1000" Type="varchar" />
-          <Property Name="Key" MaxLength="1000" Type="varchar" />
+          <Property Name="dmaUserPreferenceId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="varchar" MaxLength="1000" />
+          <Property Name="Key" Type="varchar" MaxLength="1000" />
           <Property Name="Value" Type="text" />
-          <Property Name="hmUserId" Nullable="false" Type="int" />
-          <Property Name="RecCreatedAt" Nullable="false" Type="datetime" />
+          <Property Name="hmUserId" Type="int" Nullable="false" />
+          <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DMA_HM.dbo.vw_dmaInvoiceReport' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -114,31 +135,35 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_dmaInvoiceReport' does not have a pr
             <PropertyRef Name="ClientFundName" />
             <PropertyRef Name="FeeType" />
             <PropertyRef Name="InvoiceDate" />
+            <PropertyRef Name="OriginalContextMonth" />
             <PropertyRef Name="Amount" />
             <PropertyRef Name="ClientApproval" />
             <PropertyRef Name="ClientApprovalStatus" />
             <PropertyRef Name="InvoiceCreatedTimestamp" />
+            <PropertyRef Name="SendToClientPortalForApproval" />
           </Key>
-          <Property Name="dmaInvoiceReportId" Nullable="false" Type="bigint" />
-          <Property Name="LegalFundName" Nullable="false" MaxLength="100" Type="varchar" />
-          <Property Name="ClientFundName" Nullable="false" MaxLength="100" Type="varchar" />
-          <Property Name="ShortFundName" MaxLength="100" Type="varchar" />
-          <Property Name="FeeType" Nullable="false" MaxLength="100" Type="varchar" />
-          <Property Name="FileName" MaxLength="200" Type="varchar" />
-          <Property Name="Vendor" MaxLength="300" Type="varchar" />
-          <Property Name="FileSource" MaxLength="50" Type="varchar" />
-          <Property Name="InvoiceNo" MaxLength="50" Type="varchar" />
-          <Property Name="InvoiceDate" Nullable="false" Type="date" />
+          <Property Name="dmaInvoiceReportId" Type="bigint" Nullable="false" />
+          <Property Name="LegalFundName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ClientFundName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ShortFundName" Type="varchar" MaxLength="100" />
+          <Property Name="FeeType" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="FileName" Type="varchar" MaxLength="200" />
+          <Property Name="Vendor" Type="varchar" MaxLength="300" />
+          <Property Name="FileSource" Type="varchar" MaxLength="50" />
+          <Property Name="InvoiceNo" Type="varchar" MaxLength="50" />
+          <Property Name="InvoiceDate" Type="date" Nullable="false" />
+          <Property Name="OriginalContextMonth" Type="date" Nullable="false" />
           <Property Name="ServicesCoveredFrom" Type="date" />
           <Property Name="ServicesCoveredTo" Type="date" />
-          <Property Name="Amount" Nullable="false" Type="float" />
+          <Property Name="Amount" Type="float" Nullable="false" />
           <Property Name="PaidDate" Type="date" />
-          <Property Name="ClientApproval" Nullable="false" Type="bit" />
-          <Property Name="Currency" MaxLength="3" Type="varchar" />
-          <Property Name="ClientApprovalStatus" Nullable="false" MaxLength="14" Type="varchar" />
-          <Property Name="ApprovedBy" MaxLength="50" Type="varchar" />
-          <Property Name="InvoiceCreatedTimestamp" Nullable="false" Type="datetime" />
+          <Property Name="ClientApproval" Type="bit" Nullable="false" />
+          <Property Name="Currency" Type="varchar" MaxLength="3" />
+          <Property Name="ClientApprovalStatus" Type="varchar" MaxLength="14" Nullable="false" />
+          <Property Name="ApprovedBy" Type="varchar" MaxLength="50" />
+          <Property Name="InvoiceCreatedTimestamp" Type="datetime" Nullable="false" />
           <Property Name="ApprovedTimestamp" Type="datetime" />
+          <Property Name="SendToClientPortalForApproval" Type="bit" Nullable="false" />
           <Property Name="Child" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
@@ -154,24 +179,37 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
             <PropertyRef Name="FundStatus" />
             <PropertyRef Name="ClientLegalEntityName" />
           </Key>
-          <Property Name="intFundId" Nullable="false" Type="int" />
-          <Property Name="FundMapId" Nullable="false" Type="int" />
+          <Property Name="intFundId" Type="int" Nullable="false" />
+          <Property Name="FundMapId" Type="int" Nullable="false" />
           <Property Name="OnBoardFundId" Type="bigint" />
-          <Property Name="CreatedFor" Nullable="false" MaxLength="200" Type="varchar" />
-          <Property Name="ShortFundName" MaxLength="100" Type="varchar" />
-          <Property Name="LegalFundName" Nullable="false" MaxLength="100" Type="varchar" />
-          <Property Name="ClientFundName" Nullable="false" MaxLength="100" Type="varchar" />
-          <Property Name="HMRAName" Nullable="false" MaxLength="100" Type="varchar" />
-          <Property Name="FundStatus" Nullable="false" MaxLength="13" Type="varchar" />
-          <Property Name="BaseCurrencyShareclass" MaxLength="3" Type="char" />
-          <Property Name="NAVFrequency" MaxLength="200" Type="varchar" />
-          <Property Name="FundLegalStructure" MaxLength="200" Type="varchar" />
-          <Property Name="AccountingMethod" MaxLength="200" Type="varchar" />
-          <Property Name="ClientLegalEntityName" Nullable="false" MaxLength="200" Type="varchar" />
-          <Property Name="ClientShortName" MaxLength="200" Type="varchar" />
+          <Property Name="CreatedFor" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="ShortFundName" Type="varchar" MaxLength="100" />
+          <Property Name="LegalFundName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ClientFundName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="HMRAName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="FundStatus" Type="varchar" MaxLength="13" Nullable="false" />
+          <Property Name="BaseCurrencyShareclass" Type="char" MaxLength="3" />
+          <Property Name="NAVFrequency" Type="varchar" MaxLength="200" />
+          <Property Name="FundLegalStructure" Type="varchar" MaxLength="200" />
+          <Property Name="AccountingMethod" Type="varchar" MaxLength="200" />
+          <Property Name="ClientLegalEntityName" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="ClientShortName" Type="varchar" MaxLength="200" />
         </EntityType>
+        <Association Name="FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId">
+          <End Role="dmaCollateralData" Type="Self.dmaCollateralData" Multiplicity="0..1" />
+          <End Role="dmaOpsCashCollateral" Type="Self.dmaOpsCashCollateral" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dmaCollateralData">
+              <PropertyRef Name="dmaCollateralDataId" />
+            </Principal>
+            <Dependent Role="dmaOpsCashCollateral">
+              <PropertyRef Name="dmaCollateralDataId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="DMA_HMModelStoreContainer">
           <EntitySet Name="dmaCollateralData" EntityType="Self.dmaCollateralData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="dmaOpsCashCollateral" EntityType="Self.dmaOpsCashCollateral" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaReports" EntityType="Self.dmaReports" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaUserPreference" EntityType="Self.dmaUserPreference" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="vw_dmaInvoiceReport" EntityType="Self.vw_dmaInvoiceReport" store:Type="Views" store:Schema="dbo">
@@ -186,6 +224,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
     [vw_dmaInvoiceReport].[FileSource] AS [FileSource], 
     [vw_dmaInvoiceReport].[InvoiceNo] AS [InvoiceNo], 
     [vw_dmaInvoiceReport].[InvoiceDate] AS [InvoiceDate], 
+    [vw_dmaInvoiceReport].[OriginalContextMonth] AS [OriginalContextMonth], 
     [vw_dmaInvoiceReport].[ServicesCoveredFrom] AS [ServicesCoveredFrom], 
     [vw_dmaInvoiceReport].[ServicesCoveredTo] AS [ServicesCoveredTo], 
     [vw_dmaInvoiceReport].[Amount] AS [Amount], 
@@ -196,6 +235,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
     [vw_dmaInvoiceReport].[ApprovedBy] AS [ApprovedBy], 
     [vw_dmaInvoiceReport].[InvoiceCreatedTimestamp] AS [InvoiceCreatedTimestamp], 
     [vw_dmaInvoiceReport].[ApprovedTimestamp] AS [ApprovedTimestamp], 
+    [vw_dmaInvoiceReport].[SendToClientPortalForApproval] AS [SendToClientPortalForApproval], 
     [vw_dmaInvoiceReport].[Child] AS [Child]
     FROM [dbo].[vw_dmaInvoiceReport] AS [vw_dmaInvoiceReport]</DefiningQuery>
           </EntitySet>
@@ -218,6 +258,10 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
     [vw_HFundOps].[ClientShortName] AS [ClientShortName]
     FROM [dbo].[vw_HFundOps] AS [vw_HFundOps]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId" Association="Self.FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId">
+            <End Role="dmaCollateralData" EntitySet="dmaCollateralData" />
+            <End Role="dmaOpsCashCollateral" EntitySet="dmaOpsCashCollateral" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -240,6 +284,11 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <EntitySet Name="vw_HFundOps" EntityType="OperationsModel.vw_HFundOps" />
           <EntitySet Name="vw_dmaInvoiceReport" EntityType="OperationsModel.vw_dmaInvoiceReport" />
           <EntitySet Name="dmaCollateralDatas" EntityType="OperationsModel.dmaCollateralData" />
+          <EntitySet Name="dmaOpsCashCollaterals" EntityType="OperationsModel.dmaOpsCashCollateral" />
+          <AssociationSet Name="FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId" Association="OperationsModel.FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId">
+            <End Role="dmaCollateralData" EntitySet="dmaCollateralDatas" />
+            <End Role="dmaOpsCashCollateral" EntitySet="dmaOpsCashCollaterals" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="dmaReport">
           <Key>
@@ -288,6 +337,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
             <PropertyRef Name="ClientApproval" />
             <PropertyRef Name="ClientApprovalStatus" />
             <PropertyRef Name="InvoiceCreatedTimestamp" />
+            <PropertyRef Name="OriginalContextMonth" />
+            <PropertyRef Name="SendToClientPortalForApproval" />
           </Key>
           <Property Name="dmaInvoiceReportId" Nullable="false" Type="Int64" />
           <Property Name="LegalFundName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" Type="String" />
@@ -310,6 +361,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="InvoiceCreatedTimestamp" Nullable="false" Precision="3" Type="DateTime" />
           <Property Name="ApprovedTimestamp" Precision="3" Type="DateTime" />
           <Property Name="Child" Type="Int32" />
+          <Property Name="OriginalContextMonth" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SendToClientPortalForApproval" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="dmaCollateralData">
           <Key>
@@ -390,7 +443,42 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="BrokerStatus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IsReportStatusOverridden" Type="Boolean" Nullable="false" />
           <Property Name="AcadiaCallStatus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="dmaOpsCashCollaterals" Relationship="OperationsModel.FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId" FromRole="dmaCollateralData" ToRole="dmaOpsCashCollateral" />
         </EntityType>
+        <EntityType Name="dmaOpsCashCollateral">
+          <Key>
+            <PropertyRef Name="dmaOpsCashCollateralId" />
+          </Key>
+          <Property Name="dmaOpsCashCollateralId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EligibleCurrency" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SettlementDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="AgreedMovementType" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="BaseCollateralValue" Type="Double" />
+          <Property Name="CollateralValue" Type="Double" />
+          <Property Name="PledgeAmount" Type="Double" />
+          <Property Name="ReturnAmount" Type="Double" />
+          <Property Name="RecCreatedDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="RecCreatedBy" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IsPledgeCancelledOrRejected" Type="Boolean" Nullable="false" />
+          <Property Name="IsBalanceOverriden" Type="Boolean" Nullable="false" />
+          <Property Name="IsCurrencyPledged" Type="Boolean" Nullable="false" />
+          <Property Name="FXRate" Type="Double" />
+          <Property Name="FXRateValue" Type="Double" />
+          <Property Name="dmaCollateralDataId" Type="Int64" />
+          <NavigationProperty Name="dmaCollateralData" Relationship="OperationsModel.FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId" FromRole="dmaOpsCashCollateral" ToRole="dmaCollateralData" />
+        </EntityType>
+        <Association Name="FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId">
+          <End Type="OperationsModel.dmaCollateralData" Role="dmaCollateralData" Multiplicity="0..1" />
+          <End Type="OperationsModel.dmaOpsCashCollateral" Role="dmaOpsCashCollateral" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dmaCollateralData">
+              <PropertyRef Name="dmaCollateralDataId" />
+            </Principal>
+            <Dependent Role="dmaOpsCashCollateral">
+              <PropertyRef Name="dmaCollateralDataId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -443,6 +531,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <EntitySetMapping Name="vw_dmaInvoiceReport">
             <EntityTypeMapping TypeName="OperationsModel.vw_dmaInvoiceReport">
               <MappingFragment StoreEntitySet="vw_dmaInvoiceReport">
+                <ScalarProperty Name="SendToClientPortalForApproval" ColumnName="SendToClientPortalForApproval" />
+                <ScalarProperty Name="OriginalContextMonth" ColumnName="OriginalContextMonth" />
                 <ScalarProperty Name="Child" ColumnName="Child" />
                 <ScalarProperty Name="ApprovedTimestamp" ColumnName="ApprovedTimestamp" />
                 <ScalarProperty Name="InvoiceCreatedTimestamp" ColumnName="InvoiceCreatedTimestamp" />
@@ -545,6 +635,28 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
                 <ScalarProperty Name="dmaFundsId" ColumnName="dmaFundsId" />
                 <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
                 <ScalarProperty Name="dmaCollateralDataId" ColumnName="dmaCollateralDataId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dmaOpsCashCollaterals">
+            <EntityTypeMapping TypeName="OperationsModel.dmaOpsCashCollateral">
+              <MappingFragment StoreEntitySet="dmaOpsCashCollateral">
+                <ScalarProperty Name="dmaCollateralDataId" ColumnName="dmaCollateralDataId" />
+                <ScalarProperty Name="FXRateValue" ColumnName="FXRateValue" />
+                <ScalarProperty Name="FXRate" ColumnName="FXRate" />
+                <ScalarProperty Name="IsCurrencyPledged" ColumnName="IsCurrencyPledged" />
+                <ScalarProperty Name="IsBalanceOverriden" ColumnName="IsBalanceOverriden" />
+                <ScalarProperty Name="IsPledgeCancelledOrRejected" ColumnName="IsPledgeCancelledOrRejected" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="RecCreatedDate" ColumnName="RecCreatedDate" />
+                <ScalarProperty Name="ReturnAmount" ColumnName="ReturnAmount" />
+                <ScalarProperty Name="PledgeAmount" ColumnName="PledgeAmount" />
+                <ScalarProperty Name="CollateralValue" ColumnName="CollateralValue" />
+                <ScalarProperty Name="BaseCollateralValue" ColumnName="BaseCollateralValue" />
+                <ScalarProperty Name="AgreedMovementType" ColumnName="AgreedMovementType" />
+                <ScalarProperty Name="SettlementDate" ColumnName="SettlementDate" />
+                <ScalarProperty Name="EligibleCurrency" ColumnName="EligibleCurrency" />
+                <ScalarProperty Name="dmaOpsCashCollateralId" ColumnName="dmaOpsCashCollateralId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

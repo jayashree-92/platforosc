@@ -210,8 +210,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         });
     }
 
-    $scope.fnDownloadWireSourceFile = function(sourceModuleName,attachmentName) {
-
+    $scope.fnDownloadWireSourceFile = function (sourceModuleName, attachmentName, fileSource) {
+        
     }
 
     $scope.SwiftFormatMessageActiveTag = "";
@@ -1257,7 +1257,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     //            isUsdAvailable = true;
                     //    });
 
-                   // $("#liCurrency").select2('val', isUsdAvailable ? "USD" : currency).trigger('change');
+                    // $("#liCurrency").select2('val', isUsdAvailable ? "USD" : currency).trigger('change');
                     $scope.isSendingAccountEnabled = true;
                 });
             }
@@ -1510,7 +1510,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.wireTicketObj.IsSenderInformationRequired = false;
         }, 500);
 
-    
+
     });
 
     $scope.auditWireLogs = function (statusId) {
