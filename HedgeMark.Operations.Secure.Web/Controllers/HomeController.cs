@@ -328,25 +328,10 @@ namespace HMOSecureWeb.Controllers
 
         public Dictionary<string, List<string>> MessageTypes = new Dictionary<string, List<string>>()
         {
-            { ReportName.AdhocReport , new List<string>() { "MT103", "MT202", "MT202 COV", "MT210", "MT540", "MT542" } },
+            { ReportName.AdhocWireReport , new List<string>() { "MT103", "MT202", "MT202 COV", "MT210", "MT540", "MT542" } },
             { ReportName.Collateral, new List<string>() { "MT103", "MT202", "MT202 COV", "MT210" } },
             { ReportName.Invoices, new List<string>() { "MT103", "MT202", "MT202 COV" } }
         };
-
-        private class WireSourceDetails
-        {
-            public WireSourceDetails()
-            {
-                Details = new Dictionary<string, string>();
-            }
-
-            public string SourceModuleName { get; set; }
-            public string AttachmentName { get; set; }
-            public string FileSource { get; set; }
-            public Dictionary<string, string> Details { get; set; }
-
-            public bool IsSourceAvailable { get { return !string.IsNullOrWhiteSpace(SourceModuleName); } }
-        }
 
 
         public JsonResult GetWireDetails(long wireId)
@@ -775,7 +760,7 @@ namespace HMOSecureWeb.Controllers
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                var adhocWirePurposes = context.hmsWirePurposeLkups.Where(s => s.ReportName == ReportName.AdhocReport && s.IsApproved).ToList();
+                var adhocWirePurposes = context.hmsWirePurposeLkups.Where(s => s.ReportName == ReportName.AdhocWireReport && s.IsApproved).ToList();
                 var wirePurposes = adhocWirePurposes.Select(s => new { id = s.hmsWirePurposeId, text = s.Purpose }).ToList();
                 var currencies = context.onBoardingCurrencies.AsNoTracking().Select(s => new { id = s.Currency, text = s.Currency }).ToList();
                 return Json(new { wirePurposes, currencies });

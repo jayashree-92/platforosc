@@ -41,6 +41,22 @@ namespace HMOSecureMiddleware
     }
 
 
+    public class WireSourceDetails
+    {
+        public WireSourceDetails()
+        {
+            Details = new Dictionary<string, string>();
+        }
+
+        public string SourceModuleName { get; set; }
+        public string AttachmentName { get; set; }
+        public string FileSource { get; set; }
+        public Dictionary<string, string> Details { get; set; }
+
+        public bool IsSourceAvailable { get { return !string.IsNullOrWhiteSpace(SourceModuleName); } }
+    }
+
+
     public class WireTicketStatus
     {
         public WireTicketStatus(WireTicket wireTicket, int userId, bool isWireApprover, bool isAdHocWire = false)
@@ -80,7 +96,7 @@ namespace HMOSecureMiddleware
             IsCancelEnabled = !IsWireStatusCancelled && (!(IsWireStatusApproved || swiftStatusId > 1) && !IsDeadlineCrossed || !IsSwiftCancelDisabled);
 
             IsDraftEnabled = !IsDeadlineCrossed && (IsWireStatusInitiated || IsWireStatusFailed || IsWireStatusCancelled && IsSwiftStatusNotInitiated);
-            IsWirePurposeAdhoc = isAdHocWire || wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocReport;
+            IsWirePurposeAdhoc = isAdHocWire || wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocWireReport;
 
             var isUserInvolvedInInitation = wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated || s.WireStatusId == (int)WireDataManager.WireStatus.Drafted).Any(s => s.CreatedBy == userId)
                 || wireTicket.HMWire.CreatedBy == userId || wireTicket.HMWire.LastUpdatedBy == userId;
@@ -448,9 +464,7 @@ namespace HMOSecureMiddleware
                 return wireWorkFlowLog;
 
             }
-
         }
-
 
         public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus wireStatus, string comment, int userId)
         {
@@ -624,7 +638,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                var wirePortalCutoff = context.onBoardingWirePortalCutoffs.FirstOrDefault(s => s.onBoardingWirePortalCutoffId == wireCutoffId);
+                var wirePortalCutoff = context.onBoardingWirePortalCutoffs.First(s => s.onBoardingWirePortalCutoffId == wireCutoffId);
                 context.onBoardingWirePortalCutoffs.Remove(wirePortalCutoff);
                 context.SaveChanges();
             }

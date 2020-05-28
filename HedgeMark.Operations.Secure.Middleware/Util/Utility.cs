@@ -90,6 +90,6 @@ namespace HMOSecureMiddleware.Util
         public static readonly string RepoCollateral = "Repo Collateral";
 
         //Wires Report
-        public static readonly string AdhocReport = "Adhoc Report";
+        public static readonly string AdhocWireReport = "Adhoc Report";
     }
 }

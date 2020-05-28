@@ -1466,43 +1466,49 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
-    $("#liUltimateBeneficiaryType0").on("change", function (e) {
-        $("#liUltimateBeneficiaryBICorABA0").select2("val", '').trigger("change");
-        $("#ultimateBankName0").val("");
-        $("#ultimateBankAddress0").val("");
-    });
-
-    $("#liBeneficiaryType0").on("change", function (e) {
-        $("#liBeneficiaryBICorABA0").select2("val", '').trigger("change");
-        $("#beneficiaryBankName0").val("");
-        $("#beneficiaryBankAddress0").val("");
-    });
-
-    $("#liIntermediaryType0").on("change", function (e) {
-        $("#liIntermediaryBICorABA0").select2("val", '').trigger("change");
-        $("#intermediaryBankName0").val("");
-        $("#intermediaryBankAddress0").val("");
-    });
-
     $scope.fnLoadDefaultDropDowns = function (key) {
 
-        $("#liBeneficiaryType" + key).select2({
+        $("#liBeneficiaryType0").select2({
             placeholder: "Select a BIC or ABA",
             allowClear: true,
             data: $scope.beneficiaryType
         });
 
-        $("#liIntermediaryType" + key).select2({
+        $("#liIntermediaryType0").select2({
             placeholder: "Select a BIC or ABA",
             allowClear: true,
             data: $scope.beneficiaryType
         });
 
-        $("#liUltimateBeneficiaryType" + key).select2({
+        $("#liUltimateBeneficiaryType0").select2({
             placeholder: "Select a BIC or ABA",
             allowClear: true,
             data: $scope.ultimateBeneficiaryType
         });
+
+
+
+        $("#liUltimateBeneficiaryType0").on("change", function (e) {
+            $("#liUltimateBeneficiaryBICorABA0").select2("val", '').trigger("change");
+            $("#ultimateBankName0").val("");
+            $("#ultimateBankAddress0").val("");
+        });
+
+        $("#liBeneficiaryType0").on("change", function (e) {
+            $("#liBeneficiaryBICorABA0").select2("val", '').trigger("change");
+            $("#beneficiaryBankName0").val("");
+            $("#beneficiaryBankAddress0").val("");
+        });
+
+        $("#liIntermediaryType0").on("change", function (e) {
+            $("#liIntermediaryBICorABA0").select2("val", '').trigger("change");
+            $("#intermediaryBankName0").val("");
+            $("#intermediaryBankAddress0").val("");
+        });
+
+
+
+
 
         $("#AuthorizedParty" + key).select2({
             placeholder: "Select Authorized Party",
