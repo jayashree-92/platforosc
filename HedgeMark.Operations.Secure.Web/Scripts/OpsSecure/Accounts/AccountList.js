@@ -2216,7 +2216,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         success: function (file, result) {
             $(".dzFileProgress").removeClass("progress-bar-striped").removeClass("active").removeClass("progress-bar-warning").addClass("progress-bar-success");
             $(".dzFileProgress").html("Upload Successful");
-            fnDestroyDataTable("#accountTable");
+            //fnDestroyDataTable("#accountTable");
             $scope.fnGetAccounts();
         },
         queuecomplete: function () {
