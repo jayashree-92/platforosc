@@ -131,6 +131,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_dmaInvoiceReport' does not have a pr
         <EntityType Name="vw_dmaInvoiceReport">
           <Key>
             <PropertyRef Name="dmaInvoiceReportId" />
+            <PropertyRef Name="ClientFundId" />
             <PropertyRef Name="LegalFundName" />
             <PropertyRef Name="ClientFundName" />
             <PropertyRef Name="FeeType" />
@@ -143,6 +144,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_dmaInvoiceReport' does not have a pr
             <PropertyRef Name="SendToClientPortalForApproval" />
           </Key>
           <Property Name="dmaInvoiceReportId" Type="bigint" Nullable="false" />
+          <Property Name="ClientFundId" Type="bigint" Nullable="false" />
           <Property Name="LegalFundName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="ClientFundName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="ShortFundName" Type="varchar" MaxLength="100" />
@@ -150,6 +152,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_dmaInvoiceReport' does not have a pr
           <Property Name="FileName" Type="varchar" MaxLength="200" />
           <Property Name="Vendor" Type="varchar" MaxLength="300" />
           <Property Name="FileSource" Type="varchar" MaxLength="50" />
+          <Property Name="FilePath" Type="varchar" MaxLength="500" />
           <Property Name="InvoiceNo" Type="varchar" MaxLength="50" />
           <Property Name="InvoiceDate" Type="date" Nullable="false" />
           <Property Name="OriginalContextMonth" Type="date" Nullable="false" />
@@ -157,6 +160,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_dmaInvoiceReport' does not have a pr
           <Property Name="ServicesCoveredTo" Type="date" />
           <Property Name="Amount" Type="float" Nullable="false" />
           <Property Name="PaidDate" Type="date" />
+          <Property Name="IsApprovalRequired" Type="bit" />
           <Property Name="ClientApproval" Type="bit" Nullable="false" />
           <Property Name="Currency" Type="varchar" MaxLength="3" />
           <Property Name="ClientApprovalStatus" Type="varchar" MaxLength="14" Nullable="false" />
@@ -215,6 +219,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <EntitySet Name="vw_dmaInvoiceReport" EntityType="Self.vw_dmaInvoiceReport" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vw_dmaInvoiceReport].[dmaInvoiceReportId] AS [dmaInvoiceReportId], 
+    [vw_dmaInvoiceReport].[ClientFundId] AS [ClientFundId], 
     [vw_dmaInvoiceReport].[LegalFundName] AS [LegalFundName], 
     [vw_dmaInvoiceReport].[ClientFundName] AS [ClientFundName], 
     [vw_dmaInvoiceReport].[ShortFundName] AS [ShortFundName], 
@@ -222,6 +227,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
     [vw_dmaInvoiceReport].[FileName] AS [FileName], 
     [vw_dmaInvoiceReport].[Vendor] AS [Vendor], 
     [vw_dmaInvoiceReport].[FileSource] AS [FileSource], 
+    [vw_dmaInvoiceReport].[FilePath] AS [FilePath], 
     [vw_dmaInvoiceReport].[InvoiceNo] AS [InvoiceNo], 
     [vw_dmaInvoiceReport].[InvoiceDate] AS [InvoiceDate], 
     [vw_dmaInvoiceReport].[OriginalContextMonth] AS [OriginalContextMonth], 
@@ -229,6 +235,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
     [vw_dmaInvoiceReport].[ServicesCoveredTo] AS [ServicesCoveredTo], 
     [vw_dmaInvoiceReport].[Amount] AS [Amount], 
     [vw_dmaInvoiceReport].[PaidDate] AS [PaidDate], 
+    [vw_dmaInvoiceReport].[IsApprovalRequired] AS [IsApprovalRequired], 
     [vw_dmaInvoiceReport].[ClientApproval] AS [ClientApproval], 
     [vw_dmaInvoiceReport].[Currency] AS [Currency], 
     [vw_dmaInvoiceReport].[ClientApprovalStatus] AS [ClientApprovalStatus], 
@@ -339,6 +346,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
             <PropertyRef Name="InvoiceCreatedTimestamp" />
             <PropertyRef Name="OriginalContextMonth" />
             <PropertyRef Name="SendToClientPortalForApproval" />
+            <PropertyRef Name="ClientFundId" />
           </Key>
           <Property Name="dmaInvoiceReportId" Nullable="false" Type="Int64" />
           <Property Name="LegalFundName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" Type="String" />
@@ -363,6 +371,9 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="Child" Type="Int32" />
           <Property Name="OriginalContextMonth" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="SendToClientPortalForApproval" Type="Boolean" Nullable="false" />
+          <Property Name="ClientFundId" Type="Int64" Nullable="false" />
+          <Property Name="FilePath" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IsApprovalRequired" Type="Boolean" />
         </EntityType>
         <EntityType Name="dmaCollateralData">
           <Key>
@@ -531,6 +542,9 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <EntitySetMapping Name="vw_dmaInvoiceReport">
             <EntityTypeMapping TypeName="OperationsModel.vw_dmaInvoiceReport">
               <MappingFragment StoreEntitySet="vw_dmaInvoiceReport">
+                <ScalarProperty Name="IsApprovalRequired" ColumnName="IsApprovalRequired" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="ClientFundId" ColumnName="ClientFundId" />
                 <ScalarProperty Name="SendToClientPortalForApproval" ColumnName="SendToClientPortalForApproval" />
                 <ScalarProperty Name="OriginalContextMonth" ColumnName="OriginalContextMonth" />
                 <ScalarProperty Name="Child" ColumnName="Child" />

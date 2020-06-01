@@ -210,8 +210,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         });
     }
 
-    $scope.fnDownloadWireSourceFile = function (sourceModuleName, attachmentName, fileSource) {
-        
+    $scope.fnDownloadWireSourceFile = function (sourceModuleName, sourceModuleId) {
+        if (sourceModuleName == "Invoices")
+            window.location.href = "/Home/DownloadInvoiceWireFile?sourceModuleId=" + sourceModuleId;
     }
 
     $scope.SwiftFormatMessageActiveTag = "";

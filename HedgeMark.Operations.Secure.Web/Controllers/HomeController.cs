@@ -378,6 +378,7 @@ namespace HMOSecureWeb.Controllers
 
                     wireSourceModule.AttachmentName = invoiceReport.FileName;
                     wireSourceModule.FileSource = invoiceReport.FileSource;
+                    wireSourceModule.SourceModuleId = invoiceId;
 
                     wireSourceModule.Details.Add("Invoice No", invoiceReport.InvoiceNo);
                     wireSourceModule.Details.Add("Invoice Date", invoiceReport.InvoiceDate.ToShortDateString());
@@ -643,6 +644,34 @@ namespace HMOSecureWeb.Controllers
             var tempFilePath = string.Format("Temp\\{0}", UserName);
             var file = new FileInfo(string.Format("{0}{1}\\{2}", FileSystemManager.OpsSecureWiresFilesPath, (wireId > 0 ? wireId.ToString() : tempFilePath), fileName));
             return DownloadFile(file, fileName);
+        }
+
+        public FileResult DownloadInvoiceWireFile(long sourceModuleId)
+        {
+            using (var context = new OperationsContext())
+            {
+                var invoiceReport = context.vw_dmaInvoiceReport.First(s => s.dmaInvoiceReportId == sourceModuleId);
+                var file = GetInvoiceFileLocation(invoiceReport);
+                return DownloadFile(file, invoiceReport.FileName);
+            }
+        }
+
+        private FileInfo GetInvoiceFileLocation(vw_dmaInvoiceReport invoice)
+        {
+            switch (invoice.FileSource) {
+
+                case "Manual":
+                   return new FileInfo(string.Format("{0}/{1}/{2}", FileSystemManager.InvoicesFileAttachement, invoice.dmaInvoiceReportId, invoice.FileName));
+                case "Overriden":
+                    return new FileInfo(string.Format("{0}/{1}/{2}", FileSystemManager.RawFilesOverridesPath, invoice.OriginalContextMonth.ToString("yyyy-MM-dd"), invoice.FileName));
+                default:
+                    return invoice.FileSource == "Config"
+                ? new FileInfo(string.Format("{0}{1}", FileSystemManager.InternalConfigFiles, invoice.FileName))
+                : new FileInfo(string.Format("{0}{1}",
+                    (invoice.FileSource == "Overriden") && (!invoice.FileName.StartsWith("Overrides\\") || !invoice.FileName.StartsWith("Overrides/"))
+                        ? FileSystemManager.RawFilesOverridesPath
+                        : FileSystemManager.SftpOutputFilesPath, invoice.FilePath));  // FileOriginManager.GetRawFileDirectoryIncludingSubSir(fileOrigin, contextDate)
+            }
         }
 
         public JsonResult GetTimeToApproveTheWire(long onboardingAccountId, DateTime valueDate)
