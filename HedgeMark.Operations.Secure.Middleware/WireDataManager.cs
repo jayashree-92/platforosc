@@ -47,7 +47,7 @@ namespace HMOSecureMiddleware
         {
             Details = new Dictionary<string, string>();
         }
-
+        public long SourceModuleId { get; set; }
         public string SourceModuleName { get; set; }
         public string AttachmentName { get; set; }
         public string FileSource { get; set; }

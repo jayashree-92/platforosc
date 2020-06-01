@@ -37,5 +37,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<int> Child { get; set; }
         public System.DateTime OriginalContextMonth { get; set; }
         public bool SendToClientPortalForApproval { get; set; }
+        public long ClientFundId { get; set; }
+        public string FilePath { get; set; }
+        public Nullable<bool> IsApprovalRequired { get; set; }
     }
 }

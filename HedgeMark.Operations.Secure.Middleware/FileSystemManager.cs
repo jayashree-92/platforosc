@@ -17,6 +17,15 @@ namespace HMOSecureMiddleware
             }
         }
 
+        public static string ManagedAccountRootDirectory
+        {
+            get
+            {
+                var configPath = ConfigurationManagerWrapper.StringSetting("ManagedAccountRootDirectory", @"D:\ManagedAccountFiles\");
+                return GetValidatedConfigPath(configPath);
+            }
+        }
+
         public static string OpsSecureWiresFilesPath
         {
 
@@ -61,6 +70,40 @@ namespace HMOSecureMiddleware
                 var configPath = string.Format(@"{0}\BulkFileUploads\", OpsSecureRootDirectory);
                 return GetValidatedConfigPath(configPath);
             }
+        }
+
+        public static string InvoicesFileAttachement
+        {
+            get
+            {
+                var configPath = string.Format(@"{0}\Invoices\FileAttachement\", ManagedAccountRootDirectory);
+                return GetValidatedConfigPath(configPath);
+            }
+        }
+        public static string InternalConfigFiles
+        {
+            get
+            {
+                var configPath = string.Format(@"{0}\InternalConfigFiles\", ManagedAccountRootDirectory);
+                return GetValidatedConfigPath(configPath);
+            }
+        }
+        public static string RawFilesOverridesPath
+        {
+            get
+            {
+                var configPath = string.Format(@"{0}\Overrides\", ManagedAccountRootDirectory);
+                return GetValidatedConfigPath(configPath);
+            }
+        }
+        public static string SftpOutputFilesPath
+        {
+            get
+            {
+                var configPath = ConfigurationManagerWrapper.StringSetting("SftpOutputFilesPath", string.Format(@"{0}\{1}\{2}\", ManagedAccountRootDirectory, "SftpOutputFilesPath", "HM"));
+                return GetValidatedConfigPath(configPath);
+            }
+
         }
 
         public static string DefaultTimeZone
