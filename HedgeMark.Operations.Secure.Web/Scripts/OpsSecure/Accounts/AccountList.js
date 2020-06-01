@@ -2678,7 +2678,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     function hierarchyFormat(aId) {
         return "<div class=\"slider center-block onboardingMapping\" style=\"margin-bottom: 10px !important;\">" +
-            "<img src=\"../img/loading.gif\" alt=\"Loading...\" style='position:absolute;text-align:center;' class='onboardingLoadSpinner col-md-offset-6'/>" +
+            "<img src=\"../Images/loading.gif\" alt=\"Loading...\" style='position:absolute;text-align:center;' class='onboardingLoadSpinner col-md-offset-6'/>" +
             "<table id=\"accountRowTable" + aId + "\" class=\"table table-bordered table-condensed\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\" width=\"100%\"></table>" +
             "</div>";
     }
@@ -2929,22 +2929,23 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if ($("#accountSSITemplateTable").hasClass("initialized")) {
             fnDestroyDataTable("#accountSSITemplateTable");
         }
+
         accountSsiTemplateTable = $("#accountSSITemplateTable").DataTable(
             {
                 aaData: data,
                 "bDestroy": true,
                 "columns": [
-                    { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
-                    { "mData": "dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
+                    { "mData": "Account.onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
+                    { "mData": "Account.dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
                     { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
-                    { "mData": "BrokerId", "sTitle": "BrokerId", visible: false },
+                    { "mData": "Account.BrokerId", "sTitle": "BrokerId", visible: false },
                     {
                         "orderable": false,
                         "data": null,
                         "defaultContent": "<i class=\"glyphicon glyphicon-menu-right\" style=\"cursor:pointer;\"></i>"
                     },
                     {
-                        "mData": "AccountType", "sTitle": "Entity Type",
+                        "mData": "Account.AccountType", "sTitle": "Entity Type",
                         "mRender": function (tdata) {
                             if (tdata != null && tdata != "undefinied") {
                                 switch (tdata) {
@@ -2963,9 +2964,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     { "mData": "AgreementName", "sTitle": "Agreement Name" },
                     { "mData": "Broker", "sTitle": "Broker" },
                     //{ "mData": "AccountName", "sTitle": "Account Name" },
-                    { "mData": "AccountNumber", "sTitle": "Account Number" },
+                    { "mData": "Account.AccountNumber", "sTitle": "Account Number" },
                     {
-                        "mData": "onBoardingAccountStatus", "sTitle": "Account Status",
+                        "mData": "Account.onBoardingAccountStatus", "sTitle": "Account Status",
                         "mRender": function (tdata) {
                             if (tdata != null && tdata != "undefined") {
                                 switch (tdata) {
@@ -2979,12 +2980,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         }
                     },
                     {
-                        "mData": "CreatedBy", "sTitle": "Created By", "mRender": function (data) {
+                        "mData": "Account.CreatedBy", "sTitle": "Created By", "mRender": function (data) {
                             return humanizeEmail(data);
                         }
                     },
                     {
-                        "mData": "CreatedAt",
+                        "mData": "Account.CreatedAt",
                         "sTitle": "Created Date",
                         "type": "dotnet-date",
                         "mRender": function (tdata) {
@@ -2992,12 +2993,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         }
                     },
                     {
-                        "mData": "UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
+                        "mData": "Account.UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
                             return humanizeEmail(data);
                         }
                     },
                     {
-                        "mData": "UpdatedAt",
+                        "mData": "Account.UpdatedAt",
                         "sTitle": "Last Modified",
                         "type": "dotnet-date",
                         "mRender": function (tdata) {
@@ -3011,7 +3012,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     "sInfoFiltered": " - filtering from _MAX_ Onboarded Accounts"
                 },
                 "createdRow": function (row, data) {
-                    switch (data.onBoardingAccountStatus) {
+                    switch (data.Account.onBoardingAccountStatus) {
                         case "Approved":
                             $(row).addClass("success");
                             break;
@@ -3064,10 +3065,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         var tr = $(this).parent();
         var row = accountSsiTemplateTable.row(tr);
-        if (row.data() != undefined) {
-            var onBoardingAccountId = row.data().onBoardingAccountId;
-            var fId = row.data().hmFundId;
-            var currency = row.data().Currency;
+
+        var account = row.data().Account;
+
+        if (account != undefined) {
+            var onBoardingAccountId = account.onBoardingAccountId;
+            var fId = account.hmFundId;
+            var currency = account.Currency;
 
             var icon = $(this).find("i");
             if ($("#accountRowTable").hasClass("initialized")) {

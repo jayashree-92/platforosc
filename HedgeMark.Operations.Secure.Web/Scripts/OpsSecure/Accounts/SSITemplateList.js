@@ -221,7 +221,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
             if (entityId != undefined && entityId != "") {
                 var ssiTemplates = $filter('filter')(angular.copy($scope.ssiTemplateList),
                     function (ssi) {
-                        return !$scope.isServiceType ? ssi.TemplateEntityId == entityId : ssi.ServiceProvider == entityText;
+                        return !$scope.isServiceType ? ssi.SSITemplate.TemplateEntityId == entityId : ssi.SSITemplate.ServiceProvider == entityText;
                     }, true);
                 $scope.viewAssociationTable(ssiTemplates);
             }
@@ -247,7 +247,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                 aaData: data,
                 "bDestroy": true,
                 "columns": [
-                    { "mData": "onBoardingSSITemplateId", "sTitle": "onBoardingSSITemplateId", visible: false },
+                    { "mData": "SSITemplate.onBoardingSSITemplateId", "sTitle": "onBoardingSSITemplateId", visible: false },
                     {
                         "orderable": false,
                         "data": null,
@@ -257,12 +257,12 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         "mData": "Broker", "sTitle": "Broker"
                     },
                     {
-                        "mData": "ServiceProvider", "sTitle": "Service Provider"
+                        "mData": "SSITemplate.ServiceProvider", "sTitle": "Service Provider"
                     },
-                    { "mData": "TemplateName", "sTitle": "Template Name" },
-                    { "mData": "AccountNumber", "sTitle": "Account Number" },
+                    { "mData": "SSITemplate.TemplateName", "sTitle": "Template Name" },
+                    { "mData": "SSITemplate.AccountNumber", "sTitle": "Account Number" },
                     {
-                        "mData": "SSITemplateStatus", "sTitle": "SSI Template Status",
+                        "mData": "SSITemplate.SSITemplateStatus", "sTitle": "SSI Template Status",
                         "mRender": function (tdata) {
                             if (tdata != null && tdata != "undefined") {
                                 switch (tdata) {
@@ -276,12 +276,12 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         }
                     },
                     {
-                        "mData": "CreatedBy", "sTitle": "Created By", "mRender": function (data) {
+                        "mData": "SSITemplate.CreatedBy", "sTitle": "Created By", "mRender": function (data) {
                             return humanizeEmail(data);
                         }
                     },
                     {
-                        "mData": "CreatedAt",
+                        "mData": "SSITemplate.CreatedAt",
                         "sTitle": "Created Date",
                         "type": "dotnet-date",
                         "mRender": function (tdata) {
@@ -289,12 +289,12 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         }
                     },
                     {
-                        "mData": "UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
+                        "mData": "SSITemplate.UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) {
                             return humanizeEmail(data);
                         }
                     },
                     {
-                        "mData": "UpdatedAt",
+                        "mData": "SSITemplate.UpdatedAt",
                         "sTitle": "Last Modified",
                         "type": "dotnet-date",
                         "mRender": function (tdata) {
