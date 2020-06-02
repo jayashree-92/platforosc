@@ -1,11 +1,11 @@
 ﻿
 <div class="modal fade" id="modalToRetrieveWires" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-mlg2" role="document" >
+    <div class="modal-dialog modal-mlg2" role="document">
         <div class="modal-content">
             <div class="row" style="position: sticky;top: 0;z-index:2;">
-                <span class="col-md-12" style="margin-bottom: 10px;">
+                <span class="col-md-12" style="margin-bottom: 10px;padding: 0px">
                     <p class="panel panel-heading" style="background: #F5F5F5;border-bottom: 1px solid lightgray;">
-                        <img src="..\Images\spinner.gif" alt="Loading..." class="triggerTasklogLoadSpinner" ng-style="{ 'display': isWireLoadingInProgress ? 'inline' : 'none' }" />
+                        <img src="..\Images\spinner.gif" alt="Loading..." ng-style="{ 'display': isWireLoadingInProgress ? 'inline' : 'none' }" />
                         @*<i class="glyphicon glyphicon-usd"></i>*@
                         <span style="font-size: 15px;font-weight: bold">Wire Ticket Details  </span>
                         <span ng-if="!WireTicketStatus.IsApprovedOrFailed">
@@ -22,7 +22,7 @@
                         <span ng-show="WireTicket.WireStatusId == 6" style="font-weight: bold"> - by {{workflowUsers[0]}}</span>
                     </p>
                 </span>
-                <span class="pull-right" style="padding: 5px; position: absolute; margin: 5px 0px 0px -50px">
+                <span class="pull-right" style="padding: 5px; position: absolute; margin:6px 0px 0px -32px">
                     <button title="close this log" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </span>
                 <div class="collapse container-fluid" id="wireCurrentlyViewedBy">
@@ -173,7 +173,7 @@
                         </div>
                     </div>
                 </div>
-                <p style="height:5px;" />
+                <p style="height: 5px;" />
                 <div class="row">
                     <div class="col-md-12">
                         <div class="col-md-3">
@@ -895,10 +895,10 @@
                     <div class="panel-body collapse" id="wireSourceDiv" style="padding: 10px 15px 0px 15px; overflow-y: scroll; max-height: 270px; margin-bottom: 2px;">
                         <span id="spnWireSource">
                             <p class="messgeBlock" ng-show="WireSourceModuleDetails.AttachmentName!=''">
-                                File Attachment:<a href = '/Home/DownloadInvoiceWireFile?sourceModuleId={{WireSourceModuleDetails.SourceModuleId}}' @*ng-click="fnDownloadWireSourceFile(WireSourceModuleDetails.SourceModuleName,WireSourceModuleDetails.SourceModuleId)"*@>{{WireSourceModuleDetails.AttachmentName}}</a>
+                                File Attachment:<a href='/Home/DownloadInvoiceWireFile?sourceModuleId={{WireSourceModuleDetails.SourceModuleId}}' @*ng-click="fnDownloadWireSourceFile(WireSourceModuleDetails.SourceModuleName,WireSourceModuleDetails.SourceModuleId)"*@>{{WireSourceModuleDetails.AttachmentName}}</a>
                             </p>
                             <p ng-repeat="(key, value) in WireSourceModuleDetails.Details" class="messgeBlock">
-                                {{key}}:{{value}}
+                                {{key}}:<b>{{value}}</b>
                             </p>
                             <p></p>
                         </span>
