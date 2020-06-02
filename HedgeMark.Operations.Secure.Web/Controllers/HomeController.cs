@@ -397,7 +397,7 @@ namespace HMOSecureWeb.Controllers
                 using (var context = new OperationsContext())
                 {
                     var opsCashCollateralId = wireTicket.HMWire.hmsWireCollateralAssociations.First().dmaCashCollateralId;
-                    var collateralReport = context.dmaOpsCashCollaterals.Include(a => a.dmaCollateralData).First(s => s.dmaCollateralDataId == opsCashCollateralId);
+                    var collateralReport = context.dmaOpsCashCollaterals.Include(a => a.dmaCollateralData).First(s => s.dmaOpsCashCollateralId == opsCashCollateralId);
 
                     wireSourceModule.Details.Add("Counterparty", collateralReport.dmaCollateralData.BrokerName);
                     wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (System Balance)", collateralReport.dmaCollateralData.CollateralPledgedToByFundSystemBalance.ToCurrency());
