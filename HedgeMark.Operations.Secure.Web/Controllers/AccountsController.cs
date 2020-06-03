@@ -162,7 +162,7 @@ namespace HMOSecureWeb.Controllers
             if (string.IsNullOrWhiteSpace(messages))
                 messages = string.Empty;
 
-            var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds, messages.Split(',').ToList(), false, currency);
+            var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds, messages.Split(',').ToList(), string.IsNullOrWhiteSpace(messages), currency);
             var availableSSITemplates = ssiTemplates
                 .Where(s => !ssiTemplateMaps.Select(p => p.onBoardingSSITemplateId)
                 .Contains(s.onBoardingSSITemplateId)).ToList();

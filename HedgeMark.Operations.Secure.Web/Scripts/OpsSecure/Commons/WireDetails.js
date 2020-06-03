@@ -51,7 +51,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 buttons: [
                     {
                         extend: 'csv',
-                        text: 'Export as .CSV',
+                        text: 'Export as .csv',
                         className: "btn-sm",
                         customize: function (csv) {
                             //var allColumns = tblWireStatusDetails.columns().data().toArray();
@@ -82,12 +82,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                             }
 
                             return fullCsv;
-                        },
-                        //exportOptions: {
-                        //    modifier: {
-                        //        search: 'none'
-                        //    }
-                        //}
+                        }
                     }
                 ],
                 rowCallback: function (row, data, index) {
