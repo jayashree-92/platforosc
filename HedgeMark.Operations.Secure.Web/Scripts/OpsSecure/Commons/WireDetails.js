@@ -48,7 +48,48 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
 
                 "dom": "<'pull-right'f>itI",
                 rowId: "hmsWireId",
+                buttons: [
+                    {
+                        extend: 'csv',
+                        text: 'Export as .CSV',
+                        className: "btn-sm",
+                        customize: function (csv) {
+                            //var allColumns = tblWireStatusDetails.columns().data().toArray();
+                            var allColumns = tblWireStatusDetails.columns().nodes().to$().toArray();
+                            var totalColumns = allColumns.length;
 
+                            var rows = [];
+                            var headerRow = "";
+                            for (var i = 0; i < totalColumns; i++) {
+                                headerRow += "\"" + tblWireStatusDetails.column(i).header().textContent + "\",";
+                            }
+                            rows.push(headerRow);
+                            for (var i = 0; i < totalColumns; i++) {
+
+                                for (var j = 0; j < allColumns[i].length; j++) {
+                                    var row = rows[j + 1];
+                                    if (row == undefined)
+                                        row = "";
+
+                                    row += "\"" + $(allColumns[i][j]).text() + "\",";
+                                    rows[j + 1] = row;
+                                }
+
+                            }
+                            var fullCsv = "";
+                            for (var k = 0; k < rows.length; k++) {
+                                fullCsv += rows[k] + "\n";
+                            }
+
+                            return fullCsv;
+                        },
+                        //exportOptions: {
+                        //    modifier: {
+                        //        search: 'none'
+                        //    }
+                        //}
+                    }
+                ],
                 rowCallback: function (row, data, index) {
 
                 },
@@ -238,6 +279,8 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 ],
 
             });
+
+            tblWireStatusDetails.buttons().container().appendTo('#spnCustomButtons');
 
 
             //$("#tblWireStatusDetails").off("dblclick", "tbody tr").on("dblclick", "tbody tr", function (event) {
