@@ -96,11 +96,11 @@ namespace HMOSecureMiddleware
                 return GetValidatedConfigPath(configPath);
             }
         }
-        public static string SftpOutputFilesPath
+        public static string SftpRawFilesOfHM
         {
             get
             {
-                var configPath = ConfigurationManagerWrapper.StringSetting("SftpOutputFilesPath", string.Format(@"{0}\{1}\{2}\", ManagedAccountRootDirectory, "SftpOutputFilesPath", "HM"));
+                var configPath = ConfigurationManagerWrapper.StringSetting("SftpRawFilesOfHM", string.Format(@"{0}\{1}\{2}\", ManagedAccountRootDirectory, "SftpOutputFilesPath", "HM"));
                 return GetValidatedConfigPath(configPath);
             }
 

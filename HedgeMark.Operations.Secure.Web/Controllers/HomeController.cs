@@ -670,7 +670,7 @@ namespace HMOSecureWeb.Controllers
                 : new FileInfo(string.Format("{0}{1}",
                     (invoice.FileSource == "Overriden") && (!invoice.FileName.StartsWith("Overrides\\") || !invoice.FileName.StartsWith("Overrides/"))
                         ? FileSystemManager.RawFilesOverridesPath
-                        : FileSystemManager.SftpOutputFilesPath, invoice.FilePath));  // FileOriginManager.GetRawFileDirectoryIncludingSubSir(fileOrigin, contextDate)
+                        : FileSystemManager.SftpRawFilesOfHM, invoice.FilePath));  // FileOriginManager.GetRawFileDirectoryIncludingSubSir(fileOrigin, contextDate)
             }
         }
 
