@@ -894,11 +894,11 @@
                     </div>
                     <div class="panel-body collapse" id="wireSourceDiv" style="padding: 10px 15px 0px 15px; overflow-y: scroll; max-height: 270px; margin-bottom: 2px;">
                         <span id="spnWireSource">
-                            <p class="messgeBlock" ng-show="WireSourceModuleDetails.AttachmentName!=''">
+                            <p class="messgeBlock" ng-show="WireSourceModuleDetails.AttachmentName!=null && WireSourceModuleDetails.AttachmentName!=''">
                                 File Attachment:<a href='/Home/DownloadInvoiceWireFile?sourceModuleId={{WireSourceModuleDetails.SourceModuleId}}' @*ng-click="fnDownloadWireSourceFile(WireSourceModuleDetails.SourceModuleName,WireSourceModuleDetails.SourceModuleId)"*@>{{WireSourceModuleDetails.AttachmentName}}</a>
                             </p>
                             <p ng-repeat="(key, value) in WireSourceModuleDetails.Details" class="messgeBlock">
-                                {{key}}:<b>{{value}}</b>
+                                {{key}}:&nbsp;<b ng-class="{ 'font-danger':value!=null && value!='' && value[0]=='(' && value[value.length-1]==')' }">{{value}}</b>
                             </p>
                             <p></p>
                         </span>
