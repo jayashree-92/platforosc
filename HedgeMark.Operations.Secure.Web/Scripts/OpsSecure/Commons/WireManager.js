@@ -575,7 +575,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
         else {
             angular.element("#wireEntryDate").html(getFormattedUIDate(moment(getDateForDisplay($scope.WireTicket.ContextDate))._d));
-            if ($scope.WireTicketStatus.IsEditEnabled) {
+            if ($scope.WireTicketStatus.IsEditEnabled && $scope.wireObj.IsAdhocWire) {
                 $scope.initializeDatePicker();
                 angular.element("#wireValueDate").datepicker("setDate", moment(getDateForDisplay($scope.WireTicket.ValueDate))._d);
             }
@@ -598,7 +598,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.bindWireValues = function () {
         angular.element("#wireEntryDate").html(getFormattedUIDate(moment(getDateForDisplay($scope.WireTicket.ContextDate))._d));
         angular.element("#liCurrency").select2('val', $scope.accountDetail.Currency).trigger('change');
-        if ($scope.WireTicketStatus.IsEditEnabled) {
+        if ($scope.WireTicketStatus.IsEditEnabled && $scope.wireObj.IsAdhocWire) {
             $scope.initializeDatePicker();
             angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditable', true);
             angular.element("#wireValueDate").datepicker("setDate", moment(getDateForDisplay($scope.WireTicket.ValueDate))._d);
