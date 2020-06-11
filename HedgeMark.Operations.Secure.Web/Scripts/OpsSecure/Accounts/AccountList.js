@@ -489,7 +489,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.allAccountList = response.data.OnBoardingAccounts;
             $scope.accountDetail = response.data.OnBoardingAccounts[0];
 
-
             if ($("#accountTable").hasClass("initialized")) {
                 accountTable.clear();
                 accountTable.rows.add($scope.allAccountList);
@@ -569,7 +568,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                                 if (tdata == null)
                                     return "";
 
-                                return moment(tdata.DaystoWire).format("LT");
+                                return moment(tdata.CutoffTime).format("LT");
                             }
                         },
                         { "mData": "Account.WirePortalCutoff", "sTitle": "Days to wire per V.D", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.DaystoWire : ""; } },
