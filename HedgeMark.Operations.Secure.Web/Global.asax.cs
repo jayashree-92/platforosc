@@ -19,6 +19,7 @@ using log4net.Config;
 using System.Collections.Generic;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Monitoring;
+using HedgeMark.Operations.Secure.DataModel.Models;
 
 namespace HMOSecureWeb
 {
@@ -48,7 +49,7 @@ namespace HMOSecureWeb
             //Boot up required assemblies to middleware
             BootUpMiddleware.BootUp();
 
-            var connectionString = new AdminContext().Database.Connection.ConnectionString;
+            var connectionString = new AdminContextSettings().ConnectionString;
             AppHeartBeat.Start("HM-Operations-Secure", AppMnemonic.DMO, AppType.WebApp, connectionString);
 
         }
