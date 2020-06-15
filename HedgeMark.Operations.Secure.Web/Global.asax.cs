@@ -49,8 +49,8 @@ namespace HMOSecureWeb
             //Boot up required assemblies to middleware
             BootUpMiddleware.BootUp();
 
-            var connectionString = new AdminContextSettings().ConnectionString;
-            AppHeartBeat.Start("HM-Operations-Secure", AppMnemonic.DMO, AppType.WebApp, connectionString);
+            //var connectionString = new AdminContextSettings().ConnectionString;
+            //AppHeartBeat.Start("HM-Operations-Secure", AppMnemonic.DMO, AppType.WebApp, connectionString);
 
         }
         void GlobalUnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -214,7 +214,7 @@ namespace HMOSecureWeb
         public void Application_End(object sender, EventArgs e)
         {
             //JobStorage.Current.GetMonitoringApi().PurgeJobs();
-            AppHeartBeat.Stop();
+            //AppHeartBeat.Stop();
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
