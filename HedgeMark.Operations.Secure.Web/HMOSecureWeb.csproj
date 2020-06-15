@@ -60,6 +60,9 @@
     <Reference Include="Hangfire.SqlServer, Version=1.7.11.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.SqlServer.1.7.11\lib\net45\Hangfire.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="HedgeMark.Monitoring">
+      <HintPath>..\ExternalLibraries\HedgeMark.Monitoring.dll</HintPath>
+    </Reference>
     <Reference Include="HedgeMark.Operations.FileParseEngine">
       <HintPath>..\HedgeMark.Operations.Secure.Middleware\ExternalLibraries\HM-Ops-Utils\HedgeMark.Operations.FileParseEngine.dll</HintPath>
     </Reference>

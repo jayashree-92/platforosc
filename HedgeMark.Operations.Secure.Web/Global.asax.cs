@@ -18,6 +18,7 @@ using log4net;
 using log4net.Config;
 using System.Collections.Generic;
 using HedgeMark.Operations.Secure.DataModel;
+using HedgeMark.Monitoring;
 
 namespace HMOSecureWeb
 {
@@ -46,6 +47,8 @@ namespace HMOSecureWeb
 
             //Boot up required assemblies to middleware
             BootUpMiddleware.BootUp();
+
+            AppHeartBeat.Start("HM-Operations-Secure", AppMnemonic.DMO, AppType.WebApp, "HMOpsSecureConnectionString");
 
         }
         void GlobalUnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -209,6 +212,7 @@ namespace HMOSecureWeb
         public void Application_End(object sender, EventArgs e)
         {
             //JobStorage.Current.GetMonitoringApi().PurgeJobs();
+            AppHeartBeat.Stop();
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
