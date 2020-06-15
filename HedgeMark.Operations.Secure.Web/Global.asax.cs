@@ -48,7 +48,8 @@ namespace HMOSecureWeb
             //Boot up required assemblies to middleware
             BootUpMiddleware.BootUp();
 
-            AppHeartBeat.Start("HM-Operations-Secure", AppMnemonic.DMO, AppType.WebApp, "HMOpsSecureConnectionString");
+            var connectionString = new AdminContext().Database.Connection.ConnectionString;
+            AppHeartBeat.Start("HM-Operations-Secure", AppMnemonic.DMO, AppType.WebApp, connectionString);
 
         }
         void GlobalUnhandledException(object sender, UnhandledExceptionEventArgs e)
