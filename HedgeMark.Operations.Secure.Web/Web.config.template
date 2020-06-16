@@ -19,6 +19,7 @@
     <add name="AdminContext" connectionString="metadata=res://*/AdminModel.csdl|res://*/AdminModel.ssdl|res://*/AdminModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=W00001N00\MSDMUT05;initial catalog=HM;persist security info=True;user id=DMAHMUserDEV;password=scG_8&amp;m;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
     <add name="OperationsContext" connectionString="metadata=res://*/OperationsContext.csdl|res://*/OperationsContext.ssdl|res://*/OperationsContext.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=W00001N00\MSDMUT05;initial catalog=DMA_HM;persist security info=True;user id=DMAHMUserDEV;password=scG_8&amp;m;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
     <add name="OperationsSecureContext" connectionString="metadata=res://*/OperationsSecureModel.csdl|res://*/OperationsSecureModel.ssdl|res://*/OperationsSecureModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=W00001N00\MSDMUT05;initial catalog=HM_WIRES;persist security info=True;user id=HMWIRESDEV;password=5$#2wires@1;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient"/>
+
   </connectionStrings>
   <!-- < = &lt; > = &gt; " = &quot; ' = &apos; & = &amp; -->
 

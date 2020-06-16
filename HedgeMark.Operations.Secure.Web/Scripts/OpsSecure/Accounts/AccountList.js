@@ -496,7 +496,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             } else {
                 accountTable = $("#accountTable").not(".initialized").addClass("initialized").DataTable({
-                    aaData: response.data.OnBoardingAccounts,
+                    aaData: $scope.allAccountList,
                     "dom": "<'#fundAccountSearchPane.collapse'P><'row'<'col-md-6'i><'col-md-6 pull-right'f>>trI",
                     searchPanes: {
                         cascadePanes: true,
@@ -568,7 +568,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                                 if (tdata == null)
                                     return "";
 
-                                return moment(tdata.DaystoWire).format("LT");
+                                return moment(tdata.CutoffTime).format("LT");
                             }
                         },
                         { "mData": "Account.WirePortalCutoff", "sTitle": "Days to wire per V.D", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.DaystoWire : ""; } },
@@ -717,8 +717,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         var account = rowElement.Account;
 
-        console.log(account);
-
         $scope.onBoardingAccountId = account.onBoardingAccountId;
         $scope.FundId = account.hmFundId;
         $scope.AgreementId = account.dmaAgreementOnBoardingId;
@@ -778,10 +776,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.watchAccountDetails = [];
         $scope.onBoardingAccountDetails = [];
 
-        console.log(rowElement);
-
-
-
+       
         var accDetails = rowElement.Account;
         $scope.accountDetail = accDetails;
         $scope.onBoardingAccountId = accDetails.onBoardingAccountId;
@@ -831,7 +826,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 account.IsReceivingAccount = true;
             else
                 account.IsReceivingAccount = false;
-            $scope.onBoardingAccountDetails.push(account);
+            $scope.onBoardingAccountDetails[0] = account;
+
+            //$scope.accountDetail = account;
         });
         $scope.fnPreloadAccountData().then($scope.fnInitPreLoadEvents());
         $scope.isStatusUpdate = false;

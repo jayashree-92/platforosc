@@ -82,11 +82,11 @@ namespace HedgeMark.Operations.Secure.DataModel.Models
         }
     }
 
-    public class AdminSettings
+    public class AdminContextSettings
     {
         private static readonly string connectionString;
 
-        static AdminSettings()
+        static AdminContextSettings()
         {
             connectionString = new AdminContext().Database.Connection.ConnectionString;
         }

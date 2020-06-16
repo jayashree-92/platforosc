@@ -124,6 +124,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         "data": "TransferType", "sTitle": "Transfer Type"
                     },
 
+                    { "data": "HMWire.hmsWirePurposeLkup.ReportName", "sTitle": "Source Report" },
                     { "data": "HMWire.hmsWirePurposeLkup.Purpose", "sTitle": "Wire Purpose" },
                     {
                         "data": "HMWire.ValueDate", "sTitle": "Value Date",
