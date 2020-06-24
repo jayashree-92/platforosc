@@ -332,7 +332,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-                return context.vw_OnboardedAgreements.Where(s => s.AgreementType == "PB" || s.AgreementType == "Custody").Select(s => s.dmaAgreementOnBoardingId).ToList();
+                return context.vw_OnboardedAgreements.Where(s => s.AgreementType == "PB" || s.AgreementType == "Custody" || s.AgreementType == "Synthetic Prime Brokerage").Select(s => s.dmaAgreementOnBoardingId).ToList();
             }
         }
 
