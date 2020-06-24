@@ -249,10 +249,10 @@ namespace HMOSecureWeb.Controllers
 
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
 
-            Dictionary<long, string> counterparties;
+            Dictionary<long, string> counterpartyFamilies;
             Dictionary<long, AgreementBaseData> agreements;
             var allAgreementIds = onBoardingAccounts.Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
-            var allCounterpartyFamilyIds = onBoardingAccounts.Select(s => s.BrokerId).Distinct().ToList();
+            var allCounterpartyFamilyIds = onBoardingAccounts.Select(s => s.dmaCounterpartyFamilyId).Distinct().ToList();
 
             using (var context = new AdminContext())
             {
@@ -266,7 +266,7 @@ namespace HMOSecureWeb.Controllers
                     agreements.Add(data.AgreementOnboardingId, data);
                 }
 
-                counterparties = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
+                counterpartyFamilies = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
             }
             var receivingAccountTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.ReceivingAgreementTypesForAccount).Split(',').ToList();
             var funds = AdminFundManager.GetHFundsCreatedForDMA(hmFundIds, AuthorizedSessionData.IsPrivilegedUser, PreferencesManager.FundNameInDropDown.LegalFundName);
@@ -282,7 +282,7 @@ namespace HMOSecureWeb.Controllers
                     AgreementTypeId = account.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)account.dmaAgreementOnBoardingId) ? agreements[(long)account.dmaAgreementOnBoardingId].AgreementTypeId :
                                       (accountTypes.ContainsValue(account.AccountType) ? accountTypes.FirstOrDefault(y => y.Value == account.AccountType).Key : 0),
 
-                    Broker = account.BrokerId != null && counterparties.ContainsKey((long)account.BrokerId) ? counterparties[(long)account.BrokerId] : string.Empty,
+                    Broker = account.dmaCounterpartyFamilyId != null && counterpartyFamilies.ContainsKey((long)account.dmaCounterpartyFamilyId) ? counterpartyFamilies[(long)account.dmaCounterpartyFamilyId] : string.Empty,
                     FundName = funds.ContainsKey((int)account.hmFundId) ? funds[(int)account.hmFundId] : string.Empty,
                     ApprovedMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Approved"),
                     PendingApprovalMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Pending Approval"),
@@ -574,7 +574,7 @@ namespace HMOSecureWeb.Controllers
             Dictionary<int, string> funds;
             Dictionary<long, AgreementBaseData> agreements;
             var allAgreementIds = onBoardingAccounts.Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
-            var allCounterpartyFamilyIds = onBoardingAccounts.Select(s => s.BrokerId).Distinct().ToList();
+            var allCounterpartyFamilyIds = onBoardingAccounts.Select(s => s.dmaCounterpartyFamilyId).Distinct().ToList();
             var allFundIds = onBoardingAccounts.Select(s => s.hmFundId).Distinct().ToList();
 
             using (var context = new AdminContext())
@@ -598,7 +598,7 @@ namespace HMOSecureWeb.Controllers
                 row["Entity Type"] = account.AccountType;
                 row["Fund Name"] = funds.ContainsKey((int)account.hmFundId) ? funds[(int)account.hmFundId] : string.Empty;
                 row["Agreement Name"] = account.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)account.dmaAgreementOnBoardingId) ? agreements[(long)account.dmaAgreementOnBoardingId].AgreementShortName : string.Empty;
-                row["Broker"] = account.BrokerId != null && counterparties.ContainsKey((long)account.BrokerId) ? counterparties[(long)account.BrokerId] : string.Empty;
+                row["Broker"] = account.dmaCounterpartyFamilyId != null && counterparties.ContainsKey((long)account.dmaCounterpartyFamilyId) ? counterparties[(long)account.dmaCounterpartyFamilyId] : string.Empty;
                 row["Account Name"] = account.AccountName;
                 row["Account Number"] = account.AccountNumber;
                 row["Account Type"] = account.AccountPurpose;
@@ -754,7 +754,7 @@ namespace HMOSecureWeb.Controllers
                             var counterPartyByAgreement = onboardingAccounts.FirstOrDefault(s => s.dmaAgreementOnBoardingId == accountDetail.dmaAgreementOnBoardingId);
                             if (counterPartyByAgreement != null)
                             {
-                                accountDetail.BrokerId = counterPartyByAgreement.BrokerId;
+                                accountDetail.dmaCounterpartyFamilyId = counterPartyByAgreement.dmaCounterpartyFamilyId;
                             }
 
                             if (accountDetail.onBoardingAccountId == 0)
@@ -769,11 +769,11 @@ namespace HMOSecureWeb.Controllers
                         else
                         {
                             accountDetail.hmFundId = funds.FirstOrDefault(x => x.Value == account["Fund Name"]).Key;
-                            accountDetail.BrokerId = counterpartyFamilies.FirstOrDefault(x => x.Value == account["Broker"]).Key;
+                            accountDetail.dmaCounterpartyFamilyId = counterpartyFamilies.FirstOrDefault(x => x.Value == account["Broker"]).Key;
                             if (accountDetail.onBoardingAccountId == 0)
                             {
                                 var existsAccount = onboardingAccounts.FirstOrDefault(x => x.hmFundId == accountDetail.hmFundId &&
-                                    x.BrokerId == accountDetail.BrokerId && x.AccountNumber == accountDetail.AccountNumber);
+                                    x.dmaCounterpartyFamilyId == accountDetail.dmaCounterpartyFamilyId && x.AccountNumber == accountDetail.AccountNumber);
                                 if (existsAccount != null) continue;
                             }
                         }

@@ -440,7 +440,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
 
         $scope.copyAccount.hmFundId = $scope.FundId;
-        $scope.copyAccount.BrokerId = $scope.BrokerId;
+        $scope.copyAccount.dmaCounterpartyFamilyId = $scope.BrokerId;
         $scope.copyAccount.onBoardingAccountSSITemplateMaps = [];
         $scope.copyAccount.onBoardingAccountDocuments = [];
         $scope.copyAccount.IsReceivingAccountType = $scope.accountType == "Agreement" && $.inArray($scope.AgreementType, $scope.receivingAccountTypes) > -1;
@@ -514,7 +514,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         { "mData": "Account.onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
                         { "mData": "Account.dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
                         { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
-                        { "mData": "Account.BrokerId", "sTitle": "BrokerId", visible: false },
+                        { "mData": "Account.dmaCounterpartyFamilyId", "sTitle": "BrokerId", visible: false },
                         //{ "mData": "AccountType", "sTitle": "Account Type" },
                         { "mData": "Account.onBoardingAccountId", "sTitle": "SSI Association Status" },
                         {
@@ -720,7 +720,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.onBoardingAccountId = account.onBoardingAccountId;
         $scope.FundId = account.hmFundId;
         $scope.AgreementId = account.dmaAgreementOnBoardingId;
-        $scope.BrokerId = account.BrokerId;
+        $scope.BrokerId = account.dmaCounterpartyFamilyId;
         $scope.AccountType = account.AccountType;
 
         $scope.AgreementTypeId = rowElement.AgreementTypeId;
@@ -2935,7 +2935,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     { "mData": "Account.onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
                     { "mData": "Account.dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
                     { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
-                    { "mData": "Account.BrokerId", "sTitle": "BrokerId", visible: false },
+                    { "mData": "Account.dmaCounterpartyFamilyId", "sTitle": "BrokerId", visible: false },
                     {
                         "orderable": false,
                         "data": null,

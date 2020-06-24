@@ -17,12 +17,12 @@ namespace HedgeMark.Operations.Secure.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public onBoardingAccount()
         {
-            this.onBoardingAccountDocuments = new HashSet<onBoardingAccountDocument>();
-            this.onBoardingAccountModuleAssociations = new HashSet<onBoardingAccountModuleAssociation>();
-            this.onBoardingAccountSSITemplateMaps = new HashSet<onBoardingAccountSSITemplateMap>();
             this.hmsAccountCallbacks = new HashSet<hmsAccountCallback>();
             this.hmsWires = new HashSet<hmsWire>();
             this.hmsWires1 = new HashSet<hmsWire>();
+            this.onBoardingAccountDocuments = new HashSet<onBoardingAccountDocument>();
+            this.onBoardingAccountModuleAssociations = new HashSet<onBoardingAccountModuleAssociation>();
+            this.onBoardingAccountSSITemplateMaps = new HashSet<onBoardingAccountSSITemplateMap>();
         }
     
         public long onBoardingAccountId { get; set; }
@@ -57,7 +57,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public System.DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
         public string AccountType { get; set; }
-        public Nullable<long> BrokerId { get; set; }
+        public Nullable<long> dmaCounterpartyFamilyId { get; set; }
         public string AccountPurpose { get; set; }
         public string AccountStatus { get; set; }
         public Nullable<double> HoldbackAmount { get; set; }
@@ -71,12 +71,19 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string ApprovedBy { get; set; }
         public long hmFundId { get; set; }
         public Nullable<long> BeneficiaryBICorABAId { get; set; }
-        public Nullable<long> WirePortalCutoffId { get; set; }
         public Nullable<long> IntermediaryBICorABAId { get; set; }
         public Nullable<long> UltimateBeneficiaryBICorABAId { get; set; }
+        public Nullable<long> WirePortalCutoffId { get; set; }
         public Nullable<long> SwiftGroupId { get; set; }
         public string AssociatedCustodyAcctNumber { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsAccountCallback> hmsAccountCallbacks { get; set; }
+        public virtual hmsSwiftGroup SwiftGroup { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsWire> hmsWires { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsWire> hmsWires1 { get; set; }
         public virtual onBoardingAccountBICorABA Beneficiary { get; set; }
         public virtual onBoardingAccountBICorABA Intermediary { get; set; }
         public virtual onBoardingAccountBICorABA UltimateBeneficiary { get; set; }
@@ -87,12 +94,5 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual ICollection<onBoardingAccountModuleAssociation> onBoardingAccountModuleAssociations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hmsAccountCallback> hmsAccountCallbacks { get; set; }
-        public virtual hmsSwiftGroup SwiftGroup { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hmsWire> hmsWires { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hmsWire> hmsWires1 { get; set; }
     }
 }

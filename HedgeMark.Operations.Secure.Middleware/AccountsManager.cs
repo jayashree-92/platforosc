@@ -64,7 +64,7 @@ namespace HMOSecureMiddleware
                     .Include(s => s.SwiftGroup)
                     .Include(s => s.hmsAccountCallbacks)
                     .Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
-                    .Where(account => account.BrokerId == brokerId && account.hmFundId == fundId && account.AccountType != AgreementAccountType && !account.IsDeleted).ToList();
+                    .Where(account => account.dmaCounterpartyFamilyId == brokerId && account.hmFundId == fundId && account.AccountType != AgreementAccountType && !account.IsDeleted).ToList();
             }
         }
 
