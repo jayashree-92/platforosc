@@ -17,6 +17,7 @@ namespace HMOSecureWeb.Controllers
     {
         UserCommitId,
         AuthorizedUserData,
+        AuthorizedFundData,
         UserPreferencesInSession,
     }
 
@@ -126,6 +127,36 @@ namespace HMOSecureWeb.Controllers
             protected set
             {
                 var preferncesKey = string.Format("{0}{1}", UserName, OpsSecureSessionVars.AuthorizedUserData);
+                SetSessionValue(preferncesKey, value);
+            }
+        }
+
+        private void ResetAuthorizedFundData()
+        {
+            var preferncesKey = string.Format("{0}{1}", UserName, OpsSecureSessionVars.AuthorizedFundData);
+            var authorizedData = AdminFundManager.GetFundData(AuthorizedSessionData, PreferredFundNameInSession);
+            SetSessionValue(preferncesKey, authorizedData);
+        }
+
+        public List<HFundBasic> AuthorizedDMAFundData
+        {
+            get
+            {
+                var preferncesKey = string.Format("{0}{1}", UserName, OpsSecureSessionVars.AuthorizedFundData);
+                var authorizedData = new List<HFundBasic>();
+                if (GetSessionValue(preferncesKey) != null)
+                    authorizedData = (List<HFundBasic>)GetSessionValue(preferncesKey);
+
+                if (authorizedData.Count > 0)
+                    return authorizedData;
+
+                authorizedData = AdminFundManager.GetFundData(AuthorizedSessionData, PreferredFundNameInSession);
+                SetSessionValue(preferncesKey, authorizedData);
+                return authorizedData;
+            }
+            private set
+            {
+                var preferncesKey = string.Format("{0}{1}", UserName, OpsSecureSessionVars.AuthorizedFundData);
                 SetSessionValue(preferncesKey, value);
             }
         }

@@ -114,10 +114,18 @@
                             </span>
                             <span class="row" style="display: none;" id="spnBroker">
                                 <span class="col-md-2">
-                                    <label class="control-label">Broker <span style="color: red"> *</span></label>
+                                    <label class="control-label">Counterparty <span style="color: red"> *</span></label>
                                 </span>
                                 <span class="col-md-4">
                                     <input name="Broker" type="text" class="form-control" id="liBroker" ng-disabled="isEdit" />
+                                </span>
+                            </span>
+                            <span class="row" style="display: none;" id="spnBrokerFamily">
+                                <span class="col-md-2">
+                                    <label class="control-label">Counterparty Family</label>
+                                </span>
+                                <span class="col-md-4" style="margin-top:5px ">
+                                    {{CounterpartyFamilyName}}
                                 </span>
                             </span>
                             <span class="row" style="display: none;" id="spnAgreement">
@@ -137,7 +145,8 @@
                             <div class="panel-heading" style="min-height: 45px;">
                                 <b ng-show="accountDetail.onBoardingAccountId > 0" style="cursor: pointer; background: #F5F5F5; margin: 0px">
                                     <span style="font-size: 15px; font-weight: bold">{{accountDetail.AccountName}} </span>
-                                    | Broker:<span style="font-size: 15px; font-weight: bold"> {{broker}} </span>
+                                    | Counterparty:<span style="font-size: 15px; font-weight: bold"> {{CounterpartyName}} </span>
+                                    | Family:<span style="font-size: 15px; font-weight: bold"> {{CounterpartyFamilyName}} </span>
                                     <span id="hmStatus" style="display: none;">| Status: <b><span id="spnAgrCurrentStatus" class=""></span></b></span>
                                 </b>
                                 <b ng-show="accountDetail.onBoardingAccountId == 0" style="cursor: pointer; background: #F5F5F5; margin: 0px" class="control-label">{{accountDetail.AccountName}}</b>

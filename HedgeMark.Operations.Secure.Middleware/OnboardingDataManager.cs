@@ -27,7 +27,8 @@ namespace HMOSecureMiddleware
         public string AgreementShortName { get; set; }
         public int AgreementTypeId { get; set; }
         public string AgreementType { get; set; }
-        public long BrokerId { get; set; }
+        public long CounterpartyFamilyId { get; set; }
+        public long CounterpartyId { get; set; }
     }
 
     public class OnBoardingDataManager
@@ -51,6 +52,16 @@ namespace HMOSecureMiddleware
                 return context.dmaCounterpartyFamilies.ToList();
             }
         }
+   public static List<dmaCounterPartyOnBoarding> GetAllCounterparties()
+        {
+            using (var context = new AdminContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.dmaCounterPartyOnBoardings.ToList();
+            }
+        }
+
 
         public static string GetCounterpartyFamilyName(long counterpartyFamilyId)
         {
@@ -72,7 +83,16 @@ namespace HMOSecureMiddleware
 
                 return context.vw_OnboardedAgreements
                     .Where(a => a.AgreementStatus != "Terminated – Agreement" && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || hmFundIds.Contains(a.hmFundId ?? 0)))
-                    .AsNoTracking().Select(x => new AgreementBaseData() { AgreementOnboardingId = x.dmaAgreementOnBoardingId, AgreementShortName = x.AgreementShortName, HMFundId = x.hmFundId ?? 0, AgreementTypeId = x.AgreementTypeId ?? 0, AgreementType = x.AgreementType, BrokerId = x.dmaCounterPartyFamilyId ?? 0 }).ToList();
+                    .AsNoTracking().Select(x => new AgreementBaseData()
+                    {
+                        AgreementOnboardingId = x.dmaAgreementOnBoardingId,
+                        AgreementShortName = x.AgreementShortName,
+                        HMFundId = x.hmFundId ?? 0,
+                        AgreementTypeId = x.AgreementTypeId ?? 0,
+                        AgreementType = x.AgreementType,
+                        CounterpartyFamilyId = x.dmaCounterPartyFamilyId ?? 0,
+                        CounterpartyId = x.dmaCounterPartyOnBoardId ?? 0
+                    }).ToList();
             }
         }
 

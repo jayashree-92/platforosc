@@ -39,34 +39,34 @@ namespace HMOSecureMiddleware
 
         }
 
-        public static List<onBoardingAccount> GetAllOnBoardingAccounts(long agreementId = 0, long fundId = 0, long brokerId = 0)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
+        //public static List<onBoardingAccount> GetAllOnBoardingAccounts(long agreementId = 0, long fundId = 0, long brokerId = 0)
+        //{
+        //    using (var context = new OperationsSecureContext())
+        //    {
+        //        context.Configuration.LazyLoadingEnabled = false;
+        //        context.Configuration.ProxyCreationEnabled = false;
 
-                if (agreementId > 0)
-                    return context.onBoardingAccounts
-                        .Include(s => s.Beneficiary)
-                        .Include(s => s.Intermediary)
-                        .Include(s => s.UltimateBeneficiary)
-                        .Include(s => s.WirePortalCutoff)
-                        .Include(s => s.SwiftGroup)
-                        .Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
-                        .Where(account => account.dmaAgreementOnBoardingId == agreementId && !account.IsDeleted).ToList();
+        //        if (agreementId > 0)
+        //            return context.onBoardingAccounts
+        //                .Include(s => s.Beneficiary)
+        //                .Include(s => s.Intermediary)
+        //                .Include(s => s.UltimateBeneficiary)
+        //                .Include(s => s.WirePortalCutoff)
+        //                .Include(s => s.SwiftGroup)
+        //                .Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
+        //                .Where(account => account.dmaAgreementOnBoardingId == agreementId && !account.IsDeleted).ToList();
 
-                return context.onBoardingAccounts
-                    .Include(s => s.Beneficiary)
-                    .Include(s => s.Intermediary)
-                    .Include(s => s.UltimateBeneficiary)
-                    .Include(s => s.WirePortalCutoff)
-                    .Include(s => s.SwiftGroup)
-                    .Include(s => s.hmsAccountCallbacks)
-                    .Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
-                    .Where(account => account.dmaCounterpartyFamilyId == brokerId && account.hmFundId == fundId && account.AccountType != AgreementAccountType && !account.IsDeleted).ToList();
-            }
-        }
+        //        return context.onBoardingAccounts
+        //            .Include(s => s.Beneficiary)
+        //            .Include(s => s.Intermediary)
+        //            .Include(s => s.UltimateBeneficiary)
+        //            .Include(s => s.WirePortalCutoff)
+        //            .Include(s => s.SwiftGroup)
+        //            .Include(s => s.hmsAccountCallbacks)
+        //            .Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
+        //            .Where(account => account.dmaCounterpartyFamilyId == brokerId && account.hmFundId == fundId && account.AccountType != AgreementAccountType && !account.IsDeleted).ToList();
+        //    }
+        //}
 
         public static onBoardingAccount GetOnBoardingAccount(long accountId)
         {

@@ -54,34 +54,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         text: 'Export as .csv',
                         className: "btn-sm",
                         customize: function (csv) {
-                            //var allColumns = tblWireStatusDetails.columns().data().toArray();
-                            var allColumns = tblWireStatusDetails.columns().nodes().to$().toArray();
-                            var totalColumns = allColumns.length;
-
-                            var rows = [];
-                            var headerRow = "";
-                            for (var i = 0; i < totalColumns; i++) {
-                                headerRow += "\"" + tblWireStatusDetails.column(i).header().textContent + "\",";
-                            }
-                            rows.push(headerRow);
-                            for (var i = 0; i < totalColumns; i++) {
-
-                                for (var j = 0; j < allColumns[i].length; j++) {
-                                    var row = rows[j + 1];
-                                    if (row == undefined)
-                                        row = "";
-
-                                    row += "\"" + $(allColumns[i][j]).text() + "\",";
-                                    rows[j + 1] = row;
-                                }
-
-                            }
-                            var fullCsv = "";
-                            for (var k = 0; k < rows.length; k++) {
-                                fullCsv += rows[k] + "\n";
-                            }
-
-                            return fullCsv;
+                            return constructCSVstring(tblWireStatusDetails);
                         }
                     }
                 ],

@@ -11,6 +11,7 @@ namespace HMOSecureMiddleware
             public int hmFundId { get; set; }
             public string PreferredFundName { get; set; }
             public vw_HFundOps HFund { get; set; }
+            //public List<int> CalendarIds { get; set; }
         }
 
 
@@ -45,33 +46,80 @@ namespace HMOSecureMiddleware
                     LegalFundName = s.HFund.LegalFundName,
                     ClientShortName = s.HFund.ClientShortName,
                     ClientLegalName = s.HFund.ClientLegalEntityName,
-                    
+
                 }).ToList();
+            }
+        }
+
+        public static List<HFundBasic> GetHFundsCreatedForDMAOnly(PreferencesManager.FundNameInDropDown preferredFundName, List<long> hmFundIds = null)
+        {
+            var shouldBringAllFunds = hmFundIds == null;
+            if (hmFundIds == null)
+                hmFundIds = new List<long>();
+
+            using (var context = new OperationsContext())
+            {
+                return (from fnd in GetUniversalDMAFundListQuery(context, preferredFundName)
+                        where shouldBringAllFunds || hmFundIds.Contains(fnd.HFund.intFundId)
+                        select new HFundBasic()
+                        {
+                            HmFundId = fnd.HFund.intFundId,
+                            OnBoardFundId = fnd.HFund.OnBoardFundId ?? 0,
+                            PreferredFundName = fnd.PreferredFundName ?? "Unknown Fund-" + fnd.HFund.intFundId,
+                            ClientFundVersion = "DMA",
+                            LegalFundName = fnd.HFund.LegalFundName
+                            //CalendarIds = fnd.CalendarIds,
+                        }).ToList();
             }
         }
 
         public static HFund GetHFundCreatedForDMA(long hmFundId, PreferencesManager.FundNameInDropDown preferredFundName)
         {
-            return GetHFundsCreatedForDMA(new List<long>() {hmFundId}, preferredFundName).FirstOrDefault();
+            return GetHFundsCreatedForDMA(new List<long>() { hmFundId }, preferredFundName).FirstOrDefault();
         }
 
         public static IQueryable<QueryableHFund> GetUniversalDMAFundListQuery(OperationsContext context, PreferencesManager.FundNameInDropDown preferredFundName)
         {
             return (from fund in context.vw_HFundOps
                     let prefName = preferredFundName == PreferencesManager.FundNameInDropDown.ClientFundName ? fund.ClientFundName
-                        : preferredFundName == PreferencesManager.FundNameInDropDown.HMRAName ? fund.HMRAName
-                        : preferredFundName == PreferencesManager.FundNameInDropDown.LegalFundName ? fund.LegalFundName
-                        : preferredFundName == PreferencesManager.FundNameInDropDown.OpsShortName && fund.ShortFundName != null ? fund.ShortFundName
-                        : fund.ClientFundName
+                             : preferredFundName == PreferencesManager.FundNameInDropDown.HMRAName ? fund.HMRAName
+                             : preferredFundName == PreferencesManager.FundNameInDropDown.LegalFundName ? fund.LegalFundName
+                             : preferredFundName == PreferencesManager.FundNameInDropDown.OpsShortName && fund.ShortFundName != null ? fund.ShortFundName
+                             : fund.ClientFundName
 
                     select new QueryableHFund()
                     {
                         hmFundId = fund.intFundId,
                         HFund = fund,
-                        PreferredFundName = prefName.Replace("\t", "")
+                        PreferredFundName = prefName.Replace("\t", ""),
+                        //CalendarIds = fndWitMap.Select(s => s.onboardHolidayCalendarId ?? 0).ToList()
                     }).OrderBy(s => s.PreferredFundName);
         }
+
+        public static List<HFundBasic> GetFundData(AuthorizedData authorizedData, PreferencesManager.FundNameInDropDown preferredFundName)
+        {
+            var allFunds = GetHFundsCreatedForDMAOnly(preferredFundName);
+
+            if (authorizedData.IsPrivilegedUser)
+                return allFunds;
+
+            var authorizedIds = authorizedData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
+            return allFunds.Where(s => authorizedIds.Contains(s.HmFundId)).ToList();
+        }
+
     }
+
+    public class HFundBasic
+    {
+        public long HmFundId { get; set; }
+        public long OnBoardFundId { get; set; }
+        public string PreferredFundName { get; set; }
+        public string LegalFundName { get; set; }
+        public string ClientFundVersion { get; set; }
+        public string CreatedFor { get; set; }
+        //public List<int> CalendarIds { get; set; }
+    }
+
 
     public class HFund
     {

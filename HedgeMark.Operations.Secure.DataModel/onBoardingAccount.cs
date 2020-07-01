@@ -76,6 +76,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> WirePortalCutoffId { get; set; }
         public Nullable<long> SwiftGroupId { get; set; }
         public string AssociatedCustodyAcctNumber { get; set; }
+        public Nullable<long> dmaCounterpartyId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsAccountCallback> hmsAccountCallbacks { get; set; }
