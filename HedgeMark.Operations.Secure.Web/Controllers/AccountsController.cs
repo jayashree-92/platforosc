@@ -633,7 +633,7 @@ namespace HMOSecureWeb.Controllers
                 row["Entity Type"] = account.AccountType;
                 row["Fund Name"] = funds.ContainsKey((int)account.hmFundId) ? funds[(int)account.hmFundId] : string.Empty;
                 row["Agreement Name"] = account.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)account.dmaAgreementOnBoardingId) ? agreements[(long)account.dmaAgreementOnBoardingId].AgreementShortName : string.Empty;
-                row["Counterparty"] = account.dmaCounterpartyId != null && counterparties.ContainsKey((long)account.dmaCounterpartyId) ? counterpartyFamilies[(long)account.dmaCounterpartyId] : string.Empty;
+                row["Counterparty"] = account.dmaCounterpartyId != null && counterparties.ContainsKey((long)account.dmaCounterpartyId) ? counterparties[(long)account.dmaCounterpartyId] : string.Empty;
                 row["Counterparty Family"] = account.dmaCounterpartyFamilyId != null && counterpartyFamilies.ContainsKey((long)account.dmaCounterpartyFamilyId) ? counterpartyFamilies[(long)account.dmaCounterpartyFamilyId] : string.Empty;
                 row["Account Name"] = account.AccountName;
                 row["Account Number"] = account.AccountNumber;
