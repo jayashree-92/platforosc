@@ -1,0 +1,35 @@
+
+USE HM_WIRES;
+
+
+IF EXISTS (SELECT * FROM SYSOBJECTS WHERE type = 'V' AND name = 'vw_FundAccounts')
+BEGIN
+DROP VIEW [dbo].[vw_FundAccounts]
+END
+
+IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE type = 'V' AND name = 'vw_FundAccounts')
+BEGIN
+                DECLARE @query NVARCHAR(MAX);
+
+                SET @query  = 'CREATE VIEW [dbo].[vw_FundAccounts]
+				AS
+				
+				SELECT onBoardingAccountId,acc.dmaAgreementOnBoardingId,dmaAgreementTypeId,typ.AgreementType,acc.AccountType,
+				acc.hmFundId, F.ShortFundName,LFund.LegalFundName,
+				acc.dmaCounterpartyId, cp.CounterpartyName,cpf.CounterpartyFamily,
+				acc.AccountName,acc.AccountNumber,acc.Currency,acc.AccountPurpose,acc.AccountStatus,acc.FFCNumber
+				FROM onBoardingAccount acc
+				LEFT JOIN HM.DBO.ClientFund CF WITH(NOLOCK)   ON CF.ClientFundID=acc.hmFundId
+				LEFT JOIN HM.DBO.Fund F  WITH(NOLOCK) ON F.FundID = CF.FundID  
+				LEFT JOIN HM.DBO.LegalFund LFund  WITH(NOLOCK) ON LFund.LegalFundID = F.LegalFundID  
+				LEFT JOIN hm.hmadmin.dmaAgreementOnBoarding agrmt  WITH(NOLOCK)on agrmt.dmaAgreementOnBoardingId = acc.dmaAgreementOnBoardingId
+				LEFT JOIN hm.hmadmin.dmaAgreementTypes typ  WITH(NOLOCK) on agrmt.AgreementTypeId = typ.dmaAgreementTypeId 
+				LEFT JOIN HM.HMADMIN.dmaCounterPartyOnBoarding cp WITH(NOLOCK) ON cp.dmaCounterPartyOnBoardId = acc.dmaCounterpartyId
+				LEFT JOIN HM.HMADMIN.dmaCounterpartyFamily cpf WITH(NOLOCK) ON cpf.dmaCounterpartyFamilyId = cp.dmaCounterPartyFamilyId  
+				WHERE acc.IsDeleted =0 and acc.onBoardingAccountStatus =''Approved'''
+				
+	EXEC sp_executesql @query ;
+END
+GO
+
+
