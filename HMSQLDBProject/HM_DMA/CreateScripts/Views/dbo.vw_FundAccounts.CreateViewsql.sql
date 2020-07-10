@@ -15,7 +15,7 @@ BEGIN
 				AS
 				
 				SELECT onBoardingAccountId,acc.dmaAgreementOnBoardingId,dmaAgreementTypeId,typ.AgreementType,acc.AccountType,
-				acc.hmFundId, F.ShortFundName,LFund.LegalFundName,
+				acc.hmFundId,F.FundId as FundMapId,F.ShortFundName,LFund.LegalFundName,
 				acc.dmaCounterpartyId, cp.CounterpartyName,cpf.CounterpartyFamily,
 				acc.AccountName,acc.AccountNumber,acc.Currency,acc.AccountPurpose,acc.AccountStatus,acc.FFCNumber
 				FROM onBoardingAccount acc

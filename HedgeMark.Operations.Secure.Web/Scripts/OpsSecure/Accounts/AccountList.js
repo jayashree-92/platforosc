@@ -550,7 +550,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         { "mData": "CounterpartyFamilyName", "sTitle": "Counterparty Family" },
                         { "mData": "CounterpartyName", "sTitle": "Counterparty" },
                         { "mData": "Account.AccountName", "sTitle": "Account Name" },
-                        { "mData": "Account.AccountNumber", "sTitle": "Account Number" },
+                        { "mData": "Account.UltimateBeneficiaryAccountNumber", "sTitle": "Account Number" },
                         { "mData": "Account.AccountPurpose", "sTitle": "Account Type" },
                         { "mData": "Account.AccountStatus", "sTitle": "Account Status" },
                         { "mData": "Account.Currency", "sTitle": "Currency" },
@@ -2043,7 +2043,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#FFCName").val(ssiTemplate.FFCName);
             $("#FFCNumber").val(ssiTemplate.FFCNumber);
             $("#Reference").val(ssiTemplate.Reference);
-            $("#accountNumber").val(ssiTemplate.AccountNumber);
+            $("#accountNumber").val(ssiTemplate.UltimateBeneficiaryAccountNumber);
             $("#templateType").val(ssiTemplate.SSITemplateType);
 
         } else {
@@ -2366,24 +2366,24 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         var onBoardingAccount = $scope.onBoardingAccountDetails[index];
 
-        if ((isFFC && $scope.onBoardingAccountDetails[index].FFCNumber == null || $scope.onBoardingAccountDetails[index].FFCNumber == "") || ($scope.onBoardingAccountDetails[index].AccountNumber == null || $scope.onBoardingAccountDetails[index].AccountNumber == "")) {
-            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].AccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
+        if ((isFFC && $scope.onBoardingAccountDetails[index].FFCNumber == null || $scope.onBoardingAccountDetails[index].FFCNumber == "") || ($scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber == null || $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber == "")) {
+            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
             return;
         }
 
         var acc = $filter('filter')(angular.copy($scope.allAccountList), function (account) {
             return account.Account.onBoardingAccountId != $scope.onBoardingAccountDetails[index].onBoardingAccountId &&
-                account.Account.FFCNumber == $scope.onBoardingAccountDetails[index].FFCNumber && account.Account.AccountNumber == $scope.onBoardingAccountDetails[index].AccountNumber;
+                account.Account.FFCNumber == $scope.onBoardingAccountDetails[index].FFCNumber && account.Account.UltimateBeneficiaryAccountNumber == $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber;
         }, true)[0];
         if (acc == undefined) {
-            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].AccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
+            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
         }
         else {
-            var accNo = angular.copy(isFFC ? $scope.onBoardingAccountDetails[index].FFCNumber : $scope.onBoardingAccountDetails[index].AccountNumber);
+            var accNo = angular.copy(isFFC ? $scope.onBoardingAccountDetails[index].FFCNumber : $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber);
             if (isFFC)
                 $scope.onBoardingAccountDetails[index].FFCNumber = "";
             else
-                $scope.onBoardingAccountDetails[index].AccountNumber = "";
+                $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber = "";
             notifyError("Please choose a different FFC Number or Account Number as an account exists with same information - " + accNo);
         }
     }
@@ -2972,7 +2972,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     { "mData": "AgreementName", "sTitle": "Agreement Name" },
                     { "mData": "Broker", "sTitle": "Broker" },
                     //{ "mData": "AccountName", "sTitle": "Account Name" },
-                    { "mData": "Account.AccountNumber", "sTitle": "Account Number" },
+                    { "mData": "Account.UltimateBeneficiaryAccountNumber", "sTitle": "Account Number" },
                     {
                         "mData": "Account.onBoardingAccountStatus", "sTitle": "Account Status",
                         "mRender": function (tdata) {

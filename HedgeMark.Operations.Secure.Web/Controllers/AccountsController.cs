@@ -215,7 +215,7 @@ namespace HMOSecureWeb.Controllers
                         ssi.StatusComments,
                         ssiTemplate.SSITemplateType,
                         ssiTemplate.TemplateName,
-                        ssiTemplate.AccountNumber
+                        AccountNumber = ssiTemplate.UltimateBeneficiaryAccountNumber
                     } : null;
                 }).Where(temp => temp != null).OrderBy(y => y.TemplateName).ToList(),
                 ssiTemplates = availableSSITemplates,
@@ -254,7 +254,7 @@ namespace HMOSecureWeb.Controllers
                         ssi.StatusComments,
                         account.AccountType,
                         account.AccountName,
-                        account.AccountNumber
+                        AccountNumber = account.UltimateBeneficiaryAccountNumber
                     } : null;
                 }).Where(temp => temp != null).OrderBy(y => y.AccountName).ToList(),
                 fundAccounts = availableFundAccounts,
@@ -636,7 +636,7 @@ namespace HMOSecureWeb.Controllers
                 row["Counterparty"] = account.dmaCounterpartyId != null && counterparties.ContainsKey((long)account.dmaCounterpartyId) ? counterparties[(long)account.dmaCounterpartyId] : string.Empty;
                 row["Counterparty Family"] = account.dmaCounterpartyFamilyId != null && counterpartyFamilies.ContainsKey((long)account.dmaCounterpartyFamilyId) ? counterpartyFamilies[(long)account.dmaCounterpartyFamilyId] : string.Empty;
                 row["Account Name"] = account.AccountName;
-                row["Account Number"] = account.AccountNumber;
+                row["Account Number"] = account.UltimateBeneficiaryAccountNumber;
                 row["Account Type"] = account.AccountPurpose;
                 row["Account Status"] = account.AccountStatus;
                 row["Currency"] = account.Currency;
@@ -779,7 +779,7 @@ namespace HMOSecureWeb.Controllers
                             WirePortalCutoff = new onBoardingWirePortalCutoff(),
                             SwiftGroup = new hmsSwiftGroup(),
                             onBoardingAccountId = string.IsNullOrWhiteSpace(account["Account Id"]) ? 0 : long.Parse(account["Account Id"]),
-                            AccountNumber = account["Account Number"],
+                            UltimateBeneficiaryAccountNumber = account["Account Number"],
                             AccountType = account["Entity Type"]
                         };
 
@@ -799,7 +799,7 @@ namespace HMOSecureWeb.Controllers
                                 var existsAccount = onboardingAccounts.FirstOrDefault(x =>
                                     x.dmaAgreementOnBoardingId == accountDetail.dmaAgreementOnBoardingId &&
                                     x.hmFundId == accountDetail.hmFundId &&
-                                    x.AccountNumber == accountDetail.AccountNumber);
+                                    x.UltimateBeneficiaryAccountNumber == accountDetail.UltimateBeneficiaryAccountNumber);
                                 if (existsAccount != null) continue;
                             }
                         }
@@ -811,7 +811,7 @@ namespace HMOSecureWeb.Controllers
                             if (accountDetail.onBoardingAccountId == 0)
                             {
                                 var existsAccount = onboardingAccounts.FirstOrDefault(x => x.hmFundId == accountDetail.hmFundId &&
-                                    x.dmaCounterpartyFamilyId == accountDetail.dmaCounterpartyFamilyId && x.AccountNumber == accountDetail.AccountNumber);
+                                    x.dmaCounterpartyFamilyId == accountDetail.dmaCounterpartyFamilyId && x.UltimateBeneficiaryAccountNumber == accountDetail.UltimateBeneficiaryAccountNumber);
                                 if (existsAccount != null) continue;
                             }
                         }

@@ -33,7 +33,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string ReasonDetail { get; set; }
         public string OtherReason { get; set; }
         public string AccountName { get; set; }
-        public string AccountNumber { get; set; }
+        public string UltimateBeneficiaryAccountNumber { get; set; }
         public string BeneficiaryType { get; set; }
         public string BeneficiaryAccountNumber { get; set; }
         public string IntermediaryType { get; set; }

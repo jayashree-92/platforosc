@@ -92,7 +92,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     { "data": "ClientLegalName", "sTitle": "Client" },
                     { "data": "PreferredFundName", "sTitle": "Fund" },
                     { "data": "SendingAccount.AccountName", "sTitle": "Sending Account Name" },
-                    { "data": "SendingAccount.AccountNumber", "sTitle": "Sending Account Number" },
+                    { "data": "SendingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Sending Account Number" },
                     {
                         "data": "TransferType", "sTitle": "Transfer Type"
                     },
@@ -117,7 +117,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     },
 
                     {
-                        "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary Bank",
+                        "data": "ReceivingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Beneficiary Bank",
                         "render": function (tdata, type, row) {
                             if (row.IsFundTransfer) {
                                 if (row.ReceivingAccount.UltimateBeneficiaryType == "Account Name")
@@ -135,7 +135,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         }
                     },
                     {
-                        "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary",
+                        "data": "ReceivingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Beneficiary",
                         "render": function (tdata, type, row) {
                             if (row.IsFundTransfer) {
                                 if (row.ReceivingAccount.UltimateBeneficiaryType == "Account Name")
@@ -153,13 +153,13 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         }
                     },
                     {
-                        "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary A/C Number",
+                        "data": "ReceivingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Beneficiary A/C Number",
                         "render": function (tdata, type, row) {
                             if (row.IsFundTransfer) {
-                                return row.ReceivingAccount.AccountNumber;
+                                return row.ReceivingAccount.UltimateBeneficiaryAccountNumber;
                             }
                             else if (!row.IsNotice) {
-                                return row.SSITemplate.AccountNumber;
+                                return row.SSITemplate.UltimateBeneficiaryAccountNumber;
                             }
                             return "N/A";
                         }
