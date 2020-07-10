@@ -1,7 +1,6 @@
 
 USE HM_WIRES;
 
-
 IF EXISTS (SELECT * FROM SYSOBJECTS WHERE type = 'V' AND name = 'vw_FundAccounts')
 BEGIN
 DROP VIEW [dbo].[vw_FundAccounts]
@@ -16,8 +15,10 @@ BEGIN
 				
 				SELECT onBoardingAccountId,acc.dmaAgreementOnBoardingId,dmaAgreementTypeId,typ.AgreementType,acc.AccountType,
 				acc.hmFundId,F.FundId as FundMapId,F.ShortFundName,LFund.LegalFundName,
-				acc.dmaCounterpartyId, cp.CounterpartyName,cpf.CounterpartyFamily,
-				acc.AccountName,acc.AccountNumber,acc.Currency,acc.AccountPurpose,acc.AccountStatus,acc.FFCNumber
+				acc.dmaCounterpartyId, cp.CounterpartyName,cpf.CounterpartyFamily,acc.AccountName, 
+				CASE WHEN LEN( acc.FFCNumber) >0 THEN acc.FFCNumber
+				ELSE acc.UltimateBeneficiaryAccountNumber  END AS AccountNumber,
+				acc.FFCNumber,acc.UltimateBeneficiaryAccountNumber,acc.Currency,acc.AccountPurpose,acc.AccountStatus
 				FROM onBoardingAccount acc
 				LEFT JOIN HM.DBO.ClientFund CF WITH(NOLOCK)   ON CF.ClientFundID=acc.hmFundId
 				LEFT JOIN HM.DBO.Fund F  WITH(NOLOCK) ON F.FundID = CF.FundID  
@@ -31,5 +32,3 @@ BEGIN
 	EXEC sp_executesql @query ;
 END
 GO
-
-
