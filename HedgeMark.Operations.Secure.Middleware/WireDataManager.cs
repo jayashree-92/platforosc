@@ -92,8 +92,7 @@ namespace HMOSecureMiddleware
 
             IsEditEnabled = IsWireStatusDrafted && !IsDeadlineCrossed;
             IsApprovedOrFailed = IsWireStatusCancelled || IsWireStatusApproved || IsWireStatusFailed;
-            IsSwiftCancelDisabled = IsSwiftStatusProcessing || IsSwiftStatusCompleted || IsSwiftStatusNegativeAcknowledged || IsSwiftStatusFailed;
-            IsCancelEnabled = !IsWireStatusCancelled && (!(IsWireStatusApproved || swiftStatusId > 1) && !IsDeadlineCrossed || !IsSwiftCancelDisabled);
+            IsCancelEnabled = wireTicket.HMWire.hmsWireId > 0 && (!IsApprovedOrFailed || IsSwiftStatusAcknowledged && !IsDeadlineCrossed);
 
             IsDraftEnabled = !IsDeadlineCrossed && (IsWireStatusInitiated || IsWireStatusFailed || IsWireStatusCancelled && IsSwiftStatusNotInitiated);
             IsWirePurposeAdhoc = isAdHocWire || wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocWireReport;
@@ -123,7 +122,7 @@ namespace HMOSecureMiddleware
         public bool IsDeadlineCrossed { get; private set; }
         public bool IsEditEnabled { get; private set; }
         public bool IsApprovedOrFailed { get; private set; }
-        public bool IsSwiftCancelDisabled { get; private set; }
+        //public bool IsSwiftCancelDisabled { get; private set; }
         public bool IsCancelEnabled { get; private set; }
         public bool IsWirePurposeAdhoc { get; private set; }
         public bool IsDraftEnabled { get; private set; }

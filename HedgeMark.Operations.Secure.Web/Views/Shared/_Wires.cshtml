@@ -973,8 +973,8 @@
                 <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-disabled="isUserActionDone" ng-if="WireTicketStatus.IsAuthorizedUserToApprove" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
                     <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
                 </button>
-                <button id="cancelWire" type="button" class="btn btn-sm btn-info ng-show-only cancelWire" ng-disabled="isUserActionDone" ng-if="WireTicketStatus.IsCancelEnabled" ng-click="confirmCancellation()" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ getCancelButtonText(true) }}...</span>">
-                    <i class="glyphicon glyphicon-repeat"></i>&nbsp;{{ getCancelButtonText(false) }}
+                <button id="cancelWire" type="button" class="btn btn-sm btn-danger ng-show-only cancelWire" ng-disabled="isUserActionDone" ng-if="WireTicketStatus.IsCancelEnabled" ng-click="confirmCancellation()" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-remove icon-rotate'></i>&nbsp;<span class='statusFill'>{{ getCancelButtonText(true) }}...</span>">
+                    <i class="glyphicon glyphicon-remove"></i>&nbsp;{{ getCancelButtonText(false) }}
                 </button>
                 <a href="#" class="btn btn-sm btn-default" style="vertical-align:-webkit-baseline-middle;" data-dismiss="modal">Dismiss</a>
                 <br />
