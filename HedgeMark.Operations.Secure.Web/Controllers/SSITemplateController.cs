@@ -328,7 +328,7 @@ namespace HMOSecureWeb.Controllers
                             templateDetail.UltimateBeneficiary.BICorABA = string.Empty;
                             templateDetail.UltimateBeneficiaryBICorABAId = null;
                         }
-                        templateDetail.AccountNumber = template["Ultimate Beneficiary Account Number"];
+                        templateDetail.UltimateBeneficiaryAccountNumber = template["Ultimate Beneficiary Account Number"];
                         templateDetail.FFCName = template["FFC Name"];
                         templateDetail.FFCNumber = template["FFC Number"];
                         templateDetail.Reference = template["Reference"];
@@ -550,7 +550,7 @@ namespace HMOSecureWeb.Controllers
                 row["Ultimate Beneficiary Bank Name"] = template.UltimateBeneficiary != null ? template.UltimateBeneficiary.BankName : string.Empty;
                 row["Ultimate Beneficiary Bank Address"] = template.UltimateBeneficiary != null ? template.UltimateBeneficiary.BankAddress : string.Empty;
                 row["Ultimate Beneficiary Account Name"] = template.UltimateBeneficiaryAccountName;
-                row["Ultimate Beneficiary Account Number"] = template.AccountNumber;
+                row["Ultimate Beneficiary Account Number"] = template.UltimateBeneficiaryAccountNumber;
                 row["FFC Name"] = template.FFCName;
                 row["FFC Number"] = template.FFCNumber;
                 row["Reference"] = template.Reference;

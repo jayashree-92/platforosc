@@ -54,34 +54,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         text: 'Export as .csv',
                         className: "btn-sm",
                         customize: function (csv) {
-                            //var allColumns = tblWireStatusDetails.columns().data().toArray();
-                            var allColumns = tblWireStatusDetails.columns().nodes().to$().toArray();
-                            var totalColumns = allColumns.length;
-
-                            var rows = [];
-                            var headerRow = "";
-                            for (var i = 0; i < totalColumns; i++) {
-                                headerRow += "\"" + tblWireStatusDetails.column(i).header().textContent + "\",";
-                            }
-                            rows.push(headerRow);
-                            for (var i = 0; i < totalColumns; i++) {
-
-                                for (var j = 0; j < allColumns[i].length; j++) {
-                                    var row = rows[j + 1];
-                                    if (row == undefined)
-                                        row = "";
-
-                                    row += "\"" + $(allColumns[i][j]).text() + "\",";
-                                    rows[j + 1] = row;
-                                }
-
-                            }
-                            var fullCsv = "";
-                            for (var k = 0; k < rows.length; k++) {
-                                fullCsv += rows[k] + "\n";
-                            }
-
-                            return fullCsv;
+                            return constructCSVstring(tblWireStatusDetails);
                         }
                     }
                 ],
@@ -119,7 +92,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     { "data": "ClientLegalName", "sTitle": "Client" },
                     { "data": "PreferredFundName", "sTitle": "Fund" },
                     { "data": "SendingAccount.AccountName", "sTitle": "Sending Account Name" },
-                    { "data": "SendingAccount.AccountNumber", "sTitle": "Sending Account Number" },
+                    { "data": "SendingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Sending Account Number" },
                     {
                         "data": "TransferType", "sTitle": "Transfer Type"
                     },
@@ -144,7 +117,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     },
 
                     {
-                        "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary Bank",
+                        "data": "ReceivingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Beneficiary Bank",
                         "render": function (tdata, type, row) {
                             if (row.IsFundTransfer) {
                                 if (row.ReceivingAccount.UltimateBeneficiaryType == "Account Name")
@@ -162,7 +135,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         }
                     },
                     {
-                        "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary",
+                        "data": "ReceivingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Beneficiary",
                         "render": function (tdata, type, row) {
                             if (row.IsFundTransfer) {
                                 if (row.ReceivingAccount.UltimateBeneficiaryType == "Account Name")
@@ -180,13 +153,13 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         }
                     },
                     {
-                        "data": "ReceivingAccount.AccountNumber", "sTitle": "Beneficiary A/C Number",
+                        "data": "ReceivingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Beneficiary A/C Number",
                         "render": function (tdata, type, row) {
                             if (row.IsFundTransfer) {
-                                return row.ReceivingAccount.AccountNumber;
+                                return row.ReceivingAccount.UltimateBeneficiaryAccountNumber;
                             }
                             else if (!row.IsNotice) {
-                                return row.SSITemplate.AccountNumber;
+                                return row.SSITemplate.UltimateBeneficiaryAccountNumber;
                             }
                             return "N/A";
                         }

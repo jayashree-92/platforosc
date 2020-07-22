@@ -85,7 +85,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field25 GetField25(WireTicket wire)
         {
-            return new Field25().setAccount(!string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber);
+            return new Field25().setAccount(!string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber);
         }
 
         private static Field30 GetField30(WireTicket wire)
@@ -121,7 +121,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             var isFFCAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber);
             var isFFCNameAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCName);
 
-            var f50K = new Field50K().setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber)
+            var f50K = new Field50K().setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setNameAndAddressLine1(isFFCNameAvailable ? wire.SendingAccount.FFCName : wire.SendingAccount.UltimateBeneficiaryAccountName)
                 .setNameAndAddressLine2(wire.SendingAccount.UltimateBeneficiary.BankAddress);
 
@@ -154,7 +154,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field52A GetField52A(WireTicket wire)
         {
             var f52A = new Field52A()
-                .setAccount(wire.SendingAccount.AccountNumber)
+                .setAccount(wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setBIC(wire.SendingAccount.UltimateBeneficiaryType == "ABA" ? string.Empty : wire.SendingAccount.UltimateBeneficiary.BICorABA);
             return f52A;
         }
@@ -166,7 +166,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             var isFFCNameAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCName);
 
             var f52D = new Field52D()
-                .setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.AccountNumber)
+                .setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setNameAndAddressLine1(isFFCNameAvailable ? wire.SendingAccount.FFCName : wire.SendingAccount.UltimateBeneficiaryAccountName);
 
             return f52D;
@@ -190,7 +190,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         {
             var ffcOrUltimateAccount = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber)
                 ? wire.SendingAccount.FFCNumber
-                : !string.IsNullOrWhiteSpace(wire.SendingAccount.AccountNumber) ? wire.SendingAccount.AccountNumber : string.Empty;
+                : !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiaryAccountNumber) ? wire.SendingAccount.UltimateBeneficiaryAccountNumber : string.Empty;
 
             var f53B = new Field53B().setAccount(ffcOrUltimateAccount);
             return f53B;
@@ -293,7 +293,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field58A GetField58A(WireTicket wire)
         {
             var f58A = new Field58A()
-                .setAccount(wire.IsFundTransfer ? wire.ReceivingAccount.AccountNumber : wire.SSITemplate.AccountNumber)
+                .setAccount(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountNumber : wire.SSITemplate.UltimateBeneficiaryAccountNumber)
                 .setBIC(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryType == "ABA" ? string.Empty :
                     wire.ReceivingAccount.UltimateBeneficiary.BICorABA : wire.SSITemplate.UltimateBeneficiaryType == "ABA" ? string.Empty : wire.SSITemplate.UltimateBeneficiary.BICorABA);
             return f58A;
@@ -307,7 +307,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
             var f58D = new Field58D()
                 .setAccount(isAbaAvailable ? string.Format("/FW{0}", wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiary.BICorABA : wire.SSITemplate.UltimateBeneficiary.BICorABA)
-                    : wire.IsFundTransfer ? wire.ReceivingAccount.AccountNumber : wire.SSITemplate.AccountNumber);
+                    : wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountNumber : wire.SSITemplate.UltimateBeneficiaryAccountNumber);
 
             if (!isAbaAvailable)
                 f58D.setNameAndAddress(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountName : wire.SSITemplate.UltimateBeneficiaryAccountName);
@@ -327,7 +327,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field59 GetField59(WireTicket wire)
         {
             var f59 = new Field59()
-                .setAccount(wire.IsFundTransfer ? wire.ReceivingAccount.AccountNumber : wire.SSITemplate.AccountNumber)
+                .setAccount(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountNumber : wire.SSITemplate.UltimateBeneficiaryAccountNumber)
                 .setNameAndAddressLine1(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountName : wire.SSITemplate.UltimateBeneficiaryAccountName);
 
             return f59;
@@ -336,7 +336,7 @@ namespace HMOSecureMiddleware.SwiftMessageManager
         private static Field59A GetField59A(WireTicket wire)
         {
             var f59A = new Field59A()
-                .setAccount(wire.IsFundTransfer ? wire.ReceivingAccount.AccountNumber : wire.SSITemplate.AccountNumber)
+                .setAccount(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountNumber : wire.SSITemplate.UltimateBeneficiaryAccountNumber)
                 .setBIC(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryType == "ABA" ? string.Empty :
                     wire.ReceivingAccount.UltimateBeneficiary.BICorABA : wire.SSITemplate.UltimateBeneficiaryType == "ABA" ? string.Empty : wire.SSITemplate.UltimateBeneficiary.BICorABA);
             return f59A;

@@ -300,11 +300,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#liBroker").select2('val', '');
         if (!$scope.isEdit) {
             $scope.AgreementTypeId = 0;
-            $scope.BrokerId = 0;
+            $scope.CounterpartyFamilyId = 0;
             $scope.AgrementType = "";
             $scope.broker = "";
         }
         $("#spnBroker").hide();
+        $("#spnBrokerFamily").hide();
         $("#spnAgreement").hide();
 
 
@@ -318,17 +319,20 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if ($(this).val() != "" && $(this).val() != undefined) {
             if ($(this).val() == "Agreement") {
                 $("#spnBroker").hide();
+                $("#spnBrokerFamily").hide();
                 $("#spnAgreement").show();
                 thisFunds = angular.copy($scope.fundsWithAgreements);
             } else {
                 $scope.AgreementTypeId = angular.copy($(this).val() == "DDA" ? $scope.ddaAgreementTypeId : $scope.custodyAgreementTypeId);
                 $("#spnBroker").show();
+                $("#spnBrokerFamily").show();
                 $("#spnAgreement").hide();
                 thisFunds = angular.copy($scope.funds);
             }
         } else {
             $scope.AgreementTypeId = 0;
             $("#spnBroker").hide();
+            $("#spnBrokerFamily").hide();
             $("#spnAgreement").hide();
         }
 
@@ -341,7 +345,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#liAgreement").select2('val', '');
         $("#liBroker").select2('val', '');
 
-        $scope.BrokerId = 0;
+        $scope.CounterpartyFamilyId = 0;
         $scope.AgrementType = "";
         $scope.broker = "";
     });
@@ -398,8 +402,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             // Get row details 
             $scope.AgreementTypeId = $(this).select2('data').AgreementTypeId;
             $scope.AgreementType = $(this).select2('data').AgreementType;
-            $scope.BrokerId = $(this).select2('data').BrokerId;
-            var broker = $filter('filter')(angular.copy($scope.counterpartyFamilies), { 'BrokerId': $scope.BrokerId }, true)[0];
+            $scope.CounterpartyFamilyId = $(this).select2('data').CounterpartyFamilyId;
+            var broker = $filter('filter')(angular.copy($scope.counterpartyFamilies), { 'CounterpartyFamilyId': $scope.CounterpartyFamilyId }, true)[0];
             if (broker != undefined)
                 $scope.broker = broker.text;
             $scope.loadAccountData();
@@ -409,10 +413,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     angular.element(document).on('change', "#liBroker", function (event) {
         event.stopPropagation();
-        $scope.BrokerId = $(this).val();
+        $scope.CounterpartyId = $(this).val();
 
         if ($(this).val() > 0) {
-            $scope.broker = $(this).select2('data').text;
+            $scope.CounterpartyName = $(this).select2('data').text;
+            $scope.CounterpartyFamilyName = $(this).select2('data').familyText;
+            $scope.CounterpartyFamilyId = $(this).select2('data').familyId;
+            $scope.$apply();
             $scope.loadAccountData();
         }
     });
@@ -440,7 +447,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
 
         $scope.copyAccount.hmFundId = $scope.FundId;
-        $scope.copyAccount.dmaCounterpartyFamilyId = $scope.BrokerId;
+        $scope.copyAccount.dmaCounterpartyFamilyId = $scope.CounterpartyFamilyId;
+        $scope.copyAccount.dmaCounterpartyId = $scope.CounterpartyId;
         $scope.copyAccount.onBoardingAccountSSITemplateMaps = [];
         $scope.copyAccount.onBoardingAccountDocuments = [];
         $scope.copyAccount.IsReceivingAccountType = $scope.accountType == "Agreement" && $.inArray($scope.AgreementType, $scope.receivingAccountTypes) > -1;
@@ -514,7 +522,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         { "mData": "Account.onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
                         { "mData": "Account.dmaAgreementOnBoardingId", "sTitle": "dmaAgreementOnBoardingId", visible: false },
                         { "mData": "AgreementTypeId", "sTitle": "AgreementTypeId", visible: false },
-                        { "mData": "Account.dmaCounterpartyFamilyId", "sTitle": "BrokerId", visible: false },
+                        { "mData": "Account.dmaCounterpartyFamilyId", "sTitle": "CounterpartyFamilyId", visible: false },
+                        { "mData": "Account.dmaCounterpartyId", "sTitle": "CounterpartyId", visible: false },
                         //{ "mData": "AccountType", "sTitle": "Account Type" },
                         { "mData": "Account.onBoardingAccountId", "sTitle": "SSI Association Status" },
                         {
@@ -538,9 +547,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         },
                         { "mData": "FundName", "sTitle": "Fund Name" },
                         { "mData": "AgreementName", "sTitle": "Agreement Name" },
-                        { "mData": "Broker", "sTitle": "Broker" },
+                        { "mData": "CounterpartyFamilyName", "sTitle": "Counterparty Family" },
+                        { "mData": "CounterpartyName", "sTitle": "Counterparty" },
                         { "mData": "Account.AccountName", "sTitle": "Account Name" },
-                        { "mData": "Account.AccountNumber", "sTitle": "Account Number" },
+                        { "mData": "Account.UltimateBeneficiaryAccountNumber", "sTitle": "Account Number" },
                         { "mData": "Account.AccountPurpose", "sTitle": "Account Type" },
                         { "mData": "Account.AccountStatus", "sTitle": "Account Status" },
                         { "mData": "Account.Currency", "sTitle": "Currency" },
@@ -720,7 +730,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.onBoardingAccountId = account.onBoardingAccountId;
         $scope.FundId = account.hmFundId;
         $scope.AgreementId = account.dmaAgreementOnBoardingId;
-        $scope.BrokerId = account.dmaCounterpartyFamilyId;
+        $scope.CounterpartyFamilyId = account.dmaCounterpartyFamilyId;
         $scope.AccountType = account.AccountType;
 
         $scope.AgreementTypeId = rowElement.AgreementTypeId;
@@ -754,6 +764,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.isAuthorizedUserToApprove = false;
         $scope.isEdit = false;
         $scope.isStatusUpdate = false;
+        $scope.CounterpartyFamilyName = "";
         $("#accountModal").modal({
             show: true,
             keyboard: true
@@ -776,17 +787,17 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.watchAccountDetails = [];
         $scope.onBoardingAccountDetails = [];
 
-       
+
         var accDetails = rowElement.Account;
         $scope.accountDetail = accDetails;
         $scope.onBoardingAccountId = accDetails.onBoardingAccountId;
         $scope.AgreementId = accDetails.dmaAgreementOnBoardingId;
         $scope.FundId = accDetails.hmFundId;
         $scope.AgreementTypeId = rowElement.AgreementTypeId;
-        $scope.BrokerId = accDetails.BrokerId;
-        $scope.counterpartyFamilyId = accDetails.BrokerId;
+        $scope.CounterpartyFamilyId = accDetails.dmaCounterpartyFamilyId;
         $scope.AccountType = accDetails.AccountType;
-        $scope.broker = rowElement.Broker;
+        $scope.CounterpartyFamilyName = rowElement.CounterpartyFamilyName;
+        $scope.CounterpartyName = rowElement.CounterpartyName;
         $scope.isEdit = true;
         $scope.fundName = accDetails.FundName;
         $scope.isLoad = true;
@@ -930,7 +941,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         //var accountListUrl = "/Accounts/Index?searchText=" + searchText;
         //window.history.pushState("", "", accountListUrl);
-        //window.location.assign("/Accounts/Account?fundId=" + $scope.FundId + "&brokerId=" + $scope.BrokerId + "&agreementId=" + $scope.AgreementId + "&accountType=" + $scope.AccountType + "&searchText=" + searchText);
+        //window.location.assign("/Accounts/Account?fundId=" + $scope.FundId + "&brokerId=" + $scope.CounterpartyFamilyId + "&agreementId=" + $scope.AgreementId + "&accountType=" + $scope.AccountType + "&searchText=" + searchText);
     }
 
     $scope.fnCreateAccount = function () {
@@ -1075,7 +1086,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetSwiftGroup = function (panelIndex) {
-        $http.get("/Accounts/GetAllRelatedSwiftGroup?brokerId=" + $scope.onBoardingAccountDetails[panelIndex].BrokerId).then(function (response) {
+        $http.get("/Accounts/GetAllRelatedSwiftGroup?brokerId=" + $scope.onBoardingAccountDetails[panelIndex].dmaCounterpartyFamilyId).then(function (response) {
             $scope.SwiftGroups = response.data.swiftGroups;
             $scope.SwiftGroupData = response.data.SwiftGroupData;
 
@@ -1880,7 +1891,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.fnGetAccountDescriptions(key);
             $scope.fnGetAccountModules(key);
             if (value.onBoardingAccountId > 0) {
-                $scope.fnLoadContactDetails($scope.BrokerId, value.ContactName, key);
+                $scope.fnLoadContactDetails($scope.CounterpartyFamilyId, value.ContactName, key);
                 $scope.fnGetAccountCallbackData(value.onBoardingAccountId, key);
             }
 
@@ -2032,7 +2043,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#FFCName").val(ssiTemplate.FFCName);
             $("#FFCNumber").val(ssiTemplate.FFCNumber);
             $("#Reference").val(ssiTemplate.Reference);
-            $("#accountNumber").val(ssiTemplate.AccountNumber);
+            $("#accountNumber").val(ssiTemplate.UltimateBeneficiaryAccountNumber);
             $("#templateType").val(ssiTemplate.SSITemplateType);
 
         } else {
@@ -2242,7 +2253,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnCreateContact = function () {
         var subDomain = $("#subDomain").val();
-        window.open(subDomain + "Contact/OnboardContact?onBoardingTypeId=3&entityId=" + $scope.BrokerId + "&contactId=0", "_blank");
+        window.open(subDomain + "Contact/OnboardContact?onBoardingTypeId=3&entityId=" + $scope.CounterpartyFamilyId + "&contactId=0", "_blank");
     }
 
     $scope.fnAddCurrency = function () {
@@ -2355,24 +2366,24 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         var onBoardingAccount = $scope.onBoardingAccountDetails[index];
 
-        if ((isFFC && $scope.onBoardingAccountDetails[index].FFCNumber == null || $scope.onBoardingAccountDetails[index].FFCNumber == "") || ($scope.onBoardingAccountDetails[index].AccountNumber == null || $scope.onBoardingAccountDetails[index].AccountNumber == "")) {
-            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].AccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
+        if ((isFFC && $scope.onBoardingAccountDetails[index].FFCNumber == null || $scope.onBoardingAccountDetails[index].FFCNumber == "") || ($scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber == null || $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber == "")) {
+            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
             return;
         }
 
         var acc = $filter('filter')(angular.copy($scope.allAccountList), function (account) {
             return account.Account.onBoardingAccountId != $scope.onBoardingAccountDetails[index].onBoardingAccountId &&
-                account.Account.FFCNumber == $scope.onBoardingAccountDetails[index].FFCNumber && account.Account.AccountNumber == $scope.onBoardingAccountDetails[index].AccountNumber;
+                account.Account.FFCNumber == $scope.onBoardingAccountDetails[index].FFCNumber && account.Account.UltimateBeneficiaryAccountNumber == $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber;
         }, true)[0];
         if (acc == undefined) {
-            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].AccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
+            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
         }
         else {
-            var accNo = angular.copy(isFFC ? $scope.onBoardingAccountDetails[index].FFCNumber : $scope.onBoardingAccountDetails[index].AccountNumber);
+            var accNo = angular.copy(isFFC ? $scope.onBoardingAccountDetails[index].FFCNumber : $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber);
             if (isFFC)
                 $scope.onBoardingAccountDetails[index].FFCNumber = "";
             else
-                $scope.onBoardingAccountDetails[index].AccountNumber = "";
+                $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber = "";
             notifyError("Please choose a different FFC Number or Account Number as an account exists with same information - " + accNo);
         }
     }
@@ -2961,7 +2972,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     { "mData": "AgreementName", "sTitle": "Agreement Name" },
                     { "mData": "Broker", "sTitle": "Broker" },
                     //{ "mData": "AccountName", "sTitle": "Account Name" },
-                    { "mData": "Account.AccountNumber", "sTitle": "Account Number" },
+                    { "mData": "Account.UltimateBeneficiaryAccountNumber", "sTitle": "Account Number" },
                     {
                         "mData": "Account.onBoardingAccountStatus", "sTitle": "Account Status",
                         "mRender": function (tdata) {
@@ -3041,7 +3052,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $http.get("/Accounts/GetAccountAssociationPreloadData").then(function (response) {
-        $scope.allFunds = response.data.funds;
+        $scope.allFunds = response.data;
         $("#liOnboardingFund").select2({
             placeholder: "select a fund",
             allowClear: true,

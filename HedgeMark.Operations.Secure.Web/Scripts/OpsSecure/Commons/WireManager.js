@@ -723,7 +723,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.bindAndValidateWireData = function (statusId) {
         $scope.WireTicket.ValueDate = angular.element("#wireValueDate").text();
         $scope.WireTicket.PaymentOrReceipt = "Payment";
-        $scope.WireTicket.SendingAccountNumber = angular.copy($scope.accountDetail.AccountNumber);
+        $scope.WireTicket.SendingAccountNumber = angular.copy($scope.accountDetail.UltimateBeneficiaryAccountNumber);
         $scope.WireTicket.OnBoardAccountId = angular.copy($scope.accountDetail.onBoardingAccountId);
         $scope.WireTicket.SendingPlatform = "SWIFT";
         if ($scope.wireTicketObj.IsNotice) {
@@ -732,7 +732,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.WireTicket.OnBoardSSITemplateId = $scope.wireObj.IsAdhocWire ? 0 : angular.copy($scope.ssiTemplate.onBoardingSSITemplateId);
         }
         else {
-            $scope.WireTicket.ReceivingAccountNumber = $scope.wireTicketObj.IsFundTransfer ? angular.copy($scope.receivingAccountDetail.AccountNumber) : angular.copy($scope.ssiTemplate.AccountNumber);
+            $scope.WireTicket.ReceivingAccountNumber = $scope.wireTicketObj.IsFundTransfer ? angular.copy($scope.receivingAccountDetail.UltimateBeneficiaryAccountNumber) : angular.copy($scope.ssiTemplate.UltimateBeneficiaryAccountNumber);
             $scope.WireTicket.Currency = $scope.wireTicketObj.IsFundTransfer ? angular.copy($scope.receivingAccountDetail.Currency) : angular.copy($scope.ssiTemplate.Currency);
             $scope.WireTicket.OnBoardSSITemplateId = angular.copy($scope.ssiTemplate.onBoardingSSITemplateId);
             $scope.WireTicket.ReceivingOnBoardAccountId = $scope.wireTicketObj.IsFundTransfer ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : 0;

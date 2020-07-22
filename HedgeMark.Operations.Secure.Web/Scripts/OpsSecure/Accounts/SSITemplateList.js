@@ -101,7 +101,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         { "mData": "SSITemplate.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
                         { "mData": "SSITemplate.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Address", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankAddress : ""; } },
                         { "mData": "SSITemplate.UltimateBeneficiaryAccountName", "sTitle": "Ultimate Beneficiary Account Name" },
-                        { "mData": "SSITemplate.AccountNumber", "sTitle": "Ultimate Beneficiary Account Number" },
+                        { "mData": "SSITemplate.UltimateBeneficiaryAccountNumber", "sTitle": "Ultimate Beneficiary Account Number" },
 
                         { "mData": "SSITemplate.FFCName", "sTitle": "FFC Name" },
                         { "mData": "SSITemplate.FFCNumber", "sTitle": "FFC Number" },
@@ -260,7 +260,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         "mData": "SSITemplate.ServiceProvider", "sTitle": "Service Provider"
                     },
                     { "mData": "SSITemplate.TemplateName", "sTitle": "Template Name" },
-                    { "mData": "SSITemplate.AccountNumber", "sTitle": "Account Number" },
+                    { "mData": "SSITemplate.UltimateBeneficiaryAccountNumber", "sTitle": "Account Number" },
                     {
                         "mData": "SSITemplate.SSITemplateStatus", "sTitle": "SSI Template Status",
                         "mRender": function (tdata) {

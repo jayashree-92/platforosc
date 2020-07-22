@@ -28,7 +28,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public long onBoardingAccountId { get; set; }
         public Nullable<long> dmaAgreementOnBoardingId { get; set; }
         public string AccountName { get; set; }
-        public string AccountNumber { get; set; }
+        public string UltimateBeneficiaryAccountNumber { get; set; }
         public string BeneficiaryType { get; set; }
         public string BeneficiaryAccountNumber { get; set; }
         public string IntermediaryType { get; set; }
@@ -76,6 +76,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> WirePortalCutoffId { get; set; }
         public Nullable<long> SwiftGroupId { get; set; }
         public string AssociatedCustodyAcctNumber { get; set; }
+        public Nullable<long> dmaCounterpartyId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsAccountCallback> hmsAccountCallbacks { get; set; }

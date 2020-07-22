@@ -281,7 +281,7 @@
           <Property Name="onBoardingAccountId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="dmaAgreementOnBoardingId" Type="bigint" />
           <Property Name="AccountName" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="AccountNumber" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UltimateBeneficiaryAccountNumber" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="BeneficiaryType" Type="varchar" MaxLength="50" />
           <Property Name="BeneficiaryAccountNumber" Type="varchar" MaxLength="100" />
           <Property Name="IntermediaryType" Type="varchar" MaxLength="50" />
@@ -329,6 +329,7 @@
           <Property Name="WirePortalCutoffId" Type="bigint" />
           <Property Name="SwiftGroupId" Type="bigint" />
           <Property Name="AssociatedCustodyAcctNumber" Type="varchar" MaxLength="100" />
+          <Property Name="dmaCounterpartyId" Type="bigint" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -439,7 +440,7 @@
           <Property Name="ReasonDetail" Type="varchar" MaxLength="500" />
           <Property Name="OtherReason" Type="varchar" MaxLength="500" />
           <Property Name="AccountName" Type="varchar" MaxLength="500" />
-          <Property Name="AccountNumber" Type="varchar" MaxLength="100" />
+          <Property Name="UltimateBeneficiaryAccountNumber" Type="varchar" MaxLength="100" />
           <Property Name="BeneficiaryType" Type="varchar" MaxLength="50" />
           <Property Name="BeneficiaryAccountNumber" Type="varchar" MaxLength="100" />
           <Property Name="IntermediaryType" Type="varchar" MaxLength="50" />
@@ -1775,8 +1776,7 @@
           <Property Name="ReasonDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="OtherReason" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="AccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="AccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+		  <Property Name="UltimateBeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />          <Property Name="BeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="BeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IntermediaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IntermediaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -2135,8 +2135,7 @@
           <Property Name="onBoardingAccountId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="dmaAgreementOnBoardingId" Type="Int64" />
           <Property Name="AccountName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="AccountNumber" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryAccountNumber" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />          <Property Name="BeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="BeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="IntermediaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IntermediaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -2194,6 +2193,7 @@
           <NavigationProperty Name="onBoardingAccountDocuments" Relationship="OperationsSecureModel.FK_onBoardingAccountDocument_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountDocument" />
           <NavigationProperty Name="onBoardingAccountModuleAssociations" Relationship="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountModuleAssociation" />
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
+          <Property Name="dmaCounterpartyId" Type="Int64" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
@@ -2722,8 +2722,7 @@
                 <ScalarProperty Name="IntermediaryType" ColumnName="IntermediaryType" />
                 <ScalarProperty Name="BeneficiaryAccountNumber" ColumnName="BeneficiaryAccountNumber" />
                 <ScalarProperty Name="BeneficiaryType" ColumnName="BeneficiaryType" />
-                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
-                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="UltimateBeneficiaryAccountNumber" ColumnName="UltimateBeneficiaryAccountNumber" />                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
                 <ScalarProperty Name="OtherReason" ColumnName="OtherReason" />
                 <ScalarProperty Name="ReasonDetail" ColumnName="ReasonDetail" />
                 <ScalarProperty Name="Currency" ColumnName="Currency" />
@@ -2807,6 +2806,7 @@
           <EntitySetMapping Name="onBoardingAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccount">
               <MappingFragment StoreEntitySet="onBoardingAccount">
+                <ScalarProperty Name="dmaCounterpartyId" ColumnName="dmaCounterpartyId" />
                 <ScalarProperty Name="AssociatedCustodyAcctNumber" ColumnName="AssociatedCustodyAcctNumber" />
                 <ScalarProperty Name="SwiftGroupId" ColumnName="SwiftGroupId" />
                 <ScalarProperty Name="WirePortalCutoffId" ColumnName="WirePortalCutoffId" />
@@ -2854,8 +2854,7 @@
                 <ScalarProperty Name="IntermediaryType" ColumnName="IntermediaryType" />
                 <ScalarProperty Name="BeneficiaryAccountNumber" ColumnName="BeneficiaryAccountNumber" />
                 <ScalarProperty Name="BeneficiaryType" ColumnName="BeneficiaryType" />
-                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
-                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="UltimateBeneficiaryAccountNumber" ColumnName="UltimateBeneficiaryAccountNumber" />                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
                 <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
                 <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
               </MappingFragment>
