@@ -8,6 +8,17 @@ INSERT INTO [onBoardingModule] ([dmaReportsId],[ModuleName],[CreatedAt],[Created
 END
 GO 
 
+IF NOT EXISTS(SELECT * FROM hmsWirePurposeLkup WHERE ReportName = 'Repo Collateral' AND Purpose = 'Respond to Broker Call')
+BEGIN
+INSERT INTO [hmsWirePurposeLkup] ([ReportName], [Purpose],[CreatedAt],[CreatedBy],[ModifiedBy],[ModifiedAt],[IsApproved]) VALUES('Repo Collateral', 'Respond to Broker Call',GETDATE(),-1, NULL, NULL, 1)
+END 
+GO
+
+IF NOT EXISTS(SELECT * FROM hmsWirePurposeLkup WHERE ReportName = 'Repo Collateral' AND Purpose = 'Send Call')
+BEGIN
+INSERT INTO [hmsWirePurposeLkup] ([ReportName], [Purpose],[CreatedAt],[CreatedBy],[ModifiedBy],[ModifiedAt],[IsApproved]) VALUES('Repo Collateral', 'Send Call',GETDATE(),-1, NULL, NULL, 1)
+END 
+GO
 
 
 
