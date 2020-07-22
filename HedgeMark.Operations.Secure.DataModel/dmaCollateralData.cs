@@ -95,6 +95,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string BrokerStatus { get; set; }
         public bool IsReportStatusOverridden { get; set; }
         public string AcadiaCallStatus { get; set; }
+        public bool IsPledgedCptyFileReceived { get; set; }
+        public bool IsCollateralReport { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<dmaOpsCashCollateral> dmaOpsCashCollaterals { get; set; }

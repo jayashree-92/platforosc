@@ -84,6 +84,8 @@
           <Property Name="BrokerStatus" Type="varchar" MaxLength="100" />
           <Property Name="IsReportStatusOverridden" Type="bit" Nullable="false" />
           <Property Name="AcadiaCallStatus" Type="varchar" MaxLength="100" />
+          <Property Name="IsPledgedCptyFileReceived" Type="bit" Nullable="false" />
+          <Property Name="IsCollateralReport" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="dmaOpsCashCollateral">
           <Key>
@@ -455,6 +457,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="IsReportStatusOverridden" Type="Boolean" Nullable="false" />
           <Property Name="AcadiaCallStatus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="dmaOpsCashCollaterals" Relationship="OperationsModel.FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId" FromRole="dmaCollateralData" ToRole="dmaOpsCashCollateral" />
+          <Property Name="IsPledgedCptyFileReceived" Type="Boolean" Nullable="false" />
+          <Property Name="IsCollateralReport" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="dmaOpsCashCollateral">
           <Key>
@@ -574,6 +578,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <EntitySetMapping Name="dmaCollateralDatas">
             <EntityTypeMapping TypeName="OperationsModel.dmaCollateralData">
               <MappingFragment StoreEntitySet="dmaCollateralData">
+                <ScalarProperty Name="IsCollateralReport" ColumnName="IsCollateralReport" />
+                <ScalarProperty Name="IsPledgedCptyFileReceived" ColumnName="IsPledgedCptyFileReceived" />
                 <ScalarProperty Name="AcadiaCallStatus" ColumnName="AcadiaCallStatus" />
                 <ScalarProperty Name="IsReportStatusOverridden" ColumnName="IsReportStatusOverridden" />
                 <ScalarProperty Name="BrokerStatus" ColumnName="BrokerStatus" />
