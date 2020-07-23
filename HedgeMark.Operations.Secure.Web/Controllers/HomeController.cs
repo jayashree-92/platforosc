@@ -106,8 +106,7 @@ namespace HMOSecureWeb.Controllers
         {
             var wireData = new List<WireTicket>();
             List<hmsWire> wireStatusDetails;
-            List<onBoardingAccount> wireAccounts;
-            List<onBoardingSSITemplate> wireSSITemplates;
+
             var allStatusIds = statusIds.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.ToInt()).ToList();
 
             using (var context = new OperationsSecureContext())
@@ -130,13 +129,6 @@ namespace HMOSecureWeb.Controllers
                     .Include(s => s.ReceivingSSITemplate)
                     .Where(s => ((allStatusIds.Contains(0) || allStatusIds.Contains(2)) && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (allStatusIds.Contains(0) || allStatusIds.Contains(s.WireStatusId))
                                                     || DbFunctions.TruncateTime(s.CreatedAt) == DbFunctions.TruncateTime(endContextDate) && (allStatusIds.Contains(0) || allStatusIds.Contains(s.WireStatusId))).ToList();
-
-
-                //var accountIds = wireStatusDetails.Select(s => s.OnBoardAccountId).Union(wireStatusDetails.Where(s => s.WireTransferTypeId == 2).Select(s => s.ReceivingOnBoardAccountId)).Distinct().ToList();
-                //var ssiTemplateIds = wireStatusDetails.Select(s => s.OnBoardSSITemplateId).Distinct().ToList();
-
-                //wireAccounts = context.onBoardingAccounts.Include(s => s.UltimateBeneficiary).Include(s => s.Intermediary).Include(s => s.Beneficiary).Where(s => accountIds.Contains(s.onBoardingAccountId)).ToList();
-                //wireSSITemplates = context.onBoardingSSITemplates.Include(s => s.UltimateBeneficiary).Include(s => s.Intermediary).Include(s => s.Beneficiary).Where(s => ssiTemplateIds.Contains(s.onBoardingSSITemplateId)).ToList();
             }
 
             if (!AuthorizedSessionData.IsPrivilegedUser)
@@ -404,7 +396,7 @@ namespace HMOSecureWeb.Controllers
                     wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (Verified Balance)", collateralReport.dmaCollateralData.CollateralPledgedToByFundVerifiedBalance.ToCurrency());
                     wireSourceModule.Details.Add("Collateral Pending to / (from) Fund", collateralReport.dmaCollateralData.CollateralPendingToFromFund.ToCurrency());
                     wireSourceModule.Details.Add("Exposure / MTM", collateralReport.dmaCollateralData.ExposureOrMtm.ToCurrency());
-                    if(collateralReport.dmaCollateralData.IsCollateralReport)
+                    if (collateralReport.dmaCollateralData.IsCollateralReport)
                         wireSourceModule.Details.Add("Independent Amount (CounterParty)", collateralReport.dmaCollateralData.IndependentAmount.ToCurrency());
                     wireSourceModule.Details.Add("Credit Support Amount", collateralReport.dmaCollateralData.CreditSupportAmount.ToCurrency());
                     wireSourceModule.Details.Add("Agreed Movement to / (from) Fund", collateralReport.dmaCollateralData.AgreedMovementToFromFund.ToCurrency());
@@ -659,10 +651,11 @@ namespace HMOSecureWeb.Controllers
 
         private FileInfo GetInvoiceFileLocation(vw_dmaInvoiceReport invoice)
         {
-            switch (invoice.FileSource) {
+            switch (invoice.FileSource)
+            {
 
                 case "Manual":
-                   return new FileInfo(string.Format("{0}/{1}/{2}", FileSystemManager.InvoicesFileAttachement, invoice.dmaInvoiceReportId, invoice.FileName));
+                    return new FileInfo(string.Format("{0}/{1}/{2}", FileSystemManager.InvoicesFileAttachement, invoice.dmaInvoiceReportId, invoice.FileName));
                 case "Overriden":
                     return new FileInfo(string.Format("{0}/{1}/{2}", FileSystemManager.RawFilesOverridesPath, invoice.OriginalContextMonth.ToString("yyyy-MM-dd"), invoice.FileName));
                 default:

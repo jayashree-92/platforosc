@@ -92,11 +92,15 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     { "data": "ClientLegalName", "sTitle": "Client" },
                     { "data": "PreferredFundName", "sTitle": "Fund" },
                     { "data": "SendingAccount.AccountName", "sTitle": "Sending Account Name" },
-                    { "data": "SendingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Sending Account Number" },
                     {
-                        "data": "TransferType", "sTitle": "Transfer Type"
+                        "data": "SendingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Sending Account Number" ,  "render":
+                            function (tdata, type, row) {
+                                if (row.SendingAccount.FFCNumber != null && row.SendingAccount.FFCNumber.length > 0)
+                                    return row.SendingAccount.FFCNumber;
+                                return tdata;
+                            }
                     },
-
+                    { "data": "TransferType", "sTitle": "Transfer Type" },
                     { "data": "HMWire.hmsWirePurposeLkup.ReportName", "sTitle": "Source Report" },
                     { "data": "HMWire.hmsWirePurposeLkup.Purpose", "sTitle": "Wire Purpose" },
                     {
@@ -115,7 +119,6 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                             return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
                         }
                     },
-
                     {
                         "data": "ReceivingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Beneficiary Bank",
                         "render": function (tdata, type, row) {

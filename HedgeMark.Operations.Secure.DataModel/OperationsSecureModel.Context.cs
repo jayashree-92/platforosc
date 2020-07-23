@@ -63,5 +63,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsSwiftGroup> hmsSwiftGroups { get; set; }
         public virtual DbSet<hmsWire> hmsWires { get; set; }
         public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
+        public virtual DbSet<vw_FundAccounts> vw_FundAccounts { get; set; }
     }
 }

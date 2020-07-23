@@ -230,7 +230,7 @@
                                     <label class="control-label">Account Number </label>
                                 </div>
                                 <div class="col-sm-8 col-md-5 col-lg-5">
-                                    <input name="accountnumber" type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryAccountNumber" readonly />
+                                    <input name="accountnumber" type="text" class="form-control" value="{{accountDetail.FFCNumber !=null && accountDetail.FFCNumber.length >0 ?accountDetail.FFCNumber : accountDetail.UltimateBeneficiaryAccountNumber}}" readonly />
                                 </div>
                             </div>
                         </div>

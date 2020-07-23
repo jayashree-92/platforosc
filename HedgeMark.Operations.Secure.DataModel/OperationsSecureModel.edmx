@@ -496,6 +496,44 @@
           <Property Name="RecCreatedBy" Type="int" Nullable="false" />
           <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_FundAccounts">
+          <Key>
+            <PropertyRef Name="onBoardingAccountId" />
+            <PropertyRef Name="AgreementLongName" />
+            <PropertyRef Name="AgreementShortName" />
+            <PropertyRef Name="hmFundId" />
+            <PropertyRef Name="AccountName" />
+            <PropertyRef Name="UltimateBeneficiaryAccountNumber" />
+          </Key>
+          <Property Name="onBoardingAccountId" Type="bigint" Nullable="false" />
+          <Property Name="dmaAgreementOnBoardingId" Type="bigint" />
+          <Property Name="dmaAgreementTypeId" Type="int" />
+          <Property Name="AgreementType" Type="varchar" MaxLength="500" />
+          <Property Name="AgreementLongName" Type="nvarchar" MaxLength="1114" Nullable="false" />
+          <Property Name="AgreementShortName" Type="nvarchar" MaxLength="1106" Nullable="false" />
+          <Property Name="AccountType" Type="varchar" MaxLength="50" />
+          <Property Name="hmFundId" Type="bigint" Nullable="false" />
+          <Property Name="FundMapId" Type="int" />
+          <Property Name="ShortFundName" Type="varchar" MaxLength="100" />
+          <Property Name="LegalFundName" Type="varchar" MaxLength="100" />
+          <Property Name="dmaCounterpartyId" Type="bigint" />
+          <Property Name="CounterpartyName" Type="nvarchar" MaxLength="500" />
+          <Property Name="CounterpartyFamily" Type="varchar" MaxLength="100" />
+          <Property Name="AccountName" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="AccountNumber" Type="varchar" MaxLength="100" />
+          <Property Name="FFCNumber" Type="varchar" MaxLength="100" />
+          <Property Name="UltimateBeneficiaryAccountNumber" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Currency" Type="varchar" MaxLength="50" />
+          <Property Name="AccountPurpose" Type="varchar" MaxLength="50" />
+          <Property Name="AccountStatus" Type="varchar" MaxLength="50" />
+          <Property Name="Description" Type="varchar" MaxLength="8000" />
+          <Property Name="TickerorISIN" Type="varchar" MaxLength="200" />
+          <Property Name="CashSweep" Type="varchar" MaxLength="100" />
+          <Property Name="CashSweepTime" Type="time" Precision="7" />
+          <Property Name="CashSweepTimeZone" Type="varchar" MaxLength="10" />
+        </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
           <End Role="hmsAccountCallback" Type="Self.hmsAccountCallback" Multiplicity="*" />
@@ -979,6 +1017,36 @@
           <EntitySet Name="OnBoardingSSITemplateAccountType" EntityType="Self.OnBoardingSSITemplateAccountType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingSSITemplateDocument" EntityType="Self.onBoardingSSITemplateDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="onBoardingWirePortalCutoff" EntityType="Self.onBoardingWirePortalCutoff" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vw_FundAccounts" EntityType="Self.vw_FundAccounts" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_FundAccounts].[onBoardingAccountId] AS [onBoardingAccountId], 
+    [vw_FundAccounts].[dmaAgreementOnBoardingId] AS [dmaAgreementOnBoardingId], 
+    [vw_FundAccounts].[dmaAgreementTypeId] AS [dmaAgreementTypeId], 
+    [vw_FundAccounts].[AgreementType] AS [AgreementType], 
+    [vw_FundAccounts].[AgreementLongName] AS [AgreementLongName], 
+    [vw_FundAccounts].[AgreementShortName] AS [AgreementShortName], 
+    [vw_FundAccounts].[AccountType] AS [AccountType], 
+    [vw_FundAccounts].[hmFundId] AS [hmFundId], 
+    [vw_FundAccounts].[FundMapId] AS [FundMapId], 
+    [vw_FundAccounts].[ShortFundName] AS [ShortFundName], 
+    [vw_FundAccounts].[LegalFundName] AS [LegalFundName], 
+    [vw_FundAccounts].[dmaCounterpartyId] AS [dmaCounterpartyId], 
+    [vw_FundAccounts].[CounterpartyName] AS [CounterpartyName], 
+    [vw_FundAccounts].[CounterpartyFamily] AS [CounterpartyFamily], 
+    [vw_FundAccounts].[AccountName] AS [AccountName], 
+    [vw_FundAccounts].[AccountNumber] AS [AccountNumber], 
+    [vw_FundAccounts].[FFCNumber] AS [FFCNumber], 
+    [vw_FundAccounts].[UltimateBeneficiaryAccountNumber] AS [UltimateBeneficiaryAccountNumber], 
+    [vw_FundAccounts].[Currency] AS [Currency], 
+    [vw_FundAccounts].[AccountPurpose] AS [AccountPurpose], 
+    [vw_FundAccounts].[AccountStatus] AS [AccountStatus], 
+    [vw_FundAccounts].[Description] AS [Description], 
+    [vw_FundAccounts].[TickerorISIN] AS [TickerorISIN], 
+    [vw_FundAccounts].[CashSweep] AS [CashSweep], 
+    [vw_FundAccounts].[CashSweepTime] AS [CashSweepTime], 
+    [vw_FundAccounts].[CashSweepTimeZone] AS [CashSweepTimeZone]
+    FROM [dbo].[vw_FundAccounts] AS [vw_FundAccounts]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_hmsAccountCallback_onBoardingAccountId" Association="Self.FK_hmsAccountCallback_onBoardingAccountId">
             <End Role="onBoardingAccount" EntitySet="onBoardingAccount" />
             <End Role="hmsAccountCallback" EntitySet="hmsAccountCallback" />
@@ -1319,6 +1387,7 @@
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
             <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMaps" />
           </AssociationSet>
+          <EntitySet Name="vw_FundAccounts" EntityType="OperationsSecureModel.vw_FundAccounts" />
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -2327,6 +2396,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="vw_FundAccounts">
+          <Key>
+            <PropertyRef Name="onBoardingAccountId" />
+            <PropertyRef Name="AgreementLongName" />
+            <PropertyRef Name="AgreementShortName" />
+            <PropertyRef Name="hmFundId" />
+            <PropertyRef Name="AccountName" />
+            <PropertyRef Name="UltimateBeneficiaryAccountNumber" />
+          </Key>
+          <Property Name="onBoardingAccountId" Type="Int64" Nullable="false" />
+          <Property Name="dmaAgreementOnBoardingId" Type="Int64" />
+          <Property Name="dmaAgreementTypeId" Type="Int32" />
+          <Property Name="AgreementType" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AgreementLongName" Type="String" Nullable="false" MaxLength="1114" FixedLength="false" Unicode="true" />
+          <Property Name="AgreementShortName" Type="String" Nullable="false" MaxLength="1106" FixedLength="false" Unicode="true" />
+          <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="hmFundId" Type="Int64" Nullable="false" />
+          <Property Name="FundMapId" Type="Int32" />
+          <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LegalFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="dmaCounterpartyId" Type="Int64" />
+          <Property Name="CounterpartyName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CounterpartyFamily" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AccountName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FFCNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryAccountNumber" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AccountPurpose" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AccountStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="TickerorISIN" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CashSweep" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CashSweepTime" Type="Time" Precision="7" />
+          <Property Name="CashSweepTimeZone" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2855,6 +2960,38 @@
                 <ScalarProperty Name="BeneficiaryAccountNumber" ColumnName="BeneficiaryAccountNumber" />
                 <ScalarProperty Name="BeneficiaryType" ColumnName="BeneficiaryType" />
                 <ScalarProperty Name="UltimateBeneficiaryAccountNumber" ColumnName="UltimateBeneficiaryAccountNumber" />                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
+                <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_FundAccounts">
+            <EntityTypeMapping TypeName="OperationsSecureModel.vw_FundAccounts">
+              <MappingFragment StoreEntitySet="vw_FundAccounts">
+                <ScalarProperty Name="CashSweepTimeZone" ColumnName="CashSweepTimeZone" />
+                <ScalarProperty Name="CashSweepTime" ColumnName="CashSweepTime" />
+                <ScalarProperty Name="CashSweep" ColumnName="CashSweep" />
+                <ScalarProperty Name="TickerorISIN" ColumnName="TickerorISIN" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="AccountStatus" ColumnName="AccountStatus" />
+                <ScalarProperty Name="AccountPurpose" ColumnName="AccountPurpose" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="UltimateBeneficiaryAccountNumber" ColumnName="UltimateBeneficiaryAccountNumber" />
+                <ScalarProperty Name="FFCNumber" ColumnName="FFCNumber" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="CounterpartyFamily" ColumnName="CounterpartyFamily" />
+                <ScalarProperty Name="CounterpartyName" ColumnName="CounterpartyName" />
+                <ScalarProperty Name="dmaCounterpartyId" ColumnName="dmaCounterpartyId" />
+                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
+                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
+                <ScalarProperty Name="FundMapId" ColumnName="FundMapId" />
+                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
+                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+                <ScalarProperty Name="AgreementShortName" ColumnName="AgreementShortName" />
+                <ScalarProperty Name="AgreementLongName" ColumnName="AgreementLongName" />
+                <ScalarProperty Name="AgreementType" ColumnName="AgreementType" />
+                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
                 <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
                 <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
               </MappingFragment>

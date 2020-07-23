@@ -273,33 +273,9 @@ namespace HMOSecureWeb.Controllers
         {
             var hmFundIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
             var onBoardingAccounts = AccountManager.GetAllOnBoardingAccounts(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
-            var hFunds = AuthorizedDMAFundData.ToDictionary(s => s.HmFundId, v => v.LegalFundName);
+            var fundAccounts = AccountManager.GetOnBoardingAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
+            var fundAccountmap = fundAccounts.ToDictionary(s => s.onBoardingAccountId, v => v);
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
-
-            Dictionary<long, string> counterpartyFamilies;
-            Dictionary<long, string> counterparties;
-            Dictionary<long, AgreementBaseData> agreements;
-            var allAgreementIds = onBoardingAccounts.Where(s => s.dmaAgreementOnBoardingId != null).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
-            var allCounterpartyFamilyIds = onBoardingAccounts.Where(s => s.dmaCounterpartyFamilyId != null).Select(s => s.dmaCounterpartyFamilyId).Distinct().ToList();
-            var allCounterpartyIds = onBoardingAccounts.Where(s => s.dmaCounterpartyId != null).Select(s => s.dmaCounterpartyId).Distinct().ToList();
-
-            using (var context = new AdminContext())
-            {
-                var agreementList = context.vw_OnboardedAgreements.AsNoTracking()
-                    .Where(s => allAgreementIds.Contains(s.dmaAgreementOnBoardingId)).OrderBy(s => s.hmFundId ?? 0)
-                    .Select(s => new AgreementBaseData { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId }).ToList();
-
-                agreements = new Dictionary<long, AgreementBaseData>();
-                foreach (var data in agreementList.Where(data => !agreements.ContainsKey(data.AgreementOnboardingId)))
-                {
-                    agreements.Add(data.AgreementOnboardingId, data);
-                }
-
-                counterpartyFamilies = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
-                counterparties = context.dmaCounterPartyOnBoardings.AsNoTracking().Where(s => allCounterpartyIds.Contains(s.dmaCounterPartyOnBoardId)).ToDictionary(s => s.dmaCounterPartyOnBoardId, v => v.CounterpartyName);
-
-
-            }
             var receivingAccountTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.ReceivingAgreementTypesForAccount).Split(',').ToList();
 
             return Json(new
@@ -309,13 +285,12 @@ namespace HMOSecureWeb.Controllers
                 OnBoardingAccounts = onBoardingAccounts.Select(account => new
                 {
                     Account = AccountManager.SetAccountDefaults(account),
-                    AgreementName = account.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)account.dmaAgreementOnBoardingId) ? agreements[(long)account.dmaAgreementOnBoardingId].AgreementShortName : string.Empty,
-                    AgreementTypeId = account.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)account.dmaAgreementOnBoardingId) ? agreements[(long)account.dmaAgreementOnBoardingId].AgreementTypeId :
-                                      (accountTypes.ContainsValue(account.AccountType) ? accountTypes.FirstOrDefault(y => y.Value == account.AccountType).Key : 0),
-
-                    CounterpartyFamilyName = account.dmaCounterpartyFamilyId != null && counterpartyFamilies.ContainsKey((long)account.dmaCounterpartyFamilyId) ? counterpartyFamilies[(long)account.dmaCounterpartyFamilyId] : string.Empty,
-                    CounterpartyName = account.dmaCounterpartyId != null && counterparties.ContainsKey((long)account.dmaCounterpartyId) ? counterparties[(long)account.dmaCounterpartyId] : string.Empty,
-                    FundName = hFunds.ContainsKey((int)account.hmFundId) ? hFunds[(int)account.hmFundId] : string.Empty,
+                    AccountNumber = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].AccountNumber : string.Empty,
+                    AgreementName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].AgreementShortName : string.Empty,
+                    AgreementTypeId = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].dmaAgreementTypeId ?? 0 : 0,
+                    CounterpartyFamilyName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].CounterpartyFamily : string.Empty,
+                    CounterpartyName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].CounterpartyName : string.Empty,
+                    FundName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].LegalFundName : string.Empty,
                     ApprovedMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Approved"),
                     PendingApprovalMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Pending Approval"),
 
@@ -586,57 +561,38 @@ namespace HMOSecureWeb.Controllers
 
             var hmFundIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
             var onBoardingAccounts = AccountManager.GetAllOnBoardingAccounts(hmFundIds, AuthorizedSessionData.IsPrivilegedUser).OrderByDescending(x => x.UpdatedAt).ToList();
-            var contentToExport = new Dictionary<string, List<Row>>();
-            var accountListRows = BuildAccountRows(onBoardingAccounts);
+            var fundAccounts = AccountManager.GetOnBoardingAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
+
+
+            var accountListRows = BuildAccountRows(onBoardingAccounts, fundAccounts);
             //File name and path
+
+            var contentToExport = new Dictionary<string, List<Row>>() { { "List of Accounts", accountListRows } };
             var fileName = string.Format("AccountList_{0:yyyyMMdd}", DateTime.Now);
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
-            contentToExport.Add("List of Accounts", accountListRows);
             //Export the checklist file
+
             Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
         //Build Account Rows
-        private List<Row> BuildAccountRows(List<onBoardingAccount> onBoardingAccounts)
+        private List<Row> BuildAccountRows(List<onBoardingAccount> onBoardingAccounts, List<vw_FundAccounts> fundAccounts)
         {
+            var fundAccountMap = fundAccounts.ToDictionary(s => s.onBoardingAccountId, v => v);
             var accountListRows = new List<Row>();
-
-            Dictionary<long, string> counterpartyFamilies;
-            Dictionary<long, string> counterparties;
-            Dictionary<int, string> funds;
-            Dictionary<long, AgreementBaseData> agreements;
-            var allAgreementIds = onBoardingAccounts.Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
-            var allCounterpartyFamilyIds = onBoardingAccounts.Select(s => s.dmaCounterpartyFamilyId).Distinct().ToList();
-            var allCounterpartyIds = onBoardingAccounts.Select(s => s.dmaCounterpartyId).Distinct().ToList();
-            var allFundIds = onBoardingAccounts.Select(s => s.hmFundId).Distinct().ToList();
-
-            using (var context = new AdminContext())
-            {
-                agreements = context.vw_OnboardedAgreements.AsNoTracking()
-                    .Where(s => allAgreementIds.Contains(s.dmaAgreementOnBoardingId))
-                    .Select(s => new AgreementBaseData { AgreementOnboardingId = s.dmaAgreementOnBoardingId, AgreementShortName = s.AgreementShortName, AgreementTypeId = (int)s.AgreementTypeId })
-                    .ToDictionary(s => s.AgreementOnboardingId, v => v);
-
-                counterpartyFamilies = context.dmaCounterpartyFamilies.AsNoTracking().Where(s => allCounterpartyFamilyIds.Contains(s.dmaCounterpartyFamilyId)).ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
-                counterparties = context.dmaCounterPartyOnBoardings.AsNoTracking().Where(s => allCounterpartyIds.Contains(s.dmaCounterPartyOnBoardId)).ToDictionary(s => s.dmaCounterPartyOnBoardId, v => v.CounterpartyName);
-
-                funds = context.vw_HFund.AsNoTracking()
-                    .Where(s => AuthorizedSessionData.IsPrivilegedUser || allFundIds.Contains(s.intFundID))
-                    .ToDictionary(x => x.intFundID, v => v.LegalFundName);
-            }
 
             foreach (var account in onBoardingAccounts)
             {
                 var row = new Row();
                 row["Account Id"] = account.onBoardingAccountId.ToString();
                 row["Entity Type"] = account.AccountType;
-                row["Fund Name"] = funds.ContainsKey((int)account.hmFundId) ? funds[(int)account.hmFundId] : string.Empty;
-                row["Agreement Name"] = account.dmaAgreementOnBoardingId != null && agreements.ContainsKey((long)account.dmaAgreementOnBoardingId) ? agreements[(long)account.dmaAgreementOnBoardingId].AgreementShortName : string.Empty;
-                row["Counterparty"] = account.dmaCounterpartyId != null && counterparties.ContainsKey((long)account.dmaCounterpartyId) ? counterparties[(long)account.dmaCounterpartyId] : string.Empty;
-                row["Counterparty Family"] = account.dmaCounterpartyFamilyId != null && counterpartyFamilies.ContainsKey((long)account.dmaCounterpartyFamilyId) ? counterpartyFamilies[(long)account.dmaCounterpartyFamilyId] : string.Empty;
+                row["Fund Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].LegalFundName : string.Empty;
+                row["Agreement Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].AgreementShortName : string.Empty;
+                row["Counterparty"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].CounterpartyName : string.Empty;
+                row["Counterparty Family"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].CounterpartyFamily : string.Empty;
                 row["Account Name"] = account.AccountName;
-                row["Account Number"] = account.UltimateBeneficiaryAccountNumber;
+                row["Account Number"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].AccountNumber : string.Empty;
                 row["Account Type"] = account.AccountPurpose;
                 row["Account Status"] = account.AccountStatus;
                 row["Currency"] = account.Currency;

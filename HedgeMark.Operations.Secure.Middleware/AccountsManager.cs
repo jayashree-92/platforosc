@@ -20,6 +20,17 @@ namespace HMOSecureMiddleware
         public const int BrokerTemplateTypeId = 2;
         public const string AgreementAccountType = "Agreement";
 
+        public static List<vw_FundAccounts> GetOnBoardingAccountDetails(List<long> hmFundIds, bool isPreviledgedUser)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.vw_FundAccounts.Where(s => isPreviledgedUser || hmFundIds.Contains(s.hmFundId)).ToList();
+            }
+
+        }
+
         public static List<onBoardingAccount> GetAllOnBoardingAccounts(List<long> hmFundIds, bool isPreviledgedUser)
         {
             using (var context = new OperationsSecureContext())
