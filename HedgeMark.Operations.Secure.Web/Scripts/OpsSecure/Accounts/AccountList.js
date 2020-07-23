@@ -2970,7 +2970,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         "mData": "FundName", "sTitle": "Fund Name"
                     },
                     { "mData": "AgreementName", "sTitle": "Agreement Name" },
-                    { "mData": "Broker", "sTitle": "Broker" },
+                    { "mData": "CounterpartyFamilyName", "sTitle": "Counterparty Family" },
+                    { "mData": "CounterpartyName", "sTitle": "Counterparty" },
                     //{ "mData": "AccountName", "sTitle": "Account Name" },
                     { "mData": "Account.UltimateBeneficiaryAccountNumber", "sTitle": "Account Number" },
                     {
