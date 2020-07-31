@@ -15,7 +15,6 @@ namespace HedgeMark.Operations.Secure.DataModel
     public partial class dmaUserPreference
     {
         public long dmaUserPreferenceId { get; set; }
-        public string UserId { get; set; }
         public string Key { get; set; }
         public string Value { get; set; }
         public int hmUserId { get; set; }

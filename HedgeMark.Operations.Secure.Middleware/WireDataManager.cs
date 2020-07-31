@@ -257,7 +257,7 @@ namespace HMOSecureMiddleware
             List<string> workflowUsers;
             List<string> attachmentUsers;
 
-            var hFund = AdminFundManager.GetHFundCreatedForDMA(hmWire.hmFundId, PreferencesManager.FundNameInDropDown.OpsShortName);
+            var hFund = AdminFundManager.GetHFundsCreatedForDMAOnly(PreferencesManager.FundNameInDropDown.OpsShortName, hmWire.hmFundId);
 
             using (var context = new AdminContext())
             {
@@ -286,7 +286,7 @@ namespace HMOSecureMiddleware
                 WorkflowUsers = workflowUsers,
                 Counterparty = (counterparty ?? new dmaCounterPartyOnBoarding()).CounterpartyName,
                 SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireId),
-                ShortFundName = hFund != null ? hFund.ShortFundName : string.Empty
+                ShortFundName = hFund != null ? hFund.PreferredFundName : string.Empty
             };
         }
 
@@ -331,7 +331,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-                return context.vw_OnboardedAgreements.Where(s => s.AgreementType == "PB" || s.AgreementType == "Custody" || s.AgreementType == "Synthetic Prime Brokerage").Select(s => s.dmaAgreementOnBoardingId).ToList();
+                return context.vw_CounterpartyAgreements.Where(s => s.AgreementType == "PB" || s.AgreementType == "Custody" || s.AgreementType == "Synthetic Prime Brokerage").Select(s => s.dmaAgreementOnBoardingId).ToList();
             }
         }
 

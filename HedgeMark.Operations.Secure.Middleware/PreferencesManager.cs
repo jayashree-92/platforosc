@@ -38,7 +38,7 @@ namespace HMOSecureMiddleware
 
         public static void SaveUserPreferences(int hmUserId, string key, string value)
         {
-            var preference = new dmaUserPreference() { Key = key, Value = value, hmUserId = hmUserId, UserId = string.Empty };
+            var preference = new dmaUserPreference() { Key = key, Value = value, hmUserId = hmUserId };
             SaveUserPreferences(preference);
         }
 

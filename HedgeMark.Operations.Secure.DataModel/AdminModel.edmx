@@ -127,6 +127,8 @@
           <Property Name="UpdatedBy" Type="varchar" MaxLength="100" />
           <Property Name="UpdatedAt" Type="datetime" />
           <Property Name="CounterpartyRegistrationNumber" Type="varchar" MaxLength="2000" />
+          <Property Name="LEI" Type="varchar" MaxLength="500" />
+          <Property Name="DomicileChoiceId" Type="bigint" />
         </EntityType>
         <EntityType Name="dmaFundOnBoardPermissions">
           <Key>
@@ -204,27 +206,17 @@
 warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vw_HFund">
           <Key>
-            <PropertyRef Name="intFundID" />
-            <PropertyRef Name="FundMapId" />
-            <PropertyRef Name="ClientFundName" />
+            <PropertyRef Name="hmFundId" />
             <PropertyRef Name="LegalFundName" />
             <PropertyRef Name="HMRAName" />
             <PropertyRef Name="FundType" />
-            <PropertyRef Name="ClientFundVersion" />
-            <PropertyRef Name="FundStatus" />
-            <PropertyRef Name="StrategyID" />
           </Key>
-          <Property Name="intFundID" Type="int" Nullable="false" />
-          <Property Name="FundMapId" Type="int" Nullable="false" />
-          <Property Name="ClientFundName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="hmFundId" Type="int" Nullable="false" />
           <Property Name="ShortFundName" Type="varchar" MaxLength="100" />
           <Property Name="LegalFundName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="HMRAName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="FundType" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="ClientFundVersion" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="FundStatus" Type="varchar" MaxLength="13" Nullable="false" />
-          <Property Name="StrategyID" Type="int" Nullable="false" />
-          <Property Name="RegionID" Type="int" />
+          <Property Name="FundStatus" Type="varchar" MaxLength="200" />
           <Property Name="DataProviderNameId" Type="int" />
           <Property Name="DataProviderName" Type="varchar(max)" />
           <Property Name="varPositionFrequency" Type="varchar" MaxLength="200" />
@@ -236,10 +228,16 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="FundManagerName" Type="varchar" MaxLength="100" />
           <Property Name="FundManagerID" Type="int" />
           <Property Name="dmaFundOnBoardId" Type="bigint" />
+          <Property Name="dmaClientOnBoardId" Type="bigint" />
+          <Property Name="ActualLaunchDate" Type="datetime" />
+          <Property Name="TradeStartDate" Type="datetime" />
+          <Property Name="AdminChoiceId" Type="bigint" />
+          <Property Name="AdminChoice" Type="varchar" MaxLength="1000" />
+          <Property Name="FundStructureId" Type="bigint" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="vw_OnboardedAgreements">
+warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_CounterpartyAgreements">
           <Key>
             <PropertyRef Name="dmaAgreementOnBoardingId" />
             <PropertyRef Name="dmaFundOnBoardId" />
@@ -252,7 +250,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           </Key>
           <Property Name="dmaAgreementOnBoardingId" Type="bigint" Nullable="false" />
           <Property Name="dmaFundOnBoardId" Type="bigint" Nullable="false" />
-          <Property Name="hmFundId" Type="int" />
           <Property Name="dmaClientOnBoardId" Type="bigint" Nullable="false" />
           <Property Name="AgreementTypeId" Type="int" />
           <Property Name="AgreementStatusId" Type="int" />
@@ -316,6 +313,10 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="CounterpartyFamily" Type="varchar" MaxLength="100" />
           <Property Name="CounterpartyName" Type="nvarchar" MaxLength="500" />
           <Property Name="CounterpartyShortCode" Type="nvarchar" MaxLength="500" />
+          <Property Name="CounterpartyRegistrationNumber" Type="varchar" MaxLength="2000" />
+          <Property Name="LEI" Type="varchar" MaxLength="500" />
+          <Property Name="DomicileChoiceId" Type="bigint" />
+          <Property Name="CounterpartyDomicile" Type="varchar" MaxLength="1000" />
           <Property Name="FundMapId" Type="int" />
           <Property Name="ClientName" Type="varchar" MaxLength="200" />
           <Property Name="LegalFundName" Type="varchar" MaxLength="100" />
@@ -378,17 +379,12 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <EntitySet Name="OnBoardingServiceProvider" EntityType="Self.OnBoardingServiceProvider" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="vw_HFund" EntityType="Self.vw_HFund" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-    [vw_HFund].[intFundID] AS [intFundID], 
-    [vw_HFund].[FundMapId] AS [FundMapId], 
-    [vw_HFund].[ClientFundName] AS [ClientFundName], 
+    [vw_HFund].[hmFundId] AS [hmFundId], 
     [vw_HFund].[ShortFundName] AS [ShortFundName], 
     [vw_HFund].[LegalFundName] AS [LegalFundName], 
     [vw_HFund].[HMRAName] AS [HMRAName], 
     [vw_HFund].[FundType] AS [FundType], 
-    [vw_HFund].[ClientFundVersion] AS [ClientFundVersion], 
     [vw_HFund].[FundStatus] AS [FundStatus], 
-    [vw_HFund].[StrategyID] AS [StrategyID], 
-    [vw_HFund].[RegionID] AS [RegionID], 
     [vw_HFund].[DataProviderNameId] AS [DataProviderNameId], 
     [vw_HFund].[DataProviderName] AS [DataProviderName], 
     [vw_HFund].[varPositionFrequency] AS [varPositionFrequency], 
@@ -399,86 +395,95 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
     [vw_HFund].[FiscalYearEnd] AS [FiscalYearEnd], 
     [vw_HFund].[FundManagerName] AS [FundManagerName], 
     [vw_HFund].[FundManagerID] AS [FundManagerID], 
-    [vw_HFund].[dmaFundOnBoardId] AS [dmaFundOnBoardId]
+    [vw_HFund].[dmaFundOnBoardId] AS [dmaFundOnBoardId], 
+    [vw_HFund].[dmaClientOnBoardId] AS [dmaClientOnBoardId], 
+    [vw_HFund].[ActualLaunchDate] AS [ActualLaunchDate], 
+    [vw_HFund].[TradeStartDate] AS [TradeStartDate], 
+    [vw_HFund].[AdminChoiceId] AS [AdminChoiceId], 
+    [vw_HFund].[AdminChoice] AS [AdminChoice], 
+    [vw_HFund].[FundStructureId] AS [FundStructureId]
     FROM [dbo].[vw_HFund] AS [vw_HFund]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="vw_OnboardedAgreements" EntityType="Self.vw_OnboardedAgreements" store:Type="Views" store:Schema="HMADMIN">
+          <EntitySet Name="vw_CounterpartyAgreements" EntityType="Self.vw_CounterpartyAgreements" store:Type="Views" store:Schema="HMADMIN">
             <DefiningQuery>SELECT 
-    [vw_OnboardedAgreements].[dmaAgreementOnBoardingId] AS [dmaAgreementOnBoardingId], 
-    [vw_OnboardedAgreements].[dmaFundOnBoardId] AS [dmaFundOnBoardId], 
-    [vw_OnboardedAgreements].[hmFundId] AS [hmFundId], 
-    [vw_OnboardedAgreements].[dmaClientOnBoardId] AS [dmaClientOnBoardId], 
-    [vw_OnboardedAgreements].[AgreementTypeId] AS [AgreementTypeId], 
-    [vw_OnboardedAgreements].[AgreementStatusId] AS [AgreementStatusId], 
-    [vw_OnboardedAgreements].[dmaOnBoardingAgreementVersionId] AS [dmaOnBoardingAgreementVersionId], 
-    [vw_OnboardedAgreements].[dmaCounterPartyFamilyId] AS [dmaCounterPartyFamilyId], 
-    [vw_OnboardedAgreements].[dmaCounterPartyOnBoardId] AS [dmaCounterPartyOnBoardId], 
-    [vw_OnboardedAgreements].[Comments] AS [Comments], 
-    [vw_OnboardedAgreements].[CurrencyCode] AS [CurrencyCode], 
-    [vw_OnboardedAgreements].[CreditSupportAmount] AS [CreditSupportAmount], 
-    [vw_OnboardedAgreements].[ThresholdwrtFund] AS [ThresholdwrtFund], 
-    [vw_OnboardedAgreements].[ThresholdwrtCounterparty] AS [ThresholdwrtCounterparty], 
-    [vw_OnboardedAgreements].[MTAwrtFund] AS [MTAwrtFund], 
-    [vw_OnboardedAgreements].[MTAwrtCounterparty] AS [MTAwrtCounterparty], 
-    [vw_OnboardedAgreements].[DeliverRoundingAmount] AS [DeliverRoundingAmount], 
-    [vw_OnboardedAgreements].[DeliverRoundingMethod] AS [DeliverRoundingMethod], 
-    [vw_OnboardedAgreements].[ReturnRoundingAmount] AS [ReturnRoundingAmount], 
-    [vw_OnboardedAgreements].[ReturnRoundingMethod] AS [ReturnRoundingMethod], 
-    [vw_OnboardedAgreements].[ThresholdIATermsforMTM] AS [ThresholdIATermsforMTM], 
-    [vw_OnboardedAgreements].[ThresholdwrtFundforMTM] AS [ThresholdwrtFundforMTM], 
-    [vw_OnboardedAgreements].[ThresholdwrtCounterpartyforMTM] AS [ThresholdwrtCounterpartyforMTM], 
-    [vw_OnboardedAgreements].[MTAwrtFundforMTM] AS [MTAwrtFundforMTM], 
-    [vw_OnboardedAgreements].[MTAwrtCounterpartyforMTM] AS [MTAwrtCounterpartyforMTM], 
-    [vw_OnboardedAgreements].[DeliverRoundingAmountforMTM] AS [DeliverRoundingAmountforMTM], 
-    [vw_OnboardedAgreements].[DeliverRoundingMethodforMTM] AS [DeliverRoundingMethodforMTM], 
-    [vw_OnboardedAgreements].[ReturnRoundingAmountforMTM] AS [ReturnRoundingAmountforMTM], 
-    [vw_OnboardedAgreements].[ReturnRoundingMethodforMTM] AS [ReturnRoundingMethodforMTM], 
-    [vw_OnboardedAgreements].[NotificationTimeZone] AS [NotificationTimeZone], 
-    [vw_OnboardedAgreements].[InterestRateSource] AS [InterestRateSource], 
-    [vw_OnboardedAgreements].[TransferOfInterest] AS [TransferOfInterest], 
-    [vw_OnboardedAgreements].[NOTIFICATION_DEADLINE] AS [NOTIFICATION_DEADLINE], 
-    [vw_OnboardedAgreements].[MARGIN_DELIVERY_DEADLINE] AS [MARGIN_DELIVERY_DEADLINE], 
-    [vw_OnboardedAgreements].[CreatedBy] AS [CreatedBy], 
-    [vw_OnboardedAgreements].[UpdatedBy] AS [UpdatedBy], 
-    [vw_OnboardedAgreements].[ModifiedDate] AS [ModifiedDate], 
-    [vw_OnboardedAgreements].[HMOpsStatus] AS [HMOpsStatus], 
-    [vw_OnboardedAgreements].[PBFXNetting] AS [PBFXNetting], 
-    [vw_OnboardedAgreements].[InterestMethod] AS [InterestMethod], 
-    [vw_OnboardedAgreements].[LegalOrOperational] AS [LegalOrOperational], 
-    [vw_OnboardedAgreements].[TransferTiming] AS [TransferTiming], 
-    [vw_OnboardedAgreements].[AgreementTask] AS [AgreementTask], 
-    [vw_OnboardedAgreements].[ActualLaunchDate] AS [ActualLaunchDate], 
-    [vw_OnboardedAgreements].[RevisedLaunchedDate] AS [RevisedLaunchedDate], 
-    [vw_OnboardedAgreements].[OriginalTargetLaunchDate] AS [OriginalTargetLaunchDate], 
-    [vw_OnboardedAgreements].[TradeStartDate] AS [TradeStartDate], 
-    [vw_OnboardedAgreements].[LaunchStatus] AS [LaunchStatus], 
-    [vw_OnboardedAgreements].[AgreementType] AS [AgreementType], 
-    [vw_OnboardedAgreements].[AgreementStatus] AS [AgreementStatus], 
-    [vw_OnboardedAgreements].[AgreementVersion] AS [AgreementVersion], 
-    [vw_OnboardedAgreements].[TargetCompletion] AS [TargetCompletion], 
-    [vw_OnboardedAgreements].[TargetCompletionDate] AS [TargetCompletionDate], 
-    [vw_OnboardedAgreements].[RelativeDays] AS [RelativeDays], 
-    [vw_OnboardedAgreements].[RelativeOptions] AS [RelativeOptions], 
-    [vw_OnboardedAgreements].[Notes] AS [Notes], 
-    [vw_OnboardedAgreements].[HistoricalNotes] AS [HistoricalNotes], 
-    [vw_OnboardedAgreements].[NotesModifiedDate] AS [NotesModifiedDate], 
-    [vw_OnboardedAgreements].[FullyExecutedDate] AS [FullyExecutedDate], 
-    [vw_OnboardedAgreements].[StatusDate] AS [StatusDate], 
-    [vw_OnboardedAgreements].[Responsibility] AS [Responsibility], 
-    [vw_OnboardedAgreements].[IACalculationAgent] AS [IACalculationAgent], 
-    [vw_OnboardedAgreements].[MTMChangeThresholdPercentage] AS [MTMChangeThresholdPercentage], 
-    [vw_OnboardedAgreements].[CounterpartyFamily] AS [CounterpartyFamily], 
-    [vw_OnboardedAgreements].[CounterpartyName] AS [CounterpartyName], 
-    [vw_OnboardedAgreements].[CounterpartyShortCode] AS [CounterpartyShortCode], 
-    [vw_OnboardedAgreements].[FundMapId] AS [FundMapId], 
-    [vw_OnboardedAgreements].[ClientName] AS [ClientName], 
-    [vw_OnboardedAgreements].[LegalFundName] AS [LegalFundName], 
-    [vw_OnboardedAgreements].[ShortFundName] AS [ShortFundName], 
-    [vw_OnboardedAgreements].[AgreementLongName] AS [AgreementLongName], 
-    [vw_OnboardedAgreements].[AgreementShortName] AS [AgreementShortName], 
-    [vw_OnboardedAgreements].[FundManagerName] AS [FundManagerName], 
-    [vw_OnboardedAgreements].[AdminChoice] AS [AdminChoice]
-    FROM [HMADMIN].[vw_OnboardedAgreements] AS [vw_OnboardedAgreements]</DefiningQuery>
+    [vw_CounterpartyAgreements].[dmaAgreementOnBoardingId] AS [dmaAgreementOnBoardingId], 
+    [vw_CounterpartyAgreements].[dmaFundOnBoardId] AS [dmaFundOnBoardId], 
+    [vw_CounterpartyAgreements].[dmaClientOnBoardId] AS [dmaClientOnBoardId], 
+    [vw_CounterpartyAgreements].[AgreementTypeId] AS [AgreementTypeId], 
+    [vw_CounterpartyAgreements].[AgreementStatusId] AS [AgreementStatusId], 
+    [vw_CounterpartyAgreements].[dmaOnBoardingAgreementVersionId] AS [dmaOnBoardingAgreementVersionId], 
+    [vw_CounterpartyAgreements].[dmaCounterPartyFamilyId] AS [dmaCounterPartyFamilyId], 
+    [vw_CounterpartyAgreements].[dmaCounterPartyOnBoardId] AS [dmaCounterPartyOnBoardId], 
+    [vw_CounterpartyAgreements].[Comments] AS [Comments], 
+    [vw_CounterpartyAgreements].[CurrencyCode] AS [CurrencyCode], 
+    [vw_CounterpartyAgreements].[CreditSupportAmount] AS [CreditSupportAmount], 
+    [vw_CounterpartyAgreements].[ThresholdwrtFund] AS [ThresholdwrtFund], 
+    [vw_CounterpartyAgreements].[ThresholdwrtCounterparty] AS [ThresholdwrtCounterparty], 
+    [vw_CounterpartyAgreements].[MTAwrtFund] AS [MTAwrtFund], 
+    [vw_CounterpartyAgreements].[MTAwrtCounterparty] AS [MTAwrtCounterparty], 
+    [vw_CounterpartyAgreements].[DeliverRoundingAmount] AS [DeliverRoundingAmount], 
+    [vw_CounterpartyAgreements].[DeliverRoundingMethod] AS [DeliverRoundingMethod], 
+    [vw_CounterpartyAgreements].[ReturnRoundingAmount] AS [ReturnRoundingAmount], 
+    [vw_CounterpartyAgreements].[ReturnRoundingMethod] AS [ReturnRoundingMethod], 
+    [vw_CounterpartyAgreements].[ThresholdIATermsforMTM] AS [ThresholdIATermsforMTM], 
+    [vw_CounterpartyAgreements].[ThresholdwrtFundforMTM] AS [ThresholdwrtFundforMTM], 
+    [vw_CounterpartyAgreements].[ThresholdwrtCounterpartyforMTM] AS [ThresholdwrtCounterpartyforMTM], 
+    [vw_CounterpartyAgreements].[MTAwrtFundforMTM] AS [MTAwrtFundforMTM], 
+    [vw_CounterpartyAgreements].[MTAwrtCounterpartyforMTM] AS [MTAwrtCounterpartyforMTM], 
+    [vw_CounterpartyAgreements].[DeliverRoundingAmountforMTM] AS [DeliverRoundingAmountforMTM], 
+    [vw_CounterpartyAgreements].[DeliverRoundingMethodforMTM] AS [DeliverRoundingMethodforMTM], 
+    [vw_CounterpartyAgreements].[ReturnRoundingAmountforMTM] AS [ReturnRoundingAmountforMTM], 
+    [vw_CounterpartyAgreements].[ReturnRoundingMethodforMTM] AS [ReturnRoundingMethodforMTM], 
+    [vw_CounterpartyAgreements].[NotificationTimeZone] AS [NotificationTimeZone], 
+    [vw_CounterpartyAgreements].[InterestRateSource] AS [InterestRateSource], 
+    [vw_CounterpartyAgreements].[TransferOfInterest] AS [TransferOfInterest], 
+    [vw_CounterpartyAgreements].[NOTIFICATION_DEADLINE] AS [NOTIFICATION_DEADLINE], 
+    [vw_CounterpartyAgreements].[MARGIN_DELIVERY_DEADLINE] AS [MARGIN_DELIVERY_DEADLINE], 
+    [vw_CounterpartyAgreements].[CreatedBy] AS [CreatedBy], 
+    [vw_CounterpartyAgreements].[UpdatedBy] AS [UpdatedBy], 
+    [vw_CounterpartyAgreements].[ModifiedDate] AS [ModifiedDate], 
+    [vw_CounterpartyAgreements].[HMOpsStatus] AS [HMOpsStatus], 
+    [vw_CounterpartyAgreements].[PBFXNetting] AS [PBFXNetting], 
+    [vw_CounterpartyAgreements].[InterestMethod] AS [InterestMethod], 
+    [vw_CounterpartyAgreements].[LegalOrOperational] AS [LegalOrOperational], 
+    [vw_CounterpartyAgreements].[TransferTiming] AS [TransferTiming], 
+    [vw_CounterpartyAgreements].[AgreementTask] AS [AgreementTask], 
+    [vw_CounterpartyAgreements].[ActualLaunchDate] AS [ActualLaunchDate], 
+    [vw_CounterpartyAgreements].[RevisedLaunchedDate] AS [RevisedLaunchedDate], 
+    [vw_CounterpartyAgreements].[OriginalTargetLaunchDate] AS [OriginalTargetLaunchDate], 
+    [vw_CounterpartyAgreements].[TradeStartDate] AS [TradeStartDate], 
+    [vw_CounterpartyAgreements].[LaunchStatus] AS [LaunchStatus], 
+    [vw_CounterpartyAgreements].[AgreementType] AS [AgreementType], 
+    [vw_CounterpartyAgreements].[AgreementStatus] AS [AgreementStatus], 
+    [vw_CounterpartyAgreements].[AgreementVersion] AS [AgreementVersion], 
+    [vw_CounterpartyAgreements].[TargetCompletion] AS [TargetCompletion], 
+    [vw_CounterpartyAgreements].[TargetCompletionDate] AS [TargetCompletionDate], 
+    [vw_CounterpartyAgreements].[RelativeDays] AS [RelativeDays], 
+    [vw_CounterpartyAgreements].[RelativeOptions] AS [RelativeOptions], 
+    [vw_CounterpartyAgreements].[Notes] AS [Notes], 
+    [vw_CounterpartyAgreements].[HistoricalNotes] AS [HistoricalNotes], 
+    [vw_CounterpartyAgreements].[NotesModifiedDate] AS [NotesModifiedDate], 
+    [vw_CounterpartyAgreements].[FullyExecutedDate] AS [FullyExecutedDate], 
+    [vw_CounterpartyAgreements].[StatusDate] AS [StatusDate], 
+    [vw_CounterpartyAgreements].[Responsibility] AS [Responsibility], 
+    [vw_CounterpartyAgreements].[IACalculationAgent] AS [IACalculationAgent], 
+    [vw_CounterpartyAgreements].[MTMChangeThresholdPercentage] AS [MTMChangeThresholdPercentage], 
+    [vw_CounterpartyAgreements].[CounterpartyFamily] AS [CounterpartyFamily], 
+    [vw_CounterpartyAgreements].[CounterpartyName] AS [CounterpartyName], 
+    [vw_CounterpartyAgreements].[CounterpartyShortCode] AS [CounterpartyShortCode], 
+    [vw_CounterpartyAgreements].[CounterpartyRegistrationNumber] AS [CounterpartyRegistrationNumber], 
+    [vw_CounterpartyAgreements].[LEI] AS [LEI], 
+    [vw_CounterpartyAgreements].[DomicileChoiceId] AS [DomicileChoiceId], 
+    [vw_CounterpartyAgreements].[CounterpartyDomicile] AS [CounterpartyDomicile], 
+    [vw_CounterpartyAgreements].[FundMapId] AS [FundMapId], 
+    [vw_CounterpartyAgreements].[ClientName] AS [ClientName], 
+    [vw_CounterpartyAgreements].[LegalFundName] AS [LegalFundName], 
+    [vw_CounterpartyAgreements].[ShortFundName] AS [ShortFundName], 
+    [vw_CounterpartyAgreements].[AgreementLongName] AS [AgreementLongName], 
+    [vw_CounterpartyAgreements].[AgreementShortName] AS [AgreementShortName], 
+    [vw_CounterpartyAgreements].[FundManagerName] AS [FundManagerName], 
+    [vw_CounterpartyAgreements].[AdminChoice] AS [AdminChoice]
+    FROM [HMADMIN].[vw_CounterpartyAgreements] AS [vw_CounterpartyAgreements]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK__aspnet_Us__RoleI__2DB1C7EE" Association="Self.FK__aspnet_Us__RoleI__2DB1C7EE">
             <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
@@ -606,9 +611,9 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
             <End Role="dmaCounterPartyOnBoarding" EntitySet="dmaCounterPartyOnBoardings" />
           </AssociationSet>
           <EntitySet Name="dmaOnBoardingContactDetails" EntityType="AdminModel.dmaOnBoardingContactDetail" />
-          <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
-          <EntitySet Name="vw_OnboardedAgreements" EntityType="AdminModel.vw_OnboardedAgreements" />
           <EntitySet Name="OnBoardingServiceProviders" EntityType="AdminModel.OnBoardingServiceProvider" />
+          <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
+          <EntitySet Name="vw_CounterpartyAgreements" EntityType="AdminModel.vw_CounterpartyAgreements" />
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -698,6 +703,8 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="dmaCounterpartyFamily" Relationship="AdminModel.FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId" FromRole="dmaCounterPartyOnBoarding" ToRole="dmaCounterpartyFamily" />
           <Property Name="CounterpartyRegistrationNumber" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="LEI" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="DomicileChoiceId" Type="Int64" />
         </EntityType>
         <EntityType Name="dmaFundOnBoardPermission">
           <Key>
@@ -787,29 +794,27 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="ClientSubCategory" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ComplainceCert" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="OnBoardingServiceProvider">
+          <Key>
+            <PropertyRef Name="OnBoardingServiceProviderId" />
+          </Key>
+          <Property Name="OnBoardingServiceProviderId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FeeType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ServiceProvider" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+        </EntityType>
         <EntityType Name="vw_HFund">
           <Key>
-            <PropertyRef Name="intFundID" />
-            <PropertyRef Name="FundMapId" />
-            <PropertyRef Name="ClientFundName" />
+            <PropertyRef Name="hmFundId" />
             <PropertyRef Name="LegalFundName" />
             <PropertyRef Name="HMRAName" />
             <PropertyRef Name="FundType" />
-            <PropertyRef Name="ClientFundVersion" />
-            <PropertyRef Name="FundStatus" />
-            <PropertyRef Name="StrategyID" />
           </Key>
-          <Property Name="intFundID" Type="Int32" Nullable="false" />
-          <Property Name="FundMapId" Type="Int32" Nullable="false" />
-          <Property Name="ClientFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="hmFundId" Type="Int32" Nullable="false" />
           <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="LegalFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="HMRAName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FundType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ClientFundVersion" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FundStatus" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
-          <Property Name="StrategyID" Type="Int32" Nullable="false" />
-          <Property Name="RegionID" Type="Int32" />
+          <Property Name="FundStatus" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="DataProviderNameId" Type="Int32" />
           <Property Name="DataProviderName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="varPositionFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
@@ -821,8 +826,14 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="FundManagerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FundManagerID" Type="Int32" />
           <Property Name="dmaFundOnBoardId" Type="Int64" />
+          <Property Name="dmaClientOnBoardId" Type="Int64" />
+          <Property Name="ActualLaunchDate" Type="DateTime" Precision="3" />
+          <Property Name="TradeStartDate" Type="DateTime" Precision="3" />
+          <Property Name="AdminChoiceId" Type="Int64" />
+          <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="FundStructureId" Type="Int64" />
         </EntityType>
-        <EntityType Name="vw_OnboardedAgreements">
+        <EntityType Name="vw_CounterpartyAgreements">
           <Key>
             <PropertyRef Name="dmaAgreementOnBoardingId" />
             <PropertyRef Name="dmaFundOnBoardId" />
@@ -835,7 +846,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           </Key>
           <Property Name="dmaAgreementOnBoardingId" Type="Int64" Nullable="false" />
           <Property Name="dmaFundOnBoardId" Type="Int64" Nullable="false" />
-          <Property Name="hmFundId" Type="Int32" />
           <Property Name="dmaClientOnBoardId" Type="Int64" Nullable="false" />
           <Property Name="AgreementTypeId" Type="Int32" />
           <Property Name="AgreementStatusId" Type="Int32" />
@@ -894,9 +904,15 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="FullyExecutedDate" Type="DateTime" Precision="3" />
           <Property Name="StatusDate" Type="DateTime" Precision="0" />
           <Property Name="Responsibility" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IACalculationAgent" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="MTMChangeThresholdPercentage" Type="Double" />
           <Property Name="CounterpartyFamily" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="CounterpartyName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="CounterpartyShortCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CounterpartyRegistrationNumber" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="LEI" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="DomicileChoiceId" Type="Int64" />
+          <Property Name="CounterpartyDomicile" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="FundMapId" Type="Int32" />
           <Property Name="ClientName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="LegalFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -905,16 +921,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <Property Name="AgreementShortName" Type="String" Nullable="false" MaxLength="1106" FixedLength="false" Unicode="true" />
           <Property Name="FundManagerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="IACalculationAgent" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
-          <Property Name="MTMChangeThresholdPercentage" Type="Double" />
-        </EntityType>
-        <EntityType Name="OnBoardingServiceProvider">
-          <Key>
-            <PropertyRef Name="OnBoardingServiceProviderId" />
-          </Key>
-          <Property Name="OnBoardingServiceProviderId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FeeType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ServiceProvider" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1092,6 +1098,8 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
           <EntitySetMapping Name="dmaCounterPartyOnBoardings">
             <EntityTypeMapping TypeName="AdminModel.dmaCounterPartyOnBoarding">
               <MappingFragment StoreEntitySet="dmaCounterPartyOnBoarding">
+                <ScalarProperty Name="DomicileChoiceId" ColumnName="DomicileChoiceId" />
+                <ScalarProperty Name="LEI" ColumnName="LEI" />
                 <ScalarProperty Name="CounterpartyRegistrationNumber" ColumnName="CounterpartyRegistrationNumber" />
                 <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
                 <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
@@ -1187,9 +1195,24 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="OnBoardingServiceProviders">
+            <EntityTypeMapping TypeName="AdminModel.OnBoardingServiceProvider">
+              <MappingFragment StoreEntitySet="OnBoardingServiceProvider">
+                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
+                <ScalarProperty Name="FeeType" ColumnName="FeeType" />
+                <ScalarProperty Name="OnBoardingServiceProviderId" ColumnName="OnBoardingServiceProviderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="vw_HFund">
             <EntityTypeMapping TypeName="AdminModel.vw_HFund">
               <MappingFragment StoreEntitySet="vw_HFund">
+                <ScalarProperty Name="FundStructureId" ColumnName="FundStructureId" />
+                <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
+                <ScalarProperty Name="AdminChoiceId" ColumnName="AdminChoiceId" />
+                <ScalarProperty Name="TradeStartDate" ColumnName="TradeStartDate" />
+                <ScalarProperty Name="ActualLaunchDate" ColumnName="ActualLaunchDate" />
+                <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
                 <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
                 <ScalarProperty Name="FundManagerID" ColumnName="FundManagerID" />
                 <ScalarProperty Name="FundManagerName" ColumnName="FundManagerName" />
@@ -1201,25 +1224,18 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
                 <ScalarProperty Name="varPositionFrequency" ColumnName="varPositionFrequency" />
                 <ScalarProperty Name="DataProviderName" ColumnName="DataProviderName" />
                 <ScalarProperty Name="DataProviderNameId" ColumnName="DataProviderNameId" />
-                <ScalarProperty Name="RegionID" ColumnName="RegionID" />
-                <ScalarProperty Name="StrategyID" ColumnName="StrategyID" />
                 <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
-                <ScalarProperty Name="ClientFundVersion" ColumnName="ClientFundVersion" />
                 <ScalarProperty Name="FundType" ColumnName="FundType" />
                 <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
                 <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
                 <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
-                <ScalarProperty Name="ClientFundName" ColumnName="ClientFundName" />
-                <ScalarProperty Name="FundMapId" ColumnName="FundMapId" />
-                <ScalarProperty Name="intFundID" ColumnName="intFundID" />
+                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="vw_OnboardedAgreements">
-            <EntityTypeMapping TypeName="AdminModel.vw_OnboardedAgreements">
-              <MappingFragment StoreEntitySet="vw_OnboardedAgreements">
-                <ScalarProperty Name="MTMChangeThresholdPercentage" ColumnName="MTMChangeThresholdPercentage" />
-                <ScalarProperty Name="IACalculationAgent" ColumnName="IACalculationAgent" />
+          <EntitySetMapping Name="vw_CounterpartyAgreements">
+            <EntityTypeMapping TypeName="AdminModel.vw_CounterpartyAgreements">
+              <MappingFragment StoreEntitySet="vw_CounterpartyAgreements">
                 <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
                 <ScalarProperty Name="FundManagerName" ColumnName="FundManagerName" />
                 <ScalarProperty Name="AgreementShortName" ColumnName="AgreementShortName" />
@@ -1228,9 +1244,15 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
                 <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
                 <ScalarProperty Name="ClientName" ColumnName="ClientName" />
                 <ScalarProperty Name="FundMapId" ColumnName="FundMapId" />
+                <ScalarProperty Name="CounterpartyDomicile" ColumnName="CounterpartyDomicile" />
+                <ScalarProperty Name="DomicileChoiceId" ColumnName="DomicileChoiceId" />
+                <ScalarProperty Name="LEI" ColumnName="LEI" />
+                <ScalarProperty Name="CounterpartyRegistrationNumber" ColumnName="CounterpartyRegistrationNumber" />
                 <ScalarProperty Name="CounterpartyShortCode" ColumnName="CounterpartyShortCode" />
                 <ScalarProperty Name="CounterpartyName" ColumnName="CounterpartyName" />
                 <ScalarProperty Name="CounterpartyFamily" ColumnName="CounterpartyFamily" />
+                <ScalarProperty Name="MTMChangeThresholdPercentage" ColumnName="MTMChangeThresholdPercentage" />
+                <ScalarProperty Name="IACalculationAgent" ColumnName="IACalculationAgent" />
                 <ScalarProperty Name="Responsibility" ColumnName="Responsibility" />
                 <ScalarProperty Name="StatusDate" ColumnName="StatusDate" />
                 <ScalarProperty Name="FullyExecutedDate" ColumnName="FullyExecutedDate" />
@@ -1289,18 +1311,8 @@ warning 6002: The table/view 'HM.HMADMIN.vw_OnboardedAgreements' does not have a
                 <ScalarProperty Name="AgreementStatusId" ColumnName="AgreementStatusId" />
                 <ScalarProperty Name="AgreementTypeId" ColumnName="AgreementTypeId" />
                 <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
-                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
                 <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
                 <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OnBoardingServiceProviders">
-            <EntityTypeMapping TypeName="AdminModel.OnBoardingServiceProvider">
-              <MappingFragment StoreEntitySet="OnBoardingServiceProvider">
-                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
-                <ScalarProperty Name="FeeType" ColumnName="FeeType" />
-                <ScalarProperty Name="OnBoardingServiceProviderId" ColumnName="OnBoardingServiceProviderId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

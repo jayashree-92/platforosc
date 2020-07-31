@@ -14,13 +14,11 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class vw_HFundOps
     {
-        public int intFundId { get; set; }
-        public int FundMapId { get; set; }
+        public int hmFundId { get; set; }
         public Nullable<long> OnBoardFundId { get; set; }
-        public string CreatedFor { get; set; }
+        public string FundType { get; set; }
         public string ShortFundName { get; set; }
         public string LegalFundName { get; set; }
-        public string ClientFundName { get; set; }
         public string HMRAName { get; set; }
         public string FundStatus { get; set; }
         public string BaseCurrencyShareclass { get; set; }

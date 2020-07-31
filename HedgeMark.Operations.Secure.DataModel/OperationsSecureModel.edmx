@@ -501,8 +501,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
         <EntityType Name="vw_FundAccounts">
           <Key>
             <PropertyRef Name="onBoardingAccountId" />
-            <PropertyRef Name="AgreementLongName" />
-            <PropertyRef Name="AgreementShortName" />
             <PropertyRef Name="hmFundId" />
             <PropertyRef Name="AccountName" />
             <PropertyRef Name="UltimateBeneficiaryAccountNumber" />
@@ -511,11 +509,11 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="dmaAgreementOnBoardingId" Type="bigint" />
           <Property Name="dmaAgreementTypeId" Type="int" />
           <Property Name="AgreementType" Type="varchar" MaxLength="500" />
-          <Property Name="AgreementLongName" Type="nvarchar" MaxLength="1114" Nullable="false" />
-          <Property Name="AgreementShortName" Type="nvarchar" MaxLength="1106" Nullable="false" />
+          <Property Name="AgreementLongName" Type="nvarchar" MaxLength="1114" />
+          <Property Name="AgreementShortName" Type="nvarchar" MaxLength="1106" />
           <Property Name="AccountType" Type="varchar" MaxLength="50" />
+          <Property Name="ApprovalStatus" Type="varchar" MaxLength="50" />
           <Property Name="hmFundId" Type="bigint" Nullable="false" />
-          <Property Name="FundMapId" Type="int" />
           <Property Name="ShortFundName" Type="varchar" MaxLength="100" />
           <Property Name="LegalFundName" Type="varchar" MaxLength="100" />
           <Property Name="dmaCounterpartyId" Type="bigint" />
@@ -1026,8 +1024,8 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
     [vw_FundAccounts].[AgreementLongName] AS [AgreementLongName], 
     [vw_FundAccounts].[AgreementShortName] AS [AgreementShortName], 
     [vw_FundAccounts].[AccountType] AS [AccountType], 
+    [vw_FundAccounts].[ApprovalStatus] AS [ApprovalStatus], 
     [vw_FundAccounts].[hmFundId] AS [hmFundId], 
-    [vw_FundAccounts].[FundMapId] AS [FundMapId], 
     [vw_FundAccounts].[ShortFundName] AS [ShortFundName], 
     [vw_FundAccounts].[LegalFundName] AS [LegalFundName], 
     [vw_FundAccounts].[dmaCounterpartyId] AS [dmaCounterpartyId], 
@@ -2399,8 +2397,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
         <EntityType Name="vw_FundAccounts">
           <Key>
             <PropertyRef Name="onBoardingAccountId" />
-            <PropertyRef Name="AgreementLongName" />
-            <PropertyRef Name="AgreementShortName" />
             <PropertyRef Name="hmFundId" />
             <PropertyRef Name="AccountName" />
             <PropertyRef Name="UltimateBeneficiaryAccountNumber" />
@@ -2409,11 +2405,11 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="dmaAgreementOnBoardingId" Type="Int64" />
           <Property Name="dmaAgreementTypeId" Type="Int32" />
           <Property Name="AgreementType" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="AgreementLongName" Type="String" Nullable="false" MaxLength="1114" FixedLength="false" Unicode="true" />
-          <Property Name="AgreementShortName" Type="String" Nullable="false" MaxLength="1106" FixedLength="false" Unicode="true" />
+          <Property Name="AgreementLongName" Type="String" MaxLength="1114" FixedLength="false" Unicode="true" />
+          <Property Name="AgreementShortName" Type="String" MaxLength="1106" FixedLength="false" Unicode="true" />
           <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ApprovalStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="hmFundId" Type="Int64" Nullable="false" />
-          <Property Name="FundMapId" Type="Int32" />
           <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="LegalFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="dmaCounterpartyId" Type="Int64" />
@@ -2985,8 +2981,8 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
                 <ScalarProperty Name="dmaCounterpartyId" ColumnName="dmaCounterpartyId" />
                 <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
                 <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
-                <ScalarProperty Name="FundMapId" ColumnName="FundMapId" />
                 <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
+                <ScalarProperty Name="ApprovalStatus" ColumnName="ApprovalStatus" />
                 <ScalarProperty Name="AccountType" ColumnName="AccountType" />
                 <ScalarProperty Name="AgreementShortName" ColumnName="AgreementShortName" />
                 <ScalarProperty Name="AgreementLongName" ColumnName="AgreementLongName" />

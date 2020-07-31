@@ -21,8 +21,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string AgreementLongName { get; set; }
         public string AgreementShortName { get; set; }
         public string AccountType { get; set; }
+        public string ApprovalStatus { get; set; }
         public long hmFundId { get; set; }
-        public Nullable<int> FundMapId { get; set; }
         public string ShortFundName { get; set; }
         public string LegalFundName { get; set; }
         public Nullable<long> dmaCounterpartyId { get; set; }

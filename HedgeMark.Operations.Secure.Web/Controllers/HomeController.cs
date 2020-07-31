@@ -166,7 +166,7 @@ namespace HMOSecureWeb.Controllers
 
                 //wire.ReceivingSSITemplate.onBoardingAccountSSITemplateMaps
 
-                var fund = hFunds.FirstOrDefault(s => s.HFundId == wire.hmFundId) ?? new HFund();
+                var fund = hFunds.FirstOrDefault(s => s.hmFundId == wire.hmFundId) ?? new HFund();
                 var thisWire = new WireTicket
                 {
                     HMWire = wire,
@@ -814,8 +814,8 @@ namespace HMOSecureWeb.Controllers
             List<AgreementBaseDetails> onBoardedAgreements;
             using (var context = new AdminContext())
             {
-                onBoardedAgreements = (from oAgreement in context.vw_OnboardedAgreements
-                                       where oAgreement.hmFundId == fundId && oAgreement.HMOpsStatus == "Approved"
+                onBoardedAgreements = (from oAgreement in context.vw_CounterpartyAgreements
+                                       where oAgreement.FundMapId == fundId && oAgreement.HMOpsStatus == "Approved"
                                        select new AgreementBaseDetails { AgreementId = oAgreement.dmaAgreementOnBoardingId, AgreementShortName = oAgreement.AgreementShortName }).ToList();
             }
 

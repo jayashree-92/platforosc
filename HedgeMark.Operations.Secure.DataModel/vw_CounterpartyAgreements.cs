@@ -12,11 +12,10 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class vw_OnboardedAgreements
+    public partial class vw_CounterpartyAgreements
     {
         public long dmaAgreementOnBoardingId { get; set; }
         public long dmaFundOnBoardId { get; set; }
-        public Nullable<int> hmFundId { get; set; }
         public long dmaClientOnBoardId { get; set; }
         public Nullable<int> AgreementTypeId { get; set; }
         public Nullable<int> AgreementStatusId { get; set; }
@@ -75,9 +74,15 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<System.DateTime> FullyExecutedDate { get; set; }
         public Nullable<System.DateTime> StatusDate { get; set; }
         public string Responsibility { get; set; }
+        public string IACalculationAgent { get; set; }
+        public Nullable<double> MTMChangeThresholdPercentage { get; set; }
         public string CounterpartyFamily { get; set; }
         public string CounterpartyName { get; set; }
         public string CounterpartyShortCode { get; set; }
+        public string CounterpartyRegistrationNumber { get; set; }
+        public string LEI { get; set; }
+        public Nullable<long> DomicileChoiceId { get; set; }
+        public string CounterpartyDomicile { get; set; }
         public Nullable<int> FundMapId { get; set; }
         public string ClientName { get; set; }
         public string LegalFundName { get; set; }
@@ -86,7 +91,5 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string AgreementShortName { get; set; }
         public string FundManagerName { get; set; }
         public string AdminChoice { get; set; }
-        public string IACalculationAgent { get; set; }
-        public Nullable<double> MTMChangeThresholdPercentage { get; set; }
     }
 }

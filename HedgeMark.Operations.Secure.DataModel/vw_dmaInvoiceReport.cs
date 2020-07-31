@@ -15,30 +15,30 @@ namespace HedgeMark.Operations.Secure.DataModel
     public partial class vw_dmaInvoiceReport
     {
         public long dmaInvoiceReportId { get; set; }
+        public long FundId { get; set; }
         public string LegalFundName { get; set; }
-        public string ClientFundName { get; set; }
         public string ShortFundName { get; set; }
         public string FeeType { get; set; }
         public string FileName { get; set; }
         public string Vendor { get; set; }
         public string FileSource { get; set; }
+        public string FilePath { get; set; }
         public string InvoiceNo { get; set; }
         public System.DateTime InvoiceDate { get; set; }
+        public System.DateTime OriginalContextMonth { get; set; }
         public Nullable<System.DateTime> ServicesCoveredFrom { get; set; }
         public Nullable<System.DateTime> ServicesCoveredTo { get; set; }
         public double Amount { get; set; }
         public Nullable<System.DateTime> PaidDate { get; set; }
+        public Nullable<bool> IsApprovalRequired { get; set; }
         public bool ClientApproval { get; set; }
         public string Currency { get; set; }
         public string ClientApprovalStatus { get; set; }
         public string ApprovedBy { get; set; }
         public System.DateTime InvoiceCreatedTimestamp { get; set; }
         public Nullable<System.DateTime> ApprovedTimestamp { get; set; }
-        public Nullable<int> Child { get; set; }
-        public System.DateTime OriginalContextMonth { get; set; }
         public bool SendToClientPortalForApproval { get; set; }
-        public long ClientFundId { get; set; }
-        public string FilePath { get; set; }
-        public Nullable<bool> IsApprovalRequired { get; set; }
+        public Nullable<System.DateTime> ClientStatusUpdatedAt { get; set; }
+        public Nullable<int> Child { get; set; }
     }
 }

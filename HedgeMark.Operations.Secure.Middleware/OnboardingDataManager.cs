@@ -39,7 +39,7 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.vw_OnboardedAgreements.AsNoTracking().ToDictionary(s => s.dmaAgreementOnBoardingId, s => s.AgreementShortName);
+                return context.vw_CounterpartyAgreements.AsNoTracking().ToDictionary(s => s.dmaAgreementOnBoardingId, s => s.AgreementShortName);
             }
         }
 
@@ -81,13 +81,13 @@ namespace HMOSecureMiddleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                return context.vw_OnboardedAgreements
-                    .Where(a => a.AgreementStatus != "Terminated – Agreement" && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || hmFundIds.Contains(a.hmFundId ?? 0)))
+                return context.vw_CounterpartyAgreements
+                    .Where(a => a.AgreementStatus != "Terminated – Agreement" && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || hmFundIds.Contains(a.FundMapId ?? 0)))
                     .AsNoTracking().Select(x => new AgreementBaseData()
                     {
                         AgreementOnboardingId = x.dmaAgreementOnBoardingId,
                         AgreementShortName = x.AgreementShortName,
-                        HMFundId = x.hmFundId ?? 0,
+                        HMFundId = x.FundMapId ?? 0,
                         AgreementTypeId = x.AgreementTypeId ?? 0,
                         AgreementType = x.AgreementType,
                         CounterpartyFamilyId = x.dmaCounterPartyFamilyId ?? 0,
@@ -110,7 +110,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-                return context.vw_OnboardedAgreements.Where(x => x.hmFundId == fundId && x.dmaCounterPartyOnBoardId.HasValue && x.HMOpsStatus == "Approved").Select(x => x.dmaCounterPartyOnBoardId.Value).Distinct().ToList();
+                return context.vw_CounterpartyAgreements.Where(x => x.FundMapId == fundId && x.dmaCounterPartyOnBoardId.HasValue && x.HMOpsStatus == "Approved").Select(x => x.dmaCounterPartyOnBoardId.Value).Distinct().ToList();
             }
         }
 
@@ -119,7 +119,7 @@ namespace HMOSecureMiddleware
         {
             using (var context = new AdminContext())
             {
-                var intFundIds = context.vw_OnboardedAgreements.Where(x => (x.dmaCounterPartyOnBoardId ?? 0) == brokerId && x.hmFundId.HasValue && x.HMOpsStatus == "Approved").Select(x => x.hmFundId.Value).Distinct().ToList();
+                var intFundIds = context.vw_CounterpartyAgreements.Where(x => (x.dmaCounterPartyOnBoardId ?? 0) == brokerId && x.FundMapId.HasValue && x.HMOpsStatus == "Approved").Select(x => x.FundMapId.Value).Distinct().ToList();
                 return intFundIds.Select(Convert.ToInt64).ToList();
             }
         }

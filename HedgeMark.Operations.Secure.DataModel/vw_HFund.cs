@@ -14,17 +14,12 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class vw_HFund
     {
-        public int intFundID { get; set; }
-        public int FundMapId { get; set; }
-        public string ClientFundName { get; set; }
+        public int hmFundId { get; set; }
         public string ShortFundName { get; set; }
         public string LegalFundName { get; set; }
         public string HMRAName { get; set; }
         public string FundType { get; set; }
-        public string ClientFundVersion { get; set; }
         public string FundStatus { get; set; }
-        public int StrategyID { get; set; }
-        public Nullable<int> RegionID { get; set; }
         public Nullable<int> DataProviderNameId { get; set; }
         public string DataProviderName { get; set; }
         public string varPositionFrequency { get; set; }
@@ -36,5 +31,11 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string FundManagerName { get; set; }
         public Nullable<int> FundManagerID { get; set; }
         public Nullable<long> dmaFundOnBoardId { get; set; }
+        public Nullable<long> dmaClientOnBoardId { get; set; }
+        public Nullable<System.DateTime> ActualLaunchDate { get; set; }
+        public Nullable<System.DateTime> TradeStartDate { get; set; }
+        public Nullable<long> AdminChoiceId { get; set; }
+        public string AdminChoice { get; set; }
+        public Nullable<long> FundStructureId { get; set; }
     }
 }

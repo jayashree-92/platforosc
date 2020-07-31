@@ -95,7 +95,7 @@ namespace HMOSecureMiddleware
                                where obP.userId == userId
                                select new AuthorizedEntity()
                                {
-                                   Id = vf.intFundID,
+                                   Id = vf.hmFundId,
                                    Level = obP.dmaPermissionLevelId
                                }).ToList();
                 return hmFunds;
