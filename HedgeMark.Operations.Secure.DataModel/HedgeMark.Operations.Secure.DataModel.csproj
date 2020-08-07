@@ -113,6 +113,9 @@
     <Compile Include="hmsBulkUploadLog.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsCurrency.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsMQLog.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
@@ -161,6 +164,9 @@
     <Compile Include="hmsWireMessageType.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsWirePortalCutoff.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsWirePurposeLkup.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
@@ -202,9 +208,6 @@
     <Compile Include="onBoardingCashInstruction.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="onBoardingCurrency.cs">
-      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="onBoardingModule.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
@@ -218,9 +221,6 @@
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingSSITemplateDocument.cs">
-      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="onBoardingWirePortalCutoff.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="OperationsContext.Context.cs">

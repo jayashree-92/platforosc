@@ -12,15 +12,15 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class onBoardingWirePortalCutoff
+    public partial class hmsWirePortalCutoff
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public onBoardingWirePortalCutoff()
+        public hmsWirePortalCutoff()
         {
             this.onBoardingAccounts = new HashSet<onBoardingAccount>();
         }
     
-        public long onBoardingWirePortalCutoffId { get; set; }
+        public long hmsWirePortalCutoffId { get; set; }
         public string CashInstruction { get; set; }
         public string Country { get; set; }
         public string Currency { get; set; }

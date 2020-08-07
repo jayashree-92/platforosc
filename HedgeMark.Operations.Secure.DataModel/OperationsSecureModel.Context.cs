@@ -44,10 +44,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
         public virtual DbSet<onBoardingAuthorizedParty> onBoardingAuthorizedParties { get; set; }
         public virtual DbSet<onBoardingCashInstruction> onBoardingCashInstructions { get; set; }
-        public virtual DbSet<onBoardingCurrency> onBoardingCurrencies { get; set; }
         public virtual DbSet<OnBoardingSSITemplateAccountType> OnBoardingSSITemplateAccountTypes { get; set; }
         public virtual DbSet<onBoardingSSITemplateDocument> onBoardingSSITemplateDocuments { get; set; }
-        public virtual DbSet<onBoardingWirePortalCutoff> onBoardingWirePortalCutoffs { get; set; }
         public virtual DbSet<hmsWireSenderInformation> hmsWireSenderInformations { get; set; }
         public virtual DbSet<onBoardingAccountModuleAssociation> onBoardingAccountModuleAssociations { get; set; }
         public virtual DbSet<onBoardingModule> onBoardingModules { get; set; }
@@ -63,6 +61,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsSwiftGroup> hmsSwiftGroups { get; set; }
         public virtual DbSet<hmsWire> hmsWires { get; set; }
         public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
+        public virtual DbSet<hmsCurrency> hmsCurrencies { get; set; }
+        public virtual DbSet<hmsWirePortalCutoff> hmsWirePortalCutoffs { get; set; }
         public virtual DbSet<vw_FundAccounts> vw_FundAccounts { get; set; }
     }
 }

@@ -732,7 +732,7 @@ namespace HMOSecureWeb.Controllers
                             Beneficiary = new onBoardingAccountBICorABA(),
                             Intermediary = new onBoardingAccountBICorABA(),
                             UltimateBeneficiary = new onBoardingAccountBICorABA(),
-                            WirePortalCutoff = new onBoardingWirePortalCutoff(),
+                            WirePortalCutoff = new hmsWirePortalCutoff(),
                             SwiftGroup = new hmsSwiftGroup(),
                             onBoardingAccountId = string.IsNullOrWhiteSpace(account["Account Id"]) ? 0 : long.Parse(account["Account Id"]),
                             UltimateBeneficiaryAccountNumber = account["Account Number"],

@@ -785,7 +785,7 @@ namespace HMOSecureWeb.Controllers
                 context.Configuration.ProxyCreationEnabled = false;
                 var adhocWirePurposes = context.hmsWirePurposeLkups.Where(s => s.ReportName == ReportName.AdhocWireReport && s.IsApproved).ToList();
                 var wirePurposes = adhocWirePurposes.Select(s => new { id = s.hmsWirePurposeId, text = s.Purpose }).ToList();
-                var currencies = context.onBoardingCurrencies.AsNoTracking().Select(s => new { id = s.Currency, text = s.Currency }).ToList();
+                var currencies = context.hmsCurrencies.AsNoTracking().Select(s => new { id = s.Currency, text = s.Currency }).ToList();
                 return Json(new { wirePurposes, currencies });
             }
         }

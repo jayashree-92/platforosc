@@ -18,5 +18,7 @@ BEGIN
 	ALTER TABLE onBoardingAccount ADD dmaCounterpartyId BIGINT
 END
 
-
---select * from onBoardingSSITemplate
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'onBoardingAccount' AND COLUMN_NAME = 'MarginAccountNumber')
+BEGIN
+	ALTER TABLE onBoardingAccount ADD MarginAccountNumber VARCHAR(100)
+END

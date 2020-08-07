@@ -12,9 +12,9 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class onBoardingCurrency
+    public partial class hmsCurrency
     {
-        public long onBoardingCurrencyId { get; set; }
+        public long hmsCurrencyId { get; set; }
         public string Currency { get; set; }
     }
 }

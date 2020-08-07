@@ -614,21 +614,21 @@ namespace HMOSecureMiddleware
 
         #region Wire Portal Cutoffs
 
-        public static List<onBoardingWirePortalCutoff> GetWirePortalCutoffData()
+        public static List<hmsWirePortalCutoff> GetWirePortalCutoffData()
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingWirePortalCutoffs.ToList();
+                return context.hmsWirePortalCutoffs.ToList();
             }
         }
 
-        public static void SaveWirePortalCutoff(onBoardingWirePortalCutoff wirePortalCutoff)
+        public static void SaveWirePortalCutoff(hmsWirePortalCutoff wirePortalCutoff)
         {
             using (var context = new OperationsSecureContext())
             {
-                context.onBoardingWirePortalCutoffs.AddOrUpdate(wirePortalCutoff);
+                context.hmsWirePortalCutoffs.AddOrUpdate(wirePortalCutoff);
                 context.SaveChanges();
             }
         }
@@ -637,8 +637,8 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                var wirePortalCutoff = context.onBoardingWirePortalCutoffs.First(s => s.onBoardingWirePortalCutoffId == wireCutoffId);
-                context.onBoardingWirePortalCutoffs.Remove(wirePortalCutoff);
+                var wirePortalCutoff = context.hmsWirePortalCutoffs.First(s => s.hmsWirePortalCutoffId == wireCutoffId);
+                context.hmsWirePortalCutoffs.Remove(wirePortalCutoff);
                 context.SaveChanges();
             }
         }

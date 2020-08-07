@@ -33,17 +33,17 @@ namespace HMOSecureWeb.Controllers
             return Json(new { cashInstructions, currencies, timeZones }, JsonRequestBehavior.AllowGet);
         }
 
-        private onBoardingWirePortalCutoff GetWirePortalCutOffData(long wireCutoffId)
+        private hmsWirePortalCutoff GetWirePortalCutOffData(long wireCutoffId)
         {
             using (var context = new OperationsSecureContext())
             {
-                return context.onBoardingWirePortalCutoffs.FirstOrDefault(s => s.onBoardingWirePortalCutoffId == wireCutoffId) ?? new onBoardingWirePortalCutoff();
+                return context.hmsWirePortalCutoffs.FirstOrDefault(s => s.hmsWirePortalCutoffId == wireCutoffId) ?? new hmsWirePortalCutoff();
             }
         }
 
-        public void SaveWirePortalCutoff(onBoardingWirePortalCutoff wirePortalCutoff)
+        public void SaveWirePortalCutoff(hmsWirePortalCutoff wirePortalCutoff)
         {
-            var originalCutOff = GetWirePortalCutOffData(wirePortalCutoff.onBoardingWirePortalCutoffId);
+            var originalCutOff = GetWirePortalCutOffData(wirePortalCutoff.hmsWirePortalCutoffId);
 
             wirePortalCutoff.RecCreatedBy = UserDetails.Id;
             wirePortalCutoff.RecCreatedAt = DateTime.Now;
@@ -52,7 +52,7 @@ namespace HMOSecureWeb.Controllers
             AuditWireCutoffChanges(wirePortalCutoff, originalCutOff);
         }
 
-        private void AuditWireCutoffChanges(onBoardingWirePortalCutoff wirePortalCutoff, onBoardingWirePortalCutoff originalCutOff, bool isDeleted = false)
+        private void AuditWireCutoffChanges(hmsWirePortalCutoff wirePortalCutoff, hmsWirePortalCutoff originalCutOff, bool isDeleted = false)
         {
             var fieldsChanged = new List<string>();
 
@@ -66,7 +66,7 @@ namespace HMOSecureWeb.Controllers
             //Log the changes in user audits
             var auditData = new hmsUserAuditLog
             {
-                Action = isDeleted ? "Deleted" : originalCutOff.onBoardingWirePortalCutoffId > 0 ? "Edited" : "Added",
+                Action = isDeleted ? "Deleted" : originalCutOff.hmsWirePortalCutoffId > 0 ? "Edited" : "Added",
                 Module = "Wire Cutoff",
                 Log = string.Format("Cash Instruction: <i>{0}</i><br/>Currency: <i>{1}</i>", wirePortalCutoff.CashInstruction,
                     wirePortalCutoff.Currency),
@@ -88,7 +88,7 @@ namespace HMOSecureWeb.Controllers
             var originalCutOff = GetWirePortalCutOffData(wireCutoffId);
             WireDataManager.DeleteWirePortalCutoff(wireCutoffId);
 
-            AuditWireCutoffChanges(new onBoardingWirePortalCutoff() { onBoardingWirePortalCutoffId = wireCutoffId }, originalCutOff, true);
+            AuditWireCutoffChanges(new hmsWirePortalCutoff() { hmsWirePortalCutoffId = wireCutoffId }, originalCutOff, true);
         }
 
 
@@ -106,7 +106,7 @@ namespace HMOSecureWeb.Controllers
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
-        private List<Row> BuildExportRows(List<onBoardingWirePortalCutoff> wireCutoffData)
+        private List<Row> BuildExportRows(List<hmsWirePortalCutoff> wireCutoffData)
         {
             var wireCutoffRows = new List<Row>();
 

@@ -32,6 +32,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string AccountNumber { get; set; }
         public string FFCNumber { get; set; }
         public string UltimateBeneficiaryAccountNumber { get; set; }
+        public string MarginAccountNumber { get; set; }
         public string Currency { get; set; }
         public string AccountPurpose { get; set; }
         public string AccountStatus { get; set; }

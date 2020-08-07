@@ -105,7 +105,7 @@ namespace HMOSecureMiddleware
                 return null;
 
             if (account.WirePortalCutoff == null)
-                account.WirePortalCutoff = new onBoardingWirePortalCutoff() { CutOffTimeZone = "EST" };
+                account.WirePortalCutoff = new hmsWirePortalCutoff() { CutOffTimeZone = "EST" };
             if (account.Beneficiary == null)
                 account.Beneficiary = new onBoardingAccountBICorABA();
             if (account.Intermediary == null)
@@ -643,11 +643,11 @@ namespace HMOSecureMiddleware
             return ssiTemplate.onBoardingSSITemplateId;
         }
 
-        public static List<onBoardingCurrency> GetAllCurrencies()
+        public static List<hmsCurrency> GetAllCurrencies()
         {
             using (var context = new OperationsSecureContext())
             {
-                return context.onBoardingCurrencies.AsNoTracking().ToList();
+                return context.hmsCurrencies.AsNoTracking().ToList();
             }
         }
 
@@ -655,8 +655,8 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
-                var onBoardingCurrency = new onBoardingCurrency { Currency = currency };
-                context.onBoardingCurrencies.Add(onBoardingCurrency);
+                var onBoardingCurrency = new hmsCurrency() { Currency = currency };
+                context.hmsCurrencies.Add(onBoardingCurrency);
                 context.SaveChanges();
             }
         }
@@ -698,15 +698,15 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static onBoardingWirePortalCutoff GetCutoffTime(string cashInstruction, string currency)
+        public static hmsWirePortalCutoff GetCutoffTime(string cashInstruction, string currency)
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                var onBoardingWirePortalCutoff = context.onBoardingWirePortalCutoffs.AsNoTracking().FirstOrDefault(x => x.CashInstruction == cashInstruction && x.Currency == currency);
-                return onBoardingWirePortalCutoff ?? new onBoardingWirePortalCutoff();
+                var onBoardingWirePortalCutoff = context.hmsWirePortalCutoffs.AsNoTracking().FirstOrDefault(x => x.CashInstruction == cashInstruction && x.Currency == currency);
+                return onBoardingWirePortalCutoff ?? new hmsWirePortalCutoff();
             }
         }
 

@@ -77,6 +77,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> SwiftGroupId { get; set; }
         public string AssociatedCustodyAcctNumber { get; set; }
         public Nullable<long> dmaCounterpartyId { get; set; }
+        public Nullable<long> DummyClientFundId { get; set; }
+        public string MarginAccountNumber { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsAccountCallback> hmsAccountCallbacks { get; set; }
@@ -88,12 +90,12 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual onBoardingAccountBICorABA Beneficiary { get; set; }
         public virtual onBoardingAccountBICorABA Intermediary { get; set; }
         public virtual onBoardingAccountBICorABA UltimateBeneficiary { get; set; }
-        public virtual onBoardingWirePortalCutoff WirePortalCutoff { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountDocument> onBoardingAccountDocuments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountModuleAssociation> onBoardingAccountModuleAssociations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
+        public virtual hmsWirePortalCutoff WirePortalCutoff { get; set; }
     }
 }
