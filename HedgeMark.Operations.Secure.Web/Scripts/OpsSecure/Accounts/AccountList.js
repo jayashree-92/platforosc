@@ -727,6 +727,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         var account = rowElement.Account;
 
+
         $scope.onBoardingAccountId = account.onBoardingAccountId;
         $scope.FundId = account.hmFundId;
         $scope.AgreementId = account.dmaAgreementOnBoardingId;
@@ -802,6 +803,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.fundName = accDetails.FundName;
         $scope.isLoad = true;
 
+        if ($scope.AgreementTypeId > 0) {
+            $scope.AgreementType = $.grep($scope.agreementTypes, function (v) { return v.id == $scope.AgreementTypeId; })[0].text;
+        }
+        
         $http.get("/Accounts/GetOnBoardingAccount?accountId=" + $scope.onBoardingAccountId).then(function (response) {
             var account = response.data.OnBoardingAccount;
             //$(".accntActions button").hide();
@@ -822,9 +827,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             var agreementType = {};
             if ($scope.AgreementTypeId > 0) {
-
                 agreementType = $.grep($scope.agreementTypes, function (v) { return v.id == $scope.AgreementTypeId; })[0];
-                $scope.AgreementType = agreementType.text;
             }
 
             if (agreementType != undefined && (agreementType.text == "PB" || agreementType.text == "FCM" || $scope.AccountType == "DDA")) {

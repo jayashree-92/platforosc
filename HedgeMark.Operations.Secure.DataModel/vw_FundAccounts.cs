@@ -36,6 +36,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string Currency { get; set; }
         public string AccountPurpose { get; set; }
         public string AccountStatus { get; set; }
+        public string AuthorizedParty { get; set; }
         public string Description { get; set; }
         public string TickerorISIN { get; set; }
         public string CashSweep { get; set; }

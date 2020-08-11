@@ -530,6 +530,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="Currency" Type="varchar" MaxLength="50" />
           <Property Name="AccountPurpose" Type="varchar" MaxLength="50" />
           <Property Name="AccountStatus" Type="varchar" MaxLength="50" />
+          <Property Name="AuthorizedParty" Type="varchar" MaxLength="500" />
           <Property Name="Description" Type="varchar" MaxLength="8000" />
           <Property Name="TickerorISIN" Type="varchar" MaxLength="200" />
           <Property Name="CashSweep" Type="varchar" MaxLength="100" />
@@ -1043,6 +1044,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
     [vw_FundAccounts].[Currency] AS [Currency], 
     [vw_FundAccounts].[AccountPurpose] AS [AccountPurpose], 
     [vw_FundAccounts].[AccountStatus] AS [AccountStatus], 
+    [vw_FundAccounts].[AuthorizedParty] AS [AuthorizedParty], 
     [vw_FundAccounts].[Description] AS [Description], 
     [vw_FundAccounts].[TickerorISIN] AS [TickerorISIN], 
     [vw_FundAccounts].[CashSweep] AS [CashSweep], 
@@ -2431,6 +2433,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="AccountPurpose" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="AccountStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AuthorizedParty" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
           <Property Name="TickerorISIN" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="CashSweep" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -2981,6 +2984,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
                 <ScalarProperty Name="CashSweep" ColumnName="CashSweep" />
                 <ScalarProperty Name="TickerorISIN" ColumnName="TickerorISIN" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="AuthorizedParty" ColumnName="AuthorizedParty" />
                 <ScalarProperty Name="AccountStatus" ColumnName="AccountStatus" />
                 <ScalarProperty Name="AccountPurpose" ColumnName="AccountPurpose" />
                 <ScalarProperty Name="Currency" ColumnName="Currency" />

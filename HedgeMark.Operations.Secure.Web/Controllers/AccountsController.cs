@@ -661,6 +661,7 @@ namespace HMOSecureWeb.Controllers
                 row["Ultimate Beneficiary Account Name"] = account.UltimateBeneficiaryAccountName;
                 row["FFC Name"] = account.FFCName;
                 row["FFC Number"] = account.FFCNumber;
+                row["Margin Account Number"] = account.MarginAccountNumber;
                 row["Reference"] = account.Reference;
                 row["Status"] = account.onBoardingAccountStatus;
                 row["Comments"] = account.StatusComments;
@@ -913,6 +914,7 @@ namespace HMOSecureWeb.Controllers
 
                         accountDetail.FFCName = account["FFC Name"];
                         accountDetail.FFCNumber = account["FFC Number"];
+                        accountDetail.MarginAccountNumber = account["Margin Account Number"];
                         accountDetail.Reference = account["Reference"];
                         accountDetail.onBoardingAccountStatus = account["Status"];
                         accountDetail.StatusComments = account["Comments"];
@@ -987,6 +989,7 @@ namespace HMOSecureWeb.Controllers
             row["Ultimate Beneficiary BIC or ABA"] = String.Empty;
             row["FFC Name"] = String.Empty;
             row["FFC Number"] = String.Empty;
+            row["Margin Account Number"] = String.Empty;
             row["Reference"] = String.Empty;
             row["Status"] = String.Empty;
             row["Comments"] = String.Empty;
