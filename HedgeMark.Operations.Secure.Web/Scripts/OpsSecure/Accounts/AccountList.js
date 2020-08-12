@@ -140,12 +140,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
     $scope.contactTable = [];
-    function viewContactTable(data, key) {
+    function viewContactTable(data) {
 
-        if ($("#contactTable" + key).hasClass("initialized")) {
-            fnDestroyDataTable("#contactTable" + key);
+        if ($("#contactTable0").hasClass("initialized")) {
+            fnDestroyDataTable("#contactTable0");
         }
-        $scope.contactTable[key] = $("#contactTable" + key).not(".initialized").addClass("initialized").DataTable({
+        $scope.contactTable[0] = $("#contactTable0").not(".initialized").addClass("initialized").DataTable({
             "bDestroy": true,
             // responsive: true,
             aaData: data,
@@ -192,7 +192,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
 
         $timeout(function () {
-            $scope.contactTable[key].columns.adjust().draw(true);
+            $scope.contactTable[0].columns.adjust().draw(true);
         }, 1000);
     }
 
@@ -806,7 +806,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if ($scope.AgreementTypeId > 0) {
             $scope.AgreementType = $.grep($scope.agreementTypes, function (v) { return v.id == $scope.AgreementTypeId; })[0].text;
         }
-        
+
         $http.get("/Accounts/GetOnBoardingAccount?accountId=" + $scope.onBoardingAccountId).then(function (response) {
             var account = response.data.OnBoardingAccount;
             //$(".accntActions button").hide();
@@ -1440,8 +1440,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
     angular.element("#txtDetail").on("focusin", function () { angular.element("#txtDetail").popover("hide"); });
 
-    $scope.fnLoadContactDetails = function (brokerId, contactName, index) {
-        $http.get("/Accounts/GetAllOnBoardingAccountContacts?entityId=" + brokerId).then(function (response) {
+    $scope.fnLoadContactDetails = function (contactName) {
+        $http.get("/Accounts/GetAllOnBoardingAccountContacts?brokerId=" + $scope.CounterpartyFamilyId).then(function (response) {
             $scope.contactNames = [];
             if (response.data.OnBoardingContacts.length > 0) {
                 $.each(response.data.OnBoardingContacts, function (i, v) {
@@ -1450,7 +1450,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 });
             }
 
-            $("#liContacts" + index).select2({
+            $("#liContacts0").select2({
                 placeholder: "Select Contacts",
                 multiple: true,
                 //templateResult: groupNameFormat,
@@ -1459,11 +1459,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             });
             if (contactName != null && contactName != undefined && contactName != "") {
                 var names = contactName.split(',');
-                $("#liContacts" + index).select2("val", names);
+                $("#liContacts0").select2("val", names);
                 $scope.onboardingContacts = $filter('filter')(($scope.OnBoardingContactsDetails), function (c) {
                     return $.inArray(c.id.toString(), names) > -1;
                 });
-                viewContactTable($scope.onboardingContacts, index);
+                viewContactTable($scope.onboardingContacts);
             }
         });
         //}

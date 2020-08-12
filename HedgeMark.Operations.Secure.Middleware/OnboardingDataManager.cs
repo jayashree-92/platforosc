@@ -102,7 +102,7 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.dmaOnBoardingContactDetails.Where(contact => contact.dmaOnBoardingTypeId == onBoardingTypeId && contact.dmaOnBoardingEntityId == entityId && !contact.IsDeleted).ToList();
+                return context.dmaOnBoardingContactDetails.Where(contact => contact.dmaOnBoardingTypeId == onBoardingTypeId && contact.dmaOnBoardingEntityId == entityId && contact.Wires && !contact.IsDeleted).ToList();
             }
         }
 
