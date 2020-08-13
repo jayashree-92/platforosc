@@ -744,11 +744,17 @@ namespace HMOSecureWeb.Controllers
                         if (account["Entity Type"] == "Agreement")
                         {
                             accountDetail.dmaAgreementOnBoardingId = agreements.FirstOrDefault(x => x.Value == account["Agreement Name"]).Key;
+
+                            //No agreement available for given name
+                            if (accountDetail.dmaAgreementOnBoardingId == 0)
+                                continue;
+
                             accountDetail.hmFundId = hFunds.FirstOrDefault(x => x.LegalFundName == account["Fund Name"]).HmFundId;
                             var counterPartyByAgreement = onboardingAccounts.FirstOrDefault(s => s.dmaAgreementOnBoardingId == accountDetail.dmaAgreementOnBoardingId);
                             if (counterPartyByAgreement != null)
                             {
                                 accountDetail.dmaCounterpartyFamilyId = counterPartyByAgreement.dmaCounterpartyFamilyId;
+                                accountDetail.dmaCounterpartyId = counterPartyByAgreement.dmaCounterpartyId;
                             }
 
                             if (accountDetail.onBoardingAccountId == 0)
