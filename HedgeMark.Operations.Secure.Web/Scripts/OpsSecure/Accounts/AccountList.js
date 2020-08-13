@@ -301,6 +301,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if (!$scope.isEdit) {
             $scope.AgreementTypeId = 0;
             $scope.CounterpartyFamilyId = 0;
+            $scope.CounterpartyId = 0;
             $scope.AgrementType = "";
             $scope.broker = "";
         }
@@ -403,6 +404,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.AgreementTypeId = $(this).select2('data').AgreementTypeId;
             $scope.AgreementType = $(this).select2('data').AgreementType;
             $scope.CounterpartyFamilyId = $(this).select2('data').CounterpartyFamilyId;
+            $scope.CounterpartyId = $(this).select2('data').CounterpartyId;
+
             var broker = $filter('filter')(angular.copy($scope.counterpartyFamilies), { 'CounterpartyFamilyId': $scope.CounterpartyFamilyId }, true)[0];
             if (broker != undefined)
                 $scope.broker = broker.text;
@@ -414,7 +417,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     angular.element(document).on('change', "#liBroker", function (event) {
         event.stopPropagation();
         $scope.CounterpartyId = $(this).val();
-
+        
         if ($(this).val() > 0) {
             $scope.CounterpartyName = $(this).select2('data').text;
             $scope.CounterpartyFamilyName = $(this).select2('data').familyText;
@@ -732,6 +735,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.FundId = account.hmFundId;
         $scope.AgreementId = account.dmaAgreementOnBoardingId;
         $scope.CounterpartyFamilyId = account.dmaCounterpartyFamilyId;
+        $scope.CounterpartyId = account.dmaCounterpartyId;
         $scope.AccountType = account.AccountType;
 
         $scope.AgreementTypeId = rowElement.AgreementTypeId;
@@ -796,6 +800,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.FundId = accDetails.hmFundId;
         $scope.AgreementTypeId = rowElement.AgreementTypeId;
         $scope.CounterpartyFamilyId = accDetails.dmaCounterpartyFamilyId;
+        $scope.CounterpartyId = accDetails.dmaCounterpartyId;
         $scope.AccountType = accDetails.AccountType;
         $scope.CounterpartyFamilyName = rowElement.CounterpartyFamilyName;
         $scope.CounterpartyName = rowElement.CounterpartyName;
