@@ -8,16 +8,18 @@
         <EntityTypeShape EntityType="AdminModel.aspnet_Roles" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.aspnet_Users" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.hLoginRegistration" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AdminModel.dmaAgreementType" Width="1.5" PointX="7.75" PointY="26.75" />
-        <EntityTypeShape EntityType="AdminModel.dmaCounterPartyOnBoarding" Width="1.5" PointX="13.125" PointY="30.625" />
+        <EntityTypeShape EntityType="AdminModel.dmaAgreementType" Width="1.5" PointX="18.75" PointY="4" />
+        <EntityTypeShape EntityType="AdminModel.dmaCounterPartyOnBoarding" Width="1.5" PointX="24.125" PointY="7.875" />
         <EntityTypeShape EntityType="AdminModel.dmaFundOnBoardPermission" Width="1.5" PointX="15" PointY="10.875" />
         <AssociationConnector Association="AdminModel.aspnet_UsersInRoles" />
-        <EntityTypeShape EntityType="AdminModel.dmaCounterpartyFamily" Width="1.5" PointX="6.875" PointY="23.25" />
+        <EntityTypeShape EntityType="AdminModel.dmaCounterpartyFamily" Width="1.5" PointX="17.875" PointY="0.5" />
         <AssociationConnector Association="AdminModel.FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId" />
-        <EntityTypeShape EntityType="AdminModel.dmaOnBoardingContactDetail" Width="1.5" PointX="17.375" PointY="0.75" />
+        <EntityTypeShape EntityType="AdminModel.dmaOnBoardingContactDetail" Width="1.5" PointX="12.125" PointY="0.5" />
         <EntityTypeShape EntityType="AdminModel.OnBoardingServiceProvider" Width="1.5" PointX="7.375" PointY="6.75" />
         <EntityTypeShape EntityType="AdminModel.vw_HFund" Width="1.5" PointX="0.75" PointY="4.75" />
         <EntityTypeShape EntityType="AdminModel.vw_CounterpartyAgreements" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="AdminModel.onboardingContactFundMap" Width="1.5" PointX="14.375" PointY="4.375" />
+        <AssociationConnector Association="AdminModel.FK_onboardingContactFundMap_dmaOnBoardingContactDetailId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

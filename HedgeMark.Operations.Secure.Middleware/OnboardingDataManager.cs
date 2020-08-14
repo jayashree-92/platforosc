@@ -83,7 +83,7 @@ namespace HMOSecureMiddleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.dmaCounterPartyOnBoardings.Where(c => !c.IsDeleted).Include(x => x.dmaCounterpartyFamily).ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
+                return context.dmaCounterPartyOnBoardings.Where(c => !c.IsDeleted).ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
             }
         }
 
@@ -120,13 +120,20 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<dmaOnBoardingContactDetail> GetAllOnBoardingContacts(long onBoardingTypeId, long entityId)
+        public static List<dmaOnBoardingContactDetail> GetAllOnBoardingContacts(long onBoardingTypeId, long entityId, long hmFundId)
         {
             using (var context = new AdminContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.dmaOnBoardingContactDetails.Where(contact => contact.dmaOnBoardingTypeId == onBoardingTypeId && contact.dmaOnBoardingEntityId == entityId && contact.Wires && !contact.IsDeleted).ToList();
+
+                return (from cont in context.dmaOnBoardingContactDetails
+                        join cntM in context.onboardingContactFundMaps on cont.dmaOnBoardingContactDetailId equals cntM.dmaOnBoardingContactDetailId
+                        join fnd in context.vw_HFund on cntM.dmaFundOnBoardId equals fnd.dmaFundOnBoardId
+                        where fnd.hmFundId == hmFundId
+                        where cont.dmaOnBoardingTypeId == onBoardingTypeId && cont.dmaOnBoardingEntityId == entityId && cont.Wires && !cont.IsDeleted
+                        select cont
+                        ).Distinct().ToList();
             }
         }
 

@@ -417,7 +417,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     angular.element(document).on('change', "#liBroker", function (event) {
         event.stopPropagation();
         $scope.CounterpartyId = $(this).val();
-        
+
         if ($(this).val() > 0) {
             $scope.CounterpartyName = $(this).select2('data').text;
             $scope.CounterpartyFamilyName = $(this).select2('data').familyText;
@@ -1078,17 +1078,17 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $http.get("/Accounts/GetAllAuthorizedParty").then(function (response) {
             $scope.authorizedPartyData = response.data.AuthorizedParties;
 
-                $("#liAuthorizedParty0").select2({
-                    placeholder: "Select a Authorized Party",
-                    allowClear: true,
-                    data: response.data.AuthorizedParties
-                });
+            $("#liAuthorizedParty0").select2({
+                placeholder: "Select a Authorized Party",
+                allowClear: true,
+                data: response.data.AuthorizedParties
+            });
 
-                if ($scope.onBoardingAccountDetails[0].AuthorizedParty != null && $scope.onBoardingAccountDetails[0].AuthorizedParty != 'undefined') {
-                    $("#liAuthorizedParty0").select2("val", $scope.onBoardingAccountDetails[0].AuthorizedParty);
-                    $scope.fnAuthorizedPartyChange(0);
-                }
-           
+            if ($scope.onBoardingAccountDetails[0].AuthorizedParty != null && $scope.onBoardingAccountDetails[0].AuthorizedParty != 'undefined') {
+                $("#liAuthorizedParty0").select2("val", $scope.onBoardingAccountDetails[0].AuthorizedParty);
+                $scope.fnAuthorizedPartyChange(0);
+            }
+
         });
     }
 
@@ -1097,22 +1097,22 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.SwiftGroups = response.data.swiftGroups;
             $scope.SwiftGroupData = response.data.SwiftGroupData;
 
-          
-                $("#liSwiftGroup0").select2({
-                    placeholder: "Select a Swift Group",
-                    allowClear: true,
-                    data: response.data.SwiftGroupData
-                });
 
-                if ($scope.onBoardingAccountDetails[0].SwiftGroupId != null && $scope.onBoardingAccountDetails[0].SwiftGroupId != 'undefined') {
-                    $("#liSwiftGroup0").select2("val", $scope.onBoardingAccountDetails[0].SwiftGroupId);
-                }
-                else if (!$scope.isEdit) {
-                    $("#liSwiftGroup0").select2("val", response.data.SwiftGroupData[0] != undefined ? response.data.SwiftGroupData[0].id : null);
-                }
+            $("#liSwiftGroup0").select2({
+                placeholder: "Select a Swift Group",
+                allowClear: true,
+                data: response.data.SwiftGroupData
+            });
 
-                $scope.fnOnSwiftGroupChange($("#liSwiftGroup0").select2("val"));
-            
+            if ($scope.onBoardingAccountDetails[0].SwiftGroupId != null && $scope.onBoardingAccountDetails[0].SwiftGroupId != 'undefined') {
+                $("#liSwiftGroup0").select2("val", $scope.onBoardingAccountDetails[0].SwiftGroupId);
+            }
+            else if (!$scope.isEdit) {
+                $("#liSwiftGroup0").select2("val", response.data.SwiftGroupData[0] != undefined ? response.data.SwiftGroupData[0].id : null);
+            }
+
+            $scope.fnOnSwiftGroupChange($("#liSwiftGroup0").select2("val"));
+
         });
     }
 
@@ -1445,7 +1445,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     angular.element("#txtDetail").on("focusin", function () { angular.element("#txtDetail").popover("hide"); });
 
     $scope.fnLoadContactDetails = function (contactName) {
-        $http.get("/Accounts/GetAllOnBoardingAccountContacts?brokerId=" + $scope.CounterpartyFamilyId).then(function (response) {
+        $http.get("/Accounts/GetAllOnBoardingAccountContacts?counterpartyFamilyId=" + $scope.CounterpartyFamilyId + "&hmFundId=" + $scope.FundId).then(function (response) {
             $scope.contactNames = [];
             if (response.data.OnBoardingContacts.length > 0) {
                 $.each(response.data.OnBoardingContacts, function (i, v) {

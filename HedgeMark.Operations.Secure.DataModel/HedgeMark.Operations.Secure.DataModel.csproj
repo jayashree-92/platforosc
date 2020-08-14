@@ -211,6 +211,9 @@
     <Compile Include="onBoardingCashInstruction.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="onboardingContactFundMap.cs">
+      <DependentUpon>AdminModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="onBoardingModule.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

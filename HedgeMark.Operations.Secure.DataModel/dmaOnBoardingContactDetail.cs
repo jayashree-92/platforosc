@@ -14,6 +14,12 @@ namespace HedgeMark.Operations.Secure.DataModel
     
     public partial class dmaOnBoardingContactDetail
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public dmaOnBoardingContactDetail()
+        {
+            this.onboardingContactFundMaps = new HashSet<onboardingContactFundMap>();
+        }
+    
         public long dmaOnBoardingContactDetailId { get; set; }
         public long dmaOnBoardingTypeId { get; set; }
         public long dmaOnBoardingEntityId { get; set; }
@@ -62,5 +68,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public bool Onboarding { get; set; }
         public string ClientSubCategory { get; set; }
         public bool ComplainceCert { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<onboardingContactFundMap> onboardingContactFundMaps { get; set; }
     }
 }

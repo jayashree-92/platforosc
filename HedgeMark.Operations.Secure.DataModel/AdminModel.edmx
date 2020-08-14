@@ -194,6 +194,19 @@
           <Property Name="ClientSubCategory" Type="varchar" MaxLength="20" />
           <Property Name="ComplainceCert" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="onboardingContactFundMap">
+          <Key>
+            <PropertyRef Name="onboardingContactFundMapId" />
+          </Key>
+          <Property Name="onboardingContactFundMapId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dmaOnBoardingContactDetailId" Type="bigint" Nullable="false" />
+          <Property Name="dmaFundOnBoardId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="OnBoardingServiceProvider">
           <Key>
             <PropertyRef Name="OnBoardingServiceProviderId" />
@@ -309,6 +322,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <Property Name="StatusDate" Type="date" />
           <Property Name="Responsibility" Type="varchar" MaxLength="500" />
           <Property Name="IACalculationAgent" Type="varchar" MaxLength="25" />
+          <Property Name="AdditionalCollateralNotes" Type="varchar" MaxLength="8000" />
           <Property Name="MTMChangeThresholdPercentage" Type="float" />
           <Property Name="CounterpartyFamily" Type="varchar" MaxLength="100" />
           <Property Name="CounterpartyName" Type="nvarchar" MaxLength="500" />
@@ -362,6 +376,18 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_onboardingContactFundMap_dmaOnBoardingContactDetailId">
+          <End Role="dmaOnBoardingContactDetail" Type="Self.dmaOnBoardingContactDetail" Multiplicity="1" />
+          <End Role="onboardingContactFundMap" Type="Self.onboardingContactFundMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dmaOnBoardingContactDetail">
+              <PropertyRef Name="dmaOnBoardingContactDetailId" />
+            </Principal>
+            <Dependent Role="onboardingContactFundMap">
+              <PropertyRef Name="dmaOnBoardingContactDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="USP_NEXEN_GetUserDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userID" Type="varchar" Mode="In" />
           <Parameter Name="userType" Type="varchar" Mode="In" />
@@ -376,6 +402,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <EntitySet Name="dmaCounterPartyOnBoarding" EntityType="Self.dmaCounterPartyOnBoarding" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaFundOnBoardPermissions" EntityType="Self.dmaFundOnBoardPermissions" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaOnBoardingContactDetail" EntityType="Self.dmaOnBoardingContactDetail" Schema="HMADMIN" store:Type="Tables" />
+          <EntitySet Name="onboardingContactFundMap" EntityType="Self.onboardingContactFundMap" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="OnBoardingServiceProvider" EntityType="Self.OnBoardingServiceProvider" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="vw_HFund" EntityType="Self.vw_HFund" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -467,6 +494,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
     [vw_CounterpartyAgreements].[StatusDate] AS [StatusDate], 
     [vw_CounterpartyAgreements].[Responsibility] AS [Responsibility], 
     [vw_CounterpartyAgreements].[IACalculationAgent] AS [IACalculationAgent], 
+    [vw_CounterpartyAgreements].[AdditionalCollateralNotes] AS [AdditionalCollateralNotes], 
     [vw_CounterpartyAgreements].[MTMChangeThresholdPercentage] AS [MTMChangeThresholdPercentage], 
     [vw_CounterpartyAgreements].[CounterpartyFamily] AS [CounterpartyFamily], 
     [vw_CounterpartyAgreements].[CounterpartyName] AS [CounterpartyName], 
@@ -496,6 +524,10 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <AssociationSet Name="FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId" Association="Self.FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId">
             <End Role="dmaCounterpartyFamily" EntitySet="dmaCounterpartyFamily" />
             <End Role="dmaCounterPartyOnBoarding" EntitySet="dmaCounterPartyOnBoarding" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onboardingContactFundMap_dmaOnBoardingContactDetailId" Association="Self.FK_onboardingContactFundMap_dmaOnBoardingContactDetailId">
+            <End Role="dmaOnBoardingContactDetail" EntitySet="dmaOnBoardingContactDetail" />
+            <End Role="onboardingContactFundMap" EntitySet="onboardingContactFundMap" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -614,6 +646,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <EntitySet Name="OnBoardingServiceProviders" EntityType="AdminModel.OnBoardingServiceProvider" />
           <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
           <EntitySet Name="vw_CounterpartyAgreements" EntityType="AdminModel.vw_CounterpartyAgreements" />
+          <EntitySet Name="onboardingContactFundMaps" EntityType="AdminModel.onboardingContactFundMap" />
+          <AssociationSet Name="FK_onboardingContactFundMap_dmaOnBoardingContactDetailId" Association="AdminModel.FK_onboardingContactFundMap_dmaOnBoardingContactDetailId">
+            <End Role="dmaOnBoardingContactDetail" EntitySet="dmaOnBoardingContactDetails" />
+            <End Role="onboardingContactFundMap" EntitySet="onboardingContactFundMaps" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -793,6 +830,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <Property Name="Onboarding" Type="Boolean" Nullable="false" />
           <Property Name="ClientSubCategory" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ComplainceCert" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="onboardingContactFundMaps" Relationship="AdminModel.FK_onboardingContactFundMap_dmaOnBoardingContactDetailId" FromRole="dmaOnBoardingContactDetail" ToRole="onboardingContactFundMap" />
         </EntityType>
         <EntityType Name="OnBoardingServiceProvider">
           <Key>
@@ -921,7 +959,34 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <Property Name="AgreementShortName" Type="String" Nullable="false" MaxLength="1106" FixedLength="false" Unicode="true" />
           <Property Name="FundManagerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="AdditionalCollateralNotes" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="onboardingContactFundMap">
+          <Key>
+            <PropertyRef Name="onboardingContactFundMapId" />
+          </Key>
+          <Property Name="onboardingContactFundMapId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dmaOnBoardingContactDetailId" Type="Int64" Nullable="false" />
+          <Property Name="dmaFundOnBoardId" Type="Int64" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="dmaOnBoardingContactDetail" Relationship="AdminModel.FK_onboardingContactFundMap_dmaOnBoardingContactDetailId" FromRole="onboardingContactFundMap" ToRole="dmaOnBoardingContactDetail" />
+        </EntityType>
+        <Association Name="FK_onboardingContactFundMap_dmaOnBoardingContactDetailId">
+          <End Type="AdminModel.dmaOnBoardingContactDetail" Role="dmaOnBoardingContactDetail" Multiplicity="1" />
+          <End Type="AdminModel.onboardingContactFundMap" Role="onboardingContactFundMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dmaOnBoardingContactDetail">
+              <PropertyRef Name="dmaOnBoardingContactDetailId" />
+            </Principal>
+            <Dependent Role="onboardingContactFundMap">
+              <PropertyRef Name="dmaOnBoardingContactDetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1236,6 +1301,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <EntitySetMapping Name="vw_CounterpartyAgreements">
             <EntityTypeMapping TypeName="AdminModel.vw_CounterpartyAgreements">
               <MappingFragment StoreEntitySet="vw_CounterpartyAgreements">
+                <ScalarProperty Name="AdditionalCollateralNotes" ColumnName="AdditionalCollateralNotes" />
                 <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
                 <ScalarProperty Name="FundManagerName" ColumnName="FundManagerName" />
                 <ScalarProperty Name="AgreementShortName" ColumnName="AgreementShortName" />
@@ -1313,6 +1379,20 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
                 <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
                 <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
                 <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onboardingContactFundMaps">
+            <EntityTypeMapping TypeName="AdminModel.onboardingContactFundMap">
+              <MappingFragment StoreEntitySet="onboardingContactFundMap">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
+                <ScalarProperty Name="dmaOnBoardingContactDetailId" ColumnName="dmaOnBoardingContactDetailId" />
+                <ScalarProperty Name="onboardingContactFundMapId" ColumnName="onboardingContactFundMapId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -331,9 +331,9 @@ namespace HMOSecureWeb.Controllers
 
         }
 
-        public JsonResult GetAllOnBoardingAccountContacts(long brokerId)
+        public JsonResult GetAllOnBoardingAccountContacts(long counterpartyFamilyId, long hmFundId)
         {
-            var onBoardingContacts = OnBoardingDataManager.GetAllOnBoardingContacts(ContactManager.CounterpartyTypeId, brokerId);
+            var onBoardingContacts = OnBoardingDataManager.GetAllOnBoardingContacts(ContactManager.CounterpartyTypeId, counterpartyFamilyId, hmFundId);
             return Json(new
             {
                 OnBoardingContacts = onBoardingContacts.Select(contact => new
