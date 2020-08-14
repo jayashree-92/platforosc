@@ -1454,7 +1454,6 @@ HmOpsApp.controller("wireInitiationCtrl",
                         }
                         $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
                     });
-                    $scope.fnGetCashBalances();
                 }
                 else {
                     $scope.isReceivingAccountEnabled = false;
@@ -1464,7 +1463,9 @@ HmOpsApp.controller("wireInitiationCtrl",
                     angular.element("#liReceivingBookAccount").select2("val", "").trigger('change');
                     angular.element("#liReceivingAccount").select2("val", "").trigger('change');
                 }
+              
                 $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
+                $scope.fnGetCashBalances();
             }, 50);
         });
 

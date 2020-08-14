@@ -132,8 +132,7 @@ namespace HMOSecureMiddleware
                         join fnd in context.vw_HFund on cntM.dmaFundOnBoardId equals fnd.dmaFundOnBoardId
                         where fnd.hmFundId == hmFundId
                         where cont.dmaOnBoardingTypeId == onBoardingTypeId && cont.dmaOnBoardingEntityId == entityId && cont.Wires && !cont.IsDeleted
-                        select cont
-                        ).Distinct().ToList();
+                        select cont).Distinct().ToList();
             }
         }
 

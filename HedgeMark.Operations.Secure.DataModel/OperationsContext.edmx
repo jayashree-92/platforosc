@@ -124,6 +124,7 @@
           <Property Name="dmaTreasuryCashBalanceId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="onboardAccountId" Type="bigint" Nullable="false" />
           <Property Name="Currency" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="AccountOrAgreementType" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="ContextDate" Type="date" Nullable="false" />
           <Property Name="CashBalance" Type="decimal" Precision="18" Scale="0" />
           <Property Name="MinimunEquity" Type="decimal" Precision="18" Scale="0" />
@@ -205,6 +206,18 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="ClientLegalEntityName" Type="varchar" MaxLength="200" />
           <Property Name="ClientShortName" Type="varchar" MaxLength="200" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_ProxyCurrencyConversionData">
+          <Key>
+            <PropertyRef Name="HM_SECURITY_ID" />
+          </Key>
+          <Property Name="HM_SECURITY_ID" Type="bigint" Nullable="false" />
+          <Property Name="HM_CONTEXT_DT" Type="date" />
+          <Property Name="FROM_CRNCY" Type="varchar" MaxLength="4" />
+          <Property Name="TO_CRNCY" Type="varchar" MaxLength="4" />
+          <Property Name="FX_RATE" Type="decimal" Precision="28" Scale="10" />
+        </EntityType>
         <Association Name="FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId">
           <End Role="dmaCollateralData" Type="Self.dmaCollateralData" Multiplicity="0..1" />
           <End Role="dmaOpsCashCollateral" Type="Self.dmaOpsCashCollateral" Multiplicity="*" />
@@ -270,6 +283,15 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
     [vw_HFundOps].[ClientShortName] AS [ClientShortName]
     FROM [dbo].[vw_HFundOps] AS [vw_HFundOps]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="vw_ProxyCurrencyConversionData" EntityType="Self.vw_ProxyCurrencyConversionData" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_ProxyCurrencyConversionData].[HM_SECURITY_ID] AS [HM_SECURITY_ID], 
+    [vw_ProxyCurrencyConversionData].[HM_CONTEXT_DT] AS [HM_CONTEXT_DT], 
+    [vw_ProxyCurrencyConversionData].[FROM_CRNCY] AS [FROM_CRNCY], 
+    [vw_ProxyCurrencyConversionData].[TO_CRNCY] AS [TO_CRNCY], 
+    [vw_ProxyCurrencyConversionData].[FX_RATE] AS [FX_RATE]
+    FROM [dbo].[vw_ProxyCurrencyConversionData] AS [vw_ProxyCurrencyConversionData]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId" Association="Self.FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId">
             <End Role="dmaCollateralData" EntitySet="dmaCollateralData" />
             <End Role="dmaOpsCashCollateral" EntitySet="dmaOpsCashCollateral" />
@@ -285,12 +307,13 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <EntitySet Name="vw_dmaInvoiceReport" EntityType="OperationsModel.vw_dmaInvoiceReport" />
           <EntitySet Name="vw_HFundOps" EntityType="OperationsModel.vw_HFundOps" />
           <EntitySet Name="dmaUserPreferences" EntityType="OperationsModel.dmaUserPreference" />
-          <EntitySet Name="dmaTreasuryCashBalances" EntityType="OperationsModel.dmaTreasuryCashBalance" />
           <EntitySet Name="dmaCollateralDatas" EntityType="OperationsModel.dmaCollateralData" />
           <AssociationSet Name="FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId" Association="OperationsModel.FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId">
             <End Role="dmaCollateralData" EntitySet="dmaCollateralDatas" />
             <End Role="dmaOpsCashCollateral" EntitySet="dmaOpsCashCollaterals" />
           </AssociationSet>
+          <EntitySet Name="dmaTreasuryCashBalances" EntityType="OperationsModel.dmaTreasuryCashBalance" />
+          <EntitySet Name="vw_ProxyCurrencyConversionData" EntityType="OperationsModel.vw_ProxyCurrencyConversionData" />
         </EntityContainer>
         <EntityType Name="dmaReport">
           <Key>
@@ -395,18 +418,6 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="hmUserId" Type="Int32" Nullable="false" />
           <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <EntityType Name="dmaTreasuryCashBalance">
-          <Key>
-            <PropertyRef Name="dmaTreasuryCashBalanceId" />
-          </Key>
-          <Property Name="dmaTreasuryCashBalanceId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="onboardAccountId" Type="Int64" Nullable="false" />
-          <Property Name="Currency" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="ContextDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="CashBalance" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="MinimunEquity" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         <EntityType Name="dmaCollateralData">
           <Key>
             <PropertyRef Name="dmaCollateralDataId" />
@@ -502,6 +513,29 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="dmaTreasuryCashBalance">
+          <Key>
+            <PropertyRef Name="dmaTreasuryCashBalanceId" />
+          </Key>
+          <Property Name="dmaTreasuryCashBalanceId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="onboardAccountId" Type="Int64" Nullable="false" />
+          <Property Name="Currency" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ContextDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CashBalance" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="MinimunEquity" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AccountOrAgreementType" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="vw_ProxyCurrencyConversionData">
+          <Key>
+            <PropertyRef Name="HM_SECURITY_ID" />
+          </Key>
+          <Property Name="HM_SECURITY_ID" Type="Int64" Nullable="false" />
+          <Property Name="HM_CONTEXT_DT" Type="DateTime" Precision="0" />
+          <Property Name="FROM_CRNCY" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="TO_CRNCY" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="FX_RATE" Type="Decimal" Precision="28" Scale="10" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -602,19 +636,6 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="dmaTreasuryCashBalances">
-            <EntityTypeMapping TypeName="OperationsModel.dmaTreasuryCashBalance">
-              <MappingFragment StoreEntitySet="dmaTreasuryCashBalances">
-                <ScalarProperty Name="RecCreatedDt" ColumnName="RecCreatedDt" />
-                <ScalarProperty Name="MinimunEquity" ColumnName="MinimunEquity" />
-                <ScalarProperty Name="CashBalance" ColumnName="CashBalance" />
-                <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="onboardAccountId" ColumnName="onboardAccountId" />
-                <ScalarProperty Name="dmaTreasuryCashBalanceId" ColumnName="dmaTreasuryCashBalanceId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="dmaCollateralDatas">
             <EntityTypeMapping TypeName="OperationsModel.dmaCollateralData">
               <MappingFragment StoreEntitySet="dmaCollateralData">
@@ -695,6 +716,31 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
                 <ScalarProperty Name="BrokerName" ColumnName="BrokerName" />
                 <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
                 <ScalarProperty Name="dmaCollateralDataId" ColumnName="dmaCollateralDataId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dmaTreasuryCashBalances">
+            <EntityTypeMapping TypeName="OperationsModel.dmaTreasuryCashBalance">
+              <MappingFragment StoreEntitySet="dmaTreasuryCashBalances">
+                <ScalarProperty Name="AccountOrAgreementType" ColumnName="AccountOrAgreementType" />
+                <ScalarProperty Name="RecCreatedDt" ColumnName="RecCreatedDt" />
+                <ScalarProperty Name="MinimunEquity" ColumnName="MinimunEquity" />
+                <ScalarProperty Name="CashBalance" ColumnName="CashBalance" />
+                <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="onboardAccountId" ColumnName="onboardAccountId" />
+                <ScalarProperty Name="dmaTreasuryCashBalanceId" ColumnName="dmaTreasuryCashBalanceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_ProxyCurrencyConversionData">
+            <EntityTypeMapping TypeName="OperationsModel.vw_ProxyCurrencyConversionData">
+              <MappingFragment StoreEntitySet="vw_ProxyCurrencyConversionData">
+                <ScalarProperty Name="FX_RATE" ColumnName="FX_RATE" />
+                <ScalarProperty Name="TO_CRNCY" ColumnName="TO_CRNCY" />
+                <ScalarProperty Name="FROM_CRNCY" ColumnName="FROM_CRNCY" />
+                <ScalarProperty Name="HM_CONTEXT_DT" ColumnName="HM_CONTEXT_DT" />
+                <ScalarProperty Name="HM_SECURITY_ID" ColumnName="HM_SECURITY_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

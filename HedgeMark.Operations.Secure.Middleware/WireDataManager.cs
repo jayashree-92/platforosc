@@ -62,6 +62,7 @@ namespace HMOSecureMiddleware
         public decimal Amount { get; set; }
         public DateTime ValueDate { get; set; }
         public int WireStatusId { get; set; }
+        public string Currency { get; set; }
     }
 
     public class CashBalances

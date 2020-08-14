@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
 using HMOSecureMiddleware.Util;
@@ -629,6 +630,97 @@ namespace HMOSecureMiddleware
         {
             var contextDate = valueDate.GetContextDate();
 
+            vw_FundAccounts fndAccount;
+
+            //Is PB Account 
+            using (var context = new OperationsSecureContext())
+            {
+                fndAccount = context.vw_FundAccounts.First(s => s.onBoardingAccountId == sendingFundAccountId);
+            }
+
+            return fndAccount.AccountType == "Agreement" && fndAccount.AgreementType == "PB"
+                ? ComputePBCashBalances(valueDate, contextDate, fndAccount)
+                : ComputeNonPBCashBalances(sendingFundAccountId, valueDate, contextDate);
+        }
+
+        private static CashBalances ComputePBCashBalances(DateTime valueDate, DateTime contextDate, vw_FundAccounts fndAccount)
+        {
+            List<dmaTreasuryCashBalance> allTreasuryBals;
+            using (var context = new OperationsContext())
+            {
+                allTreasuryBals = context.dmaTreasuryCashBalances.Where(s => s.AccountOrAgreementType == "PB" && s.ContextDate == contextDate.Date).ToList();
+            }
+
+            var allPBForContextDate = allTreasuryBals.Select(s => s.onboardAccountId).ToList();
+            dmaTreasuryCashBalance treasuryBal;
+            List<WireBaseDetails> wires;
+            using (var context = new OperationsSecureContext())
+            {
+               var treasuryBalAccId = (from acc in context.vw_FundAccounts
+                               where allPBForContextDate.Contains(acc.onBoardingAccountId)
+                               where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && acc.AgreementType == "PB"
+                               select acc.onBoardingAccountId).FirstOrDefault();
+               treasuryBal = allTreasuryBals.FirstOrDefault(s => s.onboardAccountId == treasuryBalAccId);
+
+                if (treasuryBal == null)
+                    return new CashBalances() { IsCashBalanceAvailable = false };
+
+                wires = (from wire in context.hmsWires
+                         join acc in context.vw_FundAccounts on wire.OnBoardAccountId equals acc.onBoardingAccountId
+                         where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && acc.AgreementType == "PB"
+                         where wire.ValueDate == valueDate &&
+                               wire.WireStatusId == (int)WireDataManager.WireStatus.Approved || wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated
+                         select new WireBaseDetails
+                         {
+                             SendingAccountId = wire.OnBoardAccountId,
+                             Amount = wire.Amount,
+                             WireStatusId = wire.WireStatusId,
+                             ValueDate = valueDate,
+                             Currency = wire.Currency
+                         }).ToList();
+            }
+
+            // Covert the amount to its Existing Sending account currency
+
+            var allFromCurrency = wires.Select(s => s.Currency).Distinct().ToList();
+            if (!allFromCurrency.Contains(treasuryBal.Currency))
+                allFromCurrency.Add(treasuryBal.Currency);
+            if (!allFromCurrency.Contains(fndAccount.Currency))
+                allFromCurrency.Add(fndAccount.Currency);
+
+            List<vw_ProxyCurrencyConversionData> conversionData;
+            using (var context = new OperationsContext())
+            {
+                conversionData = context.vw_ProxyCurrencyConversionData.Where(s =>
+                    s.HM_CONTEXT_DT == contextDate && s.TO_CRNCY == fndAccount.Currency &&
+                    allFromCurrency.Contains(s.FROM_CRNCY)).ToList();
+            }
+
+            var totalWiredInLocalCur = (from wire in wires
+                                        let fxRate = conversionData.Where(s => s.FROM_CRNCY == wire.Currency && s.TO_CRNCY == fndAccount.Currency)
+                                                         .Select(s => s.FX_RATE).FirstOrDefault() ?? 0
+                                        where fxRate != 0 && fxRate != 1
+                                        select wire.Amount * fxRate).Sum();
+
+            var converForTreasuryBal = conversionData.Where(s => s.FROM_CRNCY == treasuryBal.Currency && s.TO_CRNCY == fndAccount.Currency)
+                                           .Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
+
+            var cashBalances = new CashBalances()
+            {
+                IsCashBalanceAvailable = true,
+                TotalWired = totalWiredInLocalCur,
+                TreasuryBalance = converForTreasuryBal == 0 ? treasuryBal.CashBalance ?? 0 : (treasuryBal.CashBalance ?? 0 * converForTreasuryBal),
+                Currency = converForTreasuryBal == 0 ? treasuryBal.Currency : fndAccount.Currency,
+                ContextDate = treasuryBal.ContextDate,
+                ApprovedWires = wires.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved),
+                PendingWires = wires.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated),
+            };
+
+            return cashBalances;
+        }
+
+        private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate)
+        {
             dmaTreasuryCashBalance treasuryBal;
             using (var context = new OperationsContext())
             {
@@ -642,13 +734,15 @@ namespace HMOSecureMiddleware
             using (var context = new OperationsSecureContext())
             {
                 wires = context.hmsWires.Where(s => s.OnBoardAccountId == sendingFundAccountId && s.ValueDate == valueDate &&
-                    s.WireStatusId == (int)WireDataManager.WireStatus.Approved || s.WireStatusId == (int)WireDataManager.WireStatus.Initiated)
+                                                    s.WireStatusId == (int)WireDataManager.WireStatus.Approved ||
+                                                    s.WireStatusId == (int)WireDataManager.WireStatus.Initiated)
                     .Select(s => new WireBaseDetails
                     {
                         SendingAccountId = s.OnBoardAccountId,
                         Amount = s.Amount,
                         WireStatusId = s.WireStatusId,
-                        ValueDate = valueDate
+                        ValueDate = valueDate,
+                        Currency = s.Currency
                     }).ToList();
             }
 

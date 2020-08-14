@@ -12,15 +12,12 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class dmaTreasuryCashBalance
+    public partial class vw_ProxyCurrencyConversionData
     {
-        public long dmaTreasuryCashBalanceId { get; set; }
-        public long onboardAccountId { get; set; }
-        public string Currency { get; set; }
-        public System.DateTime ContextDate { get; set; }
-        public Nullable<decimal> CashBalance { get; set; }
-        public Nullable<decimal> MinimunEquity { get; set; }
-        public System.DateTime RecCreatedDt { get; set; }
-        public string AccountOrAgreementType { get; set; }
+        public long HM_SECURITY_ID { get; set; }
+        public Nullable<System.DateTime> HM_CONTEXT_DT { get; set; }
+        public string FROM_CRNCY { get; set; }
+        public string TO_CRNCY { get; set; }
+        public Nullable<decimal> FX_RATE { get; set; }
     }
 }
