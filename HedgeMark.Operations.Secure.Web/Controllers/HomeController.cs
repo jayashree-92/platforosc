@@ -670,7 +670,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetTimeToApproveTheWire(long onboardingAccountId, DateTime valueDate)
         {
-            var onboardAccount = AccountManager.GetOnBoardingAccount(onboardingAccountId);
+            var onboardAccount = FundAccountManager.GetOnBoardingAccount(onboardingAccountId);
             var timeToApprove = GetDeadlineToApprove(onboardAccount, valueDate);
             return Json(timeToApprove);
         }
@@ -800,7 +800,7 @@ namespace HMOSecureWeb.Controllers
             using (var context = new OperationsContext())
             {
                 var authorizedFundIds = AuthorizedSessionData.HMFundIds.Select(s => s.Id).ToList();
-                var fundsWithApprovedAccounts = AccountManager.GetFundsOfApprovedAccounts();
+                var fundsWithApprovedAccounts = FundAccountManager.GetFundsOfApprovedAccounts();
                 authorizedFundIds = authorizedFundIds.Count == 0 ? fundsWithApprovedAccounts : authorizedFundIds.Intersect(fundsWithApprovedAccounts).ToList();
                 var hFunds = AdminFundManager.GetUniversalDMAFundListQuery(context, PreferredFundNameInSession)
                     .Where(s => authorizedFundIds.Contains(s.hmFundId)).OrderBy(s => s.PreferredFundName)
@@ -891,12 +891,20 @@ namespace HMOSecureWeb.Controllers
         }
 
 
-        public JsonResult GetBoardingAccount(long onBoardingAccountId, DateTime valueDate)
+        public JsonResult GetFundAccount(long onBoardingAccountId, DateTime valueDate)
         {
-            var onboardAccount = AccountManager.GetOnBoardingAccount(onBoardingAccountId);
+            var onboardAccount = FundAccountManager.GetOnBoardingAccount(onBoardingAccountId);
             var deadlineToApprove = GetDeadlineToApprove(onboardAccount, valueDate);
+
             return Json(new { onboardAccount, deadlineToApprove });
         }
+
+        public JsonResult GetCashBalances(long sendingAccountId, DateTime valueDate)
+        {
+            var cashBalance = FundAccountManager.GetAccountCashBalances(sendingAccountId, valueDate);
+            return Json(cashBalance);
+        }
+
 
         public JsonResult ValidateAccountDetails(string wireMessageType, onBoardingAccount account, onBoardingAccount receivingAccount, onBoardingSSITemplate ssiTemplate, bool isFundTransfer)
         {

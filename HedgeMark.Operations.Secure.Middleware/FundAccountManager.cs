@@ -6,18 +6,16 @@ using System.IO;
 using System.Linq;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
+using HMOSecureMiddleware.Util;
 using log4net;
 
 namespace HMOSecureMiddleware
 {
-    public class AccountManager
+    public class FundAccountManager
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(AccountManager));
-
-        #region Account
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(FundAccountManager));
 
         public const int FundTemplateTypeId = 1;
-        public const int BrokerTemplateTypeId = 2;
         public const string AgreementAccountType = "Agreement";
 
         public static List<vw_FundAccounts> GetOnBoardingAccountDetails(List<long> hmFundIds, bool isPreviledgedUser)
@@ -50,35 +48,6 @@ namespace HMOSecureMiddleware
 
         }
 
-        //public static List<onBoardingAccount> GetAllOnBoardingAccounts(long agreementId = 0, long fundId = 0, long brokerId = 0)
-        //{
-        //    using (var context = new OperationsSecureContext())
-        //    {
-        //        context.Configuration.LazyLoadingEnabled = false;
-        //        context.Configuration.ProxyCreationEnabled = false;
-
-        //        if (agreementId > 0)
-        //            return context.onBoardingAccounts
-        //                .Include(s => s.Beneficiary)
-        //                .Include(s => s.Intermediary)
-        //                .Include(s => s.UltimateBeneficiary)
-        //                .Include(s => s.WirePortalCutoff)
-        //                .Include(s => s.SwiftGroup)
-        //                .Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
-        //                .Where(account => account.dmaAgreementOnBoardingId == agreementId && !account.IsDeleted).ToList();
-
-        //        return context.onBoardingAccounts
-        //            .Include(s => s.Beneficiary)
-        //            .Include(s => s.Intermediary)
-        //            .Include(s => s.UltimateBeneficiary)
-        //            .Include(s => s.WirePortalCutoff)
-        //            .Include(s => s.SwiftGroup)
-        //            .Include(s => s.hmsAccountCallbacks)
-        //            .Include(x => x.onBoardingAccountSSITemplateMaps).Include(x => x.onBoardingAccountDocuments)
-        //            .Where(account => account.dmaCounterpartyFamilyId == brokerId && account.hmFundId == fundId && account.AccountType != AgreementAccountType && !account.IsDeleted).ToList();
-        //    }
-        //}
-
         public static onBoardingAccount GetOnBoardingAccount(long accountId)
         {
             using (var context = new OperationsSecureContext())
@@ -96,7 +65,6 @@ namespace HMOSecureMiddleware
 
                 return SetAccountDefaults(account);
             }
-
         }
 
         public static onBoardingAccount SetAccountDefaults(onBoardingAccount account)
@@ -452,24 +420,6 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static Dictionary<long, string> GetAllSsiTemplates()
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                return context.onBoardingSSITemplates.Where(f => !f.IsDeleted).ToDictionary(s => s.onBoardingSSITemplateId, s => s.TemplateName);
-            }
-        }
-
-        public static List<onBoardingSSITemplate> GetAllSsiTemplates(int templateTypeId, long templateEntityId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingSSITemplates.Include(x => x.onBoardingSSITemplateDocuments).Where(template => template.TemplateTypeId == templateTypeId && template.TemplateEntityId == templateEntityId && !template.IsDeleted).ToList();
-            }
-        }
-
         public static List<long> GetFundsOfApprovedAccounts()
         {
             using (var context = new OperationsSecureContext())
@@ -506,141 +456,6 @@ namespace HMOSecureMiddleware
 
                 //return context.onBoardingAccounts.Include(s => s.SwiftGroup).Where(account => !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && (hmFundIds.Contains(account.hmFundId) || isServiceType) && (currency == null || account.Currency == currency) && ((account.SwiftGroup ?? new hmsSwiftGroup()).AcceptedMessages.Contains(messageType))).ToList();
             }
-        }
-
-        public static List<onBoardingSSITemplate> GetAllBrokerSsiTemplates()
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingSSITemplates
-                    .Include(s => s.Beneficiary)
-                    .Include(s => s.Intermediary)
-                    .Include(s => s.UltimateBeneficiary).Where(template => template.TemplateTypeId == BrokerTemplateTypeId && !template.IsDeleted).ToList();
-            }
-        }
-
-        public static onBoardingSSITemplate GetSsiTemplate(long templateId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                var ssiTemplate = context.onBoardingSSITemplates
-                    .Include(s => s.Beneficiary)
-                    .Include(s => s.Intermediary)
-                    .Include(s => s.UltimateBeneficiary)
-                    .Include(x => x.onBoardingSSITemplateDocuments)
-                    .Include(x => x.onBoardingAccountSSITemplateMaps)
-                    .First(template => template.onBoardingSSITemplateId == templateId);
-
-                return SetSSITemplateDefaults(ssiTemplate);
-            }
-        }
-
-        public static onBoardingSSITemplate SetSSITemplateDefaults(onBoardingSSITemplate ssiTemplate)
-        {
-            if (ssiTemplate == null)
-                return null;
-
-            if (ssiTemplate.Beneficiary == null)
-                ssiTemplate.Beneficiary = new onBoardingAccountBICorABA();
-            if (ssiTemplate.Intermediary == null)
-                ssiTemplate.Intermediary = new onBoardingAccountBICorABA();
-            if (ssiTemplate.UltimateBeneficiary == null)
-                ssiTemplate.UltimateBeneficiary = new onBoardingAccountBICorABA();
-            if (ssiTemplate.onBoardingSSITemplateDocuments == null)
-                ssiTemplate.onBoardingSSITemplateDocuments = new List<onBoardingSSITemplateDocument>();
-            if (ssiTemplate.onBoardingAccountSSITemplateMaps == null)
-                ssiTemplate.onBoardingAccountSSITemplateMaps = new List<onBoardingAccountSSITemplateMap>();
-
-            //remove circular references
-            ssiTemplate.Beneficiary.onBoardingSSITemplates = ssiTemplate.Beneficiary.onBoardingSSITemplates1 = ssiTemplate.Beneficiary.onBoardingSSITemplates2 = null;
-            ssiTemplate.Intermediary.onBoardingSSITemplates = ssiTemplate.Intermediary.onBoardingSSITemplates1 = ssiTemplate.Intermediary.onBoardingSSITemplates2 = null;
-            ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates1 = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates2 = null;
-            ssiTemplate.onBoardingSSITemplateDocuments.ForEach(s => s.onBoardingSSITemplate = null);
-            ssiTemplate.onBoardingAccountSSITemplateMaps.ForEach(s => { s.onBoardingSSITemplate = null; s.onBoardingAccount = null; });
-
-            ssiTemplate.hmsWires = null;
-
-            return ssiTemplate;
-        }
-
-        public static List<OnBoardingServiceProvider> GetAllServiceProviderList()
-        {
-            using (var context = new AdminContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.OnBoardingServiceProviders.ToList();
-            }
-        }
-
-        public static void RemoveSsiTemplateMap(long ssiTemplateMapId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                var ssiTemplateMap = context.onBoardingAccountSSITemplateMaps.First(x => x.onBoardingAccountSSITemplateMapId == ssiTemplateMapId);
-                context.onBoardingAccountSSITemplateMaps.Remove(ssiTemplateMap);
-                context.SaveChanges();
-            }
-        }
-
-        public static List<OnBoardingSSITemplateAccountType> GetAllSsiTemplateAccountTypes(int? agreementTypeId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.OnBoardingSSITemplateAccountTypes.Where(x => x.dmaAgreementTypeId == agreementTypeId).ToList();
-            }
-        }
-
-        public static List<OnBoardingServiceProvider> GetAllSsiTemplateServiceProviders(string serviceProviderName)
-        {
-            using (var context = new AdminContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.OnBoardingServiceProviders.Where(x => x.ServiceProvider == serviceProviderName).ToList();
-            }
-        }
-
-        public static long AddSsiTemplate(onBoardingSSITemplate ssiTemplate, string userName)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                ssiTemplate.dmaAgreementTypeId = !string.IsNullOrEmpty(ssiTemplate.ServiceProvider) ? 1 : ssiTemplate.dmaAgreementTypeId;
-
-                if (ssiTemplate.onBoardingSSITemplateId == 0)
-                {
-                    ssiTemplate.CreatedAt = DateTime.Now;
-                    ssiTemplate.CreatedBy = userName;
-                    ssiTemplate.UpdatedAt = DateTime.Now;
-                    ssiTemplate.UpdatedBy = userName;
-                    ssiTemplate.SSITemplateStatus = "Saved As Draft";
-                    ssiTemplate.LastUsedAt = DateTime.Now;
-                }
-                else
-                {
-                    ssiTemplate.UpdatedAt = DateTime.Now;
-                    ssiTemplate.UpdatedBy = userName;
-                    ssiTemplate.LastUsedAt = DateTime.Now;
-
-                    if (ssiTemplate.onBoardingSSITemplateDocuments != null && ssiTemplate.onBoardingSSITemplateDocuments.Count > 0)
-                    {
-                        context.onBoardingSSITemplateDocuments.AddRange(ssiTemplate.onBoardingSSITemplateDocuments.Where(s => s.onBoardingSSITemplateDocumentId == 0));
-                        //new Repository<onBoardingSSITemplateDocument>().BulkInsert(, dbSchemaName: "HMADMIN.");
-                    }
-                }
-                ssiTemplate.Beneficiary = null;
-                ssiTemplate.Intermediary = null;
-                ssiTemplate.UltimateBeneficiary = null;
-                context.onBoardingSSITemplates.AddOrUpdate(ssiTemplate);
-                context.SaveChanges();
-            }
-            return ssiTemplate.onBoardingSSITemplateId;
         }
 
         public static List<hmsCurrency> GetAllCurrencies()
@@ -710,16 +525,6 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static void RemoveSsiTemplateDocument(long ssiTemplateId, string fileName)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                var document = context.onBoardingSSITemplateDocuments.FirstOrDefault(x => x.onBoardingSSITemplateId == ssiTemplateId && x.FileName == fileName);
-                if (document == null) return;
-                context.onBoardingSSITemplateDocuments.Remove(document);
-                context.SaveChanges();
-            }
-        }
 
         public static List<onBoardingAuthorizedParty> GetAllAuthorizedParty()
         {
@@ -820,6 +625,45 @@ namespace HMOSecureMiddleware
             }
         }
 
-        #endregion
+        public static CashBalances GetAccountCashBalances(long sendingFundAccountId, DateTime valueDate)
+        {
+            var contextDate = valueDate.GetContextDate();
+
+            dmaTreasuryCashBalance treasuryBal;
+            using (var context = new OperationsContext())
+            {
+                treasuryBal = context.dmaTreasuryCashBalances.FirstOrDefault(s => s.onboardAccountId == sendingFundAccountId && s.ContextDate == contextDate.Date);
+            }
+
+            if (treasuryBal == null)
+                return new CashBalances() { IsCashBalanceAvailable = false };
+
+            List<WireBaseDetails> wires;
+            using (var context = new OperationsSecureContext())
+            {
+                wires = context.hmsWires.Where(s => s.OnBoardAccountId == sendingFundAccountId && s.ValueDate == valueDate &&
+                    s.WireStatusId == (int)WireDataManager.WireStatus.Approved || s.WireStatusId == (int)WireDataManager.WireStatus.Initiated)
+                    .Select(s => new WireBaseDetails
+                    {
+                        SendingAccountId = s.OnBoardAccountId,
+                        Amount = s.Amount,
+                        WireStatusId = s.WireStatusId,
+                        ValueDate = valueDate
+                    }).ToList();
+            }
+
+            var cashBalances = new CashBalances()
+            {
+                IsCashBalanceAvailable = true,
+                TotalWired = wires.Sum(s => s.Amount),
+                TreasuryBalance = treasuryBal.CashBalance ?? 0,
+                Currency = treasuryBal.Currency,
+                ContextDate = treasuryBal.ContextDate,
+                ApprovedWires = wires.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved),
+                PendingWires = wires.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated),
+            };
+
+            return cashBalances;
+        }
     }
 }

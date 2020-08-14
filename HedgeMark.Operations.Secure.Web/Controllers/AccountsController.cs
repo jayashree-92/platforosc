@@ -25,29 +25,6 @@ namespace HMOSecureWeb.Controllers
         }
 
 
-        private class CounterpartyData
-        {
-            public long CounterpartyId { get; set; }
-            public long CounterpartyFamilyId { get; set; }
-            public string CounterpartyFamilyName { get; set; }
-            public string CounterpartyName { get; set; }
-        }
-
-        private static List<CounterpartyData> GetAllCounterparties()
-        {
-            using (var context = new AdminContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.dmaCounterPartyOnBoardings.Include(s => s.dmaCounterpartyFamily).Select(s => new CounterpartyData
-                {
-                    CounterpartyName = s.CounterpartyName,
-                    CounterpartyFamilyId = s.dmaCounterpartyFamilyId ?? 0,
-                    CounterpartyId = s.dmaCounterPartyOnBoardId,
-                    CounterpartyFamilyName = s.dmaCounterpartyFamily.CounterpartyFamily
-                }).ToList();
-            }
-        }
 
         public JsonResult GetAccountPreloadData()
         {
@@ -58,7 +35,7 @@ namespace HMOSecureWeb.Controllers
 
                 var funds = hFunds.Select(s => new { id = s.HmFundId, text = s.PreferredFundName, LegalName = s.LegalFundName });
                 var agreementData = OnBoardingDataManager.GetAgreementsForOnboardingAccountPreloadData(hFundIds, AuthorizedSessionData.IsPrivilegedUser);
-                var counterpartyFamilies = GetAllCounterparties().Select(x => new
+                var counterpartyFamilies = OnBoardingDataManager.GetAllCounterparties().Select(x => new
                 {
                     id = x.CounterpartyId,
                     text = x.CounterpartyName,
@@ -102,7 +79,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAccountDescriptionsByAgreementTypeId(long agreementTypeId)
         {
-            var accountDescriptionChoices = AccountManager.GetAccountDescriptionsByAgreementTypeId(agreementTypeId);
+            var accountDescriptionChoices = FundAccountManager.GetAccountDescriptionsByAgreementTypeId(agreementTypeId);
             return Json(new
             {
                 accountDescriptions = accountDescriptionChoices.Select(choice => new
@@ -115,7 +92,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAccountModules()
         {
-            var accountModules = AccountManager.GetOnBoardingModules();
+            var accountModules = FundAccountManager.GetOnBoardingModules();
             return Json(new
             {
                 accountModules = accountModules.Select(choice => new
@@ -129,7 +106,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAccountReports()
         {
-            var accountReports = AccountManager.GetAccountReports();
+            var accountReports = FundAccountManager.GetAccountReports();
             return Json(new
             {
                 accountReports = accountReports.Select(choice => new
@@ -142,12 +119,12 @@ namespace HMOSecureWeb.Controllers
 
         public void AddAccountDescriptions(string accountDescription, int agreementTypeId)
         {
-            AccountManager.AddAccountDescription(accountDescription, agreementTypeId);
+            FundAccountManager.AddAccountDescription(accountDescription, agreementTypeId);
         }
 
         public void AddAccountModule(long reportId, string accountModule)
         {
-            AccountManager.AddOnboardingModule(reportId, accountModule, UserName);
+            FundAccountManager.AddOnboardingModule(reportId, accountModule, UserName);
         }
 
         private string GetContactName(string lastname, string firstname, string email)
@@ -170,7 +147,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetOnBoardingAccount(long accountId)
         {
-            var onBoardingAccount = AccountManager.GetOnBoardingAccount(accountId);
+            var onBoardingAccount = FundAccountManager.GetOnBoardingAccount(accountId);
 
             return Json(new
             {
@@ -182,14 +159,14 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAccountSsiTemplateMap(long accountId, long fundId, string currency, string messages)
         {
-            var ssiTemplateMaps = AccountManager.GetAccountSsiTemplateMap(accountId);
+            var ssiTemplateMaps = FundAccountManager.GetAccountSsiTemplateMap(accountId);
 
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
 
             if (string.IsNullOrWhiteSpace(messages))
                 messages = string.Empty;
 
-            var ssiTemplates = AccountManager.GetAllApprovedSsiTemplates(counterpartyIds, messages.Split(',').ToList(), string.IsNullOrWhiteSpace(messages), currency);
+            var ssiTemplates = FundAccountManager.GetAllApprovedSsiTemplates(counterpartyIds, messages.Split(',').ToList(), string.IsNullOrWhiteSpace(messages), currency);
             var availableSSITemplates = ssiTemplates
                 .Where(s => !ssiTemplateMaps.Select(p => p.onBoardingSSITemplateId)
                 .Contains(s.onBoardingSSITemplateId)).ToList();
@@ -224,11 +201,11 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetSsiTemplateAccountMap(long ssiTemplateId, long brokerId, string currency, string message, bool isServiceType)
         {
-            var ssiTemplateMaps = AccountManager.GetSsiTemplateAccountMap(ssiTemplateId);
+            var ssiTemplateMaps = FundAccountManager.GetSsiTemplateAccountMap(ssiTemplateId);
             var hmFundIds = OnBoardingDataManager.GetFundIdsbyCounterparty(brokerId);
             if (string.IsNullOrWhiteSpace(message))
                 message = string.Empty;
-            var fundAccounts = AccountManager.GetAllApprovedAccounts(hmFundIds, message, currency, isServiceType);
+            var fundAccounts = FundAccountManager.GetAllApprovedAccounts(hmFundIds, message, currency, isServiceType);
             var existingAccountMaps = ssiTemplateMaps.Select(p => p.onBoardingAccountId).ToList();
             var availableFundAccounts = fundAccounts.Where(s => !existingAccountMaps.Contains(s.onBoardingAccountId)).ToList();
             availableFundAccounts.ForEach(s => s.SwiftGroup = null);
@@ -262,7 +239,7 @@ namespace HMOSecureWeb.Controllers
         }
         public JsonResult GetAccountDocuments(long accountId)
         {
-            var accountDocuments = AccountManager.GetAccountDocuments(accountId);
+            var accountDocuments = FundAccountManager.GetAccountDocuments(accountId);
             return Json(new
             {
                 accountDocuments
@@ -272,8 +249,8 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetAllOnBoardingAccount()
         {
             var hmFundIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
-            var onBoardingAccounts = AccountManager.GetAllOnBoardingAccounts(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
-            var fundAccounts = AccountManager.GetOnBoardingAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
+            var onBoardingAccounts = FundAccountManager.GetAllOnBoardingAccounts(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
+            var fundAccounts = FundAccountManager.GetOnBoardingAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
             var fundAccountmap = fundAccounts.ToDictionary(s => s.onBoardingAccountId, v => v);
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
             var receivingAccountTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.ReceivingAgreementTypesForAccount).Split(',').ToList();
@@ -284,7 +261,7 @@ namespace HMOSecureWeb.Controllers
                 receivingAccountTypes,
                 OnBoardingAccounts = onBoardingAccounts.Select(account => new
                 {
-                    Account = AccountManager.SetAccountDefaults(account),
+                    Account = FundAccountManager.SetAccountDefaults(account),
                     AccountNumber = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].AccountNumber : string.Empty,
                     AgreementName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].AgreementShortName : string.Empty,
                     AgreementTypeId = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].dmaAgreementTypeId ?? 0 : 0,
@@ -344,7 +321,7 @@ namespace HMOSecureWeb.Controllers
 
                 var auditLogList = AuditManager.GetAuditLogs(account, fundName, agreement, broker, UserName);
 
-                var accountId = AccountManager.AddAccount(account, UserName);
+                var accountId = FundAccountManager.AddAccount(account, UserName);
 
                 if (accountId > 0)
                 {
@@ -379,12 +356,12 @@ namespace HMOSecureWeb.Controllers
 
         public void DeleteAccount(long onBoardingAccountId)
         {
-            AccountManager.DeleteAccount(onBoardingAccountId, UserName);
+            FundAccountManager.DeleteAccount(onBoardingAccountId, UserName);
         }
 
         public JsonResult GetAllCurrencies()
         {
-            var currenciesChoices = AccountManager.GetAllCurrencies();
+            var currenciesChoices = FundAccountManager.GetAllCurrencies();
             return Json(new
             {
                 currencies = currenciesChoices.Select(choice => new
@@ -397,12 +374,12 @@ namespace HMOSecureWeb.Controllers
 
         public void AddCurrency(string currency)
         {
-            AccountManager.AddCurrency(currency);
+            FundAccountManager.AddCurrency(currency);
         }
 
         public JsonResult GetAllCashInstruction()
         {
-            var cashInstructionChoices = AccountManager.GetAllCashInstruction();
+            var cashInstructionChoices = FundAccountManager.GetAllCashInstruction();
             return Json(new
             {
                 cashInstructions = cashInstructionChoices.Select(choice => new
@@ -420,12 +397,12 @@ namespace HMOSecureWeb.Controllers
 
         public void AddCashInstruction(string cashInstruction)
         {
-            AccountManager.AddCashInstruction(cashInstruction);
+            FundAccountManager.AddCashInstruction(cashInstruction);
         }
 
         public JsonResult GetAllAuthorizedParty()
         {
-            var authorizedParties = AccountManager.GetAllAuthorizedParty();
+            var authorizedParties = FundAccountManager.GetAllAuthorizedParty();
             return Json(new
             {
                 AuthorizedParties = authorizedParties.Select(choice => new
@@ -438,12 +415,12 @@ namespace HMOSecureWeb.Controllers
 
         public void AddAuthorizedParty(string authorizedParty)
         {
-            AccountManager.AddAuthorizedParty(authorizedParty, UserName);
+            FundAccountManager.AddAuthorizedParty(authorizedParty, UserName);
         }
 
         public JsonResult GetAllRelatedSwiftGroup(long brokerId)
         {
-            var swiftGroups = AccountManager.GetAllSwiftGroup(brokerId);
+            var swiftGroups = FundAccountManager.GetAllSwiftGroup(brokerId);
             swiftGroups.ForEach(s =>
             {
                 s.onBoardingAccounts = null;
@@ -462,7 +439,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAccountCallbackData(long accountId)
         {
-            var callbacks = AccountManager.GetAccountCallbacks(accountId);
+            var callbacks = FundAccountManager.GetAccountCallbacks(accountId);
             return Json(callbacks, JsonContentType, JsonContentEncoding);
         }
 
@@ -471,7 +448,7 @@ namespace HMOSecureWeb.Controllers
             hmsAccountCallback existingCallback;
             if (callback.hmsAccountCallbackId > 0)
             {
-                existingCallback = AccountManager.GetCallbackData(callback.hmsAccountCallbackId);
+                existingCallback = FundAccountManager.GetCallbackData(callback.hmsAccountCallbackId);
                 callback.RecCreatedDt = existingCallback.RecCreatedDt;
                 callback.RecCreatedBy = existingCallback.RecCreatedBy;
                 if (callback.IsCallbackConfirmed)
@@ -486,12 +463,12 @@ namespace HMOSecureWeb.Controllers
                 callback.RecCreatedDt = DateTime.Now;
             }
 
-            AccountManager.AddOrUpdateCallback(callback);
+            FundAccountManager.AddOrUpdateCallback(callback);
         }
 
         public JsonResult GetAllAccountBicorAba()
         {
-            var accountBicorAba = AccountManager.GetAllAccountBicorAba();
+            var accountBicorAba = FundAccountManager.GetAllAccountBicorAba();
             return Json(new
             {
                 accountBicorAba
@@ -506,27 +483,22 @@ namespace HMOSecureWeb.Controllers
             accountBiCorAba.CreatedBy = UserName;
             accountBiCorAba.UpdatedBy = UserName;
 
-            AccountManager.AddAccountBiCorAba(accountBiCorAba);
+            FundAccountManager.AddAccountBiCorAba(accountBiCorAba);
         }
 
         public void UpdateAccountStatus(string accountStatus, long accountId, string comments)
         {
-            AccountManager.UpdateAccountStatus(accountStatus, accountId, comments, UserName);
+            FundAccountManager.UpdateAccountStatus(accountStatus, accountId, comments, UserName);
         }
 
         public void UpdateAccountMapStatus(string status, long accountMapId, string comments)
         {
-            AccountManager.UpdateAccountMapStatus(status, accountMapId, comments, UserName);
-        }
-
-        public void RemoveSsiTemplateMap(long ssiTemplateMapId)
-        {
-            AccountManager.RemoveSsiTemplateMap(ssiTemplateMapId);
+            FundAccountManager.UpdateAccountMapStatus(status, accountMapId, comments, UserName);
         }
 
         public JsonResult GetCutoffTime(string cashInstruction, string currency)
         {
-            var cutOffTime = AccountManager.GetCutoffTime(cashInstruction, currency);
+            var cutOffTime = FundAccountManager.GetCutoffTime(cashInstruction, currency);
             return Json(new
             {
                 cutOffTime
@@ -535,7 +507,7 @@ namespace HMOSecureWeb.Controllers
 
         public void AddAccountSsiTemplateMap(List<onBoardingAccountSSITemplateMap> accountSsiTemplateMap)
         {
-            AccountManager.AddAccountSsiTemplateMap(accountSsiTemplateMap, UserName);
+            FundAccountManager.AddAccountSsiTemplateMap(accountSsiTemplateMap, UserName);
         }
 
         public void RemoveAccountDocument(string fileName, long documentId)
@@ -545,12 +517,12 @@ namespace HMOSecureWeb.Controllers
             //if (System.IO.File.Exists(fileinfo.FullName))
             //    System.IO.File.Delete(fileinfo.FullName);
             if (documentId > 0)
-                AccountManager.RemoveAccountDocument(documentId);
+                FundAccountManager.RemoveAccountDocument(documentId);
         }
 
         public bool IsAccountDocumentExists(long accountId)
         {
-            return AccountManager.IsAccountDocumentExists(accountId);
+            return FundAccountManager.IsAccountDocumentExists(accountId);
         }
 
 
@@ -560,8 +532,8 @@ namespace HMOSecureWeb.Controllers
         {
 
             var hmFundIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
-            var onBoardingAccounts = AccountManager.GetAllOnBoardingAccounts(hmFundIds, AuthorizedSessionData.IsPrivilegedUser).OrderByDescending(x => x.UpdatedAt).ToList();
-            var fundAccounts = AccountManager.GetOnBoardingAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
+            var onBoardingAccounts = FundAccountManager.GetAllOnBoardingAccounts(hmFundIds, AuthorizedSessionData.IsPrivilegedUser).OrderByDescending(x => x.UpdatedAt).ToList();
+            var fundAccounts = FundAccountManager.GetOnBoardingAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
 
 
             var accountListRows = BuildAccountRows(onBoardingAccounts, fundAccounts);
@@ -690,13 +662,13 @@ namespace HMOSecureWeb.Controllers
 
         public string UploadAccount()
         {
-            var onboardingAccounts = AccountManager.GetAllOnBoardingAccounts(new List<long>(), true);
+            var onboardingAccounts = FundAccountManager.GetAllOnBoardingAccounts(new List<long>(), true);
             var counterpartyFamilies = OnBoardingDataManager.GetAllCounterpartyFamilies().ToDictionary(x => x.dmaCounterpartyFamilyId, x => x.CounterpartyFamily);
-            var counterparties = OnBoardingDataManager.GetAllCounterparties().ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
+            var counterparties = OnBoardingDataManager.GetAllCounterparties().ToDictionary(x => x.CounterpartyId, x => x.CounterpartyName);
             var hFunds = AuthorizedDMAFundData;
             var agreements = OnBoardingDataManager.GetAllAgreements();
-            var accountBicorAba = AccountManager.GetAllAccountBicorAba();
-            var swiftgroups = AccountManager.GetAllSwiftGroup();
+            var accountBicorAba = FundAccountManager.GetAllAccountBicorAba();
+            var swiftgroups = FundAccountManager.GetAllSwiftGroup();
 
             var bulkUploadLogs = new List<hmsBulkUploadLog>();
             for (var i = 0; i < Request.Files.Count; i++)
@@ -936,7 +908,7 @@ namespace HMOSecureWeb.Controllers
                         accountDetail.IsDeleted = false;
 
                         if (accountDetail.hmFundId != 0)
-                            AccountManager.AddAccount(accountDetail, UserName);
+                            FundAccountManager.AddAccount(accountDetail, UserName);
                     }
                 }
                 bulkUploadLogs.Add(new hmsBulkUploadLog() { FileName = newFileName, IsFundAccountLog = true, UserName = UserName });
@@ -1043,7 +1015,7 @@ namespace HMOSecureWeb.Controllers
 
                     if (System.IO.File.Exists(fileinfo.FullName))
                     {
-                        AccountManager.RemoveAccountDocument(accountId, file.FileName);
+                        FundAccountManager.RemoveAccountDocument(accountId, file.FileName);
                         System.IO.File.Delete(fileinfo.FullName);
                     }
 
@@ -1056,7 +1028,7 @@ namespace HMOSecureWeb.Controllers
                     document.RecCreatedBy = UserName;
                     document.onBoardingAccountId = accountId;
 
-                    AccountManager.AddAccountDocument(document);
+                    FundAccountManager.AddAccountDocument(document);
 
                     aDocments.Add(document);
                 }

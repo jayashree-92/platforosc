@@ -83,7 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountsManager.cs" />
+    <Compile Include="FundAccountManager.cs" />
     <Compile Include="AdminFundManager.cs" />
     <Compile Include="AuditManager.cs" />
     <Compile Include="AuthorizationManager.cs" />
@@ -101,6 +101,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="SSITemplateManager.cs" />
     <Compile Include="SwiftMessageManager\OutboundSwiftMsgCreater.cs" />
     <Compile Include="SwiftMessageManager\InboundSwiftMsgParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

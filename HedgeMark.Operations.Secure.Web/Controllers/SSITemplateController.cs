@@ -29,7 +29,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAllSsiTemplates()
         {
-            var ssiTemplates = AccountManager.GetAllSsiTemplates();
+            var ssiTemplates = SSITemplateManager.GetAllSsiTemplates();
             return Json(new
             {
                 SSITemplates = ssiTemplates.OrderBy(x => x.Value).Select(ac => new
@@ -42,7 +42,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAllSsiTemplates(int templateTypeId, long templateEntityId)
         {
-            var onBoardingSsiTemplates = AccountManager.GetAllSsiTemplates(templateTypeId, templateEntityId);
+            var onBoardingSsiTemplates = SSITemplateManager.GetAllSsiTemplates(templateTypeId, templateEntityId);
             return Json(new
             {
                 OnBoardingSSITemplates = onBoardingSsiTemplates
@@ -51,15 +51,15 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAllBrokerSsiTemplates()
         {
-            var brokerSsiTemplates = AccountManager.GetAllBrokerSsiTemplates();
+            var brokerSsiTemplates = SSITemplateManager.GetAllBrokerSsiTemplates();
             var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties();
             var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
-            var serviceProviders = AccountManager.GetAllServiceProviderList();
+            var serviceProviders = SSITemplateManager.GetAllServiceProviderList();
             return Json(new
             {
                 BrokerSsiTemplates = brokerSsiTemplates.Select(template => new
                 {
-                    SSITemplate = AccountManager.SetSSITemplateDefaults(template),
+                    SSITemplate = SSITemplateManager.SetSSITemplateDefaults(template),
                     AgreementType = (agreementTypes.ContainsKey(template.dmaAgreementTypeId) && string.IsNullOrEmpty(template.ServiceProvider)) ? agreementTypes[template.dmaAgreementTypeId] : string.Empty,
                     Broker = (counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty)
                 }).ToList(),
@@ -72,7 +72,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetSsiTemplate(long templateId)
         {
-            var onBoardingSsiTemplate = AccountManager.GetSsiTemplate(templateId);
+            var onBoardingSsiTemplate = SSITemplateManager.GetSsiTemplate(templateId);
             var document = onBoardingSsiTemplate.onBoardingSSITemplateDocuments.ToList();
             onBoardingSsiTemplate.onBoardingSSITemplateDocuments = null;
 
@@ -88,23 +88,23 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAllServiceProviderList()
         {
-            var serviceProviders = AccountManager.GetAllServiceProviderList().Select(y => new { id = y.ServiceProvider, text = y.ServiceProvider }).DistinctBy(x => x.id).OrderBy(x => x.id).ToList();
+            var serviceProviders = SSITemplateManager.GetAllServiceProviderList().Select(y => new { id = y.ServiceProvider, text = y.ServiceProvider }).DistinctBy(x => x.id).OrderBy(x => x.id).ToList();
             return Json(serviceProviders, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult PaymentOrReceiptReasonDetails(string templateType, int? agreementTypeId, string serviceProviderName)
         {
-            var reasonDetail = templateType == "Broker" ? AccountManager.GetAllSsiTemplateAccountTypes(agreementTypeId).Select(x => new { id = x.Reason, text = x.Reason }).OrderBy(x => x.text).ToList() : AccountManager.GetAllSsiTemplateServiceProviders(serviceProviderName).Select(x => new { id = x.FeeType, text = x.FeeType }).OrderBy(x => x.text).ToList();
+            var reasonDetail = templateType == "Broker" ? SSITemplateManager.GetAllSsiTemplateAccountTypes(agreementTypeId).Select(x => new { id = x.Reason, text = x.Reason }).OrderBy(x => x.text).ToList() : SSITemplateManager.GetAllSsiTemplateServiceProviders(serviceProviderName).Select(x => new { id = x.FeeType, text = x.FeeType }).OrderBy(x => x.text).ToList();
             return Json(reasonDetail, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetSsiTemplatePreloadData()
         {
             var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties().Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList();
-            var templates = AccountManager.GetAllSsiTemplates().Select(x => new { id = x.Key, text = x.Value }).ToList();
+            var templates = SSITemplateManager.GetAllSsiTemplates().Select(x => new { id = x.Key, text = x.Value }).ToList();
             var permittedAgreementTypes = new List<string>() { "ISDA", "PB", "FCM", "CDA", "FXPB", "GMRA", "MSLA", "MRA", "MSFTA", "Listed Options", "Non-US Listed Options" };
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes().Where(x => permittedAgreementTypes.Contains(x.Value)).Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList();
-            var currencies = AccountManager.GetAllCurrencies().Select(y => new { id = y.Currency, text = y.Currency }).OrderBy(x => x.text).ToList();
+            var currencies = FundAccountManager.GetAllCurrencies().Select(y => new { id = y.Currency, text = y.Currency }).OrderBy(x => x.text).ToList();
 
             return Json(new
             {
@@ -139,7 +139,7 @@ namespace HMOSecureWeb.Controllers
                 ssiTemplate.onBoardingSSITemplateDocuments = document;
             }
 
-            var ssiTemplateId = AccountManager.AddSsiTemplate(ssiTemplate, UserName);
+            var ssiTemplateId = SSITemplateManager.AddSsiTemplate(ssiTemplate, UserName);
             if (ssiTemplateId > 0)
             {
                 var auditLogList = AuditManager.GetAuditLogs(ssiTemplate, accountType, broker, UserName);
@@ -181,6 +181,11 @@ namespace HMOSecureWeb.Controllers
                 //AuditManager.AddAuditLog(auditLog);
             }
         }
+        
+        public void RemoveSsiTemplateMap(long ssiTemplateMapId)
+        {
+            SSITemplateManager.RemoveSsiTemplateMap(ssiTemplateMapId);
+        }
 
         public void DeleteSsiTemplate(long ssiTemplateId)
         {
@@ -210,10 +215,10 @@ namespace HMOSecureWeb.Controllers
 
         public string UploadSsiTemplate()
         {
-            var onboardingSsiTemplate = AccountManager.GetAllBrokerSsiTemplates();
+            var onboardingSsiTemplate = SSITemplateManager.GetAllBrokerSsiTemplates();
             var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties();
             var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
-            var accountBicorAba = AccountManager.GetAllAccountBicorAba();
+            var accountBicorAba = FundAccountManager.GetAllAccountBicorAba();
             var messageTypes = new List<string> { "MT103", "MT202", "MT202 COV" };
             var bulkUploadLogs = new List<hmsBulkUploadLog>();
             for (var i = 0; i < Request.Files.Count; i++)
@@ -252,7 +257,7 @@ namespace HMOSecureWeb.Controllers
                         templateDetail.UltimateBeneficiary = new onBoardingAccountBICorABA();
 
                         templateDetail.onBoardingSSITemplateId = string.IsNullOrWhiteSpace(template["SSI Template Id"]) ? 0 : long.Parse(template["SSI Template Id"]);
-                        templateDetail.TemplateTypeId = AccountManager.BrokerTemplateTypeId;
+                        templateDetail.TemplateTypeId = SSITemplateManager.BrokerTemplateTypeId;
                         templateDetail.TemplateEntityId = counterParties.FirstOrDefault(x => x.Value == template["Legal Entity"]).Key;
                         templateDetail.dmaAgreementTypeId = agreementTypes.FirstOrDefault(x => x.Value == template["Account Type"]).Key;
                         templateDetail.ServiceProvider = template["Service Provider"];
@@ -356,7 +361,7 @@ namespace HMOSecureWeb.Controllers
                         templateDetail.IsDeleted = false;
                         templateDetail.LastUsedAt = DateTime.Now;
                         //templateDetail.TemplateName = template["SSI Template Type"] == "Broker" ? template["Broker"] + " - " + template["Account Type"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : (!string.IsNullOrWhiteSpace(template["SSI Template Type"]) ? template["Service Provider"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : template["Template Name"]);
-                        AccountManager.AddSsiTemplate(templateDetail, UserName);
+                        SSITemplateManager.AddSsiTemplate(templateDetail, UserName);
                     }
                     bulkUploadLogs.Add(new hmsBulkUploadLog() { FileName = newFileName, IsFundAccountLog = false, UserName = UserName });
                 }
@@ -503,7 +508,7 @@ namespace HMOSecureWeb.Controllers
 
         public FileResult ExportAllSsiTemplatelist()
         {
-            var ssiTemplates = AccountManager.GetAllBrokerSsiTemplates().OrderByDescending(x => x.UpdatedAt).ToList();
+            var ssiTemplates = SSITemplateManager.GetAllBrokerSsiTemplates().OrderByDescending(x => x.UpdatedAt).ToList();
             var contentToExport = new Dictionary<string, List<Row>>();
             var accountListRows = BuildSsiTemplateRows(ssiTemplates);
             //File name and path
@@ -610,7 +615,7 @@ namespace HMOSecureWeb.Controllers
 
                     if (System.IO.File.Exists(fileinfo.FullName))
                     {
-                        AccountManager.RemoveSsiTemplateDocument(ssiTemplateId, file.FileName);
+                        SSITemplateManager.RemoveSsiTemplateDocument(ssiTemplateId, file.FileName);
                         System.IO.File.Delete(fileinfo.FullName);
                     }
 

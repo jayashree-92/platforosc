@@ -1074,46 +1074,45 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         else $(".cashSweepTimeDiv" + index).hide();
     }
 
-    $scope.fnGetAuthorizedParty = function (panelIndex) {
+    $scope.fnGetAuthorizedParty = function () {
         $http.get("/Accounts/GetAllAuthorizedParty").then(function (response) {
             $scope.authorizedPartyData = response.data.AuthorizedParties;
 
-            if (panelIndex != undefined) {
-                $("#liAuthorizedParty" + panelIndex).select2({
+                $("#liAuthorizedParty0").select2({
                     placeholder: "Select a Authorized Party",
                     allowClear: true,
                     data: response.data.AuthorizedParties
                 });
 
-                if ($scope.onBoardingAccountDetails[panelIndex].AuthorizedParty != null && $scope.onBoardingAccountDetails[panelIndex].AuthorizedParty != 'undefined') {
-                    $("#liAuthorizedParty" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].AuthorizedParty);
-                    $scope.fnAuthorizedPartyChange(panelIndex);
+                if ($scope.onBoardingAccountDetails[0].AuthorizedParty != null && $scope.onBoardingAccountDetails[0].AuthorizedParty != 'undefined') {
+                    $("#liAuthorizedParty0").select2("val", $scope.onBoardingAccountDetails[0].AuthorizedParty);
+                    $scope.fnAuthorizedPartyChange(0);
                 }
-            }
+           
         });
     }
 
-    $scope.fnGetSwiftGroup = function (panelIndex) {
-        $http.get("/Accounts/GetAllRelatedSwiftGroup?brokerId=" + $scope.onBoardingAccountDetails[panelIndex].dmaCounterpartyFamilyId).then(function (response) {
+    $scope.fnGetSwiftGroup = function () {
+        $http.get("/Accounts/GetAllRelatedSwiftGroup?brokerId=" + $scope.onBoardingAccountDetails[0].dmaCounterpartyFamilyId).then(function (response) {
             $scope.SwiftGroups = response.data.swiftGroups;
             $scope.SwiftGroupData = response.data.SwiftGroupData;
 
-            if (panelIndex != undefined) {
-                $("#liSwiftGroup" + panelIndex).select2({
+          
+                $("#liSwiftGroup0").select2({
                     placeholder: "Select a Swift Group",
                     allowClear: true,
                     data: response.data.SwiftGroupData
                 });
 
-                if ($scope.onBoardingAccountDetails[panelIndex].SwiftGroupId != null && $scope.onBoardingAccountDetails[panelIndex].SwiftGroupId != 'undefined') {
-                    $("#liSwiftGroup" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].SwiftGroupId);
+                if ($scope.onBoardingAccountDetails[0].SwiftGroupId != null && $scope.onBoardingAccountDetails[0].SwiftGroupId != 'undefined') {
+                    $("#liSwiftGroup0").select2("val", $scope.onBoardingAccountDetails[0].SwiftGroupId);
                 }
                 else if (!$scope.isEdit) {
-                    $("#liSwiftGroup" + panelIndex).select2("val", response.data.SwiftGroupData[0] != undefined ? response.data.SwiftGroupData[0].id : null);
+                    $("#liSwiftGroup0").select2("val", response.data.SwiftGroupData[0] != undefined ? response.data.SwiftGroupData[0].id : null);
                 }
 
-                $scope.fnOnSwiftGroupChange($("#liSwiftGroup" + panelIndex).select2("val"), panelIndex);
-            }
+                $scope.fnOnSwiftGroupChange($("#liSwiftGroup0").select2("val"));
+            
         });
     }
 
@@ -1128,16 +1127,16 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             viewContactTable(onboardingContacts, index);
         }
     }
-    $scope.fnOnSwiftGroupChange = function (swiftGroup, index) {
-        $scope.onBoardingAccountDetails[index].SwiftGroupId = swiftGroup;
+    $scope.fnOnSwiftGroupChange = function (swiftGroup) {
+        $scope.onBoardingAccountDetails[0].SwiftGroupId = swiftGroup;
         var swData = $.grep($scope.SwiftGroups, function (v) { return v.hmsSwiftGroupId == swiftGroup; })[0];
         if (swData != undefined) {
             $scope.swiftGroupInfo = swData;
-            $("#txtSender" + index).val(swData.SendersBIC);
+            $("#txtSender0").val(swData.SendersBIC);
         }
         else {
             $scope.swiftGroupInfo = undefined;
-            $("#txtSender" + index).val("");
+            $("#txtSender0").val("");
         }
     }
 
@@ -1319,25 +1318,25 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         // $("html, body").animate({ scrollTop: $(e.target).offset().top - 10 }, "slow");
     }
 
-    $scope.fnGetAccountDescriptions = function (panelIndex) {
+    $scope.fnGetAccountDescriptions = function () {
 
         $http.get("/Accounts/GetAccountDescriptionsByAgreementTypeId?agreementTypeId=" + $scope.AgreementTypeId).then(function (response) {
             $scope.AccountDescriptions = response.data.accountDescriptions;
-            $("#liAccountDescriptions" + panelIndex).select2({
+            $("#liAccountDescriptions0").select2({
                 placeholder: "Select Description",
                 allowClear: true,
                 data: response.data.accountDescriptions
             });
 
             if ($scope.AgreementTypeId > 0)
-                $("#liAccountDescriptions" + panelIndex).val($scope.onBoardingAccountDetails[panelIndex].Description);
+                $("#liAccountDescriptions0").val($scope.onBoardingAccountDetails[0].Description);
         });
     }
 
-    $scope.fnGetAccountModules = function (panelIndex) {
+    $scope.fnGetAccountModules = function () {
         $http.get("/Accounts/GetAccountModules").then(function (response) {
             $scope.accountModules = response.data.accountModules;
-            $("#liAccountModule_" + panelIndex).select2({
+            $("#liAccountModule_0").select2({
                 placeholder: "Select Modules",
                 multiple: true,
                 allowClear: true,
@@ -1345,7 +1344,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 formatResult: formatResult,
                 formatSelection: formatResult
             });
-            $("#liAccountModule_" + panelIndex).val($scope.onBoardingAccountDetails[panelIndex].AccountModule);
+            $("#liAccountModule_0").val($scope.onBoardingAccountDetails[0].AccountModule);
         });
     }
 
@@ -1354,7 +1353,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         return selectData.text + "&nbsp;&nbsp;<label class='label " + (selectData.report == "Collateral" ? " label-info" : "label-default") + " shadowBox'>" + selectData.report + "</label>";
     }
 
-    $scope.fnGetAccountReports = function (panelIndex) {
+    $scope.fnGetAccountReports = function () {
         $http.get("/Accounts/GetAccountReports").then(function (response) {
             $scope.accountReports = response.data.accountReports;
             $("#liAccountReport").select2({
@@ -1415,14 +1414,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if ($scope.detail == "Description") {
             $http.post("/Accounts/AddAccountDescriptions", { accountDescription: $("#txtDetail").val(), agreementTypeId: $scope.agreementTypeId }).then(function (response) {
                 notifySuccess("Description added successfully");
-                $scope.onBoardingAccountDetails[$scope.PanelIndex].Description = $("#txtDetail").val();
-                $scope.fnGetAccountDescriptions($scope.PanelIndex);
+                $scope.onBoardingAccountDetails[0].Description = $("#txtDetail").val();
+                $scope.fnGetAccountDescriptions();
             });
         }
         else {
             $http.post("/Accounts/AddAccountModule", { reportId: $("#liAccountReport").select2('val'), accountModule: $("#txtDetail").val() }).then(function (response) {
                 notifySuccess("Module added successfully");
-                $scope.fnGetAccountModules($scope.PanelIndex);
+                $scope.fnGetAccountModules();
             });
         }
 
@@ -1474,15 +1473,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         //}
     }
 
-    $scope.fnGetAccountCallbackData = function (accountId, index) {
+    $scope.fnGetAccountCallbackData = function (accountId) {
         $http.get("/Accounts/GetAccountCallbackData?accountId=" + accountId).then(function (response) {
-            $scope.onBoardingAccountDetails[index].hmsAccountCallbacks = response.data;
+            $scope.onBoardingAccountDetails[0].hmsAccountCallbacks = response.data;
             $scope.CallBackChecks = response.data;
-            $scope.viewCallbackTable($scope.CallBackChecks, index);
+            $scope.viewCallbackTable($scope.CallBackChecks, 0);
         });
     }
 
-    $scope.fnLoadDefaultDropDowns = function (key) {
+    $scope.fnLoadDefaultDropDowns = function () {
 
         $("#liBeneficiaryType0").select2({
             placeholder: "Select a BIC or ABA",
@@ -1526,53 +1525,53 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
 
 
-        $("#AuthorizedParty" + key).select2({
+        $("#AuthorizedParty0").select2({
             placeholder: "Select Authorized Party",
             allowClear: true,
             data: $scope.authorizedPartyData
         });
-        $("#cashSweep" + key).select2({
+        $("#cashSweep0").select2({
             placeholder: "Select Cash Sweep",
             allowClear: true,
             data: $scope.cashSweepData
         });
-        $("#cashSweepTimeZone" + key).select2({
+        $("#cashSweepTimeZone0").select2({
             placeholder: "Zone",
             allowClear: true,
             data: $scope.cashSweepTimeZoneData
         });
-        $("#contactType" + key).select2({
+        $("#contactType0").select2({
             placeholder: "Contact Type",
             allowClear: true,
             data: $scope.ContactType
         });
-        $("#liCurrency" + key).select2({
+        $("#liCurrency0").select2({
             placeholder: "Select a Currency",
             allowClear: true,
             data: $scope.currencies
         });
-        $("#liSweepCurrency" + key).select2({
+        $("#liSweepCurrency0").select2({
             placeholder: "Select a Sweep Currency",
             allowClear: true,
             data: $scope.currencies
         });
-        $("#liCashInstruction" + key).select2({
+        $("#liCashInstruction0").select2({
             placeholder: "select a Cash Instruction",
             allowClear: true,
             data: $scope.cashInstructions
         });
 
-        $("#liAccountPurpose" + key).select2({
+        $("#liAccountPurpose0").select2({
             placeholder: "Select a Account Type",
             allowClear: true,
             data: $scope.accountPurpose
         });
-        $("#liAccountStatus" + key).select2({
+        $("#liAccountStatus0").select2({
             placeholder: "Select a Account Status",
             allowClear: true,
             data: $scope.accountStatus
         });
-        //$("#liCustodyAcct" + key).select2({
+        //$("#liCustodyAcct0").select2({
         //    placeholder: "Select a Associated Custody Account",
         //    allowClear: true,
         //    data: $scope.cusodyAccountData
@@ -1707,7 +1706,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     return;
                 } else {
                     if (rowElement.onBoardingAccountSSITemplateMapId > 0) {
-                        $http.post("/Accounts/RemoveSsiTemplateMap", { ssiTemplateMapId: rowElement.onBoardingAccountSSITemplateMapId }).then(function () {
+                        $http.post("/SSITemplate/RemoveSsiTemplateMap", { ssiTemplateMapId: rowElement.onBoardingAccountSSITemplateMapId }).then(function () {
                             ssiMapTable[rowIndex].row(selectedRow).remove().draw();
                             //$scope.ssiTemplateDocuments.pop(rowElement);
                             $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountSSITemplateMaps.pop(rowElement);
@@ -1896,18 +1895,18 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.fnGetAccountReports();
         $.each($scope.onBoardingAccountDetails, function (key, value) {
 
-            $scope.fnGetAccountDescriptions(key);
-            $scope.fnGetAccountModules(key);
+            $scope.fnGetAccountDescriptions();
+            $scope.fnGetAccountModules();
             if (value.onBoardingAccountId > 0) {
-                $scope.fnLoadContactDetails($scope.CounterpartyFamilyId, value.ContactName, key);
-                $scope.fnGetAccountCallbackData(value.onBoardingAccountId, key);
+                $scope.fnLoadContactDetails(value.ContactName);
+                $scope.fnGetAccountCallbackData(value.onBoardingAccountId);
             }
 
-            $scope.fnLoadDefaultDropDowns(key);
-            $scope.fnGetAuthorizedParty(key);
-            $scope.fnGetSwiftGroup(key);
-            var cashSweepTimeDiv = ".cashSweepTimeDiv" + key;
-            var cashSweepTime = "#cashSweepTime" + key;
+            $scope.fnLoadDefaultDropDowns();
+            $scope.fnGetAuthorizedParty();
+            $scope.fnGetSwiftGroup();
+            var cashSweepTimeDiv = ".cashSweepTimeDiv0";
+            var cashSweepTime = "#cashSweepTime0";
             if (value.CashSweep == "Yes") {
                 $(cashSweepTimeDiv).show();
                 //if (value.CashSweepTime != null && value.CashSweepTime != "" && value.CashSweepTime != undefined) {
@@ -1917,11 +1916,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 //}
 
 
-                $("#cashSweepTimeZone" + key).val(value.CashSweepTimeZone);
+                $("#cashSweepTimeZone0").val(value.CashSweepTimeZone);
             }
             else $(cashSweepTimeDiv).hide();
 
-            var descriptionValue = "#liAccountDescriptions" + key;
+            var descriptionValue = "#liAccountDescriptions0";
             $(descriptionValue).val(value.Description);
 
             //var contactNameValue = "#contactName" + key;
@@ -2761,7 +2760,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             })
         }).then(function (response) {
             notifySuccess("Account Call back added successfully");
-            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[$scope.PanelIndex].onBoardingAccountId, $scope.PanelIndex);
+            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId);
         });
 
         $("#callbackModal").modal("hide");

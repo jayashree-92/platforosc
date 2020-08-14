@@ -756,7 +756,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     return;
                 } else {
                     if (rowElement.onBoardingAccountSSITemplateMapId > 0) {
-                        $http.post("/Accounts/RemoveSsiTemplateMap", { ssiTemplateMapId: rowElement.onBoardingAccountSSITemplateMapId }).then(function () {
+                        $http.post("/SSITemplate/RemoveSsiTemplateMap", { ssiTemplateMapId: rowElement.onBoardingAccountSSITemplateMapId }).then(function () {
                             $scope.ssiMapTable.row(selectedRow).remove().draw();
                             //$scope.ssiTemplateDocuments.pop(rowElement);             
                             notifySuccess("Fund account removed succesfully");

@@ -441,7 +441,25 @@
                         <p />
                     </div>
                 </div>
-
+                <div class="panel panel-info" ng-if="WireTicket.OnboardAccountId != '' && (WireTicket.WireStatusId <= 1 || WireTicket.WireStatusId == 6)">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#cashBalancesDiv" ng-click="collapseContainer('CashBalances')" aria-expanded="false" aria-controls="cashBalancesDiv">
+                        <span class="">Available Cash Balances</span>&nbsp;&nbsp;<span class="label label-default">{{CashBalance.Currency}}</span>&nbsp;<span class="label  {{ CashBalance.AvailableBalance <=0 ?'label-warning' :'label-success' }} prewrap">{{ CashBalance.AvailableBalance}}</span>
+                        <span class="small" ng-if="CashBalance.IsCashBalanceAvailable">
+                            (Treasury:{{ CashBalance.TreasuryBalance}} - Total Wired:{{CashBalance.TotalWired}})
+                        </span><span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isCashBalancesCollapsed , 'glyphicon-chevron-down': isCashBalancesCollapsed }"></span>
+                    </div>
+                    <div id="cashBalancesDiv" class="panel-body collapse">
+                        <div class="row">
+                            <p class="ng-show-hide swiftMessgeBlock" style="line-height: 2;padding: 0px">
+                                Available Balances :{{CashBalance.AvailableBalance}}
+                                Treasury Wires :{{CashBalance.TreasuryBalance}}
+                                Total Wired :{{CashBalance.TotalWired}}
+                                Approved Wires :{{CashBalance.ApprovedWires}}
+                                Pending Wires :{{CashBalance.PendingWires}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
                 <div class="panel panel-default ng-show-hide" id="panelReceivingAccountSelector" ng-if="wireTicketObj.IsFundTransfer && WireTicket.ReceivingOnBoardAccountId != ''">
                     <div class="panel-heading" data-toggle="collapse" data-target="#receivingAccountDetailDiv" ng-click="collapseContainer('ReceivingAccount')" aria-expanded="false" aria-controls="receivingAccountDetailDiv">
                         <span class="">Receiving Account Details</span>&nbsp;&nbsp;<span class="label label-primary">{{ receivingAccountDetail.UltimateBeneficiaryAccountNumber + " - " + receivingAccountDetail.AccountName }}</span>
@@ -957,7 +975,7 @@
                 </div>
                 <textarea type="text" placeholder="Enter Comments" id="wireComment" ng-model="wireComments" class="form-control" rows="2" style="width:50%;float:left;"></textarea>
                 <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save"
-                        ng-if="WireTicketStatus.IsDraftEnabled" ng-click="fnUpdateWireWithStatus(1)" 
+                        ng-if="WireTicketStatus.IsDraftEnabled" ng-click="fnUpdateWireWithStatus(1)"
                         style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ WireTicketStatus.IsLastModifiedUser ?  'Modifying' : 'Reverting to Draft' }}...</span>">
                     <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;{{ WireTicketStatus.IsLastModifiedUser ? "Modify" : "Save as Draft" }}
                 </button>

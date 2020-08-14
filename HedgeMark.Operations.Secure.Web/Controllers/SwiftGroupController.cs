@@ -31,7 +31,7 @@ namespace HMOSecureWeb.Controllers
             return Json(new
             {
                 brokerLegalEntityData = brokerLegalEntityData.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
-                swiftGroupStatusData = AccountManager.GetSwiftGroupStatus().Select(s => new { id = s.Key, text = s.Value }).ToList(),
+                swiftGroupStatusData = FundAccountManager.GetSwiftGroupStatus().Select(s => new { id = s.Key, text = s.Value }).ToList(),
                 wireMessageTypes,
                 swiftGroupData = swiftGroupData.OrderByDescending(s => s.SwiftGroup.RecCreatedAt).ToList()
             }, JsonRequestBehavior.AllowGet);
@@ -39,7 +39,7 @@ namespace HMOSecureWeb.Controllers
 
         private static List<SwiftGroupData> GetAllSwiftGroupData(out Dictionary<long, string> brokerLegalEntityData)
         {
-            var swiftGroupInfo = AccountManager.GetAllSwiftGroup();
+            var swiftGroupInfo = FundAccountManager.GetAllSwiftGroup();
             brokerLegalEntityData = OnBoardingDataManager.GetAllCounterpartyFamilies().ToDictionary(s => s.dmaCounterpartyFamilyId, v => v.CounterpartyFamily);
 
             var swiftGroupData = new List<SwiftGroupData>();
@@ -79,7 +79,7 @@ namespace HMOSecureWeb.Controllers
             var originalSwiftGroup = GetSwiftGroupData(hmsSwiftGroup.hmsSwiftGroupId);
             hmsSwiftGroup.RecCreatedBy = UserName;
             hmsSwiftGroup.RecCreatedAt = DateTime.Now;
-            AccountManager.AddOrUpdateSwiftGroup(hmsSwiftGroup);
+            FundAccountManager.AddOrUpdateSwiftGroup(hmsSwiftGroup);
             AuditSwiftGroupChanges(hmsSwiftGroup, originalSwiftGroup);
         }
 
@@ -167,7 +167,7 @@ namespace HMOSecureWeb.Controllers
 
             if (originalSwiftGroup.SwiftGroupStatusId != swiftGroup.SwiftGroupStatusId)
             {
-                var statusLkup = AccountManager.GetSwiftGroupStatus();
+                var statusLkup = FundAccountManager.GetSwiftGroupStatus();
 
                 fieldsChanged.Add("Swift Group Status");
                 previousState += string.Format("Swift Group Status: <i>{0}</i><br/>", statusLkup.ContainsKey(originalSwiftGroup.SwiftGroupStatusId ?? 0) ? statusLkup[originalSwiftGroup.SwiftGroupStatusId ?? 0] : string.Empty);

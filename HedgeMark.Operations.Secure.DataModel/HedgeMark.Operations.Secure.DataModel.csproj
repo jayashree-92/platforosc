@@ -98,6 +98,9 @@
     <Compile Include="dmaReport.cs">
       <DependentUpon>OperationsContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="dmaTreasuryCashBalance.cs">
+      <DependentUpon>OperationsContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="dmaUserPreference.cs">
       <DependentUpon>OperationsContext.tt</DependentUpon>
     </Compile>

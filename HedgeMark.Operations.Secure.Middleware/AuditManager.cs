@@ -72,7 +72,7 @@ namespace HMOSecureMiddleware
 
         public static List<hmsUserAuditLog> GetAuditLogs(onBoardingSSITemplate ssiTemplate, string accountType, string broker, string userName)
         {
-            var nonUpdatedAccount = AccountManager.GetSsiTemplate(ssiTemplate.onBoardingSSITemplateId);
+            var nonUpdatedAccount = SSITemplateManager.GetSsiTemplate(ssiTemplate.onBoardingSSITemplateId);
 
             var propertyInfos = typeof(onBoardingSSITemplate).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(s => QualifiedTypeToAudit.Contains(s.PropertyType));
             var isNewAccount = nonUpdatedAccount == null;
@@ -114,7 +114,7 @@ namespace HMOSecureMiddleware
         }
         public static List<hmsUserAuditLog> GetAuditLogs(onBoardingAccount account, string fundName, string agreement, string broker, string userName)
         {
-            var nonUpdatedAccount = AccountManager.GetOnBoardingAccount(account.onBoardingAccountId);
+            var nonUpdatedAccount = FundAccountManager.GetOnBoardingAccount(account.onBoardingAccountId);
             var propertyInfos = typeof(onBoardingAccount).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(s => QualifiedTypeToAudit.Contains(s.PropertyType));
             var isNewAccount = nonUpdatedAccount == null;
 

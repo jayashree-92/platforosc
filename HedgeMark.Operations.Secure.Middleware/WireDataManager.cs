@@ -56,6 +56,28 @@ namespace HMOSecureMiddleware
         public bool IsSourceAvailable { get { return !string.IsNullOrWhiteSpace(SourceModuleName); } }
     }
 
+    public class WireBaseDetails
+    {
+        public long SendingAccountId { get; set; }
+        public decimal Amount { get; set; }
+        public DateTime ValueDate { get; set; }
+        public int WireStatusId { get; set; }
+    }
+
+    public class CashBalances
+    {
+        public bool IsCashBalanceAvailable { get; set; }
+        public DateTime ContextDate { get; set; }
+        public decimal TreasuryBalance { get; set; }
+        public int ApprovedWires { get; set; }
+        public int PendingWires { get; set; }
+        public decimal TotalWired { get; set; }
+        public string Currency { get; set; }
+        public decimal AvailableBalance
+        {
+            get { return TreasuryBalance - TotalWired; }
+        }
+    }
 
     public class WireTicketStatus
     {
@@ -210,13 +232,13 @@ namespace HMOSecureMiddleware
                 hmWire.hmsWireLogs = context.hmsWireLogs.Where(s => s.hmsWireId == wireId).ToList();
             }
 
-            hmWire.SendingAccount = AccountManager.GetOnBoardingAccount(hmWire.OnBoardAccountId);
+            hmWire.SendingAccount = FundAccountManager.GetOnBoardingAccount(hmWire.OnBoardAccountId);
 
             if (hmWire.ReceivingOnBoardAccountId != null)
-                hmWire.ReceivingAccount = AccountManager.GetOnBoardingAccount(hmWire.ReceivingOnBoardAccountId ?? 0);
+                hmWire.ReceivingAccount = FundAccountManager.GetOnBoardingAccount(hmWire.ReceivingOnBoardAccountId ?? 0);
 
             if (hmWire.OnBoardSSITemplateId != null)
-                hmWire.ReceivingSSITemplate = AccountManager.GetSsiTemplate(hmWire.OnBoardSSITemplateId ?? 0);
+                hmWire.ReceivingSSITemplate = SSITemplateManager.GetSsiTemplate(hmWire.OnBoardSSITemplateId ?? 0);
 
             hmWire.hmsWireLogs.ForEach(s =>
             {

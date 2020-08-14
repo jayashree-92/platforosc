@@ -22,7 +22,6 @@ namespace HedgeMark.Operations.Secure.DataModel
     
         public long dmaCollateralDataId { get; set; }
         public System.DateTime ContextDate { get; set; }
-        public long dmaFundsId { get; set; }
         public string BrokerName { get; set; }
         public string CallStatus { get; set; }
         public string CallSubStatus { get; set; }

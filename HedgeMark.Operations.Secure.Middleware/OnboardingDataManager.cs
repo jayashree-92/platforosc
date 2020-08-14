@@ -31,6 +31,14 @@ namespace HMOSecureMiddleware
         public long CounterpartyId { get; set; }
     }
 
+    public class CounterpartyData
+    {
+        public long CounterpartyId { get; set; }
+        public long CounterpartyFamilyId { get; set; }
+        public string CounterpartyFamilyName { get; set; }
+        public string CounterpartyName { get; set; }
+    }
+
     public class OnBoardingDataManager
     {
         public static Dictionary<long, string> GetAllAgreements()
@@ -52,16 +60,32 @@ namespace HMOSecureMiddleware
                 return context.dmaCounterpartyFamilies.ToList();
             }
         }
-   public static List<dmaCounterPartyOnBoarding> GetAllCounterparties()
+
+        public static List<CounterpartyData> GetAllCounterparties()
         {
             using (var context = new AdminContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.dmaCounterPartyOnBoardings.ToList();
+                return context.dmaCounterPartyOnBoardings.Where(s => !s.IsDeleted).Include(s => s.dmaCounterpartyFamily).Select(s => new CounterpartyData
+                {
+                    CounterpartyName = s.CounterpartyName,
+                    CounterpartyFamilyId = s.dmaCounterpartyFamilyId ?? 0,
+                    CounterpartyId = s.dmaCounterPartyOnBoardId,
+                    CounterpartyFamilyName = s.dmaCounterpartyFamily.CounterpartyFamily
+                }).ToList();
             }
         }
 
+        public static Dictionary<long, string> GetAllOnBoardedCounterparties()
+        {
+            using (var context = new AdminContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.dmaCounterPartyOnBoardings.Where(c => !c.IsDeleted).Include(x => x.dmaCounterpartyFamily).ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
+            }
+        }
 
         public static string GetCounterpartyFamilyName(long counterpartyFamilyId)
         {
@@ -131,16 +155,6 @@ namespace HMOSecureMiddleware
                 if (agreementTypes == null)
                     agreementTypes = new List<string>();
                 return context.dmaAgreementTypes.Where(s => agreementTypes.Count == 0 || agreementTypes.Contains(s.AgreementType)).ToDictionary(x => x.dmaAgreementTypeId, x => x.AgreementType);
-            }
-        }
-
-        public static Dictionary<long, string> GetAllOnBoardedCounterparties()
-        {
-            using (var context = new AdminContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.dmaCounterPartyOnBoardings.Where(c => !c.IsDeleted).Include(x => x.dmaCounterpartyFamily).ToDictionary(x => x.dmaCounterPartyOnBoardId, x => x.CounterpartyName);
             }
         }
     }
