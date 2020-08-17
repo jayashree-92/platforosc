@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
 using HMOSecureMiddleware.Util;
@@ -653,7 +652,7 @@ namespace HMOSecureMiddleware
 
             var allPBForContextDate = allTreasuryBals.Select(s => s.onboardAccountId).ToList();
             dmaTreasuryCashBalance treasuryBal;
-            List<WireBaseDetails> wires;
+            List<WireAccountBaseData> wires;
             using (var context = new OperationsSecureContext())
             {
                var treasuryBalAccId = (from acc in context.vw_FundAccounts
@@ -670,9 +669,9 @@ namespace HMOSecureMiddleware
                          where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && acc.AgreementType == "PB"
                          where wire.ValueDate == valueDate &&
                                wire.WireStatusId == (int)WireDataManager.WireStatus.Approved || wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated
-                         select new WireBaseDetails
+                         select new WireAccountBaseData
                          {
-                             SendingAccountId = wire.OnBoardAccountId,
+                             OnBoardAccountId = wire.OnBoardAccountId,
                              Amount = wire.Amount,
                              WireStatusId = wire.WireStatusId,
                              ValueDate = valueDate,
@@ -730,15 +729,15 @@ namespace HMOSecureMiddleware
             if (treasuryBal == null)
                 return new CashBalances() { IsCashBalanceAvailable = false };
 
-            List<WireBaseDetails> wires;
+            List<WireAccountBaseData> wires;
             using (var context = new OperationsSecureContext())
             {
                 wires = context.hmsWires.Where(s => s.OnBoardAccountId == sendingFundAccountId && s.ValueDate == valueDate &&
                                                     s.WireStatusId == (int)WireDataManager.WireStatus.Approved ||
                                                     s.WireStatusId == (int)WireDataManager.WireStatus.Initiated)
-                    .Select(s => new WireBaseDetails
+                    .Select(s => new WireAccountBaseData
                     {
-                        SendingAccountId = s.OnBoardAccountId,
+                        OnBoardAccountId = s.OnBoardAccountId,
                         Amount = s.Amount,
                         WireStatusId = s.WireStatusId,
                         ValueDate = valueDate,

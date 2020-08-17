@@ -12,7 +12,6 @@ using System.Data.Entity;
 
 namespace HMOSecureMiddleware
 {
-
     public class WireAccountBaseData
     {
         public long OnBoardAccountId { get; set; }
@@ -21,6 +20,10 @@ namespace HMOSecureMiddleware
         public string FFCNumber { get; set; }
         public bool IsAuthorizedSendingAccount { get; set; }
         public string Currency { get; set; }
+        public DateTime ValueDate { get; set; }
+        public int WireStatusId { get; set; }
+        public decimal Amount { get; set; }
+
         public string AccountNameAndNumber
         {
             get
@@ -54,15 +57,6 @@ namespace HMOSecureMiddleware
         public Dictionary<string, string> Details { get; set; }
 
         public bool IsSourceAvailable { get { return !string.IsNullOrWhiteSpace(SourceModuleName); } }
-    }
-
-    public class WireBaseDetails
-    {
-        public long SendingAccountId { get; set; }
-        public decimal Amount { get; set; }
-        public DateTime ValueDate { get; set; }
-        public int WireStatusId { get; set; }
-        public string Currency { get; set; }
     }
 
     public class CashBalances
