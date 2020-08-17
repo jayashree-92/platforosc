@@ -120,7 +120,7 @@ namespace HMOSecureMiddleware
             }
         }
 
-        public static List<dmaOnBoardingContactDetail> GetAllOnBoardingContacts(long onBoardingTypeId, long entityId, long hmFundId)
+        public static List<dmaOnBoardingContactDetail> GetAllOnBoardingContacts(long hmFundId)
         {
             using (var context = new AdminContext())
             {
@@ -130,9 +130,11 @@ namespace HMOSecureMiddleware
                 return (from cont in context.dmaOnBoardingContactDetails
                         join cntM in context.onboardingContactFundMaps on cont.dmaOnBoardingContactDetailId equals cntM.dmaOnBoardingContactDetailId
                         join fnd in context.vw_HFund on cntM.dmaFundOnBoardId equals fnd.dmaFundOnBoardId
-                        where fnd.hmFundId == hmFundId
-                        where cont.dmaOnBoardingTypeId == onBoardingTypeId && cont.dmaOnBoardingEntityId == entityId && cont.Wires && !cont.IsDeleted
-                        select cont).Distinct().ToList();
+                        where fnd.hmFundId == hmFundId && cont.Wires && !cont.IsDeleted
+                        select cont).Union(
+                    from cont in context.dmaOnBoardingContactDetails
+                    where cont.dmaOnBoardingTypeId == ContactManager.FundTypeId && cont.dmaOnBoardingEntityId == hmFundId && cont.Wires && !cont.IsDeleted
+                    select cont).Distinct().ToList();
             }
         }
 

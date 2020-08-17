@@ -1445,7 +1445,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     angular.element("#txtDetail").on("focusin", function () { angular.element("#txtDetail").popover("hide"); });
 
     $scope.fnLoadContactDetails = function (contactName) {
-        $http.get("/Accounts/GetAllOnBoardingAccountContacts?counterpartyFamilyId=" + $scope.CounterpartyFamilyId + "&hmFundId=" + $scope.FundId).then(function (response) {
+        $http.get("/Accounts/GetAllOnBoardingAccountContacts?hmFundId=" + $scope.FundId).then(function (response) {
             $scope.contactNames = [];
             if (response.data.OnBoardingContacts.length > 0) {
                 $.each(response.data.OnBoardingContacts, function (i, v) {
