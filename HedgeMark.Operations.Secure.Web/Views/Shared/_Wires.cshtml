@@ -445,15 +445,15 @@
                     <div class="panel-heading" data-toggle="collapse" data-target="#cashBalancesDiv" ng-click="collapseContainer('CashBalances')" aria-expanded="false" aria-controls="cashBalancesDiv">
                         <span class="">Available Cash Balances</span>&nbsp;&nbsp;<span class="label label-default">{{CashBalance.Currency}}</span>&nbsp;<span class="label  {{ CashBalance.AvailableBalance <=0 ?'label-warning' :'label-success' }} prewrap">{{ CashBalance.AvailableBalance}}</span>
                         <span class="small" ng-if="CashBalance.IsCashBalanceAvailable">
-                            (Beginning Treasury:{{ CashBalance.TreasuryBalance}} - Total Wired:{{CashBalance.TotalWired}})
-                                                                                                                                                        </span><span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isCashBalancesCollapsed , 'glyphicon-chevron-down': isCashBalancesCollapsed }"></span>
+                            (Beginning Treasury:{{ CashBalance.TreasuryBalance}} {{CashBalance.Currency}} - Total Wired:{{CashBalance.TotalWired}} {{CashBalance.Currency}})
+                        </span><span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isCashBalancesCollapsed , 'glyphicon-chevron-down': isCashBalancesCollapsed }"></span>
                     </div>
                     <div id="cashBalancesDiv" class="panel-body collapse">
                         <div class="row">
                             <p class="ng-show-hide swiftMessgeBlock" style="line-height: 2;padding: 0px">
-                                Available Balances :{{CashBalance.AvailableBalance}} in {{CashBalance.Currency}}
-                                Beginning Treasury :{{CashBalance.TreasuryBalance}} in {{CashBalance.Currency}}
-                                Total Wired :{{CashBalance.TotalWired}} in {{CashBalance.Currency}}
+                                Available Balances :{{CashBalance.AvailableBalance}} {{CashBalance.Currency}}
+                                Beginning Treasury :{{CashBalance.TreasuryBalance}} {{CashBalance.Currency}}
+                                Total Wired :{{CashBalance.TotalWired}} {{CashBalance.Currency}}
                                 Approved Wires :{{CashBalance.ApprovedWires}}
                                 Pending Wires :{{CashBalance.PendingWires}}
                             </p>
