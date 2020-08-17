@@ -655,11 +655,11 @@ namespace HMOSecureMiddleware
             List<WireAccountBaseData> wires;
             using (var context = new OperationsSecureContext())
             {
-               var treasuryBalAccId = (from acc in context.vw_FundAccounts
-                               where allPBForContextDate.Contains(acc.onBoardingAccountId)
-                               where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && acc.AgreementType == "PB"
-                               select acc.onBoardingAccountId).FirstOrDefault();
-               treasuryBal = allTreasuryBals.FirstOrDefault(s => s.onboardAccountId == treasuryBalAccId);
+                var treasuryBalAccId = (from acc in context.vw_FundAccounts
+                                        where allPBForContextDate.Contains(acc.onBoardingAccountId)
+                                        where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && acc.AgreementType == "PB"
+                                        select acc.onBoardingAccountId).FirstOrDefault();
+                treasuryBal = allTreasuryBals.FirstOrDefault(s => s.onboardAccountId == treasuryBalAccId);
 
                 if (treasuryBal == null)
                     return new CashBalances() { IsCashBalanceAvailable = false };
@@ -698,8 +698,7 @@ namespace HMOSecureMiddleware
             var totalWiredInLocalCur = (from wire in wires
                                         let fxRate = conversionData.Where(s => s.FROM_CRNCY == wire.Currency && s.TO_CRNCY == fndAccount.Currency)
                                                          .Select(s => s.FX_RATE).FirstOrDefault() ?? 0
-                                        where fxRate != 0 && fxRate != 1
-                                        select wire.Amount * fxRate).Sum();
+                                        select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum();
 
             var converForTreasuryBal = conversionData.Where(s => s.FROM_CRNCY == treasuryBal.Currency && s.TO_CRNCY == fndAccount.Currency)
                                            .Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
