@@ -192,7 +192,7 @@ namespace HMOSecureWeb.Controllers
                         ssi.StatusComments,
                         ssiTemplate.SSITemplateType,
                         ssiTemplate.TemplateName,
-                        AccountNumber = !string.IsNullOrWhiteSpace(ssiTemplate.FFCNumber) ? ssiTemplate.FFCNumber : ssiTemplate.UltimateBeneficiaryAccountNumber
+                        AccountNumber = ssiTemplate.UltimateBeneficiaryAccountNumber ?? ""
                     } : null;
                 }).Where(temp => temp != null).OrderBy(y => y.TemplateName).ToList(),
                 ssiTemplates = availableSSITemplates,
@@ -231,7 +231,7 @@ namespace HMOSecureWeb.Controllers
                         ssi.StatusComments,
                         account.AccountType,
                         account.AccountName,
-                        AccountNumber = !string.IsNullOrWhiteSpace(account.FFCNumber) ? account.FFCNumber : account.UltimateBeneficiaryAccountNumber
+                        AccountNumber = account.UltimateBeneficiaryAccountNumber ?? ""
                     } : null;
                 }).Where(temp => temp != null).OrderBy(y => y.AccountName).ToList(),
                 fundAccounts = availableFundAccounts,

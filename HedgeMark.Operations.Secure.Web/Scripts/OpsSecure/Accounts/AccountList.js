@@ -2127,6 +2127,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 {
                     "sTitle": "Account Number",
                     "mData": "AccountNumber",
+                    "mRender": function(tdata) {
+                        if (tdata == null)
+                            return "";
+                    }
                 },
                 {
                     "sTitle": "FFC Number",
