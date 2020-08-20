@@ -731,8 +731,8 @@ namespace HMOSecureMiddleware
             using (var context = new OperationsSecureContext())
             {
                 wires = context.hmsWires.Where(s => s.OnBoardAccountId == sendingFundAccountId && s.ValueDate == valueDate &&
-                                                    s.WireStatusId == (int)WireDataManager.WireStatus.Approved ||
-                                                    s.WireStatusId == (int)WireDataManager.WireStatus.Initiated)
+                                                    (s.WireStatusId == (int)WireDataManager.WireStatus.Approved ||
+                                                    s.WireStatusId == (int)WireDataManager.WireStatus.Initiated))
                     .Select(s => new WireAccountBaseData
                     {
                         OnBoardAccountId = s.OnBoardAccountId,
