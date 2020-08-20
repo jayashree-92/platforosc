@@ -612,6 +612,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         { "mData": "Account.UltimateBeneficiaryAccountName", "sTitle": "Ultimate Beneficiary Account Name" },
                         { "mData": "Account.FFCName", "sTitle": "FFC Name" },
                         { "mData": "Account.FFCNumber", "sTitle": "FFC Number" },
+                        { "mData": "Account.MarginAccountNumber", "sTitle": "Margin Account Number" },
                         { "mData": "Account.Reference", "sTitle": "Reference" },
                         {
                             "mData": "Account.onBoardingAccountStatus", "sTitle": "Status",

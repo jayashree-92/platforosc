@@ -443,7 +443,7 @@
                 </div>
                 <div class="panel panel-info" ng-if="WireTicket.OnboardAccountId != '' && (WireTicket.WireStatusId <= 2 || WireTicket.WireStatusId == 6)">
                     <div class="panel-heading" data-toggle="collapse" data-target="#cashBalancesDiv" ng-click="collapseContainer('CashBalances')" aria-expanded="false" aria-controls="cashBalancesDiv">
-                        <span class="">Available Cash Balances</span>&nbsp;&nbsp;<span class="label label-default">{{CashBalance.Currency}}</span>&nbsp;<span class="label  {{ CashBalance.AvailableBalance <=0 ?'label-warning' :'label-success' }} prewrap">{{ CashBalance.AvailableBalance}}</span>
+                        <span class="">Available Cash Balances</span>&nbsp;&nbsp;<span class="label label-default">{{CashBalance.Currency}}</span>&nbsp;<span class="label  {{ CashBalance.AvailableBalance <=0 ?'label-danger' :'label-success' }} prewrap">{{ CashBalance.AvailableBalance}}</span>
                         <span class="small" ng-if="CashBalance.IsCashBalanceAvailable">
                             (Beginning Treasury:{{ CashBalance.TreasuryBalance}} {{CashBalance.Currency}} - Total Wired:{{CashBalance.TotalWired}} {{CashBalance.Currency}})
                         </span><span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isCashBalancesCollapsed , 'glyphicon-chevron-down': isCashBalancesCollapsed }"></span>

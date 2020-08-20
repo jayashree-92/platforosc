@@ -667,8 +667,7 @@ namespace HMOSecureMiddleware
                 wires = (from wire in context.hmsWires
                          join acc in context.vw_FundAccounts on wire.OnBoardAccountId equals acc.onBoardingAccountId
                          where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && acc.AgreementType == "PB"
-                         where wire.ValueDate == valueDate &&
-                               wire.WireStatusId == (int)WireDataManager.WireStatus.Approved || wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated
+                         where wire.ValueDate == valueDate && (wire.WireStatusId == (int)WireDataManager.WireStatus.Approved || wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated)
                          select new WireAccountBaseData
                          {
                              OnBoardAccountId = wire.OnBoardAccountId,
