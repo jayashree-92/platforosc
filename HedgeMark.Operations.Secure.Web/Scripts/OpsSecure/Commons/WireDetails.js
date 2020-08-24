@@ -159,9 +159,15 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                         "data": "ReceivingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Beneficiary A/C Number",
                         "render": function (tdata, type, row) {
                             if (row.IsFundTransfer) {
+                                if (row.ReceivingAccount.FFCNumber != null && row.ReceivingAccount.FFCNumber.length > 0)
+                                    return row.ReceivingAccount.FFCNumber;
+
                                 return row.ReceivingAccount.UltimateBeneficiaryAccountNumber;
                             }
                             else if (!row.IsNotice) {
+                                if (row.SSITemplate.FFCNumber != null && row.SSITemplate.FFCNumber.length > 0)
+                                    return row.SSITemplate.FFCNumber;
+
                                 return row.SSITemplate.UltimateBeneficiaryAccountNumber;
                             }
                             return "N/A";
