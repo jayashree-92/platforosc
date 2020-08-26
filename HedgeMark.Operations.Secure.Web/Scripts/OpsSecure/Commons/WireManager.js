@@ -1,6 +1,6 @@
 ﻿
 HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q, $opsSharedScopes, $interval, $filter, $sce) {
-    $opsSharedScopes.store('wireInitiationCtrl', $scope);
+    $opsSharedScopes.store("wireInitiationCtrl", $scope);
 
     $scope.fnLoadWireTicketDetails = function (wireObj) {
         $scope.wireObj = angular.copy(wireObj);
@@ -80,11 +80,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             });
     }
 
-    $('#wireValueDate').click(function () {
+    $("#wireValueDate").click(function () {
         var popup = $(this).offset();
         var popupTop = popup.top + 20;
         $timeout(function () {
-            $('.datepicker').css({
+            $(".datepicker").css({
                 'top': popupTop
             });
         },
@@ -97,11 +97,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.MessageTypes = response.data.wireMessages;
             else {
                 if ($scope.wireObj.Purpose == "Respond to Broker Call")
-                    $scope.MessageTypes = $filter('filter')(response.data.wireMessages,
+                    $scope.MessageTypes = $filter("filter")(response.data.wireMessages,
                         function (type) { return type.text != "MT210" },
                         true);
                 else
-                    $scope.MessageTypes = $filter('filter')(response.data.wireMessages, { text: 'MT210' }, true);
+                    $scope.MessageTypes = $filter("filter")(response.data.wireMessages, { text: "MT210" }, true);
             }
             $scope.TransferTypes = response.data.wireTransferTypes;
             $scope.SenderInformation = response.data.wireSenderInformation;
@@ -434,7 +434,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.getSwiftStatus = function () {
 
         angular.element("#spnswiftStatus")
-            .removeClass('label-info label-warning label-success label-default label-danger');
+            .removeClass("label-info label-warning label-success label-default label-danger");
 
         switch ($scope.WireTicket.SwiftStatusId) {
             case 2:
@@ -455,19 +455,19 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
     }
 
-    angular.element(document).on('change',
+    angular.element(document).on("change",
         "#liMessageType",
         function () {
             $timeout(function () {
-                $scope.WireTicket.WireMessageTypeId = $("#liMessageType").select2('val');
+                $scope.WireTicket.WireMessageTypeId = $("#liMessageType").select2("val");
                 if ($scope.WireTicket.WireMessageTypeId != "") {
                     if ($scope.wireTicketObj.IsFundTransfer) {
                         if ($scope.accountDetail.onBoardingAccountId != 0 &&
                             $scope.receivingAccountDetail.onBoardingAccountId != 0) {
                             $scope.validateAccountsForMessageType();
                             angular.element("#liDeliveryCharges")
-                                .select2('val', ($scope.WireTicket.WireMessageTypeId != "1" ? null : "OUR"))
-                                .trigger('change');
+                                .select2("val", ($scope.WireTicket.WireMessageTypeId != "1" ? null : "OUR"))
+                                .trigger("change");
                         }
                     } else {
                         if ($scope.accountDetail.onBoardingAccountId != 0 &&
@@ -475,15 +475,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                             $scope.validateAccountsForMessageType();
                         }
                     }
-                    var messageType = $("#liMessageType").select2('data').text;
-                    if (messageType.indexOf('MT103') > -1 || messageType.indexOf('MT202') > -1) {
+                    var messageType = $("#liMessageType").select2("data").text;
+                    if (messageType.indexOf("MT103") > -1 || messageType.indexOf("MT202") > -1) {
                         $scope.wireTicketObj.IsSenderInformationRequired = true;
                         angular.element("#liSenderInformation")
-                            .select2('val', $scope.WireTicket.SenderInformationId)
-                            .trigger('change');
+                            .select2("val", $scope.WireTicket.SenderInformationId)
+                            .trigger("change");
                     } else {
                         $scope.wireTicketObj.IsSenderInformationRequired = false;
-                        angular.element("#liSenderInformation").select2('val', null).trigger('change');
+                        angular.element("#liSenderInformation").select2("val", null).trigger("change");
                         $scope.WireTicket.SenderDescription = "";
                     }
                 }
@@ -492,11 +492,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 50);
         });
 
-    angular.element(document).on('change',
+    angular.element(document).on("change",
         "#liSenderInformation",
         function () {
             $timeout(function () {
-                $scope.WireTicket.SenderInformationId = $("#liSenderInformation").select2('val');
+                $scope.WireTicket.SenderInformationId = $("#liSenderInformation").select2("val");
                 $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
             }, 50);
         });
@@ -504,13 +504,13 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.validateAccountsForMessageType = function () {
         $http.post("/Home/ValidateAccountDetails",
             JSON.stringify({
-                wireMessageType: $("#liMessageType").select2('data').text,
+                wireMessageType: $("#liMessageType").select2("data").text,
                 account: $scope.accountDetail,
                 receivingAccount: $scope.receivingAccountDetail,
                 ssiTemplate: $scope.ssiTemplate,
                 isFundTransfer: $scope.wireTicketObj.IsFundTransfer
             }),
-            { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
+            { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
                 //$scope.isMandatoryFieldsMissing = response.data.isMandatoryFieldsMissing;
                 $scope.isMandatoryFieldsMissing = false;
                 if ($scope.isValidWireInitiation) {
@@ -519,7 +519,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                             $("#wireErrorStatus").collapse("hide");
                             $scope.validationMsg = "";
                         } else if ($scope.isWireCreated) {
-                            $("#chkWireCreation").prop('checked', false).trigger('change');
+                            $("#chkWireCreation").prop("checked", false).trigger("change");
                             $scope.isUserActionDone = true;
                             $scope.validationMsg =
                                 "An Initiated wire exists for the same value date, purpose, sending and receiving account.";
@@ -542,13 +542,13 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         bAllowNegative: false,
         fnFocusInCallback: function () {
             if ($(this).text() == "0")
-                $(this).html('');
+                $(this).html("");
         },
         fnFocusOutCallback: function () {
             $scope.WireTicket.Amount = Math.abs($.convertToNumber($(this).text(), true));
             $(this).html($.convertToCurrency($scope.WireTicket.Amount, 2));
             $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
-            angular.element("#liMessageType").trigger('change');
+            angular.element("#liMessageType").trigger("change");
         }
     });
 
@@ -582,7 +582,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             receivingAccountId: angular.copy($scope.receivingAccountDetail.onBoardingAccountId),
             receivingSSITemplateId: angular.copy($scope.ssiTemplate.onBoardingSSITemplateId),
             wireId: $scope.WireTicket.hmsWireId
-        }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
+        }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
             if ($scope.WireTicket.hmsWireId == 0)
                 $scope.isWireCreated = response.data;
             else
@@ -602,7 +602,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }
             else {
                 $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-                $("#chkWireCreation").prop('checked', false).trigger('change');
+                $("#chkWireCreation").prop("checked", false).trigger("change");
                 $scope.isUserActionDone = true;
                 $scope.validationMsg = "An Initiated wire exists for the same value date, purpose, sending and receiving account.";
             }
@@ -611,7 +611,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $(document).on("click", "#wireCreationDiv", function (event) {
         $timeout(function () {
-            $scope.isUserActionDone = !$("#chkWireCreation").prop('checked');
+            $scope.isUserActionDone = !$("#chkWireCreation").prop("checked");
         }, 50);
     });
 
@@ -619,7 +619,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         var account = null, receivingAccount = null;
         if ($scope.WireTicket.hmsWireId == 0) {
             $scope.WireTicket.ContextDate = angular.copy($scope.wireObj.ContextDate);
-            if ($scope.wireObj.Amount == '')
+            if ($scope.wireObj.Amount == "")
                 $scope.wireObj.Amount = 0;
             angular.element("#wireEntryDate").html(getFormattedUIDate(moment(getDateForDisplay($scope.wireObj.ContextDate))._d));
             $scope.initializeDatePicker();
@@ -627,20 +627,20 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             if (!$scope.wireObj.IsAdhocWire) {
                 var transferType = $scope.wireObj.Purpose == "Send Call" ? "Notice" : "3rd Party Transfer";
                 $scope.wireTicketObj.IsNotice = transferType == "Notice";
-                var wireTransferType = $filter('filter')($scope.TransferTypes, function (message) { return message.text == transferType }, true)[0];
+                var wireTransferType = $filter("filter")($scope.TransferTypes, function (message) { return message.text == transferType }, true)[0];
                 $scope.WireTicket.WireTransferTypeId = wireTransferType.id;
-                var wireMessageType = $filter('filter')($scope.MessageTypes, function (message) { return message.text == ($scope.wireTicketObj.IsNotice ? "MT210" : $scope.ssiTemplate.MessageType) }, true)[0];
-                angular.element("#liMessageType").select2('val', wireMessageType.id).trigger('change');
+                var wireMessageType = $filter("filter")($scope.MessageTypes, function (message) { return message.text == ($scope.wireTicketObj.IsNotice ? "MT210" : $scope.ssiTemplate.MessageType) }, true)[0];
+                angular.element("#liMessageType").select2("val", wireMessageType.id).trigger("change");
                 if (!$scope.wireTicketObj.IsNotice) {
-                    angular.element("#liDeliveryCharges").select2('val', ($scope.ssiTemplate.MessageType != "MT103" ? null : "OUR")).trigger('change');
+                    angular.element("#liDeliveryCharges").select2("val", ($scope.ssiTemplate.MessageType != "MT103" ? null : "OUR")).trigger("change");
                 }
                 else
                     $scope.wireTicketObj.ReceivingAccountCurrency = $scope.accountDetail.Currency;
-                angular.element("#wireAmount").text($.convertToCurrency($scope.wireObj.Amount, 2)).attr('contenteditable', false);
+                angular.element("#wireAmount").text($.convertToCurrency($scope.wireObj.Amount, 2)).attr("contenteditable", false);
                 $scope.WireTicket.Amount = angular.copy($scope.wireObj.Amount);
             }
             if ($scope.wireObj.IsAdhocWire) {
-                angular.element("#wireAmount").text('').attr('contenteditable', true);
+                angular.element("#wireAmount").text("").attr("contenteditable", true);
                 $scope.isWireRequirementsFilled = false;
             }
         }
@@ -651,12 +651,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 angular.element("#wireValueDate").datepicker("setDate", moment(getDateForDisplay($scope.WireTicket.ValueDate))._d);
             }
             else
-                angular.element("#wireValueDate").datepicker('remove').html(getFormattedUIDate(moment(getDateForDisplay($scope.WireTicket.ValueDate))._d))
-            angular.element("#liCurrency").select2('val', $scope.accountDetail.Currency).trigger('change');
+                angular.element("#wireValueDate").datepicker("remove").html(getFormattedUIDate(moment(getDateForDisplay($scope.WireTicket.ValueDate))._d))
+            angular.element("#liCurrency").select2("val", $scope.accountDetail.Currency).trigger("change");
             $scope.WireTicket.Amount = $scope.WireTicket.WireStatusId == 1 ? angular.copy($scope.wireObj.Amount) : $scope.WireTicket.Amount;
-            angular.element("#wireAmount").text($.convertToCurrency(($scope.WireTicket.Amount), 2)).attr('contenteditable', false);
-            angular.element("#liMessageType").select2('val', $scope.WireTicket.WireMessageTypeId).trigger('change');
-            angular.element("#liDeliveryCharges").select2('val', $scope.WireTicket.DeliveryCharges).trigger('change');
+            angular.element("#wireAmount").text($.convertToCurrency(($scope.WireTicket.Amount), 2)).attr("contenteditable", false);
+            angular.element("#liMessageType").select2("val", $scope.WireTicket.WireMessageTypeId).trigger("change");
+            angular.element("#liDeliveryCharges").select2("val", $scope.WireTicket.DeliveryCharges).trigger("change");
         }
 
         $scope.WireTicket.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
@@ -664,28 +664,30 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.dummyWire.HMWire.ContextDate = $scope.WireTicket.ContextDate = moment($scope.WireTicket.ContextDate).format("YYYY-MM-DD");
         $scope.dummyWire.HMWire.ValueDate = angular.element("#wireValueDate").text();
         $scope.wireComments = "";
+        $scope.fnCalculateCashBalance();
     }
 
     $scope.bindWireValues = function () {
         angular.element("#wireEntryDate").html(getFormattedUIDate(moment(getDateForDisplay($scope.WireTicket.ContextDate))._d));
-        angular.element("#liCurrency").select2('val', $scope.accountDetail.Currency).trigger('change');
+        angular.element("#liCurrency").select2("val", $scope.accountDetail.Currency).trigger("change");
         if ($scope.WireTicketStatus.IsEditEnabled && $scope.wireObj.Report == "Adhoc Report") {
             $scope.initializeDatePicker();
-            angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditable', true);
+            angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr("contenteditable", true);
             angular.element("#wireValueDate").datepicker("setDate", moment(getDateForDisplay($scope.WireTicket.ValueDate))._d);
         }
         else {
-            angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr('contenteditable', false);
-            angular.element("#wireValueDate").datepicker('remove').html(getFormattedUIDate(moment(getDateForDisplay($scope.WireTicket.ValueDate))._d))
+            angular.element("#wireAmount").text($.convertToCurrency($scope.WireTicket.Amount, 2)).attr("contenteditable", false);
+            angular.element("#wireValueDate").datepicker("remove").html(getFormattedUIDate(moment(getDateForDisplay($scope.WireTicket.ValueDate))._d))
         }
-        angular.element("#liMessageType").select2('val', $scope.WireTicket.WireMessageTypeId).trigger('change');
-        angular.element("#liDeliveryCharges").select2('val', $scope.WireTicket.DeliveryCharges).trigger('change');
-        angular.element("#liSenderInformation").select2('val', $scope.WireTicket.SenderInformationId).trigger('change');
+        angular.element("#liMessageType").select2("val", $scope.WireTicket.WireMessageTypeId).trigger("change");
+        angular.element("#liDeliveryCharges").select2("val", $scope.WireTicket.DeliveryCharges).trigger("change");
+        angular.element("#liSenderInformation").select2("val", $scope.WireTicket.SenderInformationId).trigger("change");
         $scope.WireTicket.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
         $scope.dummyWire = angular.copy($scope.wireTicketObj);
         $scope.dummyWire.HMWire.ContextDate = $scope.WireTicket.ContextDate = moment($scope.WireTicket.ContextDate).format("YYYY-MM-DD");
         $scope.dummyWire.HMWire.ValueDate = angular.element("#wireValueDate").text();
         $scope.wireComments = "";
+        $scope.fnCalculateCashBalance();
     }
 
     angular.element("#modalToRetrieveWires").on("hidden.bs.modal", function () {
@@ -695,9 +697,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $opsSharedScopes.get("CollateralTableCtrl").canSaveAmount = angular.copy($scope.canSave);
         }
         angular.element("button").button("reset");
-        angular.element('#cancelWire').popover("hide");
+        angular.element("#cancelWire").popover("hide");
         $("#wireErrorStatus").collapse("hide");
-        angular.element("#liWireTransferType").select2('val', 1).trigger('change');
+        angular.element("#liWireTransferType").select2("val", 1).trigger("change");
     });
 
     $scope.fnUpdateWireWithStatus = function (statusId) {
@@ -705,7 +707,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isUserActionDone = true;
             $scope.changeButtonStatus(statusId);
             var wireData = statusId == 4 ? $scope.dummyWire : angular.copy($scope.wireTicketObj);
-            $http.post("/Home/SaveWire", JSON.stringify({ wireTicket: wireData, reportMapId: $scope.wireObj.ReportMapId, purpose: $scope.wireObj.Purpose, statusId: statusId, comment: $scope.wireComments }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
+            $http.post("/Home/SaveWire", JSON.stringify({ wireTicket: wireData, reportMapId: $scope.wireObj.ReportMapId, purpose: $scope.wireObj.Purpose, statusId: statusId, comment: $scope.wireComments }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
                 $scope.canSave = true;
                 angular.element("#modalToRetrieveWires").modal("hide");
                 if ($scope.WireTicket.WireStatusId == 0)
@@ -763,11 +765,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.confirmCancellation = function () {
-        angular.element('#cancelWire').popover('destroy').popover({
-            trigger: 'click',
+        angular.element("#cancelWire").popover("destroy").popover({
+            trigger: "click",
             title: "Are you sure to " + ($scope.WireTicket.SwiftStatusId == 1 ? "reject" : "cancel") + " this wire?",
-            placement: 'top',
-            container: 'body',
+            placement: "top",
+            container: "body",
             content: function () {
                 return "<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
                     + "<button class=\"btn btn-sm btn-success confirmCancellation\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
@@ -782,13 +784,13 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             + "</div>");
     }
 
-    $(document).on('click', ".confirmCancellation", function () {
-        angular.element('#cancelWire').popover("hide");
+    $(document).on("click", ".confirmCancellation", function () {
+        angular.element("#cancelWire").popover("hide");
         $scope.fnUpdateWireWithStatus(4);
 
     });
-    $(document).on('click', ".dismissCancellation", function () {
-        angular.element('#cancelWire').popover("hide");
+    $(document).on("click", ".dismissCancellation", function () {
+        angular.element("#cancelWire").popover("hide");
     });
 
     $scope.bindAndValidateWireData = function (statusId) {
@@ -809,15 +811,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.WireTicket.ReceivingOnBoardAccountId = $scope.wireTicketObj.IsFundTransfer ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : 0;
         }
         //$scope.WireTicket.OnBoardAgreementId = !$scope.wireTicketObj.IsFundTransfer && $scope.wireObj.IsAdhocWire ? $("#liAgreement").select2('val') : angular.copy($scope.wireObj.AgreementId);
-        $scope.WireTicket.WireMessageTypeId = angular.element("#liMessageType").select2('val');
-        $scope.WireTicket.DeliveryCharges = $scope.WireTicket.WireMessageTypeId == "1" ? angular.element("#liDeliveryCharges").select2('val') : null;
+        $scope.WireTicket.WireMessageTypeId = angular.element("#liMessageType").select2("val");
+        $scope.WireTicket.DeliveryCharges = $scope.WireTicket.WireMessageTypeId == "1" ? angular.element("#liDeliveryCharges").select2("val") : null;
         if ($scope.wireTicketObj.IsSenderInformationRequired) {
-            $scope.WireTicket.SenderInformationId = angular.element("#liSenderInformation").select2('val');
+            $scope.WireTicket.SenderInformationId = angular.element("#liSenderInformation").select2("val");
             $scope.WireTicket.SenderDescription = angular.element("#wireSenderDescription").val();
         }
 
         if ($scope.WireTicket.WireStatusId == 0)
-            $scope.WireTicket.hmFundId = $scope.wireObj.IsAdhocWire ? $("#liFund").select2('val') : 0;
+            $scope.WireTicket.hmFundId = $scope.wireObj.IsAdhocWire ? $("#liFund").select2("val") : 0;
 
         //Validation not required for Hold Status
         if (statusId == 6)
@@ -851,7 +853,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.validationMsg = "Sender Description cannot exceed 6 lines";
             return false;
         }
-        var isInvalid = $filter('filter')(splittedInfo, function (split) { return split != undefined && split.length > 33 }, true)[0] != undefined;
+        var isInvalid = $filter("filter")(splittedInfo, function (split) { return split != undefined && split.length > 33 }, true)[0] != undefined;
         if (isInvalid) {
             $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
             $scope.validationMsg = "Sender Description character length cannot exceed 33 in each line";
@@ -878,7 +880,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if (account.onBoardingAccountId == undefined || account.onBoardingAccountId == 0)
             return;
 
-        $http.post("/Home/GetTimeToApproveTheWire", ({ onBoardingAccountId: account.onBoardingAccountId, valueDate: $("#wireValueDate").text() }), { headers: { 'Content-Type': 'application/json; charset=utf-8;' } }).then(function (response) {
+        $http.post("/Home/GetTimeToApproveTheWire", ({ onBoardingAccountId: account.onBoardingAccountId, valueDate: $("#wireValueDate").text() }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
             $scope.timeToApprove = response.data;
             $scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
             if ($scope.timeToApprove.Hours > 0 || ($scope.timeToApprove.Hours == 0 && $scope.timeToApprove.Minutes >= 0 && $scope.timeToApprove.Seconds > 0)) {
@@ -891,7 +893,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     $scope.validationMsg = angular.copy($scope.mandatoryFieldMsg);
                 }
                 else {
-                    $("#chkWireCreation").prop('checked', false).trigger('change').trigger('change');
+                    $("#chkWireCreation").prop("checked", false).trigger("change").trigger("change");
                     $scope.isUserActionDone = true;
                     $scope.validationMsg = "An Initiated wire exists for the same value date, purpose, sending and receiving account.";
                 }
@@ -930,16 +932,16 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.deliveryCharges = [{ id: "BEN", text: "Beneficiary" }, { id: "OUR", text: "Our customer charged" }, { id: "SHA", text: " Shared charges" }];
 
     function formatSelect(selectData) {
-        var stat = $filter('filter')($scope.SenderInformation, { 'id': selectData.id }, true)[0];
-        if (stat.text.indexOf('-') != -1) {
-            var split = stat.text.split('-');
+        var stat = $filter("filter")($scope.SenderInformation, { 'id': selectData.id }, true)[0];
+        if (stat.text.indexOf("-") != -1) {
+            var split = stat.text.split("-");
             return split[0];
         }
         return selectData.text;
     }
 
     function formatResult(selectData) {
-        var stat = $filter('filter')($scope.SenderInformation, { 'id': selectData.id }, true)[0];
+        var stat = $filter("filter")($scope.SenderInformation, { 'id': selectData.id }, true)[0];
         return stat.text;
     }
 
@@ -959,7 +961,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             closeOnSelect: false
         });
 
-        angular.element("#liSenderInformation").select2("destroy").val('');
+        angular.element("#liSenderInformation").select2("destroy").val("");
         angular.element("#liSenderInformation").select2({
             placeholder: "Select Sender Information",
             data: $scope.SenderInformation,
@@ -971,8 +973,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         if ($scope.wireObj.IsAdhocWire) {
             $scope.getHFunds();
-            $scope.purposes = $filter('orderBy')($scope.purposes, 'text');
-            angular.element("#liWiresPurpose").select2("destroy").val('');
+            $scope.purposes = $filter("orderBy")($scope.purposes, "text");
+            angular.element("#liWiresPurpose").select2("destroy").val("");
             angular.element("#liWiresPurpose").select2({
                 placeholder: "Select Purpose",
                 data: $scope.purposes,
@@ -980,8 +982,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 closeOnSelect: false,
                 val: ""
             });
-            $scope.currencies = $filter('orderBy')($scope.currencies, 'text');
-            angular.element("#liCurrency").select2("destroy").val('');
+            $scope.currencies = $filter("orderBy")($scope.currencies, "text");
+            angular.element("#liCurrency").select2("destroy").val("");
             angular.element("#liCurrency").select2({
                 placeholder: "Select Currency",
                 data: [],
@@ -989,15 +991,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 closeOnSelect: false,
                 val: ""
             });
-            angular.element("#liSendingAccount").select2("destroy").val('');
+            angular.element("#liSendingAccount").select2("destroy").val("");
             angular.element("#liSendingAccount").select2({
-                placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? 'Receiving' : 'Sending') + " Account",
+                placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                 data: [],
                 allowClear: true,
                 closeOnSelect: false
             });
 
-            angular.element("#liReceivingBookAccount").select2("destroy").val('');
+            angular.element("#liReceivingBookAccount").select2("destroy").val("");
             angular.element("#liReceivingBookAccount").select2({
                 placeholder: "Select Receiving Account",
                 data: [],
@@ -1005,7 +1007,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 closeOnSelect: false
             });
 
-            angular.element("#liReceivingAccount").select2("destroy").val('');
+            angular.element("#liReceivingAccount").select2("destroy").val("");
             angular.element("#liReceivingAccount").select2({
                 placeholder: "Select Receiving Account",
                 data: [],
@@ -1013,47 +1015,47 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 closeOnSelect: false
             });
 
-            angular.element("#liWireTransferType").select2("destroy").val('');
+            angular.element("#liWireTransferType").select2("destroy").val("");
             angular.element("#liWireTransferType").select2({
                 placeholder: "Select Transfer Type",
                 data: $scope.TransferTypes,
                 closeOnSelect: false
             });
 
-            angular.element("#liWiresPurpose").select2('val', '').trigger('change');
-            angular.element("#liWireTransferType").select2('val', 1).trigger('change');
+            angular.element("#liWiresPurpose").select2("val", "").trigger("change");
+            angular.element("#liWireTransferType").select2("val", 1).trigger("change");
             $scope.isPurposeEnabled = false;
             $scope.isFundsChanged = false;
             $scope.isSendingAccountEnabled = false;
             $scope.isReceivingAccountEnabled = false;
-            $scope.WireTicket.OnBoardAccountId = '';
-            $scope.WireTicket.OnBoardSSITemplateId = '';
-            $scope.WireTicket.ReceivingOnBoardAccountId = '';
+            $scope.WireTicket.OnBoardAccountId = "";
+            $scope.WireTicket.OnBoardSSITemplateId = "";
+            $scope.WireTicket.ReceivingOnBoardAccountId = "";
         }
         else if ($scope.WireTicket.hmsWireId == 0) {
-            angular.element("#liSendingAccount").select2("destroy").val('');
+            angular.element("#liSendingAccount").select2("destroy").val("");
             angular.element("#liSendingAccount").select2({
-                placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? 'Receiving' : 'Sending') + " Account",
+                placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                 data: $scope.sendingAccountsList,
                 closeOnSelect: false
             });
-            angular.element("#liSendingAccount").select2('val', $scope.sendingAccountsList[0].id).trigger('change');
+            angular.element("#liSendingAccount").select2("val", $scope.sendingAccountsList[0].id).trigger("change");
             angular.element("#liSenderInformation").select2("enable");
             angular.element("#wireSenderDescription").removeAttr("disabled");
         }
         else if ($scope.WireTicketStatus.IsEditEnabled) {
             $scope.IsNormalTransfer = $scope.WireTicket.WireTransferTypeId == 1;
             $timeout(function () {
-                angular.element("#liWireTransferType").select2('val', $scope.WireTicket.WireTransferTypeId).trigger('change');
-                angular.element("#liSendingAccount").select2("destroy").val('');
+                angular.element("#liWireTransferType").select2("val", $scope.WireTicket.WireTransferTypeId).trigger("change");
+                angular.element("#liSendingAccount").select2("destroy").val("");
                 angular.element("#liSendingAccount").select2({
-                    placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? 'Receiving' : 'Sending') + " Account",
+                    placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                     data: $scope.sendingAccountsList,
                     allowClear: true,
                     closeOnSelect: false
                 });
                 $scope.isSendingAccountEnabled = true;
-                angular.element("#liSendingAccount").select2('val', $scope.WireTicket.OnBoardAccountId).trigger('change');
+                angular.element("#liSendingAccount").select2("val", $scope.WireTicket.OnBoardAccountId).trigger("change");
                 angular.element("#liSenderInformation").select2("enable");
                 angular.element("#wireSenderDescription").removeAttr("disabled");
             }, 50);
@@ -1280,19 +1282,19 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.$watch("isWireRequirementsFilled", function (newValue, oldValue) {
         if ($scope.WireTicket.WireStatusId < 1) {
             if ($scope.wireTicketObj.IsNotice)
-                $scope.isWireRequirementsFilled = $("#liFund").select2('val') != "" && $("#liWiresPurpose").select2('val') != "" && $("#liSendingAccount").select2('val') != "";
+                $scope.isWireRequirementsFilled = $("#liFund").select2("val") != "" && $("#liWiresPurpose").select2("val") != "" && $("#liSendingAccount").select2("val") != "";
             else if ($scope.wireTicketObj.IsFundTransfer)
-                $scope.isWireRequirementsFilled = $("#liFund").select2('val') != "" && $("#liWiresPurpose").select2('val') != "" && $("#liSendingAccount").select2('val') != "" && $("#liReceivingBookAccount").select2('val') != "" && $("#liMessageType").select2('val') != "";
+                $scope.isWireRequirementsFilled = $("#liFund").select2("val") != "" && $("#liWiresPurpose").select2("val") != "" && $("#liSendingAccount").select2("val") != "" && $("#liReceivingBookAccount").select2("val") != "" && $("#liMessageType").select2("val") != "";
             else
-                $scope.isWireRequirementsFilled = $("#liFund").select2('val') != "" && $("#liWiresPurpose").select2('val') != "" && $("#liSendingAccount").select2('val') != "" && $("#liReceivingAccount").select2('val') != "";
+                $scope.isWireRequirementsFilled = $("#liFund").select2("val") != "" && $("#liWiresPurpose").select2("val") != "" && $("#liSendingAccount").select2("val") != "" && $("#liReceivingAccount").select2("val") != "";
         }
         else if ($scope.WireTicketStatus.IsEditEnabled) {
             if ($scope.wireTicketObj.IsNotice)
-                $scope.isWireRequirementsFilled = $("#liSendingAccount").select2('val') != "";
+                $scope.isWireRequirementsFilled = $("#liSendingAccount").select2("val") != "";
             else if ($scope.wireTicketObj.IsFundTransfer)
-                $scope.isWireRequirementsFilled = $("#liSendingAccount").select2('val') != "" && $("#liReceivingBookAccount").select2('val') != "" && $("#liMessageType").select2('val') != "";
+                $scope.isWireRequirementsFilled = $("#liSendingAccount").select2("val") != "" && $("#liReceivingBookAccount").select2("val") != "" && $("#liMessageType").select2("val") != "";
             else
-                $scope.isWireRequirementsFilled = $("#liSendingAccount").select2('val') != "" && $("#liReceivingAccount").select2('val') != "";
+                $scope.isWireRequirementsFilled = $("#liSendingAccount").select2("val") != "" && $("#liReceivingAccount").select2("val") != "";
         }
         else
             $scope.isWireRequirementsFilled = true;
@@ -1301,9 +1303,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     angular.element(document).on("change", "#liWiresPurpose", function () {
         $timeout(function () {
-            if ($("#liWiresPurpose").select2('val') != "")
-                $scope.wireObj.Purpose = angular.copy($("#liWiresPurpose").select2('data').text);
-            $scope.WireTicket.WirePurposeId = angular.copy($("#liWiresPurpose").select2('val'));
+            if ($("#liWiresPurpose").select2("val") != "")
+                $scope.wireObj.Purpose = angular.copy($("#liWiresPurpose").select2("data").text);
+            $scope.WireTicket.WirePurposeId = angular.copy($("#liWiresPurpose").select2("val"));
             $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
             if (!$scope.isWireLoadingInProgress)
                 $scope.checkForCreatedWires();
@@ -1312,9 +1314,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
     angular.element(document).on("change", "#liFund", function () {
         $timeout(function () {
-            if ($("#liFund").select2('val') != "") {
+            if ($("#liFund").select2("val") != "") {
                 $scope.isFundsChanged = true;
-                $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2('val') + "&isFundTransfer=" + $scope.wireTicketObj.IsFundTransfer).then(function (response) {
+                $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2("val") + "&isFundTransfer=" + $scope.wireTicketObj.IsFundTransfer).then(function (response) {
                     $scope.sendingAccountsListOfFund = response.data.sendingAccountsList;
                     $scope.receivingAccountsListOfFund = response.data.receivingAccountsList;
                     $scope.currencies = response.data.currencies;
@@ -1341,20 +1343,20 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }
             else {
                 $scope.isFundsChanged = false;
-                $("#liAgreement").select2('val', '').trigger('change');
-                $("#liSendingAccount").select2('val', '').trigger('change');
-                $("#liReceivingBookAccount").select2('val', '').trigger('change');
-                $("#liReceivingAccount").select2('val', '').trigger('change');
+                $("#liAgreement").select2("val", "").trigger("change");
+                $("#liSendingAccount").select2("val", "").trigger("change");
+                $("#liReceivingBookAccount").select2("val", "").trigger("change");
+                $("#liReceivingAccount").select2("val", "").trigger("change");
             }
         }, 50);
     });
 
     angular.element(document).on("change", "#liCurrency", function () {
         $timeout(function () {
-            if ($("#liCurrency").select2('val') != "" && $scope.WireTicket.hmsWireId == 0) {
-                $scope.sendingAccountsList = $filter('filter')(angular.copy($scope.sendingAccountsListOfFund), { 'Currency': $("#liCurrency").select2('val') }, true);
+            if ($("#liCurrency").select2("val") != "" && $scope.WireTicket.hmsWireId == 0) {
+                $scope.sendingAccountsList = $filter("filter")(angular.copy($scope.sendingAccountsListOfFund), { 'Currency': $("#liCurrency").select2("val") }, true);
                 angular.element("#liSendingAccount").select2({
-                    placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? 'Receiving' : 'Sending') + " Account",
+                    placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                     data: $scope.sendingAccountsList,
                     allowClear: true,
                     closeOnSelect: false
@@ -1363,25 +1365,25 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }
             else if ($scope.WireTicket.hmsWireId == 0) {
                 $scope.isFundsChanged = false;
-                $("#liAgreement").select2('val', '').trigger('change');
-                $("#liSendingAccount").select2('val', '').trigger('change');
-                $("#liReceivingBookAccount").select2('val', '').trigger('change');
-                $("#liReceivingAccount").select2('val', '').trigger('change');
+                $("#liAgreement").select2("val", "").trigger("change");
+                $("#liSendingAccount").select2("val", "").trigger("change");
+                $("#liReceivingBookAccount").select2("val", "").trigger("change");
+                $("#liReceivingAccount").select2("val", "").trigger("change");
             }
         }, 50);
     });
 
     angular.element(document).on("change", "#liSendingAccount", function () {
         $timeout(function () {
-            $scope.WireTicket.OnBoardAccountId = angular.copy($("#liSendingAccount").select2('val'));
-            if ($("#liSendingAccount").select2('val') != "") {
+            $scope.WireTicket.OnBoardAccountId = angular.copy($("#liSendingAccount").select2("val"));
+            if ($("#liSendingAccount").select2("val") != "") {
                 if ($scope.WireTicketStatus.IsWirePurposeAdhoc && !$scope.wireTicketObj.IsNotice) {
                     if (!$scope.wireTicketObj.IsFundTransfer) {
                         $http.get("/Home/GetApprovedSSITemplatesForAccount?accountId=" + $scope.WireTicket.OnBoardAccountId + "&isNormalTransfer=" + $scope.IsNormalTransfer).then(function (response) {
                             $scope.receivingAccounts = response.data.receivingAccounts;
                             $scope.receivingAccountList = response.data.receivingAccountList;
                             $scope.counterParties = response.data.counterparties;
-                            angular.element("#liReceivingAccount").select2('destroy');
+                            angular.element("#liReceivingAccount").select2("destroy");
                             angular.element("#liReceivingAccount").select2({
                                 placeholder: "Select Receiving Account",
                                 data: $scope.receivingAccountList,
@@ -1390,15 +1392,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                             });
                             $scope.isReceivingAccountEnabled = true;
                             if ($scope.WireTicket.hmsWireId > 0)
-                                angular.element("#liReceivingAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
+                                angular.element("#liReceivingAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger("change");
                         });
                     }
                     else {
-                        $scope.receivingBookAccountList = $filter('filter')(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
-                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2('val');
+                        $scope.receivingBookAccountList = $filter("filter")(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
+                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2("val");
                         }, true);
 
-                        angular.element("#liReceivingBookAccount").select2('destroy');
+                        angular.element("#liReceivingBookAccount").select2("destroy");
                         angular.element("#liReceivingBookAccount").select2({
                             placeholder: "Select Receiving Account",
                             data: $scope.receivingBookAccountList,
@@ -1407,7 +1409,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         });
                         $scope.isReceivingAccountEnabled = true;
                         if ($scope.WireTicket.hmsWireId > 0)
-                            angular.element("#liReceivingBookAccount").select2("val", $scope.WireTicket.ReceivingOnBoardAccountId).trigger('change');
+                            angular.element("#liReceivingBookAccount").select2("val", $scope.WireTicket.ReceivingOnBoardAccountId).trigger("change");
                     }
                 }
                 //var account = $filter('filter')(angular.copy($scope.sendingAccounts), function (account) {
@@ -1441,8 +1443,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     $scope.accountDetail = account;
                     if ($scope.wireTicketObj.IsNotice) {
                         $scope.wireTicketObj.ReceivingAccountCurrency = $scope.accountDetail.Currency;
-                        var wireMessageType = $filter('filter')($scope.MessageTypes, function (message) { return message.text == "MT210" }, true)[0];
-                        angular.element("#liMessageType").select2('val', wireMessageType.id).trigger('change');
+                        var wireMessageType = $filter("filter")($scope.MessageTypes, function (message) { return message.text == "MT210" }, true)[0];
+                        angular.element("#liMessageType").select2("val", wireMessageType.id).trigger("change");
                     }
                     $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
                 });
@@ -1452,8 +1454,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.accountDetail = angular.copy($scope.wireTicketObj.SendingAccount);
                 $interval.cancel($scope.promise);
                 $scope.timeToShow = "00 : 00 : 00";
-                angular.element("#liReceivingBookAccount").select2("val", "").trigger('change');
-                angular.element("#liReceivingAccount").select2("val", "").trigger('change');
+                angular.element("#liReceivingBookAccount").select2("val", "").trigger("change");
+                angular.element("#liReceivingAccount").select2("val", "").trigger("change");
             }
 
             $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
@@ -1472,7 +1474,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.CashBalance.TreasuryBalance = $.convertToCurrency($scope.CashBalance.TreasuryBalance, 2);
                 $scope.CashBalance.TotalWired = $.convertToCurrency($scope.CashBalance.TotalWired, 2);
                 $scope.CashBalance.AvailableBalance = !$scope.CashBalance.IsCashBalanceAvailable ? "N.A" : $.convertToCurrency($scope.CashBalance.AvailableBalance, 2);
-                $scope.CashBalance.CalculatedBalance = $scope.CashBalance.AvailableBalance;
+                $scope.fnCalculateCashBalance();
             });
     }
 
@@ -1486,7 +1488,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     angular.element(document).on("change", "#liReceivingBookAccount", function () {
         $timeout(function () {
-            $scope.WireTicket.ReceivingOnBoardAccountId = angular.copy($("#liReceivingBookAccount").select2('val'));
+            $scope.WireTicket.ReceivingOnBoardAccountId = angular.copy($("#liReceivingBookAccount").select2("val"));
             if ($scope.WireTicket.ReceivingOnBoardAccountId != "") {
                 if ($scope.wireTicketObj.IsFundTransfer) {
 
@@ -1535,17 +1537,17 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     angular.element(document).on("change", "#liReceivingAccount", function () {
         $timeout(function () {
-            $scope.WireTicket.OnBoardSSITemplateId = angular.copy($("#liReceivingAccount").select2('val'));
+            $scope.WireTicket.OnBoardSSITemplateId = angular.copy($("#liReceivingAccount").select2("val"));
             if ($scope.WireTicket.OnBoardSSITemplateId != "") {
                 if (!$scope.wireTicketObj.IsFundTransfer) {
-                    $scope.ssiTemplate = $filter('filter')($scope.receivingAccounts, function (template) {
+                    $scope.ssiTemplate = $filter("filter")($scope.receivingAccounts, function (template) {
                         return template.onBoardingSSITemplateId == $scope.WireTicket.OnBoardSSITemplateId;
                     }, true)[0];
                     $scope.wireTicketObj.ReceivingAccountCurrency = angular.copy($scope.ssiTemplate.Currency);
                     $scope.wireTicketObj.Counterparty = $scope.counterParties[$scope.ssiTemplate.TemplateEntityId];
-                    var wireMessageType = $filter('filter')($scope.MessageTypes, function (message) { return message.text == $scope.ssiTemplate.MessageType }, true)[0];
-                    angular.element("#liMessageType").select2('val', wireMessageType.id).trigger('change');
-                    angular.element("#liDeliveryCharges").select2('val', ($scope.ssiTemplate.MessageType != "MT103" ? null : "OUR")).trigger('change');
+                    var wireMessageType = $filter("filter")($scope.MessageTypes, function (message) { return message.text == $scope.ssiTemplate.MessageType }, true)[0];
+                    angular.element("#liMessageType").select2("val", wireMessageType.id).trigger("change");
+                    angular.element("#liDeliveryCharges").select2("val", ($scope.ssiTemplate.MessageType != "MT103" ? null : "OUR")).trigger("change");
                     if (!$scope.isWireLoadingInProgress && $scope.WireTicket.hmsWireId == 0)
                         $scope.checkForCreatedWires();
                     if (!$scope.wireTicketObj.IsFundTransfer) {
@@ -1567,7 +1569,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 }
             }
             else {
-                angular.element("#liMessageType").select2('val', '').trigger('change');
+                angular.element("#liMessageType").select2("val", "").trigger("change");
                 $scope.ssiTemplate = angular.copy($scope.wireTicketObj.SSITemplate);
             }
 
@@ -1577,15 +1579,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $(document).on("change", "#liWireTransferType", function (event) {
         $timeout(function () {
-            $scope.WireTicket.WireTransferTypeId = angular.copy($("#liWireTransferType").select2('val'));
+            $scope.WireTicket.WireTransferTypeId = angular.copy($("#liWireTransferType").select2("val"));
             $scope.wireTicketObj.IsFundTransfer = $scope.WireTicket.WireTransferTypeId == 2;
             $scope.IsNormalTransfer = $scope.WireTicket.WireTransferTypeId == 1;
-            $scope.wireTicketObj.IsNotice = $("#liWireTransferType").select2('data').text == "Notice";
-            $("#liWiresPurpose").select2('val', '').trigger('change');
-            $("#liFund").select2('val', '').trigger('change');
-            $("#liCurrency").select2('val', '').trigger('change');
-            $("#liAgreement").select2('val', '').trigger('change');
-            $("#liSendingAccount").select2('val', '').trigger('change');
+            $scope.wireTicketObj.IsNotice = $("#liWireTransferType").select2("data").text == "Notice";
+            $("#liWiresPurpose").select2("val", "").trigger("change");
+            $("#liFund").select2("val", "").trigger("change");
+            $("#liCurrency").select2("val", "").trigger("change");
+            $("#liAgreement").select2("val", "").trigger("change");
+            $("#liSendingAccount").select2("val", "").trigger("change");
 
             $timeout(function () {
                 if ($scope.wireTicketObj.IsNotice)
@@ -1596,10 +1598,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
 
 
-            $("#liReceivingBookAccount").select2('val', '').trigger('change');
-            $("#liReceivingAccount").select2('val', '').trigger('change');
+            $("#liReceivingBookAccount").select2("val", "").trigger("change");
+            $("#liReceivingAccount").select2("val", "").trigger("change");
             if ($scope.wireTicketObj.IsFundTransfer)
-                $scope.filteredMessageTypes = $filter('filter')(angular.copy($scope.MessageTypes), function (message) { return (message.text == "MT103" || message.text == "MT202") }, true);
+                $scope.filteredMessageTypes = $filter("filter")(angular.copy($scope.MessageTypes), function (message) { return (message.text == "MT103" || message.text == "MT202") }, true);
             else
                 $scope.filteredMessageTypes = angular.copy(angular.copy($scope.MessageTypes));
             angular.element("#liMessageType").select2({
@@ -1608,8 +1610,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 allowClear: true,
                 closeOnSelect: false
             });
-            $("#liMessageType").select2('val', '').trigger('change');
-            $("#liSenderInformation").select2('val', '').trigger('change');
+            $("#liMessageType").select2("val", "").trigger("change");
+            $("#liSenderInformation").select2("val", "").trigger("change");
             $scope.wireTicketObj.IsSenderInformationRequired = false;
         }, 500);
 
@@ -1627,7 +1629,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return $scope.wireTicketObj.TransferType;
         }
         else if ($scope.WireTicketStatus.IsWirePurposeAdhoc) {
-            return $("#liWireTransferType").select2('data').text;
+            return $("#liWireTransferType").select2("data").text;
         }
         else {
             return $scope.wireObj.Purpose == "Send Call" ? "Notice" : "3rd Party Transfer";
