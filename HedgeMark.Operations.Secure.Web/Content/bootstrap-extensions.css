@@ -1296,3 +1296,8 @@ table.dataTable tbody td.selected {
     .navbar-ops-menu .navbar-link:hover {
         color: #ffffff;
     }
+
+mark,
+.mark {
+    padding: .2em 0px;
+}

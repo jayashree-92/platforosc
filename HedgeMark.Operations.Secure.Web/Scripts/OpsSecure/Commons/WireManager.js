@@ -74,7 +74,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     $scope.WireTicket.ValueDate = angular.element("#wireValueDate").text();
                     $scope.checkForCreatedWires();
                     $scope.getApprovalTime($scope.accountDetail);
-                    $scope.fnGetCashBalances();
+                    $scope.fnGetCashBalances($("#wireValueDate").text());
                 }
                 angular.element(".datepicker").hide();
             });
@@ -228,7 +228,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
             $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
             $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
-            $scope.fnGetCashBalances();
+            $scope.fnGetCashBalances(moment($scope.WireTicket.ValueDate).format("YYYY-MM-DD"));
         });
     }
 
@@ -1076,7 +1076,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         $scope.isWireLoadingInProgress = false;
         $scope.isUserActionDone = false;
-        $scope.fnGetCashBalances();
+        //$scope.fnGetCashBalances();
     }
 
     $scope.WireTicket = {
@@ -1458,16 +1458,16 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }
 
             $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
-            //$scope.fnGetCashBalances();
+            $scope.fnGetCashBalances($("#wireValueDate").text());
         }, 50);
     });
 
     $scope.CashBalance = { IsCashBalanceAvailable: false };
-    $scope.fnGetCashBalances = function () {
+    $scope.fnGetCashBalances = function (valueDate) {
         if ($scope.WireTicket.OnBoardAccountId == undefined || $scope.WireTicket.OnBoardAccountId == 0)
             return;
 
-        $http.get("/Home/GetCashBalances?sendingAccountId=" + $scope.WireTicket.OnBoardAccountId + "&valueDate=" + moment($scope.WireTicket.ValueDate).format('YYYY-MM-DD'))
+        $http.get("/Home/GetCashBalances?sendingAccountId=" + $scope.WireTicket.OnBoardAccountId + "&valueDate=" + valueDate)
             .then(function (response) {
                 $scope.CashBalance = response.data;
                 $scope.CashBalance.TreasuryBalance = $.convertToCurrency($scope.CashBalance.TreasuryBalance, 2);
