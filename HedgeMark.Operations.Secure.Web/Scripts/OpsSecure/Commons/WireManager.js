@@ -1458,7 +1458,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }
 
             $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
-            $scope.fnGetCashBalances();
+            //$scope.fnGetCashBalances();
         }, 50);
     });
 
@@ -1479,9 +1479,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.fnCalculateCashBalance = function () {
         if (!$scope.CashBalance.IsCashBalanceAvailable)
-            return;
-
-        $scope.CashBalance.CalculatedBalance = $.convertToCurrency($.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text()), 2);
+            $scope.CashBalance.CalculatedBalance = "N.A";
+        else
+            $scope.CashBalance.CalculatedBalance = $.convertToCurrency($.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text()), 2);
     };
 
 
