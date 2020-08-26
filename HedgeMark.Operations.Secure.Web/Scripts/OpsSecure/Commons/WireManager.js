@@ -160,8 +160,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         return $http.get("/Home/GetWireDetails?wireId=" + wireId).then(function (response) {
             $scope.wireTicketObj = response.data.wireTicket;
             $scope.WireTicketStatus = response.data.wireTicketStatus;
-            $scope.wireTicketObj.HMWire.CreatedAt =
-                moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
+            $scope.wireTicketObj.HMWire.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
 
             $scope.sendingAccountsList = response.data.sendingAccountsList;
             $scope.receivingAccountsListOfFund = response.data.receivingAccountsList;
@@ -229,6 +228,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
             $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
             $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
+            $scope.fnGetCashBalances();
         });
     }
 
