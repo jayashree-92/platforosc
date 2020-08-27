@@ -792,3 +792,34 @@ function renderDataAsCurrency(tdata, type, row) {
 
     return $.convertToCurrency(tdata.toString(), 2);
 }
+
+var constructCSVstring = function (dtDatatable) {
+
+    var allColumns = dtDatatable.columns().nodes().to$().toArray();
+    var totalColumns = allColumns.length;
+
+    var rows = [];
+    var headerRow = "";
+    for (var i = 0; i < totalColumns; i++) {
+        headerRow += "\"" + dtDatatable.column(i).header().textContent + "\",";
+    }
+    rows.push(headerRow);
+    for (var i = 0; i < totalColumns; i++) {
+
+        for (var j = 0; j < allColumns[i].length; j++) {
+            var row = rows[j + 1];
+            if (row == undefined)
+                row = "";
+
+            row += "\"" + $(allColumns[i][j]).text() + "\",";
+            rows[j + 1] = row;
+        }
+
+    }
+    var fullCsv = "";
+    for (var k = 0; k < rows.length; k++) {
+        fullCsv += rows[k] + "\n";
+    }
+
+    return fullCsv;
+}
