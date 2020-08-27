@@ -333,13 +333,7 @@ jQuery.fn.dataTable.ext.type.search.currency = function (data) {
 
 jQuery.extend(jQuery.fn.dataTableExt.oSort, {
     "timespan-pre": function (a) {
-        a = $(a).attr("date");
-
-        if (a === "" || a == null || a == "n.a" || a == "-")
-            a = "0";
-
-        a = a.replace(/[^\d\-\.]/g, "");
-        return parseFloat(a);
+        return a.Ticks;
     },
 
     "timespan-asc": function (a, b) {
