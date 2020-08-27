@@ -677,38 +677,39 @@ namespace HMOSecureWeb.Controllers
 
         private TimeSpan GetDeadlineToApprove(onBoardingAccount onboardAccount, DateTime valueDate)
         {
-            try
-            {
-                var timeZones = FileSystemManager.GetAllTimeZones();
-                var cashSweep = valueDate.Date.Add(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0));
-                var cutOff = valueDate.AddDays(onboardAccount.WirePortalCutoff.DaystoWire).Date.Add(onboardAccount.WirePortalCutoff.CutoffTime);
-                var baseTimeZone = timeZones[FileSystemManager.DefaultTimeZone];
-                var cashSweepTimeZone = onboardAccount.CashSweepTimeZone ?? "";
-                var customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cashSweepTimeZone) ? timeZones[cashSweepTimeZone] : baseTimeZone);
-                var destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones[FileSystemManager.DefaultTimeZone]);
+            var timeZones = FileSystemManager.GetAllTimeZones();
+            var baseTimeZone = timeZones[FileSystemManager.DefaultTimeZone];
+            var destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(baseTimeZone);
 
-                var cashSweepTime = customTimeZone.Id != baseTimeZone ? TimeZoneInfo.ConvertTime(new DateTime(cashSweep.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone) : cashSweep;
-                var cutoffTimeZone = onboardAccount.WirePortalCutoff.CutOffTimeZone ?? "";
+            var currentTime = DateTime.Now;
+            if (TimeZoneInfo.Local.Id != baseTimeZone)
+                currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, baseTimeZone);
 
-                customTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cutoffTimeZone) ? timeZones[cutoffTimeZone] : baseTimeZone);
-                var cutOffTime = customTimeZone.Id != baseTimeZone ? TimeZoneInfo.ConvertTime(new DateTime(cutOff.Ticks, DateTimeKind.Unspecified), customTimeZone, destinationTimeZone) : cutOff;
+            var cutOffTimeDeadline = GetCutOffTime(onboardAccount.WirePortalCutoff.CutoffTime, valueDate, onboardAccount.WirePortalCutoff.CutOffTimeZone, timeZones, destinationTimeZone, onboardAccount.WirePortalCutoff.DaystoWire);
 
-                var currentTime = DateTime.Now;
-                if (TimeZoneInfo.Local.Id != baseTimeZone)
-                    currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, baseTimeZone);
+            //when there is no cash sweep, use only cut-off time
+            if (onboardAccount.CashSweep == "No")
+                return cutOffTimeDeadline - currentTime;
 
-                TimeSpan offSetTime;
-                if (cashSweepTime < cutOffTime)
-                    offSetTime = cashSweepTime - currentTime;
-                else
-                    offSetTime = cutOffTime - currentTime;
+            var cashSweepTimeDeadline = GetCutOffTime(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0), valueDate, onboardAccount.CashSweepTimeZone, timeZones, destinationTimeZone);
+            return cashSweepTimeDeadline < cutOffTimeDeadline ? cashSweepTimeDeadline - currentTime : cutOffTimeDeadline - currentTime;
 
-                return offSetTime;
-            }
-            catch (TimeZoneNotFoundException)
-            {
-                return new TimeSpan();
-            }
+        }
+
+        private static DateTime GetCutOffTime(TimeSpan cutOffTime, DateTime valueDate, string cutoffTimeZone, Dictionary<string, string> timeZones, TimeZoneInfo destinationTimeZone, int daysToAdd = 0)
+        {
+            if (string.IsNullOrWhiteSpace(cutoffTimeZone))
+                cutoffTimeZone = destinationTimeZone.Id;
+
+            var cutOff = valueDate.AddDays(daysToAdd).Date.Add(cutOffTime);
+
+            if (cutoffTimeZone == destinationTimeZone.Id)
+                return cutOff;
+
+            var cutOffTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cutoffTimeZone) ? timeZones[cutoffTimeZone] : destinationTimeZone.Id);
+            var deadline = TimeZoneInfo.ConvertTime(new DateTime(cutOff.Ticks, DateTimeKind.Unspecified), cutOffTimeZoneInfo, destinationTimeZone);
+
+            return deadline;
         }
 
         public JsonResult GetWirePurposes()
