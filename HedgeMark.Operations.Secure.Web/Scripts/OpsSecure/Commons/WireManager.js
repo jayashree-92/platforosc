@@ -909,39 +909,17 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         });
     }
 
-
+    
+    $scope.timeToShow = "00 : 00 : 00";
     $scope.fnResetDeadlineTimer = function () {
         if ($scope.promise != null)
             $interval.cancel($scope.promise);
-        $scope.promise = $interval($scope.fnWireDeadlineCountDownTimer, 1000);
+        $scope.promise = $interval(
+            function () {
+                $scope.timeToShow = fnGetWireDeadlineCounter($scope.timeToApprove);
+                $scope.isDeadlineCrossed = $scope.timeToApprove.Days <= 0 && $scope.timeToApprove.Hours < 0;
+            }, 1000);
     }
-
-    $scope.timeToShow = "00 : 00 : 00";
-    $scope.fnWireDeadlineCountDownTimer = function () {
-        if ($scope.timeToApprove != undefined && $scope.timeToApprove.Hours >= 0) {
-            $scope.timeToApprove.Seconds--;
-            if ($scope.timeToApprove.Seconds == -1) {
-                $scope.timeToApprove.Minutes--;
-                if ($scope.timeToApprove.Minutes == -1) {
-                    $scope.timeToApprove.Hours--;
-                    $scope.timeToApprove.Minutes = 59;
-                }
-                $scope.timeToApprove.Seconds = 59;
-            }
-        }
-
-        if ($scope.timeToApprove.Hours < 0) {
-            $scope.timeToShow = moment().add($scope.timeToApprove).fromNow();
-            $scope.isDeadlineCrossed = true;
-        } else {
-            if ($scope.timeToApprove.Days > 0)
-                $scope.timeToShow = moment($scope.timeToApprove).format("D")+"d + "+ moment($scope.timeToApprove).format("HH:mm:ss");
-            else
-                $scope.timeToShow = moment($scope.timeToApprove).format("HH:mm:ss");
-            $scope.isDeadlineCrossed = false;
-        }
-    }
-
 
     $scope.deliveryCharges = [{ id: "BEN", text: "Beneficiary" }, { id: "OUR", text: "Our customer charged" }, { id: "SHA", text: " Shared charges" }];
 

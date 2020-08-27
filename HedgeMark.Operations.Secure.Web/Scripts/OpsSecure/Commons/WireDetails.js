@@ -25,33 +25,6 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
         $http.post("/Home/RemoveActionInProgress?wireId=" + wireId);
     }
 
-
-    $scope.fnGetWireDeadlineCounter = function (timeToApprove) {
-        if (timeToApprove == undefined)
-            timeToApprove = {};
-
-        if (timeToApprove.Hours >= 0) {
-            timeToApprove.Seconds--;
-            if (timeToApprove.Seconds == -1) {
-                timeToApprove.Minutes--;
-                if (timeToApprove.Minutes == -1) {
-                    timeToApprove.Hours--;
-                    timeToApprove.Minutes = 59;
-                }
-                timeToApprove.Seconds = 59;
-            }
-        }
-
-        if (timeToApprove.Hours < 0) {
-            return moment().add(timeToApprove).fromNow();
-        } else {
-            if (timeToApprove.Days > 0)
-                return moment(timeToApprove).format("D") + "d + " + moment(timeToApprove).format("HH:mm:ss");
-            else
-                return moment(timeToApprove).format("HH:mm:ss");
-        }
-    }
-
     $scope.promise = null;
 
     $scope.fnLoadWireDetailsGrid = function (statusId, startContextDate, endContextDate) {
@@ -95,12 +68,12 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     "data": "Deadline", "sTitle": "Deadline", "render": function (tdata, type, row) {
 
                         if (type == "sort")
-                            return tdata; 
-                        
+                            return tdata;
+
                         if (row.HMWire.WireStatusId != 2)
                             return "n.a";
 
-                        return $scope.fnGetWireDeadlineCounter(tdata);
+                        return fnGetWireDeadlineCounter(tdata);
                     }, "type": "timespan"
                 },
                 {
