@@ -127,6 +127,8 @@ namespace HMOSecureMiddleware.Models
                 return HMWire.hmsWireSenderInformation == null ? "BNF" : HMWire.hmsWireSenderInformation.SenderInformation;
             }
         }
+
+        public TimeSpan Deadline { get; set; }
     }
 
     public class WireInBoundMessage

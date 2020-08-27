@@ -125,6 +125,7 @@ namespace HMOSecureWeb.Controllers
                     .Include(s => s.hmsWireStatusLkup)
                     .Include(s => s.hmsWireTransferTypeLKup)
                     .Include(s => s.SendingAccount)
+                    .Include(s => s.SendingAccount.WirePortalCutoff)
                     .Include(s => s.ReceivingAccount)
                     .Include(s => s.ReceivingSSITemplate)
                     .Where(s => ((allStatusIds.Contains(0) || allStatusIds.Contains(2)) && s.WireStatusId == 2) || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (allStatusIds.Contains(0) || allStatusIds.Contains(s.WireStatusId))
@@ -140,7 +141,6 @@ namespace HMOSecureWeb.Controllers
             Dictionary<int, string> users;
             var hFundIds = wireStatusDetails.Select(s => s.hmFundId).ToList();
 
-
             using (var context = new AdminContext())
             {
                 context.Configuration.ProxyCreationEnabled = false;
@@ -151,7 +151,7 @@ namespace HMOSecureWeb.Controllers
             }
 
             var hFunds = AdminFundManager.GetHFundsCreatedForDMA(hFundIds, PreferredFundNameInSession);
-
+            var timeZones = FileSystemManager.GetAllTimeZones();
             foreach (var wire in wireStatusDetails)
             {
                 wire.hmsWireMessageType.hmsWires = null;
@@ -178,6 +178,8 @@ namespace HMOSecureWeb.Controllers
                     ClientLegalName = fund.ClientLegalName ?? string.Empty,
                     ClientShortName = fund.ClientShortName ?? string.Empty
                 };
+
+                thisWire.Deadline = GetDeadlineToApprove(thisWire.SendingAccount, thisWire.HMWire.ValueDate, timeZones);
 
                 thisWire.SendingAccount.onBoardingAccountSSITemplateMaps = null;
                 thisWire.ReceivingAccount.onBoardingAccountSSITemplateMaps = null;
@@ -263,7 +265,6 @@ namespace HMOSecureWeb.Controllers
                 thisWire.WireApprovedBy = thisWire.HMWire.ApprovedBy > 0 ? users.First(s => s.Key == thisWire.HMWire.ApprovedBy).Value.HumanizeEmail() : "-";
 
                 SetUserTitles(thisWire);
-
                 wireData.Add(thisWire);
             }
 
@@ -653,7 +654,6 @@ namespace HMOSecureWeb.Controllers
         {
             switch (invoice.FileSource)
             {
-
                 case "Manual":
                     return new FileInfo(string.Format("{0}/{1}/{2}", FileSystemManager.InvoicesFileAttachement, invoice.dmaInvoiceReportId, invoice.FileName));
                 case "Overriden":
@@ -675,9 +675,14 @@ namespace HMOSecureWeb.Controllers
             return Json(timeToApprove);
         }
 
-        private TimeSpan GetDeadlineToApprove(onBoardingAccount onboardAccount, DateTime valueDate)
+        private TimeSpan GetDeadlineToApprove(onBoardingAccount onboardAccount, DateTime valueDate, Dictionary<string, string> timeZones = null)
         {
-            var timeZones = FileSystemManager.GetAllTimeZones();
+            if (timeZones == null)
+                timeZones = FileSystemManager.GetAllTimeZones();
+
+            if (onboardAccount.WirePortalCutoff == null)
+                onboardAccount.WirePortalCutoff = new hmsWirePortalCutoff();
+
             var baseTimeZone = timeZones[FileSystemManager.DefaultTimeZone];
             var destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(baseTimeZone);
 
@@ -693,7 +698,6 @@ namespace HMOSecureWeb.Controllers
 
             var cashSweepTimeDeadline = GetCutOffTime(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0), valueDate, onboardAccount.CashSweepTimeZone, timeZones, destinationTimeZone);
             return cashSweepTimeDeadline < cutOffTimeDeadline ? cashSweepTimeDeadline - currentTime : cutOffTimeDeadline - currentTime;
-
         }
 
         private static DateTime GetCutOffTime(TimeSpan cutOffTime, DateTime valueDate, string cutoffTimeZone, Dictionary<string, string> timeZones, TimeZoneInfo destinationTimeZone, int daysToAdd = 0)
