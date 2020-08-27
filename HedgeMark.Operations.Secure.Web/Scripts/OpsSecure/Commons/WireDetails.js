@@ -94,11 +94,14 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 "columns": [{
                     "data": "Deadline", "sTitle": "Deadline", "render": function (tdata, type, row) {
 
+                        if (type == "sort")
+                            return tdata; 
+                        
                         if (row.HMWire.WireStatusId != 2)
                             return "n.a";
 
                         return $scope.fnGetWireDeadlineCounter(tdata);
-                    }
+                    }, "type": "timespan"
                 },
                 {
                     "mData": "HMWire.WireStatusId", "sTitle": "Wire Status",

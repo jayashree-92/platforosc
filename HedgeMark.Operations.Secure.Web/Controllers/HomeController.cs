@@ -179,7 +179,7 @@ namespace HMOSecureWeb.Controllers
                     ClientShortName = fund.ClientShortName ?? string.Empty
                 };
 
-                thisWire.Deadline = GetDeadlineToApprove(thisWire.SendingAccount, thisWire.HMWire.ValueDate, timeZones);
+                thisWire.Deadline = wire.WireStatusId == 2 ? GetDeadlineToApprove(thisWire.SendingAccount, thisWire.HMWire.ValueDate, timeZones) : new TimeSpan();
 
                 thisWire.SendingAccount.onBoardingAccountSSITemplateMaps = null;
                 thisWire.ReceivingAccount.onBoardingAccountSSITemplateMaps = null;

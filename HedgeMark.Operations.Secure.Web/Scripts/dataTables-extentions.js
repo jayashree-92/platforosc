@@ -124,7 +124,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function (oSettings) {
 $.fn.dataTableExt.oApi.fnFilterAll = function (oSettings, sInput, iColumn, bRegex, bSmart) {
     var settings = $.fn.dataTableSettings;
 
-    for (var i = 0 ; i < settings.length ; i++) {
+    for (var i = 0; i < settings.length; i++) {
         settings[i].oInstance.fnFilter(sInput, iColumn, bRegex, bSmart);
     }
 };
@@ -274,9 +274,9 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallbac
 
         /* Got the data - add it to the table */
         var aData = (oSettings.sAjaxDataProp !== "") ?
-			that.oApi._fnGetObjectDataFn(oSettings.sAjaxDataProp)(json) : json;
+            that.oApi._fnGetObjectDataFn(oSettings.sAjaxDataProp)(json) : json;
 
-        for (var i = 0 ; i < aData.length ; i++) {
+        for (var i = 0; i < aData.length; i++) {
             that.oApi._fnAddData(oSettings, aData[i]);
         }
 
@@ -330,6 +330,28 @@ jQuery.fn.dataTable.ext.type.search.currency = function (data) {
     return !data ? "" : typeof data === "string" ? data + data.replace(/[^\d\-\.()]/g, "") : data;
 };
 
+
+jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+    "timespan-pre": function (a) {
+        a = $(a).attr("date");
+
+        if (a === "" || a == null || a == "n.a" || a == "-")
+            a = "0";
+
+        a = a.replace(/[^\d\-\.]/g, "");
+        return parseFloat(a);
+    },
+
+    "timespan-asc": function (a, b) {
+        return a - b;
+    },
+
+    "timespan-desc": function (a, b) {
+        return b - a;
+    }
+});
+
+
 jQuery.extend(jQuery.fn.dataTableExt.oSort, {
     "dotnet-date-pre": function (a) {
         a = $(a).attr("date");
@@ -373,8 +395,7 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
 
 jQuery.extend(jQuery.fn.dataTableExt.oSort, {
     "file-status-pre": function (a) {
-        if ($(a).hasClass("label-danger"))
-        { return 4; }
+        if ($(a).hasClass("label-danger")) { return 4; }
 
         if (a.trim() == "Not Received") {
             return 1;
@@ -430,11 +451,11 @@ $.extend($.fn.dataTableExt.oPagination, {
             };
 
             $(nPaging).addClass("pagination").append(
-				"<ul>" +
-					"<li class=\"prev disabled\"><a href=\"#\">&larr; " + oLang.sPrevious + "</a></li>" +
-					"<li class=\"next disabled\"><a href=\"#\">" + oLang.sNext + " &rarr; </a></li>" +
-				"</ul>"
-			);
+                "<ul>" +
+                "<li class=\"prev disabled\"><a href=\"#\">&larr; " + oLang.sPrevious + "</a></li>" +
+                "<li class=\"next disabled\"><a href=\"#\">" + oLang.sNext + " &rarr; </a></li>" +
+                "</ul>"
+            );
             var els = $("a", nPaging);
             $(els[0]).bind("click.DT", { action: "previous" }, fnClickHandler);
             $(els[1]).bind("click.DT", { action: "next" }, fnClickHandler);
@@ -469,12 +490,12 @@ $.extend($.fn.dataTableExt.oPagination, {
                 for (j = iStart; j <= iEnd; j++) {
                     sClass = (j == oPaging.iPage + 1) ? "class=\"active\"" : "";
                     $("<li " + sClass + "><a href=\"#\">" + j + "</a></li>")
-						.insertBefore($("li:last", an[i])[0])
-						.bind("click", function (e) {
-						    e.preventDefault();
-						    oSettings._iDisplayStart = (parseInt($("a", this).text(), 10) - 1) * oPaging.iLength;
-						    fnDraw(oSettings);
-						});
+                        .insertBefore($("li:last", an[i])[0])
+                        .bind("click", function (e) {
+                            e.preventDefault();
+                            oSettings._iDisplayStart = (parseInt($("a", this).text(), 10) - 1) * oPaging.iLength;
+                            fnDraw(oSettings);
+                        });
                 }
 
                 // Add / remove disabled classes from the static elements
@@ -555,7 +576,7 @@ $.fn.dataTableExt.oApi.fnGetSelectedRowDataByIndex = function (oSettings, select
 
 $.fn.dataTableExt.oApi.fnGetColumnIndexByTitle = function (oSettings, columnId) {
     var cols = oSettings.aoColumns;
-    for (var x = 0, xLen = cols.length ; x < xLen ; x++) {
+    for (var x = 0, xLen = cols.length; x < xLen; x++) {
         if (cols[x].sTitle == columnId) {
             return x;
         };
@@ -566,7 +587,7 @@ $.fn.dataTableExt.oApi.fnGetColumnIndexByTitle = function (oSettings, columnId) 
 
 $.fn.dataTableExt.oApi.fnGetColumnIndexByTitleIfContains = function (oSettings, columnId) {
     var cols = oSettings.aoColumns;
-    for (var x = 0, xLen = cols.length ; x < xLen ; x++) {
+    for (var x = 0, xLen = cols.length; x < xLen; x++) {
         if (cols[x].sTitle.indexOf(columnId) > -1) {
             return x;
         };
@@ -577,7 +598,7 @@ $.fn.dataTableExt.oApi.fnGetColumnIndexByTitleIfContains = function (oSettings, 
 
 $.fn.dataTableExt.oApi.fnGetColumnIndex = function (oSettings, columnId) {
     var cols = oSettings.aoColumns;
-    for (var x = 0, xLen = cols.length ; x < xLen ; x++) {
+    for (var x = 0, xLen = cols.length; x < xLen; x++) {
         console.log(cols[x].nTh.getAttribute("id"));
         if (cols[x].nTh.getAttribute("id") == columnId) {
             return x;
@@ -698,11 +719,11 @@ $.fn.dataTableExt.oApi.fnSelectMatchingLabel = function (oSettings, sSelectRowCl
 $.fn.dataTableExt.oApi.fnGetFirstMatchingRow = function (oSettings, sSearch, iColumn) {
     var i, iLen, j, jLen, aData = [];
 
-    for (i = 0, iLen = oSettings.aoData.length ; i < iLen ; i++) {
+    for (i = 0, iLen = oSettings.aoData.length; i < iLen; i++) {
         aData = oSettings.aoData[i]._aData;
 
         if (typeof iColumn == "undefined") {
-            for (j = 0, jLen = aData.length ; j < jLen ; j++) {
+            for (j = 0, jLen = aData.length; j < jLen; j++) {
                 if (aData[j] == sSearch) {
                     return aData;
                 }
