@@ -2128,7 +2128,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 {
                     "sTitle": "Account Number",
                     "mData": "AccountNumber",
-                    "mRender": function(tdata) {
+                    "mRender": function (tdata) {
                         if (tdata == null)
                             return "";
                     }
@@ -2827,7 +2827,19 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                             return "<button class='btn btn-primary btn-xs btnCallbackConfirm' title='Confirm'>Confirm</button>";
                         }
                     },
-
+                    {
+                        "mData": "RecCreatedBy", "sTitle": "Created By", "mRender": function (data) {
+                            return humanizeEmail(data);
+                        }
+                    },
+                    {
+                        "mData": "RecCreatedDt",
+                        "sTitle": "Created At",
+                        "type": "dotnet-date",
+                        "mRender": function (tdata) {
+                            return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                        }
+                    },
                     {
                         "mData": "ConfirmedBy", "sTitle": "Confirmed By", "mRender": function (data, type, row) {
                             return row.IsCallbackConfirmed ? humanizeEmail(data) : "";
@@ -2844,19 +2856,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                             return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
                         }
                     },
-                    {
-                        "mData": "RecCreatedBy", "sTitle": "Created By", "mRender": function (data) {
-                            return humanizeEmail(data);
-                        }
-                    },
-                    {
-                        "mData": "RecCreatedDt",
-                        "sTitle": "Created At",
-                        "type": "dotnet-date",
-                        "mRender": function (tdata) {
-                            return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
-                        }
-                    }
+
                 ],
                 "oLanguage": {
                     "sSearch": "",
@@ -2890,6 +2890,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $(document).on("click", ".btnCallbackConfirm", function (event) {
             event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
             var selectedRow = $(this).parents("tr");
             $scope.rowElement = $scope.accountCallbackTable[index].row(selectedRow).data();
             $scope.tdEle = $(this).closest('td');

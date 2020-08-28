@@ -64,5 +64,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsCurrency> hmsCurrencies { get; set; }
         public virtual DbSet<hmsWirePortalCutoff> hmsWirePortalCutoffs { get; set; }
         public virtual DbSet<vw_FundAccounts> vw_FundAccounts { get; set; }
+        public virtual DbSet<hmsSSICallback> hmsSSICallbacks { get; set; }
     }
 }

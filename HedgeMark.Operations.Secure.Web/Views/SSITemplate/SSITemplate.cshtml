@@ -233,6 +233,25 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="panel panel-default ng-show-hide" id="panelCallBack" plindex="0" data-toggle='collapse'>
+                            <div class="panel-heading" data-toggle="collapse" data-target="#ssiCallBack" aria-expanded="false" aria-controls="ssiCallBack" ng-click="adjustContainer(true)">
+                                <b>Callback Check</b>
+                                <span class="pull-right">
+                                    <a class="btn btn-xs btn-primary" ng-click="$event.stopPropagation();fnAddCallbackModal()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Callback</a>&nbsp;&nbsp;
+                                    <i class="glyphicon glyphicon-chevron-down"></i>
+                                </span>
+                            </div>
+                            <div id="ssiCallBack" class="panel-body collapse">
+                                <div class="control-group">
+                                    <p></p>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-12 col-lg-12">
+                                            <table id="ssiCallbackTbl" class="table table-condensed table-bordered table-striped table-hover" tindex="0"><tfoot></tfoot></table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="panel panel-default ng-show-hide" id="panelAttachment" ng-show="ssiTemplateId != 0">
                             <div class="panel-heading" data-toggle="collapse" data-target="#ssiAttachmentInfo" aria-expanded="false" aria-controls="ssiAttachmentInfo">
                                 <b>Attachment</b>
@@ -264,7 +283,7 @@
                                         </span>
                                     }
                                     <a class="btn btn-xs btn-primary" ng-click="$event.stopPropagation();fnAssociationSSI($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
-                                    <i class="indicator glyphicon glyphicon-chevron-down"></i>
+                                    <i class="glyphicon glyphicon-chevron-down"></i>
                                 </span>
 
                             </div>
@@ -281,7 +300,7 @@
                             @if (User.IsWireUser())
                             {
                                 <button type="submit" title="Save SSI Template" class="btn btn-sm btn-primary" ng-disabled=" ssiTemplateId > 0 && (!isSSITemplateChanged || ssiTemplate.SSITemplateStatus == 'Approved')" style="" ng-click="SaveSSITemplate(ssiTemplateForm.$valid)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;Save SSI Template</button>
-                                
+
                                 <a id="requestForApproval" title="Request for Approval" class="btn btn-sm btn-warning" ng-show="ssiTemplateId != 0" ng-disabled="ssiTemplate.SSITemplateStatus == 'Approved'" style="" ng-click="fnUpdateSSITemplateStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</a>
                                 if (User.IsWireApprover())
                                 {
@@ -294,6 +313,51 @@
                 </div>
             </form>
         </div>
+
+    <div class="modal fade" id="callbackModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Callback</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtContactName" class="control-label">Contact Name:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtContactName" ng-model="callback.ContactName" class="modalInputWidth form-control" placeholder="Contact Name" />
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtContactNumber" class="control-label">Contact Number:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtContactNumber" ng-model="callback.ContactNumber" class="modalInputWidth form-control" placeholder="Contact Number" />
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-sm-8 col-md-4 col-lg-4">
+                            <label for="txtTitle" class="control-label">Title:</label>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-8">
+                            <input type="text" id="txtTitle" ng-model="callback.Title" class="modalInputWidth form-control" placeholder="Title" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnSaveCallback()">
+                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Save Callback
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <div class="modal fade" id="updateSSITemplateModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="UpdateSSITemplateModal" aria-hidden="true" style="width: 100%">
             <div class="modal-dialog" role="document">
@@ -314,6 +378,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="currencyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -412,12 +477,12 @@
                             </div>
                         </div>
                         @*<div class="row" style="margin-top: 10px;">
-                            <div class="col-sm-4 col-md-4 col-lg-4">
-                            </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <label class="control-label">&nbsp;&nbsp;Example: US – New York</label>
-                            </div>
-                        </div>*@
+                                <div class="col-sm-4 col-md-4 col-lg-4">
+                                </div>
+                                <div class="col-sm-8 col-md-8 col-lg-8">
+                                    <label class="control-label">&nbsp;&nbsp;Example: US – New York</label>
+                                </div>
+                            </div>*@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddSSITemplateDetail($index)">

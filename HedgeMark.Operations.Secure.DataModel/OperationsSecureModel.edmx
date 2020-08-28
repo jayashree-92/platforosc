@@ -68,6 +68,21 @@
           <Property Name="Message" Type="varchar" MaxLength="2000" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsSSICallback">
+          <Key>
+            <PropertyRef Name="hmsSSICallbackId" />
+          </Key>
+          <Property Name="hmsSSICallbackId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="onBoardingSSITemplateId" Type="bigint" Nullable="false" />
+          <Property Name="ContactName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ContactNumber" Type="varchar" MaxLength="30" />
+          <Property Name="Title" Type="varchar" MaxLength="200" />
+          <Property Name="IsCallbackConfirmed" Type="bit" Nullable="false" />
+          <Property Name="RecCreatedBy" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="RecCreatedDt" Type="datetime" Nullable="false" />
+          <Property Name="ConfirmedBy" Type="varchar" MaxLength="50" />
+          <Property Name="ConfirmedAt" Type="datetime" />
+        </EntityType>
         <EntityType Name="hmsSwiftGroup">
           <Key>
             <PropertyRef Name="hmsSwiftGroupId" />
@@ -561,6 +576,18 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_hmsSSICallback_onBoardingSSITemplateId">
+          <End Role="onBoardingSSITemplate" Type="Self.onBoardingSSITemplate" Multiplicity="1" />
+          <End Role="hmsSSICallback" Type="Self.hmsSSICallback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="hmsSSICallback">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_hmsSwiftGroup_SwiftGroupStatusId">
           <End Role="hmsSwiftGroupStatusLkp" Type="Self.hmsSwiftGroupStatusLkp" Multiplicity="0..1" />
           <End Role="hmsSwiftGroup" Type="Self.hmsSwiftGroup" Multiplicity="*" />
@@ -988,6 +1015,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <EntitySet Name="hmsCurrency" EntityType="Self.hmsCurrency" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsMQLogs" EntityType="Self.hmsMQLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsNotificationStaging" EntityType="Self.hmsNotificationStaging" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsSSICallback" EntityType="Self.hmsSSICallback" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftGroup" EntityType="Self.hmsSwiftGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftGroupStatusLkp" EntityType="Self.hmsSwiftGroupStatusLkp" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
@@ -1059,6 +1087,10 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <AssociationSet Name="FK_hmsActionInProgress_hmsWireId" Association="Self.FK_hmsActionInProgress_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsActionInProgress" EntitySet="hmsActionInProgress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsSSICallback_onBoardingSSITemplateId" Association="Self.FK_hmsSSICallback_onBoardingSSITemplateId">
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplate" />
+            <End Role="hmsSSICallback" EntitySet="hmsSSICallback" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsSwiftGroup_SwiftGroupStatusId" Association="Self.FK_hmsSwiftGroup_SwiftGroupStatusId">
             <End Role="hmsSwiftGroupStatusLkp" EntitySet="hmsSwiftGroupStatusLkp" />
@@ -1393,6 +1425,11 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
           </AssociationSet>
           <EntitySet Name="vw_FundAccounts" EntityType="OperationsSecureModel.vw_FundAccounts" />
+          <EntitySet Name="hmsSSICallbacks" EntityType="OperationsSecureModel.hmsSSICallback" />
+          <AssociationSet Name="FK_hmsSSICallback_onBoardingSSITemplateId" Association="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId">
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+            <End Role="hmsSSICallback" EntitySet="hmsSSICallbacks" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -1856,6 +1893,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <NavigationProperty Name="onBoardingSSITemplateDocuments" Relationship="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingSSITemplateDocument" />
           <Property Name="LastUsedAt" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsWire" />
+          <NavigationProperty Name="hmsSSICallbacks" Relationship="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsSSICallback" />
         </EntityType>
         <Association Name="FK_onBoardingSSITemplate_BeneficiaryBICorABAId">
           <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
@@ -2440,6 +2478,34 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="CashSweepTime" Type="Time" Precision="7" />
           <Property Name="CashSweepTimeZone" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="hmsSSICallback">
+          <Key>
+            <PropertyRef Name="hmsSSICallbackId" />
+          </Key>
+          <Property Name="hmsSSICallbackId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="onBoardingSSITemplateId" Type="Int64" Nullable="false" />
+          <Property Name="ContactName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactNumber" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Title" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IsCallbackConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="RecCreatedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ConfirmedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ConfirmedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="onBoardingSSITemplate" Relationship="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" FromRole="hmsSSICallback" ToRole="onBoardingSSITemplate" />
+        </EntityType>
+        <Association Name="FK_hmsSSICallback_onBoardingSSITemplateId">
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsSSICallback" Role="hmsSSICallback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="hmsSSICallback">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3007,6 +3073,22 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
                 <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
                 <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
                 <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsSSICallbacks">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsSSICallback">
+              <MappingFragment StoreEntitySet="hmsSSICallback">
+                <ScalarProperty Name="ConfirmedAt" ColumnName="ConfirmedAt" />
+                <ScalarProperty Name="ConfirmedBy" ColumnName="ConfirmedBy" />
+                <ScalarProperty Name="RecCreatedDt" ColumnName="RecCreatedDt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="IsCallbackConfirmed" ColumnName="IsCallbackConfirmed" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
+                <ScalarProperty Name="hmsSSICallbackId" ColumnName="hmsSSICallbackId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

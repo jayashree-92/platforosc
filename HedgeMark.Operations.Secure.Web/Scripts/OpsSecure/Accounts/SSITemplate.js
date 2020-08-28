@@ -51,7 +51,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 },
                 { "mData": "AgreementName", "sTitle": "Agreement Name" },
                 { "mData": "Broker", "sTitle": "Broker" },
-                { "mData": "AccountNumber", "sTitle": "Account Number" },
+                { "mData": "UltimateBeneficiaryAccountNumber", "sTitle": "Account Number" },
                 {
                     "mData": "onBoardingAccountStatus", "sTitle": "Account Status",
                     "mRender": function (tdata) {
@@ -369,7 +369,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         });
     }
 
-    
+
     $("#liUltimateBeneficiaryType").on("change", function (e) {
         $("#liUltimateBeneficiaryBICorABA").select2("val", '').trigger("change");
         $("#ultimateBankName").val("");
@@ -533,6 +533,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             }
 
             $scope.fnConstructDocumentTable($scope.ssiTemplateDocuments);
+            $scope.viewCallbackTable($scope.ssiTemplate.hmsSSICallbacks);
             $scope.fnGetAssociatedAccounts();
 
             //$scope.fnConstructAssociatedAccountsTable($scope.associatedAccounts);
@@ -564,7 +565,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             return;
         }
 
-       if (val != oldVal) {
+        if (val != oldVal) {
             $scope.isSSITemplateChanged = true;
         }
         else {
@@ -742,7 +743,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             }
         });
 
-         $timeout(function () {
+        $timeout(function () {
             $scope.ssiMapTable.columns.adjust().draw(true);
         }, 100);
 
@@ -878,7 +879,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             //responsive: true,
             aaData: $scope.fundAccounts,
             "aoColumns": [
-                
+
                 {
                     "sTitle": "Account Name",
                     "mData": "AccountName"
@@ -898,7 +899,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 },
                 {
                     "sTitle": "Account Number",
-                    "mData": "AccountNumber",
+                    "mData": "UltimateBeneficiaryAccountNumber",
                 },
                 {
                     "sTitle": "FFC Number",
@@ -939,7 +940,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 "sInfo": "Showing _START_ to _END_ of _TOTAL_ SSI Templates"
             }
         });
-        
+
         $timeout(function () {
             $scope.ssiTemplateTableMap.columns.adjust().draw(true);
         }, 1000);
@@ -1261,7 +1262,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 $timeout(function () {
                     window.location.href = "/SSITemplate/SSITemplate?ssiTemplateId=" + ssiTemplateId;
                 }, 500);
-                
+
             }
             $(".glyphicon-refresh").removeClass("icon-rotate");
         });
@@ -1364,13 +1365,264 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     $timeout(function () {
                         window.location.href = "/SSITemplate/Index?searchText=" + searchText;
                     }, 500);
-                    
+
                 }
             })
         });
 
         $("#updateSSITemplateModal").modal("hide");
 
+    }
+
+    $scope.ssiCallbackTable = null;
+
+    $scope.viewCallbackTable = function (data) {
+
+        if ($("#ssiCallbackTbl").hasClass("initialized")) {
+            fnDestroyDataTable("#ssiCallbackTbl");
+        }
+        $scope.ssiCallbackTable = $("#ssiCallbackTbl").DataTable({
+            aaData: data,
+            "bDestroy": true,
+            "columns": [
+                { "mData": "onBoardingSSITemplateId", "sTitle": "onBoardingSSITemplateId", visible: false },
+                { "mData": "hmsSSICallbackId", "sTitle": "hmsSSICallbackId", visible: false },
+                {
+                    "mData": "ContactName", "sTitle": "Contact Name"
+                },
+                {
+                    "mData": "ContactNumber", "sTitle": "Contact Number"
+                },
+                {
+                    "mData": "Title", "sTitle": "Title"
+                },
+
+                {
+                    "mData": "IsCallbackConfirmed", "sTitle": "Callback Confirmation",
+                    "mRender": function (tdata) {
+                        if (tdata)
+                            return "<label class='label label-success'>Confirmed</label>";
+
+                        return "<button class='btn btn-primary btn-xs btnCallbackConfirm' title='Confirm'>Confirm</button>";
+                    }
+                },
+                {
+                    "mData": "RecCreatedBy", "sTitle": "Created By", "mRender": function (data) {
+                        return humanizeEmail(data);
+                    }
+                },
+                {
+                    "mData": "RecCreatedDt",
+                    "sTitle": "Created At",
+                    "type": "dotnet-date",
+                    "mRender": function (tdata) {
+                        return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                    }
+                },
+                {
+                    "mData": "ConfirmedBy", "sTitle": "Confirmed By", "mRender": function (data, type, row) {
+                        return row.IsCallbackConfirmed ? humanizeEmail(data) : "";
+                    }
+                },
+                {
+                    "mData": "ConfirmedAt",
+                    "sTitle": "Confirmed At",
+                    "type": "dotnet-date",
+                    "mRender": function (tdata, type, row) {
+                        if (!row.IsCallbackConfirmed)
+                            return "";
+
+                        return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                    }
+                },
+              
+            ],
+            "oLanguage": {
+                "sSearch": "",
+                "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Callbacks",
+                "sInfoFiltered": " - filtering from _MAX_ Callbacks"
+            },
+            "createdRow": function (row, data) {
+                switch (data.IsCallbackConfirmed) {
+                    case true:
+                        $(row).addClass("success");
+                        break;
+                    case false:
+                        $(row).addClass("warning");
+                        break;
+                }
+
+            },
+            //"scrollX": false,
+            "deferRender": true,
+            // "scroller": true,
+            "orderClasses": false,
+            "sScrollX": "100%",
+            //sDom: "ift",
+            "sScrollY": 450,
+            "sScrollXInner": "100%",
+            "bScrollCollapse": true,
+            "order": [],
+            //"bPaginate": false,
+            iDisplayLength: -1
+        });
+
+        $(document).on("click", ".btnCallbackConfirm", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            var selectedRow = $(this).parents("tr");
+            $scope.rowElement = $scope.ssiCallbackTable.row(selectedRow).data();
+            $scope.tdEle = $(this).closest('td');
+            $scope.tdEle.popover('destroy');
+            $timeout(function () {
+                angular.element($scope.tdEle).attr('title', 'Are you sure to confirm the call back?').popover('destroy').popover({
+                    trigger: 'click',
+                    title: "Are you sure to confirm the call back?",
+                    placement: 'top',
+                    container: 'body',
+                    content: function () {
+                        return "<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
+                            + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i>&nbsp;Yes</button>"
+                            + "&nbsp;&nbsp;<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i>&nbsp;No</button>"
+                            + "</div>";
+                    },
+                    html: true
+                }).popover('show');
+                $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
+                    + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
+                    + "<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
+                    + "</div>");
+
+            }, 50);
+        });
+
+        $timeout(function () {
+            $scope.ssiCallbackTable.columns.adjust().draw(true);
+        }, 1000);
+
+    }
+
+    $scope.fnAddCallbackModal = function () {
+        $scope.callback = { onBoardingSSITemplateId: $scope.ssiTemplate.onBoardingSSITemplateId };
+        $("#callbackModal").modal({
+            show: true,
+            keyboard: true
+        }).on("hidden.bs.modal", function () {
+            $("#txtContactName").popover("hide");
+            $("#txtContactNumber").popover("hide");
+        });
+    }
+
+    $scope.fnSaveCallback = function () {
+        if ($("#txtContactName").val() == undefined || $("#txtContactName").val() == "") {
+            //pop-up    
+            $("#txtContactName").popover({
+                placement: "right",
+                trigger: "manual",
+                container: "body",
+                content: "Contact Name cannot be empty. Please add a valid name",
+                html: true,
+                width: "250px"
+            });
+
+            $("#txtContactName").popover("show");
+            return;
+        }
+
+        $("#txtContactName").popover("hide");
+        if ($("#txtContactNumber").val() == undefined || $("#txtContactNumber").val() == "") {
+            //pop-up    
+            $("#txtContactNumber").popover({
+                placement: "right",
+                trigger: "manual",
+                container: "body",
+                content: "Contact Number cannot be empty. Please add a valid number",
+                html: true,
+                width: "250px"
+            });
+
+            $("#txtContactNumber").popover("show");
+            return;
+        }
+
+        $("#txtContactNumber").popover("hide");
+        var isExists = false;
+        $($scope.callbackData).each(function (i, v) {
+            if ($("#txtContactNumber").val() == v.ContactNumber && ("#txtContactName").val() == v.ContactName) {
+                isExists = true;
+                return false;
+            }
+        });
+        if (isExists) {
+            $("#txtContactName").popover({
+                placement: "right",
+                trigger: "manual",
+                container: "body",
+                content: "Contact Name & Contact Number already exists. Please enter a different combination.",
+                html: true,
+                width: "250px"
+            });
+            $("#txtContactName").popover("show");
+            return;
+        }
+
+        $http({
+            method: "POST",
+            url: "/SSITemplate/AddOrUpdateCallback",
+            type: "json",
+            data: JSON.stringify({
+                callback: $scope.callback
+            })
+        }).then(function (response) {
+            notifySuccess("SSI Call back added successfully");
+            $scope.fnGetSSICallbackData($scope.ssiTemplate.onBoardingSSITemplateId);
+        });
+
+        $("#callbackModal").modal("hide");
+    }
+
+    $scope.adjustContainer = function (isCallback) {
+        $timeout(function () {
+            if (isCallback) {
+                if ($scope.ssiCallbackTable != undefined)
+                    $scope.ssiCallbackTable.columns.adjust().draw(true);
+            }
+            //else {
+            //    if ($scope.contactTable[index] != undefined)
+            //        $scope.contactTable[index].columns.adjust().draw(true);
+            //}
+        }, 100);
+    }
+
+    $(document).on('click', ".confirmCallback", function () {
+        angular.element($scope.tdEle).popover("destroy");
+        $timeout(function () {
+            $scope.rowElement.IsCallbackConfirmed = true;
+            $http({
+                method: "POST",
+                url: "/SSITemplate/AddOrUpdateCallback",
+                type: "json",
+                data: JSON.stringify({
+                    callback: $scope.rowElement
+                })
+            }).then(function (response) {
+                $scope.fnGetSSICallbackData($scope.ssiTemplate.onBoardingSSITemplateId);
+                notifySuccess("SSI callback confirmed successfully");
+            });
+        }, 100);
+    });
+
+    $(document).on('click', ".dismissCallback", function () {
+        angular.element($scope.tdEle).popover("destroy");
+    });
+
+    $scope.fnGetSSICallbackData = function (ssiTemplateId) {
+        $http.get("/SSITemplate/GetSSICallbackData?ssiTemplateId=" + ssiTemplateId).then(function (response) {
+            $scope.ssiTemplate.hmsSSICallbacks = response.data;
+            $scope.CallBackChecks = response.data;
+            $scope.viewCallbackTable($scope.CallBackChecks, 0);
+        });
     }
 
     $scope.fnSendApprovalSSITemplateStatus = function () {

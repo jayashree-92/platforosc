@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
 
@@ -12,7 +10,7 @@ namespace HMOSecureMiddleware
 {
     public class SSITemplateManager
     {
-        
+
         public const int BrokerTemplateTypeId = 2;
         public static List<onBoardingSSITemplate> GetAllBrokerSsiTemplates()
         {
@@ -27,7 +25,7 @@ namespace HMOSecureMiddleware
             }
         }
 
-        
+
         public static Dictionary<long, string> GetAllSsiTemplates()
         {
             using (var context = new OperationsSecureContext())
@@ -45,7 +43,7 @@ namespace HMOSecureMiddleware
                 return context.onBoardingSSITemplates.Include(x => x.onBoardingSSITemplateDocuments).Where(template => template.TemplateTypeId == templateTypeId && template.TemplateEntityId == templateEntityId && !template.IsDeleted).ToList();
             }
         }
-        
+
 
         public static onBoardingSSITemplate GetSsiTemplate(long templateId)
         {
@@ -59,6 +57,7 @@ namespace HMOSecureMiddleware
                     .Include(s => s.UltimateBeneficiary)
                     .Include(x => x.onBoardingSSITemplateDocuments)
                     .Include(x => x.onBoardingAccountSSITemplateMaps)
+                    .Include(x => x.hmsSSICallbacks)
                     .First(template => template.onBoardingSSITemplateId == templateId);
 
                 return SetSSITemplateDefaults(ssiTemplate);
@@ -89,6 +88,7 @@ namespace HMOSecureMiddleware
             ssiTemplate.onBoardingAccountSSITemplateMaps.ForEach(s => { s.onBoardingSSITemplate = null; s.onBoardingAccount = null; });
 
             ssiTemplate.hmsWires = null;
+            ssiTemplate.hmsSSICallbacks.ForEach(s => { s.onBoardingSSITemplate = null; });
 
             return ssiTemplate;
         }
@@ -168,7 +168,7 @@ namespace HMOSecureMiddleware
             }
             return ssiTemplate.onBoardingSSITemplateId;
         }
-        
+
         public static void RemoveSsiTemplateDocument(long ssiTemplateId, string fileName)
         {
             using (var context = new OperationsSecureContext())
@@ -176,6 +176,33 @@ namespace HMOSecureMiddleware
                 var document = context.onBoardingSSITemplateDocuments.FirstOrDefault(x => x.onBoardingSSITemplateId == ssiTemplateId && x.FileName == fileName);
                 if (document == null) return;
                 context.onBoardingSSITemplateDocuments.Remove(document);
+                context.SaveChanges();
+            }
+        }
+        public static hmsSSICallback GetCallbackData(long callbackId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.hmsSSICallbacks.First(s => s.hmsSSICallbackId == callbackId);
+            }
+        }
+
+        public static List<hmsSSICallback> GetSSICallbacks(long ssiTemplateId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.hmsSSICallbacks.Where(s => s.onBoardingSSITemplateId == ssiTemplateId).AsNoTracking().ToList();
+            }
+        }
+        public static void AddOrUpdateCallback(hmsSSICallback callback)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.hmsSSICallbacks.AddOrUpdate(callback);
                 context.SaveChanges();
             }
         }

@@ -506,6 +506,34 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
+        public JsonResult GetSSICallbackData(long ssiTemplateId)
+        {
+            var callbacks = SSITemplateManager.GetSSICallbacks(ssiTemplateId);
+            return Json(callbacks, JsonContentType, JsonContentEncoding);
+        }
+
+        public void AddOrUpdateCallback(hmsSSICallback callback)
+        {
+            if (callback.hmsSSICallbackId > 0)
+            {
+                var existingCallback = SSITemplateManager.GetCallbackData(callback.hmsSSICallbackId);
+                callback.RecCreatedDt = existingCallback.RecCreatedDt;
+                callback.RecCreatedBy = existingCallback.RecCreatedBy;
+                if (callback.IsCallbackConfirmed)
+                {
+                    callback.ConfirmedBy = UserName;
+                    callback.ConfirmedAt = DateTime.Now;
+                }
+            }
+            else
+            {
+                callback.RecCreatedBy = UserName;
+                callback.RecCreatedDt = DateTime.Now;
+            }
+
+            SSITemplateManager.AddOrUpdateCallback(callback);
+        }
+
         public FileResult ExportAllSsiTemplatelist()
         {
             var ssiTemplates = SSITemplateManager.GetAllBrokerSsiTemplates().OrderByDescending(x => x.UpdatedAt).ToList();

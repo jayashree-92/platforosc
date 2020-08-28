@@ -81,6 +81,8 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWirePortalCutoff" Width="1.5" PointX="3.375" PointY="12" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId1" />
         <EntityTypeShape EntityType="OperationsSecureModel.vw_FundAccounts" Width="1.5" PointX="0.75" PointY="17.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsSSICallback" Width="1.5" PointX="6.625" PointY="22.5" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
