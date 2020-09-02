@@ -909,9 +909,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $q.all([$scope.fnUpdateAccount(false)]).then(function () {
                     $http.post("/Accounts/UpdateAccountStatus", { accountStatus: $scope.AccountStatus, accountId: $scope.onBoardingAccountId, comments: $("#statusComments").val().trim() }).then(function () {
                         notifySuccess("Account  " + $scope.AccountStatus.toLowerCase() + " successfully");
-                        $timeout(function () {
-                            window.location.href = "/Accounts/Index";
-                        }, 500);
+                        $scope.fnGetAccounts();
 
                     });
                     $("#btnSendApproval").hide();
