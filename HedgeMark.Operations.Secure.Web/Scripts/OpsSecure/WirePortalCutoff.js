@@ -138,7 +138,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
     });
 
     $scope.dummyCutoff = {
-        onBoardingWirePortalCutoffId: 0,
+        hmsWirePortalCutoffId: 0,
         CashInstruction: null,
         Currency: null,
         Country: null,
@@ -184,7 +184,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
                 label: "Delete",
                 className: "btn btn-sm btn-danger",
                 callback: function () {
-                    $http.post("/WirePortalCutoff/DeleteWirePortalCutoff", { wireCutoffId: $scope.selectedRowData.onBoardingWirePortalCutoffId }).then(function () {
+                    $http.post("/WirePortalCutoff/DeleteWirePortalCutoff", { wireCutoffId: $scope.selectedRowData.hmsWirePortalCutoffId }).then(function () {
                         notifySuccess("Wire cutoff deleted successfully");
                         $scope.fnGetWirePortalCutoffs();
                     });

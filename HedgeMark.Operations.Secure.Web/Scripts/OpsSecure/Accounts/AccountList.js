@@ -1172,8 +1172,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 //$("#cutOffTime" + index).val($scope.onBoardingAccountDetails[index].CutoffTime);
                 $scope.onBoardingAccountDetails[index].WirePortalCutoff.DaystoWire = cutOff.DaystoWire;
                 $scope.onBoardingAccountDetails[index].WirePortalCutoff.CutOffTimeZone = cutOff.CutOffTimeZone;
-                $scope.onBoardingAccountDetails[index].WirePortalCutoff.onBoardingWirePortalCutoffId = cutOff.onBoardingWirePortalCutoffId;
-                $scope.onBoardingAccountDetails[index].WirePortalCutoffId = cutOff.onBoardingWirePortalCutoffId;
+                $scope.onBoardingAccountDetails[index].WirePortalCutoff.hmsWirePortalCutoffId = cutOff.hmsWirePortalCutoffId;
+                $scope.onBoardingAccountDetails[index].WirePortalCutoffId = cutOff.hmsWirePortalCutoffId;
             }
             else {
                 $("#cutOffTime" + index).val("");
