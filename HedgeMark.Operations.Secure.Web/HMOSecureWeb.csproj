@@ -412,6 +412,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\45.png" />
     <Content Include="Images\big-spinner.gif" />
     <Content Include="Images\bnymellon-arrow-icon.png" />
     <Content Include="Images\bnymellon_logo.png" />
