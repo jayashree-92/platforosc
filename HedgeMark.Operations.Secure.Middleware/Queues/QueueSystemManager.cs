@@ -167,7 +167,7 @@ namespace HMOSecureMiddleware.Queues
             // creating a message options object
             var mqGetMsgOpts = new MQGetMessageOptions { Options = MQC.MQGMO_FAIL_IF_QUIESCING | MQC.MQGMO_WAIT };
             //var isDone = false;
-
+            Logger.Info(string.Format("Total messages Out-loop available as of {0} is ={1}", DateTime.Now.ToLongTimeString(), queue.CurrentDepth));
             while (queue.CurrentDepth > 0)
             {
                 Logger.Info(string.Format("Total messages available as of {0} is ={1}", DateTime.Now.ToLongTimeString(), queue.CurrentDepth));

@@ -114,7 +114,7 @@ namespace HMOSecureWeb
 
             if (!(roles.Contains(OpsSecureUserRoles.WireApprover) || roles.Contains(OpsSecureUserRoles.WireInitiator)))
             {
-                Logger.InfoFormat(string.Format("LDAP ID: {0}", userSso.CommitId));
+                //Logger.InfoFormat(string.Format("LDAP ID: {0}", userSso.CommitId));
 
                 if (!string.IsNullOrWhiteSpace(userSso.CommitId))
                 {
