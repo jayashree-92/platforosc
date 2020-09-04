@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -165,33 +166,50 @@ namespace HMOSecureMiddleware.Queues
 
             // creating a message options object
             var mqGetMsgOpts = new MQGetMessageOptions { Options = MQC.MQGMO_FAIL_IF_QUIESCING | MQC.MQGMO_WAIT };
-            var isDone = false;
+            //var isDone = false;
 
-            while (!isDone)
+            while (queue.CurrentDepth > 0)
             {
+                Logger.Info(string.Format("Total messages available as of {0} is ={1}", DateTime.Now.ToLongTimeString(), queue.CurrentDepth));
+                hmsMQLog mqLog = null;
                 try
                 {
                     Logger.Debug("Getting the Inbound message from Queue..");
                     var message = new MQMessage();
+
                     queue.Get(message, mqGetMsgOpts);
                     var messageAsText = message.ReadString(message.MessageLength);
 
                     //Log all Incoming messages
-                    LogMQMessage(messageAsText, queueName, false);
+                    mqLog = LogMQMessage(messageAsText, queueName, false);
 
                     WireTransactionManager.ProcessInboundMessage(messageAsText);
-                    Logger.Debug("Message Processing Complete");
+
+                    UpdateMQMessageLog(mqLog, "Message Processed Successfully");
+
                     message.ClearMessage();
                 }
                 catch (MQException mqe)
                 {
-                    if (mqe.ReasonCode != 2033)
-                        Logger.Error("MQException caught: " + mqe.ReasonCode + " " + mqe.Message, mqe);
-                    isDone = true;
+                    if (mqe.ReasonCode == 2033)
+                        continue;
+
+                    var msg = string.Format("MQException caught: {0} {1}", mqe.ReasonCode, mqe.Message);
+                    Logger.Error(msg, mqe);
+                    if (mqLog != null)
+                        UpdateMQMessageLog(mqLog, msg);
+                    //isDone = true;
+                }
+                catch (UnhandledWireMessageException ex)
+                {
+                    if (mqLog != null)
+                        UpdateMQMessageLog(mqLog, ex.Message);
                 }
                 catch (Exception ex)
                 {
                     Logger.Error("Exception when processing inbound : " + ex.Message, ex);
+                    if (mqLog != null)
+                        UpdateMQMessageLog(mqLog, "Exception when processing inbound : " + ex.Message);
                 }
             }
 
@@ -213,11 +231,11 @@ namespace HMOSecureMiddleware.Queues
             }
         }
 
-        public static void LogMQMessage(string message, string queueName, bool isOutBound)
+        public static hmsMQLog LogMQMessage(string message, string queueName, bool isOutBound)
         {
             using (var context = new OperationsSecureContext())
             {
-                var inBoundMessageMQLog = new hmsMQLog()
+                var messageMqLog = new hmsMQLog()
                 {
                     QueueManager = QueueManagerName,
                     Message = message,
@@ -225,10 +243,28 @@ namespace HMOSecureMiddleware.Queues
                     IsOutBound = isOutBound,
                     CreatedAt = DateTime.Now
                 };
-                context.hmsMQLogs.Add(inBoundMessageMQLog);
+
+                if (isOutBound)
+                    messageMqLog.OpsSecureHandlerMessage = "MQ Message sent Successfully";
+
+
+                context.hmsMQLogs.Add(messageMqLog);
+                context.SaveChanges();
+
+                return messageMqLog;
+            }
+        }
+
+        public static void UpdateMQMessageLog(hmsMQLog log, string hmOpsHandlerMessage)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                log.OpsSecureHandlerMessage = hmOpsHandlerMessage;
+                context.hmsMQLogs.AddOrUpdate(log);
                 context.SaveChanges();
             }
         }
+
 
         //private static void ProcessMessage(IMessage msg)
         //{

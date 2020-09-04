@@ -41,7 +41,7 @@ HmOpsApp.controller("MQLogsCtrl", function ($scope, $http, $timeout, $filter) {
     function createAuditLogsTable(auditStartDate, auditEndDate) {
         $("#btnGetInboundLogs").button("loading");
         fnDestroyDataTable("#tblAuditLogsDetails");
-        $http.get("/Audit/GetMQLogs?startDate=" + moment(auditStartDate).format("YYYY-MM-DD") + "&endDate=" + moment().format("YYYY-MM-DD")).then(function (response) {
+        $http.get("/Audit/GetMQLogs?startDate=" + moment(auditStartDate).format("YYYY-MM-DD") + "&endDate=" + moment(auditEndDate).format("YYYY-MM-DD")).then(function (response) {
             var auditLogTable = $("#tblInboundLogsDetails").DataTable({
                 "aaData": response.data,
                 "dom": "<\"toolbar\"><'row header'<'col-md-6 header-left'i><'col-md-6 header-right'f>>trI",
@@ -77,10 +77,10 @@ HmOpsApp.controller("MQLogsCtrl", function ($scope, $http, $timeout, $filter) {
                             return "<p class=\"swiftMessgeBlock\">" + tdata + "</p>";
                         }
                     },
-                {
-                    "mData": "CreatedAt", "sTitle": "Received At",                    
-                    "mRender": renderDotNetDateAndTime
-                }],
+                    {
+                        "mData": "CreatedAt", "sTitle": "Received At",
+                        "mRender": renderDotNetDateAndTime
+                    }, { "mData": "OpsSecureHandlerMessage", "sTitle": "Ops Secure Handler Message" }],
                 "oLanguage": {
                     "sSearch": "",
                     "sEmptyTable": "No Inbound logs available for the selected context date.",

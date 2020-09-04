@@ -25,8 +25,12 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetMQLogs(DateTime startDate, DateTime endDate)
         {
-            var mqLogs = WireDataManager.GetMQLogs(startDate, endDate);
-            return Json(mqLogs);
+            endDate = endDate.Date == DateTime.Today.Date ? DateTime.Now : endDate;
+            using (var context = new OperationsSecureContext())
+            {
+                var mqLogs = context.hmsMQLogs.Where(s => s.CreatedAt >= startDate && s.CreatedAt <= endDate).ToList();
+                return Json(mqLogs);
+            }
         }
 
 

@@ -56,6 +56,7 @@
           <Property Name="QueueName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Message" Type="varchar" MaxLength="8000" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="OpsSecureHandlerMessage" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="hmsNotificationStaging">
           <Key>
@@ -1570,6 +1571,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="QueueName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Message" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OpsSecureHandlerMessage" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="hmsWireLog">
           <Key>
@@ -2615,6 +2617,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <EntitySetMapping Name="hmsMQLogs">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsMQLog">
               <MappingFragment StoreEntitySet="hmsMQLogs">
+                <ScalarProperty Name="OpsSecureHandlerMessage" ColumnName="OpsSecureHandlerMessage" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="Message" ColumnName="Message" />
                 <ScalarProperty Name="QueueName" ColumnName="QueueName" />

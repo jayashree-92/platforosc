@@ -399,11 +399,11 @@ namespace HMOSecureMiddleware
             return swiftMessages;
         }
 
-        private static hmsWire GetWire(long wireId)
+        public static hmsWire GetWire(long wireId)
         {
             using (var context = new OperationsSecureContext())
             {
-                var wireTicket = context.hmsWires.First(s => s.hmsWireId == wireId);
+                var wireTicket = context.hmsWires.FirstOrDefault(s => s.hmsWireId == wireId);
                 return wireTicket;
             }
         }
@@ -426,7 +426,7 @@ namespace HMOSecureMiddleware
 
         public static hmsWireWorkflowLog SetWireStatusAndWorkFlow(long wireId, WireStatus wireStatus, WireDataManager.SwiftStatus swiftStatus, string comment, int userId)
         {
-            var hmsWire = GetWire(wireId);
+            hmsWire hmsWire = GetWire(wireId);
             return SetWireStatusAndWorkFlow(hmsWire, wireStatus, swiftStatus, comment, userId);
         }
 
@@ -617,15 +617,6 @@ namespace HMOSecureMiddleware
             using (var context = new OperationsSecureContext())
             {
                 return context.hmsWires.Where(s => s.hmsWireMessageType.MessageType == "MT210" && s.WireStatusId == (int)WireStatus.Initiated).Select(s => s.hmsWireId).ToList();
-            }
-        }
-
-        public static List<hmsMQLog> GetMQLogs(DateTime startDate, DateTime endDate)
-        {
-            endDate = endDate.Date == DateTime.Now.Date ? DateTime.Now : endDate;
-            using (var context = new OperationsSecureContext())
-            {
-                return context.hmsMQLogs.Where(s => s.CreatedAt >= startDate && s.CreatedAt <= endDate).ToList();
             }
         }
 

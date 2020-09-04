@@ -109,6 +109,7 @@
     <Compile Include="Util\UmsLibrary.cs" />
     <Compile Include="Util\Utility.cs" />
     <Compile Include="WireDataManager.cs" />
+    <Compile Include="WireExceptions.cs" />
     <Compile Include="WireTransactionManager.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HMOSecureMiddleware.Models;
 using HedgeMark.SwiftMessageHandler.Model.MT;
 
@@ -16,7 +17,8 @@ namespace HMOSecureMiddleware.SwiftMessageManager
             var inBoundWireMessage = new WireInBoundMessage().Parse(swiftMessage);
 
             if (inBoundWireMessage.WireId == 0)
-                throw new Exception(string.Format("System cannot find Transaction ref for MT {0}: {1}", inBoundWireMessage.SwiftMessage.GetMTType(), inBoundWireMessage.OriginalFinMessage));
+                throw new UnhandledWireMessageException(string.Format("Unknown Transaction ref for MT {0}:{1}/{2}", inBoundWireMessage.SwiftMessage.GetMTType(),
+                    inBoundWireMessage.SwiftMessage.GetFieldValue(FieldDirectory.FIELD_20), inBoundWireMessage.SwiftMessage.GetFieldValue(FieldDirectory.FIELD_21)));
 
             if (inBoundWireMessage.IsFeAck)
                 return inBoundWireMessage;

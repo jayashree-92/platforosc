@@ -20,5 +20,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string QueueName { get; set; }
         public string Message { get; set; }
         public System.DateTime CreatedAt { get; set; }
+        public string OpsSecureHandlerMessage { get; set; }
     }
 }
