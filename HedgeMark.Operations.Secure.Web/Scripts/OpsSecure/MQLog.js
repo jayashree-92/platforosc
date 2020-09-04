@@ -80,7 +80,14 @@ HmOpsApp.controller("MQLogsCtrl", function ($scope, $http, $timeout, $filter) {
                     {
                         "mData": "CreatedAt", "sTitle": "Received At",
                         "mRender": renderDotNetDateAndTime
-                    }, { "mData": "OpsSecureHandlerMessage", "sTitle": "Ops Secure Handler Message" }],
+                    }, {
+                        "mData": "OpsSecureHandlerMessage", "sTitle": "Ops Secure Handler Message", mRender: function (data) {
+                            if (data == null)
+                                return "";
+
+                            return data.indexOf("Successfully") > 0 ? "<span class='font-success'>" + data + "</span>" : "<span class='font-danger'>" + data + "</span>"
+                        }
+                    }],
                 "oLanguage": {
                     "sSearch": "",
                     "sEmptyTable": "No Inbound logs available for the selected context date.",
