@@ -183,7 +183,7 @@ namespace HMOSecureMiddleware.Queues
 
                     WireTransactionManager.ProcessInboundMessage(messageAsText);
 
-                    UpdateMQMessageLog(mqLog, "Message Processed Successfully");
+                    UpdateMQMessageLog(mqLog, "MQ Message Processed Successfully");
 
                     message.ClearMessage();
                 }
