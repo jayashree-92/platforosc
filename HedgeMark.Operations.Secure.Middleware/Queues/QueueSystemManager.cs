@@ -166,11 +166,9 @@ namespace HMOSecureMiddleware.Queues
 
             // creating a message options object
             var mqGetMsgOpts = new MQGetMessageOptions { Options = MQC.MQGMO_FAIL_IF_QUIESCING | MQC.MQGMO_WAIT };
-            //var isDone = false;
-            Logger.Info(string.Format("Total messages Out-loop available as of {0} is ={1}", DateTime.Now.ToLongTimeString(), queue.CurrentDepth));
-            while (queue.CurrentDepth > 0)
+
+            while (true)
             {
-                Logger.Info(string.Format("Total messages available as of {0} is ={1}", DateTime.Now.ToLongTimeString(), queue.CurrentDepth));
                 hmsMQLog mqLog = null;
                 try
                 {
@@ -191,14 +189,14 @@ namespace HMOSecureMiddleware.Queues
                 }
                 catch (MQException mqe)
                 {
+                    //This means no messages available in Queue to Process
                     if (mqe.ReasonCode == 2033)
-                        continue;
+                        break;
 
                     var msg = string.Format("MQException caught: {0} {1}", mqe.ReasonCode, mqe.Message);
                     Logger.Error(msg, mqe);
                     if (mqLog != null)
                         UpdateMQMessageLog(mqLog, msg);
-                    //isDone = true;
                 }
                 catch (UnhandledWireMessageException ex)
                 {
@@ -207,9 +205,10 @@ namespace HMOSecureMiddleware.Queues
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("Exception when processing inbound : " + ex.Message, ex);
+                    var msg = string.Format("Unhandled Exception when processing inbound : {0}", ex.Message);
+                    Logger.Error(msg, ex);
                     if (mqLog != null)
-                        UpdateMQMessageLog(mqLog, "Exception when processing inbound : " + ex.Message);
+                        UpdateMQMessageLog(mqLog, msg);
                 }
             }
 
