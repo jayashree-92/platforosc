@@ -99,20 +99,10 @@ namespace HMOSecureWeb.Controllers
                 {
                     id = choice.onBoardingModuleId,
                     text = choice.ModuleName,
-                    report = GetReportName(choice.dmaReportsId),
+                    report =FileSystemManager.GetReportName(choice.dmaReportsId),
                 }).OrderBy(x => x.text).ToList()
             }, JsonContentType, JsonContentEncoding);
-        }
-
-        private string GetReportName(long dmaReportsId)
-        {
-            if (dmaReportsId == 4)
-                return "Collateral";
-            else if (dmaReportsId == 17)
-                return "Repo Collateral";
-            else
-                return "Invoices";
-        }
+        }    
 
         public JsonResult GetAccountReports()
         {
