@@ -99,7 +99,7 @@ namespace HMOSecureWeb.Controllers
                 {
                     id = choice.onBoardingModuleId,
                     text = choice.ModuleName,
-                    report = choice.dmaReportsId == 4 ? "Collateral" : "Invoices"
+                    report = choice.ReportName,
                 }).OrderBy(x => x.text).ToList()
             }, JsonContentType, JsonContentEncoding);
         }

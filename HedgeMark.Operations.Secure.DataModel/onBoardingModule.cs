@@ -23,6 +23,18 @@ namespace HedgeMark.Operations.Secure.DataModel
         public long onBoardingModuleId { get; set; }
         public long dmaReportsId { get; set; }
         public string ModuleName { get; set; }
+
+        public string ReportName {
+            get
+            {
+                if (dmaReportsId == 4)
+                    return "Collateral";
+                else if (dmaReportsId == 17)
+                    return "Repo Collateral";
+                else
+                    return "Invoices";
+            }
+        }
         public System.DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
     
