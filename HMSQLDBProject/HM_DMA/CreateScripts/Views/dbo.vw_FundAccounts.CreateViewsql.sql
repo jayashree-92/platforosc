@@ -16,7 +16,9 @@ BEGIN
 			CASE WHEN acc.dmaAgreementOnBoardingId >0 THEN	CONCAT(typ.AgreementType,'' between '',LFund.LegalFundName,'' and '',cp.CounterpartyName) ELSE NULL END AS AgreementLongName,  
 			CASE WHEN acc.dmaAgreementOnBoardingId >0 THEN	CONCAT(typ.AgreementType,'' - '',LFund.LegalFundName,'' - '',cp.CounterpartyShortCode) ELSE NULL END AS AgreementShortName,  
 				acc.AccountType,acc.onBoardingAccountStatus AS ApprovalStatus,
-				acc.hmFundId,F.ShortFundName,LFund.LegalFundName,
+				acc.hmFundId,
+				CASE WHEN(F.ShortFundName IS NOT NULL) THEN F.ShortFundName ELSE LFund.LegalFundName END AS [ShortFundName],
+				LFund.LegalFundName,
 				acc.dmaCounterpartyId, cp.CounterpartyName,cpf.CounterpartyFamily,acc.AccountName, 
 			CASE WHEN LEN(acc.FFCNumber) >0 THEN acc.FFCNumber ELSE acc.UltimateBeneficiaryAccountNumber  END AS AccountNumber,
 				acc.FFCNumber,acc.UltimateBeneficiaryAccountNumber,acc.MarginAccountNumber,acc.Currency,acc.AccountPurpose,acc.AccountStatus,acc.AuthorizedParty,
@@ -28,7 +30,7 @@ BEGIN
 				LEFT JOIN HM.HMADMIN.dmaAgreementTypes typ  WITH(NOLOCK) on agrmt.AgreementTypeId = typ.dmaAgreementTypeId 
 				LEFT JOIN HM.HMADMIN.dmaCounterPartyOnBoarding cp WITH(NOLOCK) ON cp.dmaCounterPartyOnBoardId = acc.dmaCounterpartyId
 				LEFT JOIN HM.HMADMIN.dmaCounterpartyFamily cpf WITH(NOLOCK) ON cpf.dmaCounterpartyFamilyId = cp.dmaCounterPartyFamilyId  
-				WHERE acc.IsDeleted =0'
+				WHERE acc.IsDeleted =0 AND acc.hmFundId !=0'
 				
 	EXEC sp_executesql @query ;
 END
