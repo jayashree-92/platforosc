@@ -59,11 +59,11 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<onBoardingSSITemplate> onBoardingSSITemplates { get; set; }
         public virtual DbSet<hmsAccountCallback> hmsAccountCallbacks { get; set; }
         public virtual DbSet<hmsSwiftGroup> hmsSwiftGroups { get; set; }
-        public virtual DbSet<hmsWire> hmsWires { get; set; }
-        public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
         public virtual DbSet<hmsCurrency> hmsCurrencies { get; set; }
         public virtual DbSet<hmsWirePortalCutoff> hmsWirePortalCutoffs { get; set; }
         public virtual DbSet<vw_FundAccounts> vw_FundAccounts { get; set; }
         public virtual DbSet<hmsSSICallback> hmsSSICallbacks { get; set; }
+        public virtual DbSet<hmsWire> hmsWires { get; set; }
+        public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
     }
 }
