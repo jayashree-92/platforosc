@@ -9,7 +9,10 @@
   <property name="OutputFile1" value="../HedgeMark.Operations.Secure.Web/obj/QA/"/>   
   <property name="sourcePackageLocation" value="\\wc08a10009pv00\d$\Operations_Secure_Jenkins\QA"/>
   <property name="UnitTestProjectReference" value="../HedgeMark.SwiftMessageHandler.Tests/bin/QA/HedgeMark.SwiftMessageHandler.Tests.dll" />  
-  
+   
+  <property name="allServers" value="wc08a10004pv00,wc08a10003pv00" />
+  <property name="appPoolName" value="OPS_Secure_QA01" />
+ 
   <property name="primaryServers" value="  
 	  \\wc08a10003pv00\d$\OPS_Secure_QA01,
 	  \\wc08a10004pv00\d$\OPS_Secure_QA01"/>

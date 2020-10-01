@@ -22,5 +22,12 @@
 	 <arg><path><pathelement file="${serverToDeploy}\web.Config" /></path></arg>
     </exec>
 	</foreach>
+	
+	<if test="${property::exists('allServers')}">
+		<foreach item="String" in="${allServers}" delim="," property="serverName">
+		  <iisapppool action="Restart" pool="${appPoolName}" server="${serverName}" failonerror="false" verbose="true"/>
+		</foreach>
+	</if>
+	
  </target>
  </project>
