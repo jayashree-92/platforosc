@@ -625,6 +625,11 @@ namespace HMOSecureMiddleware
             }
         }
 
+        private static List<string> TreasuryAgreementTypesToUseMarginExcessOrDeficit
+        {
+            get { return SystemSwitches.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit; }
+        }
+
         public static CashBalances GetAccountCashBalances(long sendingFundAccountId, DateTime valueDate)
         {
             var contextDate = valueDate.GetContextDate();
@@ -637,7 +642,7 @@ namespace HMOSecureMiddleware
                 fndAccount = context.vw_FundAccounts.First(s => s.onBoardingAccountId == sendingFundAccountId);
             }
 
-            return fndAccount.AccountType == "Agreement" && fndAccount.AgreementType == "PB"
+            return fndAccount.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(fndAccount.AgreementType)
                 ? ComputePBCashBalances(valueDate, contextDate, fndAccount)
                 : ComputeNonPBCashBalances(sendingFundAccountId, valueDate, contextDate);
         }
@@ -647,7 +652,7 @@ namespace HMOSecureMiddleware
             List<dmaTreasuryCashBalance> allTreasuryBals;
             using (var context = new OperationsContext())
             {
-                allTreasuryBals = context.dmaTreasuryCashBalances.Where(s => s.AccountOrAgreementType == "PB" && s.ContextDate == contextDate.Date).ToList();
+                allTreasuryBals = context.dmaTreasuryCashBalances.Where(s => TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(s.AccountOrAgreementType) && s.ContextDate == contextDate.Date).ToList();
             }
 
             var allPBForContextDate = allTreasuryBals.Select(s => s.onboardAccountId).ToList();
@@ -657,7 +662,7 @@ namespace HMOSecureMiddleware
             {
                 var treasuryBalAccId = (from acc in context.vw_FundAccounts
                                         where allPBForContextDate.Contains(acc.onBoardingAccountId)
-                                        where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && acc.AgreementType == "PB"
+                                        where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(acc.AgreementType)
                                         select acc.onBoardingAccountId).FirstOrDefault();
                 treasuryBal = allTreasuryBals.FirstOrDefault(s => s.onboardAccountId == treasuryBalAccId);
 
@@ -666,7 +671,7 @@ namespace HMOSecureMiddleware
 
                 wires = (from wire in context.hmsWires
                          join acc in context.vw_FundAccounts on wire.OnBoardAccountId equals acc.onBoardingAccountId
-                         where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && acc.AgreementType == "PB"
+                         where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(acc.AgreementType)
                          where wire.ValueDate == valueDate && (wire.WireStatusId == (int)WireDataManager.WireStatus.Approved || wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated)
                          select new WireAccountBaseData
                          {

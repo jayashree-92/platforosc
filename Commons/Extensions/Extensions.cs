@@ -132,6 +132,19 @@ namespace Com.HedgeMark.Commons.Extensions
             return string.Join(separator, array);
         }
 
+        public static List<string> ToStringList(this string value)
+        {
+            try
+            {
+                return value.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+            }
+            catch (Exception)
+            {
+                return new List<string>();
+            }
+        }
+
+
         public static string[] SplitToCsv(this string value)
         {
             return value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);

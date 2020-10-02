@@ -14,6 +14,7 @@
         <EntityTypeShape EntityType="OperationsModel.vw_ProxyCurrencyConversionData" Width="1.5" PointX="7.375" PointY="4.75" />
         <EntityTypeShape EntityType="OperationsModel.dmaCollateralData" Width="1.5" PointX="5.375" PointY="7.625" />
         <AssociationConnector Association="OperationsModel.FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId" />
+        <EntityTypeShape EntityType="OperationsModel.dmaSystemSwitch" Width="1.5" PointX="9.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
