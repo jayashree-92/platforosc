@@ -9,6 +9,7 @@ using HedgeMark.SwiftMessageHandler;
 using HMOSecureMiddleware.Util;
 using log4net;
 using System.Data.Entity;
+using System.Runtime.CompilerServices;
 
 namespace HMOSecureMiddleware
 {
@@ -482,6 +483,10 @@ namespace HMOSecureMiddleware
             }
         }
 
+        //We need to make sure only one transaction is performed at a given time - to avoid same wire is being approved by two different scenario
+        public static object WireSaveTransactionLock = new object();
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus wireStatus, string comment, int userId)
         {
             using (var context = new OperationsSecureContext())
@@ -507,23 +512,30 @@ namespace HMOSecureMiddleware
                 context.hmsWireDocuments.AddRange(wireTicket.HMWire.hmsWireDocuments.Where(s => s.hmsWireDocumentId == 0));
                 context.SaveChanges();
             }
-
-            var existingWireTicket = GetWireData(wireTicket.HMWire.hmsWireId);
-
-            if (wireStatus == WireStatus.Approved)
-                WireTransactionManager.ApproveAndInitiateWireTransfer(existingWireTicket, comment, userId);
-
-            else if (existingWireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus == WireStatus.Cancelled)
-                WireTransactionManager.CancelWireTransfer(existingWireTicket, comment, userId);
-            else
+            lock (WireSaveTransactionLock)
             {
-                wireTicket.HMWire.CreatedAt = existingWireTicket.HMWire.CreatedAt;
-                SetWireStatusAndWorkFlow(wireTicket.HMWire, wireStatus, SwiftStatus.NotInitiated, comment, userId);
-                if (existingWireTicket.IsNotice && wireStatus == WireStatus.Initiated)
-                    SaveWireData(wireTicket, WireStatus.Approved, comment, userId);
-            }
+                var existingWireTicket = GetWireData(wireTicket.HMWire.hmsWireId);
 
-            return existingWireTicket;
+                if (wireStatus == WireStatus.Approved)
+                    WireTransactionManager.ApproveAndInitiateWireTransfer(existingWireTicket, comment, userId);
+
+                else if (existingWireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus == WireStatus.Cancelled)
+                    WireTransactionManager.CancelWireTransfer(existingWireTicket, comment, userId);
+
+                //if the wire is already approved, user can only cancel it, and cannot perform other options such as hold
+                else if (existingWireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus != WireStatus.Cancelled)
+                    throw new InvalidOperationException(string.Format("Wire already Approved and '{0}' action cannot be performed at this time", wireStatus));
+
+                else
+                {
+                    wireTicket.HMWire.CreatedAt = existingWireTicket.HMWire.CreatedAt;
+                    SetWireStatusAndWorkFlow(wireTicket.HMWire, wireStatus, SwiftStatus.NotInitiated, comment, userId);
+                    if (existingWireTicket.IsNotice && wireStatus == WireStatus.Initiated)
+                        SaveWireData(wireTicket, WireStatus.Approved, comment, userId);
+                }
+
+                return existingWireTicket;
+            }
         }
 
         public static bool IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId, long receivingSSITemplateId, long wireId)
