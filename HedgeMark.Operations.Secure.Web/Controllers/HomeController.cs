@@ -315,7 +315,14 @@ namespace HMOSecureWeb.Controllers
                 var wireMessages = wireMessageTypes.Select(s => new { id = s.hmsWireMessageTypeId, text = s.MessageType }).ToList();
                 var wireTransferTypes = context.hmsWireTransferTypeLKups.Select(s => new { id = s.WireTransferTypeId, text = s.TransferType }).ToList();
                 var wireSenderInformation = context.hmsWireSenderInformations.ToList();
-                return Json(new { wireMessages, wireTransferTypes, wireSenderInformation = wireSenderInformation.Select(s => new { id = s.hmsWireSenderInformationId, text = string.Format("{0}-{1}", s.SenderInformation, s.Description), value = s.SenderInformation }).ToList() });
+                var collateralCashPurpose = context.hmsCollateralCashPurposeLkups.ToList();
+                return Json(new
+                {
+                    wireMessages,
+                    wireTransferTypes,
+                    wireSenderInformation = wireSenderInformation.Select(s => new { id = s.hmsWireSenderInformationId, text = string.Format("{0}-{1}", s.SenderInformation, s.Description), value = s.SenderInformation }).ToList(),
+                    wireCollateralCashPurpose = collateralCashPurpose.Select(s => new { id = s.hmsCollateralCashPurposeLkupId, text = string.Format("{0}-{1}", s.PurposeCode, s.Description), value = s.PurposeCode }).ToList()
+                });
             }
         }
 
@@ -353,7 +360,17 @@ namespace HMOSecureWeb.Controllers
 
             var wireSourceModule = GetWireSourceDetails(wireTicket);
 
-            return Json(new { wireTicket, wireTicketStatus, deadlineToApprove, sendingAccountsList, receivingAccountsList, IsWireCreated = false, currentlyViewedBy, wireSourceModule });
+            return Json(new
+            {
+                wireTicket,
+                wireTicketStatus,
+                deadlineToApprove,
+                sendingAccountsList,
+                receivingAccountsList,
+                IsWireCreated = false,
+                currentlyViewedBy,
+                wireSourceModule
+            });
         }
 
         private WireSourceDetails GetWireSourceDetails(WireTicket wireTicket)
@@ -438,6 +455,9 @@ namespace HMOSecureWeb.Controllers
                 AttachmentUsers = new List<string>(),
                 WorkflowUsers = new List<string>()
             };
+
+            wireTicket.HMWire.hmsWireField = new hmsWireField();
+
             var wireTicketStatus = new WireTicketStatus(wireTicket, UserId, User.IsWireApprover(), true);
             return Json(new { wireTicket, wireTicketStatus, IsWireCreated = false });
         }
@@ -846,6 +866,7 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetApprovedSSITemplatesForAccount(long accountId, bool isNormalTransfer)
         {
             List<onBoardingSSITemplate> receivingAccounts;
+            bool shouldEnableCollateralPurpose;
             using (var context = new OperationsSecureContext())
             {
                 var templateType = isNormalTransfer ? "Broker" : "Fee/Expense Payment";
@@ -861,6 +882,10 @@ namespace HMOSecureWeb.Controllers
                     .Where(s => s.onBoardingAccountSSITemplateMaps.Any(s1 => s1.Status == "Approved" && s1.onBoardingAccountId == accountId))
                     .Where(s => s.SSITemplateType == templateType)
                     .ToList();
+
+
+                shouldEnableCollateralPurpose = context.onBoardingAccounts.Include(s => s.SwiftGroup)
+                    .Any(s => s.onBoardingAccountId == accountId && s.AuthorizedParty == "Hedgemark" && s.SwiftGroup.SwiftGroup.StartsWith("State Street"));
             }
 
             //remove proxies to avoid circular dependency issue
@@ -886,12 +911,14 @@ namespace HMOSecureWeb.Controllers
 
             });
 
+
+
             using (var context = new AdminContext())
             {
                 var entityIds = receivingAccounts.Select(s => s.TemplateEntityId).Distinct().ToList();
                 var counterparties = context.dmaCounterPartyOnBoardings.Where(s => entityIds.Contains(s.dmaCounterPartyOnBoardId)).ToDictionary(s => s.dmaCounterPartyOnBoardId.ToString(), v => v.CounterpartyName);
                 var receivingAccountList = receivingAccounts.Select(s => new { id = s.onBoardingSSITemplateId, text = string.IsNullOrWhiteSpace(s.FFCNumber) ? string.Format("{0}-{1}", s.UltimateBeneficiaryAccountNumber, s.TemplateName) : string.Format("{0}-{1}-{2}", s.FFCNumber, s.UltimateBeneficiaryAccountNumber, s.TemplateName) }).ToList();
-                return Json(new { receivingAccounts, receivingAccountList, counterparties });
+                return Json(new { receivingAccounts, receivingAccountList, counterparties, shouldEnableCollateralPurpose });
             }
         }
 

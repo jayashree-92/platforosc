@@ -111,6 +111,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }
             $scope.TransferTypes = response.data.wireTransferTypes;
             $scope.SenderInformation = response.data.wireSenderInformation;
+            $scope.CollateralPurpose = response.data.wireCollateralCashPurpose;
         });
     }
 
@@ -490,17 +491,30 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         angular.element("#liSenderInformation").select2("val", null).trigger("change");
                         $scope.WireTicket.SenderDescription = "";
                     }
+
+                    if ($scope.WireTicket.hmsWireFieldId != null && $scope.WireTicket.hmsWireFieldId > 0) {
+                        angular.element("#liCollateralPurpose").select2("val", $scope.WireTicket.hmsWireField.hmsCollateralCashPurposeLkupId).trigger("change");
+                    } else {
+                        angular.element("#liCollateralPurpose").select2("val", "").trigger("change");
+                    }
                 }
                 $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
-            },
-                50);
+            }, 50);
         });
 
-    angular.element(document).on("change",
-        "#liSenderInformation",
+    angular.element(document).on("change", "#liSenderInformation",
         function () {
             $timeout(function () {
                 $scope.WireTicket.SenderInformationId = $("#liSenderInformation").select2("val");
+                $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
+            }, 50);
+        });
+
+    angular.element(document).on("change", "#liCollateralPurpose",
+        function () {
+            $timeout(function () {
+                if ($scope.WireTicket.hmsWireField != undefined)
+                    $scope.WireTicket.hmsWireField.hmsCollateralCashPurposeLkupId = $("#liCollateralPurpose").select2("val");
                 $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
             }, 50);
         });
@@ -583,7 +597,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $http.post("/Home/IsWireCreated", JSON.stringify({
             valueDate: $("#wireValueDate").text(),
             purpose: $scope.wireObj.Purpose, sendingAccountId: $scope.accountDetail.onBoardingAccountId,
-            receivingAccountId: angular.copy($scope.receivingAccountDetail.onBoardingAccountId),
+            receivingAccountId: $scope.receivingAccountDetail != undefined ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : "",
             receivingSSITemplateId: angular.copy($scope.ssiTemplate.onBoardingSSITemplateId),
             wireId: $scope.WireTicket.hmsWireId
         }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
@@ -685,6 +699,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         angular.element("#liMessageType").select2("val", $scope.WireTicket.WireMessageTypeId).trigger("change");
         angular.element("#liDeliveryCharges").select2("val", $scope.WireTicket.DeliveryCharges).trigger("change");
         angular.element("#liSenderInformation").select2("val", $scope.WireTicket.SenderInformationId).trigger("change");
+        if ($scope.WireTicket != null && $scope.WireTicket.hmsWireField != null)
+            angular.element("#liCollateralPurpose").select2("val", $scope.WireTicket.hmsWireField.hmsCollateralCashPurposeLkupId).trigger("change");
         $scope.WireTicket.CreatedAt = moment($scope.WireTicket.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
         $scope.dummyWire = angular.copy($scope.wireTicketObj);
         $scope.dummyWire.HMWire.ContextDate = $scope.WireTicket.ContextDate = moment($scope.WireTicket.ContextDate).format("YYYY-MM-DD");
@@ -820,6 +836,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.WireTicket.SenderDescription = angular.element("#wireSenderDescription").val();
         }
 
+        if ($scope.WireTicket.hmsWireField == null)
+            $scope.WireTicket.hmsWireField = {};
+        $scope.WireTicket.hmsWireField.hmsCollateralCashPurposeLkupId = angular.element("#liCollateralPurpose").select2("val");
+
         if ($scope.WireTicket.WireStatusId == 0)
             $scope.WireTicket.hmFundId = $scope.wireObj.IsAdhocWire ? $("#liFund").select2("val") : 0;
 
@@ -909,7 +929,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         });
     }
 
-    
+
     $scope.timeToShow = "00 : 00 : 00";
     $scope.fnResetDeadlineTimer = function () {
         if ($scope.promise != null)
@@ -924,17 +944,13 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.deliveryCharges = [{ id: "BEN", text: "Beneficiary" }, { id: "OUR", text: "Our customer charged" }, { id: "SHA", text: " Shared charges" }];
 
     function formatSelect(selectData) {
-        var stat = $filter("filter")($scope.SenderInformation, { 'id': selectData.id }, true)[0];
-        if (stat.text.indexOf("-") != -1) {
-            var split = stat.text.split("-");
-            return split[0];
-        }
-        return selectData.text;
+        //   var stat = $filter("filter")($scope.SenderInformation, { 'id': selectData.id }, true)[0];
+        return selectData.text.indexOf("-") != -1 ? selectData.text.split("-")[0] : selectData.text;
     }
 
     function formatResult(selectData) {
-        var stat = $filter("filter")($scope.SenderInformation, { 'id': selectData.id }, true)[0];
-        return stat.text;
+        //var stat = $filter("filter")($scope.SenderInformation, { 'id': selectData.id }, true)[0];
+        return selectData.text;
     }
 
     $scope.initializeControls = function () {
@@ -957,6 +973,16 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         angular.element("#liSenderInformation").select2({
             placeholder: "Select Sender Information",
             data: $scope.SenderInformation,
+            allowClear: true,
+            formatSelection: formatSelect,
+            formatResult: formatResult,
+            closeOnSelect: false
+        });
+
+        angular.element("#liCollateralPurpose").select2("destroy").val("");
+        angular.element("#liCollateralPurpose").select2({
+            placeholder: "Select CollateralPurpose",
+            data: $scope.CollateralPurpose,
             allowClear: true,
             formatSelection: formatSelect,
             formatResult: formatResult,
@@ -1033,6 +1059,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             });
             angular.element("#liSendingAccount").select2("val", $scope.sendingAccountsList[0].id).trigger("change");
             angular.element("#liSenderInformation").select2("enable");
+            angular.element("#liCollateralPurpose").select2("enable");
             angular.element("#wireSenderDescription").removeAttr("disabled");
         }
         else if ($scope.WireTicketStatus.IsEditEnabled) {
@@ -1049,6 +1076,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.isSendingAccountEnabled = true;
                 angular.element("#liSendingAccount").select2("val", $scope.WireTicket.OnBoardAccountId).trigger("change");
                 angular.element("#liSenderInformation").select2("enable");
+                angular.element("#liCollateralPurpose").select2("enable");
                 angular.element("#wireSenderDescription").removeAttr("disabled");
             }, 50);
             //$timeout(function () {
@@ -1061,6 +1089,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         else {
             angular.element("#liMessageType").select2("disable");
             angular.element("#liSenderInformation").select2("disable");
+            angular.element("#liCollateralPurpose").select2("disable");
             angular.element("#wireSenderDescription").attr("disabled", "disabled");
         }
         if ($scope.wireObj.WireId == undefined)
@@ -1383,7 +1412,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                                 allowClear: true,
                                 closeOnSelect: false
                             });
+                            
                             $scope.isReceivingAccountEnabled = true;
+                            $scope.WireTicketStatus.ShouldEnableCollateralPurpose = response.data.shouldEnableCollateralPurpose;
+
                             if ($scope.WireTicket.hmsWireId > 0)
                                 angular.element("#liReceivingAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger("change");
                         });
@@ -1508,10 +1540,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         }
                         if ($scope.WireTicket.hmsWireId == 0 || $scope.WireTicketStatus.IsEditEnabled) {
                             angular.element("#liSenderInformation").select2("enable");
+                            angular.element("#liCollateralPurpose").select2("enable");
                             angular.element("#wireSenderDescription").removeAttr("disabled");
                         }
                         else {
                             angular.element("#liSenderInformation").select2("disable");
+                            angular.element("#liCollateralPurpose").select2("disable");
                             angular.element("#wireSenderDescription").attr("disabled", "disabled");
                         }
                     });
@@ -1552,10 +1586,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     }
                     if ($scope.WireTicket.hmsWireId == 0 || $scope.WireTicketStatus.IsEditEnabled) {
                         angular.element("#liSenderInformation").select2("enable");
+                        angular.element("#liCollateralPurpose").select2("enable");
                         angular.element("#wireSenderDescription").removeAttr("disabled");
                     }
                     else {
                         angular.element("#liSenderInformation").select2("disable");
+                        angular.element("#liCollateralPurpose").select2("disable");
                         angular.element("#wireSenderDescription").attr("disabled", "disabled");
                     }
                 }
@@ -1604,6 +1640,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             });
             $("#liMessageType").select2("val", "").trigger("change");
             $("#liSenderInformation").select2("val", "").trigger("change");
+            $("#liCollateralPurpose").select2("val", "").trigger("change");
             $scope.wireTicketObj.IsSenderInformationRequired = false;
         }, 500);
 

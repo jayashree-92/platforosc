@@ -75,6 +75,9 @@ namespace HMOSecureMiddleware.SwiftMessageManager
 
         private static Field21 GetField21(WireTicket wire)
         {
+            if (wire.HMWire.hmsWireField != null && wire.HMWire.hmsWireField.hmsCollateralCashPurposeLkupId > 0)
+                return new Field21().setReference(wire.HMWire.hmsWireField.hmsCollateralCashPurposeLkup.PurposeCode);
+
             return new Field21().setReference("NONREF");
         }
 

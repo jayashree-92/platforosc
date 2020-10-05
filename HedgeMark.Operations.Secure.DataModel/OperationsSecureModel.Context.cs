@@ -65,5 +65,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsSSICallback> hmsSSICallbacks { get; set; }
         public virtual DbSet<hmsWire> hmsWires { get; set; }
         public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
+        public virtual DbSet<hmsCollateralCashPurposeLkup> hmsCollateralCashPurposeLkups { get; set; }
+        public virtual DbSet<hmsWireField> hmsWireFields { get; set; }
     }
 }

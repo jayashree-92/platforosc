@@ -120,6 +120,8 @@ namespace HMOSecureMiddleware
 
             IsAuthorizedUserToApprove = IsWireStatusInitiated && !isUserInvolvedInInitation && !IsDeadlineCrossed && isWireApprover && !IsNoticePending;
 
+            ShouldEnableCollateralPurpose = wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && wireTicket.SendingAccount.SwiftGroup.SwiftGroup.StartsWith("State Street");
+
             IsLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == userId;
         }
 
@@ -147,6 +149,7 @@ namespace HMOSecureMiddleware
         public bool IsAuthorizedUserToApprove { get; private set; }
         public bool IsLastModifiedUser { get; private set; }
         public bool IsNoticePending { get; private set; }
+        public bool ShouldEnableCollateralPurpose { get; private set; }
         public string ValidationMessage { get; private set; }
     }
 
@@ -217,6 +220,8 @@ namespace HMOSecureMiddleware
                                          .Include(s => s.hmsWireSenderInformation)
                                          .Include(s => s.hmsWireInvoiceAssociations)
                                          .Include(s => s.hmsWireCollateralAssociations)
+                                         .Include(s => s.hmsWireField)
+                                         .Include(s => s.hmsWireField.hmsCollateralCashPurposeLkup)
                                          //.Include(s => s.SendingAccount)
                                          //.Include(s => s.ReceivingAccount)
                                          //.Include(s => s.ReceivingSSITemplate)
@@ -262,6 +267,14 @@ namespace HMOSecureMiddleware
             hmWire.hmsWireCollateralAssociations.ForEach(s => s.hmsWire = null);
             hmWire.hmsWireInvoiceAssociations.ForEach(s => s.hmsWire = null);
 
+            if (hmWire.hmsWireField != null)
+            {
+                hmWire.hmsWireField.hmsWires = null;
+                hmWire.hmsWireField.hmsCollateralCashPurposeLkup.hmsWireFields = null;
+            }
+            else
+                hmWire.hmsWireField = new hmsWireField();
+
             if (hmWire.hmsSwiftStatusLkup != null)
             {
                 hmWire.hmsSwiftStatusLkup.hmsWires = null;
@@ -269,6 +282,7 @@ namespace HMOSecureMiddleware
             }
             if (hmWire.hmsWireSenderInformation != null)
                 hmWire.hmsWireSenderInformation.hmsWires = null;
+
             hmWire.hmsWireWorkflowLogs = hmWire.hmsWireWorkflowLogs.OrderByDescending(s => s.CreatedAt).ToList();
 
             dmaCounterPartyOnBoarding counterparty = null;
@@ -505,6 +519,9 @@ namespace HMOSecureMiddleware
 
                     if (wireTicket.HMWire.ReceivingOnBoardAccountId == 0)
                         wireTicket.HMWire.ReceivingOnBoardAccountId = null;
+
+                    if (wireTicket.HMWire.hmsWireField != null && wireTicket.HMWire.hmsWireField.hmsCollateralCashPurposeLkupId == 0)
+                        wireTicket.HMWire.hmsWireField = null;
 
                     context.hmsWires.AddOrUpdate(wireTicket.HMWire);
                     context.SaveChanges();

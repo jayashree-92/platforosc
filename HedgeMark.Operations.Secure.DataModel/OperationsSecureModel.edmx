@@ -39,6 +39,14 @@
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
           <Property Name="UserName" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsCollateralCashPurposeLkup">
+          <Key>
+            <PropertyRef Name="hmsCollateralCashPurposeLkupId" />
+          </Key>
+          <Property Name="hmsCollateralCashPurposeLkupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PurposeCode" Type="varchar" MaxLength="16" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsCurrency">
           <Key>
             <PropertyRef Name="hmsCurrencyId" />
@@ -164,6 +172,13 @@
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsWireFields">
+          <Key>
+            <PropertyRef Name="hmsWireFieldId" />
+          </Key>
+          <Property Name="hmsWireFieldId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="hmsCollateralCashPurposeLkupId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsWireInvoiceAssociation">
           <Key>
             <PropertyRef Name="hmsWireInvoiceAssociationId" />
@@ -276,6 +291,7 @@
           <Property Name="ApprovedAt" Type="datetime" />
           <Property Name="ApprovedBy" Type="int" />
           <Property Name="ReceivingOnBoardAccountId" Type="bigint" />
+          <Property Name="hmsWireFieldId" Type="bigint" />
         </EntityType>
         <EntityType Name="hmsWireSenderInformation">
           <Key>
@@ -623,6 +639,18 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_hmsWireFields_hmsCollateralCashPurposeLkupId">
+          <End Role="hmsCollateralCashPurposeLkup" Type="Self.hmsCollateralCashPurposeLkup" Multiplicity="1" />
+          <End Role="hmsWireFields" Type="Self.hmsWireFields" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsCollateralCashPurposeLkup">
+              <PropertyRef Name="hmsCollateralCashPurposeLkupId" />
+            </Principal>
+            <Dependent Role="hmsWireFields">
+              <PropertyRef Name="hmsCollateralCashPurposeLkupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
           <End Role="hmsWireInvoiceAssociation" Type="Self.hmsWireInvoiceAssociation" Multiplicity="*" />
@@ -704,6 +732,18 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             </Principal>
             <Dependent Role="hmsWires">
               <PropertyRef Name="SwiftStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_hmsWireFieldId">
+          <End Role="hmsWireFields" Type="Self.hmsWireFields" Multiplicity="0..1" />
+          <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireFields">
+              <PropertyRef Name="hmsWireFieldId" />
+            </Principal>
+            <Dependent Role="hmsWires">
+              <PropertyRef Name="hmsWireFieldId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1011,6 +1051,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <EntitySet Name="hmsAccountCallback" EntityType="Self.hmsAccountCallback" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsActionInProgress" EntityType="Self.hmsActionInProgress" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsBulkUploadLog" EntityType="Self.hmsBulkUploadLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsCollateralCashPurposeLkup" EntityType="Self.hmsCollateralCashPurposeLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsCurrency" EntityType="Self.hmsCurrency" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsMQLogs" EntityType="Self.hmsMQLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsNotificationStaging" EntityType="Self.hmsNotificationStaging" Schema="dbo" store:Type="Tables" />
@@ -1023,6 +1064,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <EntitySet Name="hmsWireCollateralAssociation" EntityType="Self.hmsWireCollateralAssociation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireCutoffTimeZones" EntityType="Self.hmsWireCutoffTimeZones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireDocument" EntityType="Self.hmsWireDocument" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsWireFields" EntityType="Self.hmsWireFields" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireInvoiceAssociation" EntityType="Self.hmsWireInvoiceAssociation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireJobSchedules" EntityType="Self.hmsWireJobSchedules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireLogs" EntityType="Self.hmsWireLogs" Schema="dbo" store:Type="Tables" />
@@ -1103,6 +1145,10 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsWireDocument" EntitySet="hmsWireDocument" />
           </AssociationSet>
+          <AssociationSet Name="FK_hmsWireFields_hmsCollateralCashPurposeLkupId" Association="Self.FK_hmsWireFields_hmsCollateralCashPurposeLkupId">
+            <End Role="hmsCollateralCashPurposeLkup" EntitySet="hmsCollateralCashPurposeLkup" />
+            <End Role="hmsWireFields" EntitySet="hmsWireFields" />
+          </AssociationSet>
           <AssociationSet Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" Association="Self.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsWireInvoiceAssociation" EntitySet="hmsWireInvoiceAssociation" />
@@ -1129,6 +1175,10 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           </AssociationSet>
           <AssociationSet Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" Association="Self.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
             <End Role="hmsSwiftStatusLkup" EntitySet="hmsSwiftStatusLkup" />
+            <End Role="hmsWires" EntitySet="hmsWires" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWires_hmsWireFieldId" Association="Self.FK_hmsWires_hmsWireFieldId">
+            <End Role="hmsWireFields" EntitySet="hmsWireFields" />
             <End Role="hmsWires" EntitySet="hmsWires" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWires_hmsWireMessageType_WireMessageTypeId" Association="Self.FK_hmsWires_hmsWireMessageType_WireMessageTypeId">
@@ -1428,6 +1478,16 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_AccountId" Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId">
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
             <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMaps" />
+          </AssociationSet>
+          <EntitySet Name="hmsCollateralCashPurposeLkups" EntityType="OperationsSecureModel.hmsCollateralCashPurposeLkup" />
+          <EntitySet Name="hmsWireFields" EntityType="OperationsSecureModel.hmsWireField" />
+          <AssociationSet Name="FK_hmsWireFields_hmsCollateralCashPurposeLkupId" Association="OperationsSecureModel.FK_hmsWireFields_hmsCollateralCashPurposeLkupId">
+            <End Role="hmsCollateralCashPurposeLkup" EntitySet="hmsCollateralCashPurposeLkups" />
+            <End Role="hmsWireField" EntitySet="hmsWireFields" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWires_hmsWireFieldId" Association="OperationsSecureModel.FK_hmsWires_hmsWireFieldId">
+            <End Role="hmsWireField" EntitySet="hmsWireFields" />
+            <End Role="hmsWire" EntitySet="hmsWires" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
@@ -2135,7 +2195,9 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <NavigationProperty Name="ReceivingSSITemplate" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="hmsWire" ToRole="onBoardingSSITemplate" />
           <NavigationProperty Name="ReceivingAccount" Relationship="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" FromRole="hmsWire" ToRole="onBoardingAccount" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireWorkflowLog" />
-        </EntityType>
+          <Property Name="hmsWireFieldId" Type="Int64" />
+          <NavigationProperty Name="hmsWireField" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireFieldId" FromRole="hmsWire" ToRole="hmsWireField" />
+          </EntityType>
         <EntityType Name="onBoardingAccount">
           <Key>
             <PropertyRef Name="onBoardingAccountId" />
@@ -2502,6 +2564,48 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             </Principal>
             <Dependent Role="onBoardingAccountSSITemplateMap">
               <PropertyRef Name="onBoardingAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsCollateralCashPurposeLkup">
+          <Key>
+            <PropertyRef Name="hmsCollateralCashPurposeLkupId" />
+          </Key>
+          <Property Name="hmsCollateralCashPurposeLkupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PurposeCode" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hmsWireFields" Relationship="OperationsSecureModel.FK_hmsWireFields_hmsCollateralCashPurposeLkupId" FromRole="hmsCollateralCashPurposeLkup" ToRole="hmsWireField" />
+        </EntityType>
+        <EntityType Name="hmsWireField">
+          <Key>
+            <PropertyRef Name="hmsWireFieldId" />
+          </Key>
+          <Property Name="hmsWireFieldId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsCollateralCashPurposeLkupId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="hmsCollateralCashPurposeLkup" Relationship="OperationsSecureModel.FK_hmsWireFields_hmsCollateralCashPurposeLkupId" FromRole="hmsWireField" ToRole="hmsCollateralCashPurposeLkup" />
+          <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireFieldId" FromRole="hmsWireField" ToRole="hmsWire" />
+        </EntityType>
+        <Association Name="FK_hmsWireFields_hmsCollateralCashPurposeLkupId">
+          <End Type="OperationsSecureModel.hmsCollateralCashPurposeLkup" Role="hmsCollateralCashPurposeLkup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireField" Role="hmsWireField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsCollateralCashPurposeLkup">
+              <PropertyRef Name="hmsCollateralCashPurposeLkupId" />
+            </Principal>
+            <Dependent Role="hmsWireField">
+              <PropertyRef Name="hmsCollateralCashPurposeLkupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_hmsWireFieldId">
+          <End Type="OperationsSecureModel.hmsWireField" Role="hmsWireField" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireField">
+              <PropertyRef Name="hmsWireFieldId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="hmsWireFieldId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3000,6 +3104,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <EntitySetMapping Name="hmsWires">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsWire">
               <MappingFragment StoreEntitySet="hmsWires">
+                <ScalarProperty Name="hmsWireFieldId" ColumnName="hmsWireFieldId" />
                 <ScalarProperty Name="ReceivingOnBoardAccountId" ColumnName="ReceivingOnBoardAccountId" />
                 <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
                 <ScalarProperty Name="ApprovedAt" ColumnName="ApprovedAt" />
@@ -3088,6 +3193,23 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
                 <ScalarProperty Name="AccountName" ColumnName="AccountName" />
                 <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
                 <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsCollateralCashPurposeLkups">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsCollateralCashPurposeLkup">
+              <MappingFragment StoreEntitySet="hmsCollateralCashPurposeLkup">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PurposeCode" ColumnName="PurposeCode" />
+                <ScalarProperty Name="hmsCollateralCashPurposeLkupId" ColumnName="hmsCollateralCashPurposeLkupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWireFields">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireField">
+              <MappingFragment StoreEntitySet="hmsWireFields">
+                <ScalarProperty Name="hmsCollateralCashPurposeLkupId" ColumnName="hmsCollateralCashPurposeLkupId" />
+                <ScalarProperty Name="hmsWireFieldId" ColumnName="hmsWireFieldId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

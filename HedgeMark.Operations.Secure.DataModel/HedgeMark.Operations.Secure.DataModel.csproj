@@ -119,6 +119,9 @@
     <Compile Include="hmsBulkUploadLog.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsCollateralCashPurposeLkup.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsCurrency.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
@@ -156,6 +159,9 @@
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="hmsWireDocument.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hmsWireField.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="hmsWireInvoiceAssociation.cs">

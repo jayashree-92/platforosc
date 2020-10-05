@@ -55,6 +55,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<System.DateTime> ApprovedAt { get; set; }
         public Nullable<int> ApprovedBy { get; set; }
         public Nullable<long> ReceivingOnBoardAccountId { get; set; }
+        public Nullable<long> hmsWireFieldId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsActionInProgress> hmsActionInProgresses { get; set; }
@@ -79,5 +80,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual onBoardingAccount ReceivingAccount { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
+        public virtual hmsWireField hmsWireField { get; set; }
     }
 }

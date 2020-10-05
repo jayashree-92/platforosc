@@ -196,6 +196,17 @@
                     </div>
                 </div>
                 <p style="height:5px;" ng-show="WireTicket.WireMessageTypeId == 1" />
+                <div class="row" ng-show="WireTicketStatus.ShouldEnableCollateralPurpose">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Collateral Purpose (field 21):</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="liCollateralPurpose" class="form-control" disabled/>
+                        </div>
+                    </div>
+                </div>
+                <p style="height:5px;" ng-show="WireTicketStatus.ShouldEnableCollateralPurpose" ></p>
                 <div class="row" ng-show="wireTicketObj.IsSenderInformationRequired">
                     <div class="col-md-12">
                         <div class="col-md-3">
@@ -210,6 +221,7 @@
                         </div>
                     </div>
                 </div>
+
                 <p style="height:5px;" ng-show="wireTicketObj.IsSenderInformationRequired" />
                 <div class="panel panel-default" id="panelAccountSelector" ng-if="WireTicket.OnboardAccountId != ''">
                     <div class="panel-heading" data-toggle="collapse" data-target="#accountDetailDiv" ng-click="collapseContainer('Account')" aria-expanded="false" aria-controls="accountDetailDiv">
