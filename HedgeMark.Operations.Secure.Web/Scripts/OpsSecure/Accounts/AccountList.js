@@ -2097,6 +2097,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
     $scope.isAssociationVisible = false;
     $scope.fnAssociationSSI = function (panelIndex) {
+
+
+        console.log($scope.ssiTemplates);
+
         $scope.PanelIndex = panelIndex;
         if ($("#ssiTemplateTableMap").hasClass("initialized")) {
             fnDestroyDataTable("#ssiTemplateTableMap");
@@ -2125,11 +2129,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 },
                 {
                     "sTitle": "Account Number",
-                    "mData": "AccountNumber",
-                    "mRender": function (tdata) {
-                        if (tdata == null)
-                            return "";
-                    }
+                    "mData": "UltimateBeneficiaryAccountNumber",
+                    //"mRender": function (tdata) {
+                    //    if (tdata == null)
+                    //        return "";
+                    //}
                 },
                 {
                     "sTitle": "FFC Number",
@@ -3140,7 +3144,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                                 },
                                 {
                                     "sTitle": "Account Number",
-                                    "mData": "AccountNumber"
+                                    "mData": "UltimateBeneficiaryAccountNumber"
                                 },
                                 {
                                     "sTitle": "FFC Number",
