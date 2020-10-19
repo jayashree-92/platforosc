@@ -139,6 +139,7 @@
           <Property Name="CashBalance" Type="decimal" Precision="18" Scale="0" />
           <Property Name="MinimunEquity" Type="decimal" Precision="18" Scale="0" />
           <Property Name="RecCreatedDt" Type="datetime" Nullable="false" />
+          <Property Name="MarginBuffer" Type="decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="dmaUserPreference">
           <Key>
@@ -442,6 +443,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <Property Name="MinimunEquity" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="AccountOrAgreementType" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MarginBuffer" Type="Decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="vw_ProxyCurrencyConversionData">
           <Key>
@@ -661,6 +663,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <EntitySetMapping Name="dmaTreasuryCashBalances">
             <EntityTypeMapping TypeName="OperationsModel.dmaTreasuryCashBalance">
               <MappingFragment StoreEntitySet="dmaTreasuryCashBalances">
+                <ScalarProperty Name="MarginBuffer" ColumnName="MarginBuffer" />
                 <ScalarProperty Name="AccountOrAgreementType" ColumnName="AccountOrAgreementType" />
                 <ScalarProperty Name="RecCreatedDt" ColumnName="RecCreatedDt" />
                 <ScalarProperty Name="MinimunEquity" ColumnName="MinimunEquity" />

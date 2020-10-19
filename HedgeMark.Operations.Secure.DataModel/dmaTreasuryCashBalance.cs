@@ -22,5 +22,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<decimal> MinimunEquity { get; set; }
         public System.DateTime RecCreatedDt { get; set; }
         public string AccountOrAgreementType { get; set; }
+        public Nullable<decimal> MarginBuffer { get; set; }
     }
 }

@@ -73,6 +73,7 @@ namespace HMOSecureMiddleware
         {
             get { return TreasuryBalance - TotalWired; }
         }
+        public decimal MarginBuffer { get; set; }
     }
 
     public class WireTicketStatus

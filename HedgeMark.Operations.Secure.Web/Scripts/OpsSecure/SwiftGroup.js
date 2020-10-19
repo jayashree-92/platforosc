@@ -189,21 +189,18 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
         $scope.swiftGroup.SwiftGroup.SendersBIC = $scope.swiftGroup.SwiftGroup.SendersBIC.toUpperCase();
         var hmsSwiftGroup = angular.copy($scope.swiftGroup.SwiftGroup);
 
-        $http({
-            method: "POST",
-            url: "/SwiftGroup/AddOrUpdateSwiftGroup",
-            type: "json",
-            data: JSON.stringify({
-                hmsSwiftGroup: hmsSwiftGroup
-            })
+
+        //data: JSON.stringify({
+
+        $http.post("/SwiftGroup/AddOrUpdateSwiftGroup", {
+            hmsSwiftGroup: hmsSwiftGroup
         }).then(function (response) {
             notifySuccess("Swift Group Details " + ($scope.isAdd ? "added" : "updated") + " successfully");
             $scope.fnGetSwiftGroupData();
             angular.element("#swiftGroupModal").modal('hide');
-        },
-            function (error) {
-                notifyError("Changes failed to save with error :" + error.data);
-            });
+        }, function (error) {
+            notifyError("Changes failed to save with error :" + error.data);
+        });
     }
 
     $scope.fnDeleteSwiftGroup = function () {

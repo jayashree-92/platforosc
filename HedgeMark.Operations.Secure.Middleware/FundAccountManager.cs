@@ -712,6 +712,7 @@ namespace HMOSecureMiddleware
                 IsCashBalanceAvailable = true,
                 TotalWired = totalWiredInLocalCur,
                 TreasuryBalance = converForTreasuryBal == 0 ? treasuryBal.CashBalance ?? 0 : (treasuryBal.CashBalance ?? 0) * converForTreasuryBal,
+                MarginBuffer = converForTreasuryBal == 0 ? treasuryBal.MarginBuffer ?? 0 : (treasuryBal.MarginBuffer ?? 0) * converForTreasuryBal,
                 Currency = converForTreasuryBal == 0 ? treasuryBal.Currency : fndAccount.Currency,
                 ContextDate = treasuryBal.ContextDate,
                 ApprovedWires = wires.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved),
