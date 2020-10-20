@@ -42,7 +42,7 @@
       <do>
         <echo message="* Executing ${path::get-file-name(SP.script)}"/>        
 		<sql
-        connstring="Provider=SQLNCLI11.1;Data Source=${sql.svr}; Initial Catalog=${sql.DB};User ID=${sql.user};Password=${sql.pwd}"
+        connstring="Provider=SQLNCLI11.1;Data Source=${sql.svr}; Initial Catalog=${sql.DB};Integrated Security=SSPI;"
         transaction="true"
         delimiter="GO"
         delimstyle="Line"
