@@ -99,10 +99,10 @@ namespace HMOSecureWeb.Controllers
                 {
                     id = choice.onBoardingModuleId,
                     text = choice.ModuleName,
-                    report =FileSystemManager.GetReportName(choice.dmaReportsId),
+                    report = FileSystemManager.GetReportName(choice.dmaReportsId),
                 }).OrderBy(x => x.text).ToList()
             }, JsonContentType, JsonContentEncoding);
-        }    
+        }
 
         public JsonResult GetAccountReports()
         {
@@ -712,6 +712,11 @@ namespace HMOSecureWeb.Controllers
                             AccountType = account["Entity Type"]
                         };
 
+                        var fund = hFunds.FirstOrDefault(x => x.LegalFundName == account["Fund Name"] || x.PreferredFundName == account["Fund Name"]);
+
+                        if (fund == null)
+                            continue;
+
 
                         if (account["Entity Type"] == "Agreement")
                         {
@@ -721,7 +726,7 @@ namespace HMOSecureWeb.Controllers
                             if (accountDetail.dmaAgreementOnBoardingId == 0)
                                 continue;
 
-                            accountDetail.hmFundId = hFunds.FirstOrDefault(x => x.LegalFundName == account["Fund Name"]).HmFundId;
+                            accountDetail.hmFundId = fund.HmFundId;
                             var counterPartyByAgreement = onboardingAccounts.FirstOrDefault(s => s.dmaAgreementOnBoardingId == accountDetail.dmaAgreementOnBoardingId);
                             if (counterPartyByAgreement != null)
                             {
@@ -740,7 +745,7 @@ namespace HMOSecureWeb.Controllers
                         }
                         else
                         {
-                            accountDetail.hmFundId = hFunds.FirstOrDefault(x => x.LegalFundName == account["Fund Name"]).HmFundId;
+                            accountDetail.hmFundId = fund.HmFundId;
                             accountDetail.dmaCounterpartyFamilyId = counterpartyFamilies.FirstOrDefault(x => x.Value == account["Counterparty Family"]).Key;
                             accountDetail.dmaCounterpartyId = counterparties.FirstOrDefault(x => x.Value == account["Counterparty"]).Key;
                             if (accountDetail.onBoardingAccountId == 0)
