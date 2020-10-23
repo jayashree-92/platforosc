@@ -883,8 +883,7 @@ namespace HMOSecureWeb.Controllers
                     .Where(s => s.SSITemplateType == templateType)
                     .ToList();
 
-
-                shouldEnableCollateralPurpose = context.onBoardingAccounts.Include(s => s.SwiftGroup)
+                shouldEnableCollateralPurpose = isNormalTransfer && context.onBoardingAccounts.Include(s => s.SwiftGroup)
                     .Any(s => s.onBoardingAccountId == accountId && s.AuthorizedParty == "Hedgemark" && s.SwiftGroup.SwiftGroup.StartsWith("State Street"));
             }
 

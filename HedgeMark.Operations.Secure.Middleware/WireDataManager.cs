@@ -121,7 +121,7 @@ namespace HMOSecureMiddleware
 
             IsAuthorizedUserToApprove = IsWireStatusInitiated && !isUserInvolvedInInitation && !IsDeadlineCrossed && isWireApprover && !IsNoticePending;
 
-            ShouldEnableCollateralPurpose = wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && wireTicket.SendingAccount.SwiftGroup.SwiftGroup.StartsWith("State Street");
+            ShouldEnableCollateralPurpose = wireTicket.Is3rdPartyTransfer && wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && wireTicket.SendingAccount.SwiftGroup.SwiftGroup.StartsWith("State Street");
 
             IsLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == userId;
         }

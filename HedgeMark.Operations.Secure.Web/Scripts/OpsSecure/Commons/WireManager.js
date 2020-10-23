@@ -467,25 +467,19 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.WireTicket.WireMessageTypeId = $("#liMessageType").select2("val");
                 if ($scope.WireTicket.WireMessageTypeId != "") {
                     if ($scope.wireTicketObj.IsFundTransfer) {
-                        if ($scope.accountDetail.onBoardingAccountId != 0 &&
-                            $scope.receivingAccountDetail.onBoardingAccountId != 0) {
+                        if ($scope.accountDetail.onBoardingAccountId != 0 && $scope.receivingAccountDetail.onBoardingAccountId != 0) {
                             $scope.validateAccountsForMessageType();
-                            angular.element("#liDeliveryCharges")
-                                .select2("val", ($scope.WireTicket.WireMessageTypeId != "1" ? null : "OUR"))
-                                .trigger("change");
+                            angular.element("#liDeliveryCharges").select2("val", ($scope.WireTicket.WireMessageTypeId != "1" ? null : "OUR")).trigger("change");
                         }
                     } else {
-                        if ($scope.accountDetail.onBoardingAccountId != 0 &&
-                            $scope.ssiTemplate.onBoardingSSITemplateId != 0) {
+                        if ($scope.accountDetail.onBoardingAccountId != 0 && $scope.ssiTemplate.onBoardingSSITemplateId != 0) {
                             $scope.validateAccountsForMessageType();
                         }
                     }
                     var messageType = $("#liMessageType").select2("data").text;
                     if (messageType.indexOf("MT103") > -1 || messageType.indexOf("MT202") > -1) {
                         $scope.wireTicketObj.IsSenderInformationRequired = true;
-                        angular.element("#liSenderInformation")
-                            .select2("val", $scope.WireTicket.SenderInformationId)
-                            .trigger("change");
+                        angular.element("#liSenderInformation").select2("val", $scope.WireTicket.SenderInformationId).trigger("change");
                     } else {
                         $scope.wireTicketObj.IsSenderInformationRequired = false;
                         angular.element("#liSenderInformation").select2("val", null).trigger("change");
@@ -847,40 +841,46 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if (statusId == 6)
             return true;
 
-        if (!$scope.wireTicketObj.IsSenderInformationRequired || $scope.validateSenderDescription()) {
-            if ($scope.WireTicket.Amount != 0) {
-                if (!$scope.isDeadlineCrossed || $scope.wireComments.trim() != "") {
-                    $("#wireErrorStatus").collapse("hide");
-                    $scope.validationMsg = "";
-                    return true;
-                }
-                else {
-                    $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-                    $scope.validationMsg = "Please enter the comments to initiate the wire as deadline is crossed.";
-                    return false;
-                }
-            }
-            else {
-                $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-                $scope.validationMsg = "Please enter a non-zero amount to initiate the wire";
-                return false;
-            }
+        if ($scope.wireTicketObj.IsSenderInformationRequired && !$scope.validateSenderDescription())
+            return false;
+
+        if ($scope.WireTicket.Amount == 0) {
+            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
+            $scope.fnShowErrorMessage("Please enter a non-zero amount to initiate the wire");
+            return false;
         }
+        
+        if ($scope.WireTicketStatus.ShouldEnableCollateralPurpose && $("#liCollateralPurpose").val() == "") {
+            $scope.fnShowErrorMessage("Please select a valid collateral purpose to initiate the wire.");
+            return false;
+        }
+
+        if ($scope.isDeadlineCrossed && $scope.wireComments.trim() == "") {
+            $scope.fnShowErrorMessage("Please enter the comments to initiate the wire as deadline is crossed.");
+            return false;
+        }
+
+        $("#wireErrorStatus").collapse("hide");
+        $scope.validationMsg = "";
+        return true;
     }
 
     $scope.validateSenderDescription = function () {
         var splittedInfo = $scope.WireTicket.SenderDescription.split("\n");
         if (splittedInfo.length > 6) {
-            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-            $scope.validationMsg = "Sender Description cannot exceed 6 lines";
+            $scope.fnShowErrorMessage("Sender Description cannot exceed 6 lines");
             return false;
         }
         var isInvalid = $filter("filter")(splittedInfo, function (split) { return split != undefined && split.length > 33 }, true)[0] != undefined;
         if (isInvalid) {
-            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-            $scope.validationMsg = "Sender Description character length cannot exceed 33 in each line";
+            $scope.fnShowErrorMessage("Sender Description character length cannot exceed 33 in each line");
         }
         return !isInvalid;
+    }
+
+    $scope.fnShowErrorMessage = function (message) {
+        $scope.validationMsg = message;
+        $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
     }
 
     $scope.castToDate = function (account) {
@@ -981,7 +981,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         angular.element("#liCollateralPurpose").select2("destroy").val("");
         angular.element("#liCollateralPurpose").select2({
-            placeholder: "Select CollateralPurpose",
+            placeholder: "Select Collateral Purpose",
             data: $scope.CollateralPurpose,
             allowClear: true,
             formatSelection: formatSelect,
@@ -1412,7 +1412,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                                 allowClear: true,
                                 closeOnSelect: false
                             });
-                            
+
                             $scope.isReceivingAccountEnabled = true;
                             $scope.WireTicketStatus.ShouldEnableCollateralPurpose = response.data.shouldEnableCollateralPurpose;
 

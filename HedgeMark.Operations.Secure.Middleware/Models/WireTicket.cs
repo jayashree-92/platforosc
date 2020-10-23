@@ -24,6 +24,11 @@ namespace HMOSecureMiddleware.Models
             get { return HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.WireTransferTypeId == 2; }
         }
 
+        public bool Is3rdPartyTransfer
+        {
+            get { return HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.WireTransferTypeId == 1; }
+        }
+
         public bool IsNotice
         {
             get { return HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.TransferType == "Notice"; }
