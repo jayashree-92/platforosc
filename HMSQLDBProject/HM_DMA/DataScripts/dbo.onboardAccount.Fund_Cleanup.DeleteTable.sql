@@ -9,6 +9,15 @@ BEGIN
     DELETE FROM onBoardingAccountDocument where onBoardingAccountId  IN (select onBoardingAccountId FROM onBoardingAccount WHERE hmFundId=0) 
 END
 
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME= 'onBoardingAccountSSITemplateMap_bkup_V7_0' AND TABLE_SCHEMA ='DmaBackup')
+BEGIN
+   SELECT * INTO DMABackup.onBoardingAccountSSITemplateMap_bkup_V7_0 FROM onBoardingAccountSSITemplateMap;
+END
+IF  EXISTS(select * from onBoardingAccountSSITemplateMap where onBoardingAccountId  IN (select onBoardingAccountId FROM onBoardingAccount WHERE hmFundId=0))
+BEGIN
+    DELETE FROM onBoardingAccountSSITemplateMap where onBoardingAccountId  IN (select onBoardingAccountId FROM onBoardingAccount WHERE hmFundId=0) 
+END
+
 IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME= 'onBoardingAccount_bkup_V7_0' AND TABLE_SCHEMA ='DmaBackup')
 BEGIN
    SELECT * INTO DMABackup.onBoardingAccount_bkup_V7_0 FROM onBoardingAccount;
