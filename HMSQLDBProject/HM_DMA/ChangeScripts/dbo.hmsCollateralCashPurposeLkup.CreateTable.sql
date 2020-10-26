@@ -12,7 +12,9 @@ PRIMARY KEY  CLUSTERED
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 
---INSERT INTO [hmsCollateralCashPurposeLkup]([PurposeCode],[Description]) VALUES ('NONREF' ,'No Refereces')
+TRUNCATE TABLE [hmsCollateralCashPurposeLkup];
+
+INSERT INTO [hmsCollateralCashPurposeLkup]([PurposeCode],[Description]) VALUES ('NONREF' ,'No Refereces')
 INSERT INTO [hmsCollateralCashPurposeLkup]([PurposeCode],[Description]) VALUES ('CCPC' ,'Cleared Swap Collateral (Initial Margin)')
 INSERT INTO [hmsCollateralCashPurposeLkup]([PurposeCode],[Description]) VALUES ('SWCC' ,'Swap Client Collateral')
 INSERT INTO [hmsCollateralCashPurposeLkup]([PurposeCode],[Description]) VALUES ('SWBC' ,'Swap Broker Collateral')
