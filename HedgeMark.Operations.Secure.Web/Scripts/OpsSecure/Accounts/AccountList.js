@@ -997,43 +997,41 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
         var isAccountNameEmpty = false;
 
-        $.each($scope.onBoardingAccountDetails, function (key, value) {
+        var value = $scope.onBoardingAccountDetails[0];
 
-            var liAccountDescriptionsValue = "#liAccountDescriptions" + key;
-            value.Description = $(liAccountDescriptionsValue).val();
+        value.Description = $("#liAccountDescriptions0").val();
 
-            if ($("#cashSweep" + key).val() == "Yes") {
-                var cashSweepTimeValue = "#cashSweepTime" + key;
-                value.CashSweepTime = $(cashSweepTimeValue).val();
-                var cashSweepTimeZoneValue = "#cashSweepTimeZone" + key;
-                value.CashSweepTimeZone = $(cashSweepTimeZoneValue).val();
-            }
-            else {
-                value.CashSweepTime = "";
-                value.CashSweepTimeZone = "";
-            }
-            value.CutoffTime = $("#cutOffTime" + key).val();
-            value.SendersBIC = $("#txtSender" + key).val();
+        if ($("#cashSweep0").val() == "Yes") {
+            var cashSweepTimeValue = "#cashSweepTime0";
+            value.CashSweepTime = $(cashSweepTimeValue).val();
+            var cashSweepTimeZoneValue = "#cashSweepTimeZone0";
+            value.CashSweepTimeZone = $(cashSweepTimeZoneValue).val();
+        }
+        else {
+            value.CashSweepTime = "";
+            value.CashSweepTimeZone = "";
+        }
+        value.CutoffTime = $("#cutOffTime0").val();
+        value.SendersBIC = $("#txtSender0").val();
 
-            value.BeneficiaryBankName = $("#beneficiaryBankName" + key).val();
-            value.BeneficiaryBankAddress = $("#beneficiaryBankAddress" + key).val();
+        value.BeneficiaryBankName = $("#beneficiaryBankName0").val();
+        value.BeneficiaryBankAddress = $("#beneficiaryBankAddress0").val();
 
-            value.IntermediaryBankName = $("#intermediaryBankName" + key).val();
-            value.IntermediaryBankAddress = $("#intermediaryBankAddress" + key).val();
+        value.IntermediaryBankName = $("#intermediaryBankName0").val();
+        value.IntermediaryBankAddress = $("#intermediaryBankAddress0").val();
 
-            var data = $("#liAccountModule_" + key).select2('data') == undefined ? [] : $("#liAccountModule_" + key).select2('data');
-            value.AccountModule = data.map(s => { return s.id }).join(',');
+        var data = $("#liAccountModule_0").select2('data') == undefined ? [] : $("#liAccountModule_0").select2('data');
+        value.AccountModule = data.map(s => { return s.id }).join(',');
 
-            value.UltimateBeneficiaryBankName = $("#ultimateBankName" + key).val();
-            value.UltimateBeneficiaryBankAddress = $("#ultimateBankAddress" + key).val();
-            if (status != "" && status != undefined)
-                value.onBoardingAccountStatus = status;
-            if (value.UltimateBeneficiaryType == "Account Name" &&
-                (value.UltimateBeneficiaryAccountName == null || value.UltimateBeneficiaryAccountName == ""))
-                isAccountNameEmpty = true;
-            if (value.IsReceivingAccount)
-                value.onBoardingAccountSSITemplateMaps = [];
-        });
+        value.UltimateBeneficiaryBankName = $("#ultimateBankName0").val();
+        value.UltimateBeneficiaryBankAddress = $("#ultimateBankAddress0").val();
+        if (status != "" && status != undefined)
+            value.onBoardingAccountStatus = status;
+        if (value.UltimateBeneficiaryType == "Account Name" &&
+            (value.UltimateBeneficiaryAccountName == null || value.UltimateBeneficiaryAccountName == ""))
+            isAccountNameEmpty = true;
+        if (value.IsReceivingAccount)
+            value.onBoardingAccountSSITemplateMaps = [];
 
         if (isAccountNameEmpty) {
             notifyWarning("Account name field is required");
@@ -1318,8 +1316,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetAccountDescriptions = function () {
-
-        $http.get("/Accounts/GetAccountDescriptionsByAgreementTypeId?agreementTypeId=" + $scope.AgreementTypeId).then(function (response) {
+        var agrmTypeId = $scope.AccountType == "DDA" ? $scope.ddaAgreementTypeId : $scope.AccountType == "Custody" ? $scope.custodyAgreementTypeId : $scope.AgreementTypeId;
+        $http.get("/Accounts/GetAccountDescriptionsByAgreementTypeId?agreementTypeId=" + agrmTypeId).then(function (response) {
             $scope.AccountDescriptions = response.data.accountDescriptions;
             $("#liAccountDescriptions0").select2({
                 placeholder: "Select Description",
@@ -1919,8 +1917,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
             else $(cashSweepTimeDiv).hide();
 
-            var descriptionValue = "#liAccountDescriptions0";
-            $(descriptionValue).val(value.Description);
+            $("#liAccountDescriptions0").val(value.Description);
 
             //var contactNameValue = "#contactName" + key;
             //$(contactNameValue).val(value.ContactName);
