@@ -457,7 +457,7 @@
                 </div>
                 <div class="panel panel-info" ng-if="WireTicket.OnboardAccountId != '' && (WireTicket.WireStatusId <= 2 || WireTicket.WireStatusId == 6)">
                     <div class="panel-heading" data-toggle="collapse" data-target="#cashBalancesDiv" ng-click="collapseContainer('CashBalances')" aria-expanded="false" aria-controls="cashBalancesDiv">
-                        <span class="">Available Cash Balances</span>&nbsp;&nbsp;<span class="label label-default">{{CashBalance.Currency}}</span>&nbsp;<span class="label  {{ CashBalance.CalculatedBalance.indexOf('(') ==0 ?'label-danger' :'label-success' }} {{CashBalance.CalculatedBalance !=CashBalance.AvailableBalance ?'tdHeading':''}} prewrap number-counter">{{ CashBalance.CalculatedBalance}}</span>
+                        <span class="">Available Cash Balances</span>&nbsp;&nbsp;<span class="label label-default">{{CashBalance.Currency}}</span>&nbsp;<span class="label  {{ CashBalance.IsNewBalanceOffLimit ?'label-danger' :'label-success' }} {{CashBalance.CalculatedBalance !=CashBalance.AvailableBalance ?'tdHeading':''}} prewrap number-counter">{{ CashBalance.CalculatedBalance}}</span>
                         <span class="small" ng-if="CashBalance.IsCashBalanceAvailable">
                             (Beginning Treasury:{{ CashBalance.TreasuryBalance}} {{CashBalance.Currency}} - Total Wired:{{CashBalance.TotalWired}} {{CashBalance.Currency}})  <span style="font-size: 13px;">+</span> Buffer :{{CashBalance.MarginBuffer}} {{CashBalance.Currency}}
                         </span><span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isCashBalancesCollapsed , 'glyphicon-chevron-down': isCashBalancesCollapsed }"></span>

@@ -849,7 +849,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.fnShowErrorMessage("Please enter a non-zero amount to initiate the wire");
             return false;
         }
-        
+
         if ($scope.WireTicketStatus.ShouldEnableCollateralPurpose && $("#liCollateralPurpose").val() == "") {
             $scope.fnShowErrorMessage("Please select a valid collateral purpose to initiate the wire.");
             return false;
@@ -859,6 +859,17 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.fnShowErrorMessage("Please enter the comments to initiate the wire as deadline is crossed.");
             return false;
         }
+
+        //validate against the available cash balances
+        if ($scope.CashBalance.IsNewBalanceOffLimit) {
+            if ($scope.wireComments.trim() == "") {
+                $scope.fnShowErrorMessage("Please enter the comments to initiate as the Amount exceeded the available Cash Balances.");
+                return false;
+            }
+            $scope.fnShowErrorMessage("Please note that the Amount exceeded the available Cash Balances.");
+            return true;
+        }
+
 
         $("#wireErrorStatus").collapse("hide");
         $scope.validationMsg = "";
@@ -1503,10 +1514,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.fnCalculateCashBalance = function () {
+
+        $scope.CashBalance.IsNewBalanceOffLimit = false;
         if (!$scope.CashBalance.IsCashBalanceAvailable)
             $scope.CashBalance.CalculatedBalance = "N.A";
-        else
-            $scope.CashBalance.CalculatedBalance = $.convertToCurrency($.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text()), 2);
+        else {
+            var newBalance = $.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text());
+            $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
+            $scope.CashBalance.IsNewBalanceOffLimit = newBalance < 0;
+        }
     };
 
 
