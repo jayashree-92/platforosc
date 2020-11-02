@@ -861,13 +861,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
 
         //validate against the available cash balances
-        if ($scope.CashBalance.IsNewBalanceOffLimit) {
-            if ($scope.wireComments.trim() == "") {
-                $scope.fnShowErrorMessage("Please enter the comments to initiate as the Amount exceeded the available Cash Balances.");
-                return false;
-            }
+        if ($scope.CashBalance.IsNewBalanceOffLimit && $("#chkCashBalOff").prop("checked") === false) {
             $scope.fnShowErrorMessage("Please note that the Amount exceeded the available Cash Balances.");
-            return true;
+            return false;
         }
 
 
@@ -1517,11 +1513,14 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.CashBalance.AvailableBalance = !$scope.CashBalance.IsCashBalanceAvailable ? "N.A" : $.convertToCurrency($scope.CashBalance.AvailableBalance, 2);
                 $scope.fnCalculateCashBalance();
             });
+
+
     }
 
     $scope.fnCalculateCashBalance = function () {
 
         $scope.CashBalance.IsNewBalanceOffLimit = false;
+        $("#chkCashBalOff").prop("checked", false).trigger("change");
         if (!$scope.CashBalance.IsCashBalanceAvailable)
             $scope.CashBalance.CalculatedBalance = "N.A";
         else {
