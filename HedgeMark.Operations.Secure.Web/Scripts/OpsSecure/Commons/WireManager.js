@@ -1500,6 +1500,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.CashBalance = { IsCashBalanceAvailable: false };
     $scope.fnGetCashBalances = function (valueDate) {
+
+        $scope.CashBalance = {};
+        $scope.CashBalance.IsCashBalanceAvailable = false;
+        $scope.CashBalance.CalculatedBalance = "N.A";
+        $scope.CashBalance.IsNewBalanceOffLimit = false;
+
         if ($scope.WireTicket.OnBoardAccountId == undefined || $scope.WireTicket.OnBoardAccountId == 0)
             return;
 
