@@ -527,6 +527,8 @@ namespace HMOSecureMiddleware
                     context.hmsWires.AddOrUpdate(wireTicket.HMWire);
                     context.SaveChanges();
                 }
+                if (wireTicket.HMWire.hmsWireField != null)
+                    context.hmsWireFields.AddOrUpdate(wireTicket.HMWire.hmsWireField);
                 context.hmsWireDocuments.AddRange(wireTicket.HMWire.hmsWireDocuments.Where(s => s.hmsWireDocumentId == 0));
                 context.SaveChanges();
             }
