@@ -506,6 +506,9 @@ namespace HMOSecureMiddleware
         {
             using (var context = new OperationsSecureContext())
             {
+                if (wireTicket.HMWire.hmsWireField != null && wireTicket.HMWire.hmsWireField.hmsCollateralCashPurposeLkupId == 0)
+                    wireTicket.HMWire.hmsWireField = null;
+
                 if (wireTicket.HMWire.hmsWireId == 0)
                 {
                     wireTicket.HMWire.WireStatusId = (int)wireStatus;
@@ -520,9 +523,6 @@ namespace HMOSecureMiddleware
 
                     if (wireTicket.HMWire.ReceivingOnBoardAccountId == 0)
                         wireTicket.HMWire.ReceivingOnBoardAccountId = null;
-
-                    if (wireTicket.HMWire.hmsWireField != null && wireTicket.HMWire.hmsWireField.hmsCollateralCashPurposeLkupId == 0)
-                        wireTicket.HMWire.hmsWireField = null;
 
                     context.hmsWires.AddOrUpdate(wireTicket.HMWire);
                     context.SaveChanges();

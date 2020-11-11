@@ -54,6 +54,6 @@ BEGIN
 	ALTER TABLE hmsWires ADD [hmsWireFieldId]  BIGINT	;
 
 	ALTER TABLE [dbo].[hmsWires]  WITH CHECK ADD CONSTRAINT [FK_hmsWires_hmsWireFieldId] 
-		FOREIGN KEY([hmsWireFieldId]) REFERENCES [dbo].[hmsWireFields] (hmsWireFieldId)
+		FOREIGN KEY([hmsWireFieldId]) REFERENCES [dbo].[hmsWireFields] (hmsWireFieldId);
 END
 GO
