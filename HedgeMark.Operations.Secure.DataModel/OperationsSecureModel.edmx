@@ -384,6 +384,7 @@
           <Property Name="AssociatedCustodyAcctNumber" Type="varchar" MaxLength="100" />
           <Property Name="dmaCounterpartyId" Type="bigint" />
           <Property Name="MarginAccountNumber" Type="varchar" MaxLength="100" />
+          <Property Name="TopLevelManagerAccountNumber" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -2266,6 +2267,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <NavigationProperty Name="onBoardingAccountDocuments" Relationship="OperationsSecureModel.FK_onBoardingAccountDocument_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountDocument" />
           <NavigationProperty Name="onBoardingAccountModuleAssociations" Relationship="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountModuleAssociation" />
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
+          <Property Name="TopLevelManagerAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
@@ -3140,6 +3142,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <EntitySetMapping Name="onBoardingAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccount">
               <MappingFragment StoreEntitySet="onBoardingAccount">
+                <ScalarProperty Name="TopLevelManagerAccountNumber" ColumnName="TopLevelManagerAccountNumber" />
                 <ScalarProperty Name="MarginAccountNumber" ColumnName="MarginAccountNumber" />
                 <ScalarProperty Name="dmaCounterpartyId" ColumnName="dmaCounterpartyId" />
                 <ScalarProperty Name="AssociatedCustodyAcctNumber" ColumnName="AssociatedCustodyAcctNumber" />

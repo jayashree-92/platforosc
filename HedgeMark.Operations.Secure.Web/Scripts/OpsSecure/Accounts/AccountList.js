@@ -613,6 +613,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         { "mData": "Account.FFCName", "sTitle": "FFC Name" },
                         { "mData": "Account.FFCNumber", "sTitle": "FFC Number" },
                         { "mData": "Account.MarginAccountNumber", "sTitle": "Margin Account Number" },
+                        { "mData": "Account.TopLevelManagerAccountNumber", "sTitle": "Top Level Manager Account" },
                         { "mData": "Account.Reference", "sTitle": "Reference" },
                         {
                             "mData": "Account.onBoardingAccountStatus", "sTitle": "Status",

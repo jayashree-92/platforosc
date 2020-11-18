@@ -634,6 +634,7 @@ namespace HMOSecureWeb.Controllers
                 row["FFC Name"] = account.FFCName;
                 row["FFC Number"] = account.FFCNumber;
                 row["Margin Account Number"] = account.MarginAccountNumber;
+                row["Top Level Manager Account"] = account.TopLevelManagerAccountNumber;
                 row["Reference"] = account.Reference;
                 row["Status"] = account.onBoardingAccountStatus;
                 row["Comments"] = account.StatusComments;

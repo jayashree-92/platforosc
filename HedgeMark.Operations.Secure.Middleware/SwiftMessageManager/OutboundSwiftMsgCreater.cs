@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Serialization.Formatters;
-using System.Text;
 using HMOSecureMiddleware.Models;
 using Com.HedgeMark.Commons;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
