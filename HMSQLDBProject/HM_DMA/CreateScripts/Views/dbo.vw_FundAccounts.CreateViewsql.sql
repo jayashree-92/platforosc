@@ -1,6 +1,11 @@
 
 USE HM_WIRES;
 
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'onBoardingAccount' AND COLUMN_NAME = 'TopLevelManagerAccountNumber')
+BEGIN
+	ALTER TABLE onBoardingAccount ADD TopLevelManagerAccountNumber VARCHAR(100)
+END
+
 IF EXISTS (SELECT * FROM SYSOBJECTS WHERE type = 'V' AND name = 'vw_FundAccounts')
 BEGIN
 DROP VIEW [dbo].[vw_FundAccounts]
