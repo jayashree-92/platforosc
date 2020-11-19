@@ -21,7 +21,7 @@ BEGIN
 				LFund.LegalFundName,
 				acc.dmaCounterpartyId, cp.CounterpartyName,cpf.CounterpartyFamily,acc.AccountName, 
 			CASE WHEN LEN(acc.FFCNumber) >0 THEN acc.FFCNumber ELSE acc.UltimateBeneficiaryAccountNumber  END AS AccountNumber,
-				acc.FFCNumber,acc.UltimateBeneficiaryAccountNumber,acc.MarginAccountNumber,acc.TopLevelManagerAccountNumber,acc.Currency,acc.AccountPurpose,acc.AccountStatus,acc.AuthorizedParty,
+				acc.FFCNumber,acc.UltimateBeneficiaryAccountNumber,acc.MarginAccountNumber,acc.AssociatedCustodyAcctNumber,acc.TopLevelManagerAccountNumber,acc.Currency,acc.AccountPurpose,acc.AccountStatus,acc.AuthorizedParty,
 				acc.[Description],acc.TickerorISIN,acc.CashSweep,acc.CashSweepTime,acc.CashSweepTimeZone
 				FROM onBoardingAccount acc
 				LEFT JOIN HM.DBO.Fund F  WITH(NOLOCK) ON F.FundID = acc.hmFundId

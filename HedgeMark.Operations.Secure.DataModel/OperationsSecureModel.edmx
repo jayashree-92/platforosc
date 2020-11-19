@@ -558,6 +558,8 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="FFCNumber" Type="varchar" MaxLength="100" />
           <Property Name="UltimateBeneficiaryAccountNumber" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="MarginAccountNumber" Type="varchar" MaxLength="100" />
+          <Property Name="AssociatedCustodyAcctNumber" Type="varchar" MaxLength="100" />
+          <Property Name="TopLevelManagerAccountNumber" Type="varchar" MaxLength="100" />
           <Property Name="Currency" Type="varchar" MaxLength="50" />
           <Property Name="AccountPurpose" Type="varchar" MaxLength="50" />
           <Property Name="AccountStatus" Type="varchar" MaxLength="50" />
@@ -1111,6 +1113,8 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
     [vw_FundAccounts].[FFCNumber] AS [FFCNumber], 
     [vw_FundAccounts].[UltimateBeneficiaryAccountNumber] AS [UltimateBeneficiaryAccountNumber], 
     [vw_FundAccounts].[MarginAccountNumber] AS [MarginAccountNumber], 
+    [vw_FundAccounts].[AssociatedCustodyAcctNumber] AS [AssociatedCustodyAcctNumber], 
+    [vw_FundAccounts].[TopLevelManagerAccountNumber] AS [TopLevelManagerAccountNumber], 
     [vw_FundAccounts].[Currency] AS [Currency], 
     [vw_FundAccounts].[AccountPurpose] AS [AccountPurpose], 
     [vw_FundAccounts].[AccountStatus] AS [AccountStatus], 
@@ -2118,6 +2122,8 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="CashSweep" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="CashSweepTime" Type="Time" Precision="7" />
           <Property Name="CashSweepTimeZone" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="AssociatedCustodyAcctNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TopLevelManagerAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="hmsSSICallback">
           <Key>
@@ -3056,6 +3062,8 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <EntitySetMapping Name="vw_FundAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.vw_FundAccounts">
               <MappingFragment StoreEntitySet="vw_FundAccounts">
+                <ScalarProperty Name="TopLevelManagerAccountNumber" ColumnName="TopLevelManagerAccountNumber" />
+                <ScalarProperty Name="AssociatedCustodyAcctNumber" ColumnName="AssociatedCustodyAcctNumber" />
                 <ScalarProperty Name="CashSweepTimeZone" ColumnName="CashSweepTimeZone" />
                 <ScalarProperty Name="CashSweepTime" ColumnName="CashSweepTime" />
                 <ScalarProperty Name="CashSweep" ColumnName="CashSweep" />
