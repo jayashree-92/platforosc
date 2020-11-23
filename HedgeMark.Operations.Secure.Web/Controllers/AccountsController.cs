@@ -899,6 +899,7 @@ namespace HMOSecureWeb.Controllers
                         accountDetail.FFCName = account["FFC Name"];
                         accountDetail.FFCNumber = account["FFC Number"];
                         accountDetail.MarginAccountNumber = account["Margin Account Number"];
+                        accountDetail.TopLevelManagerAccountNumber = account["Top Level Manager Account"];
                         accountDetail.Reference = account["Reference"];
                         accountDetail.onBoardingAccountStatus = account["Status"];
                         accountDetail.StatusComments = account["Comments"];
@@ -974,6 +975,7 @@ namespace HMOSecureWeb.Controllers
             row["FFC Name"] = String.Empty;
             row["FFC Number"] = String.Empty;
             row["Margin Account Number"] = String.Empty;
+            row["Top Level Manager Account"] = String.Empty;
             row["Reference"] = String.Empty;
             row["Status"] = String.Empty;
             row["Comments"] = String.Empty;
