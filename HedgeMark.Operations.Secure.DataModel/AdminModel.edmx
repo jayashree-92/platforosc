@@ -258,6 +258,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
             <PropertyRef Name="PBFXNetting" />
             <PropertyRef Name="AgreementType" />
             <PropertyRef Name="AgreementStatus" />
+            <PropertyRef Name="IsChaserMail" />
             <PropertyRef Name="AgreementLongName" />
             <PropertyRef Name="AgreementShortName" />
           </Key>
@@ -324,6 +325,10 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <Property Name="IACalculationAgent" Type="varchar" MaxLength="25" />
           <Property Name="AdditionalCollateralNotes" Type="varchar" MaxLength="8000" />
           <Property Name="MTMChangeThresholdPercentage" Type="float" />
+          <Property Name="IAChangeThresholdPercentage" Type="float" />
+          <Property Name="BufferTime" Type="int" />
+          <Property Name="IsChaserMail" Type="bit" Nullable="false" />
+          <Property Name="IAThresholdCollateral" Type="float" />
           <Property Name="CounterpartyFamily" Type="varchar" MaxLength="100" />
           <Property Name="CounterpartyName" Type="nvarchar" MaxLength="500" />
           <Property Name="CounterpartyShortCode" Type="nvarchar" MaxLength="500" />
@@ -338,6 +343,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <Property Name="AgreementLongName" Type="nvarchar" MaxLength="1114" Nullable="false" />
           <Property Name="AgreementShortName" Type="nvarchar" MaxLength="1106" Nullable="false" />
           <Property Name="FundManagerName" Type="varchar" MaxLength="100" />
+          <Property Name="dmaOnBoardingAdminChoiceId" Type="bigint" />
           <Property Name="AdminChoice" Type="varchar" MaxLength="1000" />
         </EntityType>
         <Association Name="FK__aspnet_Us__RoleI__2DB1C7EE">
@@ -496,6 +502,10 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
     [vw_CounterpartyAgreements].[IACalculationAgent] AS [IACalculationAgent], 
     [vw_CounterpartyAgreements].[AdditionalCollateralNotes] AS [AdditionalCollateralNotes], 
     [vw_CounterpartyAgreements].[MTMChangeThresholdPercentage] AS [MTMChangeThresholdPercentage], 
+    [vw_CounterpartyAgreements].[IAChangeThresholdPercentage] AS [IAChangeThresholdPercentage], 
+    [vw_CounterpartyAgreements].[BufferTime] AS [BufferTime], 
+    [vw_CounterpartyAgreements].[IsChaserMail] AS [IsChaserMail], 
+    [vw_CounterpartyAgreements].[IAThresholdCollateral] AS [IAThresholdCollateral], 
     [vw_CounterpartyAgreements].[CounterpartyFamily] AS [CounterpartyFamily], 
     [vw_CounterpartyAgreements].[CounterpartyName] AS [CounterpartyName], 
     [vw_CounterpartyAgreements].[CounterpartyShortCode] AS [CounterpartyShortCode], 
@@ -510,6 +520,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
     [vw_CounterpartyAgreements].[AgreementLongName] AS [AgreementLongName], 
     [vw_CounterpartyAgreements].[AgreementShortName] AS [AgreementShortName], 
     [vw_CounterpartyAgreements].[FundManagerName] AS [FundManagerName], 
+    [vw_CounterpartyAgreements].[dmaOnBoardingAdminChoiceId] AS [dmaOnBoardingAdminChoiceId], 
     [vw_CounterpartyAgreements].[AdminChoice] AS [AdminChoice]
     FROM [HMADMIN].[vw_CounterpartyAgreements] AS [vw_CounterpartyAgreements]</DefiningQuery>
           </EntitySet>
@@ -881,6 +892,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
             <PropertyRef Name="AgreementStatus" />
             <PropertyRef Name="AgreementLongName" />
             <PropertyRef Name="AgreementShortName" />
+            <PropertyRef Name="IsChaserMail" />
           </Key>
           <Property Name="dmaAgreementOnBoardingId" Type="Int64" Nullable="false" />
           <Property Name="dmaFundOnBoardId" Type="Int64" Nullable="false" />
@@ -960,6 +972,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <Property Name="FundManagerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="AdditionalCollateralNotes" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="IAChangeThresholdPercentage" Type="Double" />
+          <Property Name="BufferTime" Type="Int32" />
+          <Property Name="IsChaserMail" Type="Boolean" Nullable="false" />
+          <Property Name="IAThresholdCollateral" Type="Double" />
+          <Property Name="dmaOnBoardingAdminChoiceId" Type="Int64" />
         </EntityType>
         <EntityType Name="onboardingContactFundMap">
           <Key>
@@ -1301,6 +1318,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <EntitySetMapping Name="vw_CounterpartyAgreements">
             <EntityTypeMapping TypeName="AdminModel.vw_CounterpartyAgreements">
               <MappingFragment StoreEntitySet="vw_CounterpartyAgreements">
+                <ScalarProperty Name="dmaOnBoardingAdminChoiceId" ColumnName="dmaOnBoardingAdminChoiceId" />
+                <ScalarProperty Name="IAThresholdCollateral" ColumnName="IAThresholdCollateral" />
+                <ScalarProperty Name="IsChaserMail" ColumnName="IsChaserMail" />
+                <ScalarProperty Name="BufferTime" ColumnName="BufferTime" />
+                <ScalarProperty Name="IAChangeThresholdPercentage" ColumnName="IAChangeThresholdPercentage" />
                 <ScalarProperty Name="AdditionalCollateralNotes" ColumnName="AdditionalCollateralNotes" />
                 <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
                 <ScalarProperty Name="FundManagerName" ColumnName="FundManagerName" />

@@ -92,5 +92,10 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string FundManagerName { get; set; }
         public string AdminChoice { get; set; }
         public string AdditionalCollateralNotes { get; set; }
+        public Nullable<double> IAChangeThresholdPercentage { get; set; }
+        public Nullable<int> BufferTime { get; set; }
+        public bool IsChaserMail { get; set; }
+        public Nullable<double> IAThresholdCollateral { get; set; }
+        public Nullable<long> dmaOnBoardingAdminChoiceId { get; set; }
     }
 }
