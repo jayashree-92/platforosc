@@ -860,6 +860,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return false;
         }
 
+        if ($("#liWireTransferType").val() != undefined && $("#liWireTransferType").val() === "4") {
+            $("#wireErrorStatus").collapse("hide");
+            $scope.validationMsg = "";
+            return true;
+        }
+
         //validate against the available cash balances
         if ($scope.CashBalance.IsNewBalanceOffLimit && $("#chkCashBalOff").prop("checked") === false) {
             $scope.fnShowErrorMessage("Please note that the Amount exceeded the available Cash Balances.");
@@ -1631,7 +1637,13 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.WireTicket.WireTransferTypeId = angular.copy($("#liWireTransferType").select2("val"));
             $scope.wireTicketObj.IsFundTransfer = $scope.WireTicket.WireTransferTypeId == 2;
             $scope.IsNormalTransfer = $scope.WireTicket.WireTransferTypeId == 1;
-            $scope.wireTicketObj.IsNotice = $("#liWireTransferType").select2("data").text == "Notice";
+            $scope.wireTicketObj.IsNotice = $scope.WireTicket.WireTransferTypeId == 4;
+
+            if ($scope.wireTicketObj.IsNotice)
+                $("#wireValueDate").datepicker("setStartDate", "-14d");
+            else
+                $("#wireValueDate").datepicker("setStartDate", "+0d");
+
             $("#liWiresPurpose").select2("val", "").trigger("change");
             $("#liFund").select2("val", "").trigger("change");
             $("#liCurrency").select2("val", "").trigger("change");
