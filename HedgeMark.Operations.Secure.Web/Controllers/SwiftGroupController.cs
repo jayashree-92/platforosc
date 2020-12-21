@@ -52,7 +52,7 @@ namespace HMOSecureWeb.Controllers
                     SwiftGroup = s,
                     Broker = s.BrokerLegalEntityId != null && brokerLegalEntityData.ContainsKey(s.BrokerLegalEntityId ?? 0) ? brokerLegalEntityData[s.BrokerLegalEntityId ?? 0] : string.Empty,
                     SwiftGroupStatus = s.hmsSwiftGroupStatusLkp != null ? s.hmsSwiftGroupStatusLkp.Status : "Requested",
-                    IsAssociatedToAccount = s.onBoardingAccounts.Any(),
+                    IsAssociatedToAccount = s.onBoardingAccounts.Any(s1 => !s1.IsDeleted),
                 };
                 swiftGrpData.SwiftGroup.onBoardingAccounts = null;
                 swiftGroupData.Add(swiftGrpData);
