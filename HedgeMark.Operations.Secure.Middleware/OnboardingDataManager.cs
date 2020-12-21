@@ -105,8 +105,9 @@ namespace HMOSecureMiddleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
+                //AgreementStatusId - 4 = "Terminated - Agreement"
                 return context.vw_CounterpartyAgreements
-                    .Where(a => a.AgreementStatus != "Terminated - Agreement" && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || hmFundIds.Contains(a.FundMapId ?? 0)))
+                    .Where(a => a.AgreementStatusId != 4 && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || hmFundIds.Contains(a.FundMapId ?? 0)))
                     .AsNoTracking().Select(x => new AgreementBaseData()
                     {
                         AgreementOnboardingId = x.dmaAgreementOnBoardingId,
