@@ -1327,12 +1327,17 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             return;
         }
 
-        $scope.SSITemplateStatus = angular.copy(ssiStatus);
-
         if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.ssiTemplateDocuments.length == 0) {
-            notifyWarning("Please upload document to approve ssi template");
+            notifyWarning("Please upload document to approve/request to approve SSI template");
             return;
         }
+
+        if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.CallBackChecks.length == 0) {
+            notifyWarning("Please add atleast one Callback check to approve/request to approve SSI template");
+            return;
+        }
+
+        $scope.SSITemplateStatus = angular.copy(ssiStatus);
 
         var confirmationMsg = "Are you sure you want to " + ((statusAction === "Request for Approval") ? "<b>request</b> for approval of" : "<b>" + (statusAction == "Revert" ? "save changes or sending approval for" : statusAction) + "</b>") + " the selected SSI Template?";
         if (statusAction == "Request for Approval") {

@@ -26,6 +26,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string CounterpartyRegistrationNumber { get; set; }
         public string LEI { get; set; }
         public Nullable<long> DomicileChoiceId { get; set; }
+        public string SEC { get; set; }
     
         public virtual dmaCounterpartyFamily dmaCounterpartyFamily { get; set; }
     }

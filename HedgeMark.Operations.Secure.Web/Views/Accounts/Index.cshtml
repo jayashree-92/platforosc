@@ -198,10 +198,10 @@
                                                 <label class="control-label">Currency </label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input type="text" class="form-control" ng-model="accountDetail.Currency" id="liCurrency0" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, $index)" />
+                                                <input type="text" class="form-control" ng-model="accountDetail.Currency" id="liCurrency0" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction)" />
                                             </div>
                                             <div class="col-sm-8 col-md-3 col-lg-3">
-                                                <a class="btn btn-sm btn-info" ng-click="fnAddCurrencyModal($index)" title="Add Currency"><i class="glyphicon glyphicon-plus"></i></a>
+                                                <a class="btn btn-sm btn-info" ng-click="fnAddCurrencyModal()" title="Add Currency"><i class="glyphicon glyphicon-plus"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -234,7 +234,7 @@
                                                 <input ng-model="accountDetail.Description" class="form-control control-label" id="liAccountDescriptions0">
                                             </div>
                                             <div class="col-sm-8 col-md-3 col-lg-3">
-                                                <a id="btnAccountDescription" class="btn btn-sm btn-info" ng-click="fnAddAccountDetailModal($index, 'Description')" title="Add Description"><i class="glyphicon glyphicon-plus"></i></a>
+                                                <a id="btnAccountDescription" class="btn btn-sm btn-info" ng-click="fnAddAccountDetailModal('Description')" title="Add Description"><i class="glyphicon glyphicon-plus"></i></a>
                                             </div>
                                         </div>
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
@@ -264,18 +264,18 @@
                                                 <label class="control-label">Authorized Party</label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input ng-model="accountDetail.AuthorizedParty" class="form-control control-label" id="liAuthorizedParty0" ng-change="fnAuthorizedPartyChange($index)">
+                                                <input ng-model="accountDetail.AuthorizedParty" class="form-control control-label" id="liAuthorizedParty0" ng-change="fnAuthorizedPartyChange()">
                                             </div>
                                             @*<div class="col-sm-8 col-md-3 col-lg-3">
                                                     <a class="btn btn-sm btn-info" ng-click="fnAddAuthorizedPartyModal($index)" title="Add Authorized Party"><i class="glyphicon glyphicon-plus"></i></a>
                                                 </div>*@
                                         </div>
-                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="DisabledAgreementForCashInstructions.indexOf(AgreementType)>-1 || onBoardingAccountDetails[$index].AuthorizedParty!= 'Hedgemark'">
+                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="DisabledAgreementForCashInstructions.indexOf(AgreementType)>-1 || onBoardingAccountDetails[0].AuthorizedParty!= 'Hedgemark'">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
                                                 <label class="control-label">Cash Instruction Mechanism</label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input type="text" class="form-control" ng-model="accountDetail.CashInstruction" id="liCashInstruction0" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction, $index)" />
+                                                <input type="text" class="form-control" ng-model="accountDetail.CashInstruction" id="liCashInstruction0" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction)" />
                                             </div>
                                             @*<div class="col-sm-8 col-md-3 col-lg-3">
                                                     <a class="btn btn-sm btn-info" ng-click="fnAddCashInstructionModal($index)" title="Add Cash Instruction"><i class="glyphicon glyphicon-plus"></i></a>
@@ -289,7 +289,7 @@
                                                 <label class="control-label">Swift Group <span style="color: red"> *</span></label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input name="Swift Group" type="text" class="form-control" ng-model="accountDetail.SwiftGroupId" id="liSwiftGroup0" ng-change="fnOnSwiftGroupChange(accountDetail.SwiftGroupId, $index)" />
+                                                <input name="Swift Group" type="text" class="form-control" ng-model="accountDetail.SwiftGroupId" id="liSwiftGroup0" ng-change="fnOnSwiftGroupChange(accountDetail.SwiftGroupId)" />
                                             </div>
                                         </div>
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
@@ -314,7 +314,7 @@
                                     </div>
                                     <p></p>
 
-                                    <div class="row" ng-hide="DisabledAgreementForCashInstructions.indexOf(AgreementType)>-1 || onBoardingAccountDetails[$index].AuthorizedParty!= 'Hedgemark'">
+                                    <div class="row" ng-hide="DisabledAgreementForCashInstructions.indexOf(AgreementType)>-1 || onBoardingAccountDetails[0].AuthorizedParty!= 'Hedgemark'">
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
                                                 <label class="control-label">Cutoff Time Zone</label>
@@ -342,7 +342,7 @@
                                                 <label class="control-label">Cash Sweep</label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <input ng-model="accountDetail.CashSweep" class="form-control control-label" id="cashSweep0" ng-change="fnCashSweep(accountDetail.CashSweep, $index)">
+                                                <input ng-model="accountDetail.CashSweep" class="form-control control-label" id="cashSweep0" ng-change="fnCashSweep(accountDetail.CashSweep)">
                                             </div>
                                         </div>
                                         <div class="cashSweepTimeDiv0 col-sm-12 col-md-9 col-lg-6 paddingleft" ng-hide="accountDetail.IsReceivingAccount">
@@ -456,7 +456,7 @@
                                                 <label class="control-label">FFC Number </label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5">
-                                                <input type="text" name='FFCNumber' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.FFCNumber" ng-blur="validateAccountNumber($index, true)" class="form-control control-label" placeholder="FFC Number" />
+                                                <input type="text" name='FFCNumber' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.FFCNumber" ng-blur="validateAccountNumber(true)" class="form-control control-label" placeholder="FFC Number" />
                                             </div>
                                         </div>
                                     </div>
@@ -512,7 +512,7 @@
                                             <input type="text" ng-model="accountDetail.BeneficiaryAccountNumber" class="form-control control-label" placeholder="Account Number" />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input name="Account Number" type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryAccountNumber" ng-blur="validateAccountNumber($index, false)" placeholder="Account Number" required />
+                                            <input name="Account Number" type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryAccountNumber" ng-blur="validateAccountNumber(false)" placeholder="Account Number" required />
                                         </div>
                                     </div>
                                     <p></p>
@@ -521,29 +521,29 @@
                                             <label for="liBeneficiaryType0" class="control-label" style="margin-left: 15px;">Type:</label>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input type="text" class="form-control" ng-model="accountDetail.IntermediaryType" id="liIntermediaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.IntermediaryType,'Intermediary',$index)" />
+                                            <input type="text" class="form-control" ng-model="accountDetail.IntermediaryType" id="liIntermediaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.IntermediaryType,'Intermediary')" />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input name="Beneficiary Type" type="text" class="form-control" ng-model="accountDetail.BeneficiaryType" id="liBeneficiaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.BeneficiaryType,'Beneficiary',$index)" required />
+                                            <input name="Beneficiary Type" type="text" class="form-control" ng-model="accountDetail.BeneficiaryType" id="liBeneficiaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.BeneficiaryType,'Beneficiary')" required />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryType" id="liUltimateBeneficiaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.UltimateBeneficiaryType,'UltimateBeneficiary',$index)" />
+                                            <input type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryType" id="liUltimateBeneficiaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.UltimateBeneficiaryType,'UltimateBeneficiary')" />
                                         </div>
                                     </div>
                                     <p></p>
                                     <div class="row">
                                         <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
                                             <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
-                                            <a class="btn btn-sm btn-info" ng-click="fnAddBeneficiaryModal($index)" title="Add Beneficiary"><i class="glyphicon glyphicon-plus"></i></a>
+                                            <a class="btn btn-sm btn-info" ng-click="fnAddBeneficiaryModal()" title="Add Beneficiary"><i class="glyphicon glyphicon-plus"></i></a>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input type="text" ng-model="accountDetail.Intermediary.BICorABA" class="form-control control-label" id="liIntermediaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.Intermediary.BICorABA,'Intermediary',$index)" />
+                                            <input type="text" ng-model="accountDetail.Intermediary.BICorABA" class="form-control control-label" id="liIntermediaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.Intermediary.BICorABA,'Intermediary')" />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input name="Beneficiary ABA/BIC" type="text" ng-model="accountDetail.Beneficiary.BICorABA" class="form-control control-label" id="liBeneficiaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.Beneficiary.BICorABA,'Beneficiary',$index)" required />
+                                            <input name="Beneficiary ABA/BIC" type="text" ng-model="accountDetail.Beneficiary.BICorABA" class="form-control control-label" id="liBeneficiaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.Beneficiary.BICorABA,'Beneficiary')" required />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth" id="divUltimateBeneficiaryBICorABA0">
-                                            <input type="text" ng-model="accountDetail.UltimateBeneficiary.BICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.UltimateBeneficiary.BICorABA,'UltimateBeneficiary',$index)" />
+                                            <input type="text" ng-model="accountDetail.UltimateBeneficiary.BICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.UltimateBeneficiary.BICorABA,'UltimateBeneficiary')" />
                                         </div>
                                     </div>
                                     <p></p>
@@ -582,10 +582,10 @@
                                 </div>
                             </div>
                             <div class="panel panel-default ng-show-hide" id="accountCallback_0" plindex="0" data-toggle='collapse' ng-if="isEdit">
-                                <div class="panel-heading" data-toggle="collapse" data-target="#accountCallbackInfo_0" aria-expanded="false" aria-controls="accountCallbackInfo_0" ng-click="adjustContainer($index, true)" style="position: sticky;top: 47px;z-index: 2;">
-                                    <b>Callback Check</b>
+                                <div class="panel-heading" data-toggle="collapse" data-target="#accountCallbackInfo_0" aria-expanded="false" aria-controls="accountCallbackInfo_0" ng-click="adjustContainer(true)" style="position: sticky;top: 47px;z-index: 2;">
+                                    <b>Callback Check</b>&nbsp;<span style="color: red"> *</span>
                                     <span class="pull-right">
-                                        <a class="btn btn-xs btn-primary" ng-click="fnAddCallbackModal($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Callback</a>&nbsp;&nbsp;
+                                        <a class="btn btn-xs btn-primary" ng-click="fnAddCallbackModal()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Callback</a>&nbsp;&nbsp;
                                         <i class="indicator glyphicon glyphicon-chevron-down"></i>
                                     </span>
                                 </div>
@@ -601,7 +601,7 @@
                                 </div>
                             </div>
                             <div class="panel panel-default ng-show-hide" id="accountContactInfo_0" data-toggle='collapse'>
-                                <div class="panel-heading" data-toggle="collapse" data-target="#accountContactDetailInfo_0" aria-expanded="false" aria-controls="accountContactDetailInfo_0" ng-click="adjustContainer($index, false)" style="position: sticky;top: 47px;z-index: 2;">
+                                <div class="panel-heading" data-toggle="collapse" data-target="#accountContactDetailInfo_0" aria-expanded="false" aria-controls="accountContactDetailInfo_0" ng-click="adjustContainer(false)" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Contact</b>
                                     <span class="pull-right">
                                         <a class="btn btn-xs btn-info" ng-click="$event.stopPropagation();fnCreateContact()"><i class="glyphicon glyphicon-phone"></i>&nbsp;Add Contact</a>&nbsp;&nbsp;
@@ -621,7 +621,7 @@
                                                 <label class="control-label">Contacts</label>
                                             </div>
                                             <div class="col-sm-8 col-md-3 col-lg-3 AdjustDropDownWidth liHMUsers">
-                                                <input ng-model="accountDetail.ContactName" class="form-control control-label accountDetail_ContactName" id="liContacts0" ng-change="fnOnContactNameChange(accountDetail.ContactName, $index)" />
+                                                <input ng-model="accountDetail.ContactName" class="form-control control-label accountDetail_ContactName" id="liContacts0" ng-change="fnOnContactNameChange(accountDetail.ContactName)" />
                                             </div>
                                         </div>
                                     </div>
@@ -660,7 +660,7 @@
                                                 @*<a id="accountMapRevert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Created','Revert')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</a>*@
                                             </span>
                                         }
-                                        <a class="btn btn-xs btn-primary" ng-click="$event.stopPropagation();fnAssociationSSI($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
+                                        <a class="btn btn-xs btn-primary" ng-click="$event.stopPropagation();fnAssociationSSI()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
                                         <i class="indicator glyphicon glyphicon-chevron-down"></i>
                                     </span>
                                 </div>

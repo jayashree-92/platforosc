@@ -196,49 +196,44 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }, 1000);
     }
 
-    $scope.fnGetCurrency = function (panelIndex) {
+    $scope.fnGetCurrency = function () {
         return $http.get("/Accounts/GetAllCurrencies").then(function (response) {
             $scope.currencies = response.data.currencies;
 
-            if (panelIndex != undefined && panelIndex != null) {
-                $("#liCurrency" + panelIndex).select2({
-                    placeholder: "Select a Currency",
-                    allowClear: true,
-                    data: response.data.currencies
-                });
+            $("#liCurrency0").select2({
+                placeholder: "Select a Currency",
+                allowClear: true,
+                data: response.data.currencies
+            });
 
-                if ($scope.onBoardingAccountDetails[panelIndex].Currency != null && $scope.onBoardingAccountDetails[panelIndex].Currency != 'undefined')
-                    $("#liCurrency" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].Currency);
-            }
+            if ($scope.onBoardingAccountDetails[0].Currency != null && $scope.onBoardingAccountDetails[0].Currency != 'undefined')
+                $("#liCurrency0").select2("val", $scope.onBoardingAccountDetails[0].Currency);
         });
     }
 
-    $scope.fnGetCashInstruction = function (panelIndex) {
+    $scope.fnGetCashInstruction = function () {
         return $http.get("/Accounts/GetAllCashInstruction").then(function (response) {
             $scope.cashInstructions = response.data.cashInstructions;
             $scope.timeZones = response.data.timeZones;
-            if (panelIndex != undefined && panelIndex != null) {
-                $("#liCashInstruction" + panelIndex).select2({
-                    placeholder: "Select a Cash Instruction",
-                    allowClear: true,
-                    data: response.data.cashInstructions
-                });
+            $("#liCashInstruction0").select2({
+                placeholder: "Select a Cash Instruction",
+                allowClear: true,
+                data: response.data.cashInstructions
+            });
 
-                if ($scope.onBoardingAccountDetails[panelIndex].CashInstruction != null && $scope.onBoardingAccountDetails[panelIndex].CashInstruction != 'undefined')
-                    $("#liCashInstruction" + panelIndex).select2("val", $scope.onBoardingAccountDetails[panelIndex].CashInstruction);
-
-            }
+            if ($scope.onBoardingAccountDetails[0].CashInstruction != null && $scope.onBoardingAccountDetails[0].CashInstruction != 'undefined')
+                $("#liCashInstruction0").select2("val", $scope.onBoardingAccountDetails[0].CashInstruction);
         });
     }
 
-    $scope.fnGetBicorAba = function (panelIndex) {
+    $scope.fnGetBicorAba = function () {
         return $http.get("/Accounts/GetAllAccountBicorAba").then(function (response) {
             $scope.accountBicorAba = response.data.accountBicorAba;
-            if (panelIndex != null) {
-                var isAba = $scope.isBicorAba == true ? "ABA" : "BIC";
-                $scope.fnToggleBeneficiaryBICorABA(isAba, 'Beneficiary', panelIndex);
-                $("#liBeneficiaryBICorABA" + panelIndex).select2("val", isAba);
-            }
+
+            var isAba = $scope.isBicorAba == true ? "ABA" : "BIC";
+            $scope.fnToggleBeneficiaryBICorABA(isAba, 'Beneficiary');
+            $("#liBeneficiaryBICorABA0").select2("val", isAba);
+
         });
     }
 
@@ -877,12 +872,18 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnUpdateAccountStatus = function (status, statusAction) {
-        $scope.AccountStatus = status;
 
         if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.accountDocuments.length == 0) {
-            notifyWarning("Please upload document to approve account");
+            notifyWarning("Please upload document to approve/request to approve account");
             return;
         }
+
+        if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.CallBackChecks.length == 0) {
+            notifyWarning("Please add atleast one Callback check to approve/request to approve account");
+            return;
+        }
+
+        $scope.AccountStatus = status;
         var confirmationMsg = "Are you sure you want to " + ((statusAction === "Request for Approval") ? "<b>request</b> for approval of" : "<b>" + (statusAction == "Revert" ? "save changes or sending approval for" : statusAction) + "</b>") + " the selected account?";
         if (statusAction == "Request for Approval") {
             $("#btnSaveComment").addClass("btn-warning").removeClass("btn-success").removeClass("btn-primary");
@@ -1064,12 +1065,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
     $scope.fnGetAccounts();
 
-    $scope.fnCashSweep = function (cashSweep, index) {
+    $scope.fnCashSweep = function (cashSweep) {
         //var cashSweepTimeZone = "#cashSweepTimeZone" + index;
         if (cashSweep == "Yes") {
-            $(".cashSweepTimeDiv" + index).show();
+            $(".cashSweepTimeDiv0").show();
         }
-        else $(".cashSweepTimeDiv" + index).hide();
+        else $(".cashSweepTimeDiv0").hide();
     }
 
     $scope.fnGetAuthorizedParty = function () {
@@ -1084,7 +1085,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             if ($scope.onBoardingAccountDetails[0].AuthorizedParty != null && $scope.onBoardingAccountDetails[0].AuthorizedParty != 'undefined') {
                 $("#liAuthorizedParty0").select2("val", $scope.onBoardingAccountDetails[0].AuthorizedParty);
-                $scope.fnAuthorizedPartyChange(0);
+                $scope.fnAuthorizedPartyChange();
             }
 
         });
@@ -1114,15 +1115,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
-    $scope.fnOnContactNameChange = function (contacts, index) {
+    $scope.fnOnContactNameChange = function (contacts) {
 
         if (contacts != "" && contacts != 'undefined') {
             names = contacts.split(',');
             var onboardingContacts = $filter('filter')(($scope.OnBoardingContactsDetails), function (c) {
                 return $.inArray(c.id.toString(), names) > -1;
             });
-            $scope.onBoardingAccountDetails[index].ContactName = contacts;
-            viewContactTable(onboardingContacts, index);
+            $scope.onBoardingAccountDetails[0].ContactName = contacts;
+            viewContactTable(onboardingContacts);
         }
     }
     $scope.fnOnSwiftGroupChange = function (swiftGroup) {
@@ -1138,97 +1139,96 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
     }
 
-    $scope.fnAuthorizedPartyChange = function (index) {
+    $scope.fnAuthorizedPartyChange = function () {
 
-        if ($scope.onBoardingAccountDetails[index].AuthorizedParty != "Hedgemark") {
-            $scope.onBoardingAccountDetails[index].IsReceivingAccount = true;
-            $scope.onBoardingAccountDetails[index].AccountModule = null;
-            $scope.onBoardingAccountDetails[index].SwiftGroupId = null;
-            $scope.onBoardingAccountDetails[index].SwiftGroup = null;
-            $scope.onBoardingAccountDetails[index].CashSweepTime = null;
-            $scope.onBoardingAccountDetails[index].CashSweepTimeZone = null;
-            $scope.onBoardingAccountDetails[index].CashSweep = 'No';
-            $("#liAccountModule_" + index).select2("val", null);
-            $("#liSwiftGroup" + index).select2("val", null);
-            $("#cashSweep" + index).select2("val", "No").trigger('change');
+        if ($scope.onBoardingAccountDetails[0].AuthorizedParty != "Hedgemark") {
+            $scope.onBoardingAccountDetails[0].IsReceivingAccount = true;
+            $scope.onBoardingAccountDetails[0].AccountModule = null;
+            $scope.onBoardingAccountDetails[0].SwiftGroupId = null;
+            $scope.onBoardingAccountDetails[0].SwiftGroup = null;
+            $scope.onBoardingAccountDetails[0].CashSweepTime = null;
+            $scope.onBoardingAccountDetails[0].CashSweepTimeZone = null;
+            $scope.onBoardingAccountDetails[0].CashSweep = 'No';
+            $("#liAccountModule_0").select2("val", null);
+            $("#liSwiftGroup0").select2("val", null);
+            $("#cashSweep0").select2("val", "No").trigger('change');
         }
         else
-            $scope.onBoardingAccountDetails[index].IsReceivingAccount = angular.copy($scope.onBoardingAccountDetails[index].IsReceivingAccountType);
+            $scope.onBoardingAccountDetails[0].IsReceivingAccount = angular.copy($scope.onBoardingAccountDetails[0].IsReceivingAccountType);
     }
 
-    $scope.fnCutOffTime = function (currency, cashInstruction, index) {
+    $scope.fnCutOffTime = function (currency, cashInstruction) {
 
         $http.get("/Accounts/GetCutoffTime?cashInstruction=" + cashInstruction + "&currency=" + currency).then(function (response) {
             var cutOff = response.data.cutOffTime;
 
-            $scope.onBoardingAccountDetails[index].WirePortalCutoff = {};
-            $scope.onBoardingAccountDetails[index].WirePortalCutoff.CutoffTime = new Date(2014, 0, 1, 0, 0, 0);
-            $scope.onBoardingAccountDetails[index].WirePortalCutoff.CutOffTimeZone = "EST";
+            $scope.onBoardingAccountDetails[0].WirePortalCutoff = {};
+            $scope.onBoardingAccountDetails[0].WirePortalCutoff.CutoffTime = new Date(2014, 0, 1, 0, 0, 0);
+            $scope.onBoardingAccountDetails[0].WirePortalCutoff.CutOffTimeZone = "EST";
 
             if (cutOff != undefined && cutOff != "") {
 
-                $scope.onBoardingAccountDetails[index].WirePortalCutoff.CutoffTime = new Date(2014, 0, 1, cutOff.CutoffTime.Hours, cutOff.CutoffTime.Minutes, cutOff.CutoffTime.Seconds);
-                //$("#cutOffTime" + index).val($scope.onBoardingAccountDetails[index].CutoffTime);
-                $scope.onBoardingAccountDetails[index].WirePortalCutoff.DaystoWire = cutOff.DaystoWire;
-                $scope.onBoardingAccountDetails[index].WirePortalCutoff.CutOffTimeZone = cutOff.CutOffTimeZone;
-                $scope.onBoardingAccountDetails[index].WirePortalCutoff.hmsWirePortalCutoffId = cutOff.hmsWirePortalCutoffId;
-                $scope.onBoardingAccountDetails[index].WirePortalCutoffId = cutOff.hmsWirePortalCutoffId;
+                $scope.onBoardingAccountDetails[0].WirePortalCutoff.CutoffTime = new Date(2014, 0, 1, cutOff.CutoffTime.Hours, cutOff.CutoffTime.Minutes, cutOff.CutoffTime.Seconds);
+                //$("#cutOffTime" + index).val($scope.onBoardingAccountDetails[0].CutoffTime);
+                $scope.onBoardingAccountDetails[0].WirePortalCutoff.DaystoWire = cutOff.DaystoWire;
+                $scope.onBoardingAccountDetails[0].WirePortalCutoff.CutOffTimeZone = cutOff.CutOffTimeZone;
+                $scope.onBoardingAccountDetails[0].WirePortalCutoff.hmsWirePortalCutoffId = cutOff.hmsWirePortalCutoffId;
+                $scope.onBoardingAccountDetails[0].WirePortalCutoffId = cutOff.hmsWirePortalCutoffId;
             }
             else {
-                $("#cutOffTime" + index).val("");
-                $("#wireDays" + index).val("");
+                $("#cutOffTime0").val("");
+                $("#wireDays0").val("");
             }
 
-            $scope.onBoardingAccountDetails[index].Currency = currency;
-            $scope.onBoardingAccountDetails[index].CashInstruction = cashInstruction;
+            $scope.onBoardingAccountDetails[0].Currency = currency;
+            $scope.onBoardingAccountDetails[0].CashInstruction = cashInstruction;
         });
     }
 
 
-    $scope.fnGetBankDetails = function (biCorAbaValue, id, index) {
+    $scope.fnGetBankDetails = function (biCorAbaValue, id) {
         $timeout(function () {
             var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
 
             switch (id) {
                 case "Beneficiary":
-                    $scope.onBoardingAccountDetails[index].Beneficiary = {};
+                    $scope.onBoardingAccountDetails[0].Beneficiary = {};
 
-                    $scope.onBoardingAccountDetails[index].BeneficiaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
-                    $scope.onBoardingAccountDetails[index].Beneficiary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
-                    $scope.onBoardingAccountDetails[index].Beneficiary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
-                    $scope.onBoardingAccountDetails[index].Beneficiary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
-                    $scope.onBoardingAccountDetails[index].Beneficiary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    $scope.onBoardingAccountDetails[0].BeneficiaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[0].Beneficiary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[0].Beneficiary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
+                    $scope.onBoardingAccountDetails[0].Beneficiary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[0].Beneficiary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
                     break;
                 case "Intermediary":
-                    $scope.onBoardingAccountDetails[index].Intermediary = {};
-                    $scope.onBoardingAccountDetails[index].IntermediaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
-                    $scope.onBoardingAccountDetails[index].Intermediary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
-                    $scope.onBoardingAccountDetails[index].Intermediary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
-                    $scope.onBoardingAccountDetails[index].Intermediary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
-                    $scope.onBoardingAccountDetails[index].Intermediary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    $scope.onBoardingAccountDetails[0].Intermediary = {};
+                    $scope.onBoardingAccountDetails[0].IntermediaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[0].Intermediary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[0].Intermediary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
+                    $scope.onBoardingAccountDetails[0].Intermediary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[0].Intermediary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
                     break;
                 case "UltimateBeneficiary":
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiary = {};
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
+                    $scope.onBoardingAccountDetails[0].UltimateBeneficiary = {};
+                    $scope.onBoardingAccountDetails[0].UltimateBeneficiaryBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[0].UltimateBeneficiary.onBoardingAccountBICorABAId = accountBicorAba == undefined ? "" : accountBicorAba.onBoardingAccountBICorABAId;
+                    $scope.onBoardingAccountDetails[0].UltimateBeneficiary.BICorABA = accountBicorAba == undefined ? "" : accountBicorAba.BICorABA;
+                    $scope.onBoardingAccountDetails[0].UltimateBeneficiary.BankName = accountBicorAba == undefined ? "" : accountBicorAba.BankName;
+                    $scope.onBoardingAccountDetails[0].UltimateBeneficiary.BankAddress = accountBicorAba == undefined ? "" : accountBicorAba.BankAddress;
                     break;
             }
         }, 100);
 
     }
 
-    $scope.fnToggleBeneficiaryBICorABA = function (item, id, index) {
-        //var $toggleBtn = $("#" + id + index);
+    $scope.fnToggleBeneficiaryBICorABA = function (item, id) {
         $timeout(function () {
 
             var isAba = (item == "ABA");
 
             switch (id) {
                 case "Beneficiary":
-                    //$scope.onBoardingAccountDetails[index].IsBeneficiaryABA = $("#btnBeneficiaryBICorABA" + index).prop("checked");
+                    //$scope.onBoardingAccountDetails[0].IsBeneficiaryABA = $("#btnBeneficiaryBICorABA" + 0).prop("checked");
 
                     var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
                     var accountBicorAbaData = [];
@@ -1238,17 +1238,17 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
                     accountBicorAbaData = $filter('orderBy')(accountBicorAbaData, 'text');
 
-                    if ($("#liBeneficiaryBICorABA" + index).data("select2")) {
-                        $("#liBeneficiaryBICorABA" + index).select2("destroy");
+                    if ($("#liBeneficiaryBICorABA0").data("select2")) {
+                        $("#liBeneficiaryBICorABA0").select2("destroy");
                     }
-                    $("#liBeneficiaryBICorABA" + index).select2({
+                    $("#liBeneficiaryBICorABA0").select2({
                         placeholder: "Select a beneficiary BIC or ABA",
                         allowClear: true,
                         data: accountBicorAbaData
                     });
                     break;
                 case "Intermediary":
-                    //$scope.onBoardingAccountDetails[index].IsIntermediaryABA = $("#btnIntermediaryBICorABA" + index).prop("checked");
+                    //$scope.onBoardingAccountDetails[0].IsIntermediaryABA = $("#btnIntermediaryBICorABA" + 0).prop("checked");
                     var intermediaryBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
                     var intermediaryBicorAbaData = [];
                     $.each(intermediaryBicorAba, function (key, value) {
@@ -1257,35 +1257,35 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
                     intermediaryBicorAbaData = $filter('orderBy')(intermediaryBicorAbaData, 'text');
 
-                    if ($("#liIntermediaryBICorABA" + index).data("select2")) {
-                        $("#liIntermediaryBICorABA" + index).select2("destroy");
+                    if ($("#liIntermediaryBICorABA0").data("select2")) {
+                        $("#liIntermediaryBICorABA0").select2("destroy");
                     }
-                    $("#liIntermediaryBICorABA" + index).select2({
+                    $("#liIntermediaryBICorABA0").select2({
                         placeholder: "Select a intermediary BIC or ABA",
                         allowClear: true,
                         data: intermediaryBicorAbaData
                     });
                     break;
                 case "UltimateBeneficiary":
-                    //$scope.onBoardingAccountDetails[index].IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + index).prop("checked");
-                    $scope.onBoardingAccountDetails[index].UltimateBeneficiaryType = item;
+                    //$scope.onBoardingAccountDetails[0].IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + 0).prop("checked");
+                    $scope.onBoardingAccountDetails[0].UltimateBeneficiaryType = item;
 
                     if (item == "Account Name") {
-                        $("#divUltimateBeneficiaryBICorABA" + index).hide();
-                        $("#ultimateBankName" + index).hide();
-                        $("#ultimateBankAddress" + index).hide();
-                        $("#accountName" + index).show();
-                        $scope.onBoardingAccountDetails[index].UltimateBeneficiary = {};
-                        //$scope.onBoardingAccountDetails[index].UltimateBeneficiaryBICorABA = null;
-                        //$scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankName = null;
-                        //$scope.onBoardingAccountDetails[index].UltimateBeneficiaryBankAddress = null;
+                        $("#divUltimateBeneficiaryBICorABA0").hide();
+                        $("#ultimateBankName0").hide();
+                        $("#ultimateBankAddress0").hide();
+                        $("#accountName0").show();
+                        $scope.onBoardingAccountDetails[0].UltimateBeneficiary = {};
+                        //$scope.onBoardingAccountDetails[0].UltimateBeneficiaryBICorABA = null;
+                        //$scope.onBoardingAccountDetails[0].UltimateBeneficiaryBankName = null;
+                        //$scope.onBoardingAccountDetails[0].UltimateBeneficiaryBankAddress = null;
                         return;
                     } else {
-                        $("#divUltimateBeneficiaryBICorABA" + index).show();
-                        $("#ultimateBankName" + index).show();
-                        $("#ultimateBankAddress" + index).show();
-                        $("#accountName" + index).hide();
-                        $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountName = null;
+                        $("#divUltimateBeneficiaryBICorABA0").show();
+                        $("#ultimateBankName0").show();
+                        $("#ultimateBankAddress0").show();
+                        $("#accountName0").hide();
+                        $scope.onBoardingAccountDetails[0].UltimateBeneficiaryAccountName = null;
                     }
                     var ultimateBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
                     var ultimateBicorAbaData = [];
@@ -1295,10 +1295,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
                     ultimateBicorAbaData = $filter('orderBy')(ultimateBicorAbaData, 'text');
 
-                    if ($("#liUltimateBeneficiaryBICorABA" + index).data("select2")) {
-                        $("#liUltimateBeneficiaryBICorABA" + index).select2("destroy");
+                    if ($("#liUltimateBeneficiaryBICorABA0").data("select2")) {
+                        $("#liUltimateBeneficiaryBICorABA0").select2("destroy");
                     }
-                    $("#liUltimateBeneficiaryBICorABA" + index).select2({
+                    $("#liUltimateBeneficiaryBICorABA0").select2({
                         placeholder: "Select a ultimate beneficiary BIC or ABA",
                         allowClear: true,
                         data: ultimateBicorAbaData
@@ -1426,8 +1426,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#accountDetailModal").modal("hide");
     }
 
-    $scope.fnAddAccountDetailModal = function (panelIndex, detail) {
-        $scope.PanelIndex = panelIndex;
+    $scope.fnAddAccountDetailModal = function (detail) {
         $scope.detail = detail;
         //$scope.scrollPosition = $(window).scrollTop();
         //$("#txtGoverningLaw").prop("placeholder", "Enter a governing law");
@@ -1925,9 +1924,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
 
 
-            $scope.fnToggleBeneficiaryBICorABA(value.BeneficiaryType, "Beneficiary", key);
-            $scope.fnToggleBeneficiaryBICorABA(value.IntermediaryType, "Intermediary", key);
-            $scope.fnToggleBeneficiaryBICorABA(value.UltimateBeneficiaryType, "UltimateBeneficiary", key);
+            $scope.fnToggleBeneficiaryBICorABA(value.BeneficiaryType, "Beneficiary");
+            $scope.fnToggleBeneficiaryBICorABA(value.IntermediaryType, "Intermediary");
+            $scope.fnToggleBeneficiaryBICorABA(value.UltimateBeneficiaryType, "UltimateBeneficiary");
 
             if (value.onBoardingAccountStatus == createdStatus) {
                 $("#spnAgrCurrentStatus").html("Saved as Draft");
@@ -1948,7 +1947,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.fnSsiTemplateMap(value.onBoardingAccountId, $scope.FundId, key, value.Currency);
             attachment(key);
             $scope.fnAccountDocuments(value.onBoardingAccountId, key);
-            $scope.validateAccountNumber(0, true);
+            $scope.validateAccountNumber(true);
         });
 
         $("#accountDetailCP .panel-default .panel-heading").on("click", function (e) {
@@ -2085,7 +2084,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             })
         }).then(function () {
             notifySuccess("Ssi template mapped to account successfully");
-            //$scope.onBoardingAccountDetails[$scope.PanelIndex].onBoardingAccountSSITemplateMaps.push($scope.onBoardingAccountSSITemplateMap);
+            //$scope.onBoardingAccountDetails[0].onBoardingAccountSSITemplateMaps.push($scope.onBoardingAccountSSITemplateMap);
             var thisAccount = $filter('filter')($scope.onBoardingAccountDetails, { 'onBoardingAccountId': $scope.onBoardingAccountId }, true)[0];
             if (thisAccount != undefined)
                 $scope.fnSsiTemplateMap(thisAccount.onBoardingAccountId, $scope.FundId, 0, thisAccount.Currency);
@@ -2094,12 +2093,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#accountSSITemplateMapModal").modal("hide");
     }
     $scope.isAssociationVisible = false;
-    $scope.fnAssociationSSI = function (panelIndex) {
+    $scope.fnAssociationSSI = function () {
 
-
-        console.log($scope.ssiTemplates);
-
-        $scope.PanelIndex = panelIndex;
         if ($("#ssiTemplateTableMap").hasClass("initialized")) {
             fnDestroyDataTable("#ssiTemplateTableMap");
         }
@@ -2307,16 +2302,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $http.post("/Accounts/AddCurrency", { currency: $("#txtCurrency").val() }).then(function (response) {
             notifySuccess("Currency added successfully");
-            $scope.onBoardingAccountDetails[$scope.PanelIndex].Currency = $("#txtCurrency").val();
-            $scope.fnGetCurrency($scope.PanelIndex);
+            $scope.onBoardingAccountDetails[0].Currency = $("#txtCurrency").val();
+            $scope.fnGetCurrency();
             $("#txtCurrency").val("");
         });
 
         $("#currencyModal").modal("hide");
     }
 
-    $scope.fnAddCurrencyModal = function (panelIndex) {
-        $scope.PanelIndex = panelIndex;
+    $scope.fnAddCurrencyModal = function () {
         $("#currencyModal").modal({
             show: true,
             keyboard: true
@@ -2366,44 +2360,43 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $http.post("/Accounts/AddCashInstruction", { cashInstruction: $("#txtCashInstruction").val() }).then(function (response) {
             notifySuccess("Cash instruction mechanism added successfully");
-            $scope.onBoardingAccountDetails[$scope.PanelIndex].CashInstruction = $("#txtCashInstruction").val();
-            $scope.fnGetCashInstruction($scope.PanelIndex);
+            $scope.onBoardingAccountDetails[0].CashInstruction = $("#txtCashInstruction").val();
+            $scope.fnGetCashInstruction();
             $("#txtCashInstruction").val("");
         });
 
         $("#cashInstructionModal").modal("hide");
     }
 
-    $scope.validateAccountNumber = function (index, isFFC) {
+    $scope.validateAccountNumber = function (isFfc) {
 
-        var onBoardingAccount = $scope.onBoardingAccountDetails[index];
+        var onBoardingAccount = $scope.onBoardingAccountDetails[0];
 
-        if ((isFFC && $scope.onBoardingAccountDetails[index].FFCNumber == null || $scope.onBoardingAccountDetails[index].FFCNumber == "") || ($scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber == null || $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber == "")) {
-            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
+        if ((isFfc && onBoardingAccount.FFCNumber == null || onBoardingAccount.FFCNumber == "") || (onBoardingAccount.UltimateBeneficiaryAccountNumber == null || onBoardingAccount.UltimateBeneficiaryAccountNumber == "")) {
+            onBoardingAccount.ContactNumber = angular.copy(onBoardingAccount.FFCNumber == undefined || onBoardingAccount.FFCNumber == "" ? onBoardingAccount.UltimateBeneficiaryAccountNumber : onBoardingAccount.FFCNumber);
             return;
         }
 
         var acc = $filter('filter')(angular.copy($scope.allAccountList), function (account) {
-            return account.Account.onBoardingAccountId != $scope.onBoardingAccountDetails[index].onBoardingAccountId &&
-                account.Account.FFCNumber == $scope.onBoardingAccountDetails[index].FFCNumber && account.Account.UltimateBeneficiaryAccountNumber == $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber;
+            return account.Account.onBoardingAccountId != onBoardingAccount.onBoardingAccountId &&
+                account.Account.FFCNumber == onBoardingAccount.FFCNumber && account.Account.UltimateBeneficiaryAccountNumber == onBoardingAccount.UltimateBeneficiaryAccountNumber;
         }, true)[0];
         if (acc == undefined) {
-            $scope.onBoardingAccountDetails[index].ContactNumber = angular.copy($scope.onBoardingAccountDetails[index].FFCNumber == undefined || $scope.onBoardingAccountDetails[index].FFCNumber == "" ? $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber : $scope.onBoardingAccountDetails[index].FFCNumber);
+            onBoardingAccount.ContactNumber = angular.copy(onBoardingAccount.FFCNumber == undefined || onBoardingAccount.FFCNumber == "" ? onBoardingAccount.UltimateBeneficiaryAccountNumber : onBoardingAccount.FFCNumber);
         }
         else {
-            var accNo = angular.copy(isFFC ? $scope.onBoardingAccountDetails[index].FFCNumber : $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber);
-            if (isFFC)
-                $scope.onBoardingAccountDetails[index].FFCNumber = "";
+            var accNo = angular.copy(isFfc ? onBoardingAccount.FFCNumber : onBoardingAccount.UltimateBeneficiaryAccountNumber);
+            if (isFfc)
+                onBoardingAccount.FFCNumber = "";
             else
-                $scope.onBoardingAccountDetails[index].UltimateBeneficiaryAccountNumber = "";
+                onBoardingAccount.UltimateBeneficiaryAccountNumber = "";
             notifyError("Please choose a different FFC Number or Account Number as an account exists with same information - " + accNo);
         }
     }
 
     angular.element("#txtCashInstruction").on("focusin", function () { angular.element("#txtCashInstruction").popover("hide"); });
 
-    $scope.fnAddCashInstructionModal = function (panelIndex) {
-        $scope.PanelIndex = panelIndex;
+    $scope.fnAddCashInstructionModal = function () {
         $("#cashInstructionModal").modal({
             show: true,
             keyboard: true
@@ -2528,7 +2521,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             notifySuccess("Beneficiary BIC or ABA added successfully");
             $scope.BicorAba = $("#txtBICorABA").val().toUpperCase();
             $scope.isBicorAba = $("#btnBICorABA").prop("checked");
-            $scope.fnGetBicorAba($scope.PanelIndex);
+            $scope.fnGetBicorAba(0);
             $("#txtBICorABA").val("");
             $("#txtBankName").val("");
             $("#txtBankAddress").val("");
@@ -2542,8 +2535,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     angular.element("#txtBankName").on("focusin", function () { angular.element("#txtBankName").popover("hide"); });
     angular.element("#txtBankAddress").on("focusin", function () { angular.element("#txtBankAddress").popover("hide"); });
 
-    $scope.fnAddBeneficiaryModal = function (panelIndex) {
-        $scope.PanelIndex = panelIndex;
+    $scope.fnAddBeneficiaryModal = function () {
         $("#beneficiaryABABICModal").modal({
             show: true,
             keyboard: true
@@ -2594,16 +2586,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $http.post("/Accounts/AddAuthorizedParty", { authorizedParty: $("#txtAuthorizedParty").val() }).then(function (response) {
             notifySuccess("Authorized Party added successfully");
-            $scope.onBoardingAccountDetails[$scope.PanelIndex].AuthorizedParty = $("#txtAuthorizedParty").val();
-            $scope.fnGetAuthorizedParty($scope.PanelIndex);
+            $scope.onBoardingAccountDetails[0].AuthorizedParty = $("#txtAuthorizedParty").val();
+            $scope.fnGetAuthorizedParty(0);
             $("#txtAuthorizedParty").val("");
         });
 
         $("#authorizedPartyModal").modal("hide");
     }
 
-    $scope.fnAddAuthorizedPartyModal = function (panelIndex) {
-        $scope.PanelIndex = panelIndex;
+    $scope.fnAddAuthorizedPartyModal = function () {
         $("#authorizedPartyModal").modal({
             show: true,
             keyboard: true
@@ -2668,9 +2659,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $http.post("/Accounts/AddSwiftGroup", { swiftGroup: $("#txtSwiftGroup").val(), senderBic: $("#txtSendersBIC").val().toUpperCase() }).then(function (response) {
             notifySuccess("Swift Group added successfully");
-            $scope.onBoardingAccountDetails[$scope.PanelIndex].SwiftGroup = $("#txtSwiftGroup").val();
-            $scope.onBoardingAccountDetails[$scope.PanelIndex].SendersBIC = $("#txtSendersBIC").val().toUpperCase();
-            $scope.fnGetSwiftGroup($scope.PanelIndex);
+            $scope.onBoardingAccountDetails[0].SwiftGroup = $("#txtSwiftGroup").val();
+            $scope.onBoardingAccountDetails[0].SendersBIC = $("#txtSendersBIC").val().toUpperCase();
+            $scope.fnGetSwiftGroup(0);
             $("#txtSwiftGroup").val("");
             $("#txtSendersBIC").val("");
         });
@@ -2678,8 +2669,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#swiftGroupModal").modal("hide");
     }
 
-    $scope.fnAddSwiftGroupModal = function (panelIndex) {
-        $scope.PanelIndex = panelIndex;
+    $scope.fnAddSwiftGroupModal = function () {
         $("#swiftGroupModal").modal({
             show: true,
             keyboard: true
@@ -2771,9 +2761,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#callbackModal").modal("hide");
     }
 
-    $scope.fnAddCallbackModal = function (panelIndex) {
-        $scope.PanelIndex = panelIndex;
-        $scope.callback = { onBoardingAccountId: $scope.onBoardingAccountDetails[panelIndex].onBoardingAccountId };
+    $scope.fnAddCallbackModal = function () {
+        $scope.callback = { onBoardingAccountId: $scope.onBoardingAccountDetails[0].onBoardingAccountId };
         $("#callbackModal").modal({
             show: true,
             keyboard: true
@@ -2784,15 +2773,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.accountCallbackTable = [];
-    $scope.adjustContainer = function (index, isCallback) {
+    $scope.adjustContainer = function (isCallback) {
         $timeout(function () {
             if (isCallback) {
-                if ($scope.accountCallbackTable[index] != undefined)
-                    $scope.accountCallbackTable[index].columns.adjust().draw(true);
+                if ($scope.accountCallbackTable[0] != undefined)
+                    $scope.accountCallbackTable[0].columns.adjust().draw(true);
             }
             else {
-                if ($scope.contactTable[index] != undefined)
-                    $scope.contactTable[index].columns.adjust().draw(true);
+                if ($scope.contactTable[0] != undefined)
+                    $scope.contactTable[0].columns.adjust().draw(true);
             }
         }, 100);
     }

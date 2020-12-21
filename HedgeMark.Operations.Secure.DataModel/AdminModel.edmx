@@ -129,6 +129,7 @@
           <Property Name="CounterpartyRegistrationNumber" Type="varchar" MaxLength="2000" />
           <Property Name="LEI" Type="varchar" MaxLength="500" />
           <Property Name="DomicileChoiceId" Type="bigint" />
+          <Property Name="SEC" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="dmaFundOnBoardPermissions">
           <Key>
@@ -244,7 +245,7 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="dmaClientOnBoardId" Type="bigint" />
           <Property Name="ActualLaunchDate" Type="datetime" />
           <Property Name="TradeStartDate" Type="datetime" />
-          <Property Name="FundAdministrator" Type="bigint" />
+          <Property Name="AdminChoiceId" Type="bigint" />
           <Property Name="AdminChoice" Type="varchar" MaxLength="1000" />
           <Property Name="FundStructureId" Type="bigint" />
         </EntityType>
@@ -432,7 +433,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
     [vw_HFund].[dmaClientOnBoardId] AS [dmaClientOnBoardId], 
     [vw_HFund].[ActualLaunchDate] AS [ActualLaunchDate], 
     [vw_HFund].[TradeStartDate] AS [TradeStartDate], 
-    [vw_HFund].[FundAdministrator] AS [FundAdministrator], 
+    [vw_HFund].[AdminChoiceId] AS [AdminChoiceId], 
     [vw_HFund].[AdminChoice] AS [AdminChoice], 
     [vw_HFund].[FundStructureId] AS [FundStructureId]
     FROM [dbo].[vw_HFund] AS [vw_HFund]</DefiningQuery>
@@ -655,13 +656,13 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           </AssociationSet>
           <EntitySet Name="dmaOnBoardingContactDetails" EntityType="AdminModel.dmaOnBoardingContactDetail" />
           <EntitySet Name="OnBoardingServiceProviders" EntityType="AdminModel.OnBoardingServiceProvider" />
-          <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
           <EntitySet Name="vw_CounterpartyAgreements" EntityType="AdminModel.vw_CounterpartyAgreements" />
           <EntitySet Name="onboardingContactFundMaps" EntityType="AdminModel.onboardingContactFundMap" />
           <AssociationSet Name="FK_onboardingContactFundMap_dmaOnBoardingContactDetailId" Association="AdminModel.FK_onboardingContactFundMap_dmaOnBoardingContactDetailId">
             <End Role="dmaOnBoardingContactDetail" EntitySet="dmaOnBoardingContactDetails" />
             <End Role="onboardingContactFundMap" EntitySet="onboardingContactFundMaps" />
           </AssociationSet>
+          <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -753,6 +754,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <Property Name="CounterpartyRegistrationNumber" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
           <Property Name="LEI" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="DomicileChoiceId" Type="Int64" />
+          <Property Name="SEC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="dmaFundOnBoardPermission">
           <Key>
@@ -850,37 +852,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <Property Name="OnBoardingServiceProviderId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FeeType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ServiceProvider" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="vw_HFund">
-          <Key>
-            <PropertyRef Name="hmFundId" />
-            <PropertyRef Name="LegalFundName" />
-            <PropertyRef Name="HMRAName" />
-            <PropertyRef Name="FundType" />
-          </Key>
-          <Property Name="hmFundId" Type="Int32" Nullable="false" />
-          <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="LegalFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="HMRAName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FundType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FundStatus" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="DataProviderNameId" Type="Int32" />
-          <Property Name="DataProviderName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="varPositionFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="NAVFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FundLegalStructure" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="BaseCurrencyShareclass" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
-          <Property Name="AccountingMethod" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FiscalYearEnd" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="FundManagerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FundManagerID" Type="Int32" />
-          <Property Name="dmaFundOnBoardId" Type="Int64" />
-          <Property Name="dmaClientOnBoardId" Type="Int64" />
-          <Property Name="ActualLaunchDate" Type="DateTime" Precision="3" />
-          <Property Name="TradeStartDate" Type="DateTime" Precision="3" />
-          <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="FundStructureId" Type="Int64" />
-          <Property Name="FundAdministrator" Type="Int64" />
         </EntityType>
         <EntityType Name="vw_CounterpartyAgreements">
           <Key>
@@ -1004,6 +975,37 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="vw_HFund">
+          <Key>
+            <PropertyRef Name="hmFundId" />
+            <PropertyRef Name="LegalFundName" />
+            <PropertyRef Name="HMRAName" />
+            <PropertyRef Name="FundType" />
+          </Key>
+          <Property Name="hmFundId" Type="Int32" Nullable="false" />
+          <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LegalFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HMRAName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FundType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FundStatus" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DataProviderNameId" Type="Int32" />
+          <Property Name="DataProviderName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="varPositionFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="NAVFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FundLegalStructure" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="BaseCurrencyShareclass" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="AccountingMethod" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FiscalYearEnd" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="FundManagerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FundManagerID" Type="Int32" />
+          <Property Name="dmaFundOnBoardId" Type="Int64" />
+          <Property Name="dmaClientOnBoardId" Type="Int64" />
+          <Property Name="ActualLaunchDate" Type="DateTime" Precision="3" />
+          <Property Name="TradeStartDate" Type="DateTime" Precision="3" />
+          <Property Name="AdminChoiceId" Type="Int64" />
+          <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="FundStructureId" Type="Int64" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1180,6 +1182,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <EntitySetMapping Name="dmaCounterPartyOnBoardings">
             <EntityTypeMapping TypeName="AdminModel.dmaCounterPartyOnBoarding">
               <MappingFragment StoreEntitySet="dmaCounterPartyOnBoarding">
+                <ScalarProperty Name="SEC" ColumnName="SEC" />
                 <ScalarProperty Name="DomicileChoiceId" ColumnName="DomicileChoiceId" />
                 <ScalarProperty Name="LEI" ColumnName="LEI" />
                 <ScalarProperty Name="CounterpartyRegistrationNumber" ColumnName="CounterpartyRegistrationNumber" />
@@ -1286,35 +1289,6 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="vw_HFund">
-            <EntityTypeMapping TypeName="AdminModel.vw_HFund">
-              <MappingFragment StoreEntitySet="vw_HFund">
-                <ScalarProperty Name="FundAdministrator" ColumnName="FundAdministrator" />
-                <ScalarProperty Name="FundStructureId" ColumnName="FundStructureId" />
-                <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
-                <ScalarProperty Name="TradeStartDate" ColumnName="TradeStartDate" />
-                <ScalarProperty Name="ActualLaunchDate" ColumnName="ActualLaunchDate" />
-                <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
-                <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
-                <ScalarProperty Name="FundManagerID" ColumnName="FundManagerID" />
-                <ScalarProperty Name="FundManagerName" ColumnName="FundManagerName" />
-                <ScalarProperty Name="FiscalYearEnd" ColumnName="FiscalYearEnd" />
-                <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
-                <ScalarProperty Name="BaseCurrencyShareclass" ColumnName="BaseCurrencyShareclass" />
-                <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
-                <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />
-                <ScalarProperty Name="varPositionFrequency" ColumnName="varPositionFrequency" />
-                <ScalarProperty Name="DataProviderName" ColumnName="DataProviderName" />
-                <ScalarProperty Name="DataProviderNameId" ColumnName="DataProviderNameId" />
-                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
-                <ScalarProperty Name="FundType" ColumnName="FundType" />
-                <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
-                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
-                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
-                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="vw_CounterpartyAgreements">
             <EntityTypeMapping TypeName="AdminModel.vw_CounterpartyAgreements">
               <MappingFragment StoreEntitySet="vw_CounterpartyAgreements">
@@ -1415,6 +1389,35 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
                 <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
                 <ScalarProperty Name="dmaOnBoardingContactDetailId" ColumnName="dmaOnBoardingContactDetailId" />
                 <ScalarProperty Name="onboardingContactFundMapId" ColumnName="onboardingContactFundMapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_HFund">
+            <EntityTypeMapping TypeName="AdminModel.vw_HFund">
+              <MappingFragment StoreEntitySet="vw_HFund">
+                <ScalarProperty Name="FundStructureId" ColumnName="FundStructureId" />
+                <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
+                <ScalarProperty Name="AdminChoiceId" ColumnName="AdminChoiceId" />
+                <ScalarProperty Name="TradeStartDate" ColumnName="TradeStartDate" />
+                <ScalarProperty Name="ActualLaunchDate" ColumnName="ActualLaunchDate" />
+                <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
+                <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
+                <ScalarProperty Name="FundManagerID" ColumnName="FundManagerID" />
+                <ScalarProperty Name="FundManagerName" ColumnName="FundManagerName" />
+                <ScalarProperty Name="FiscalYearEnd" ColumnName="FiscalYearEnd" />
+                <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
+                <ScalarProperty Name="BaseCurrencyShareclass" ColumnName="BaseCurrencyShareclass" />
+                <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
+                <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />
+                <ScalarProperty Name="varPositionFrequency" ColumnName="varPositionFrequency" />
+                <ScalarProperty Name="DataProviderName" ColumnName="DataProviderName" />
+                <ScalarProperty Name="DataProviderNameId" ColumnName="DataProviderNameId" />
+                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
+                <ScalarProperty Name="FundType" ColumnName="FundType" />
+                <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
+                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
+                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
+                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

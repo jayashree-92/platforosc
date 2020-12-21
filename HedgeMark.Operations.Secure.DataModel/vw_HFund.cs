@@ -34,8 +34,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> dmaClientOnBoardId { get; set; }
         public Nullable<System.DateTime> ActualLaunchDate { get; set; }
         public Nullable<System.DateTime> TradeStartDate { get; set; }
+        public Nullable<long> AdminChoiceId { get; set; }
         public string AdminChoice { get; set; }
         public Nullable<long> FundStructureId { get; set; }
-        public Nullable<long> FundAdministrator { get; set; }
     }
 }

@@ -1639,10 +1639,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.IsNormalTransfer = $scope.WireTicket.WireTransferTypeId == 1;
             $scope.wireTicketObj.IsNotice = $scope.WireTicket.WireTransferTypeId == 4;
 
-            if ($scope.wireTicketObj.IsNotice)
-                $("#wireValueDate").datepicker("setStartDate", "-14d");
-            else
-                $("#wireValueDate").datepicker("setStartDate", "+0d");
+            //if ($scope.wireTicketObj.IsNotice)
+            //    $("#wireValueDate").datepicker("setStartDate", "-14d");
+            //else
+            //    $("#wireValueDate").datepicker("setStartDate", "+0d");
 
             $("#liWiresPurpose").select2("val", "").trigger("change");
             $("#liFund").select2("val", "").trigger("change");
