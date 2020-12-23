@@ -3,10 +3,10 @@
  
   <!--Project properties-->
   <property name="buildDirectory" value="../HedgeMark.Operations.Secure.Web/bin" /> 
-  <property name="Configuration" value="QA" overwrite="false"/>
+  <property name="Configuration" value="Release" overwrite="false"/>
   <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
   <property name="ProjectFile" value="../HedgeMark.Operations.Secure.Web/HMOSecureWeb.csproj"/>   
-  <property name="OutputFile1" value="../HedgeMark.Operations.Secure.Web/obj/QA/"/>   
+  <property name="OutputFile1" value="../HedgeMark.Operations.Secure.Web/obj/Release/"/>   
   <property name="sourcePackageLocation" value="\\wc08a10009pv00\d$\Operations_Secure_Jenkins\QA"/>
   <property name="UnitTestProjectReference" value="../HedgeMark.SwiftMessageHandler.Tests/bin/QA/HedgeMark.SwiftMessageHandler.Tests.dll" />  
    
