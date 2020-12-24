@@ -245,7 +245,7 @@ warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defin
           <Property Name="dmaClientOnBoardId" Type="bigint" />
           <Property Name="ActualLaunchDate" Type="datetime" />
           <Property Name="TradeStartDate" Type="datetime" />
-          <Property Name="AdminChoiceId" Type="bigint" />
+          <Property Name="FundAdministrator" Type="bigint" />
           <Property Name="AdminChoice" Type="varchar" MaxLength="1000" />
           <Property Name="FundStructureId" Type="bigint" />
         </EntityType>
@@ -433,7 +433,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
     [vw_HFund].[dmaClientOnBoardId] AS [dmaClientOnBoardId], 
     [vw_HFund].[ActualLaunchDate] AS [ActualLaunchDate], 
     [vw_HFund].[TradeStartDate] AS [TradeStartDate], 
-    [vw_HFund].[AdminChoiceId] AS [AdminChoiceId], 
+    [vw_HFund].[FundAdministrator] AS [FundAdministrator], 
     [vw_HFund].[AdminChoice] AS [AdminChoice], 
     [vw_HFund].[FundStructureId] AS [FundStructureId]
     FROM [dbo].[vw_HFund] AS [vw_HFund]</DefiningQuery>
@@ -1002,7 +1002,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <Property Name="dmaClientOnBoardId" Type="Int64" />
           <Property Name="ActualLaunchDate" Type="DateTime" Precision="3" />
           <Property Name="TradeStartDate" Type="DateTime" Precision="3" />
-          <Property Name="AdminChoiceId" Type="Int64" />
+          <Property Name="FundAdministrator" Type="Int64" />
           <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="FundStructureId" Type="Int64" />
         </EntityType>
@@ -1397,7 +1397,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
               <MappingFragment StoreEntitySet="vw_HFund">
                 <ScalarProperty Name="FundStructureId" ColumnName="FundStructureId" />
                 <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
-                <ScalarProperty Name="AdminChoiceId" ColumnName="AdminChoiceId" />
+                <ScalarProperty Name="FundAdministrator" ColumnName="FundAdministrator" />
                 <ScalarProperty Name="TradeStartDate" ColumnName="TradeStartDate" />
                 <ScalarProperty Name="ActualLaunchDate" ColumnName="ActualLaunchDate" />
                 <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
