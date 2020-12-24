@@ -2,7 +2,7 @@
 using System.Globalization;
 using Com.HedgeMark.Commons;
 
-namespace HMOSecureMiddleware.Util
+namespace HedgeMark.Operations.Secure.Middleware.Util
 {
     public static class Utility
     {

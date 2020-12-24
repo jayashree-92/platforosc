@@ -7,13 +7,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Com.HedgeMark.Commons;
 using HedgeMark.Operations.Secure.DataModel;
-using HMOSecureMiddleware.Util;
+using HedgeMark.Operations.Secure.Middleware.Util;
 using IBM.WMQ;
-using IBM.XMS;
 using log4net;
 using MQC = IBM.WMQ.MQC;
 
-namespace HMOSecureMiddleware.Queues
+namespace HedgeMark.Operations.Secure.Middleware.Queues
 {
     public class QueueSystemManager
     {

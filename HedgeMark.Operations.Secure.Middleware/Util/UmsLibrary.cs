@@ -1,14 +1,14 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using HMOSecureMiddleware.UserManagementService;
+using HedgeMark.Operations.Secure.Middleware.UserManagementService;
+using log4net;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware.Util
 {
     public class UmsLibrary
     {

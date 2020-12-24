@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HedgeMark.Operations.Secure.DataModel;
+﻿using HedgeMark.Operations.Secure.DataModel;
 
-namespace HMOSecureMiddleware.Models
+namespace HedgeMark.Operations.Secure.Middleware.Models
 {
     public class SwiftGroupData
     {

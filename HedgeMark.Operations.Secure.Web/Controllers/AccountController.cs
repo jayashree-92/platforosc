@@ -8,7 +8,7 @@ using System.Web.Security;
 using Com.HedgeMark.Commons;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.DataModel.Models;
-using HMOSecureMiddleware;
+using HedgeMark.Operations.Secure.Middleware;
 using log4net;
 
 namespace HMOSecureWeb.Controllers

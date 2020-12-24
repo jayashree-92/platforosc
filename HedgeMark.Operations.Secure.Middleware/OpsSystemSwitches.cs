@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware
 {
     public class SystemSwitches : Switches
     {

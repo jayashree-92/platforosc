@@ -1,10 +1,10 @@
-﻿using System.IO;
-using Com.HedgeMark.Commons;
-using System.Collections.Generic;
-using HedgeMark.Operations.Secure.DataModel;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Com.HedgeMark.Commons;
+using HedgeMark.Operations.Secure.DataModel;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware
 {
     public class FileSystemManager
     {

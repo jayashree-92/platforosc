@@ -1,17 +1,17 @@
 ﻿using System;
 using System.IO;
-using HMOSecureMiddleware.Models;
+using System.Linq;
 using Com.HedgeMark.Commons;
+using Com.HedgeMark.Commons.Extensions;
+using HedgeMark.Operations.Secure.Middleware.Models;
+using HedgeMark.Operations.Secure.Middleware.Util;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT1XX;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT2XX;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT5XX;
-using System.Linq;
-using HMOSecureMiddleware.Util;
-using Com.HedgeMark.Commons.Extensions;
 
-namespace HMOSecureMiddleware.SwiftMessageManager
+namespace HedgeMark.Operations.Secure.Middleware.SwiftMessageManager
 {
     public class OutboundSwiftMsgCreator
     {

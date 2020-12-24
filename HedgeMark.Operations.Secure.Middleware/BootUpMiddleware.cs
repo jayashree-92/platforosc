@@ -1,8 +1,8 @@
-﻿using HMOSecureMiddleware.Queues;
-using HMOSecureMiddleware.Util;
+﻿using HedgeMark.Operations.Secure.Middleware.Queues;
+using HedgeMark.Operations.Secure.Middleware.Util;
 using log4net;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware
 {
     public static class BootUpMiddleware
     {

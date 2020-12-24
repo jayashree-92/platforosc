@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace HMOSecureMiddleware.UserManagementService {
+namespace HedgeMark.Operations.Secure.Middleware.UserManagementService {
     
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -58,7 +58,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -132,7 +132,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -248,7 +248,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -294,7 +294,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -359,290 +359,290 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         // CODEGEN: Parameter 'addUserReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/addUser", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/addUser", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/addUser", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/addUser", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/addUser", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="addUserReturn")]
-        HMOSecureMiddleware.UserManagementService.addUserResponse addUser(HMOSecureMiddleware.UserManagementService.addUserRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserResponse addUser(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/addUser", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserResponse> addUserAsync(HMOSecureMiddleware.UserManagementService.addUserRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserResponse> addUserAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserRequest request);
         
         // CODEGEN: Parameter 'removeUserFromGroupsReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/removeUserFromGroups", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/removeUserFromGroups", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/removeUserFromGroups", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/removeUserFromGroups", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/removeUserFromGroups", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="removeUserFromGroupsReturn")]
-        HMOSecureMiddleware.UserManagementService.removeUserFromGroupsResponse removeUserFromGroups(HMOSecureMiddleware.UserManagementService.removeUserFromGroupsRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsResponse removeUserFromGroups(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/removeUserFromGroups", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromGroupsResponse> removeUserFromGroupsAsync(HMOSecureMiddleware.UserManagementService.removeUserFromGroupsRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsResponse> removeUserFromGroupsAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsRequest request);
         
         // CODEGEN: Parameter 'addUserToGroupsReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/addUserToGroups", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/addUserToGroups", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/addUserToGroups", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/addUserToGroups", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/addUserToGroups", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="addUserToGroupsReturn")]
-        HMOSecureMiddleware.UserManagementService.addUserToGroupsResponse addUserToGroups(HMOSecureMiddleware.UserManagementService.addUserToGroupsRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsResponse addUserToGroups(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/addUserToGroups", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserToGroupsResponse> addUserToGroupsAsync(HMOSecureMiddleware.UserManagementService.addUserToGroupsRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsResponse> addUserToGroupsAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsRequest request);
         
         // CODEGEN: Parameter 'renameUserReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/renameUser", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/renameUser", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/renameUser", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/renameUser", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/renameUser", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="renameUserReturn")]
-        HMOSecureMiddleware.UserManagementService.renameUserResponse renameUser(HMOSecureMiddleware.UserManagementService.renameUserRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserResponse renameUser(HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/renameUser", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.renameUserResponse> renameUserAsync(HMOSecureMiddleware.UserManagementService.renameUserRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserResponse> renameUserAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRequest request);
         
         // CODEGEN: Parameter 'user' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/modifyUser", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/modifyUser", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/modifyUser", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/modifyUser", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/modifyUser", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        HMOSecureMiddleware.UserManagementService.modifyUserResponse modifyUser(HMOSecureMiddleware.UserManagementService.modifyUserRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserResponse modifyUser(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/modifyUser", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.modifyUserResponse> modifyUserAsync(HMOSecureMiddleware.UserManagementService.modifyUserRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserResponse> modifyUserAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserRequest request);
         
         // CODEGEN: Parameter 'lookupUserByUserIdReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/lookupUserByUserId", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/lookupUserByUserId", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/lookupUserByUserId", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/lookupUserByUserId", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/lookupUserByUserId", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="lookupUserByUserIdReturn")]
-        HMOSecureMiddleware.UserManagementService.lookupUserByUserIdResponse lookupUserByUserId(HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdResponse lookupUserByUserId(HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/lookupUserByUserId", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.lookupUserByUserIdResponse> lookupUserByUserIdAsync(HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdResponse> lookupUserByUserIdAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRequest request);
         
         // CODEGEN: Parameter 'userId' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/resetPassword", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/resetPassword", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/resetPassword", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/resetPassword", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/resetPassword", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        HMOSecureMiddleware.UserManagementService.resetPasswordResponse resetPassword(HMOSecureMiddleware.UserManagementService.resetPasswordRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordResponse resetPassword(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/resetPassword", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.resetPasswordResponse> resetPasswordAsync(HMOSecureMiddleware.UserManagementService.resetPasswordRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordResponse> resetPasswordAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordRequest request);
         
         // CODEGEN: Parameter 'userId' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/resetPasswordNexenWhiteLabel", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/resetPasswordNexenWhiteLabel", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/resetPasswordNexenWhiteLabel", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/resetPasswordNexenWhiteLabel", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/resetPasswordNexenWhiteLabel", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelResponse resetPasswordNexenWhiteLabel(HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelResponse resetPasswordNexenWhiteLabel(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/resetPasswordNexenWhiteLabel", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelResponse> resetPasswordNexenWhiteLabelAsync(HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelResponse> resetPasswordNexenWhiteLabelAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelRequest request);
         
         // CODEGEN: Parameter 'searchByFilterReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/searchByFilter", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/searchByFilter", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/searchByFilter", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/searchByFilter", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/searchByFilter", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="searchByFilterReturn")]
-        HMOSecureMiddleware.UserManagementService.searchByFilterResponse searchByFilter(HMOSecureMiddleware.UserManagementService.searchByFilterRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterResponse searchByFilter(HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/searchByFilter", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.searchByFilterResponse> searchByFilterAsync(HMOSecureMiddleware.UserManagementService.searchByFilterRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterResponse> searchByFilterAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterRequest request);
         
         // CODEGEN: Parameter 'terminateUserReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/terminateUser", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/terminateUser", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/terminateUser", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/terminateUser", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/terminateUser", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="terminateUserReturn")]
-        HMOSecureMiddleware.UserManagementService.terminateUserResponse terminateUser(HMOSecureMiddleware.UserManagementService.terminateUserRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserResponse terminateUser(HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/terminateUser", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.terminateUserResponse> terminateUserAsync(HMOSecureMiddleware.UserManagementService.terminateUserRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserResponse> terminateUserAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRequest request);
         
         // CODEGEN: Parameter 'userId' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/setAccountStatus", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/setAccountStatus", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/setAccountStatus", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/setAccountStatus", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/setAccountStatus", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        HMOSecureMiddleware.UserManagementService.setAccountStatusResponse setAccountStatus(HMOSecureMiddleware.UserManagementService.setAccountStatusRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusResponse setAccountStatus(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/setAccountStatus", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.setAccountStatusResponse> setAccountStatusAsync(HMOSecureMiddleware.UserManagementService.setAccountStatusRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusResponse> setAccountStatusAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRequest request);
         
         // CODEGEN: Parameter 'preValidatePasswordReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/preValidatePassword", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/preValidatePassword", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/preValidatePassword", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/preValidatePassword", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/preValidatePassword", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="preValidatePasswordReturn")]
-        HMOSecureMiddleware.UserManagementService.preValidatePasswordResponse preValidatePassword(HMOSecureMiddleware.UserManagementService.preValidatePasswordRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordResponse preValidatePassword(HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/preValidatePassword", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.preValidatePasswordResponse> preValidatePasswordAsync(HMOSecureMiddleware.UserManagementService.preValidatePasswordRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordResponse> preValidatePasswordAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordRequest request);
         
         // CODEGEN: Parameter 'userId' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/resetPasswordAndSuppressEmail", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/resetPasswordAndSuppressEmail", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/resetPasswordAndSuppressEmail", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/resetPasswordAndSuppressEmail", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/resetPasswordAndSuppressEmail", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailResponse resetPasswordAndSuppressEmail(HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailResponse resetPasswordAndSuppressEmail(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/resetPasswordAndSuppressEmail", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailResponse> resetPasswordAndSuppressEmailAsync(HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailResponse> resetPasswordAndSuppressEmailAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailRequest request);
         
         // CODEGEN: Parameter 'addUserSimplifiedReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/addUserSimplified", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceException), Action="http://service.ums.eb0.mellon.com/addUserSimplified", Name="UMSServiceException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceException), Action="http://service.ums.eb0.mellon.com/addUserSimplified", Name="UMSServiceException")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="addUserSimplifiedReturn")]
-        HMOSecureMiddleware.UserManagementService.addUserSimplifiedResponse addUserSimplified(HMOSecureMiddleware.UserManagementService.addUserSimplifiedRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedResponse addUserSimplified(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/addUserSimplified", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserSimplifiedResponse> addUserSimplifiedAsync(HMOSecureMiddleware.UserManagementService.addUserSimplifiedRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedResponse> addUserSimplifiedAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedRequest request);
         
         // CODEGEN: Parameter 'addUserToEcomGroupsReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/addUserToEcomGroups", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/addUserToEcomGroups", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/addUserToEcomGroups", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/addUserToEcomGroups", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/addUserToEcomGroups", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="addUserToEcomGroupsReturn")]
-        HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsResponse addUserToEcomGroups(HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsResponse addUserToEcomGroups(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/addUserToEcomGroups", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsResponse> addUserToEcomGroupsAsync(HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsResponse> addUserToEcomGroupsAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsRequest request);
         
         // CODEGEN: Parameter 'removeUserFromEcomGroupsReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/removeUserFromEcomGroups", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/removeUserFromEcomGroups", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/removeUserFromEcomGroups", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/removeUserFromEcomGroups", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/removeUserFromEcomGroups", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="removeUserFromEcomGroupsReturn")]
-        HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsResponse removeUserFromEcomGroups(HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsResponse removeUserFromEcomGroups(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/removeUserFromEcomGroups", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsResponse> removeUserFromEcomGroupsAsync(HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsResponse> removeUserFromEcomGroupsAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsRequest request);
         
         // CODEGEN: Parameter 'userId' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/setAccountStatusRsaSync", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/setAccountStatusRsaSync", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/setAccountStatusRsaSync", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/setAccountStatusRsaSync", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/setAccountStatusRsaSync", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncResponse setAccountStatusRsaSync(HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncResponse setAccountStatusRsaSync(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/setAccountStatusRsaSync", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncResponse> setAccountStatusRsaSyncAsync(HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncResponse> setAccountStatusRsaSyncAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncRequest request);
         
         // CODEGEN: Parameter 'ranameUserRSASyncReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/renameUserRSASync", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/renameUserRSASync", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/renameUserRSASync", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/renameUserRSASync", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/renameUserRSASync", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="ranameUserRSASyncReturn")]
-        HMOSecureMiddleware.UserManagementService.renameUserRSASyncResponse renameUserRSASync(HMOSecureMiddleware.UserManagementService.renameUserRSASyncRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncResponse renameUserRSASync(HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/renameUserRSASync", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.renameUserRSASyncResponse> renameUserRSASyncAsync(HMOSecureMiddleware.UserManagementService.renameUserRSASyncRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncResponse> renameUserRSASyncAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncRequest request);
         
         // CODEGEN: Parameter 'terminateUserRSASyncReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/terminateUserRSASync", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/terminateUserRSASync", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/terminateUserRSASync", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/terminateUserRSASync", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/terminateUserRSASync", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="terminateUserRSASyncReturn")]
-        HMOSecureMiddleware.UserManagementService.terminateUserRSASyncResponse terminateUserRSASync(HMOSecureMiddleware.UserManagementService.terminateUserRSASyncRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncResponse terminateUserRSASync(HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/terminateUserRSASync", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.terminateUserRSASyncResponse> terminateUserRSASyncAsync(HMOSecureMiddleware.UserManagementService.terminateUserRSASyncRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncResponse> terminateUserRSASyncAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncRequest request);
         
         // CODEGEN: Parameter 'lookupUserByUserIdRsaOrgReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/lookupUserByUserIdRsaOrg", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/lookupUserByUserIdRsaOrg", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/lookupUserByUserIdRsaOrg", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/lookupUserByUserIdRsaOrg", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/lookupUserByUserIdRsaOrg", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="lookupUserByUserIdRsaOrgReturn")]
-        HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgResponse lookupUserByUserIdRsaOrg(HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgResponse lookupUserByUserIdRsaOrg(HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/lookupUserByUserIdRsaOrg", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgResponse> lookupUserByUserIdRsaOrgAsync(HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgResponse> lookupUserByUserIdRsaOrgAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgRequest request);
         
         // CODEGEN: Parameter 'removeUserFromRSAGroupReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/removeUserFromRSAGroup", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/removeUserFromRSAGroup", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/removeUserFromRSAGroup", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/removeUserFromRSAGroup", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/removeUserFromRSAGroup", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="removeUserFromRSAGroupReturn")]
-        HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupResponse removeUserFromRSAGroup(HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupResponse removeUserFromRSAGroup(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/removeUserFromRSAGroup", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupResponse> removeUserFromRSAGroupAsync(HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupResponse> removeUserFromRSAGroupAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupRequest request);
         
         // CODEGEN: Parameter 'auditObjects' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/getLastUpdatedAdmin", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/getLastUpdatedAdmin", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/getLastUpdatedAdmin", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/getLastUpdatedAdmin", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/getLastUpdatedAdmin", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="auditObjects")]
-        HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminResponse getLastUpdatedAdmin(HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminResponse getLastUpdatedAdmin(HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/getLastUpdatedAdmin", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminResponse> getLastUpdatedAdminAsync(HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminResponse> getLastUpdatedAdminAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminRequest request);
         
         // CODEGEN: Parameter 'addUserToLDAPGroupReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/addUserToLDAPGroup", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/addUserToLDAPGroup", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/addUserToLDAPGroup", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/addUserToLDAPGroup", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/addUserToLDAPGroup", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="addUserToLDAPGroupReturn")]
-        HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupResponse addUserToLDAPGroup(HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupResponse addUserToLDAPGroup(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/addUserToLDAPGroup", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupResponse> addUserToLDAPGroupAsync(HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupResponse> addUserToLDAPGroupAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupRequest request);
         
         // CODEGEN: Parameter 'removeUserFromLDAPGroupReturn' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/removeUserFromLDAPGroup", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/removeUserFromLDAPGroup", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/removeUserFromLDAPGroup", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/removeUserFromLDAPGroup", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/removeUserFromLDAPGroup", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="removeUserFromLDAPGroupReturn")]
-        HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupResponse removeUserFromLDAPGroup(HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupResponse removeUserFromLDAPGroup(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/removeUserFromLDAPGroup", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupResponse> removeUserFromLDAPGroupAsync(HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupResponse> removeUserFromLDAPGroupAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupRequest request);
         
         // CODEGEN: Parameter 'userId' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/setAccountStatusAndResetPassword", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/setAccountStatusAndResetPassword", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/setAccountStatusAndResetPassword", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/setAccountStatusAndResetPassword", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/setAccountStatusAndResetPassword", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordResponse setAccountStatusAndResetPassword(HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordResponse setAccountStatusAndResetPassword(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/setAccountStatusAndResetPassword", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordResponse> setAccountStatusAndResetPasswordAsync(HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordResponse> setAccountStatusAndResetPasswordAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordRequest request);
         
         // CODEGEN: Parameter 'user' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressSuppressEmail", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressSuppressEmail", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressSuppressEmail", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressSuppressEmail", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressSuppressEmail", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse modifyUserEmailAddressSuppressEmail(HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse modifyUserEmailAddressSuppressEmail(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressSuppressEmail", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse> modifyUserEmailAddressSuppressEmailAsync(HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse> modifyUserEmailAddressSuppressEmailAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest request);
         
         // CODEGEN: Parameter 'user' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressNexenWhiteLabel", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressNexenWhiteLabel", Name="UMSServiceFault")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HMOSecureMiddleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressNexenWhiteLabel", Name="UMSSystemFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSServiceFault), Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressNexenWhiteLabel", Name="UMSServiceFault")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HedgeMark.Operations.Secure.Middleware.UserManagementService.UMSSystemFault), Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressNexenWhiteLabel", Name="UMSSystemFault")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse modifyUserEmailAddressNexenWhiteLabel(HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest request);
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse modifyUserEmailAddressNexenWhiteLabel(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://service.ums.eb0.mellon.com/modifyUserEmailAddressNexenWhiteLabel", ReplyAction="*")]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse> modifyUserEmailAddressNexenWhiteLabelAsync(HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest request);
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse> modifyUserEmailAddressNexenWhiteLabelAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -653,12 +653,12 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.LDAPUser user;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user;
         
         public addUserRequest() {
         }
         
-        public addUserRequest(HMOSecureMiddleware.UserManagementService.LDAPUser user) {
+        public addUserRequest(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user) {
             this.user = user;
         }
     }
@@ -812,12 +812,12 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.LDAPUser user;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user;
         
         public modifyUserRequest() {
         }
         
-        public modifyUserRequest(HMOSecureMiddleware.UserManagementService.LDAPUser user) {
+        public modifyUserRequest(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user) {
             this.user = user;
         }
     }
@@ -833,7 +833,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -907,7 +907,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -983,12 +983,12 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.SearchResultUser lookupUserByUserIdReturn;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchResultUser lookupUserByUserIdReturn;
         
         public lookupUserByUserIdResponse() {
         }
         
-        public lookupUserByUserIdResponse(HMOSecureMiddleware.UserManagementService.SearchResultUser lookupUserByUserIdReturn) {
+        public lookupUserByUserIdResponse(HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchResultUser lookupUserByUserIdReturn) {
             this.lookupUserByUserIdReturn = lookupUserByUserIdReturn;
         }
     }
@@ -1075,7 +1075,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1135,7 +1135,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1188,12 +1188,12 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.SearchCriteria searchInfo;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchCriteria searchInfo;
         
         public searchByFilterRequest() {
         }
         
-        public searchByFilterRequest(HMOSecureMiddleware.UserManagementService.SearchCriteria searchInfo) {
+        public searchByFilterRequest(HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchCriteria searchInfo) {
             this.searchInfo = searchInfo;
         }
     }
@@ -1206,18 +1206,18 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute("searchByFilterReturn", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.SearchResultUser[] searchByFilterReturn;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchResultUser[] searchByFilterReturn;
         
         public searchByFilterResponse() {
         }
         
-        public searchByFilterResponse(HMOSecureMiddleware.UserManagementService.SearchResultUser[] searchByFilterReturn) {
+        public searchByFilterResponse(HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchResultUser[] searchByFilterReturn) {
             this.searchByFilterReturn = searchByFilterReturn;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://service.ums.eb0.mellon.com")]
     public enum FlagValue {
@@ -1248,12 +1248,12 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.FlagValue highRiskUserFlag;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.FlagValue highRiskUserFlag;
         
         public terminateUserRequest() {
         }
         
-        public terminateUserRequest(string userId, string adminNote, HMOSecureMiddleware.UserManagementService.FlagValue highRiskUserFlag) {
+        public terminateUserRequest(string userId, string adminNote, HedgeMark.Operations.Secure.Middleware.UserManagementService.FlagValue highRiskUserFlag) {
             this.userId = userId;
             this.adminNote = adminNote;
             this.highRiskUserFlag = highRiskUserFlag;
@@ -1312,7 +1312,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1386,7 +1386,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1462,12 +1462,12 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.PasswordValidationStatus preValidatePasswordReturn;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.PasswordValidationStatus preValidatePasswordReturn;
         
         public preValidatePasswordResponse() {
         }
         
-        public preValidatePasswordResponse(HMOSecureMiddleware.UserManagementService.PasswordValidationStatus preValidatePasswordReturn) {
+        public preValidatePasswordResponse(HedgeMark.Operations.Secure.Middleware.UserManagementService.PasswordValidationStatus preValidatePasswordReturn) {
             this.preValidatePasswordReturn = preValidatePasswordReturn;
         }
     }
@@ -1513,7 +1513,7 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.LDAPUser user;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -1530,7 +1530,7 @@ namespace HMOSecureMiddleware.UserManagementService {
         public addUserSimplifiedRequest() {
         }
         
-        public addUserSimplifiedRequest(HMOSecureMiddleware.UserManagementService.LDAPUser user, string newPassword, bool isPwdTemp, string statusFlag) {
+        public addUserSimplifiedRequest(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user, string newPassword, bool isPwdTemp, string statusFlag) {
             this.user = user;
             this.newPassword = newPassword;
             this.isPwdTemp = isPwdTemp;
@@ -1738,7 +1738,7 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.FlagValue highRiskUserFlag;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.FlagValue highRiskUserFlag;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -1747,7 +1747,7 @@ namespace HMOSecureMiddleware.UserManagementService {
         public terminateUserRSASyncRequest() {
         }
         
-        public terminateUserRSASyncRequest(string userId, string adminNote, HMOSecureMiddleware.UserManagementService.FlagValue highRiskUserFlag, string rsaAaOrgId) {
+        public terminateUserRSASyncRequest(string userId, string adminNote, HedgeMark.Operations.Secure.Middleware.UserManagementService.FlagValue highRiskUserFlag, string rsaAaOrgId) {
             this.userId = userId;
             this.adminNote = adminNote;
             this.highRiskUserFlag = highRiskUserFlag;
@@ -1809,12 +1809,12 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.SearchResultUser lookupUserByUserIdRsaOrgReturn;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchResultUser lookupUserByUserIdRsaOrgReturn;
         
         public lookupUserByUserIdRsaOrgResponse() {
         }
         
-        public lookupUserByUserIdRsaOrgResponse(HMOSecureMiddleware.UserManagementService.SearchResultUser lookupUserByUserIdRsaOrgReturn) {
+        public lookupUserByUserIdRsaOrgResponse(HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchResultUser lookupUserByUserIdRsaOrgReturn) {
             this.lookupUserByUserIdRsaOrgReturn = lookupUserByUserIdRsaOrgReturn;
         }
     }
@@ -1861,7 +1861,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1974,12 +1974,12 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute("auditObjects", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.AuditObject[] auditObjects;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.AuditObject[] auditObjects;
         
         public getLastUpdatedAdminResponse() {
         }
         
-        public getLastUpdatedAdminResponse(HMOSecureMiddleware.UserManagementService.AuditObject[] auditObjects) {
+        public getLastUpdatedAdminResponse(HedgeMark.Operations.Secure.Middleware.UserManagementService.AuditObject[] auditObjects) {
             this.auditObjects = auditObjects;
         }
     }
@@ -2125,7 +2125,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -2206,12 +2206,12 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.LDAPWhiteLabelUser user;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPWhiteLabelUser user;
         
         public modifyUserEmailAddressSuppressEmailRequest() {
         }
         
-        public modifyUserEmailAddressSuppressEmailRequest(HMOSecureMiddleware.UserManagementService.LDAPWhiteLabelUser user) {
+        public modifyUserEmailAddressSuppressEmailRequest(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPWhiteLabelUser user) {
             this.user = user;
         }
     }
@@ -2227,7 +2227,7 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3062.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -2308,12 +2308,12 @@ namespace HMOSecureMiddleware.UserManagementService {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://service.ums.eb0.mellon.com", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public HMOSecureMiddleware.UserManagementService.LDAPUserWhiteLabel user;
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUserWhiteLabel user;
         
         public modifyUserEmailAddressNexenWhiteLabelRequest() {
         }
         
-        public modifyUserEmailAddressNexenWhiteLabelRequest(HMOSecureMiddleware.UserManagementService.LDAPUserWhiteLabel user) {
+        public modifyUserEmailAddressNexenWhiteLabelRequest(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUserWhiteLabel user) {
             this.user = user;
         }
     }
@@ -2329,12 +2329,12 @@ namespace HMOSecureMiddleware.UserManagementService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface LDAPServiceDelegateChannel : HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate, System.ServiceModel.IClientChannel {
+    public interface LDAPServiceDelegateChannel : HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class LDAPServiceDelegateClient : System.ServiceModel.ClientBase<HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate>, HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate {
+    public partial class LDAPServiceDelegateClient : System.ServiceModel.ClientBase<HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate>, HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate {
         
         public LDAPServiceDelegateClient() {
         }
@@ -2356,620 +2356,620 @@ namespace HMOSecureMiddleware.UserManagementService {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.addUserResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.addUser(HMOSecureMiddleware.UserManagementService.addUserRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.addUser(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserRequest request) {
             return base.Channel.addUser(request);
         }
         
-        public string addUser(HMOSecureMiddleware.UserManagementService.LDAPUser user) {
-            HMOSecureMiddleware.UserManagementService.addUserRequest inValue = new HMOSecureMiddleware.UserManagementService.addUserRequest();
+        public string addUser(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserRequest();
             inValue.user = user;
-            HMOSecureMiddleware.UserManagementService.addUserResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).addUser(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).addUser(inValue);
             return retVal.addUserReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.addUserAsync(HMOSecureMiddleware.UserManagementService.addUserRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.addUserAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserRequest request) {
             return base.Channel.addUserAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserResponse> addUserAsync(HMOSecureMiddleware.UserManagementService.LDAPUser user) {
-            HMOSecureMiddleware.UserManagementService.addUserRequest inValue = new HMOSecureMiddleware.UserManagementService.addUserRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserResponse> addUserAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserRequest();
             inValue.user = user;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).addUserAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).addUserAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.removeUserFromGroupsResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.removeUserFromGroups(HMOSecureMiddleware.UserManagementService.removeUserFromGroupsRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.removeUserFromGroups(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsRequest request) {
             return base.Channel.removeUserFromGroups(request);
         }
         
         public string[] removeUserFromGroups(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.removeUserFromGroupsRequest inValue = new HMOSecureMiddleware.UserManagementService.removeUserFromGroupsRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            HMOSecureMiddleware.UserManagementService.removeUserFromGroupsResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromGroups(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromGroups(inValue);
             return retVal.removeUserFromGroupsReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromGroupsResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.removeUserFromGroupsAsync(HMOSecureMiddleware.UserManagementService.removeUserFromGroupsRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.removeUserFromGroupsAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsRequest request) {
             return base.Channel.removeUserFromGroupsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromGroupsResponse> removeUserFromGroupsAsync(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.removeUserFromGroupsRequest inValue = new HMOSecureMiddleware.UserManagementService.removeUserFromGroupsRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsResponse> removeUserFromGroupsAsync(string userId, string[] groupNames) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromGroupsRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromGroupsAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromGroupsAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.addUserToGroupsResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.addUserToGroups(HMOSecureMiddleware.UserManagementService.addUserToGroupsRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.addUserToGroups(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsRequest request) {
             return base.Channel.addUserToGroups(request);
         }
         
         public string[] addUserToGroups(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.addUserToGroupsRequest inValue = new HMOSecureMiddleware.UserManagementService.addUserToGroupsRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            HMOSecureMiddleware.UserManagementService.addUserToGroupsResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToGroups(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToGroups(inValue);
             return retVal.addUserToGroupsReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserToGroupsResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.addUserToGroupsAsync(HMOSecureMiddleware.UserManagementService.addUserToGroupsRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.addUserToGroupsAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsRequest request) {
             return base.Channel.addUserToGroupsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserToGroupsResponse> addUserToGroupsAsync(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.addUserToGroupsRequest inValue = new HMOSecureMiddleware.UserManagementService.addUserToGroupsRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsResponse> addUserToGroupsAsync(string userId, string[] groupNames) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToGroupsRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToGroupsAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToGroupsAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.renameUserResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.renameUser(HMOSecureMiddleware.UserManagementService.renameUserRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.renameUser(HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRequest request) {
             return base.Channel.renameUser(request);
         }
         
         public string renameUser(string userId, string newID) {
-            HMOSecureMiddleware.UserManagementService.renameUserRequest inValue = new HMOSecureMiddleware.UserManagementService.renameUserRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRequest();
             inValue.userId = userId;
             inValue.newID = newID;
-            HMOSecureMiddleware.UserManagementService.renameUserResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).renameUser(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).renameUser(inValue);
             return retVal.renameUserReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.renameUserResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.renameUserAsync(HMOSecureMiddleware.UserManagementService.renameUserRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.renameUserAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRequest request) {
             return base.Channel.renameUserAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.renameUserResponse> renameUserAsync(string userId, string newID) {
-            HMOSecureMiddleware.UserManagementService.renameUserRequest inValue = new HMOSecureMiddleware.UserManagementService.renameUserRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserResponse> renameUserAsync(string userId, string newID) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRequest();
             inValue.userId = userId;
             inValue.newID = newID;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).renameUserAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).renameUserAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.modifyUserResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.modifyUser(HMOSecureMiddleware.UserManagementService.modifyUserRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.modifyUser(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserRequest request) {
             return base.Channel.modifyUser(request);
         }
         
-        public void modifyUser(HMOSecureMiddleware.UserManagementService.LDAPUser user) {
-            HMOSecureMiddleware.UserManagementService.modifyUserRequest inValue = new HMOSecureMiddleware.UserManagementService.modifyUserRequest();
+        public void modifyUser(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserRequest();
             inValue.user = user;
-            HMOSecureMiddleware.UserManagementService.modifyUserResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUser(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUser(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.modifyUserResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.modifyUserAsync(HMOSecureMiddleware.UserManagementService.modifyUserRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.modifyUserAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserRequest request) {
             return base.Channel.modifyUserAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.modifyUserResponse> modifyUserAsync(HMOSecureMiddleware.UserManagementService.LDAPUser user) {
-            HMOSecureMiddleware.UserManagementService.modifyUserRequest inValue = new HMOSecureMiddleware.UserManagementService.modifyUserRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserResponse> modifyUserAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserRequest();
             inValue.user = user;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUserAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUserAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.lookupUserByUserIdResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.lookupUserByUserId(HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.lookupUserByUserId(HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRequest request) {
             return base.Channel.lookupUserByUserId(request);
         }
         
-        public HMOSecureMiddleware.UserManagementService.SearchResultUser lookupUserByUserId(string userId, string[] attribNames) {
-            HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRequest inValue = new HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRequest();
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchResultUser lookupUserByUserId(string userId, string[] attribNames) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRequest();
             inValue.userId = userId;
             inValue.attribNames = attribNames;
-            HMOSecureMiddleware.UserManagementService.lookupUserByUserIdResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).lookupUserByUserId(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).lookupUserByUserId(inValue);
             return retVal.lookupUserByUserIdReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.lookupUserByUserIdResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.lookupUserByUserIdAsync(HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.lookupUserByUserIdAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRequest request) {
             return base.Channel.lookupUserByUserIdAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.lookupUserByUserIdResponse> lookupUserByUserIdAsync(string userId, string[] attribNames) {
-            HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRequest inValue = new HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdResponse> lookupUserByUserIdAsync(string userId, string[] attribNames) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRequest();
             inValue.userId = userId;
             inValue.attribNames = attribNames;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).lookupUserByUserIdAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).lookupUserByUserIdAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.resetPasswordResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.resetPassword(HMOSecureMiddleware.UserManagementService.resetPasswordRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.resetPassword(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordRequest request) {
             return base.Channel.resetPassword(request);
         }
         
         public void resetPassword(string userId, string newPassword, bool forcePwdChange) {
-            HMOSecureMiddleware.UserManagementService.resetPasswordRequest inValue = new HMOSecureMiddleware.UserManagementService.resetPasswordRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordRequest();
             inValue.userId = userId;
             inValue.newPassword = newPassword;
             inValue.forcePwdChange = forcePwdChange;
-            HMOSecureMiddleware.UserManagementService.resetPasswordResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).resetPassword(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).resetPassword(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.resetPasswordResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.resetPasswordAsync(HMOSecureMiddleware.UserManagementService.resetPasswordRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.resetPasswordAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordRequest request) {
             return base.Channel.resetPasswordAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.resetPasswordResponse> resetPasswordAsync(string userId, string newPassword, bool forcePwdChange) {
-            HMOSecureMiddleware.UserManagementService.resetPasswordRequest inValue = new HMOSecureMiddleware.UserManagementService.resetPasswordRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordResponse> resetPasswordAsync(string userId, string newPassword, bool forcePwdChange) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordRequest();
             inValue.userId = userId;
             inValue.newPassword = newPassword;
             inValue.forcePwdChange = forcePwdChange;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).resetPasswordAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).resetPasswordAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.resetPasswordNexenWhiteLabel(HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.resetPasswordNexenWhiteLabel(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelRequest request) {
             return base.Channel.resetPasswordNexenWhiteLabel(request);
         }
         
         public void resetPasswordNexenWhiteLabel(string userId, string newPassword, string rsaAAOrgId, bool forcePwdChange) {
-            HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelRequest inValue = new HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelRequest();
             inValue.userId = userId;
             inValue.newPassword = newPassword;
             inValue.rsaAAOrgId = rsaAAOrgId;
             inValue.forcePwdChange = forcePwdChange;
-            HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).resetPasswordNexenWhiteLabel(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).resetPasswordNexenWhiteLabel(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.resetPasswordNexenWhiteLabelAsync(HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.resetPasswordNexenWhiteLabelAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelRequest request) {
             return base.Channel.resetPasswordNexenWhiteLabelAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelResponse> resetPasswordNexenWhiteLabelAsync(string userId, string newPassword, string rsaAAOrgId, bool forcePwdChange) {
-            HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelRequest inValue = new HMOSecureMiddleware.UserManagementService.resetPasswordNexenWhiteLabelRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelResponse> resetPasswordNexenWhiteLabelAsync(string userId, string newPassword, string rsaAAOrgId, bool forcePwdChange) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordNexenWhiteLabelRequest();
             inValue.userId = userId;
             inValue.newPassword = newPassword;
             inValue.rsaAAOrgId = rsaAAOrgId;
             inValue.forcePwdChange = forcePwdChange;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).resetPasswordNexenWhiteLabelAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).resetPasswordNexenWhiteLabelAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.searchByFilterResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.searchByFilter(HMOSecureMiddleware.UserManagementService.searchByFilterRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.searchByFilter(HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterRequest request) {
             return base.Channel.searchByFilter(request);
         }
         
-        public HMOSecureMiddleware.UserManagementService.SearchResultUser[] searchByFilter(HMOSecureMiddleware.UserManagementService.SearchCriteria searchInfo) {
-            HMOSecureMiddleware.UserManagementService.searchByFilterRequest inValue = new HMOSecureMiddleware.UserManagementService.searchByFilterRequest();
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchResultUser[] searchByFilter(HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchCriteria searchInfo) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterRequest();
             inValue.searchInfo = searchInfo;
-            HMOSecureMiddleware.UserManagementService.searchByFilterResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).searchByFilter(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).searchByFilter(inValue);
             return retVal.searchByFilterReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.searchByFilterResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.searchByFilterAsync(HMOSecureMiddleware.UserManagementService.searchByFilterRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.searchByFilterAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterRequest request) {
             return base.Channel.searchByFilterAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.searchByFilterResponse> searchByFilterAsync(HMOSecureMiddleware.UserManagementService.SearchCriteria searchInfo) {
-            HMOSecureMiddleware.UserManagementService.searchByFilterRequest inValue = new HMOSecureMiddleware.UserManagementService.searchByFilterRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterResponse> searchByFilterAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchCriteria searchInfo) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.searchByFilterRequest();
             inValue.searchInfo = searchInfo;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).searchByFilterAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).searchByFilterAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.terminateUserResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.terminateUser(HMOSecureMiddleware.UserManagementService.terminateUserRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.terminateUser(HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRequest request) {
             return base.Channel.terminateUser(request);
         }
         
-        public string terminateUser(string userId, string adminNote, HMOSecureMiddleware.UserManagementService.FlagValue highRiskUserFlag) {
-            HMOSecureMiddleware.UserManagementService.terminateUserRequest inValue = new HMOSecureMiddleware.UserManagementService.terminateUserRequest();
+        public string terminateUser(string userId, string adminNote, HedgeMark.Operations.Secure.Middleware.UserManagementService.FlagValue highRiskUserFlag) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRequest();
             inValue.userId = userId;
             inValue.adminNote = adminNote;
             inValue.highRiskUserFlag = highRiskUserFlag;
-            HMOSecureMiddleware.UserManagementService.terminateUserResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).terminateUser(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).terminateUser(inValue);
             return retVal.terminateUserReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.terminateUserResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.terminateUserAsync(HMOSecureMiddleware.UserManagementService.terminateUserRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.terminateUserAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRequest request) {
             return base.Channel.terminateUserAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.terminateUserResponse> terminateUserAsync(string userId, string adminNote, HMOSecureMiddleware.UserManagementService.FlagValue highRiskUserFlag) {
-            HMOSecureMiddleware.UserManagementService.terminateUserRequest inValue = new HMOSecureMiddleware.UserManagementService.terminateUserRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserResponse> terminateUserAsync(string userId, string adminNote, HedgeMark.Operations.Secure.Middleware.UserManagementService.FlagValue highRiskUserFlag) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRequest();
             inValue.userId = userId;
             inValue.adminNote = adminNote;
             inValue.highRiskUserFlag = highRiskUserFlag;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).terminateUserAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).terminateUserAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.setAccountStatusResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.setAccountStatus(HMOSecureMiddleware.UserManagementService.setAccountStatusRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.setAccountStatus(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRequest request) {
             return base.Channel.setAccountStatus(request);
         }
         
         public void setAccountStatus(string userId, string statusFlag) {
-            HMOSecureMiddleware.UserManagementService.setAccountStatusRequest inValue = new HMOSecureMiddleware.UserManagementService.setAccountStatusRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRequest();
             inValue.userId = userId;
             inValue.statusFlag = statusFlag;
-            HMOSecureMiddleware.UserManagementService.setAccountStatusResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatus(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatus(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.setAccountStatusResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.setAccountStatusAsync(HMOSecureMiddleware.UserManagementService.setAccountStatusRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.setAccountStatusAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRequest request) {
             return base.Channel.setAccountStatusAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.setAccountStatusResponse> setAccountStatusAsync(string userId, string statusFlag) {
-            HMOSecureMiddleware.UserManagementService.setAccountStatusRequest inValue = new HMOSecureMiddleware.UserManagementService.setAccountStatusRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusResponse> setAccountStatusAsync(string userId, string statusFlag) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRequest();
             inValue.userId = userId;
             inValue.statusFlag = statusFlag;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatusAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatusAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.preValidatePasswordResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.preValidatePassword(HMOSecureMiddleware.UserManagementService.preValidatePasswordRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.preValidatePassword(HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordRequest request) {
             return base.Channel.preValidatePassword(request);
         }
         
-        public HMOSecureMiddleware.UserManagementService.PasswordValidationStatus preValidatePassword(string userId, string pwdTxt) {
-            HMOSecureMiddleware.UserManagementService.preValidatePasswordRequest inValue = new HMOSecureMiddleware.UserManagementService.preValidatePasswordRequest();
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.PasswordValidationStatus preValidatePassword(string userId, string pwdTxt) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordRequest();
             inValue.userId = userId;
             inValue.pwdTxt = pwdTxt;
-            HMOSecureMiddleware.UserManagementService.preValidatePasswordResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).preValidatePassword(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).preValidatePassword(inValue);
             return retVal.preValidatePasswordReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.preValidatePasswordResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.preValidatePasswordAsync(HMOSecureMiddleware.UserManagementService.preValidatePasswordRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.preValidatePasswordAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordRequest request) {
             return base.Channel.preValidatePasswordAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.preValidatePasswordResponse> preValidatePasswordAsync(string userId, string pwdTxt) {
-            HMOSecureMiddleware.UserManagementService.preValidatePasswordRequest inValue = new HMOSecureMiddleware.UserManagementService.preValidatePasswordRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordResponse> preValidatePasswordAsync(string userId, string pwdTxt) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.preValidatePasswordRequest();
             inValue.userId = userId;
             inValue.pwdTxt = pwdTxt;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).preValidatePasswordAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).preValidatePasswordAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.resetPasswordAndSuppressEmail(HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.resetPasswordAndSuppressEmail(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailRequest request) {
             return base.Channel.resetPasswordAndSuppressEmail(request);
         }
         
         public void resetPasswordAndSuppressEmail(string userId, string pwdVal) {
-            HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailRequest inValue = new HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailRequest();
             inValue.userId = userId;
             inValue.pwdVal = pwdVal;
-            HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).resetPasswordAndSuppressEmail(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).resetPasswordAndSuppressEmail(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.resetPasswordAndSuppressEmailAsync(HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.resetPasswordAndSuppressEmailAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailRequest request) {
             return base.Channel.resetPasswordAndSuppressEmailAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailResponse> resetPasswordAndSuppressEmailAsync(string userId, string pwdVal) {
-            HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailRequest inValue = new HMOSecureMiddleware.UserManagementService.resetPasswordAndSuppressEmailRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailResponse> resetPasswordAndSuppressEmailAsync(string userId, string pwdVal) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.resetPasswordAndSuppressEmailRequest();
             inValue.userId = userId;
             inValue.pwdVal = pwdVal;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).resetPasswordAndSuppressEmailAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).resetPasswordAndSuppressEmailAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.addUserSimplifiedResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.addUserSimplified(HMOSecureMiddleware.UserManagementService.addUserSimplifiedRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.addUserSimplified(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedRequest request) {
             return base.Channel.addUserSimplified(request);
         }
         
-        public string addUserSimplified(HMOSecureMiddleware.UserManagementService.LDAPUser user, string newPassword, bool isPwdTemp, string statusFlag) {
-            HMOSecureMiddleware.UserManagementService.addUserSimplifiedRequest inValue = new HMOSecureMiddleware.UserManagementService.addUserSimplifiedRequest();
+        public string addUserSimplified(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user, string newPassword, bool isPwdTemp, string statusFlag) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedRequest();
             inValue.user = user;
             inValue.newPassword = newPassword;
             inValue.isPwdTemp = isPwdTemp;
             inValue.statusFlag = statusFlag;
-            HMOSecureMiddleware.UserManagementService.addUserSimplifiedResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).addUserSimplified(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).addUserSimplified(inValue);
             return retVal.addUserSimplifiedReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserSimplifiedResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.addUserSimplifiedAsync(HMOSecureMiddleware.UserManagementService.addUserSimplifiedRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.addUserSimplifiedAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedRequest request) {
             return base.Channel.addUserSimplifiedAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserSimplifiedResponse> addUserSimplifiedAsync(HMOSecureMiddleware.UserManagementService.LDAPUser user, string newPassword, bool isPwdTemp, string statusFlag) {
-            HMOSecureMiddleware.UserManagementService.addUserSimplifiedRequest inValue = new HMOSecureMiddleware.UserManagementService.addUserSimplifiedRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedResponse> addUserSimplifiedAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUser user, string newPassword, bool isPwdTemp, string statusFlag) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserSimplifiedRequest();
             inValue.user = user;
             inValue.newPassword = newPassword;
             inValue.isPwdTemp = isPwdTemp;
             inValue.statusFlag = statusFlag;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).addUserSimplifiedAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).addUserSimplifiedAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.addUserToEcomGroups(HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.addUserToEcomGroups(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsRequest request) {
             return base.Channel.addUserToEcomGroups(request);
         }
         
         public string[] addUserToEcomGroups(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsRequest inValue = new HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToEcomGroups(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToEcomGroups(inValue);
             return retVal.addUserToEcomGroupsReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.addUserToEcomGroupsAsync(HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.addUserToEcomGroupsAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsRequest request) {
             return base.Channel.addUserToEcomGroupsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsResponse> addUserToEcomGroupsAsync(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsRequest inValue = new HMOSecureMiddleware.UserManagementService.addUserToEcomGroupsRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsResponse> addUserToEcomGroupsAsync(string userId, string[] groupNames) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToEcomGroupsRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToEcomGroupsAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToEcomGroupsAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.removeUserFromEcomGroups(HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.removeUserFromEcomGroups(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsRequest request) {
             return base.Channel.removeUserFromEcomGroups(request);
         }
         
         public string[] removeUserFromEcomGroups(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsRequest inValue = new HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromEcomGroups(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromEcomGroups(inValue);
             return retVal.removeUserFromEcomGroupsReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.removeUserFromEcomGroupsAsync(HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.removeUserFromEcomGroupsAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsRequest request) {
             return base.Channel.removeUserFromEcomGroupsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsResponse> removeUserFromEcomGroupsAsync(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsRequest inValue = new HMOSecureMiddleware.UserManagementService.removeUserFromEcomGroupsRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsResponse> removeUserFromEcomGroupsAsync(string userId, string[] groupNames) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromEcomGroupsRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromEcomGroupsAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromEcomGroupsAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.setAccountStatusRsaSync(HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.setAccountStatusRsaSync(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncRequest request) {
             return base.Channel.setAccountStatusRsaSync(request);
         }
         
         public void setAccountStatusRsaSync(string userId, string statusFlag, string rsaAaOrgId) {
-            HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncRequest inValue = new HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncRequest();
             inValue.userId = userId;
             inValue.statusFlag = statusFlag;
             inValue.rsaAaOrgId = rsaAaOrgId;
-            HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatusRsaSync(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatusRsaSync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.setAccountStatusRsaSyncAsync(HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.setAccountStatusRsaSyncAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncRequest request) {
             return base.Channel.setAccountStatusRsaSyncAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncResponse> setAccountStatusRsaSyncAsync(string userId, string statusFlag, string rsaAaOrgId) {
-            HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncRequest inValue = new HMOSecureMiddleware.UserManagementService.setAccountStatusRsaSyncRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncResponse> setAccountStatusRsaSyncAsync(string userId, string statusFlag, string rsaAaOrgId) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusRsaSyncRequest();
             inValue.userId = userId;
             inValue.statusFlag = statusFlag;
             inValue.rsaAaOrgId = rsaAaOrgId;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatusRsaSyncAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatusRsaSyncAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.renameUserRSASyncResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.renameUserRSASync(HMOSecureMiddleware.UserManagementService.renameUserRSASyncRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.renameUserRSASync(HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncRequest request) {
             return base.Channel.renameUserRSASync(request);
         }
         
         public string renameUserRSASync(string userId, string newID, string rsaAaOrgId) {
-            HMOSecureMiddleware.UserManagementService.renameUserRSASyncRequest inValue = new HMOSecureMiddleware.UserManagementService.renameUserRSASyncRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncRequest();
             inValue.userId = userId;
             inValue.newID = newID;
             inValue.rsaAaOrgId = rsaAaOrgId;
-            HMOSecureMiddleware.UserManagementService.renameUserRSASyncResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).renameUserRSASync(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).renameUserRSASync(inValue);
             return retVal.ranameUserRSASyncReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.renameUserRSASyncResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.renameUserRSASyncAsync(HMOSecureMiddleware.UserManagementService.renameUserRSASyncRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.renameUserRSASyncAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncRequest request) {
             return base.Channel.renameUserRSASyncAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.renameUserRSASyncResponse> renameUserRSASyncAsync(string userId, string newID, string rsaAaOrgId) {
-            HMOSecureMiddleware.UserManagementService.renameUserRSASyncRequest inValue = new HMOSecureMiddleware.UserManagementService.renameUserRSASyncRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncResponse> renameUserRSASyncAsync(string userId, string newID, string rsaAaOrgId) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.renameUserRSASyncRequest();
             inValue.userId = userId;
             inValue.newID = newID;
             inValue.rsaAaOrgId = rsaAaOrgId;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).renameUserRSASyncAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).renameUserRSASyncAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.terminateUserRSASyncResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.terminateUserRSASync(HMOSecureMiddleware.UserManagementService.terminateUserRSASyncRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.terminateUserRSASync(HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncRequest request) {
             return base.Channel.terminateUserRSASync(request);
         }
         
-        public string terminateUserRSASync(string userId, string adminNote, HMOSecureMiddleware.UserManagementService.FlagValue highRiskUserFlag, string rsaAaOrgId) {
-            HMOSecureMiddleware.UserManagementService.terminateUserRSASyncRequest inValue = new HMOSecureMiddleware.UserManagementService.terminateUserRSASyncRequest();
+        public string terminateUserRSASync(string userId, string adminNote, HedgeMark.Operations.Secure.Middleware.UserManagementService.FlagValue highRiskUserFlag, string rsaAaOrgId) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncRequest();
             inValue.userId = userId;
             inValue.adminNote = adminNote;
             inValue.highRiskUserFlag = highRiskUserFlag;
             inValue.rsaAaOrgId = rsaAaOrgId;
-            HMOSecureMiddleware.UserManagementService.terminateUserRSASyncResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).terminateUserRSASync(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).terminateUserRSASync(inValue);
             return retVal.terminateUserRSASyncReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.terminateUserRSASyncResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.terminateUserRSASyncAsync(HMOSecureMiddleware.UserManagementService.terminateUserRSASyncRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.terminateUserRSASyncAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncRequest request) {
             return base.Channel.terminateUserRSASyncAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.terminateUserRSASyncResponse> terminateUserRSASyncAsync(string userId, string adminNote, HMOSecureMiddleware.UserManagementService.FlagValue highRiskUserFlag, string rsaAaOrgId) {
-            HMOSecureMiddleware.UserManagementService.terminateUserRSASyncRequest inValue = new HMOSecureMiddleware.UserManagementService.terminateUserRSASyncRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncResponse> terminateUserRSASyncAsync(string userId, string adminNote, HedgeMark.Operations.Secure.Middleware.UserManagementService.FlagValue highRiskUserFlag, string rsaAaOrgId) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.terminateUserRSASyncRequest();
             inValue.userId = userId;
             inValue.adminNote = adminNote;
             inValue.highRiskUserFlag = highRiskUserFlag;
             inValue.rsaAaOrgId = rsaAaOrgId;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).terminateUserRSASyncAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).terminateUserRSASyncAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.lookupUserByUserIdRsaOrg(HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.lookupUserByUserIdRsaOrg(HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgRequest request) {
             return base.Channel.lookupUserByUserIdRsaOrg(request);
         }
         
-        public HMOSecureMiddleware.UserManagementService.SearchResultUser lookupUserByUserIdRsaOrg(string userId, string[] attribNames, string rsaAaOrgId) {
-            HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgRequest inValue = new HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgRequest();
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.SearchResultUser lookupUserByUserIdRsaOrg(string userId, string[] attribNames, string rsaAaOrgId) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgRequest();
             inValue.userId = userId;
             inValue.attribNames = attribNames;
             inValue.rsaAaOrgId = rsaAaOrgId;
-            HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).lookupUserByUserIdRsaOrg(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).lookupUserByUserIdRsaOrg(inValue);
             return retVal.lookupUserByUserIdRsaOrgReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.lookupUserByUserIdRsaOrgAsync(HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.lookupUserByUserIdRsaOrgAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgRequest request) {
             return base.Channel.lookupUserByUserIdRsaOrgAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgResponse> lookupUserByUserIdRsaOrgAsync(string userId, string[] attribNames, string rsaAaOrgId) {
-            HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgRequest inValue = new HMOSecureMiddleware.UserManagementService.lookupUserByUserIdRsaOrgRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgResponse> lookupUserByUserIdRsaOrgAsync(string userId, string[] attribNames, string rsaAaOrgId) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.lookupUserByUserIdRsaOrgRequest();
             inValue.userId = userId;
             inValue.attribNames = attribNames;
             inValue.rsaAaOrgId = rsaAaOrgId;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).lookupUserByUserIdRsaOrgAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).lookupUserByUserIdRsaOrgAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.removeUserFromRSAGroup(HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.removeUserFromRSAGroup(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupRequest request) {
             return base.Channel.removeUserFromRSAGroup(request);
         }
         
         public string removeUserFromRSAGroup(string userId, string rsaAaOrgId) {
-            HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupRequest inValue = new HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupRequest();
             inValue.userId = userId;
             inValue.rsaAaOrgId = rsaAaOrgId;
-            HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromRSAGroup(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromRSAGroup(inValue);
             return retVal.removeUserFromRSAGroupReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.removeUserFromRSAGroupAsync(HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.removeUserFromRSAGroupAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupRequest request) {
             return base.Channel.removeUserFromRSAGroupAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupResponse> removeUserFromRSAGroupAsync(string userId, string rsaAaOrgId) {
-            HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupRequest inValue = new HMOSecureMiddleware.UserManagementService.removeUserFromRSAGroupRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupResponse> removeUserFromRSAGroupAsync(string userId, string rsaAaOrgId) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromRSAGroupRequest();
             inValue.userId = userId;
             inValue.rsaAaOrgId = rsaAaOrgId;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromRSAGroupAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromRSAGroupAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.getLastUpdatedAdmin(HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.getLastUpdatedAdmin(HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminRequest request) {
             return base.Channel.getLastUpdatedAdmin(request);
         }
         
-        public HMOSecureMiddleware.UserManagementService.AuditObject[] getLastUpdatedAdmin(string userLdapId) {
-            HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminRequest inValue = new HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminRequest();
+        public HedgeMark.Operations.Secure.Middleware.UserManagementService.AuditObject[] getLastUpdatedAdmin(string userLdapId) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminRequest();
             inValue.userLdapId = userLdapId;
-            HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).getLastUpdatedAdmin(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).getLastUpdatedAdmin(inValue);
             return retVal.auditObjects;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.getLastUpdatedAdminAsync(HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.getLastUpdatedAdminAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminRequest request) {
             return base.Channel.getLastUpdatedAdminAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminResponse> getLastUpdatedAdminAsync(string userLdapId) {
-            HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminRequest inValue = new HMOSecureMiddleware.UserManagementService.getLastUpdatedAdminRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminResponse> getLastUpdatedAdminAsync(string userLdapId) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.getLastUpdatedAdminRequest();
             inValue.userLdapId = userLdapId;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).getLastUpdatedAdminAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).getLastUpdatedAdminAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.addUserToLDAPGroup(HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.addUserToLDAPGroup(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupRequest request) {
             return base.Channel.addUserToLDAPGroup(request);
         }
         
         public string[] addUserToLDAPGroup(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupRequest inValue = new HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToLDAPGroup(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToLDAPGroup(inValue);
             return retVal.addUserToLDAPGroupReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.addUserToLDAPGroupAsync(HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.addUserToLDAPGroupAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupRequest request) {
             return base.Channel.addUserToLDAPGroupAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupResponse> addUserToLDAPGroupAsync(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupRequest inValue = new HMOSecureMiddleware.UserManagementService.addUserToLDAPGroupRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupResponse> addUserToLDAPGroupAsync(string userId, string[] groupNames) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.addUserToLDAPGroupRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToLDAPGroupAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).addUserToLDAPGroupAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.removeUserFromLDAPGroup(HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.removeUserFromLDAPGroup(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupRequest request) {
             return base.Channel.removeUserFromLDAPGroup(request);
         }
         
         public string[] removeUserFromLDAPGroup(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupRequest inValue = new HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromLDAPGroup(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromLDAPGroup(inValue);
             return retVal.removeUserFromLDAPGroupReturn;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.removeUserFromLDAPGroupAsync(HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.removeUserFromLDAPGroupAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupRequest request) {
             return base.Channel.removeUserFromLDAPGroupAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupResponse> removeUserFromLDAPGroupAsync(string userId, string[] groupNames) {
-            HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupRequest inValue = new HMOSecureMiddleware.UserManagementService.removeUserFromLDAPGroupRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupResponse> removeUserFromLDAPGroupAsync(string userId, string[] groupNames) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.removeUserFromLDAPGroupRequest();
             inValue.userId = userId;
             inValue.groupNames = groupNames;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromLDAPGroupAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).removeUserFromLDAPGroupAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.setAccountStatusAndResetPassword(HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.setAccountStatusAndResetPassword(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordRequest request) {
             return base.Channel.setAccountStatusAndResetPassword(request);
         }
         
         public void setAccountStatusAndResetPassword(string userId, bool lockOrUnlockFlag, string lockOrUnlockValue, bool resetPasswordFlag, string newPasswordValue, bool forcePasswordChangeFlag, bool suppressEmailFlag) {
-            HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordRequest inValue = new HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordRequest();
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordRequest();
             inValue.userId = userId;
             inValue.lockOrUnlockFlag = lockOrUnlockFlag;
             inValue.lockOrUnlockValue = lockOrUnlockValue;
@@ -2977,16 +2977,16 @@ namespace HMOSecureMiddleware.UserManagementService {
             inValue.newPasswordValue = newPasswordValue;
             inValue.forcePasswordChangeFlag = forcePasswordChangeFlag;
             inValue.suppressEmailFlag = suppressEmailFlag;
-            HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatusAndResetPassword(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatusAndResetPassword(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.setAccountStatusAndResetPasswordAsync(HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.setAccountStatusAndResetPasswordAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordRequest request) {
             return base.Channel.setAccountStatusAndResetPasswordAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordResponse> setAccountStatusAndResetPasswordAsync(string userId, bool lockOrUnlockFlag, string lockOrUnlockValue, bool resetPasswordFlag, string newPasswordValue, bool forcePasswordChangeFlag, bool suppressEmailFlag) {
-            HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordRequest inValue = new HMOSecureMiddleware.UserManagementService.setAccountStatusAndResetPasswordRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordResponse> setAccountStatusAndResetPasswordAsync(string userId, bool lockOrUnlockFlag, string lockOrUnlockValue, bool resetPasswordFlag, string newPasswordValue, bool forcePasswordChangeFlag, bool suppressEmailFlag) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.setAccountStatusAndResetPasswordRequest();
             inValue.userId = userId;
             inValue.lockOrUnlockFlag = lockOrUnlockFlag;
             inValue.lockOrUnlockValue = lockOrUnlockValue;
@@ -2994,51 +2994,51 @@ namespace HMOSecureMiddleware.UserManagementService {
             inValue.newPasswordValue = newPasswordValue;
             inValue.forcePasswordChangeFlag = forcePasswordChangeFlag;
             inValue.suppressEmailFlag = suppressEmailFlag;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatusAndResetPasswordAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).setAccountStatusAndResetPasswordAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.modifyUserEmailAddressSuppressEmail(HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.modifyUserEmailAddressSuppressEmail(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest request) {
             return base.Channel.modifyUserEmailAddressSuppressEmail(request);
         }
         
-        public void modifyUserEmailAddressSuppressEmail(HMOSecureMiddleware.UserManagementService.LDAPWhiteLabelUser user) {
-            HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest inValue = new HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest();
+        public void modifyUserEmailAddressSuppressEmail(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPWhiteLabelUser user) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest();
             inValue.user = user;
-            HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUserEmailAddressSuppressEmail(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUserEmailAddressSuppressEmail(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.modifyUserEmailAddressSuppressEmailAsync(HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.modifyUserEmailAddressSuppressEmailAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest request) {
             return base.Channel.modifyUserEmailAddressSuppressEmailAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse> modifyUserEmailAddressSuppressEmailAsync(HMOSecureMiddleware.UserManagementService.LDAPWhiteLabelUser user) {
-            HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest inValue = new HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailResponse> modifyUserEmailAddressSuppressEmailAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPWhiteLabelUser user) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressSuppressEmailRequest();
             inValue.user = user;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUserEmailAddressSuppressEmailAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUserEmailAddressSuppressEmailAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.modifyUserEmailAddressNexenWhiteLabel(HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest request) {
+        HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.modifyUserEmailAddressNexenWhiteLabel(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest request) {
             return base.Channel.modifyUserEmailAddressNexenWhiteLabel(request);
         }
         
-        public void modifyUserEmailAddressNexenWhiteLabel(HMOSecureMiddleware.UserManagementService.LDAPUserWhiteLabel user) {
-            HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest inValue = new HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest();
+        public void modifyUserEmailAddressNexenWhiteLabel(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUserWhiteLabel user) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest();
             inValue.user = user;
-            HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse retVal = ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUserEmailAddressNexenWhiteLabel(inValue);
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse retVal = ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUserEmailAddressNexenWhiteLabel(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse> HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate.modifyUserEmailAddressNexenWhiteLabelAsync(HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest request) {
+        System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse> HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate.modifyUserEmailAddressNexenWhiteLabelAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest request) {
             return base.Channel.modifyUserEmailAddressNexenWhiteLabelAsync(request);
         }
         
-        public System.Threading.Tasks.Task<HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse> modifyUserEmailAddressNexenWhiteLabelAsync(HMOSecureMiddleware.UserManagementService.LDAPUserWhiteLabel user) {
-            HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest inValue = new HMOSecureMiddleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest();
+        public System.Threading.Tasks.Task<HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelResponse> modifyUserEmailAddressNexenWhiteLabelAsync(HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPUserWhiteLabel user) {
+            HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest inValue = new HedgeMark.Operations.Secure.Middleware.UserManagementService.modifyUserEmailAddressNexenWhiteLabelRequest();
             inValue.user = user;
-            return ((HMOSecureMiddleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUserEmailAddressNexenWhiteLabelAsync(inValue);
+            return ((HedgeMark.Operations.Secure.Middleware.UserManagementService.LDAPServiceDelegate)(this)).modifyUserEmailAddressNexenWhiteLabelAsync(inValue);
         }
     }
 }

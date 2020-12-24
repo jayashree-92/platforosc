@@ -9,8 +9,8 @@ using Com.HedgeMark.Commons.Extensions;
 using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HedgeMark.Operations.Secure.DataModel;
-using HMOSecureMiddleware;
-using HMOSecureMiddleware.Util;
+using HedgeMark.Operations.Secure.Middleware;
+using HedgeMark.Operations.Secure.Middleware.Util;
 using HMOSecureWeb.Utility;
 using Newtonsoft.Json;
 

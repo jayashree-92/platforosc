@@ -60,8 +60,8 @@
     <Reference Include="Hangfire.SqlServer, Version=1.7.11.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.SqlServer.1.7.11\lib\net45\Hangfire.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="HedgeMark.Monitoring">
-      <HintPath>..\ExternalLibraries\HedgeMark.Monitoring.dll</HintPath>
+    <Reference Include="HedgeMark.Monitoring, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\Users\AABC132\AppData\Roaming\NuGet\%WORKSPACE%\packages\HedgeMark.Monitoring.1.0.0\lib\HedgeMark.Monitoring.dll</HintPath>
     </Reference>
     <Reference Include="HedgeMark.Operations.FileParseEngine">
       <HintPath>..\HedgeMark.Operations.Secure.Middleware\ExternalLibraries\HM-Ops-Utils\HedgeMark.Operations.FileParseEngine.dll</HintPath>
@@ -845,9 +845,9 @@
       <Project>{87DDFAA9-89C6-411B-B1B8-2B451A3C605C}</Project>
       <Name>HedgeMark.Operations.Secure.DataModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HedgeMark.Operations.Secure.Middleware\HMOSecureMiddleware.csproj">
+    <ProjectReference Include="..\HedgeMark.Operations.Secure.Middleware\HedgeMark.Operations.Secure.Middleware.csproj">
       <Project>{E16CB811-24A6-4439-A807-F52C209AFE35}</Project>
-      <Name>HMOSecureMiddleware</Name>
+      <Name>HedgeMark.Operations.Secure.Middleware</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

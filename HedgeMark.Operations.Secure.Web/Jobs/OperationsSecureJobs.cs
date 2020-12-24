@@ -6,7 +6,7 @@ using System.Web.Hosting;
 using Com.HedgeMark.Commons;
 using Hangfire;
 using Hangfire.Annotations;
-using HMOSecureMiddleware.Queues;
+using HedgeMark.Operations.Secure.Middleware.Queues;
 using log4net;
 
 namespace HMOSecureWeb.Jobs

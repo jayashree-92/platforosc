@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using HedgeMark.Operations.Secure.Middleware.Models;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
-using HMOSecureMiddleware.Models;
 using HedgeMark.SwiftMessageHandler.Model.MT;
 
-namespace HMOSecureMiddleware.SwiftMessageManager
+namespace HedgeMark.Operations.Secure.Middleware.SwiftMessageManager
 {
     public class InboundSwiftMsgParser
     {

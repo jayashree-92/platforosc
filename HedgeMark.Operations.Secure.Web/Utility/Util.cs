@@ -2,8 +2,8 @@
 using System.Security.Principal;
 using System.Web.Configuration;
 using Com.HedgeMark.Commons;
-using HMOSecureMiddleware;
-using HMOSecureMiddleware.Util;
+using HedgeMark.Operations.Secure.Middleware;
+using HedgeMark.Operations.Secure.Middleware.Util;
 
 namespace HMOSecureWeb.Utility
 {

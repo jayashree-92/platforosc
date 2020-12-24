@@ -1,7 +1,7 @@
 ﻿using System.ServiceModel.Channels;
 using System.Xml;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware.Util
 {
     public class SecurityHeader : MessageHeader
     {

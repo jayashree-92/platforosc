@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
-using HMOSecureMiddleware.Models;
+using HedgeMark.Operations.Secure.Middleware.Models;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware
 {
     public class NotificationManager
     {

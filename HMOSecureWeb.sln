@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commons", "Commons\Commons.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HMOSecureWeb", "HedgeMark.Operations.Secure.Web\HMOSecureWeb.csproj", "{D079B4D3-DE74-43D1-A057-81A04D771B89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HMOSecureMiddleware", "HedgeMark.Operations.Secure.Middleware\HMOSecureMiddleware.csproj", "{E16CB811-24A6-4439-A807-F52C209AFE35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HedgeMark.Operations.Secure.Middleware", "HedgeMark.Operations.Secure.Middleware\HedgeMark.Operations.Secure.Middleware.csproj", "{E16CB811-24A6-4439-A807-F52C209AFE35}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HedgeMark.SwiftMessageHandler", "HedgeMark.SwiftMessageHandler\HedgeMark.SwiftMessageHandler.csproj", "{F4B70A85-B67C-412F-BCAD-22DB58E1110A}"
 EndProject

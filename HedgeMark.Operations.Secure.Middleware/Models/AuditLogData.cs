@@ -1,4 +1,4 @@
-﻿namespace HMOSecureMiddleware.Models
+﻿namespace HedgeMark.Operations.Secure.Middleware.Models
 {
     public class AuditLogData
     {

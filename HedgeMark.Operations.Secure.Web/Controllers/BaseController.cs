@@ -9,7 +9,7 @@ using System.Linq;
 using System.Net.Mime;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
-using HMOSecureMiddleware;
+using HedgeMark.Operations.Secure.Middleware;
 
 namespace HMOSecureWeb.Controllers
 {

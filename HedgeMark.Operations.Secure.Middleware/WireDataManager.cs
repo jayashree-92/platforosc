@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using HedgeMark.Operations.Secure.DataModel;
-using System.Data.Entity.Migrations;
-using HMOSecureMiddleware.Models;
-using Com.HedgeMark.Commons.Extensions;
-using HedgeMark.SwiftMessageHandler;
-using HMOSecureMiddleware.Util;
-using log4net;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using Com.HedgeMark.Commons.Extensions;
+using HedgeMark.Operations.Secure.DataModel;
+using HedgeMark.Operations.Secure.Middleware.Models;
+using HedgeMark.Operations.Secure.Middleware.Util;
+using HedgeMark.SwiftMessageHandler;
+using log4net;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware
 {
     public class WireAccountBaseData
     {

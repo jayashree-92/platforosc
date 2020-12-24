@@ -1,11 +1,11 @@
 ﻿using HedgeMark.Operations.Secure.DataModel;
-using HMOSecureMiddleware;
-using HMOSecureMiddleware.Models;
 using System;
 using System.Linq;
 using System.Web.Mvc;
-using HMOSecureMiddleware.Util;
 using System.IO;
+using HedgeMark.Operations.Secure.Middleware;
+using HedgeMark.Operations.Secure.Middleware.Models;
+using HedgeMark.Operations.Secure.Middleware.Util;
 
 namespace HMOSecureWeb.Controllers
 {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>HedgeMark.SwiftMessageHandler</id>
+    <version>1.0.0.0</version>
+    <title>HedgeMark.SwiftMessageHandler</title>
+    <owners>HedgeMark</owners>
+    <authors>Mohan Srikanth Rameshkumar</authors>
+    <projectUrl>https://gitlab.bnymellon.net/dmu/dmu-00/hm-operations-secure/-/tree/master/HedgeMark.SwiftMessageHandler</projectUrl>
+    <description>This package utility will help construction/understanding/parsing of SWIFT messages of financial wire transactions</description>
+    <copyright>HedgeMark</copyright>
+  </metadata>
+</package>

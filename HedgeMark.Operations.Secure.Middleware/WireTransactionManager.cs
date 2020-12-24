@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using HedgeMark.Operations.Secure.DataModel;
+using HedgeMark.Operations.Secure.Middleware.Models;
+using HedgeMark.Operations.Secure.Middleware.Queues;
+using HedgeMark.Operations.Secure.Middleware.SwiftMessageManager;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT;
-using HMOSecureMiddleware.Models;
-using HMOSecureMiddleware.Queues;
-using HMOSecureMiddleware.SwiftMessageManager;
 using log4net;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware
 {
     public class WireTransactionManager
     {

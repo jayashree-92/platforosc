@@ -6,7 +6,7 @@ using System.Linq;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware
 {
     public class SSITemplateManager
     {

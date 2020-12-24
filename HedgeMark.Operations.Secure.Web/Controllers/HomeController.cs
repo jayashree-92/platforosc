@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using HedgeMark.Operations.Secure.DataModel;
-using HMOSecureMiddleware;
-using HMOSecureMiddleware.Models;
 using System.IO;
 using Hangfire;
 using HMOSecureWeb.Jobs;
@@ -12,7 +10,9 @@ using log4net;
 using HMOSecureWeb.Utility;
 using System.Data.Entity;
 using Com.HedgeMark.Commons.Extensions;
-using HMOSecureMiddleware.Util;
+using HedgeMark.Operations.Secure.Middleware;
+using HedgeMark.Operations.Secure.Middleware.Models;
+using HedgeMark.Operations.Secure.Middleware.Util;
 using log4net.Config;
 
 namespace HMOSecureWeb.Controllers

@@ -99,9 +99,9 @@
       <Project>{61be155b-657b-4611-8cea-74b188cd1ee0}</Project>
       <Name>Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HedgeMark.Operations.Secure.Middleware\HMOSecureMiddleware.csproj">
+    <ProjectReference Include="..\HedgeMark.Operations.Secure.Middleware\HedgeMark.Operations.Secure.Middleware.csproj">
       <Project>{E16CB811-24A6-4439-A807-F52C209AFE35}</Project>
-      <Name>HMOSecureMiddleware</Name>
+      <Name>HedgeMark.Operations.Secure.Middleware</Name>
     </ProjectReference>
     <ProjectReference Include="..\HedgeMark.SwiftMessageHandler\HedgeMark.SwiftMessageHandler.csproj">
       <Project>{f4b70a85-b67c-412f-bcad-22db58e1110a}</Project>

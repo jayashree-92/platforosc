@@ -1,14 +1,14 @@
 ﻿using System;
-using HedgeMark.Operations.Secure.DataModel;
 using System.Collections.Generic;
 using System.Linq;
 using Com.HedgeMark.Commons.Extensions;
+using HedgeMark.Operations.Secure.DataModel;
+using HedgeMark.Operations.Secure.Middleware.Util;
 using HedgeMark.SwiftMessageHandler.Model;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT;
-using HMOSecureMiddleware.Util;
 
-namespace HMOSecureMiddleware.Models
+namespace HedgeMark.Operations.Secure.Middleware.Models
 {
     public class WireTicket
     {

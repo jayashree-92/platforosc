@@ -1,8 +1,8 @@
-﻿using HedgeMark.Operations.Secure.DataModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using HedgeMark.Operations.Secure.DataModel;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware
 {
     public class AdminFundManager
     {

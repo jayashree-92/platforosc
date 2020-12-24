@@ -1,9 +1,6 @@
 ﻿using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HedgeMark.Operations.Secure.DataModel;
-using HMOSecureMiddleware;
-using HMOSecureMiddleware.Util;
-using HMOSecureMiddleware.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -11,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using HedgeMark.Operations.Secure.Middleware;
+using HedgeMark.Operations.Secure.Middleware.Models;
 
 
 namespace HMOSecureWeb.Controllers

@@ -1,8 +1,9 @@
 ﻿using System;
+using HedgeMark.Operations.Secure.Middleware.Models;
+using HedgeMark.Operations.Secure.Middleware.SwiftMessageManager;
 using HedgeMark.SwiftMessageHandler.Model;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT9XX;
-using HMOSecureMiddleware.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HedgeMark.SwiftMessageHandler.Tests
@@ -312,7 +313,7 @@ GSILGB2XXXX
 -}{1:F21HMRKUS30LXXX0013000006}{4:{177:1904080905}{451:0}} 
 ";
 
-            var confirmationData = HMOSecureMiddleware.SwiftMessageManager.InboundSwiftMsgParser.ParseMessage(message);
+            var confirmationData = InboundSwiftMsgParser.ParseMessage(message);
             Assert.IsTrue(confirmationData.IsAckOrNack);
 
         }

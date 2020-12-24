@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using HedgeMark.Operations.Secure.DataModel;
 using System.Data.Entity.Migrations;
+using System.Linq;
 using System.Reflection;
-using HMOSecureMiddleware.Models;
+using HedgeMark.Operations.Secure.DataModel;
+using HedgeMark.Operations.Secure.Middleware.Models;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware
 {
     public class AuditManager
     {

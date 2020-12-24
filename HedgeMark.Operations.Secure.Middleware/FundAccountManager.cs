@@ -6,10 +6,10 @@ using System.IO;
 using System.Linq;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
-using HMOSecureMiddleware.Util;
+using HedgeMark.Operations.Secure.Middleware.Util;
 using log4net;
 
-namespace HMOSecureMiddleware
+namespace HedgeMark.Operations.Secure.Middleware
 {
     public class FundAccountManager
     {

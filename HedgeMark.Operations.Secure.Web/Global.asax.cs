@@ -12,13 +12,14 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using Com.HedgeMark.Commons;
-using HMOSecureMiddleware;
 using HMOSecureWeb.Controllers;
 using log4net;
 using log4net.Config;
 using System.Collections.Generic;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Monitoring;
+using HedgeMark.Operations.Secure.Middleware;
+using HedgeMark.Operations.Secure.Middleware.Util;
 
 namespace HMOSecureWeb
 {
