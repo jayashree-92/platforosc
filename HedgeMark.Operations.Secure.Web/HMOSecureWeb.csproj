@@ -846,7 +846,7 @@
       <Name>HedgeMark.Operations.Secure.DataModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\HedgeMark.Operations.Secure.Middleware\HedgeMark.Operations.Secure.Middleware.csproj">
-      <Project>{E16CB811-24A6-4439-A807-F52C209AFE35}</Project>
+      <Project>{e16cb811-24a6-4439-a807-f52c209afe35}</Project>
       <Name>HedgeMark.Operations.Secure.Middleware</Name>
     </ProjectReference>
   </ItemGroup>
