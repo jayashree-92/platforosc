@@ -3,11 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E543D06D-3CF8-4D60-B2D6-6DA36FC68E46}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HedgeMark.Operations.Secure.DataModel", "HedgeMark.Operations.Secure.DataModel\HedgeMark.Operations.Secure.DataModel.csproj", "{87DDFAA9-89C6-411B-B1B8-2B451A3C605C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commons", "Commons\Commons.csproj", "{61BE155B-657B-4611-8CEA-74B188CD1EE0}"

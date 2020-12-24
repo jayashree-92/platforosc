@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Local\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -51,10 +51,6 @@
     <Reference Include="HedgeMark.Operations.FileParseEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalLibraries\HM-Ops-Utils\HedgeMark.Operations.FileParseEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="HedgeMark.Stats.DataContracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExternalLibraries\HM-Ops-Utils\HedgeMark.Stats.DataContracts.dll</HintPath>
     </Reference>
     <Reference Include="IBM.XMS, Version=9.0.0.5, Culture=neutral, PublicKeyToken=d2666ab12fca862b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
