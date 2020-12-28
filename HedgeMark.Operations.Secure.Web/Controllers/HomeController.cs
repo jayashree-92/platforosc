@@ -347,7 +347,7 @@ namespace HMOSecureWeb.Controllers
                     reportId = FileSystemManager.GetReportId(wireTicket.HMWire.hmsWirePurposeLkup.ReportName);
 
                 fundAccounts = wireTicketStatus.IsWirePurposeAdhoc
-                    ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, wireTicket.IsFundTransfer, wireTicket.SendingAccount.Currency)
+                    ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, (WireDataManager.TransferType)wireTicket.HMWire.WireTransferTypeId, wireTicket.SendingAccount.Currency)
                     : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId ?? 0, reportId);
             }
 
@@ -854,9 +854,9 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public JsonResult GetApprovedAccountsForFund(long fundId, bool isFundTransfer)
+        public JsonResult GetApprovedAccountsForFund(long fundId, WireDataManager.TransferType wireTransferType)
         {
-            var fundAccounts = WireDataManager.GetApprovedFundAccounts(fundId, isFundTransfer);
+            var fundAccounts = WireDataManager.GetApprovedFundAccounts(fundId, wireTransferType);
             var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber, Currency = s.Currency }).ToList();
             var receivingAccountsList = fundAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber, Currency = s.Currency }).ToList();
             var currencies = sendingAccountsList.Select(s => new { id = s.Currency, text = s.Currency }).Distinct().OrderBy(s => s.text).ToList();

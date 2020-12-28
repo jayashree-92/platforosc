@@ -1351,7 +1351,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $timeout(function () {
             if ($("#liFund").select2("val") != "") {
                 $scope.isFundsChanged = true;
-                $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2("val") + "&isFundTransfer=" + $scope.wireTicketObj.IsFundTransfer).then(function (response) {
+                $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2("val") + "&wireTransferType=" + $("#liWireTransferType").val()).then(function (response) {
                     $scope.sendingAccountsListOfFund = response.data.sendingAccountsList;
                     $scope.receivingAccountsListOfFund = response.data.receivingAccountsList;
                     $scope.currencies = response.data.currencies;
