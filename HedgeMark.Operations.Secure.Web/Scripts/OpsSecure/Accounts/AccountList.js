@@ -206,7 +206,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 data: response.data.currencies
             });
 
-            if ($scope.onBoardingAccountDetails[0].Currency != null && $scope.onBoardingAccountDetails[0].Currency != 'undefined')
+            if ($scope.onBoardingAccountDetails[0] != undefined && $scope.onBoardingAccountDetails[0].Currency != null && $scope.onBoardingAccountDetails[0].Currency != 'undefined')
                 $("#liCurrency0").select2("val", $scope.onBoardingAccountDetails[0].Currency);
         });
     }
@@ -221,7 +221,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 data: response.data.cashInstructions
             });
 
-            if ($scope.onBoardingAccountDetails[0].CashInstruction != null && $scope.onBoardingAccountDetails[0].CashInstruction != 'undefined')
+            if ($scope.onBoardingAccountDetails[0] != undefined && $scope.onBoardingAccountDetails[0].CashInstruction != null && $scope.onBoardingAccountDetails[0].CashInstruction != 'undefined')
                 $("#liCashInstruction0").select2("val", $scope.onBoardingAccountDetails[0].CashInstruction);
         });
     }
