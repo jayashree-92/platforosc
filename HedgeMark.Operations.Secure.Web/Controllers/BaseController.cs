@@ -29,6 +29,7 @@ namespace HMOSecureWeb.Controllers
         }
     }
 
+    [OutputCache(VaryByParam = "*", Duration = 0, NoStore = true)]
     [AuthorizedRoles(OpsSecureUserRoles.WireInitiator, OpsSecureUserRoles.WireApprover)]
     [Authorize, RedirectToHttps, Compress]
     public abstract class BaseController : Controller
