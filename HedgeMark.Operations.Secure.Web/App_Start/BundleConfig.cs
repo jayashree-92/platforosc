@@ -44,10 +44,8 @@ namespace HMOSecureWeb
                 "~/Scripts/DataTables/dataTables.fixedHeader.js",
                 "~/Scripts/DataTables/dataTables.buttons.js",
                 "~/Scripts/DataTables/buttons.bootstrap.js",
-                //"~/Scripts/DataTables/buttons.foundation.js",
                 "~/Scripts/DataTables/buttons.colVis.js",
                 "~/Scripts/DataTables/buttons.print.js",
-                "~/Scripts/DataTables/buttons.flash.js",
                 "~/Scripts/DataTables/buttons.html5.js",
                 "~/Scripts/DataTables/dataTables.scroller.js",
                 "~/Scripts/DataTables/dataTables.select.js",
@@ -57,7 +55,6 @@ namespace HMOSecureWeb
                 "~/Scripts/DataTables/dataTables.keyTable.js",
                 "~/Scripts/DataTables/datatables.mark.js",
                 "~/Scripts/DataTables/dataTables.searchPanes.js",
-                //"~/Scripts/DataTables/searchPanes.bootstrap.js",
                 "~/Scripts/dataTables-extentions.js"));
 
 
