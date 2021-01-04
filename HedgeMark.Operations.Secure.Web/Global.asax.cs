@@ -218,7 +218,7 @@ namespace HMOSecureWeb
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            HttpContext.Current.Response.AddHeader("X-Frame-Options", "DENY");
+            //HttpContext.Current.Response.AddHeader("X-Frame-Options", "DENY");
             HttpContext.Current.Response.Headers.Remove("Server");
             HttpContext.Current.Response.Headers.Remove("X-AspNet-Version");
             HttpContext.Current.Response.Headers.Remove("X-AspNetMvc-Version");
