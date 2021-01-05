@@ -777,6 +777,16 @@ var getFormattedUIDate = function (date) {
 /*************************************/
 Dropzone.options.myAwesomeDropzone = false;
 Dropzone.autoDiscover = false;
+
+var validateDoubleExtensionInDZ = function (file, done) {
+    if (file.name.toLowerCase().indexOf(".exe") >= 0) {
+        notifyError("Warning: filename appeares to be .exe and cannot be uploaded to the system");
+        done("Warning: filename appeares to be .exe and cannot be uploaded to the system");
+        this.removeFile(file);
+    } else
+        done();
+};
+
 /*************************************/
 
 

@@ -628,7 +628,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
         url: "/SSITemplate/UploadSsiTemplate",
         dictDefaultMessage: "<span>Drag/Drop SSI template files to add/update here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
         autoDiscover: false,
-        acceptedFiles: ".csv,.xls,.xlsx",
+        acceptedFiles: ".csv,.xls,.xlsx", accept: validateDoubleExtensionInDZ,
         maxFiles: 6,
         previewTemplate: "<div class='row col-sm-2' style='padding: 15px;'><div class='panel panel-success panel-dz'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
             "</div> <div class='panel-body'> <span class='dz-upload' data-dz-uploadprogress></span>" +
