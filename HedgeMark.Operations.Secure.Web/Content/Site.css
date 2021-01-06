@@ -821,6 +821,11 @@ label {
     padding: 3px 3px !important;
 }
 
+.label-bigger {
+    padding: 0.4em .6em .4em;
+    font-size: 12px;
+}
+
 div.tooltip-inner {
     max-width: 500px;
 }
@@ -2074,13 +2079,13 @@ div[class^="dtsp-subRow"] {
     width: -webkit-fill-available;
 }
 
-.dtsp-search{
+.dtsp-search {
     font-size: small !important;
     background-color: #efefef !important;
     border-radius: 6px !important;
 }
 
-.dtsp-clearAll{
+.dtsp-clearAll {
     -webkit-box-shadow: 0 1px 3px 0 rgba(0,0,0,.55);
     box-shadow: 0 1px 3px 0 rgba(0,0,0,.55);
     -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,background-color ease-in-out .15s,color ease-in-out .15s;

@@ -1515,15 +1515,21 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             .then(function (response) {
                 $scope.CashBalance = response.data;
                 $scope.CashBalance.TreasuryBalance = $.convertToCurrency($scope.CashBalance.TreasuryBalance, 2);
-                $scope.CashBalance.TotalWired = $.convertToCurrency($scope.CashBalance.TotalWired, 2);
+                $scope.CashBalance.TotalWireEntered = $.convertToCurrency($scope.CashBalance.TotalWireEntered, 2);
                 $scope.CashBalance.AvailableBalance = !$scope.CashBalance.IsCashBalanceAvailable ? "N.A" : $.convertToCurrency($scope.CashBalance.AvailableBalance, 2);
-                $scope.fnCalculateCashBalance();
+
+                $($scope.CashBalance.WireDetails).each(function (i, v) {
+                    v.ValueDate = moment(v.ValueDate).format("YYYY-MM-DD");
+                    v.ApprovedWireAmount = $.convertToCurrency(v.ApprovedWireAmount, 2);
+                    v.PendingWireAmount = $.convertToCurrency(v.PendingWireAmount, 2);
+                    v.TotalWireEntered = $.convertToCurrency(v.TotalWireEntered, 2);
+                });
+
+                $timeout($scope.fnCalculateCashBalance(), 100);
             });
-
-
     }
 
-    $scope.fnCalculateCashBalance = function () {
+    $scope.fnCalculateCashBalance = function (isRetry) {
 
         $scope.CashBalance.IsNewBalanceOffLimit = false;
         $("#chkCashBalOff").prop("checked", false).trigger("change");
@@ -1533,6 +1539,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             var newBalance = $.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text());
             $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
             $scope.CashBalance.IsNewBalanceOffLimit = newBalance < 0;
+
+            if ($scope.CashBalance.CalculatedBalance  == "NaN.00" && !isRetry)
+                $timeout($scope.fnCalculateCashBalance(true), 200);
         }
     };
 

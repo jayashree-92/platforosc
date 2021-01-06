@@ -63,16 +63,29 @@ namespace HedgeMark.Operations.Secure.Middleware
 
     public class CashBalances
     {
+        public class WiredDetails
+        {
+            public DateTime ValueDate { get; set; }
+            public int ApprovedCount { get; set; }
+            public int PendingCount { get; set; }
+            public decimal ApprovedWireAmount { get; set; }
+            public decimal PendingWireAmount { get; set; }
+            
+            public decimal TotalWireEntered
+            {
+                get { return ApprovedWireAmount + PendingWireAmount; }
+            }
+        }
+
+        public List<WiredDetails> WireDetails { get; set; }
         public bool IsCashBalanceAvailable { get; set; }
         public DateTime ContextDate { get; set; }
         public decimal TreasuryBalance { get; set; }
-        public int ApprovedWires { get; set; }
-        public int PendingWires { get; set; }
-        public decimal TotalWired { get; set; }
+        public decimal TotalWireEntered { get; set; }
         public string Currency { get; set; }
         public decimal AvailableBalance
         {
-            get { return TreasuryBalance - TotalWired; }
+            get { return TreasuryBalance - TotalWireEntered; }
         }
         public decimal MarginBuffer { get; set; }
     }

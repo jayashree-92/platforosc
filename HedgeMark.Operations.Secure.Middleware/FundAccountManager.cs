@@ -632,7 +632,7 @@ namespace HedgeMark.Operations.Secure.Middleware
 
         public static CashBalances GetAccountCashBalances(long sendingFundAccountId, DateTime valueDate)
         {
-            var contextDate = valueDate.GetContextDate();
+            var contextDate = DateTime.Today.GetContextDate();
 
             vw_FundAccounts fndAccount;
 
@@ -672,13 +672,13 @@ namespace HedgeMark.Operations.Secure.Middleware
                 wires = (from wire in context.hmsWires
                          join acc in context.vw_FundAccounts on wire.OnBoardAccountId equals acc.onBoardingAccountId
                          where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(acc.AgreementType)
-                         where wire.ValueDate == valueDate && (wire.WireStatusId == (int)WireDataManager.WireStatus.Approved || wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated)
+                         where wire.ValueDate > contextDate && wire.ValueDate <= valueDate && (wire.WireStatusId == (int)WireDataManager.WireStatus.Approved || wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated)
                          select new WireAccountBaseData
                          {
                              OnBoardAccountId = wire.OnBoardAccountId,
                              Amount = wire.Amount,
                              WireStatusId = wire.WireStatusId,
-                             ValueDate = valueDate,
+                             ValueDate = wire.ValueDate,
                              Currency = wire.Currency
                          }).ToList();
             }
@@ -710,14 +710,34 @@ namespace HedgeMark.Operations.Secure.Middleware
             var cashBalances = new CashBalances()
             {
                 IsCashBalanceAvailable = true,
-                TotalWired = totalWiredInLocalCur,
+                TotalWireEntered = totalWiredInLocalCur,
                 TreasuryBalance = converForTreasuryBal == 0 ? treasuryBal.CashBalance ?? 0 : (treasuryBal.CashBalance ?? 0) * converForTreasuryBal,
                 MarginBuffer = converForTreasuryBal == 0 ? treasuryBal.MarginBuffer ?? 0 : (treasuryBal.MarginBuffer ?? 0) * converForTreasuryBal,
                 Currency = converForTreasuryBal == 0 ? treasuryBal.Currency : fndAccount.Currency,
                 ContextDate = treasuryBal.ContextDate,
-                ApprovedWires = wires.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved),
-                PendingWires = wires.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated),
+                WireDetails = new List<CashBalances.WiredDetails>()
             };
+
+            var wireDetails = wires.GroupBy(s => s.ValueDate).ToDictionary(s => s.Key, v => v.ToList());
+
+            foreach (var detail in wireDetails)
+            {
+                cashBalances.WireDetails.Add(new CashBalances.WiredDetails()
+                {
+                    ValueDate = detail.Key,
+                    ApprovedCount = detail.Value.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved),
+                    PendingCount = detail.Value.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated),
+                    ApprovedWireAmount = (from wire in detail.Value
+                                          where wire.WireStatusId == (int)WireDataManager.WireStatus.Approved
+                                          let fxRate = conversionData.Where(s => s.FROM_CRNCY == wire.Currency && s.TO_CRNCY == fndAccount.Currency).Select(s => s.FX_RATE).FirstOrDefault() ?? 0
+                                          select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum(),
+
+                    PendingWireAmount = (from wire in detail.Value
+                                         where wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated
+                                         let fxRate = conversionData.Where(s => s.FROM_CRNCY == wire.Currency && s.TO_CRNCY == fndAccount.Currency).Select(s => s.FX_RATE).FirstOrDefault() ?? 0
+                                         select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum(),
+                });
+            }
 
             return cashBalances;
         }
@@ -736,7 +756,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             List<WireAccountBaseData> wires;
             using (var context = new OperationsSecureContext())
             {
-                wires = context.hmsWires.Where(s => s.OnBoardAccountId == sendingFundAccountId && s.ValueDate == valueDate &&
+                wires = context.hmsWires.Where(s => s.OnBoardAccountId == sendingFundAccountId && s.ValueDate > contextDate && s.ValueDate <= valueDate &&
                                                     (s.WireStatusId == (int)WireDataManager.WireStatus.Approved ||
                                                     s.WireStatusId == (int)WireDataManager.WireStatus.Initiated))
                     .Select(s => new WireAccountBaseData
@@ -744,7 +764,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                         OnBoardAccountId = s.OnBoardAccountId,
                         Amount = s.Amount,
                         WireStatusId = s.WireStatusId,
-                        ValueDate = valueDate,
+                        ValueDate = s.ValueDate,
                         Currency = s.Currency
                     }).ToList();
             }
@@ -752,13 +772,27 @@ namespace HedgeMark.Operations.Secure.Middleware
             var cashBalances = new CashBalances()
             {
                 IsCashBalanceAvailable = true,
-                TotalWired = wires.Sum(s => s.Amount),
+                TotalWireEntered = wires.Sum(s => s.Amount),
                 TreasuryBalance = treasuryBal.CashBalance ?? 0,
                 Currency = treasuryBal.Currency,
                 ContextDate = treasuryBal.ContextDate,
-                ApprovedWires = wires.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved),
-                PendingWires = wires.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated),
+                WireDetails = new List<CashBalances.WiredDetails>()
             };
+
+
+            var wireDetails = wires.GroupBy(s => s.ValueDate).ToDictionary(s => s.Key, v => v.ToList());
+
+            foreach (var detail in wireDetails)
+            {
+                cashBalances.WireDetails.Add(new CashBalances.WiredDetails()
+                {
+                    ValueDate = detail.Key,
+                    ApprovedCount = detail.Value.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved),
+                    PendingCount = detail.Value.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated),
+                    ApprovedWireAmount = detail.Value.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved).Sum(s => s.Amount),
+                    PendingWireAmount = detail.Value.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated).Sum(s => s.Amount)
+                });
+            }
 
             return cashBalances;
         }
