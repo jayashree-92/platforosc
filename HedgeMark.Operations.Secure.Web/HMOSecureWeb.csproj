@@ -505,8 +505,6 @@
     <Content Include="Scripts\DataTables\buttons.bootstrap4.min.js" />
     <Content Include="Scripts\DataTables\buttons.colVis.js" />
     <Content Include="Scripts\DataTables\buttons.colVis.min.js" />
-    <Content Include="Scripts\DataTables\buttons.flash.js" />
-    <Content Include="Scripts\DataTables\buttons.flash.min.js" />
     <Content Include="Scripts\DataTables\buttons.foundation.js" />
     <Content Include="Scripts\DataTables\buttons.foundation.min.js" />
     <Content Include="Scripts\DataTables\buttons.html5.js" />
