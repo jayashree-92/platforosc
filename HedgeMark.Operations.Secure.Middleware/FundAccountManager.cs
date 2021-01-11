@@ -603,17 +603,6 @@ namespace HedgeMark.Operations.Secure.Middleware
             }
         }
 
-        public static void AddOrUpdateSwiftGroup(hmsSwiftGroup hmsSwiftGroup)
-        {
-            hmsSwiftGroup.SendersBIC = hmsSwiftGroup.SendersBIC.ToUpper();
-            using (var context = new OperationsSecureContext())
-            {
-                hmsSwiftGroup.RecCreatedAt = DateTime.Now;
-                context.hmsSwiftGroups.AddOrUpdate(hmsSwiftGroup);
-                context.SaveChanges();
-            }
-        }
-
         public static bool IsAccountDocumentExists(long accountId)
         {
             using (var context = new OperationsSecureContext())

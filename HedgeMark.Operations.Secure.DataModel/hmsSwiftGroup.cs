@@ -30,6 +30,10 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string Notes { get; set; }
         public Nullable<int> SwiftGroupStatusId { get; set; }
         public Nullable<long> BrokerLegalEntityId { get; set; }
+        public Nullable<int> ApprovedBy { get; set; }
+        public Nullable<System.DateTime> ApprovedAt { get; set; }
+        public Nullable<int> RequestedBy { get; set; }
+        public Nullable<System.DateTime> RequestedAt { get; set; }
     
         public virtual hmsSwiftGroupStatusLkp hmsSwiftGroupStatusLkp { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

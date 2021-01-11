@@ -44,15 +44,36 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
                         "mData": "SwiftGroup.Notes",
                     },
                     {
-                        "sTitle": "Created By",
-                        "mData": "SwiftGroup.RecCreatedBy",
+                        "sTitle": "Requested By",
+                        "mData": "RequestedBy",
+                        "render": function (tdata) {
+                            return humanizeEmail(tdata);
+                        }
                     },
                     {
-                        "sTitle": "Created At",
-                        "mData": "SwiftGroup.RecCreatedAt",
+                        "sTitle": "Requested At",
+                        "mData": "SwiftGroup.RequestedAt",
+                        "mRender": renderDotNetDateAndTime
+                    },
+                    {
+                        "sTitle": "Approved By",
+                        "mData": "ApprovedBy",
+                        "render": function (tdata) {
+                            return humanizeEmail(tdata);
+                        }
+                    },
+                    {
+                        "sTitle": "Approved At",
+                        "mData": "SwiftGroup.ApprovedAt",
                         "mRender": renderDotNetDateAndTime
                     }
-                ],
+                ], "createdRow": function (row, data) {
+                    if (data.SwiftGroupStatus == "Live")
+                        $(row).addClass("success");
+
+                    else if (data.SwiftGroupStatus == "Requested")
+                        $(row).addClass("warning");
+                },
                 "deferRender": false,
                 "bScrollCollapse": true,
                 scroller: true,
@@ -70,7 +91,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
 
             angular.element("#liSwiftGroupStatus").select2({
                 placeholder: "Select a Status",
-                data: $scope.swiftGroupStatusData,
+                data: function () { return { results: $scope.swiftGroupStatusData }; },
                 closeOnSelect: false
             });
 
@@ -130,7 +151,11 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
     //    $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
     //}
 
+    $scope.IsSwiftGroupLoading = false;
+    $scope.ExistingSwiftGroup = {};
     $scope.fnAddOrUpdateSwiftGroup = function (isAdd) {
+
+        $scope.IsSwiftGroupLoading = true;
         $scope.isAdd = isAdd;
         if (isAdd)
             $scope.swiftGroup = angular.copy($scope.dummySwiftGroup);
@@ -142,11 +167,70 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
             $("#liBrokerEntity").select2("val", $scope.swiftGroup.SwiftGroup.BrokerLegalEntityId);
             $("#liSwiftGroupStatus").select2("val", $scope.swiftGroup.SwiftGroup.SwiftGroupStatusId);
             $("#liMessageTypes").select2("val", [$scope.swiftGroup.SwiftGroup.AcceptedMessages]);
+
+            $scope.ExistingSwiftGroup = angular.copy($scope.swiftGroup);
+            $timeout(function () {
+                $scope.IsSwiftGroupLoading = false;
+                $scope.fnChangeSwiftGroupStatus();
+            }, 50);
+
         });
+
+
+
         //$timeout(function () {
         //    $scope.isSwiftGroupRequirementsFilled = !$scope.isSwiftGroupRequirementsFilled;
         //}, 50);
     }
+
+    $scope.ShouldDisableLive = false;
+    $scope.fnChangeSwiftGroupStatus = function () {
+
+        $scope.ShouldDisableLive = false;
+        if ($scope.IsSwiftGroupLoading)
+            return;
+
+        ////if Swift Status is not Live - > return here;
+        //if ($("#liSwiftGroupStatus").select2("data").text !== "Live")
+        //    return;
+
+        if ($scope.ExistingSwiftGroup.SwiftGroup.BrokerLegalEntityId == $("#liBrokerEntity").select2("val")
+            && $scope.ExistingSwiftGroup.SwiftGroup.SendersBIC == $("#sendersBIC").val()
+            && $scope.ExistingSwiftGroup.SwiftGroup.AcceptedMessages == $("#liMessageTypes").select2("val")) {
+
+            $scope.ShouldDisableLive = false;
+        } else {
+            $scope.ShouldDisableLive = true;
+        }
+
+        var requestedId = 0; var liveId = 0;
+        $($scope.swiftGroupStatusData).each(function (i, v) {
+            if (v.text == "Requested")
+                requestedId = v.id;
+
+            if (v.text == "Live") {
+                liveId = v.id;
+
+                if ($scope.ShouldDisableLive || ($scope.ExistingSwiftGroup.SwiftGroupStatus !== "Live" &&
+                    $("#userName").val() == $scope.ExistingSwiftGroup.RequestedBy))
+                    v.disabled = true;
+                else
+                    v.disabled = false;
+            }
+
+        });
+
+        if ($("#liSwiftGroupStatus").select2("data") != null && $("#liSwiftGroupStatus").select2("data").text === "Live" && $scope.ShouldDisableLive)
+            $("#liSwiftGroupStatus").select2("val", requestedId).trigger("change");
+
+        if ($scope.ExistingSwiftGroup.SwiftGroupStatus === "Live" && !$scope.ShouldDisableLive)
+            $("#liSwiftGroupStatus").select2("val", liveId).trigger("change");
+
+    }
+
+
+    $("#liBrokerEntity").on("change", function () { $scope.fnChangeSwiftGroupStatus(); });
+    $("#liMessageTypes").on("change", function () { $scope.fnChangeSwiftGroupStatus(); });
 
     $(document).on("click", "#tblSwiftGroupData tbody tr ", function () {
         $("#tblSwiftGroupData tbody tr").removeClass("info");
@@ -182,7 +266,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
             return swift.SwiftGroup.hmsSwiftGroupId != $scope.swiftGroup.SwiftGroup.hmsSwiftGroupId && (swift.SwiftGroup.SwiftGroup == $scope.swiftGroup.SwiftGroup.SwiftGroup || swift.SwiftGroup.SendersBIC == $scope.swiftGroup.SwiftGroup.SendersBIC);
         }, true)[0];
         if (existingSwiftGroup != undefined) {
-            notifyError("Swift group data exists for selected Swift Group and Sender's BIC. Please select a new combination.")
+            notifyError("Swift group data exists for selected Swift Group and Sender's BIC. Please select a new combination.");
             return;
         }
         //$scope.formatSwiftGroup();

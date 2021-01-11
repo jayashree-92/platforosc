@@ -106,6 +106,10 @@
           <Property Name="Notes" Type="varchar" MaxLength="500" />
           <Property Name="SwiftGroupStatusId" Type="int" />
           <Property Name="BrokerLegalEntityId" Type="bigint" />
+          <Property Name="ApprovedBy" Type="int" />
+          <Property Name="ApprovedAt" Type="datetime" />
+          <Property Name="RequestedBy" Type="int" />
+          <Property Name="RequestedAt" Type="datetime" />
         </EntityType>
         <EntityType Name="hmsSwiftGroupStatusLkp">
           <Key>
@@ -244,6 +248,9 @@
           <Property Name="CutOffTimeZone" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="RecCreatedBy" Type="int" Nullable="false" />
           <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="ApprovedBy" Type="int" />
+          <Property Name="ApprovedAt" Type="datetime" />
+          <Property Name="IsApproved" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsWirePurposeLkup">
           <Key>
@@ -1375,7 +1382,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             <End Role="hmsSwiftGroup" EntitySet="hmsSwiftGroups" />
           </AssociationSet>
           <EntitySet Name="hmsCurrencies" EntityType="OperationsSecureModel.hmsCurrency" />
-          <EntitySet Name="hmsWirePortalCutoffs" EntityType="OperationsSecureModel.hmsWirePortalCutoff" />
           <EntitySet Name="vw_FundAccounts" EntityType="OperationsSecureModel.vw_FundAccounts" />
           <EntitySet Name="hmsSSICallbacks" EntityType="OperationsSecureModel.hmsSSICallback" />
           <AssociationSet Name="FK_hmsSSICallback_onBoardingSSITemplateId" Association="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId">
@@ -1423,10 +1429,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <AssociationSet Name="FK_hmsWires_hmsWireMessageType_WireMessageTypeId" Association="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId">
             <End Role="hmsWireMessageType" EntitySet="hmsWireMessageTypes" />
             <End Role="hmsWire" EntitySet="hmsWires" />
-          </AssociationSet>
-          <AssociationSet Name="FK_onBoardingAccount_WirePortalCutoffId" Association="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId">
-            <End Role="hmsWirePortalCutoff" EntitySet="hmsWirePortalCutoffs" />
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" Association="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID">
             <End Role="hmsWirePurposeLkup" EntitySet="hmsWirePurposeLkups" />
@@ -1493,6 +1495,11 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <AssociationSet Name="FK_hmsWires_hmsWireFieldId" Association="OperationsSecureModel.FK_hmsWires_hmsWireFieldId">
             <End Role="hmsWireField" EntitySet="hmsWireFields" />
             <End Role="hmsWire" EntitySet="hmsWires" />
+          </AssociationSet>
+          <EntitySet Name="hmsWirePortalCutoffs" EntityType="OperationsSecureModel.hmsWirePortalCutoff" />
+          <AssociationSet Name="FK_onBoardingAccount_WirePortalCutoffId" Association="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId">
+            <End Role="hmsWirePortalCutoff" EntitySet="hmsWirePortalCutoffs" />
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
@@ -2052,6 +2059,10 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="BrokerLegalEntityId" Type="Int64" />
           <NavigationProperty Name="hmsSwiftGroupStatusLkp" Relationship="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" FromRole="hmsSwiftGroup" ToRole="hmsSwiftGroupStatusLkp" />
           <NavigationProperty Name="onBoardingAccounts" Relationship="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" FromRole="hmsSwiftGroup" ToRole="onBoardingAccount" />
+          <Property Name="ApprovedBy" Type="Int32" />
+          <Property Name="ApprovedAt" Type="DateTime" Precision="3" />
+          <Property Name="RequestedBy" Type="Int32" />
+          <Property Name="RequestedAt" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_hmsSwiftGroup_SwiftGroupStatusId">
           <End Type="OperationsSecureModel.hmsSwiftGroupStatusLkp" Role="hmsSwiftGroupStatusLkp" Multiplicity="0..1" />
@@ -2071,21 +2082,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           </Key>
           <Property Name="hmsCurrencyId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="hmsWirePortalCutoff">
-          <Key>
-            <PropertyRef Name="hmsWirePortalCutoffId" />
-          </Key>
-          <Property Name="hmsWirePortalCutoffId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CashInstruction" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Country" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Currency" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="CutoffTime" Type="Time" Nullable="false" Precision="7" />
-          <Property Name="DaystoWire" Type="Int32" Nullable="false" />
-          <Property Name="CutOffTimeZone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="RecCreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="onBoardingAccounts" Relationship="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId" FromRole="hmsWirePortalCutoff" ToRole="onBoardingAccount" />
         </EntityType>
         <EntityType Name="vw_FundAccounts">
           <Key>
@@ -2264,7 +2260,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="MarginAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsAccountCallbacks" Relationship="OperationsSecureModel.FK_hmsAccountCallback_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="hmsAccountCallback" />
           <NavigationProperty Name="SwiftGroup" Relationship="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" FromRole="onBoardingAccount" ToRole="hmsSwiftGroup" />
-          <NavigationProperty Name="WirePortalCutoff" Relationship="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId" FromRole="onBoardingAccount" ToRole="hmsWirePortalCutoff" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardAccountId" FromRole="onBoardingAccount" ToRole="hmsWire" />
           <NavigationProperty Name="hmsWires1" Relationship="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" FromRole="onBoardingAccount" ToRole="hmsWire" />
           <NavigationProperty Name="Beneficiary" Relationship="OperationsSecureModel.FK_onBoardingAccount_BeneficiaryBICorABAId" FromRole="onBoardingAccount" ToRole="onBoardingAccountBICorABA" />
@@ -2274,6 +2269,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <NavigationProperty Name="onBoardingAccountModuleAssociations" Relationship="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountModuleAssociation" />
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
           <Property Name="TopLevelManagerAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="WirePortalCutoff" Relationship="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId" FromRole="onBoardingAccount" ToRole="hmsWirePortalCutoff" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
@@ -2392,18 +2388,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             </Principal>
             <Dependent Role="hmsWire">
               <PropertyRef Name="WireMessageTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_onBoardingAccount_WirePortalCutoffId">
-          <End Type="OperationsSecureModel.hmsWirePortalCutoff" Role="hmsWirePortalCutoff" Multiplicity="0..1" />
-          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWirePortalCutoff">
-              <PropertyRef Name="hmsWirePortalCutoffId" />
-            </Principal>
-            <Dependent Role="onBoardingAccount">
-              <PropertyRef Name="WirePortalCutoffId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2614,6 +2598,36 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             </Principal>
             <Dependent Role="hmsWire">
               <PropertyRef Name="hmsWireFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsWirePortalCutoff">
+          <Key>
+            <PropertyRef Name="hmsWirePortalCutoffId" />
+          </Key>
+          <Property Name="hmsWirePortalCutoffId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CashInstruction" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Currency" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CutoffTime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="DaystoWire" Type="Int32" Nullable="false" />
+          <Property Name="CutOffTimeZone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ApprovedBy" Type="Int32" />
+          <Property Name="ApprovedAt" Type="DateTime" Precision="3" />
+          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="onBoardingAccounts" Relationship="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId" FromRole="hmsWirePortalCutoff" ToRole="onBoardingAccount" />
+        </EntityType>
+        <Association Name="FK_onBoardingAccount_WirePortalCutoffId">
+          <End Type="OperationsSecureModel.hmsWirePortalCutoff" Role="hmsWirePortalCutoff" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWirePortalCutoff">
+              <PropertyRef Name="hmsWirePortalCutoffId" />
+            </Principal>
+            <Dependent Role="onBoardingAccount">
+              <PropertyRef Name="WirePortalCutoffId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3023,6 +3037,10 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <EntitySetMapping Name="hmsSwiftGroups">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsSwiftGroup">
               <MappingFragment StoreEntitySet="hmsSwiftGroup">
+                <ScalarProperty Name="RequestedAt" ColumnName="RequestedAt" />
+                <ScalarProperty Name="RequestedBy" ColumnName="RequestedBy" />
+                <ScalarProperty Name="ApprovedAt" ColumnName="ApprovedAt" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
                 <ScalarProperty Name="BrokerLegalEntityId" ColumnName="BrokerLegalEntityId" />
                 <ScalarProperty Name="SwiftGroupStatusId" ColumnName="SwiftGroupStatusId" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
@@ -3041,21 +3059,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
               <MappingFragment StoreEntitySet="hmsCurrency">
                 <ScalarProperty Name="Currency" ColumnName="Currency" />
                 <ScalarProperty Name="hmsCurrencyId" ColumnName="hmsCurrencyId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="hmsWirePortalCutoffs">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWirePortalCutoff">
-              <MappingFragment StoreEntitySet="hmsWirePortalCutoff">
-                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
-                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
-                <ScalarProperty Name="CutOffTimeZone" ColumnName="CutOffTimeZone" />
-                <ScalarProperty Name="DaystoWire" ColumnName="DaystoWire" />
-                <ScalarProperty Name="CutoffTime" ColumnName="CutoffTime" />
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="CashInstruction" ColumnName="CashInstruction" />
-                <ScalarProperty Name="hmsWirePortalCutoffId" ColumnName="hmsWirePortalCutoffId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3221,6 +3224,24 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
               <MappingFragment StoreEntitySet="hmsWireFields">
                 <ScalarProperty Name="hmsCollateralCashPurposeLkupId" ColumnName="hmsCollateralCashPurposeLkupId" />
                 <ScalarProperty Name="hmsWireFieldId" ColumnName="hmsWireFieldId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWirePortalCutoffs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWirePortalCutoff">
+              <MappingFragment StoreEntitySet="hmsWirePortalCutoff">
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="ApprovedAt" ColumnName="ApprovedAt" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="CutOffTimeZone" ColumnName="CutOffTimeZone" />
+                <ScalarProperty Name="DaystoWire" ColumnName="DaystoWire" />
+                <ScalarProperty Name="CutoffTime" ColumnName="CutoffTime" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="CashInstruction" ColumnName="CashInstruction" />
+                <ScalarProperty Name="hmsWirePortalCutoffId" ColumnName="hmsWirePortalCutoffId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

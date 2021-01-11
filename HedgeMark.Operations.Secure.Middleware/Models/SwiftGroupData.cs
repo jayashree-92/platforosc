@@ -8,5 +8,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         public string Broker { get; set; }
         public string SwiftGroupStatus { get; set; }
         public bool IsAssociatedToAccount { get; set; }
+        public string RequestedBy { get; set; }
+        public string ApprovedBy { get; set; }
     }
 }

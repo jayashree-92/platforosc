@@ -59,7 +59,7 @@
                             <label for="sendersBIC" class="control-label">Sender's BIC:</label>
                         </div>
                         <div class="col-md-5">
-                            <input type="text" id="sendersBIC" data-toggle="tooltip" data-placement="right" title="only alpha-numeric and between 8 to 11 characters allowed" maxlength="11" required pattern="^[A-Za-z0-9]{8,11}$" autocomplete="false" style="text-transform: uppercase;" minlength="8" ng-model="swiftGroup.SwiftGroup.SendersBIC" class="modalInputWidth form-control" />
+                            <input type="text" id="sendersBIC" ng-keyup="fnChangeSwiftGroupStatus()" data-toggle="tooltip" data-placement="right" title="only alpha-numeric and between 8 to 11 characters allowed" maxlength="11" required pattern="^[A-Za-z0-9]{8,11}$" autocomplete="false" style="text-transform: uppercase;" minlength="8" ng-model="swiftGroup.SwiftGroup.SendersBIC" class="modalInputWidth form-control" />
                         </div>
                     </div>
                     <br />

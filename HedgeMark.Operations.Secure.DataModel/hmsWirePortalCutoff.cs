@@ -29,6 +29,9 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string CutOffTimeZone { get; set; }
         public int RecCreatedBy { get; set; }
         public System.DateTime RecCreatedAt { get; set; }
+        public Nullable<int> ApprovedBy { get; set; }
+        public Nullable<System.DateTime> ApprovedAt { get; set; }
+        public bool IsApproved { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccount> onBoardingAccounts { get; set; }
