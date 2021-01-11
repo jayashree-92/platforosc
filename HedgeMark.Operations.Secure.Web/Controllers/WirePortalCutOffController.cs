@@ -3,11 +3,13 @@ using HedgeMark.Operations.FileParseEngine.Models;
 using HedgeMark.Operations.Secure.DataModel;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using HedgeMark.Operations.Secure.Middleware;
+using HedgeMark.Operations.Secure.Middleware.Models;
 
 namespace HMOSecureWeb.Controllers
 {
@@ -21,7 +23,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetWirePortalCutOffData()
         {
-            var wireCutoffData = WireDataManager.GetWirePortalCutoffData();
+            var wireCutoffData = GetWirePortalCutoffData();
             return Json(wireCutoffData);
         }
 
@@ -33,6 +35,34 @@ namespace HMOSecureWeb.Controllers
             return Json(new { cashInstructions, currencies, timeZones }, JsonRequestBehavior.AllowGet);
         }
 
+        private static List<WirePortalCutOffData> GetWirePortalCutoffData()
+        {
+            List<WirePortalCutOffData> cutOffData;
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                cutOffData = context.hmsWirePortalCutoffs.Select(s => new WirePortalCutOffData() { WirePortalCutoff = s }).ToList();
+            }
+
+            var loginIds = cutOffData.Select(s => s.WirePortalCutoff.RecCreatedBy).Union(cutOffData.Select(s => s.WirePortalCutoff.ApprovedBy ?? 0)).Distinct().ToList();
+
+            Dictionary<int, string> loginIdMap;
+            using (var context = new AdminContext())
+            {
+                loginIdMap = context.hLoginRegistrations.Where(s => loginIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID);
+            }
+
+            cutOffData.ForEach(s =>
+                {
+                    s.RequestedBy = loginIdMap.ContainsKey(s.WirePortalCutoff.RecCreatedBy) ? loginIdMap[s.WirePortalCutoff.RecCreatedBy] : "#Retrofit";
+                    s.ApprovedBy = !s.WirePortalCutoff.IsApproved ? "-" : loginIdMap.ContainsKey(s.WirePortalCutoff.ApprovedBy ?? 0) ? loginIdMap[s.WirePortalCutoff.ApprovedBy ?? 0] : "#Retrofit";
+                });
+
+            return cutOffData;
+        }
+
+
         private hmsWirePortalCutoff GetWirePortalCutOffData(long wireCutoffId)
         {
             using (var context = new OperationsSecureContext())
@@ -41,13 +71,30 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public void SaveWirePortalCutoff(hmsWirePortalCutoff wirePortalCutoff)
+        public void SaveWirePortalCutoff(hmsWirePortalCutoff wirePortalCutoff, bool shouldApprove)
         {
             var originalCutOff = GetWirePortalCutOffData(wirePortalCutoff.hmsWirePortalCutoffId);
 
-            wirePortalCutoff.RecCreatedBy = UserDetails.Id;
-            wirePortalCutoff.RecCreatedAt = DateTime.Now;
-            WireDataManager.SaveWirePortalCutoff(wirePortalCutoff);
+            wirePortalCutoff.IsApproved = shouldApprove;
+            if (!shouldApprove)
+            {
+                wirePortalCutoff.RecCreatedBy = UserId;
+                wirePortalCutoff.RecCreatedAt = DateTime.Now;
+            }
+            else
+            {
+                wirePortalCutoff.RecCreatedBy = originalCutOff.RecCreatedBy;
+                wirePortalCutoff.RecCreatedAt = originalCutOff.RecCreatedAt;
+
+                wirePortalCutoff.ApprovedBy = UserId;
+                wirePortalCutoff.ApprovedAt = DateTime.Now;
+            }
+
+            using (var context = new OperationsSecureContext())
+            {
+                context.hmsWirePortalCutoffs.AddOrUpdate(wirePortalCutoff);
+                context.SaveChanges();
+            }
 
             AuditWireCutoffChanges(wirePortalCutoff, originalCutOff);
         }
@@ -68,15 +115,10 @@ namespace HMOSecureWeb.Controllers
             {
                 Action = isDeleted ? "Deleted" : originalCutOff.hmsWirePortalCutoffId > 0 ? "Edited" : "Added",
                 Module = "Wire Cutoff",
-                Log = string.Format("Cash Instruction: <i>{0}</i><br/>Currency: <i>{1}</i>", wirePortalCutoff.CashInstruction,
-                    wirePortalCutoff.Currency),
+                Log = string.Format("Cash Instruction: <i>{0}</i><br/>Currency: <i>{1}</i>", wirePortalCutoff.CashInstruction, wirePortalCutoff.Currency),
                 Field = string.Join(",<br>", fieldsChanged),
-                PreviousStateValue =
-                    string.Format("TimeZone: <i>{0}</i><br/>Cutoff Time: <i>{1}</i><br/>Days to Wire:<i>{2}</i>",
-                        originalCutOff.CutOffTimeZone, originalCutOff.CutoffTime, originalCutOff.DaystoWire),
-                ModifiedStateValue =
-                    string.Format("TimeZone: <i>{0}</i><br/>Cutoff Time: <i>{1}</i><br/>Days to Wire:<i>{2}</i>",
-                        wirePortalCutoff.CutOffTimeZone, wirePortalCutoff.CutoffTime, wirePortalCutoff.DaystoWire),
+                PreviousStateValue = string.Format("TimeZone: <i>{0}</i><br/>Cutoff Time: <i>{1}</i><br/>Days to Wire:<i>{2}</i><br/>IsApproved:<i>{3}</i>", originalCutOff.CutOffTimeZone, originalCutOff.CutoffTime, originalCutOff.DaystoWire, originalCutOff.IsApproved),
+                ModifiedStateValue = string.Format("TimeZone: <i>{0}</i><br/>Cutoff Time: <i>{1}</i><br/>Days to Wire:<i>{2}</i><br/>IsApproved:<i>{3}</i>", wirePortalCutoff.CutOffTimeZone, wirePortalCutoff.CutoffTime, wirePortalCutoff.DaystoWire, originalCutOff.IsApproved),
                 CreatedAt = DateTime.Now,
                 UserName = User.Identity.Name
             };
@@ -86,7 +128,13 @@ namespace HMOSecureWeb.Controllers
         public void DeleteWirePortalCutoff(long wireCutoffId)
         {
             var originalCutOff = GetWirePortalCutOffData(wireCutoffId);
-            WireDataManager.DeleteWirePortalCutoff(wireCutoffId);
+
+            using (var context = new OperationsSecureContext())
+            {
+                var wirePortalCutoff = context.hmsWirePortalCutoffs.First(s => s.hmsWirePortalCutoffId == wireCutoffId);
+                context.hmsWirePortalCutoffs.Remove(wirePortalCutoff);
+                context.SaveChanges();
+            }
 
             AuditWireCutoffChanges(new hmsWirePortalCutoff() { hmsWirePortalCutoffId = wireCutoffId }, originalCutOff, true);
         }
@@ -94,7 +142,7 @@ namespace HMOSecureWeb.Controllers
 
         public FileResult ExportData()
         {
-            var wireCutoffData = WireDataManager.GetWirePortalCutoffData().OrderBy(s => s.CashInstruction).ThenBy(s => s.Currency).ToList();
+            var wireCutoffData = GetWirePortalCutoffData().OrderBy(s => s.WirePortalCutoff.CashInstruction).ThenBy(s => s.WirePortalCutoff.Currency).ToList();
             var contentToExport = new Dictionary<string, List<Row>>();
             var accountListRows = BuildExportRows(wireCutoffData);
             //File name and path
@@ -106,21 +154,26 @@ namespace HMOSecureWeb.Controllers
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
-        private List<Row> BuildExportRows(List<hmsWirePortalCutoff> wireCutoffData)
+        private List<Row> BuildExportRows(List<WirePortalCutOffData> wireCutoffData)
         {
             var wireCutoffRows = new List<Row>();
 
-            foreach (var cutoff in wireCutoffData)
+            foreach (var cutoffData in wireCutoffData)
             {
+                var cutoff = cutoffData.WirePortalCutoff;
                 var row = new Row();
-                row["Cash Instruction"] = cutoff.CashInstruction.ToString();
+                row["Cash Instruction"] = cutoff.CashInstruction;
                 row["Currency"] = cutoff.Currency;
                 row["Time Zone"] = cutoff.CutOffTimeZone;
                 var dateTime = DateTime.Today.AddHours(cutoff.CutoffTime.Hours).AddMinutes(cutoff.CutoffTime.Minutes).AddSeconds(cutoff.CutoffTime.Seconds);
                 var stringTime = dateTime.ToString("hh:mm tt");
                 row["Cutoff Time"] = stringTime;
                 row["Days to Wire"] = cutoff.DaystoWire.ToString();
+                row["Created By"] = cutoffData.RequestedBy;
                 row["Created At"] = cutoff.RecCreatedAt + "";
+                row["Is Approved"] = cutoff.IsApproved ? "Approved" : "Pending Approval";
+                row["Approved By"] = cutoffData.ApprovedBy;
+                row["Approved At"] = cutoff.ApprovedAt + "";
                 wireCutoffRows.Add(row);
             }
 

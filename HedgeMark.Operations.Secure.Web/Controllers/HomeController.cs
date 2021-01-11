@@ -692,7 +692,7 @@ namespace HMOSecureWeb.Controllers
         {
             var onboardAccount = FundAccountManager.GetOnBoardingAccount(onboardingAccountId);
             var timeToApprove = GetDeadlineToApprove(onboardAccount, valueDate);
-            return Json(timeToApprove);
+            return Json(new { timeToApprove, onboardAccount.WirePortalCutoff.IsApproved });
         }
 
         private TimeSpan GetDeadlineToApprove(onBoardingAccount onboardAccount, DateTime valueDate, Dictionary<string, string> timeZones = null)

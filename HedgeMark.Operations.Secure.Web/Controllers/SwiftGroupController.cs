@@ -132,9 +132,7 @@ namespace HMOSecureWeb.Controllers
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
-                swiftGroup =
-                    context.hmsSwiftGroups.Include(s => s.hmsSwiftGroupStatusLkp)
-                        .FirstOrDefault(s => s.hmsSwiftGroupId == swiftGroupId) ?? new hmsSwiftGroup();
+                swiftGroup = context.hmsSwiftGroups.Include(s => s.hmsSwiftGroupStatusLkp).FirstOrDefault(s => s.hmsSwiftGroupId == swiftGroupId) ?? new hmsSwiftGroup();
                 swiftGroup.IsDeleted = true;
                 swiftGroup.RecCreatedAt = DateTime.Now;
                 context.SaveChanges();
@@ -204,10 +202,8 @@ namespace HMOSecureWeb.Controllers
 
             if (originalSwiftGroup.BrokerLegalEntityId != swiftGroup.BrokerLegalEntityId)
             {
-                var originalFamilyName =
-                    OnBoardingDataManager.GetCounterpartyFamilyName(originalSwiftGroup.BrokerLegalEntityId ?? 0);
-                var modifiedFamilyName =
-                    OnBoardingDataManager.GetCounterpartyFamilyName(swiftGroup.BrokerLegalEntityId ?? 0);
+                var originalFamilyName = OnBoardingDataManager.GetCounterpartyFamilyName(originalSwiftGroup.BrokerLegalEntityId ?? 0);
+                var modifiedFamilyName = OnBoardingDataManager.GetCounterpartyFamilyName(swiftGroup.BrokerLegalEntityId ?? 0);
 
                 fieldsChanged.Add("Broker");
                 previousState += string.Format("Broker: <i>{0}</i><br/>", originalFamilyName);
@@ -219,23 +215,15 @@ namespace HMOSecureWeb.Controllers
                 var statusLkup = FundAccountManager.GetSwiftGroupStatus();
 
                 fieldsChanged.Add("Swift Group Status");
-                previousState += string.Format("Swift Group Status: <i>{0}</i><br/>",
-                    statusLkup.ContainsKey(originalSwiftGroup.SwiftGroupStatusId ?? 0)
-                        ? statusLkup[originalSwiftGroup.SwiftGroupStatusId ?? 0]
-                        : string.Empty);
-                modifiedState += string.Format("Swift Group Status: <i>{0}</i><br/>",
-                    statusLkup.ContainsKey(swiftGroup.SwiftGroupStatusId ?? 0)
-                        ? statusLkup[swiftGroup.SwiftGroupStatusId ?? 0]
-                        : string.Empty);
+                previousState += string.Format("Swift Group Status: <i>{0}</i><br/>", statusLkup.ContainsKey(originalSwiftGroup.SwiftGroupStatusId ?? 0) ? statusLkup[originalSwiftGroup.SwiftGroupStatusId ?? 0] : string.Empty);
+                modifiedState += string.Format("Swift Group Status: <i>{0}</i><br/>", statusLkup.ContainsKey(swiftGroup.SwiftGroupStatusId ?? 0) ? statusLkup[swiftGroup.SwiftGroupStatusId ?? 0] : string.Empty);
             }
 
             if (originalSwiftGroup.AcceptedMessages != swiftGroup.AcceptedMessages)
             {
                 fieldsChanged.Add("Swift Messages");
-                previousState += string.Format("Swift Messages: <i>{0}</i><br/>",
-                    originalSwiftGroup.AcceptedMessages ?? string.Empty);
-                modifiedState += string.Format("Swift Messages: <i>{0}</i><br/>",
-                    swiftGroup.AcceptedMessages ?? string.Empty);
+                previousState += string.Format("Swift Messages: <i>{0}</i><br/>", originalSwiftGroup.AcceptedMessages ?? string.Empty);
+                modifiedState += string.Format("Swift Messages: <i>{0}</i><br/>", swiftGroup.AcceptedMessages ?? string.Empty);
             }
 
             if (originalSwiftGroup.Notes != swiftGroup.Notes)

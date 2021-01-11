@@ -14,33 +14,62 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
                 "aoColumns": [
                     {
                         "sTitle": "Cash Instruction",
-                        "mData": "CashInstruction"
+                        "mData": "WirePortalCutoff.CashInstruction"
                     },
                     {
                         "sTitle": "Currency",
-                        "mData": "Currency",
+                        "mData": "WirePortalCutoff.Currency",
                     },
                     {
                         "sTitle": "Time Zone",
-                        "mData": "CutOffTimeZone",
+                        "mData": "WirePortalCutoff.CutOffTimeZone",
                     },
                     {
                         "sTitle": "Cutoff Time",
-                        "mData": "CutoffTime",
+                        "mData": "WirePortalCutoff.CutoffTime",
                         "mRender": function (tData, type, row) {
                             return moment(tData).format("hh:mm A");
                         }
                     },
                     {
                         "sTitle": "Days to wire",
-                        "mData": "DaystoWire",
+                        "mData": "WirePortalCutoff.DaystoWire",
+                    },
+                    {
+                        "sTitle": "Created By",
+                        "mData": "RequestedBy",
+                        "mRender": humanizeEmail
                     },
                     {
                         "sTitle": "Created At",
-                        "mData": "RecCreatedAt",
+                        "mData": "WirePortalCutoff.RecCreatedAt",
+                        "mRender": renderDotNetDateAndTime
+                    }, {
+                        "sTitle": "Is Approved",
+                        "mData": "WirePortalCutoff.IsApproved",
+                        "mRender": function (tdata, type, row) {
+
+                            //if (row.ModifiedBy == "-")
+                            //    return "-";
+                            return tdata ? "<label class='label label-success'>Approved</label>" : "<label class='label label-warning'>Pending Approval</label>";
+                        }
+                    },
+                    {
+                        "sTitle": "Approved By",
+                        "mData": "ApprovedBy",
+                        "mRender": humanizeEmail
+                    },
+                    {
+                        "sTitle": "Approved At",
+                        "mData": "WirePortalCutoff.ApprovedAt",
                         "mRender": renderDotNetDateAndTime
                     }
-                ],
+                ], "createdRow": function (row, data) {
+                     if (data.WirePortalCutoff.IsApproved)
+                        $(row).addClass("success");
+                    else
+                        $(row).addClass("warning");
+                },
                 "deferRender": false,
                 "bScrollCollapse": true,
                 scroller: true,
@@ -93,6 +122,8 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
 
     $scope.fnGetWirePortalCutoffs();
     $scope.enableWireActions = false;
+    $scope.IsWireCutOffLoading = false;
+    $scope.ExistingWireCutOff = {};
 
     $scope.fnAddOrUpdateWirePortalCutoff = function (isAdd) {
         $scope.isAdd = isAdd;
@@ -100,17 +131,47 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
             $scope.wirePortalCutoff = angular.copy($scope.dummyCutoff);
         else {
             var date = new Date();
-            $scope.selectedRowData.CutoffTime = new Date(date.getYear(), date.getMonth(), date.getDate(), $scope.selectedRowData.CutoffTime.Hours, $scope.selectedRowData.CutoffTime.Minutes, $scope.selectedRowData.CutoffTime.Seconds);
+            $scope.selectedRowData.WirePortalCutoff.CutoffTime = new Date(date.getYear(), date.getMonth(), date.getDate(), $scope.selectedRowData.WirePortalCutoff.CutoffTime.Hours, $scope.selectedRowData.WirePortalCutoff.CutoffTime.Minutes, $scope.selectedRowData.WirePortalCutoff.CutoffTime.Seconds);
             $scope.wirePortalCutoff = angular.copy($scope.selectedRowData);
         }
+
         angular.element("#wirePortalCutoffModal").modal({ backdrop: 'static', keyboard: true }).on("shown.bs.modal", function () {
-            $("#liCashInstruction").select2("val", $scope.wirePortalCutoff.CashInstruction);
-            $("#liCurrency").select2("val", $scope.wirePortalCutoff.Currency);
-            $("#liTimeZone").select2("val", $scope.wirePortalCutoff.CutOffTimeZone);
+            $scope.IsWireCutOffLoading = true;
+            $("#liCashInstruction").select2("val", $scope.wirePortalCutoff.WirePortalCutoff.CashInstruction);
+            $("#liCurrency").select2("val", $scope.wirePortalCutoff.WirePortalCutoff.Currency);
+            $("#liTimeZone").select2("val", $scope.wirePortalCutoff.WirePortalCutoff.CutOffTimeZone);
+            $scope.ExistingWireCutOff = angular.copy($scope.wirePortalCutoff);
+
+            $timeout(function () {
+                $scope.IsWireCutOffLoading = false;
+                $scope.fnChangeWireCutOffStatus();
+            }, 50);
         });
         $timeout(function () {
             $scope.isWireCutoffRequirementsFilled = !$scope.isWireCutoffRequirementsFilled;
         }, 50);
+    }
+
+    $("#liTimeZone").on("change", function () { $scope.fnChangeWireCutOffStatus(); });
+
+    $scope.IsChangeMade = false;
+    $scope.IsSameUserRequested = false;
+    $scope.fnChangeWireCutOffStatus = function () {
+        $scope.IsChangeMade = false;
+        if ($scope.IsWireCutOffLoading)
+            return;
+
+        if (moment($scope.ExistingWireCutOff.WirePortalCutoff.CutoffTime).format("hh:mm") == moment($scope.wirePortalCutoff.WirePortalCutoff.CutoffTime).format("hh:mm")
+            && $scope.ExistingWireCutOff.WirePortalCutoff.DaystoWire == $("#daysToWire").val()
+            && $scope.ExistingWireCutOff.WirePortalCutoff.CutOffTimeZone == $("#liTimeZone").select2("val")) {
+            $scope.IsChangeMade = false;
+        } else {
+            $scope.IsChangeMade = true;
+        }
+
+        $scope.IsSameUserRequested = $("#userName").val() == $scope.ExistingWireCutOff.RequestedBy;
+
+
     }
 
     $(document).on("click", "#tblWirePortalCutoffData tbody tr ", function () {
@@ -126,7 +187,6 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
     });
 
     $(document).on("dblclick", "#tblWirePortalCutoffData tbody tr", function () {
-
         $scope.selectedRowData = $scope.cutOffTable.row(this).data();
         $scope.fnAddOrUpdateWirePortalCutoff(false);
     });
@@ -138,13 +198,15 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
     });
 
     $scope.dummyCutoff = {
-        hmsWirePortalCutoffId: 0,
-        CashInstruction: null,
-        Currency: null,
-        Country: null,
-        CutOffTimeZone: null,
-        CutoffTime: new Date(1, 1, 2020, 0, 0, 0),
-        DaystoWire: 0,
+        WirePortalCutoff: {
+            hmsWirePortalCutoffId: 0,
+            CashInstruction: null,
+            Currency: null,
+            Country: null,
+            CutOffTimeZone: null,
+            CutoffTime: new Date(1, 1, 2020, 0, 0, 0),
+            DaystoWire: 0
+        }
     }
 
     $scope.$watch("isWireCutoffRequirementsFilled", function (newValue, oldValue) {
@@ -153,20 +215,21 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
 
     $scope.fnSaveWirePortalCutoff = function () {
         var existingCutOff = $filter('filter')($scope.wireportalCutOffData, function (cutOff) {
-            return cutOff.CashInstruction == $scope.wirePortalCutoff.CashInstruction && cutOff.Currency == $scope.wirePortalCutoff.Currency;
+            return cutOff.CashInstruction == $scope.wirePortalCutoff.WirePortalCutoff.CashInstruction && cutOff.Currency == $scope.wirePortalCutoff.WirePortalCutoff.Currency;
         }, true)[0];
         if (existingCutOff != undefined && $scope.isAdd) {
             notifyError("Cutoff data exists for selected Cash Instruction and Currency. Please select a new combination.")
             return;
         }
-        var wirePortalCutoff = angular.copy($scope.wirePortalCutoff);
+        var wirePortalCutoff = angular.copy($scope.wirePortalCutoff.WirePortalCutoff);
         wirePortalCutoff.CutoffTime = $("#cutoffTime").val();
         $http({
             method: "POST",
             url: "/WirePortalCutoff/SaveWirePortalCutoff",
             type: "json",
             data: JSON.stringify({
-                wirePortalCutoff: wirePortalCutoff
+                wirePortalCutoff: wirePortalCutoff,
+                shouldApprove: !$scope.IsChangeMade && !$scope.IsSameUserRequested
             })
         }).then(function (response) {
             notifySuccess("Wire Portal Cutoff " + ($scope.isAdd ? "added" : "updated") + " successfully");
@@ -184,7 +247,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
                 label: "Delete",
                 className: "btn btn-sm btn-danger",
                 callback: function () {
-                    $http.post("/WirePortalCutoff/DeleteWirePortalCutoff", { wireCutoffId: $scope.selectedRowData.hmsWirePortalCutoffId }).then(function () {
+                    $http.post("/WirePortalCutoff/DeleteWirePortalCutoff", { wireCutoffId: $scope.selectedRowData.WirePortalCutoff.hmsWirePortalCutoffId }).then(function () {
                         notifySuccess("Wire cutoff deleted successfully");
                         $scope.fnGetWirePortalCutoffs();
                     });

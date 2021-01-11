@@ -860,6 +860,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return false;
         }
 
+        if ($scope.isDeadlineCrossed && $scope.wireComments.trim() == "") {
+            $scope.fnShowErrorMessage("Please enter the comments to initiate the wire as deadline is crossed.");
+            return false;
+        }
+
         if ($("#liWireTransferType").val() != undefined && $("#liWireTransferType").val() === "4") {
             $("#wireErrorStatus").collapse("hide");
             $scope.validationMsg = "";
@@ -916,7 +921,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return;
 
         $http.post("/Home/GetTimeToApproveTheWire", ({ onBoardingAccountId: account.onBoardingAccountId, valueDate: $("#wireValueDate").text() }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
-            $scope.timeToApprove = response.data;
+            $scope.timeToApprove = response.data.timeToApprove;
+
+
             //$scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
             if ($scope.timeToApprove.Hours > 0 || ($scope.timeToApprove.Hours == 0 && $scope.timeToApprove.Minutes >= 0 && $scope.timeToApprove.Seconds > 0)) {
                 $scope.isDeadlineCrossed = false;
@@ -938,6 +945,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.isDeadlineCrossed = true;
                 $scope.validationMsg = "Note: Deadline crossed. Please select a future date for settlement.";
             }
+
             $scope.fnResetDeadlineTimer();
         });
     }

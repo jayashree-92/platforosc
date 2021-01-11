@@ -670,38 +670,5 @@ namespace HedgeMark.Operations.Secure.Middleware
                 return context.hmsWires.Where(s => s.hmsWireMessageType.MessageType == "MT210" && s.WireStatusId == (int)WireStatus.Initiated).Select(s => s.hmsWireId).ToList();
             }
         }
-
-        #region Wire Portal Cutoffs
-
-        public static List<hmsWirePortalCutoff> GetWirePortalCutoffData()
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.hmsWirePortalCutoffs.ToList();
-            }
-        }
-
-        public static void SaveWirePortalCutoff(hmsWirePortalCutoff wirePortalCutoff)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.hmsWirePortalCutoffs.AddOrUpdate(wirePortalCutoff);
-                context.SaveChanges();
-            }
-        }
-
-        public static void DeleteWirePortalCutoff(long wireCutoffId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                var wirePortalCutoff = context.hmsWirePortalCutoffs.First(s => s.hmsWirePortalCutoffId == wireCutoffId);
-                context.hmsWirePortalCutoffs.Remove(wirePortalCutoff);
-                context.SaveChanges();
-            }
-        }
-
-        #endregion
     }
 }

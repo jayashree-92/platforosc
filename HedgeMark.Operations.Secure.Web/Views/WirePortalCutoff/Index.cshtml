@@ -18,9 +18,11 @@
                 {
                     <button class="btn btn-danger btn-sm" id="btnDel" ng-disabled="!enableWireActions" ng-click="fnDeleteWireCutoff()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>
                 }
-                <div class="pull-right btn-group" style="padding-right: 2px;">
-                    &nbsp;&nbsp;<a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportData()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
-                </div>
+                @*<button class="btn btn-danger btn-success" id="btnApprove" ng-disabled="!enableWireActions && (IsChangeMade || wirePortalCutoff.WirePortalCutoff.IsApproved || IsSameUserRequested)" ng-click="fnDeleteWireCutoff()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>*@
+
+            </div>
+            <div class="pull-right btn-group" style="padding-right: 2px;">
+                &nbsp;&nbsp;<a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportData()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
             </div>
         </div>
         <div class="panel-body">
@@ -41,7 +43,7 @@
                             <label for="liCashInstruction" class="control-label">Cash Instruction:</label>
                         </div>
                         <div class="col-sm-8 col-md-6 col-lg-3">
-                            <input type="text" id="liCashInstruction" ng-disabled="!isAdd" ng-model="wirePortalCutoff.CashInstruction" class="modalInputWidth dropDown form-control" placeholder="Select a Cash Instruction" />
+                            <input type="text" id="liCashInstruction" ng-disabled="!isAdd" ng-model="wirePortalCutoff.WirePortalCutoff.CashInstruction" class="modalInputWidth dropDown form-control" placeholder="Select a Cash Instruction" />
                         </div>
                     </div>
                     <br />
@@ -50,7 +52,7 @@
                             <label for="liCurrency" class="control-label">Currency:</label>
                         </div>
                         <div class="col-sm-8 col-md-6 col-lg-3">
-                            <input type="text" id="liCurrency" ng-disabled="!isAdd" ng-model="wirePortalCutoff.Currency" class="modalInputWidth dropDown form-control" placeholder="Select a Currency" />
+                            <input type="text" id="liCurrency" ng-disabled="!isAdd" ng-model="wirePortalCutoff.WirePortalCutoff.Currency" class="modalInputWidth dropDown form-control" placeholder="Select a Currency" />
                         </div>
                     </div>
                     <br />
@@ -59,7 +61,7 @@
                             <label for="liTimeZone" class="control-label">Time Zone:</label>
                         </div>
                         <div class="col-sm-8 col-md-6 col-lg-3">
-                            <input type="text" id="liTimeZone" ng-model="wirePortalCutoff.CutOffTimeZone" class="modalInputWidth dropDown form-control" placeholder="Select a Time Zone" />
+                            <input type="text" id="liTimeZone" ng-model="wirePortalCutoff.WirePortalCutoff.CutOffTimeZone" class="modalInputWidth dropDown form-control" placeholder="Select a Time Zone" />
                         </div>
                     </div>
                     <br />
@@ -68,7 +70,7 @@
                             <label for="cutoffTime" class="control-label">Cutoff Time:</label>
                         </div>
                         <div class="col-sm-8 col-md-3 col-lg-2">
-                            <input type="time" id="cutoffTime" ng-model="wirePortalCutoff.CutoffTime" class="modalInputWidth form-control" value="00:00" />
+                            <input type="time" ng-change="fnChangeWireCutOffStatus()" id="cutoffTime" ng-model="wirePortalCutoff.WirePortalCutoff.CutoffTime" class="modalInputWidth form-control" value="00:00" />
                         </div>
                     </div>
                     <br />
@@ -77,13 +79,13 @@
                             <label for="daysToWire" class="control-label">Days to Wire:</label>
                         </div>
                         <div class="col-sm-8 col-md-3 col-lg-2">
-                            <input type="number" id="daysToWire" ng-model="wirePortalCutoff.DaystoWire" class="modalInputWidth form-control" />
+                            <input type="number" ng-change="fnChangeWireCutOffStatus()" id="daysToWire" ng-model="wirePortalCutoff.WirePortalCutoff.DaystoWire" class="modalInputWidth form-control" />
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-primary" ng-disabled="!isWireCutoffRequirementsFilled" ng-click="fnSaveWirePortalCutoff()">
-                        <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Cutoff
+                    <button type="button" class="btn btn-sm  {{IsChangeMade ?'btn-warning':'btn-success'}} " ng-disabled="!isWireCutoffRequirementsFilled || (!IsChangeMade && (wirePortalCutoff.WirePortalCutoff.IsApproved || IsSameUserRequested))" ng-click="fnSaveWirePortalCutoff()">
+                        <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;{{IsChangeMade ? 'Save And Request for Approval ': ' Approve CutOff'}}
                     </button>
                     <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                 </div>
