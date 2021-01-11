@@ -1525,7 +1525,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     v.TotalWireEntered = $.convertToCurrency(v.TotalWireEntered, 2);
                 });
 
-                $timeout($scope.fnCalculateCashBalance(), 100);
+                $timeout($scope.fnCalculateCashBalance(), 300);
             });
     }
 
@@ -1540,8 +1540,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
             $scope.CashBalance.IsNewBalanceOffLimit = newBalance < 0;
 
-            if ($scope.CashBalance.CalculatedBalance  == "NaN.00" && !isRetry)
-                $timeout($scope.fnCalculateCashBalance(true), 200);
+            if (($scope.CashBalance.CalculatedBalance  == "NaN.00" || $scope.CashBalance.CalculatedBalance == "N.A") && !isRetry)
+                $timeout($scope.fnCalculateCashBalance(true), 300);
         }
     };
 
