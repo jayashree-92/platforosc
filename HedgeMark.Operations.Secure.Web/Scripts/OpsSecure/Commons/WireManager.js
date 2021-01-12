@@ -15,8 +15,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.WireTicketStatus = {};
     $scope.WireSourceModuleDetails = {};
 
-
-
     $scope.loadWireRelatedData = function () {
 
         $q.all([$scope.getWireDetails($scope.wireObj.WireId), $scope.getWireMessageTypes($scope.wireObj.Report)])
@@ -129,21 +127,17 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.WireTicketStatus.IsEditEnabled = true;
             $scope.WireTicketStatus.IsWirePurposeAdhoc = true;
 
-            $scope.isWireCreated = response.data.isWireCreated;
+            $scope.IsDuplicateWireCreated = response.data.isWireCreated;
             $scope.IsSwiftMessagesPresent = false;
-            angular.forEach($scope.WireTicket.hmsWireDocuments,
-                function (val, ind) {
-                    val.CreatedAt = moment(val.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
-                });
-            angular.forEach($scope.WireTicket.hmsWireWorkflowLogs,
-                function (val, ind) {
-                    val.CreatedAt = moment(val.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
-                });
+
+            angular.forEach($scope.WireTicket.hmsWireDocuments, $scope.fnSetFormatedCreatedDt);
+            angular.forEach($scope.WireTicket.hmsWireWorkflowLogs, $scope.fnSetFormatedCreatedDt);
+
             $timeout(function () {
                 $interval.cancel($scope.promise);
                 $scope.timeToApprove = "00 : 00 : 00";
-            },
-                100);
+            }, 100);
+
             $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
         });
     }
@@ -155,13 +149,17 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             else if (allusers.length == 2)
                 $scope.currentlyViewedBy = allusers[0] + ", " + allusers[1];
             else if (allusers.length > 2)
-                $scope.currentlyViewedBy =
-                    allusers[0] + ", " + allusers[1] + " and " + (allusers.length - 2) + " other(s).";
+                $scope.currentlyViewedBy = allusers[0] + ", " + allusers[1] + " and " + (allusers.length - 2) + " other(s).";
 
             $("#wireCurrentlyViewedBy").collapse("show");
         } else
             $("#wireCurrentlyViewedBy").collapse("hide");
     }
+
+    $scope.fnSetFormatedCreatedDt = function (val, ind) {
+        val.CreatedAt = moment(val.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
+        val.hmsWire = null;
+    };
 
     $scope.getWireDetails = function (wireId) {
         return $http.get("/Home/GetWireDetails?wireId=" + wireId).then(function (response) {
@@ -194,42 +192,18 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.wireTicketObj.SwiftMessages[v.Key] = v;
             });
 
-            $scope.IsSwiftMessagesPresent = $scope.wireTicketObj.SwiftMessages != null &&
-                Object.keys($scope.wireTicketObj.SwiftMessages).length > 0;
+            $scope.IsSwiftMessagesPresent = $scope.wireTicketObj.SwiftMessages != null && Object.keys($scope.wireTicketObj.SwiftMessages).length > 0;
 
-            angular.forEach($scope.WireTicket.hmsWireDocuments,
-                function (val, ind) {
-                    val.CreatedAt = moment(val.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
-                    val.hmsWire = null;
-                });
-            angular.forEach($scope.WireTicket.hmsWireWorkflowLogs,
-                function (val, ind) {
-                    val.CreatedAt = moment(val.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
-                    val.hmsWire = null;
-                });
-            $timeout(function () {
-                $scope.timeToApprove = angular.copy(response.data.deadlineToApprove);
-                //$scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
-                if (!$scope.WireTicketStatus.IsApprovedOrFailed) {
-                    if ($scope.timeToApprove.Hours > 0 ||
-                        ($scope.timeToApprove.Hours == 0 &&
-                            $scope.timeToApprove.Minutes >= 0 &&
-                            $scope.timeToApprove.Seconds > 0)) {
-                        $scope.isDeadlineCrossed = false;
-                        $("#wireErrorStatus").collapse("hide");
-                        $scope.validationMsg = response.data.validationMsg;
-                    } else {
-                        $("#wireErrorStatus").collapse("show").pulse({ times: 3 });;
-                        $scope.isDeadlineCrossed = true;
-                        if (response.data.validationMsg == "")
-                            $scope.validationMsg =
-                                "Note:Deadline crossed. Please select a future date for settlement.";
-                        else
-                            $scope.validationMsg = response.data.validationMsg;
-                    }
-                }
-                $scope.fnResetDeadlineTimer();
-            }, 100);
+            angular.forEach($scope.WireTicket.hmsWireDocuments, $scope.fnSetFormatedCreatedDt);
+            angular.forEach($scope.WireTicket.hmsWireWorkflowLogs, $scope.fnSetFormatedCreatedDt);
+
+            $scope.fnSetWireCutOffDetails(response.data.deadlineToApprove, response.data.IsWireCutOffApproved);
+            
+            //$timeout(function () {
+            //    if (!$scope.WireTicketStatus.IsApprovedOrFailed) {
+            //        $scope.fnValidateBasicWireDetails();
+            //    }
+            //}, 100);
 
             $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
             $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
@@ -264,7 +238,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return;
         }
     }
-
 
     $scope.fnShowFormattedSwiftMsg = function ($event, key, value) {
 
@@ -460,41 +433,38 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
     }
 
-    angular.element(document).on("change",
-        "#liMessageType",
-        function () {
-            $timeout(function () {
-                $scope.WireTicket.WireMessageTypeId = $("#liMessageType").select2("val");
-                if ($scope.WireTicket.WireMessageTypeId != "") {
-                    if ($scope.wireTicketObj.IsFundTransfer) {
-                        if ($scope.accountDetail.onBoardingAccountId != 0 && $scope.receivingAccountDetail.onBoardingAccountId != 0) {
-                            $scope.validateAccountsForMessageType();
-                            angular.element("#liDeliveryCharges").select2("val", ($scope.WireTicket.WireMessageTypeId != "1" ? null : "OUR")).trigger("change");
-                        }
-                    } else {
-                        if ($scope.accountDetail.onBoardingAccountId != 0 && $scope.ssiTemplate.onBoardingSSITemplateId != 0) {
-                            $scope.validateAccountsForMessageType();
-                        }
+    angular.element(document).on("change", "#liMessageType", function () {
+        $timeout(function () {
+            $scope.WireTicket.WireMessageTypeId = $("#liMessageType").select2("val");
+            if ($scope.WireTicket.WireMessageTypeId != "") {
+                if ($scope.wireTicketObj.IsFundTransfer) {
+                    if ($scope.accountDetail.onBoardingAccountId != 0 && $scope.receivingAccountDetail.onBoardingAccountId != 0) {
+                        $scope.validateAccountsForMessageType();
+                        angular.element("#liDeliveryCharges").select2("val", ($scope.WireTicket.WireMessageTypeId != "1" ? null : "OUR")).trigger("change");
                     }
-                    var messageType = $("#liMessageType").select2("data").text;
-                    if (messageType.indexOf("MT103") > -1 || messageType.indexOf("MT202") > -1) {
-                        $scope.wireTicketObj.IsSenderInformationRequired = true;
-                        angular.element("#liSenderInformation").select2("val", $scope.WireTicket.SenderInformationId).trigger("change");
-                    } else {
-                        $scope.wireTicketObj.IsSenderInformationRequired = false;
-                        angular.element("#liSenderInformation").select2("val", null).trigger("change");
-                        $scope.WireTicket.SenderDescription = "";
-                    }
-
-                    if ($scope.WireTicket.hmsWireFieldId != null && $scope.WireTicket.hmsWireFieldId > 0) {
-                        angular.element("#liCollateralPurpose").select2("val", $scope.WireTicket.hmsWireField.hmsCollateralCashPurposeLkupId).trigger("change");
-                    } else {
-                        angular.element("#liCollateralPurpose").select2("val", "").trigger("change");
-                    }
+                } else if ($scope.accountDetail.onBoardingAccountId != 0 &&
+                    $scope.ssiTemplate.onBoardingSSITemplateId != 0) {
+                    $scope.validateAccountsForMessageType();
                 }
-                $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
-            }, 50);
-        });
+                var messageType = $("#liMessageType").select2("data").text;
+                if (messageType.indexOf("MT103") > -1 || messageType.indexOf("MT202") > -1) {
+                    $scope.wireTicketObj.IsSenderInformationRequired = true;
+                    angular.element("#liSenderInformation").select2("val", $scope.WireTicket.SenderInformationId).trigger("change");
+                } else {
+                    $scope.wireTicketObj.IsSenderInformationRequired = false;
+                    angular.element("#liSenderInformation").select2("val", null).trigger("change");
+                    $scope.WireTicket.SenderDescription = "";
+                }
+
+                if ($scope.WireTicket.hmsWireFieldId != null && $scope.WireTicket.hmsWireFieldId > 0) {
+                    angular.element("#liCollateralPurpose").select2("val", $scope.WireTicket.hmsWireField.hmsCollateralCashPurposeLkupId).trigger("change");
+                } else {
+                    angular.element("#liCollateralPurpose").select2("val", "").trigger("change");
+                }
+            }
+            $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
+        }, 50);
+    });
 
     angular.element(document).on("change", "#liSenderInformation",
         function () {
@@ -526,26 +496,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 //$scope.isMandatoryFieldsMissing = response.data.isMandatoryFieldsMissing;
                 $scope.isMandatoryFieldsMissing = false;
                 if ($scope.isValidWireInitiation) {
-                    if (!$scope.isMandatoryFieldsMissing) {
-                        if (!$scope.isWireCreated && !$scope.isDeadlineCrossed) {
-                            $("#wireErrorStatus").collapse("hide");
-                            $scope.validationMsg = "";
-                        } else if ($scope.isWireCreated) {
-                            $("#chkWireCreation").prop("checked", false).trigger("change");
-                            $scope.isUserActionDone = true;
-                            $scope.validationMsg =
-                                "An Initiated wire exists for the same value date, purpose, sending and receiving account.";
-                        } else {
-                            $scope.validationMsg =
-                                "Note: Deadline crossed. Please select a future date for settlement.";
-                        }
-                    } else {
-
-                        $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-                        //$scope.mandatoryFieldMsg = response.data.validationMsg;
-                        $scope.mandatoryFieldMsg = "";
-                        $scope.validationMsg = angular.copy($scope.mandatoryFieldMsg);
-                    }
+                    $scope.fnValidateBasicWireDetails();
                 }
             });
     }
@@ -595,35 +546,14 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             receivingSSITemplateId: angular.copy($scope.ssiTemplate.onBoardingSSITemplateId),
             wireId: $scope.WireTicket.hmsWireId
         }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
-            if ($scope.WireTicket.hmsWireId == 0)
-                $scope.isWireCreated = response.data;
-            else
-                $scope.isWireCreated = false;
-            if (!$scope.isWireCreated) {
-                $scope.isUserActionDone = false;
-                if (!$scope.isMandatoryFieldsMissing && !$scope.isDeadlineCrossed) {
-                    $("#wireErrorStatus").collapse("hide");
-                    $scope.validationMsg = "";
-                }
-                else if ($scope.isMandatoryFieldsMissing) {
-                    $scope.validationMsg = angular.copy($scope.mandatoryFieldMsg);
-                }
-                else {
-                    $scope.validationMsg = "Note: Deadline crossed. Please select a future date for settlement.";
-                }
-            }
-            else {
-                $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-                $("#chkWireCreation").prop("checked", false).trigger("change");
-                $scope.isUserActionDone = true;
-                $scope.validationMsg = "An Initiated wire exists for the same value date, purpose, sending and receiving account.";
-            }
+            $scope.IsDuplicateWireCreated = $scope.WireTicket.hmsWireId == 0 && response.data;
+            $scope.fnValidateBasicWireDetails();
         });
     }
 
     $(document).on("click", "#wireCreationDiv", function (event) {
         $timeout(function () {
-            $scope.isUserActionDone = !$("#chkWireCreation").prop("checked");
+            $scope.isUserActionDone = !$("#chkDuplicateWireCreation").prop("checked");
         }, 50);
     });
 
@@ -855,8 +785,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return false;
         }
 
-        if ($scope.isDeadlineCrossed && $scope.wireComments.trim() == "") {
-            $scope.fnShowErrorMessage("Please enter the comments to initiate the wire as deadline is crossed.");
+        if (!$scope.IsWireCutOffApproved && $scope.wireComments.trim() == "") {
+            $scope.fnShowErrorMessage("Please enter the comments to initiate the wire without Cut-off determination.");
             return false;
         }
 
@@ -915,39 +845,42 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
     }
 
+    
     $scope.getApprovalTime = function (account) {
 
         if (account.onBoardingAccountId == undefined || account.onBoardingAccountId == 0)
             return;
 
         $http.post("/Home/GetTimeToApproveTheWire", ({ onBoardingAccountId: account.onBoardingAccountId, valueDate: $("#wireValueDate").text() }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
-            $scope.timeToApprove = response.data.timeToApprove;
-
-
-            //$scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
-            if ($scope.timeToApprove.Hours > 0 || ($scope.timeToApprove.Hours == 0 && $scope.timeToApprove.Minutes >= 0 && $scope.timeToApprove.Seconds > 0)) {
-                $scope.isDeadlineCrossed = false;
-                if (!$scope.isWireCreated && !$scope.isMandatoryFieldsMissing) {
-                    $("#wireErrorStatus").collapse("hide");
-                    $scope.validationMsg = "";
-                }
-                else if ($scope.isMandatoryFieldsMissing) {
-                    $scope.validationMsg = angular.copy($scope.mandatoryFieldMsg);
-                }
-                else {
-                    $("#chkWireCreation").prop("checked", false).trigger("change").trigger("change");
-                    $scope.isUserActionDone = true;
-                    $scope.validationMsg = "An Initiated wire exists for the same value date, purpose, sending and receiving account.";
-                }
-            }
-            else {
-                $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-                $scope.isDeadlineCrossed = true;
-                $scope.validationMsg = "Note: Deadline crossed. Please select a future date for settlement.";
-            }
-
-            $scope.fnResetDeadlineTimer();
+            $scope.fnSetWireCutOffDetails(response.data.timeToApprove, response.data.IsWireCutOffApproved);
         });
+    }
+
+    $scope.fnSetWireCutOffDetails = function (timeToApprove, isApproved) {
+        $scope.timeToApprove = timeToApprove;
+        $scope.isDeadlineCrossed = !($scope.timeToApprove.Hours > 0 || ($scope.timeToApprove.Hours == 0 && $scope.timeToApprove.Minutes >= 0 && $scope.timeToApprove.Seconds > 0));
+        $scope.IsWireCutOffApproved = isApproved;
+
+        $scope.fnValidateBasicWireDetails();
+        $scope.fnResetDeadlineTimer();
+    }
+    
+    $scope.fnValidateBasicWireDetails = function () {
+        if (!$scope.IsWireCutOffApproved) {
+            $scope.fnShowErrorMessage("Note: Unable to determine Wire Cut-off date as it is not Approved. Please approve and proceed");
+        } else if ($scope.isDeadlineCrossed) {
+            $scope.fnShowErrorMessage("Note: Deadline crossed. Please select a future date for settlement.");
+        } else if ($scope.isMandatoryFieldsMissing) {
+            $scope.fnShowErrorMessage(angular.copy($scope.mandatoryFieldMsg));
+        } else if ($scope.IsDuplicateWireCreated) {
+            $("#chkDuplicateWireCreation").prop("checked", false).trigger("change").trigger("change");
+            $scope.isUserActionDone = true;
+            $scope.fnShowErrorMessage("An Initiated wire exists for the same value date, purpose, sending and receiving account.");
+        } else {
+            $scope.isUserActionDone = false;
+            $("#wireErrorStatus").collapse("hide");
+            $scope.validationMsg = "";
+        }
     }
 
 
@@ -955,22 +888,19 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.fnResetDeadlineTimer = function () {
         if ($scope.promise != null)
             $interval.cancel($scope.promise);
-        $scope.promise = $interval(
-            function () {
-                $scope.timeToShow = fnGetWireDeadlineCounter($scope.timeToApprove);
-                $scope.isDeadlineCrossed = $scope.timeToApprove.Days <= 0 && $scope.timeToApprove.Hours < 0;
-            }, 1000);
+        $scope.promise = $interval(function () {
+            $scope.timeToShow = fnGetWireDeadlineCounter($scope.timeToApprove);
+            $scope.isDeadlineCrossed = $scope.timeToApprove.Days <= 0 && $scope.timeToApprove.Hours < 0;
+        }, 1000);
     }
 
     $scope.deliveryCharges = [{ id: "BEN", text: "Beneficiary" }, { id: "OUR", text: "Our customer charged" }, { id: "SHA", text: " Shared charges" }];
 
     function formatSelect(selectData) {
-        //   var stat = $filter("filter")($scope.SenderInformation, { 'id': selectData.id }, true)[0];
         return selectData.text.indexOf("-") != -1 ? selectData.text.split("-")[0] : selectData.text;
     }
 
     function formatResult(selectData) {
-        //var stat = $filter("filter")($scope.SenderInformation, { 'id': selectData.id }, true)[0];
         return selectData.text;
     }
 
@@ -1465,23 +1395,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $http.get("/Home/GetFundAccount?onBoardingAccountId=" + $scope.WireTicket.OnBoardAccountId + "&valueDate=" + $("#wireValueDate").text()).then(function (response) {
 
                     var account = response.data.onboardAccount;
-                    $timeout(function () {
-                        $scope.timeToApprove = angular.copy(response.data.deadlineToApprove);
-                        //$scope.timeToApprove.Hours = $scope.timeToApprove.Hours + ($scope.timeToApprove.Days * 24);
-                        if ($scope.timeToApprove.Hours > 0 || ($scope.timeToApprove.Hours == 0 && $scope.timeToApprove.Minutes >= 0 && $scope.timeToApprove.Seconds > 0)) {
-                            $scope.isDeadlineCrossed = false;
-                            if (!$scope.isWireCreated && !$scope.isMandatoryFieldsMissing) {
-                                $("#wireErrorStatus").collapse("hide");
-                                $scope.validationMsg = "";
-                            }
-                        }
-                        else {
-                            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
-                            $scope.isDeadlineCrossed = true;
-                            $scope.validationMsg = "Note: Deadline crossed. Please select a future date for settlement.";
-                        }
-                        $scope.fnResetDeadlineTimer();
-                    }, 50);
+                    $scope.fnSetWireCutOffDetails(response.data.deadlineToApprove, response.data.IsWireCutOffApproved);
 
                     $scope.castToDate(account);
                     //$scope.getApprovalTime(account);
@@ -1548,7 +1462,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
             $scope.CashBalance.IsNewBalanceOffLimit = newBalance < 0;
 
-            if (($scope.CashBalance.CalculatedBalance  == "NaN.00" || $scope.CashBalance.CalculatedBalance == "N.A") && !isRetry)
+            if (($scope.CashBalance.CalculatedBalance == "NaN.00" || $scope.CashBalance.CalculatedBalance == "N.A") && !isRetry)
                 $timeout($scope.fnCalculateCashBalance(true), 300);
         }
     };

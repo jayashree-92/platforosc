@@ -369,7 +369,8 @@ namespace HMOSecureWeb.Controllers
                 receivingAccountsList,
                 IsWireCreated = false,
                 currentlyViewedBy,
-                wireSourceModule
+                wireSourceModule,
+                IsWireCutOffApproved= wireTicket.SendingAccount.WirePortalCutoff.IsApproved
             });
         }
 
@@ -692,7 +693,7 @@ namespace HMOSecureWeb.Controllers
         {
             var onboardAccount = FundAccountManager.GetOnBoardingAccount(onboardingAccountId);
             var timeToApprove = GetDeadlineToApprove(onboardAccount, valueDate);
-            return Json(new { timeToApprove, onboardAccount.WirePortalCutoff.IsApproved });
+            return Json(new { timeToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.IsApproved });
         }
 
         private TimeSpan GetDeadlineToApprove(onBoardingAccount onboardAccount, DateTime valueDate, Dictionary<string, string> timeZones = null)
@@ -927,7 +928,7 @@ namespace HMOSecureWeb.Controllers
             var onboardAccount = FundAccountManager.GetOnBoardingAccount(onBoardingAccountId);
             var deadlineToApprove = GetDeadlineToApprove(onboardAccount, valueDate);
 
-            return Json(new { onboardAccount, deadlineToApprove });
+            return Json(new { onboardAccount, deadlineToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.IsApproved });
         }
 
         public JsonResult GetCashBalances(long sendingAccountId, DateTime valueDate)
