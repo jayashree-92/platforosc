@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 
 namespace HMOSecureWeb.Controllers
 {
-    public class AccountsController : BaseController
+    public class FundAccountsController : BaseController
     {
 
         public ActionResult Index()

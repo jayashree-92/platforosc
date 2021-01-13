@@ -374,7 +374,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                 if ($(rowTableId).hasClass("initialized")) {
                     fnDestroyDataTable(rowTableId);
                 }
-                $http.get("/Accounts/GetSsiTemplateAccountMap?ssiTemplateId=" + ssiTemplateId + "&brokerId=" + brokerId + "&currency=" + currency + "&message=" + message + "&isServiceType=" + $scope.isServiceType).then(function (response) {
+                $http.get("/FundAccounts/GetSsiTemplateAccountMap?ssiTemplateId=" + ssiTemplateId + "&brokerId=" + brokerId + "&currency=" + currency + "&message=" + message + "&isServiceType=" + $scope.isServiceType).then(function (response) {
                     tblonBoardAccountRow = $(rowTableId).not(".initialized").addClass("initialized").DataTable(
                         {
                             "bDestroy": true,

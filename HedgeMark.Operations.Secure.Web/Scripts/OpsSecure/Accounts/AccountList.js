@@ -46,7 +46,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     "sTitle": "File Name",
                     "mData": "FileName",
                     "mRender": function (data) {
-                        var href = "/Accounts/DownloadAccountFile?accountId=" + $scope.onBoardingAccountId + "&fileName=" + escape(data);
+                        var href = "/FundAccounts/DownloadAccountFile?accountId=" + $scope.onBoardingAccountId + "&fileName=" + escape(data);
                         return "<a target='_blank' title='click to download this file' href='" + href + "'><i class='glyphicon glyphicon-file' ></i>&nbsp;" + data + "</a>";
                     }
                 },
@@ -85,7 +85,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             //"fnRowCallback": function (nRow, aData) {
             //    if (aData.FileName != "") {
-            //        $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/Accounts/DownloadAccountFile?fileName=" + getFormattedFileName(aData.FileName) + "&accountId=" + $scope.onBoardingAccountId + "'>" + aData.FileName + "</a>");
+            //        $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/FundAccounts/DownloadAccountFile?fileName=" + getFormattedFileName(aData.FileName) + "&accountId=" + $scope.onBoardingAccountId + "'>" + aData.FileName + "</a>");
             //    }
             //},
             "oLanguage": {
@@ -118,7 +118,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 } else {
                     $timeout(function () {
                         if (rowElement.onBoardingAccountDocumentId > 0) {
-                            $http.post("/Accounts/RemoveAccountDocument", { fileName: rowElement.FileName, documentId: rowElement.onBoardingAccountDocumentId }).then(function () {
+                            $http.post("/FundAccounts/RemoveAccountDocument", { fileName: rowElement.FileName, documentId: rowElement.onBoardingAccountDocumentId }).then(function () {
                                 accountDocumentTable[rowIndex].row(selectedRow).remove().draw();
                                 $("#spnAgrCurrentStatus").html("Saved as Draft");
                                 $("#hmStatus").show();
@@ -197,7 +197,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetCurrency = function () {
-        return $http.get("/Accounts/GetAllCurrencies").then(function (response) {
+        return $http.get("/FundAccounts/GetAllCurrencies").then(function (response) {
             $scope.currencies = response.data.currencies;
 
             $("#liCurrency0").select2({
@@ -212,7 +212,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetCashInstruction = function () {
-        return $http.get("/Accounts/GetAllCashInstruction").then(function (response) {
+        return $http.get("/FundAccounts/GetAllCashInstruction").then(function (response) {
             $scope.cashInstructions = response.data.cashInstructions;
             $scope.timeZones = response.data.timeZones;
             $("#liCashInstruction0").select2({
@@ -227,7 +227,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetBicorAba = function () {
-        return $http.get("/Accounts/GetAllAccountBicorAba").then(function (response) {
+        return $http.get("/FundAccounts/GetAllAccountBicorAba").then(function (response) {
             $scope.accountBicorAba = response.data.accountBicorAba;
 
             var isAba = $scope.isBicorAba == true ? "ABA" : "BIC";
@@ -239,7 +239,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnPreloadAccountData = function () {
 
-        return $http.get("/Accounts/GetAccountPreloadData").then(function (response) {
+        return $http.get("/FundAccounts/GetAccountPreloadData").then(function (response) {
             $scope.funds = response.data.funds;
             $scope.fundsWithAgreements = response.data.fundsWithAgreements;
             $scope.agreementData = response.data.agreementData;
@@ -486,7 +486,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $("#btnAddNewAccount").button("loading");
 
-        $http.get("/Accounts/GetAllOnBoardingAccount").then(function (response) {
+        $http.get("/FundAccounts/GetAllOnBoardingAccount").then(function (response) {
 
             $scope.agreementTypes = response.data.accountTypes;
             $scope.receivingAccountTypes = response.data.receivingAccountTypes;
@@ -809,7 +809,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.AgreementType = $.grep($scope.agreementTypes, function (v) { return v.id == $scope.AgreementTypeId; })[0].text;
         }
 
-        $http.get("/Accounts/GetOnBoardingAccount?accountId=" + $scope.onBoardingAccountId).then(function (response) {
+        $http.get("/FundAccounts/GetOnBoardingAccount?accountId=" + $scope.onBoardingAccountId).then(function (response) {
             var account = response.data.OnBoardingAccount;
             //$(".accntActions button").hide();
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
@@ -858,7 +858,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             //$scope.accountDetail = {};
             //$scope.fnGetAccounts();
             //var searchText = $('#accountListDiv input[type="search"]').val();
-            //window.location.href = "/Accounts/Index?searchText=" + searchText;
+            //window.location.href = "/FundAccounts/Index?searchText=" + searchText;
 
         }).off("shown.bs.modal").on("shown.bs.modal", function () {
             if (!$scope.isStatusUpdate) {
@@ -878,8 +878,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
 
-        if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.CallBackChecks.length == 0) {
-            notifyWarning("Please add atleast one Callback check to approve/request to approve account");
+        if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0)) {
+            notifyWarning("Please add atleast one Callback check to approve account");
             return;
         }
 
@@ -909,7 +909,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.isHigherStatus = true;
             if ($scope.validateAccount($scope.AccountStatus))
                 $q.all([$scope.fnUpdateAccount(false)]).then(function () {
-                    $http.post("/Accounts/UpdateAccountStatus", { accountStatus: $scope.AccountStatus, accountId: $scope.onBoardingAccountId, comments: $("#statusComments").val().trim() }).then(function () {
+                    $http.post("/FundAccounts/UpdateAccountStatus", { accountStatus: $scope.AccountStatus, accountId: $scope.onBoardingAccountId, comments: $("#statusComments").val().trim() }).then(function () {
                         notifySuccess("Account  " + $scope.AccountStatus.toLowerCase() + " successfully");
                         $scope.fnGetAccounts();
 
@@ -948,13 +948,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.fnEditAccountDetails(rowElement);
 
 
-        //var accountListUrl = "/Accounts/Index?searchText=" + searchText;
+        //var accountListUrl = "/FundAccounts/Index?searchText=" + searchText;
         //window.history.pushState("", "", accountListUrl);
-        //window.location.assign("/Accounts/Account?fundId=" + $scope.FundId + "&brokerId=" + $scope.CounterpartyFamilyId + "&agreementId=" + $scope.AgreementId + "&accountType=" + $scope.AccountType + "&searchText=" + searchText);
+        //window.location.assign("/FundAccounts/Account?fundId=" + $scope.FundId + "&brokerId=" + $scope.CounterpartyFamilyId + "&agreementId=" + $scope.AgreementId + "&accountType=" + $scope.AccountType + "&searchText=" + searchText);
     }
 
     $scope.fnCreateAccount = function () {
-        window.location.assign("/Accounts/Account?fundId=0&brokerId=0&agreementId=0&accountType=");
+        window.location.assign("/FundAccounts/Account?fundId=0&brokerId=0&agreementId=0&accountType=");
     }
 
     $scope.fnDeleteAccount = function () {
@@ -963,7 +963,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 label: "Delete",
                 className: "btn btn-sm btn-danger",
                 callback: function () {
-                    $http.post("/Accounts/DeleteAccount", { onBoardingAccountId: $scope.onBoardingAccountId }).then(function () {
+                    $http.post("/FundAccounts/DeleteAccount", { onBoardingAccountId: $scope.onBoardingAccountId }).then(function () {
                         accountTable.row(".info").remove().draw();
                         notifySuccess("Delete successfull");
                         $scope.onBoardingAccountId = 0;
@@ -981,7 +981,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     //Export all Accounts
     $scope.fnExportAllAccountlist = function () {
-        window.location.assign("/Accounts/ExportAllAccountlist");
+        window.location.assign("/FundAccounts/ExportAllAccountlist");
     }
 
     $scope.validateAccount = function (status) {
@@ -1052,7 +1052,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
     $scope.fnUpdateAccount = function () {
 
-        return $http.post("/Accounts/AddAccounts", { onBoardingAccounts: $scope.onBoardingAccountDetails }).then(function () {
+        return $http.post("/FundAccounts/AddAccounts", { onBoardingAccounts: $scope.onBoardingAccountDetails }).then(function () {
             if (!$scope.isHigherStatus)
                 notifySuccess("Account Saved successfully");
 
@@ -1074,7 +1074,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetAuthorizedParty = function () {
-        $http.get("/Accounts/GetAllAuthorizedParty").then(function (response) {
+        $http.get("/FundAccounts/GetAllAuthorizedParty").then(function (response) {
             $scope.authorizedPartyData = response.data.AuthorizedParties;
 
             $("#liAuthorizedParty0").select2({
@@ -1092,7 +1092,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetSwiftGroup = function () {
-        $http.get("/Accounts/GetAllRelatedSwiftGroup?brokerId=" + $scope.onBoardingAccountDetails[0].dmaCounterpartyFamilyId).then(function (response) {
+        $http.get("/FundAccounts/GetAllRelatedSwiftGroup?brokerId=" + $scope.onBoardingAccountDetails[0].dmaCounterpartyFamilyId).then(function (response) {
             $scope.SwiftGroups = response.data.swiftGroups;
             $scope.SwiftGroupData = response.data.SwiftGroupData;
 
@@ -1159,7 +1159,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnCutOffTime = function (currency, cashInstruction) {
 
-        $http.get("/Accounts/GetCutoffTime?cashInstruction=" + cashInstruction + "&currency=" + currency).then(function (response) {
+        $http.get("/FundAccounts/GetCutoffTime?cashInstruction=" + cashInstruction + "&currency=" + currency).then(function (response) {
             var cutOff = response.data.cutOffTime;
 
             $scope.onBoardingAccountDetails[0].WirePortalCutoff = {};
@@ -1318,7 +1318,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnGetAccountDescriptions = function () {
         var agrmTypeId = $scope.AccountType == "DDA" ? $scope.ddaAgreementTypeId : $scope.AccountType == "Custody" ? $scope.custodyAgreementTypeId : $scope.AgreementTypeId;
-        $http.get("/Accounts/GetAccountDescriptionsByAgreementTypeId?agreementTypeId=" + agrmTypeId).then(function (response) {
+        $http.get("/FundAccounts/GetAccountDescriptionsByAgreementTypeId?agreementTypeId=" + agrmTypeId).then(function (response) {
             $scope.AccountDescriptions = response.data.accountDescriptions;
             $("#liAccountDescriptions0").select2({
                 placeholder: "Select Description",
@@ -1332,7 +1332,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetAccountModules = function () {
-        $http.get("/Accounts/GetAccountModules").then(function (response) {
+        $http.get("/FundAccounts/GetAccountModules").then(function (response) {
             $scope.accountModules = response.data.accountModules;
             $("#liAccountModule_0").select2({
                 placeholder: "Select Modules",
@@ -1352,7 +1352,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetAccountReports = function () {
-        $http.get("/Accounts/GetAccountReports").then(function (response) {
+        $http.get("/FundAccounts/GetAccountReports").then(function (response) {
             $scope.accountReports = response.data.accountReports;
             $("#liAccountReport").select2({
                 placeholder: "Select Modules",
@@ -1410,14 +1410,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
         if ($scope.detail == "Description") {
-            $http.post("/Accounts/AddAccountDescriptions", { accountDescription: $("#txtDetail").val(), agreementTypeId: $scope.agreementTypeId }).then(function (response) {
+            $http.post("/FundAccounts/AddAccountDescriptions", { accountDescription: $("#txtDetail").val(), agreementTypeId: $scope.agreementTypeId }).then(function (response) {
                 notifySuccess("Description added successfully");
                 $scope.onBoardingAccountDetails[0].Description = $("#txtDetail").val();
                 $scope.fnGetAccountDescriptions();
             });
         }
         else {
-            $http.post("/Accounts/AddAccountModule", { reportId: $("#liAccountReport").select2('val'), accountModule: $("#txtDetail").val() }).then(function (response) {
+            $http.post("/FundAccounts/AddAccountModule", { reportId: $("#liAccountReport").select2('val'), accountModule: $("#txtDetail").val() }).then(function (response) {
                 notifySuccess("Module added successfully");
                 $scope.fnGetAccountModules();
             });
@@ -1442,7 +1442,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     angular.element("#txtDetail").on("focusin", function () { angular.element("#txtDetail").popover("hide"); });
 
     $scope.fnLoadContactDetails = function (contactName) {
-        $http.get("/Accounts/GetAllOnBoardingAccountContacts?hmFundId=" + $scope.FundId).then(function (response) {
+        $http.get("/FundAccounts/GetAllOnBoardingAccountContacts?hmFundId=" + $scope.FundId).then(function (response) {
             $scope.contactNames = [];
             if (response.data.OnBoardingContacts.length > 0) {
                 $.each(response.data.OnBoardingContacts, function (i, v) {
@@ -1471,7 +1471,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetAccountCallbackData = function (accountId) {
-        $http.get("/Accounts/GetAccountCallbackData?accountId=" + accountId).then(function (response) {
+        $http.get("/FundAccounts/GetAccountCallbackData?accountId=" + accountId).then(function (response) {
             $scope.onBoardingAccountDetails[0].hmsAccountCallbacks = response.data;
             $scope.CallBackChecks = response.data;
             $scope.viewCallbackTable($scope.CallBackChecks, 0);
@@ -1755,7 +1755,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnSsiTemplateMap = function (accountId, fundId, index, currency) {
         var messages = $scope.onBoardingAccountDetails[index].SwiftGroup != undefined ? $scope.onBoardingAccountDetails[index].SwiftGroup.AcceptedMessages : "";
-        $http.get("/Accounts/GetAccountSsiTemplateMap?accountId=" + accountId + "&fundId=" + fundId + "&currency=" + currency + "&messages=" + messages).then(function (response) {
+        $http.get("/FundAccounts/GetAccountSsiTemplateMap?accountId=" + accountId + "&fundId=" + fundId + "&currency=" + currency + "&messages=" + messages).then(function (response) {
             $scope.ssiTemplates = response.data.ssiTemplates;
             $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
             if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined && $scope.ssiTemplateMaps.length > 0) {
@@ -1786,7 +1786,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnSaveAccountMapStatus = function () {
-        $http.post("/Accounts/UpdateAccountMapStatus", { status: $scope.AccountMapStatus, accountMapId: $scope.onBoardingAccountSSITemplateMapId, comments: $("#statusMapComments").val().trim() }).then(function () {
+        $http.post("/FundAccounts/UpdateAccountMapStatus", { status: $scope.AccountMapStatus, accountMapId: $scope.onBoardingAccountSSITemplateMapId, comments: $("#statusMapComments").val().trim() }).then(function () {
             notifySuccess("Account ssi template map  " + $scope.AccountMapStatus.toLowerCase() + " successfully");
 
             $("#btnAccountMapStatusButtons a[title='Approve']").addClass("disabled");
@@ -1808,7 +1808,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     function attachment(key) {
 
         $("#uploadFiles" + key).dropzone({
-            url: "/Accounts/UploadAccountFiles?accountId=" + $scope.onBoardingAccountId,
+            url: "/FundAccounts/UploadAccountFiles?accountId=" + $scope.onBoardingAccountId,
             dictDefaultMessage: "<span><span style=\"color: red\"> * </span>Drag/Drop account documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
             autoDiscover: false,
             acceptedFiles: ".msg,.csv,.txt,.pdf,.xls,.xlsx,.zip,.rar", accept: validateDoubleExtensionInDZ,
@@ -1825,7 +1825,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             init: function () {
                 //var myDropZone = this;
                 //this.on("processing", function (file) {
-                //    this.options.url = "/Accounts/UploadAccountFiles";
+                //    this.options.url = "/FundAccounts/UploadAccountFiles";
                 //});
             },
             processing: function (file, result) {
@@ -1864,7 +1864,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnAccountDocuments = function (accountId, index) {
-        $http.get("/Accounts/GetAccountDocuments?accountId=" + accountId).then(function (response) {
+        $http.get("/FundAccounts/GetAccountDocuments?accountId=" + accountId).then(function (response) {
             $scope.accountDocuments = response.data.accountDocuments;
             if ($scope.accountDocuments != null && $scope.accountDocuments != undefined && $scope.accountDocuments.length > 0) {
                 // $scope.onBoardingAccountDetails[index].onBoardingAccountSSITemplateMaps = $scope.ssiTemplateMaps;
@@ -1973,6 +1973,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.$watch('watchAccountDetails', function (val, oldVal) {
+
         if (val == undefined || val.length == 0 || oldVal == undefined || oldVal.length == 0 || $scope.isLoad) {
             $scope.isAccountChanged = false;
             $scope.isApproved = false;
@@ -1983,6 +1984,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $scope.isDrafted = false;
                 $scope.isApproved = true;
             }
+            return;
+        }
+
+
+        if ($scope.IsCallBackChanged) {
+            $scope.IsCallBackChanged = false;
             return;
         }
 
@@ -2077,7 +2084,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
         $http({
             method: "POST",
-            url: "/Accounts/AddAccountSsiTemplateMap",
+            url: "/FundAccounts/AddAccountSsiTemplateMap",
             type: "json",
             data: JSON.stringify({
                 accountSsiTemplateMap: $scope.onBoardingAccountSSITemplateMap
@@ -2198,14 +2205,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     });
 
     $scope.downloadAccountSample = function () {
-        window.location.href = "/Accounts/ExportSampleAccountlist";
+        window.location.href = "/FundAccounts/ExportSampleAccountlist";
     }
 
     Dropzone.options.myAwesomeDropzone = false;
     Dropzone.autoDiscover = false;
 
     $("#uploadFiles").dropzone({
-        url: "/Accounts/UploadAccount",
+        url: "/FundAccounts/UploadAccount",
         dictDefaultMessage: "<span><span style=\"color: red\"> * </span>Drag/Drop account files to add/update here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
         autoDiscover: false,
         acceptedFiles: ".csv,.xls,.xlsx", accept: validateDoubleExtensionInDZ,
@@ -2222,7 +2229,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         init: function () {
 
             this.on("processing", function (file) {
-                this.options.url = "/Accounts/UploadAccount";
+                this.options.url = "/FundAccounts/UploadAccount";
             });
         },
         processing: function (file, result) {
@@ -2300,7 +2307,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
 
-        $http.post("/Accounts/AddCurrency", { currency: $("#txtCurrency").val() }).then(function (response) {
+        $http.post("/FundAccounts/AddCurrency", { currency: $("#txtCurrency").val() }).then(function (response) {
             notifySuccess("Currency added successfully");
             $scope.onBoardingAccountDetails[0].Currency = $("#txtCurrency").val();
             $scope.fnGetCurrency();
@@ -2358,7 +2365,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
 
-        $http.post("/Accounts/AddCashInstruction", { cashInstruction: $("#txtCashInstruction").val() }).then(function (response) {
+        $http.post("/FundAccounts/AddCashInstruction", { cashInstruction: $("#txtCashInstruction").val() }).then(function (response) {
             notifySuccess("Cash instruction mechanism added successfully");
             $scope.onBoardingAccountDetails[0].CashInstruction = $("#txtCashInstruction").val();
             $scope.fnGetCashInstruction();
@@ -2517,7 +2524,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
 
 
-        $http.post("/Accounts/AddAccountBiCorAba", { accountBiCorAba: $scope.accountBeneficiary }).then(function (response) {
+        $http.post("/FundAccounts/AddAccountBiCorAba", { accountBiCorAba: $scope.accountBeneficiary }).then(function (response) {
             notifySuccess("Beneficiary BIC or ABA added successfully");
             $scope.BicorAba = $("#txtBICorABA").val().toUpperCase();
             $scope.isBicorAba = $("#btnBICorABA").prop("checked");
@@ -2584,7 +2591,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
 
-        $http.post("/Accounts/AddAuthorizedParty", { authorizedParty: $("#txtAuthorizedParty").val() }).then(function (response) {
+        $http.post("/FundAccounts/AddAuthorizedParty", { authorizedParty: $("#txtAuthorizedParty").val() }).then(function (response) {
             notifySuccess("Authorized Party added successfully");
             $scope.onBoardingAccountDetails[0].AuthorizedParty = $("#txtAuthorizedParty").val();
             $scope.fnGetAuthorizedParty(0);
@@ -2657,7 +2664,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
 
-        $http.post("/Accounts/AddSwiftGroup", { swiftGroup: $("#txtSwiftGroup").val(), senderBic: $("#txtSendersBIC").val().toUpperCase() }).then(function (response) {
+        $http.post("/FundAccounts/AddSwiftGroup", { swiftGroup: $("#txtSwiftGroup").val(), senderBic: $("#txtSendersBIC").val().toUpperCase() }).then(function (response) {
             notifySuccess("Swift Group added successfully");
             $scope.onBoardingAccountDetails[0].SwiftGroup = $("#txtSwiftGroup").val();
             $scope.onBoardingAccountDetails[0].SendersBIC = $("#txtSendersBIC").val().toUpperCase();
@@ -2693,6 +2700,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             "</div>";
     }
 
+    $scope.IsCallBackChanged = false;
     $scope.fnSaveCallback = function () {
         if ($("#txtContactName").val() == undefined || $("#txtContactName").val() == "") {
             //pop-up    
@@ -2748,13 +2756,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $http({
             method: "POST",
-            url: "/Accounts/AddOrUpdateCallback",
+            url: "/FundAccounts/AddOrUpdateCallback",
             type: "json",
             data: JSON.stringify({
                 callback: $scope.callback
             })
         }).then(function (response) {
             notifySuccess("Account Call back added successfully");
+            $scope.IsCallBackChanged = true;
             $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId);
         });
 
@@ -2785,12 +2794,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
         }, 100);
     }
-    $scope.viewCallbackTable = function (data, index) {
+    $scope.viewCallbackTable = function (data) {
 
-        if ($("#accountCallbackTbl_" + index).hasClass("initialized")) {
-            fnDestroyDataTable("#accountCallbackTbl_" + index);
+        if ($("#accountCallbackTbl_0").hasClass("initialized")) {
+            fnDestroyDataTable("#accountCallbackTbl_0");
         }
-        $scope.accountCallbackTable[index] = $("#accountCallbackTbl_" + index).DataTable(
+        $scope.accountCallbackTable[0] = $("#accountCallbackTbl_0").DataTable(
             {
                 aaData: data,
                 "bDestroy": true,
@@ -2882,7 +2891,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             event.stopPropagation();
             event.stopImmediatePropagation();
             var selectedRow = $(this).parents("tr");
-            $scope.rowElement = $scope.accountCallbackTable[index].row(selectedRow).data();
+            $scope.rowElement = $scope.accountCallbackTable[0].row(selectedRow).data();
             $scope.tdEle = $(this).closest('td');
             $scope.tdEle.popover('destroy');
             $timeout(function () {
@@ -2908,7 +2917,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
 
         $timeout(function () {
-            $scope.accountCallbackTable[index].columns.adjust().draw(true);
+            $scope.accountCallbackTable[0].columns.adjust().draw(true);
         }, 1000);
 
     }
@@ -2916,15 +2925,17 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $(document).on('click', ".confirmCallback", function () {
         angular.element($scope.tdEle).popover("destroy");
         $timeout(function () {
+
             $scope.rowElement.IsCallbackConfirmed = true;
             $http({
                 method: "POST",
-                url: "/Accounts/AddOrUpdateCallback",
+                url: "/FundAccounts/AddOrUpdateCallback",
                 type: "json",
                 data: JSON.stringify({
                     callback: $scope.rowElement
                 })
             }).then(function (response) {
+                $scope.IsCallBackChanged = true;
                 $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId, 0);
                 notifySuccess("Account callback confirmed successfully");
             });
@@ -3055,7 +3066,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     }
 
-    $http.get("/Accounts/GetAccountAssociationPreloadData").then(function (response) {
+    $http.get("/FundAccounts/GetAccountAssociationPreloadData").then(function (response) {
         $scope.allFunds = response.data;
         $("#liOnboardingFund").select2({
             placeholder: "select a fund",
@@ -3106,7 +3117,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 if ($(rowTableId).hasClass("initialized")) {
                     fnDestroyDataTable(rowTableId);
                 }
-                $http.get("/Accounts/GetAccountSsiTemplateMap?accountId=" + onBoardingAccountId + "&fundId=" + fId + "&currency=" + currency).then(function (response) {
+                $http.get("/FundAccounts/GetAccountSsiTemplateMap?accountId=" + onBoardingAccountId + "&fundId=" + fId + "&currency=" + currency).then(function (response) {
 
                     tblSsiTemplateRow = $(rowTableId).not(".initialized").addClass("initialized").DataTable(
                         {

@@ -335,7 +335,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         }
     }
     $scope.fnGetCurrency = function () {
-        $http.get("/Accounts/GetAllCurrencies").then(function (response) {
+        $http.get("/FundAccounts/GetAllCurrencies").then(function (response) {
             $scope.currencies = response.data.currencies;
 
             $("#liCurrency").select2({
@@ -350,7 +350,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $scope.fnGetBicorAba = function (isNew) {
-        $http.get("/Accounts/GetAllAccountBicorAba").then(function (response) {
+        $http.get("/FundAccounts/GetAllAccountBicorAba").then(function (response) {
             $scope.accountBicorAba = response.data.accountBicorAba;
 
 
@@ -565,12 +565,12 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             return;
         }
 
-        if (val != oldVal) {
-            $scope.isSSITemplateChanged = true;
+        if ($scope.IsCallBackChanged) {
+            $scope.IsCallBackChanged = false;
+            return;
         }
-        else {
-            $scope.isSSITemplateChanged = false;
-        }
+
+        $scope.isSSITemplateChanged = val != oldVal;
 
     }, true);
 
@@ -612,7 +612,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.fnGetAssociatedAccounts = function () {
         var brokerId = $scope.ssiTemplate.SSITemplateType == "Broker" ? $scope.ssiTemplate.TemplateEntityId : 0;
         var isServiceType = $scope.ssiTemplate.SSITemplateType != "Broker";
-        $http.get("/Accounts/GetSsiTemplateAccountMap?ssiTemplateId=" + $scope.ssiTemplateId + "&brokerId=" + brokerId + "&currency=" + $scope.ssiTemplate.Currency + "&message=" + $scope.ssiTemplate.MessageType + "&isServiceType=" + isServiceType).then(function (response) {
+        $http.get("/FundAccounts/GetSsiTemplateAccountMap?ssiTemplateId=" + $scope.ssiTemplateId + "&brokerId=" + brokerId + "&currency=" + $scope.ssiTemplate.Currency + "&message=" + $scope.ssiTemplate.MessageType + "&isServiceType=" + isServiceType).then(function (response) {
             $scope.fundAccounts = response.data.fundAccounts;
             $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
             if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined && $scope.ssiTemplateMaps.length > 0) {
@@ -775,7 +775,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         //$("#accountDetailCP tbody tr td a.btn-primary").on("click", function (event) {
         //    event.preventDefault();
         //    var ssitemplateId = $(this).attr("id");
-        //    window.open("/Accounts/SSITemplate?ssiTemplateId=" + ssitemplateId, "_blank");
+        //    window.open("/FundAccounts/SSITemplate?ssiTemplateId=" + ssitemplateId, "_blank");
         //});
 
         $("#tblAssociatedAccounts tbody tr").on("click", function (event) {
@@ -816,7 +816,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
         $http({
             method: "POST",
-            url: "/Accounts/AddAccountSsiTemplateMap",
+            url: "/FundAccounts/AddAccountSsiTemplateMap",
             type: "json",
             data: JSON.stringify({
                 accountSsiTemplateMap: $scope.onBoardingAccountSSITemplateMap
@@ -850,7 +850,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $scope.fnSaveAccountMapStatus = function () {
-        $http.post("/Accounts/UpdateAccountMapStatus", { status: $scope.AccountMapStatus, accountMapId: $scope.onBoardingAccountSSITemplateMapId, comments: $("#statusMapComments").val().trim() }).then(function () {
+        $http.post("/FundAccounts/UpdateAccountMapStatus", { status: $scope.AccountMapStatus, accountMapId: $scope.onBoardingAccountSSITemplateMapId, comments: $("#statusMapComments").val().trim() }).then(function () {
             notifySuccess("Ssi template account map  " + $scope.AccountMapStatus.toLowerCase() + " successfully");
 
             $("#btnAccountMapStatusButtons a[title='Approve']").addClass("disabled");
@@ -1080,7 +1080,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             return;
         }
 
-        $http.post("/Accounts/AddCurrency", { currency: $("#txtCurrency").val() }).then(function (response) {
+        $http.post("/FundAccounts/AddCurrency", { currency: $("#txtCurrency").val() }).then(function (response) {
             notifySuccess("Currency added successfully");
             $scope.ssiTemplate.Currency = $("#txtCurrency").val();
             $scope.fnGetCurrency();
@@ -1209,7 +1209,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         }
 
 
-        $http.post("/Accounts/AddAccountBiCorAba", { accountBiCorAba: $scope.accountBeneficiary }).then(function (response) {
+        $http.post("/FundAccounts/AddAccountBiCorAba", { accountBiCorAba: $scope.accountBeneficiary }).then(function (response) {
             notifySuccess("Beneficiary BIC or ABA added successfully");
             $scope.BicorAba = $("#txtBICorABA").val().toUpperCase();
             $scope.isBicorAba = $("#btnBICorABA").prop("checked");
@@ -1332,8 +1332,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             return;
         }
 
-        if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.CallBackChecks.length == 0) {
-            notifyWarning("Please add atleast one Callback check to approve/request to approve SSI template");
+        if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0)) {
+            notifyWarning("Please add atleast one Callback check to approve SSI template");
             return;
         }
 
@@ -1440,7 +1440,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                         return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
                     }
                 },
-              
+
             ],
             "oLanguage": {
                 "sSearch": "",
@@ -1519,6 +1519,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         });
     }
 
+    $scope.IsCallBackChanged = false;
     $scope.fnSaveCallback = function () {
         if ($("#txtContactName").val() == undefined || $("#txtContactName").val() == "") {
             //pop-up    
@@ -1570,7 +1571,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             });
             $("#txtContactName").popover("show");
             return;
-        }
+        }w
 
         $http({
             method: "POST",
@@ -1581,6 +1582,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             })
         }).then(function (response) {
             notifySuccess("SSI Call back added successfully");
+            $scope.IsCallBackChanged = true;
             $scope.fnGetSSICallbackData($scope.ssiTemplate.onBoardingSSITemplateId);
         });
 
@@ -1612,6 +1614,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     callback: $scope.rowElement
                 })
             }).then(function (response) {
+                $scope.IsCallBackChanged = true;
                 $scope.fnGetSSICallbackData($scope.ssiTemplate.onBoardingSSITemplateId);
                 notifySuccess("SSI callback confirmed successfully");
             });

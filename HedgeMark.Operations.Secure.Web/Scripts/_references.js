@@ -154,7 +154,6 @@
 /// <reference path="locales/bootstrap-datepicker-en-ca.min.js" />
 /// <reference path="moment.min.js" />
 /// <reference path="moment-with-locales.min.js" />
-/// <reference path="opssecure/accounts/account.js" />
 /// <reference path="opssecure/accounts/accountlist.js" />
 /// <reference path="opssecure/accounts/ssitemplate.js" />
 /// <reference path="opssecure/accounts/ssitemplatelist.js" />
