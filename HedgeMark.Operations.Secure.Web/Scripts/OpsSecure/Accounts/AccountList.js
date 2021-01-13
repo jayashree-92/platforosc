@@ -1471,10 +1471,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetAccountCallbackData = function (accountId) {
+        $scope.IsCallBackChanged = true;
         $http.get("/FundAccounts/GetAccountCallbackData?accountId=" + accountId).then(function (response) {
             $scope.onBoardingAccountDetails[0].hmsAccountCallbacks = response.data;
             $scope.CallBackChecks = response.data;
-            $scope.viewCallbackTable($scope.CallBackChecks, 0);
+            $scope.viewCallbackTable($scope.CallBackChecks);
+            $timeout(function() { $scope.IsCallBackChanged = false; }, 1000);
         });
     }
 
@@ -1989,7 +1991,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
 
         if ($scope.IsCallBackChanged) {
-            $scope.IsCallBackChanged = false;
             return;
         }
 
@@ -2924,22 +2925,20 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $(document).on('click', ".confirmCallback", function () {
         angular.element($scope.tdEle).popover("destroy");
-        $timeout(function () {
-
-            $scope.rowElement.IsCallbackConfirmed = true;
-            $http({
-                method: "POST",
-                url: "/FundAccounts/AddOrUpdateCallback",
-                type: "json",
-                data: JSON.stringify({
-                    callback: $scope.rowElement
-                })
-            }).then(function (response) {
-                $scope.IsCallBackChanged = true;
-                $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId, 0);
-                notifySuccess("Account callback confirmed successfully");
-            });
-        }, 100);
+        $scope.IsCallBackChanged = true;
+        $scope.rowElement.IsCallbackConfirmed = true;
+        $http({
+            method: "POST",
+            url: "/FundAccounts/AddOrUpdateCallback",
+            type: "json",
+            data: JSON.stringify({
+                callback: $scope.rowElement
+            })
+        }).then(function (response) {
+            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId, 0);
+            notifySuccess("Account callback confirmed successfully");
+          
+        });
     });
 
     $(document).on('click', ".dismissCallback", function () {

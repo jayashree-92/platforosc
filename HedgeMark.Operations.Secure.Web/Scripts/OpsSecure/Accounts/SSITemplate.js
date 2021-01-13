@@ -566,7 +566,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         }
 
         if ($scope.IsCallBackChanged) {
-            $scope.IsCallBackChanged = false;
             return;
         }
 
@@ -1571,7 +1570,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             });
             $("#txtContactName").popover("show");
             return;
-        }w
+        } w
 
         $http({
             method: "POST",
@@ -1582,7 +1581,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             })
         }).then(function (response) {
             notifySuccess("SSI Call back added successfully");
-            $scope.IsCallBackChanged = true;
             $scope.fnGetSSICallbackData($scope.ssiTemplate.onBoardingSSITemplateId);
         });
 
@@ -1604,21 +1602,20 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $(document).on('click', ".confirmCallback", function () {
         angular.element($scope.tdEle).popover("destroy");
-        $timeout(function () {
-            $scope.rowElement.IsCallbackConfirmed = true;
-            $http({
-                method: "POST",
-                url: "/SSITemplate/AddOrUpdateCallback",
-                type: "json",
-                data: JSON.stringify({
-                    callback: $scope.rowElement
-                })
-            }).then(function (response) {
-                $scope.IsCallBackChanged = true;
-                $scope.fnGetSSICallbackData($scope.ssiTemplate.onBoardingSSITemplateId);
-                notifySuccess("SSI callback confirmed successfully");
-            });
-        }, 100);
+        $scope.IsCallBackChanged = true;
+        $scope.rowElement.IsCallbackConfirmed = true;
+        $http({
+            method: "POST",
+            url: "/SSITemplate/AddOrUpdateCallback",
+            type: "json",
+            data: JSON.stringify({
+                callback: $scope.rowElement
+            })
+        }).then(function (response) {
+            $scope.IsCallBackChanged = true;
+            $scope.fnGetSSICallbackData($scope.ssiTemplate.onBoardingSSITemplateId);
+            notifySuccess("SSI callback confirmed successfully");
+        });
     });
 
     $(document).on('click', ".dismissCallback", function () {
@@ -1626,10 +1623,12 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     });
 
     $scope.fnGetSSICallbackData = function (ssiTemplateId) {
+        $scope.IsCallBackChanged = true;
         $http.get("/SSITemplate/GetSSICallbackData?ssiTemplateId=" + ssiTemplateId).then(function (response) {
             $scope.ssiTemplate.hmsSSICallbacks = response.data;
             $scope.CallBackChecks = response.data;
             $scope.viewCallbackTable($scope.CallBackChecks, 0);
+            $timeout(function () { $scope.IsCallBackChanged = false; }, 1000);
         });
     }
 
