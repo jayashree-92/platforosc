@@ -8,6 +8,7 @@
 @{
     var userRole = @Util.GetRole(User).Replace("-", " ").Replace("Hm ", string.Empty);
     var commitId = @HttpContext.Current.Session[OpsSecureSessionVars.UserCommitId.ToString()].ToString();
+    var isWireApprover = User.IsWireApprover() ? "true" : "false";
 }
 <body ng-app="HmOperationsSecureApp">
 
@@ -43,6 +44,7 @@
     </div>
     <input type="hidden" id="environment" value="@Util.Environment.ToLower()" />
     <input type="hidden" id="userName" value="@User.Identity.Name" />
+    <input type="hidden" id="IsWireApprover" value="@isWireApprover" />
 
     <div class="navbar-ops-menu">
         <ul class="nav navbar-nav">

@@ -84,7 +84,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm  {{IsChangeMade ?'btn-warning':'btn-success'}} " ng-disabled="!isWireCutoffRequirementsFilled || (!IsChangeMade && (wirePortalCutoff.WirePortalCutoff.IsApproved || IsSameUserRequested))" ng-click="fnSaveWirePortalCutoff()">
+                    <button type="button" class="btn btn-sm  {{IsChangeMade ?'btn-warning':'btn-success'}} " ng-disabled="!IsWireApprover || !isWireCutoffRequirementsFilled || (!IsChangeMade && (wirePortalCutoff.WirePortalCutoff.IsApproved || IsSameUserRequested))" ng-click="fnSaveWirePortalCutoff()">
                         <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;{{IsChangeMade ? 'Save And Request for Approval ': ' Approve CutOff'}}
                     </button>
                     <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>

@@ -65,7 +65,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
                         "mRender": renderDotNetDateAndTime
                     }
                 ], "createdRow": function (row, data) {
-                     if (data.WirePortalCutoff.IsApproved)
+                    if (data.WirePortalCutoff.IsApproved)
                         $(row).addClass("success");
                     else
                         $(row).addClass("warning");
@@ -156,6 +156,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
 
     $scope.IsChangeMade = false;
     $scope.IsSameUserRequested = false;
+    $scope.IsWireApprover = false;
     $scope.fnChangeWireCutOffStatus = function () {
         $scope.IsChangeMade = false;
         if ($scope.IsWireCutOffLoading)
@@ -170,8 +171,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
         }
 
         $scope.IsSameUserRequested = $("#userName").val() == $scope.ExistingWireCutOff.RequestedBy;
-
-
+        $scope.IsWireApprover = $("#IsWireApprover").val() === "true";
     }
 
     $(document).on("click", "#tblWirePortalCutoffData tbody tr ", function () {

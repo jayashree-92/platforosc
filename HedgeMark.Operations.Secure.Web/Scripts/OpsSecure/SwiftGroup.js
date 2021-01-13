@@ -211,8 +211,9 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
             if (v.text == "Live") {
                 liveId = v.id;
 
-                if ($scope.ShouldDisableLive || ($scope.ExistingSwiftGroup.SwiftGroupStatus !== "Live" &&
-                    $("#userName").val() == $scope.ExistingSwiftGroup.RequestedBy))
+                if ($scope.ShouldDisableLive 
+                    || $("#IsWireApprover").val() !== "true"
+                    || ($scope.ExistingSwiftGroup.SwiftGroupStatus !== "Live" && $("#userName").val() == $scope.ExistingSwiftGroup.RequestedBy))
                     v.disabled = true;
                 else
                     v.disabled = false;
