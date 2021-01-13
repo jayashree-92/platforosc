@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
@@ -33,23 +34,15 @@ namespace HMOSecureWeb.Jobs
             var deactivationDeadline = DateTime.Today.AddMonths(-DeactivationPeriodInMonths);
             using (var context = new OperationsSecureContext())
             {
-                //Get all Wires' SSI initiated beteen now and Deactivation Time period
-                var allUsedSsIs = context.hmsWires
-                    .Where(s => s.CreatedAt > deactivationDeadline && s.OnBoardSSITemplateId != null && s.OnBoardSSITemplateId > 0).Select(s => s.OnBoardSSITemplateId ?? 0).Distinct()
-                    .ToList();
+                var allSsIDateMap = context.hmsWires.Where(s => s.OnBoardSSITemplateId != null && s.OnBoardSSITemplateId > 0).GroupBy(s => s.OnBoardSSITemplateId ?? 0).ToDictionary(s => s.Key, v => v.Max(v1 => v1.CreatedAt));
+                var lastUsedToDeactivateMap = allSsIDateMap.Where(s => s.Value < deactivationDeadline).ToDictionary(s => s.Key, v => v.Value);
+                var allStaleSSITemplatesToDeactivate = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Active" && lastUsedToDeactivateMap.ContainsKey(s.onBoardingSSITemplateId)).ToList();
 
-                var allStaleSSITemplatesToDeactivate = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Active" && !allUsedSsIs.Contains(s.onBoardingSSITemplateId)).ToList();
-
-                var allStaleSSITemplateIds = allStaleSSITemplatesToDeactivate.Select(s => s.onBoardingSSITemplateId).Distinct().ToList();
-                var lastUsedMap = context.hmsWires
-                    .Where(s => allStaleSSITemplateIds.Contains(s.OnBoardSSITemplateId ?? 0))
-                    .GroupBy(s => s.OnBoardSSITemplateId ?? 0).ToDictionary(s => s.Key, v => v.Max(s1 => s1.CreatedAt));
-
-                allStaleSSITemplatesToDeactivate.ForEach(s =>
+                foreach (var staleSSI in allStaleSSITemplatesToDeactivate)
                 {
-                    s.SSITemplateStatus = "De-Activated";
-                    s.LastUsedAt = lastUsedMap.ContainsKey(s.onBoardingSSITemplateId) ?lastUsedMap[s.onBoardingSSITemplateId] : deactivationDeadline;
-                });
+                    staleSSI.SSITemplateStatus = "De-Activated";
+                    staleSSI.LastUsedAt = lastUsedToDeactivateMap.ContainsKey(staleSSI.onBoardingSSITemplateId) ? lastUsedToDeactivateMap[staleSSI.onBoardingSSITemplateId] : deactivationDeadline;
+                }
 
                 context.onBoardingSSITemplates.AddOrUpdate(s => new { s.onBoardingSSITemplateId }, allStaleSSITemplatesToDeactivate.ToArray());
                 context.SaveChanges();

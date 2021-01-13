@@ -181,7 +181,7 @@ namespace HMOSecureWeb.Controllers
                 //AuditManager.AddAuditLog(auditLog);
             }
         }
-        
+
         public void RemoveSsiTemplateMap(long ssiTemplateMapId)
         {
             SSITemplateManager.RemoveSsiTemplateMap(ssiTemplateMapId);
@@ -594,6 +594,7 @@ namespace HMOSecureWeb.Controllers
                 row["UpdatedBy"] = template.UpdatedBy;
                 row["ModifiedDate"] = template.UpdatedAt + "";
                 row["ApprovedBy"] = template.ApprovedBy;
+                row["LastUsedAt"] = template.LastUsedAt + "";
                 switch (template.SSITemplateStatus)
                 {
                     case "Approved":
