@@ -36,7 +36,13 @@ namespace HMOSecureWeb.Jobs
             {
                 var allSsIDateMap = context.hmsWires.Where(s => s.OnBoardSSITemplateId != null && s.OnBoardSSITemplateId > 0).GroupBy(s => s.OnBoardSSITemplateId ?? 0).ToDictionary(s => s.Key, v => v.Max(v1 => v1.CreatedAt));
                 var lastUsedToDeactivateMap = allSsIDateMap.Where(s => s.Value < deactivationDeadline).ToDictionary(s => s.Key, v => v.Value);
-                var allStaleSSITemplatesToDeactivate = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Active" && lastUsedToDeactivateMap.ContainsKey(s.onBoardingSSITemplateId)).ToList();
+
+                var staleSSIIds = lastUsedToDeactivateMap.Keys.ToList();
+                var allStaleSSITemplatesToDeactivate = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Active" && staleSSIIds.Contains(s.onBoardingSSITemplateId)).ToList();
+
+                
+                if (allStaleSSITemplatesToDeactivate.Count == 0)
+                    return;
 
                 foreach (var staleSSI in allStaleSSITemplatesToDeactivate)
                 {
