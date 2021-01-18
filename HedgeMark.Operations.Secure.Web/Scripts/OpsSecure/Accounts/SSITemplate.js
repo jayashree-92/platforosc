@@ -1570,7 +1570,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             });
             $("#txtContactName").popover("show");
             return;
-        } w
+        } 
 
         $http({
             method: "POST",
