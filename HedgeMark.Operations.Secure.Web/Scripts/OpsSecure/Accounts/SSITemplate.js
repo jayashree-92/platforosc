@@ -968,6 +968,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     });
 
     $scope.fnAddSSITemplateDetail = function (panelIndex) {
+
+        $scope.isAuthorizedUserToApprove = false;
         if ($("#txtDescription").val() == undefined || $("#txtDescription").val() == "") {
             //pop-up    
             $("#txtDescription").popover({
@@ -1508,7 +1510,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $scope.fnAddCallbackModal = function () {
-        $scope.callback = { onBoardingSSITemplateId: $scope.ssiTemplate.onBoardingSSITemplateId };
+        $scope.callback = { onBoardingSSITemplateId: angular.copy($scope.ssiTemplate.onBoardingSSITemplateId) };
         $("#callbackModal").modal({
             show: true,
             keyboard: true
@@ -1570,7 +1572,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             });
             $("#txtContactName").popover("show");
             return;
-        } w
+        }
 
         $http({
             method: "POST",
@@ -1729,9 +1731,9 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     //    window.location.href = "/OnBoarding/ExportDetailsFromClient?clientId=" + $scope.clientId;
 
     //}
-    $(".form-control").change(function () {
-        if ($scope.ssiTemplate.SSITemplateStatus == "Pending Approval")
-            $("#approve").hide();
-    });
+    //$(".form-control").change(function () {
+    //    if ($scope.ssiTemplate.SSITemplateStatus == "Pending Approval")
+    //        $("#approve").hide();
+    //});
 
 });
