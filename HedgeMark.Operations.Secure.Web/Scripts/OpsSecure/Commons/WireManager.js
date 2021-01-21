@@ -198,7 +198,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             angular.forEach($scope.WireTicket.hmsWireWorkflowLogs, $scope.fnSetFormatedCreatedDt);
 
             $scope.fnSetWireCutOffDetails(response.data.deadlineToApprove, response.data.IsWireCutOffApproved);
-            
+
             //$timeout(function () {
             //    if (!$scope.WireTicketStatus.IsApprovedOrFailed) {
             //        $scope.fnValidateBasicWireDetails();
@@ -642,6 +642,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         angular.element("#cancelWire").popover("hide");
         $("#wireErrorStatus").collapse("hide");
         angular.element("#liWireTransferType").select2("val", 1).trigger("change");
+        $scope.WireTicket = {};
     });
 
     $scope.fnUpdateWireWithStatus = function (statusId) {
@@ -845,7 +846,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
     }
 
-    
+
     $scope.getApprovalTime = function (account) {
 
         if (account.onBoardingAccountId == undefined || account.onBoardingAccountId == 0)
@@ -864,10 +865,20 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.fnValidateBasicWireDetails();
         $scope.fnResetDeadlineTimer();
     }
-    
+
+    $scope.fnHideErrorMessage = function () {
+        $scope.isUserActionDone = false;
+        $("#wireErrorStatus").collapse("hide");
+        $scope.validationMsg = "";
+    }
+
     $scope.fnValidateBasicWireDetails = function () {
 
-        if (!$scope.IsWireCutOffApproved) {
+        if ($scope.WireTicket.OnBoardAccountId == 0) {
+            $scope.fnHideErrorMessage();
+        }
+
+        if (!$scope.IsWireCutOffApproved && !$scope.wireTicketObj.IsNotice) {
             $scope.fnShowErrorMessage("Note: Unable to determine Wire Cut-off date as it is not Approved.");
         } else if ($scope.isDeadlineCrossed) {
             $scope.fnShowErrorMessage("Note: Deadline crossed. Please select a future date for settlement.");
@@ -878,9 +889,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isUserActionDone = true;
             $scope.fnShowErrorMessage("An Initiated wire exists for the same value date, purpose, sending and receiving account.");
         } else {
-            $scope.isUserActionDone = false;
-            $("#wireErrorStatus").collapse("hide");
-            $scope.validationMsg = "";
+            $scope.fnHideErrorMessage();
         }
     }
 

@@ -370,7 +370,7 @@ namespace HMOSecureWeb.Controllers
                 IsWireCreated = false,
                 currentlyViewedBy,
                 wireSourceModule,
-                IsWireCutOffApproved= wireTicket.SendingAccount.WirePortalCutoff.IsApproved
+                IsWireCutOffApproved = wireTicket.SendingAccount.WirePortalCutoff.IsApproved
             });
         }
 
@@ -511,7 +511,19 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId, long receivingSSITemplateId, long wireId)
         {
-            var isWireCreated = WireDataManager.IsWireCreated(valueDate, purpose, sendingAccountId, receivingAccountId, receivingSSITemplateId, wireId);
+            var isWireCreated = false;
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                isWireCreated = context.hmsWires.Any(s => s.ValueDate == valueDate 
+                                                          && s.hmsWirePurposeLkup.Purpose == purpose 
+                                                          && s.hmsWireId != wireId 
+                                                          && s.OnBoardAccountId == sendingAccountId 
+                                                          && (receivingSSITemplateId > 0 && s.OnBoardSSITemplateId == receivingSSITemplateId || receivingAccountId > 0 
+                                                              && s.ReceivingOnBoardAccountId == receivingAccountId));
+            }
+
             return Json(isWireCreated);
         }
 
@@ -928,7 +940,7 @@ namespace HMOSecureWeb.Controllers
             var onboardAccount = FundAccountManager.GetOnBoardingAccount(onBoardingAccountId);
             var deadlineToApprove = GetDeadlineToApprove(onboardAccount, valueDate);
 
-            return Json(new { onboardAccount, deadlineToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.IsApproved });
+            return Json(new { onboardAccount, deadlineToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.hmsWirePortalCutoffId == 0 || onboardAccount.WirePortalCutoff.IsApproved });
         }
 
         public JsonResult GetCashBalances(long sendingAccountId, DateTime valueDate)

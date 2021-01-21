@@ -577,19 +577,6 @@ namespace HedgeMark.Operations.Secure.Middleware
             }
         }
 
-        public static bool IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId, long receivingSSITemplateId, long wireId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.hmsWires.Any(s =>
-                    s.ValueDate == valueDate && s.hmsWirePurposeLkup.Purpose == purpose && s.hmsWireId != wireId &&
-                    s.OnBoardAccountId == sendingAccountId &&
-                    (receivingSSITemplateId > 0 && s.OnBoardSSITemplateId == receivingSSITemplateId
-                    || receivingAccountId > 0 && s.ReceivingOnBoardAccountId == receivingAccountId));
-            }
-        }
         public static List<hmsWireMessageType> GetWireMessageTypes()
         {
             using (var context = new OperationsSecureContext())
