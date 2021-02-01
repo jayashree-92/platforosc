@@ -880,7 +880,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         if (!$scope.IsWireCutOffApproved && !$scope.wireTicketObj.IsNotice) {
             $scope.fnShowErrorMessage("Note: Unable to determine Wire Cut-off date as it is not Approved.");
-        } else if ($scope.isDeadlineCrossed) {
+        } else if ($scope.isDeadlineCrossed && !$scope.wireTicketObj.IsNotice) {
             $scope.fnShowErrorMessage("Note: Deadline crossed. Please select a future date for settlement.");
         } else if ($scope.isMandatoryFieldsMissing) {
             $scope.fnShowErrorMessage(angular.copy($scope.mandatoryFieldMsg));
