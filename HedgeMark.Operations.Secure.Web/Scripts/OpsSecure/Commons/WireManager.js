@@ -786,12 +786,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return false;
         }
 
-        if (!$scope.IsWireCutOffApproved && $scope.wireComments.trim() == "") {
+        if (!$scope.wireTicketObj.IsNotice && !$scope.IsWireCutOffApproved && $scope.wireComments.trim() == "") {
             $scope.fnShowErrorMessage("Please enter the comments to initiate the wire without Cut-off determination.");
             return false;
         }
 
-        if ($scope.isDeadlineCrossed && $scope.wireComments.trim() == "") {
+        if (!$scope.wireTicketObj.IsNotice && $scope.isDeadlineCrossed && $scope.wireComments.trim() == "") {  
             $scope.fnShowErrorMessage("Please enter the comments to initiate the wire as deadline is crossed.");
             return false;
         }
