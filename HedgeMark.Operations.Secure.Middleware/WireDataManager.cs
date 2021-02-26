@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Com.HedgeMark.Commons.Extensions;
+using HedgeMark.Operations.Secure.DataModel;
+using HedgeMark.Operations.Secure.Middleware.Models;
+using HedgeMark.Operations.Secure.Middleware.Util;
+using HedgeMark.SwiftMessageHandler;
+using log4net;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Com.HedgeMark.Commons.Extensions;
-using HedgeMark.Operations.Secure.DataModel;
-using HedgeMark.Operations.Secure.Middleware.Models;
-using HedgeMark.Operations.Secure.Middleware.Util;
-using HedgeMark.SwiftMessageHandler;
-using HedgeMark.SwiftMessageHandler.Model.MT.MT2XX;
-using log4net;
 
 namespace HedgeMark.Operations.Secure.Middleware
 {
@@ -70,7 +69,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             public int PendingCount { get; set; }
             public decimal ApprovedWireAmount { get; set; }
             public decimal PendingWireAmount { get; set; }
-            
+
             public decimal TotalWireEntered
             {
                 get { return ApprovedWireAmount + PendingWireAmount; }
@@ -103,7 +102,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             IsWireStatusInitiated = (int)WireDataManager.WireStatus.Initiated == wireStatusId;
             IsWireStatusOnHold = (int)WireDataManager.WireStatus.OnHold == wireStatusId;
 
-            var swiftStatusId = wireTicket.HMWire.WireStatusId;
+            var swiftStatusId = wireTicket.HMWire.SwiftStatusId;
 
             IsSwiftStatusNotInitiated = (int)WireDataManager.SwiftStatus.NotInitiated == swiftStatusId;
             IsSwiftStatusProcessing = (int)WireDataManager.SwiftStatus.Processing == swiftStatusId;
@@ -352,7 +351,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                 var fundAccounts = (from oAccnt in context.onBoardingAccounts
                                     where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed"
                                     let isAuthorizedSendingAccount = (currency == null || oAccnt.Currency == currency) && oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
-                                    let isAuthorizedSendingAccountFinal =   isNotice ? isAuthorizedSendingAccount && oAccnt.SwiftGroup.AcceptedMessages.Contains("MT210") : isAuthorizedSendingAccount
+                                    let isAuthorizedSendingAccountFinal = isNotice ? isAuthorizedSendingAccount && oAccnt.SwiftGroup.AcceptedMessages.Contains("MT210") : isAuthorizedSendingAccount
                                     where (isFundTransfer || isAuthorizedSendingAccountFinal)
                                     select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.UltimateBeneficiaryAccountNumber, FFCNumber = oAccnt.FFCNumber, IsAuthorizedSendingAccount = isAuthorizedSendingAccount, Currency = oAccnt.Currency }).Distinct().ToList();
                 return fundAccounts;

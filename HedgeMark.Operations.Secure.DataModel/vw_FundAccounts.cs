@@ -44,5 +44,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string CashSweepTimeZone { get; set; }
         public string AssociatedCustodyAcctNumber { get; set; }
         public string TopLevelManagerAccountNumber { get; set; }
+        public string ClientName { get; set; }
+        public string LaunchStatus { get; set; }
     }
 }
