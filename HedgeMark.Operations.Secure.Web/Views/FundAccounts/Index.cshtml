@@ -277,9 +277,6 @@
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
                                                 <input type="text" class="form-control" ng-model="accountDetail.CashInstruction" id="liCashInstruction0" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction)" />
                                             </div>
-                                            @*<div class="col-sm-8 col-md-3 col-lg-3">
-                                                    <a class="btn btn-sm btn-info" ng-click="fnAddCashInstructionModal($index)" title="Add Cash Instruction"><i class="glyphicon glyphicon-plus"></i></a>
-                                                </div>*@
                                         </div>
                                     </div>
                                     <p></p>
@@ -805,33 +802,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddCurrency()">
                         <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Currency
-                    </button>
-                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="cashInstructionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4>Add Cash Instruction Mechanism</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-8 col-md-5 col-lg-5">
-                            <label for="txtCashInstruction" class="control-label">Cash Instruction Mechanism:</label>
-                        </div>
-                        <div class="col-sm-8 col-md-7 col-lg-7">
-                            <input type="text" id="txtCashInstruction" class="modalInputWidth form-control" placeholder="Cash Instruction Mechanism" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddCashInstruction()">
-                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Cash Instruction
                     </button>
                     <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                 </div>

@@ -10,6 +10,9 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <button ng-click="fnAddOrUpdateWirePortalCutoff(true)" id="btnAddWireCutoff" class="btn btn-success btn-sm" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Wire Cutoff</button>
+
+            <button class="btn btn-sm btn-default" ng-click="fnAddCashInstructionModal($index)" title="Add Cash Instruction"><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Cash Instruction</button>
+
             <div class="pull-right btn-group">
                 &nbsp;&nbsp; <button class=" btn btn-primary btn-sm" id="btnEdit" ng-disabled="!enableWireActions" ng-click="fnAddOrUpdateWirePortalCutoff(false)">
                     <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
@@ -92,6 +95,35 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="cashInstructionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Cash Instruction Mechanism</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="txtCashInstruction" class="control-label">Cash Instruction Mechanism:</label>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" id="txtCashInstruction" class="modalInputWidth form-control" placeholder="Cash Instruction Mechanism" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddCashInstruction()">
+                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Cash Instruction
+                    </button>
+                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 

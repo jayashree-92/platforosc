@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Com.HedgeMark.Commons;
+using HedgeMark.Operations.Secure.DataModel;
+using HedgeMark.Operations.Secure.Middleware.Util;
+using IBM.WMQ;
+using log4net;
+using System;
 using System.Collections;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Com.HedgeMark.Commons;
-using HedgeMark.Operations.Secure.DataModel;
-using HedgeMark.Operations.Secure.Middleware.Util;
-using IBM.WMQ;
-using log4net;
 using MQC = IBM.WMQ.MQC;
 
 namespace HedgeMark.Operations.Secure.Middleware.Queues
@@ -62,7 +62,8 @@ namespace HedgeMark.Operations.Secure.Middleware.Queues
             catch (MQException mexc)
             {
                 var message = string.Format("Unable to connect to Queue Manager: {0} ReasonCode: {1}{2}", mexc.Message, mexc.ReasonCode, mexc.StackTrace);
-                Logger.Error(message, mexc);
+                if (DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
+                    Logger.Error(message, mexc);
                 throw new Exception(message, mexc);
             }
         }

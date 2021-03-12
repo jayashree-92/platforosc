@@ -2329,53 +2329,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
     angular.element("#txtCurrency").on("focusin", function () { angular.element("#txtCurrency").popover("hide"); });
 
-    $scope.fnAddCashInstruction = function () {
-        if ($("#txtCashInstruction").val() == undefined || $("#txtCashInstruction").val() == "") {
-            //pop-up    
-            $("#txtCashInstruction").popover({
-                placement: "right",
-                trigger: "manual",
-                container: "body",
-                content: "Cash Instruction cannot be empty. Please add a valid Cash Instruction",
-                html: true,
-                width: "250px"
-            });
-
-            $("#txtCashInstruction").popover("show");
-            return;
-        }
-
-        $("#txtCashInstruction").popover("hide");
-        var isExists = false;
-        $($scope.cashInstructions).each(function (i, v) {
-            if ($("#txtCashInstruction").val() == v.text) {
-                isExists = true;
-                return false;
-            }
-        });
-        if (isExists) {
-            $("#txtCashInstruction").popover({
-                placement: "right",
-                trigger: "manual",
-                container: "body",
-                content: "Cash Instruction is already exists. Please enter a valid Cash Instruction",
-                html: true,
-                width: "250px"
-            });
-            $("#txtCashInstruction").popover("show");
-            return;
-        }
-
-        $http.post("/FundAccounts/AddCashInstruction", { cashInstruction: $("#txtCashInstruction").val() }).then(function (response) {
-            notifySuccess("Cash instruction mechanism added successfully");
-            $scope.onBoardingAccountDetails[0].CashInstruction = $("#txtCashInstruction").val();
-            $scope.fnGetCashInstruction();
-            $("#txtCashInstruction").val("");
-        });
-
-        $("#cashInstructionModal").modal("hide");
-    }
-
+    
     $scope.validateAccountNumber = function (isFfc) {
 
         var onBoardingAccount = $scope.onBoardingAccountDetails[0];
@@ -2404,15 +2358,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     angular.element("#txtCashInstruction").on("focusin", function () { angular.element("#txtCashInstruction").popover("hide"); });
 
-    $scope.fnAddCashInstructionModal = function () {
-        $("#cashInstructionModal").modal({
-            show: true,
-            keyboard: true
-        }).on("hidden.bs.modal", function () {
-            $("#txtCashInstruction").popover("hide");
-            // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
-        });
-    }
 
     $scope.fnAddBICorABA = function () {
         if ($("#txtBICorABA").val() == undefined || $("#txtBICorABA").val() == "") {

@@ -95,31 +95,36 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
         });
     }
 
-    $http.get("/WirePortalCutoff/GetCutoffRelatedData").then(function (response) {
-        $scope.timeZones = response.data.timeZones;
-        $scope.currencies = response.data.currencies;
-        $scope.cashInstructions = response.data.cashInstructions;
+    $scope.fnLoadWireCutOffRelatedDate = function () {
+        
+        $http.get("/WirePortalCutoff/GetCutoffRelatedData").then(function (response) {
+            $scope.timeZones = response.data.timeZones;
+            $scope.currencies = response.data.currencies;
+            $scope.cashInstructions = response.data.cashInstructions;
 
-        angular.element("#liCashInstruction").select2({
-            placeholder: "Select a Cash Instruction",
-            data: $scope.cashInstructions,
-            closeOnSelect: false
+            angular.element("#liCashInstruction").select2({
+                placeholder: "Select a Cash Instruction",
+                data: $scope.cashInstructions,
+                closeOnSelect: false
+            });
+
+            angular.element("#liCurrency").select2({
+                placeholder: "Select a Currency",
+                data: $scope.currencies,
+                closeOnSelect: false
+            });
+
+            angular.element("#liTimeZone").select2({
+                placeholder: "Select a Time Zone",
+                data: $scope.timeZones,
+                closeOnSelect: false
+            });
+
         });
 
-        angular.element("#liCurrency").select2({
-            placeholder: "Select a Currency",
-            data: $scope.currencies,
-            closeOnSelect: false
-        });
+    }
 
-        angular.element("#liTimeZone").select2({
-            placeholder: "Select a Time Zone",
-            data: $scope.timeZones,
-            closeOnSelect: false
-        });
-
-    });
-
+    $scope.fnLoadWireCutOffRelatedDate();
     $scope.fnGetWirePortalCutoffs();
     $scope.enableWireActions = false;
     $scope.IsWireCutOffLoading = false;
@@ -262,6 +267,62 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
 
     $scope.fnExportData = function () {
         window.location.assign("/WirePortalCutoff/ExportData");
+    }
+
+    
+    $scope.fnAddCashInstructionModal = function () {
+        $("#cashInstructionModal").modal({
+            show: true,
+            keyboard: true
+        }).on("hidden.bs.modal", function () {
+            $("#txtCashInstruction").popover("hide");
+            // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
+        });
+    }
+
+    $scope.fnAddCashInstruction = function () {
+        if ($("#txtCashInstruction").val() == undefined || $("#txtCashInstruction").val() == "") {
+            //pop-up    
+            $("#txtCashInstruction").popover({
+                placement: "right",
+                trigger: "manual",
+                container: "body",
+                content: "Cash Instruction cannot be empty. Please add a valid Cash Instruction",
+                html: true,
+                width: "250px"
+            });
+
+            $("#txtCashInstruction").popover("show");
+            return;
+        }
+
+        $("#txtCashInstruction").popover("hide");
+        var isExists = false;
+        $($scope.cashInstructions).each(function (i, v) {
+            if ($("#txtCashInstruction").val() == v.text) {
+                isExists = true;
+                return false;
+            }
+        });
+        if (isExists) {
+            $("#txtCashInstruction").popover({
+                placement: "right",
+                trigger: "manual",
+                container: "body",
+                content: "Cash Instruction is already exists. Please enter a valid Cash Instruction",
+                html: true,
+                width: "250px"
+            });
+            $("#txtCashInstruction").popover("show");
+            return;
+        }
+
+        $http.post("/FundAccounts/AddCashInstruction", { cashInstruction: $("#txtCashInstruction").val() }).then(function (response) {
+            notifySuccess("Cash instruction mechanism added successfully");
+            $scope.fnLoadWireCutOffRelatedDate();
+        });
+
+        $("#cashInstructionModal").modal("hide");
     }
 
 });

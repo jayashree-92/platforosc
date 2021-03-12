@@ -126,7 +126,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             IsApprovedOrFailed = IsWireStatusCancelled || IsWireStatusApproved || IsWireStatusFailed;
             IsCancelEnabled = wireTicket.HMWire.hmsWireId > 0 && (!IsApprovedOrFailed || IsSwiftStatusAcknowledged && !IsDeadlineCrossed);
 
-            IsDraftEnabled = !IsDeadlineCrossed && (IsWireStatusInitiated || IsWireStatusFailed || IsWireStatusCancelled && IsSwiftStatusNotInitiated);
+            IsDraftEnabled = (IsWireStatusInitiated || IsWireStatusFailed || IsWireStatusCancelled) && IsSwiftStatusNotInitiated;//!IsDeadlineCrossed && 
             IsWirePurposeAdhoc = isAdHocWire || wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocWireReport;
 
             var isUserInvolvedInInitation = wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated || s.WireStatusId == (int)WireDataManager.WireStatus.Drafted).Any(s => s.CreatedBy == userId)
