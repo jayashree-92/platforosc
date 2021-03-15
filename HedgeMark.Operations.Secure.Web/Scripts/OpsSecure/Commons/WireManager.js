@@ -1468,7 +1468,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if (!$scope.CashBalance.IsCashBalanceAvailable)
             $scope.CashBalance.CalculatedBalance = "N.A";
         else {
-            var newBalance = $scope.WireTicket.WireStatusId <= 1
+            var newBalance = $scope.WireTicket.WireStatusId <= 1 && $("#liMessageType").select2("data").text !== "MT210"
                 ? $.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text())
                 : $.convertToNumber($scope.CashBalance.AvailableBalance);
             $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);

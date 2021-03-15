@@ -662,6 +662,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                          join acc in context.vw_FundAccounts on wire.OnBoardAccountId equals acc.onBoardingAccountId
                          where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(acc.AgreementType)
                          where wire.ValueDate > contextDate && wire.ValueDate <= valueDate && (wire.WireStatusId == (int)WireDataManager.WireStatus.Approved || wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated)
+                         where wire.hmsWireMessageType.MessageType != "MT210"
                          select new WireAccountBaseData
                          {
                              OnBoardAccountId = wire.OnBoardAccountId,
@@ -748,6 +749,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                 wires = context.hmsWires.Where(s => s.OnBoardAccountId == sendingFundAccountId && s.ValueDate > contextDate && s.ValueDate <= valueDate &&
                                                     (s.WireStatusId == (int)WireDataManager.WireStatus.Approved ||
                                                     s.WireStatusId == (int)WireDataManager.WireStatus.Initiated))
+                    .Where(wire => wire.hmsWireMessageType.MessageType != "MT210")
                     .Select(s => new WireAccountBaseData
                     {
                         OnBoardAccountId = s.OnBoardAccountId,
