@@ -791,7 +791,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return false;
         }
 
-        if (!$scope.wireTicketObj.IsNotice && $scope.isDeadlineCrossed && $scope.wireComments.trim() == "") {  
+        if (!$scope.wireTicketObj.IsNotice && $scope.isDeadlineCrossed && $scope.wireComments.trim() == "") {
             $scope.fnShowErrorMessage("Please enter the comments to initiate the wire as deadline is crossed.");
             return false;
         }
@@ -1468,7 +1468,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if (!$scope.CashBalance.IsCashBalanceAvailable)
             $scope.CashBalance.CalculatedBalance = "N.A";
         else {
-            var newBalance = $.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text());
+            var newBalance = $scope.WireTicket.WireStatusId <= 1
+                ? $.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text())
+                : $.convertToNumber($scope.CashBalance.AvailableBalance);
             $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
             $scope.CashBalance.IsNewBalanceOffLimit = newBalance < 0;
 
