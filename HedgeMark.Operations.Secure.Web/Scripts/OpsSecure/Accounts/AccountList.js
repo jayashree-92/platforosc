@@ -1410,7 +1410,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
         if ($scope.detail == "Description") {
-            $http.post("/FundAccounts/AddAccountDescriptions", { accountDescription: $("#txtDetail").val(), agreementTypeId: $scope.agreementTypeId }).then(function (response) {
+            var agrmTypeId = $scope.AccountType == "DDA" ? $scope.ddaAgreementTypeId : $scope.AccountType == "Custody" ? $scope.custodyAgreementTypeId : $scope.AgreementTypeId;
+            $http.post("/FundAccounts/AddAccountDescriptions", { accountDescription: $("#txtDetail").val(), agreementTypeId: agrmTypeId }).then(function (response) {
                 notifySuccess("Description added successfully");
                 $scope.onBoardingAccountDetails[0].Description = $("#txtDetail").val();
                 $scope.fnGetAccountDescriptions();
