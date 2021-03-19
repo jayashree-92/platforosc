@@ -5,6 +5,7 @@ using System.Net.Mime;
 using System.Text;
 using log4net;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 
@@ -13,16 +14,17 @@ namespace Com.HedgeMark.Commons.Mail
     public class MailSender : IDisposable
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(MailSender));
-        private const string DebugHeader = "Error Information :";
+        public static string SystemEnvironment = ConfigurationManagerWrapper.StringSetting("Environment");
+        private static readonly string MailSenderAuditId = ConfigurationManagerWrapper.StringSetting("HMSystemMailSenderAuditId", "HM-SystemSent@bnymellon.com");
 
-        public static void Send(MailInfo mailInfo)
+        public static void Send(MailInfo mailInfo, SmtpClient client)
         {
             if (string.IsNullOrWhiteSpace(mailInfo.ToAddress))
                 return;
 
             var toAddress = GetValidatedAddress(mailInfo.ToAddress);
 
-            using (var message = new MailMessage(MailInfo.FromAddress, toAddress, mailInfo.Subject, mailInfo.Body))
+            using (var message = new MailMessage(mailInfo.FromAddress, toAddress, mailInfo.Subject, mailInfo.Body))
             {
                 message.IsBodyHtml = mailInfo.IsHtml;
 
@@ -32,21 +34,22 @@ namespace Com.HedgeMark.Commons.Mail
                 if (!string.IsNullOrEmpty(mailInfo.BccAddress))
                     message.Bcc.Add(GetValidatedAddress(mailInfo.BccAddress));
 
+                if (SystemEnvironment.Equals("Prod", StringComparison.InvariantCultureIgnoreCase))
+                    message.Bcc.Add(GetValidatedAddress(MailSenderAuditId));
+
                 var contentMemoryStream = new List<MemoryStream>();
                 try
                 {
-                    Logger.DebugFormat("Mail Details: {0} From: {1} {0} To: {2} {0} BCC: {3} {0} Subject: {4} {0}", Environment.NewLine, MailInfo.FromAddress, mailInfo.ToAddress, mailInfo.BccAddress, mailInfo.Subject);
-
                     AttachFilesToThisMail(mailInfo, message, out contentMemoryStream);
-                    using (var client = new SmtpClient(mailInfo.Server))
-                    {
-                        SendMail(message, client);
-                    }
+
+                    SendMail(message, client);
                 }
                 catch (Exception ex)
                 {
                     Logger.Error(ex.Message, ex);
-                    throw;
+
+                    if (!SystemEnvironment.Equals("Local", StringComparison.InvariantCultureIgnoreCase))
+                        throw;
                 }
                 finally
                 {
@@ -67,7 +70,10 @@ namespace Com.HedgeMark.Commons.Mail
             contentMemoryStream = new List<MemoryStream>();
 
             if (mailInfo.Attachments == null && mailInfo.Attachment == null)
+            {
+                Logger.DebugFormat("No Attaching file available");
                 return;
+            }
 
             if (mailInfo.Attachments == null)
                 mailInfo.Attachments = new List<FileInfo>();
@@ -78,11 +84,8 @@ namespace Com.HedgeMark.Commons.Mail
             if (mailInfo.Attachments.Count == 0)
                 return;
 
-            foreach (var fileAttachment in mailInfo.Attachments)
+            foreach (var fileAttachment in mailInfo.Attachments.Where(fileAttachment => fileAttachment.Exists))
             {
-                if (!fileAttachment.Exists)
-                    continue;
-
                 using (var attachmentFileStream = new FileStream(fileAttachment.FullName, FileMode.Open, FileAccess.Read))
                 {
                     Logger.DebugFormat("Attaching file {0}", fileAttachment.Name);
@@ -118,23 +121,39 @@ namespace Com.HedgeMark.Commons.Mail
             }
         }
 
-        public void SendErrorNotification(MailInfo mailInfo, Exception exception)
-        {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(mailInfo.Body);
-            stringBuilder.AppendLine().AppendLine("Error Message: ").Append(exception.Message);
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
 
-            stringBuilder.AppendLine().AppendLine().AppendLine(DebugHeader);
-            stringBuilder.AppendLine().AppendLine(exception.InnerException == null ? exception.StackTrace : exception.InnerException.StackTrace);
-            mailInfo.Body = stringBuilder.ToString();
-            Send(mailInfo);
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
         }
 
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~MailSender()
+        // {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
-            // Use SupressFinalize in case a subclass 
-            // of this type implements a finalizer.
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
+        #endregion
     }
 }

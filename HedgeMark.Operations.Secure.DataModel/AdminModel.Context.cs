@@ -39,6 +39,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<vw_CounterpartyAgreements> vw_CounterpartyAgreements { get; set; }
         public virtual DbSet<onboardingContactFundMap> onboardingContactFundMaps { get; set; }
         public virtual DbSet<vw_HFund> vw_HFund { get; set; }
+        public virtual DbSet<vw_EmailDomailForFunds> vw_EmailDomailForFunds { get; set; }
     
         public virtual ObjectResult<USP_NEXEN_GetUserDetails_Result> USP_NEXEN_GetUserDetails(string userID, string userType)
         {

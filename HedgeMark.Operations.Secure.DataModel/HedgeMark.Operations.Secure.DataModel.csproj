@@ -125,10 +125,34 @@
     <Compile Include="hmsCurrency.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsDashboardPreference.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hmsDashboardPreferenceCodeLkup.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hmsDashboardSchedule.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hmsDashboardScheduleRangeLkup.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hmsDashboardTemplate.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsMQLog.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="hmsNotificationStaging.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hmsSchedule.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hmsScheduleLog.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hmsScheduleWorkflowLkup.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="hmsSSICallback.cs">
@@ -280,6 +304,9 @@
     </Compile>
     <Compile Include="vw_dmaInvoiceReport.cs">
       <DependentUpon>OperationsContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vw_EmailDomailForFunds.cs">
+      <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
     <Compile Include="vw_FundAccounts.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>

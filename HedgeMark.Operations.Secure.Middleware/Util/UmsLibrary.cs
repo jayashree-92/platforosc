@@ -54,7 +54,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
         /// </summary>
         public void SetSecurityHeader()
         {
-            MessageHeaders messageHeadersElement = OperationContext.Current.OutgoingMessageHeaders;
+            var messageHeadersElement = OperationContext.Current.OutgoingMessageHeaders;
             var securityHeader = new SecurityHeader
             {
                 userName = ConfigurationManager.AppSettings["UMS_username"],
@@ -76,7 +76,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
         public SearchResultUser LookupUserByUserId(string userName, List<string> attribNames)
         {
             var methodName = MethodBase.GetCurrentMethod().Name;
-            SearchResultUser result = new SearchResultUser(); 
+            SearchResultUser result = new SearchResultUser();
             var service = new LDAPServiceDelegateClient();
             try
             {
@@ -102,7 +102,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
             }
             return result;
         }
-        
+
 
         public List<string> GetLdapGroupsOfLdapUser(string userName)
         {
@@ -112,6 +112,6 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
             List<string> groups = (result.userAttributes[0].value != null) ? result.userAttributes[0].value.ToList() : new List<string>();
             return groups;
         }
-        
+
     }
 }

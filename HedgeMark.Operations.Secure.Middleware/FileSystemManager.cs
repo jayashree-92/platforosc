@@ -25,6 +25,25 @@ namespace HedgeMark.Operations.Secure.Middleware
                 return GetValidatedConfigPath(configPath);
             }
         }
+        public static string InternalOutputFilesDropPath
+        {
+            get
+            {
+                var configPath = ConfigurationManagerWrapper.StringSetting("InternalOutputFilesDropPath", @"D:\InternalOutputFilesDropPath\");
+                return GetValidatedConfigPath(configPath);
+            }
+        }
+
+        public static string SftpOutputFilesPath
+        {
+            get
+            {
+                var configPath = ConfigurationManagerWrapper.StringSetting("SftpOutputFilesPath", string.Format(@"{0}\{1}\", OpsSecureRootDirectory, "SftpOutputFilesPath"));
+                return GetValidatedConfigPath(configPath);
+            }
+
+        }
+
 
         public static string OpsSecureWiresFilesPath
         {

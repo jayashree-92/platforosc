@@ -70,7 +70,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Queues
 
         public static void SendMessage(string swiftMessage)
         {
-            if (Utility.IsLocal())
+            if (Utility.IsLocal)
                 return;
 
             //Send this Swift Message
@@ -150,7 +150,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Queues
 
         private static void GetAndProcessQueueMessage(string queueName)
         {
-            if (Utility.IsLocal())
+            if (Utility.IsLocal)
                 return;
 
             if (QueueManager == null || !QueueManager.IsConnected)

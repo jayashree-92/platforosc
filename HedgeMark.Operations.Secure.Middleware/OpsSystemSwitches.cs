@@ -8,6 +8,7 @@ namespace HedgeMark.Operations.Secure.Middleware
     public class SystemSwitches : Switches
     {
         public static List<string> TreasuryReportAgreementTypesToUseMarginExcessOrDeficit { get { return ((string)SystemSwitches[SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit]).ToStringList(); } }
+        public static int SchedulerProcessId { get { return ((int)SystemSwitches[SwitchKey.SchedulerProcessId]); } }
         public dynamic this[SwitchKey key]
         {
             get
@@ -28,7 +29,8 @@ namespace HedgeMark.Operations.Secure.Middleware
 
         public enum SwitchKey
         {
-            TreasuryReportAgreementTypesToUseMarginExcessOrDeficit
+            TreasuryReportAgreementTypesToUseMarginExcessOrDeficit,
+            SchedulerProcessId
         }
 
     }

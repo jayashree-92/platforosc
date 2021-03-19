@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="/Content/bootstrap-bny-nexen.css" type="text/css">
     <link rel="stylesheet" href="/Content/site.css" type="text/css">
     <link rel="stylesheet" href="css/login.css" type="text/css">
-    <script src="/Scripts/jquery-3.3.1.js"></script>
+    <script src="/Scripts/jquery-3.5.1.js"></script>
     <script src="/Scripts/angular.js"></script>
     <script src="/Scripts/angular-animate.js"></script>
     <script src="/Scripts/angular-route.js"></script>

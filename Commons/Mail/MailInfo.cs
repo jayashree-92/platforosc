@@ -10,16 +10,24 @@ namespace Com.HedgeMark.Commons.Mail
         {
             get { return ConfigurationManagerWrapper.StringSetting(Config.MailServer); }
         }
-        public static string FromAddress
+        public static string DefaultFromAddress
         {
             get { return ConfigurationManagerWrapper.StringSetting(Config.FromMailAddress, "no-reply-local@bnymellon.com"); }
         }
-        
+
+        private string fromAddress;
+        public string FromAddress
+        {
+            get { return (fromAddress ?? DefaultFromAddress); }
+            set { fromAddress = value; }
+        }
+
         public static string HedgeMarkAddress
         {
-            get {
+            get
+            {
                 var hedgeMarkAddressFilepath = AppDomain.CurrentDomain.BaseDirectory + @"\\ExternalLibraries\\HedgeMarkAddress.txt";
-                return File.ReadAllText(hedgeMarkAddressFilepath);            
+                return File.ReadAllText(hedgeMarkAddressFilepath);
             }
         }
 
@@ -62,21 +70,23 @@ namespace Com.HedgeMark.Commons.Mail
 
         public bool IsHtml { get; set; }
 
-        public MailInfo(string subject, string body, string toAddress, List<FileInfo> attachments = null, bool isHtml = true)
+        public MailInfo(string subject, string body, string toAddress, List<FileInfo> attachments = null, bool isHtml = true, string ccAddress = null)
         {
             Subject = subject;
             Body = (body ?? "<br/><br/><br/>Regards,<br/>HedgeMark Operations Team ") + HedgeMarkAddress;
             Attachments = attachments;
             this.toAddress = toAddress;
+            if (!string.IsNullOrWhiteSpace(ccAddress)) this.CcAddress = ccAddress;
             this.IsHtml = isHtml;
         }
 
-        public MailInfo(string subject, string body, string toAddress, FileInfo attachment = null, bool isHtml = true)
+        public MailInfo(string subject, string body, string toAddress, FileInfo attachment = null, bool isHtml = true, string ccAddress = null)
         {
             Subject = subject;
             Body = (body ?? "<br/><br/><br/>Regards,<br/>HedgeMark Operations Team ") + HedgeMarkAddress;
             Attachment = attachment;
             this.toAddress = toAddress;
+            if (!string.IsNullOrWhiteSpace(ccAddress)) this.CcAddress = ccAddress;
             this.IsHtml = isHtml;
         }
     }

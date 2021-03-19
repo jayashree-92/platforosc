@@ -54,6 +54,53 @@
           <Property Name="hmsCurrencyId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Currency" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsDashboardPreferenceCodeLkup">
+          <Key>
+            <PropertyRef Name="hmsDashboardPreferenceCodeLkupId" />
+          </Key>
+          <Property Name="hmsDashboardPreferenceCodeLkupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PreferenceName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="hmsDashboardPreferences">
+          <Key>
+            <PropertyRef Name="hmsDashboardPreferenceId" />
+          </Key>
+          <Property Name="hmsDashboardPreferenceId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="hmsDashboardTemplateId" Type="bigint" Nullable="false" />
+          <Property Name="PreferenceCode" Type="int" Nullable="false" />
+          <Property Name="Preferences" Type="varchar" MaxLength="8000" Nullable="false" />
+          <Property Name="RecCreatedDt" Type="datetime" Nullable="false" />
+          <Property Name="RecCreatedById" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="hmsDashboardScheduleRangeLkup">
+          <Key>
+            <PropertyRef Name="hmsDashboardScheduleRangeLkupId" />
+          </Key>
+          <Property Name="hmsDashboardScheduleRangeLkupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ScheduleRange" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="hmsDashboardSchedules">
+          <Key>
+            <PropertyRef Name="hmsDashboardScheduleId" />
+          </Key>
+          <Property Name="hmsDashboardScheduleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="hmsScheduleId" Type="int" Nullable="false" />
+          <Property Name="hmsDashboardTemplateId" Type="bigint" Nullable="false" />
+          <Property Name="DashboardScheduleRangeLkupId" Type="int" Nullable="false" />
+          <Property Name="LastUpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedBy" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="hmsDashboardTemplates">
+          <Key>
+            <PropertyRef Name="hmsDashboardTemplateId" />
+          </Key>
+          <Property Name="hmsDashboardTemplateId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="RecCreatedDt" Type="datetime" Nullable="false" />
+          <Property Name="RecCreatedById" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsMQLogs">
           <Key>
             <PropertyRef Name="hmsMQLogsId" />
@@ -76,6 +123,57 @@
           <Property Name="Title" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Message" Type="varchar" MaxLength="2000" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="hmsScheduleLogs">
+          <Key>
+            <PropertyRef Name="hmsScheduleLogId" />
+          </Key>
+          <Property Name="hmsScheduleLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="hmsScheduleId" Type="int" Nullable="false" />
+          <Property Name="ContextDate" Type="date" Nullable="false" />
+          <Property Name="ScheduleStartTime" Type="datetime" Nullable="false" />
+          <Property Name="ScheduleEndTime" Type="datetime" />
+          <Property Name="TimeOutJobId" Type="varchar" MaxLength="50" />
+          <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="hmsSchedules">
+          <Key>
+            <PropertyRef Name="hmsScheduleId" />
+          </Key>
+          <Property Name="hmsScheduleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Frequency" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="ScheduleExpression" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="TimeZone" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="To" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="CC" Type="varchar" MaxLength="500" />
+          <Property Name="ExternalTo" Type="varchar" MaxLength="500" />
+          <Property Name="ExternalToApproved" Type="varchar" MaxLength="500" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="FileFormat" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SFTPFolder" Type="varchar" MaxLength="60" />
+          <Property Name="InternalFolder" Type="varchar" MaxLength="60" />
+          <Property Name="ReportFileName" Type="varchar" MaxLength="200" />
+          <Property Name="PreferredFundNameCode" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="LastUpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedBy" Type="int" Nullable="false" />
+          <Property Name="ExternalToWorkflowCode" Type="int" Nullable="false" />
+          <Property Name="ExternalToModifiedBy" Type="int" />
+          <Property Name="ExternalToModifiedAt" Type="datetime" />
+          <Property Name="ExternalToComments" Type="varchar" MaxLength="500" />
+          <Property Name="SFTPFolderWorkflowCode" Type="int" Nullable="false" />
+          <Property Name="SFTPFolderModifiedBy" Type="int" />
+          <Property Name="SFTPFolderModifiedAt" Type="datetime" />
+          <Property Name="SFTPFolderComments" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="hmsScheduleWorkflowLkup">
+          <Key>
+            <PropertyRef Name="hmsScheduleWorkflowLkupId" />
+          </Key>
+          <Property Name="hmsScheduleWorkflowLkupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkflowStatusCode" Type="int" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsSSICallback">
           <Key>
@@ -603,6 +701,84 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode">
+          <End Role="hmsDashboardPreferenceCodeLkup" Type="Self.hmsDashboardPreferenceCodeLkup" Multiplicity="1" />
+          <End Role="hmsDashboardPreferences" Type="Self.hmsDashboardPreferences" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsDashboardPreferenceCodeLkup">
+              <PropertyRef Name="hmsDashboardPreferenceCodeLkupId" />
+            </Principal>
+            <Dependent Role="hmsDashboardPreferences">
+              <PropertyRef Name="PreferenceCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId">
+          <End Role="hmsDashboardTemplates" Type="Self.hmsDashboardTemplates" Multiplicity="1" />
+          <End Role="hmsDashboardPreferences" Type="Self.hmsDashboardPreferences" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsDashboardTemplates">
+              <PropertyRef Name="hmsDashboardTemplateId" />
+            </Principal>
+            <Dependent Role="hmsDashboardPreferences">
+              <PropertyRef Name="hmsDashboardTemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId">
+          <End Role="hmsDashboardScheduleRangeLkup" Type="Self.hmsDashboardScheduleRangeLkup" Multiplicity="1" />
+          <End Role="hmsDashboardSchedules" Type="Self.hmsDashboardSchedules" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsDashboardScheduleRangeLkup">
+              <PropertyRef Name="hmsDashboardScheduleRangeLkupId" />
+            </Principal>
+            <Dependent Role="hmsDashboardSchedules">
+              <PropertyRef Name="DashboardScheduleRangeLkupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsDashboardSchedules_hmsDashboardTemplateId">
+          <End Role="hmsDashboardTemplates" Type="Self.hmsDashboardTemplates" Multiplicity="1" />
+          <End Role="hmsDashboardSchedules" Type="Self.hmsDashboardSchedules" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsDashboardTemplates">
+              <PropertyRef Name="hmsDashboardTemplateId" />
+            </Principal>
+            <Dependent Role="hmsDashboardSchedules">
+              <PropertyRef Name="hmsDashboardTemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsDashboardSchedules_hmsScheduleId">
+          <End Role="hmsSchedules" Type="Self.hmsSchedules" Multiplicity="1" />
+          <End Role="hmsDashboardSchedules" Type="Self.hmsDashboardSchedules" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSchedules">
+              <PropertyRef Name="hmsScheduleId" />
+            </Principal>
+            <Dependent Role="hmsDashboardSchedules">
+              <PropertyRef Name="hmsScheduleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsScheduleLogs_hmsScheduleId">
+          <End Role="hmsSchedules" Type="Self.hmsSchedules" Multiplicity="1" />
+          <End Role="hmsScheduleLogs" Type="Self.hmsScheduleLogs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSchedules">
+              <PropertyRef Name="hmsScheduleId" />
+            </Principal>
+            <Dependent Role="hmsScheduleLogs">
+              <PropertyRef Name="hmsScheduleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_hmsSchedules_ExternalToWorkflowCode' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_hmsSchedules_ExternalToWorkflowCode" />-->
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_hmsSchedules_SFTPFolderWorkflowCode" />-->
         <Association Name="FK_hmsSSICallback_onBoardingSSITemplateId">
           <End Role="onBoardingSSITemplate" Type="Self.onBoardingSSITemplate" Multiplicity="1" />
           <End Role="hmsSSICallback" Type="Self.hmsSSICallback" Multiplicity="*" />
@@ -1065,8 +1241,16 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <EntitySet Name="hmsBulkUploadLog" EntityType="Self.hmsBulkUploadLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsCollateralCashPurposeLkup" EntityType="Self.hmsCollateralCashPurposeLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsCurrency" EntityType="Self.hmsCurrency" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsDashboardPreferenceCodeLkup" EntityType="Self.hmsDashboardPreferenceCodeLkup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsDashboardPreferences" EntityType="Self.hmsDashboardPreferences" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsDashboardScheduleRangeLkup" EntityType="Self.hmsDashboardScheduleRangeLkup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsDashboardSchedules" EntityType="Self.hmsDashboardSchedules" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsDashboardTemplates" EntityType="Self.hmsDashboardTemplates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsMQLogs" EntityType="Self.hmsMQLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsNotificationStaging" EntityType="Self.hmsNotificationStaging" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsScheduleLogs" EntityType="Self.hmsScheduleLogs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsSchedules" EntityType="Self.hmsSchedules" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsScheduleWorkflowLkup" EntityType="Self.hmsScheduleWorkflowLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSSICallback" EntityType="Self.hmsSSICallback" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftGroup" EntityType="Self.hmsSwiftGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftGroupStatusLkp" EntityType="Self.hmsSwiftGroupStatusLkp" Schema="dbo" store:Type="Tables" />
@@ -1144,6 +1328,30 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <AssociationSet Name="FK_hmsActionInProgress_hmsWireId" Association="Self.FK_hmsActionInProgress_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
             <End Role="hmsActionInProgress" EntitySet="hmsActionInProgress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode" Association="Self.FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode">
+            <End Role="hmsDashboardPreferenceCodeLkup" EntitySet="hmsDashboardPreferenceCodeLkup" />
+            <End Role="hmsDashboardPreferences" EntitySet="hmsDashboardPreferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId" Association="Self.FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId">
+            <End Role="hmsDashboardTemplates" EntitySet="hmsDashboardTemplates" />
+            <End Role="hmsDashboardPreferences" EntitySet="hmsDashboardPreferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId" Association="Self.FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId">
+            <End Role="hmsDashboardScheduleRangeLkup" EntitySet="hmsDashboardScheduleRangeLkup" />
+            <End Role="hmsDashboardSchedules" EntitySet="hmsDashboardSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardSchedules_hmsDashboardTemplateId" Association="Self.FK_hmsDashboardSchedules_hmsDashboardTemplateId">
+            <End Role="hmsDashboardTemplates" EntitySet="hmsDashboardTemplates" />
+            <End Role="hmsDashboardSchedules" EntitySet="hmsDashboardSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardSchedules_hmsScheduleId" Association="Self.FK_hmsDashboardSchedules_hmsScheduleId">
+            <End Role="hmsSchedules" EntitySet="hmsSchedules" />
+            <End Role="hmsDashboardSchedules" EntitySet="hmsDashboardSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsScheduleLogs_hmsScheduleId" Association="Self.FK_hmsScheduleLogs_hmsScheduleId">
+            <End Role="hmsSchedules" EntitySet="hmsSchedules" />
+            <End Role="hmsScheduleLogs" EntitySet="hmsScheduleLogs" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsSSICallback_onBoardingSSITemplateId" Association="Self.FK_hmsSSICallback_onBoardingSSITemplateId">
             <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplate" />
@@ -1504,6 +1712,38 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <AssociationSet Name="FK_onBoardingAccount_WirePortalCutoffId" Association="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId">
             <End Role="hmsWirePortalCutoff" EntitySet="hmsWirePortalCutoffs" />
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+          </AssociationSet>
+          <EntitySet Name="hmsDashboardPreferenceCodeLkups" EntityType="OperationsSecureModel.hmsDashboardPreferenceCodeLkup" />
+          <EntitySet Name="hmsDashboardPreferences" EntityType="OperationsSecureModel.hmsDashboardPreference" />
+          <EntitySet Name="hmsDashboardScheduleRangeLkups" EntityType="OperationsSecureModel.hmsDashboardScheduleRangeLkup" />
+          <EntitySet Name="hmsDashboardSchedules" EntityType="OperationsSecureModel.hmsDashboardSchedule" />
+          <EntitySet Name="hmsDashboardTemplates" EntityType="OperationsSecureModel.hmsDashboardTemplate" />
+          <EntitySet Name="hmsScheduleLogs" EntityType="OperationsSecureModel.hmsScheduleLog" />
+          <EntitySet Name="hmsSchedules" EntityType="OperationsSecureModel.hmsSchedule" />
+          <EntitySet Name="hmsScheduleWorkflowLkups" EntityType="OperationsSecureModel.hmsScheduleWorkflowLkup" />
+          <AssociationSet Name="FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode" Association="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode">
+            <End Role="hmsDashboardPreferenceCodeLkup" EntitySet="hmsDashboardPreferenceCodeLkups" />
+            <End Role="hmsDashboardPreference" EntitySet="hmsDashboardPreferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId" Association="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId">
+            <End Role="hmsDashboardTemplate" EntitySet="hmsDashboardTemplates" />
+            <End Role="hmsDashboardPreference" EntitySet="hmsDashboardPreferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId" Association="OperationsSecureModel.FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId">
+            <End Role="hmsDashboardScheduleRangeLkup" EntitySet="hmsDashboardScheduleRangeLkups" />
+            <End Role="hmsDashboardSchedule" EntitySet="hmsDashboardSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardSchedules_hmsDashboardTemplateId" Association="OperationsSecureModel.FK_hmsDashboardSchedules_hmsDashboardTemplateId">
+            <End Role="hmsDashboardTemplate" EntitySet="hmsDashboardTemplates" />
+            <End Role="hmsDashboardSchedule" EntitySet="hmsDashboardSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardSchedules_hmsScheduleId" Association="OperationsSecureModel.FK_hmsDashboardSchedules_hmsScheduleId">
+            <End Role="hmsSchedule" EntitySet="hmsSchedules" />
+            <End Role="hmsDashboardSchedule" EntitySet="hmsDashboardSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsScheduleLogs_hmsScheduleId" Association="OperationsSecureModel.FK_hmsScheduleLogs_hmsScheduleId">
+            <End Role="hmsSchedule" EntitySet="hmsSchedules" />
+            <End Role="hmsScheduleLog" EntitySet="hmsScheduleLogs" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
@@ -2637,6 +2877,188 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="hmsDashboardPreferenceCodeLkup">
+          <Key>
+            <PropertyRef Name="hmsDashboardPreferenceCodeLkupId" />
+          </Key>
+          <Property Name="hmsDashboardPreferenceCodeLkupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PreferenceName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hmsDashboardPreferences" Relationship="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode" FromRole="hmsDashboardPreferenceCodeLkup" ToRole="hmsDashboardPreference" />
+        </EntityType>
+        <EntityType Name="hmsDashboardPreference">
+          <Key>
+            <PropertyRef Name="hmsDashboardPreferenceId" />
+          </Key>
+          <Property Name="hmsDashboardPreferenceId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsDashboardTemplateId" Type="Int64" Nullable="false" />
+          <Property Name="PreferenceCode" Type="Int32" Nullable="false" />
+          <Property Name="Preferences" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RecCreatedById" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="hmsDashboardPreferenceCodeLkup" Relationship="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode" FromRole="hmsDashboardPreference" ToRole="hmsDashboardPreferenceCodeLkup" />
+          <NavigationProperty Name="hmsDashboardTemplate" Relationship="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId" FromRole="hmsDashboardPreference" ToRole="hmsDashboardTemplate" />
+        </EntityType>
+        <EntityType Name="hmsDashboardScheduleRangeLkup">
+          <Key>
+            <PropertyRef Name="hmsDashboardScheduleRangeLkupId" />
+          </Key>
+          <Property Name="hmsDashboardScheduleRangeLkupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ScheduleRange" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hmsDashboardSchedules" Relationship="OperationsSecureModel.FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId" FromRole="hmsDashboardScheduleRangeLkup" ToRole="hmsDashboardSchedule" />
+        </EntityType>
+        <EntityType Name="hmsDashboardSchedule">
+          <Key>
+            <PropertyRef Name="hmsDashboardScheduleId" />
+          </Key>
+          <Property Name="hmsDashboardScheduleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsScheduleId" Type="Int32" Nullable="false" />
+          <Property Name="hmsDashboardTemplateId" Type="Int64" Nullable="false" />
+          <Property Name="DashboardScheduleRangeLkupId" Type="Int32" Nullable="false" />
+          <Property Name="LastUpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedBy" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="hmsDashboardScheduleRangeLkup" Relationship="OperationsSecureModel.FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId" FromRole="hmsDashboardSchedule" ToRole="hmsDashboardScheduleRangeLkup" />
+          <NavigationProperty Name="hmsDashboardTemplate" Relationship="OperationsSecureModel.FK_hmsDashboardSchedules_hmsDashboardTemplateId" FromRole="hmsDashboardSchedule" ToRole="hmsDashboardTemplate" />
+          <NavigationProperty Name="hmsSchedule" Relationship="OperationsSecureModel.FK_hmsDashboardSchedules_hmsScheduleId" FromRole="hmsDashboardSchedule" ToRole="hmsSchedule" />
+        </EntityType>
+        <EntityType Name="hmsDashboardTemplate">
+          <Key>
+            <PropertyRef Name="hmsDashboardTemplateId" />
+          </Key>
+          <Property Name="hmsDashboardTemplateId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RecCreatedById" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="hmsDashboardPreferences" Relationship="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId" FromRole="hmsDashboardTemplate" ToRole="hmsDashboardPreference" />
+          <NavigationProperty Name="hmsDashboardSchedules" Relationship="OperationsSecureModel.FK_hmsDashboardSchedules_hmsDashboardTemplateId" FromRole="hmsDashboardTemplate" ToRole="hmsDashboardSchedule" />
+        </EntityType>
+        <EntityType Name="hmsScheduleLog">
+          <Key>
+            <PropertyRef Name="hmsScheduleLogId" />
+          </Key>
+          <Property Name="hmsScheduleLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsScheduleId" Type="Int32" Nullable="false" />
+          <Property Name="ContextDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ScheduleStartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ScheduleEndTime" Type="DateTime" Precision="3" />
+          <Property Name="TimeOutJobId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="hmsSchedule" Relationship="OperationsSecureModel.FK_hmsScheduleLogs_hmsScheduleId" FromRole="hmsScheduleLog" ToRole="hmsSchedule" />
+        </EntityType>
+        <EntityType Name="hmsSchedule">
+          <Key>
+            <PropertyRef Name="hmsScheduleId" />
+          </Key>
+          <Property Name="hmsScheduleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Frequency" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="ScheduleExpression" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="TimeZone" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="To" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CC" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ExternalTo" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ExternalToApproved" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="FileFormat" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SFTPFolder" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="InternalFolder" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="ReportFileName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PreferredFundNameCode" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastUpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedBy" Type="Int32" Nullable="false" />
+          <Property Name="ExternalToWorkflowCode" Type="Int32" Nullable="false" />
+          <Property Name="ExternalToModifiedBy" Type="Int32" />
+          <Property Name="ExternalToModifiedAt" Type="DateTime" Precision="3" />
+          <Property Name="ExternalToComments" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SFTPFolderWorkflowCode" Type="Int32" Nullable="false" />
+          <Property Name="SFTPFolderModifiedBy" Type="Int32" />
+          <Property Name="SFTPFolderModifiedAt" Type="DateTime" Precision="3" />
+          <Property Name="SFTPFolderComments" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hmsDashboardSchedules" Relationship="OperationsSecureModel.FK_hmsDashboardSchedules_hmsScheduleId" FromRole="hmsSchedule" ToRole="hmsDashboardSchedule" />
+          <NavigationProperty Name="hmsScheduleLogs" Relationship="OperationsSecureModel.FK_hmsScheduleLogs_hmsScheduleId" FromRole="hmsSchedule" ToRole="hmsScheduleLog" />
+        </EntityType>
+        <EntityType Name="hmsScheduleWorkflowLkup">
+          <Key>
+            <PropertyRef Name="hmsScheduleWorkflowLkupId" />
+          </Key>
+          <Property Name="hmsScheduleWorkflowLkupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkflowStatusCode" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode">
+          <End Type="OperationsSecureModel.hmsDashboardPreferenceCodeLkup" Role="hmsDashboardPreferenceCodeLkup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsDashboardPreference" Role="hmsDashboardPreference" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsDashboardPreferenceCodeLkup">
+              <PropertyRef Name="hmsDashboardPreferenceCodeLkupId" />
+            </Principal>
+            <Dependent Role="hmsDashboardPreference">
+              <PropertyRef Name="PreferenceCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId">
+          <End Type="OperationsSecureModel.hmsDashboardTemplate" Role="hmsDashboardTemplate" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsDashboardPreference" Role="hmsDashboardPreference" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsDashboardTemplate">
+              <PropertyRef Name="hmsDashboardTemplateId" />
+            </Principal>
+            <Dependent Role="hmsDashboardPreference">
+              <PropertyRef Name="hmsDashboardTemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId">
+          <End Type="OperationsSecureModel.hmsDashboardScheduleRangeLkup" Role="hmsDashboardScheduleRangeLkup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsDashboardSchedule" Role="hmsDashboardSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsDashboardScheduleRangeLkup">
+              <PropertyRef Name="hmsDashboardScheduleRangeLkupId" />
+            </Principal>
+            <Dependent Role="hmsDashboardSchedule">
+              <PropertyRef Name="DashboardScheduleRangeLkupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsDashboardSchedules_hmsDashboardTemplateId">
+          <End Type="OperationsSecureModel.hmsDashboardTemplate" Role="hmsDashboardTemplate" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsDashboardSchedule" Role="hmsDashboardSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsDashboardTemplate">
+              <PropertyRef Name="hmsDashboardTemplateId" />
+            </Principal>
+            <Dependent Role="hmsDashboardSchedule">
+              <PropertyRef Name="hmsDashboardTemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsDashboardSchedules_hmsScheduleId">
+          <End Type="OperationsSecureModel.hmsSchedule" Role="hmsSchedule" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsDashboardSchedule" Role="hmsDashboardSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSchedule">
+              <PropertyRef Name="hmsScheduleId" />
+            </Principal>
+            <Dependent Role="hmsDashboardSchedule">
+              <PropertyRef Name="hmsScheduleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsScheduleLogs_hmsScheduleId">
+          <End Type="OperationsSecureModel.hmsSchedule" Role="hmsSchedule" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsScheduleLog" Role="hmsScheduleLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSchedule">
+              <PropertyRef Name="hmsScheduleId" />
+            </Principal>
+            <Dependent Role="hmsScheduleLog">
+              <PropertyRef Name="hmsScheduleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3250,6 +3672,112 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
                 <ScalarProperty Name="Country" ColumnName="Country" />
                 <ScalarProperty Name="CashInstruction" ColumnName="CashInstruction" />
                 <ScalarProperty Name="hmsWirePortalCutoffId" ColumnName="hmsWirePortalCutoffId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsDashboardPreferenceCodeLkups">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsDashboardPreferenceCodeLkup">
+              <MappingFragment StoreEntitySet="hmsDashboardPreferenceCodeLkup">
+                <ScalarProperty Name="PreferenceName" ColumnName="PreferenceName" />
+                <ScalarProperty Name="hmsDashboardPreferenceCodeLkupId" ColumnName="hmsDashboardPreferenceCodeLkupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsDashboardPreferences">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsDashboardPreference">
+              <MappingFragment StoreEntitySet="hmsDashboardPreferences">
+                <ScalarProperty Name="RecCreatedById" ColumnName="RecCreatedById" />
+                <ScalarProperty Name="RecCreatedDt" ColumnName="RecCreatedDt" />
+                <ScalarProperty Name="Preferences" ColumnName="Preferences" />
+                <ScalarProperty Name="PreferenceCode" ColumnName="PreferenceCode" />
+                <ScalarProperty Name="hmsDashboardTemplateId" ColumnName="hmsDashboardTemplateId" />
+                <ScalarProperty Name="hmsDashboardPreferenceId" ColumnName="hmsDashboardPreferenceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsDashboardScheduleRangeLkups">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsDashboardScheduleRangeLkup">
+              <MappingFragment StoreEntitySet="hmsDashboardScheduleRangeLkup">
+                <ScalarProperty Name="ScheduleRange" ColumnName="ScheduleRange" />
+                <ScalarProperty Name="hmsDashboardScheduleRangeLkupId" ColumnName="hmsDashboardScheduleRangeLkupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsDashboardSchedules">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsDashboardSchedule">
+              <MappingFragment StoreEntitySet="hmsDashboardSchedules">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
+                <ScalarProperty Name="LastUpdatedAt" ColumnName="LastUpdatedAt" />
+                <ScalarProperty Name="DashboardScheduleRangeLkupId" ColumnName="DashboardScheduleRangeLkupId" />
+                <ScalarProperty Name="hmsDashboardTemplateId" ColumnName="hmsDashboardTemplateId" />
+                <ScalarProperty Name="hmsScheduleId" ColumnName="hmsScheduleId" />
+                <ScalarProperty Name="hmsDashboardScheduleId" ColumnName="hmsDashboardScheduleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsDashboardTemplates">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsDashboardTemplate">
+              <MappingFragment StoreEntitySet="hmsDashboardTemplates">
+                <ScalarProperty Name="RecCreatedById" ColumnName="RecCreatedById" />
+                <ScalarProperty Name="RecCreatedDt" ColumnName="RecCreatedDt" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
+                <ScalarProperty Name="hmsDashboardTemplateId" ColumnName="hmsDashboardTemplateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsScheduleLogs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsScheduleLog">
+              <MappingFragment StoreEntitySet="hmsScheduleLogs">
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="TimeOutJobId" ColumnName="TimeOutJobId" />
+                <ScalarProperty Name="ScheduleEndTime" ColumnName="ScheduleEndTime" />
+                <ScalarProperty Name="ScheduleStartTime" ColumnName="ScheduleStartTime" />
+                <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
+                <ScalarProperty Name="hmsScheduleId" ColumnName="hmsScheduleId" />
+                <ScalarProperty Name="hmsScheduleLogId" ColumnName="hmsScheduleLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsSchedules">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsSchedule">
+              <MappingFragment StoreEntitySet="hmsSchedules">
+                <ScalarProperty Name="SFTPFolderComments" ColumnName="SFTPFolderComments" />
+                <ScalarProperty Name="SFTPFolderModifiedAt" ColumnName="SFTPFolderModifiedAt" />
+                <ScalarProperty Name="SFTPFolderModifiedBy" ColumnName="SFTPFolderModifiedBy" />
+                <ScalarProperty Name="SFTPFolderWorkflowCode" ColumnName="SFTPFolderWorkflowCode" />
+                <ScalarProperty Name="ExternalToComments" ColumnName="ExternalToComments" />
+                <ScalarProperty Name="ExternalToModifiedAt" ColumnName="ExternalToModifiedAt" />
+                <ScalarProperty Name="ExternalToModifiedBy" ColumnName="ExternalToModifiedBy" />
+                <ScalarProperty Name="ExternalToWorkflowCode" ColumnName="ExternalToWorkflowCode" />
+                <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
+                <ScalarProperty Name="LastUpdatedAt" ColumnName="LastUpdatedAt" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="PreferredFundNameCode" ColumnName="PreferredFundNameCode" />
+                <ScalarProperty Name="ReportFileName" ColumnName="ReportFileName" />
+                <ScalarProperty Name="InternalFolder" ColumnName="InternalFolder" />
+                <ScalarProperty Name="SFTPFolder" ColumnName="SFTPFolder" />
+                <ScalarProperty Name="FileFormat" ColumnName="FileFormat" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ExternalToApproved" ColumnName="ExternalToApproved" />
+                <ScalarProperty Name="ExternalTo" ColumnName="ExternalTo" />
+                <ScalarProperty Name="CC" ColumnName="CC" />
+                <ScalarProperty Name="To" ColumnName="To" />
+                <ScalarProperty Name="TimeZone" ColumnName="TimeZone" />
+                <ScalarProperty Name="ScheduleExpression" ColumnName="ScheduleExpression" />
+                <ScalarProperty Name="Frequency" ColumnName="Frequency" />
+                <ScalarProperty Name="hmsScheduleId" ColumnName="hmsScheduleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsScheduleWorkflowLkups">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsScheduleWorkflowLkup">
+              <MappingFragment StoreEntitySet="hmsScheduleWorkflowLkup">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="WorkflowStatusCode" ColumnName="WorkflowStatusCode" />
+                <ScalarProperty Name="hmsScheduleWorkflowLkupId" ColumnName="hmsScheduleWorkflowLkupId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

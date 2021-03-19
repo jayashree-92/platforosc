@@ -881,3 +881,18 @@ var fnGetWireDeadlineCounter = function (timeToApprove) {
             return moment(timeToApprove).format("HH:mm:ss");
     }
 }
+
+var ContextDatesOfTodayAndTomorrow;
+
+function GetContextDatesOfTodayAndYesterday() {
+    $.ajax({
+        "url": "/WiresDashboard/GetContextDatesOfTodayAndYesterday",
+        "async": false,
+        "dataType": "json",
+        "success": function (json) {
+            ContextDatesOfTodayAndTomorrow = [moment(json.previousContextDate), moment(json.thisContextDate)];
+        }
+    });
+}
+
+GetContextDatesOfTodayAndYesterday();

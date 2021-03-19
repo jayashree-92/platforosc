@@ -15,6 +15,8 @@ namespace HedgeMark.Operations.Secure.Middleware
         }
 
         public static readonly string ShowRiskOrShortFundNames = "CONFIG:ShowRiskOrShortFundNames";
+        public static readonly string FavoriteDashboardTemplateForReportId = "FavoriteDashboardTemplateForReportId";
+        public static readonly string LocalQaMailListKey = "CONFIG:LocalOrQa:USERS";
 
         public static List<string> AllPreferrenceKeys = new List<string>()
         {
@@ -56,6 +58,17 @@ namespace HedgeMark.Operations.Secure.Middleware
             {
                 var pref = context.hmsSystemPreferences.FirstOrDefault(s => s.SystemKey == preference.ToString()) ?? new hmsSystemPreference();
                 return pref.SystemValue;
+            }
+        }
+
+        //This setting is applicable only for Lower environment and not for PRODUCTION
+        public static string GetLocalQaUsers()
+        {
+
+            using (var context = new OperationsContext())
+            {
+                var userPreferenceData = context.dmaUserPreferences.Where(up => up.Key == LocalQaMailListKey).Select(v => v.Value).FirstOrDefault();
+                return userPreferenceData;
             }
         }
 

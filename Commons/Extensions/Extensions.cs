@@ -419,13 +419,6 @@ namespace Com.HedgeMark.Commons.Extensions
                 : source.Select(selector).Where(x => x != null);
         }
 
-        //// This cannot be used for converting to / validating for DateTime
-        //public static T CheckAndConvertTo<T>(this object source)
-        //{
-        //    object result;
-        //    return source.TryConvert(typeof(T), out result) ? (T)result : default(T);
-        //}
-
         //Trims the value after checking if the value is null 
         public static string TrimEndTrial(this string value)
         {
@@ -445,6 +438,23 @@ namespace Com.HedgeMark.Commons.Extensions
             var index = 0;
             foreach (var t in source)
                 action(t, index++);
+        }
+
+        public static string GetValidatedConfigPath(this string configPath)
+        {
+            if (configPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
+                throw new FileLoadException(string.Format("Invalid file path : {0}", configPath));
+
+            return configPath;
+        }
+        public static bool IsEqualTo(this string value1, string value2)
+        {
+            return !string.IsNullOrEmpty(value1) && string.Compare(value1, value2, StringComparison.OrdinalIgnoreCase) == 0;
+        }
+
+        public static bool In(this string value1, IEnumerable<string> value2)
+        {
+            return value1 != null && value2 != null && value2.Any(value => value.IsEqualTo(value1));
         }
     }
 }

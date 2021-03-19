@@ -10,7 +10,7 @@ namespace HMOSecureWeb
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-3.3.1.js"));
+            bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-3.5.1.js"));
             bundles.Add(new ScriptBundle("~/bundles/jquery-ui").Include("~/Scripts/jquery-ui-1.12.1.js"));
 
 
@@ -23,9 +23,9 @@ namespace HMOSecureWeb
                 "~/Scripts/angular-messages.js",
                 //"~/Scripts/angular-message-format.js",
                 "~/Scripts/angular-mocks.js",
-                //"~/Scripts/angular-parse-ext.js",
-                //"~/Scripts/angular-resource.js",
-                //"~/Scripts/angular-sanitize.js",
+            //"~/Scripts/angular-parse-ext.js",
+            //"~/Scripts/angular-resource.js",
+            //"~/Scripts/angular-sanitize.js",
             //"~/Scripts/angular-route.js",
             //"~/Scripts/angular-sanitize.js",
             //"~/Scripts/angular-scenario.js",

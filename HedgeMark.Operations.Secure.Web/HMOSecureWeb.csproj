@@ -153,6 +153,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DashboardReportController.cs" />
     <Compile Include="Controllers\FundAccountsController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Controllers\SwiftGroupController.cs" />
     <Compile Include="Controllers\WireLogController.cs" />
     <Compile Include="Controllers\WirePortalCutoffController.cs" />
+    <Compile Include="Controllers\WiresDashboardController.cs" />
     <Compile Include="Filters\CompressAttribute.cs" />
     <Compile Include="Filters\RedirectToHttps.cs" />
     <Compile Include="Global.asax.cs">
@@ -628,13 +630,13 @@
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
     <Content Include="Scripts\angular-messages.min.js.map" />
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
+    <None Include="Scripts\jquery-3.5.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.5.1.js" />
+    <Content Include="Scripts\jquery-3.5.1.min.js" />
+    <Content Include="Scripts\jquery-3.5.1.slim.js" />
+    <Content Include="Scripts\jquery-3.5.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.5.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.5.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
@@ -732,6 +734,8 @@
     <Content Include="Scripts\OpsSecure\Accounts\AccountList.js" />
     <Content Include="Scripts\OpsSecure\Accounts\SSITemplate.js" />
     <Content Include="Scripts\OpsSecure\Accounts\SSITemplateList.js" />
+    <Content Include="Scripts\OpsSecure\Commons\DashboardReport.js" />
+    <Content Include="Scripts\OpsSecure\Commons\Schedules.js" />
     <Content Include="Scripts\OpsSecure\Commons\WireDetails.js" />
     <Content Include="Scripts\OpsSecure\Commons\WireManager.js" />
     <Content Include="Scripts\OpsSecure\Home.js" />
@@ -743,6 +747,7 @@
     <Content Include="Scripts\OpsSecure\WireLog.js" />
     <Content Include="Scripts\OpsSecure\WirePortalCutoff.js" />
     <Content Include="Scripts\OpsSecure\WirePurpose.js" />
+    <Content Include="Scripts\OpsSecure\WiresDashboard.js" />
     <Content Include="Scripts\Plugins\ContextMenu.js" />
     <Content Include="Scripts\Plugins\NumericCellEditor.js" />
     <Content Include="Scripts\Plugins\SideNavigationMenu.js" />
@@ -819,6 +824,9 @@
     <Content Include="Views\SSITemplate\SSITemplate.cshtml" />
     <Content Include="Views\WirePortalCutoff\Index.cshtml" />
     <Content Include="Views\SwiftGroup\Index.cshtml" />
+    <Content Include="Views\Shared\_DashboardReport.cshtml" />
+    <Content Include="Views\WiresDashboard\Index.cshtml" />
+    <Content Include="Views\Shared\_Schedules.cshtml" />
     <None Include="Web.Debug.config">
       <SubType>Designer</SubType>
     </None>
@@ -828,6 +836,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\DashboardReport\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

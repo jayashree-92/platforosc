@@ -1,0 +1,271 @@
+﻿<span ng-controller="ReportScheduleCtrl">
+    <div id="panelReportSchedules" class="collapse container" style="margin: 0px;padding: 0px 15px;/* border-color: rgb(107 103 103); */border-top: 1px solid #cfcfcf;border-bottom: 1px solid #cfcfcf;background-color: #f5f5f5;">
+        <span class="panel-body" style="padding-top: 5px;">
+            <table id="tblReportSchedules" class="table table-responsive table-striped table-bordered table-hover table-condensed animateLastColumn"></table>
+        </span>
+    </div>
+
+    <div class="modal fade" id="mdlToShowSchedulesConfig">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="row" style="position: sticky; top: 0; z-index: 3;">
+                    <span class="col-md-12">
+                        <p class="panel panel-heading" style="margin-bottom: 10px; background: #F5F5F5; border-bottom: 1px solid lightgray;">
+                            <span class="panel-title">{{IsAddNewJobClicked?'Add':'Edit'}} Schedule <i class="glyphicon glyphicon-menu-right"></i> {{ReportName}} {{IsDashboardSchedule?'Dashboard':''}} <i class="glyphicon glyphicon-menu-right"></i><span class="small"> {{TemplateName}} </span></span>
+                        </p>
+                    </span>
+                    <span class="pull-right" style="padding: 8px; margin: 3px 0px 0px -45px; position: absolute">
+                        <button title="close this log" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </span>
+                </div>
+                <div class="modal-body row" style="padding: 0px 20px 0px 20px; margin: inherit;">
+                    <div class="ng-show-hide hmo-recurringEvents" style="padding-top: 10px">
+                        <div class="row" style="padding-top: 10px">
+                            <div class="col-md-2">
+                                <div class="btn-group btn-group-vertical btn-radio-group" id="rdJobFrequency" data-toggle="buttons" style="border-right: 1px solid #e1e1e1; padding: 15px 0px;">
+                                    <label class="btn btn-xs btn-block well well-sm active" ng-class="Job.Schedule.Frequency =='Daily'?'on':''" ng-click="fnToggleRecurringEventFrequency('Daily')">
+                                        <input type="radio" name="options" value="Daily" checked="checked">&nbsp;Daily&nbsp;&nbsp;
+                                    </label>
+                                    <label class="btn btn-xs btn-block well well-sm" ng-class="Job.Schedule.Frequency =='Weekly'?'on':''" ng-click="fnToggleRecurringEventFrequency('Weekly')">
+                                        <input type="radio" name="options" value="Weekly">&nbsp;Weekly&nbsp;&nbsp;
+                                    </label>
+                                    <label class="btn btn-xs btn-block well well-sm" ng-class="Job.Schedule.Frequency =='Monthly'?'on':''" ng-click="fnToggleRecurringEventFrequency('Monthly')">
+                                        <input type="radio" name="options" value="Monthly">&nbsp;Monthly&nbsp;&nbsp;
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-inline">
+                                <div class="row">
+                                    <label for="inptJobScheduleAt" class="control-label">At:</label>
+                                    <div class="input-group" id="inptJobScheduleAt" data-placement="right" data-align="top" data-autoclose="true" style="width: 110px;">
+                                        <input type="text" class="form-control" ng-model="Job.Due.DueTime" value={{Job.Due.DueTime}}>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </span>
+                                    </div>
+                                    &nbsp;&nbsp;
+                                    <select id="liScheduleTimeZone" class="form-control" ng-modal="Job.Schedule.TimeZone">
+                                        <option ng-class="{active:$first}" ng-repeat="timeZone in TimeZones" on-last-repeat value="{{timeZone}}">{{timeZone}}</option>
+                                    </select>
+                                </div>
+                                <p></p>
+                                @*<span class="ng-show-only" ng-show="Job.Schedule.Frequency=='Daily'">
+                                        Recur every : <input ng-model="Job.RepeatInterval" type="number" min="1" max="7" value="1" step="1" class="form-control" style="width: 70px;" id="txtRecurringEventDailyCount" />&nbsp;&nbsp;Days
+                                        <p></p>
+                                        <button ng-click="fnToggleIsOnlyOnWeekDays()" class="btn btn-xs btn-default" id="btnIsOnlyOnWeekDays"><i class="glyphicon glyphicon-unchecked"></i>&nbsp;&nbsp;Apply only on business days</button>
+                                    </span>*@
+                                <span class="ng-show-only" ng-show="Job.Schedule.Frequency=='Weekly'">
+                                    @*Recur every : <input ng-model="Job.RepeatInterval" type="number" min="1" max="7" value="1" class="form-control" style="width: 70px;" id="txtRecurringEventWeeklyCount" />&nbsp;&nbsp;Weeks*@
+
+                                    <div class="row">
+                                        <label class="control-label">Every:</label>
+                                        <div class="btn-group btn-checkbox-group btn-group-justified" data-toggle="buttons" style="display: block;" id="chkWeeklyRepeatDays">
+                                            <label class="btn btn-xs btn-block well well-sm active" ng-click="fnToggleWeeklyRepeatDays(1,$event)">
+                                                <input type="checkbox" name="options" value="1">&nbsp;Monday&nbsp;&nbsp;
+                                            </label>
+                                            <label class="btn btn-xs btn-block well well-sm" ng-click="fnToggleWeeklyRepeatDays(2,$event)">
+                                                <input type="checkbox" name="options" value="2">&nbsp;Tuesday&nbsp;&nbsp;
+                                            </label>
+                                            <label class="btn btn-xs btn-block well well-sm" ng-click="fnToggleWeeklyRepeatDays(3,$event)">
+                                                <input type="checkbox" name="options" value="3">&nbsp;Wednesday&nbsp;&nbsp;
+                                            </label>
+                                            <p></p>
+                                            <label class="btn btn-xs btn-block well well-sm" ng-click="fnToggleWeeklyRepeatDays(4,$event)">
+                                                <input type="checkbox" name="options" value="4">&nbsp;Thursday&nbsp;&nbsp;
+                                            </label>
+                                            <label class="btn btn-xs btn-block well well-sm" ng-click="fnToggleWeeklyRepeatDays(5,$event)">
+                                                <input type="checkbox" name="options" value="5">&nbsp;Friday&nbsp;&nbsp;
+                                            </label>
+                                            @*<label class="btn btn-xs btn-block well well-sm">
+                                                    <input type="checkbox" name="options" value="6">&nbsp;Saturday&nbsp;&nbsp;
+                                                </label>
+                                                <label class="btn btn-xs btn-block well well-sm">
+                                                    <input type="checkbox" name="options" value="0">&nbsp;Sunday&nbsp;&nbsp;
+                                                </label>*@
+                                        </div>
+                                    </div>
+                                </span>
+                                <span class="ng-show-only form-inline" ng-show="Job.Schedule.Frequency=='Monthly'">
+                                    <div class="row">
+                                        <span class="glyphicon glyphicon-{{Job.Due.IsMonthlyNthDaySelected?'unchecked':'check'}}" ng-click="fnToggleMonthlyNthDayOption(false)" style="cursor: pointer;"></span> | Day&nbsp;&nbsp;&nbsp;
+                                        <input type="number" ng-model="Job.Due.DueDayOfMonth" value="{{Job.Due.DueDayOfMonth}}" min="1" max="20" ng-disabled="Job.Due.IsMonthlyNthDaySelected" class="form-control" style="width: 70px;border-color: #a6a6a6;" id="txtRecurringEventMonthlyDayCount" />
+                                    </div>
+                                    <div class="row" style="padding-top: 5px;">
+                                        <span class="glyphicon glyphicon-{{ Job.Due.IsMonthlyNthDaySelected?'check':'unchecked' }}" ng-click="fnToggleMonthlyNthDayOption(true)" style="cursor: pointer;"></span> |
+
+                                        The&nbsp;&nbsp;
+                                        <select ng-model="Job.Due.MonthlyNthDay" ng-disabled="!Job.Due.IsMonthlyNthDaySelected" class="form-control">
+                                            <option value="first">first</option>
+                                            <option value="second">second</option>
+                                            <option value="third">third</option>
+                                            <option value="fourth">fourth</option>
+                                            <option value="last">last</option>
+                                        </select>
+                                        <select ng-model="Job.Due.MonthlyNthDayOfWeek" ng-disabled="!Job.Due.IsMonthlyNthDaySelected" class="form-control">
+                                            @*<option value="day">day</option>*@
+                                            <option value="weekday">Business day</option>
+                                            @*<option value="weekend day">weekend day</option>*@
+                                            @*<option value="Sunday">Sunday</option>*@
+                                            <option value="monday">Monday</option>
+                                            <option value="tuesday">Tuesday</option>
+                                            <option value="wednesday">Wednesday</option>
+                                            <option value="thursday">Thursday</option>
+                                            <option value="friday">Friday</option>
+                                            @*<option value="Saturday">Saturday</option>*@
+                                        </select>
+                                    </div>
+                                    @*<br />
+                                        <span class="pull-right">
+                                            &nbsp;&nbsp;of every&nbsp;&nbsp;
+                                            <input type="number" ng-model="Job.RepeatInterval" value="1" min="1" max="12" class="form-control" style="width: 70px;" id="txtRecurringEventMonthlyCount" />&nbsp;&nbsp;month(s)
+                                        </span>*@
+                                </span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row hmo-Recepients">
+                        <div class="container">
+                            <label class="control-label">Internal To:</label>
+                            <div id="dvInptScheduleInternalTo" class="form-control schedule-email-box" ng-model="Job.Schedule.To" placeholder="Enter Internal Email Ids"></div>
+                        </div>
+                        <p></p>
+                        <div class="container">
+                            <label class="control-label">Internal CC:</label>
+                            <div id="dvInptScheduleInternalCC" class="form-control schedule-email-box" ng-model="Job.Schedule.CC" placeholder="Enter CC Email Ids"></div>
+                        </div>
+                        <p></p>
+                        <div class="container">
+                            <label class="control-label">External To:</label>
+                            <div id="dvInptScheduleExternalTo" class="form-control schedule-email-box" ng-model="Job.Schedule.ExternalTo" placeholder="Enter External Email Ids"></div>
+
+                            <div ng-show="Job.Schedule.ExternalToWorkflowCode!=0" style="margin: 0px;text-align: right" class="ng-show-only" ng-class="Job.Schedule.ExternalToWorkflowCode ==1 ?'info-block-right':'error-block-right'">{{Job.Schedule.ExternalToWorkflowCode ==1?'Approved By':'Rejected By'}}&nbsp;<b>{{Job.ExternalToModifiedBy==null || Job.ExternalToModifiedBy=='' ? 'you':Job.ExternalToModifiedBy}}</b> on {{Job.Schedule.ExternalToModifiedAt}}</div>
+                            <label ng-show="Job.Schedule.ExternalTo!='' && IsExternalToHasValidIds && Job.Schedule.ExternalToWorkflowCode==0 && Job.IsExternalToRequestCreatedBySameUser" class="label label-warning ng-show-hide"><i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;{{IsExternalToHasChanged?'Approval Required':'Pending Approval'}}</label>
+                            <div class="btn-group btn-group-xs pull-right ng-show-hide" ng-show="Job.Schedule.ExternalTo!='' &&  IsExternalToHasValidIds && !IsExternalToHasChanged && Job.Schedule.ExternalToWorkflowCode==0 && !Job.IsExternalToRequestCreatedBySameUser">
+                                <button ng-disabled="IsExternalToEditingInProgress" ng-click="fnApproveOrRejectExternalTo(1)" class="btn btn-xs btn-success ng-show-hide"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
+                                <button ng-disabled="IsExternalToEditingInProgress" tabindex="-1" ng-click="fnApproveOrRejectExternalTo(2)" class="btn btn-xs btn-danger ng-show-hide"><i class="glyphicon glyphicon-remove"></i>&nbsp;Reject</button>
+                                @*<button ng-show="Job.Schedule.ExternalToWorkflowCode!=0" class="ng-show-hide btn btn-xs btn-warning"><i class="glyphicon glyphicon-share"></i>&nbsp;Revert</button>*@
+                            </div>
+                        </div>
+                        <p></p>
+                        <div class="container ng-show-hide" ng-show="NewChangesToExternalToExisits">
+                            <label class="control-label">Existing Approved External To:</label> (active with schedule)
+                            <div id="dvInptScheduleExternalToApproved" class="form-control schedule-email-box-highlighted" ng-model="Job.Schedule.ExternalToApproved"></div>
+                        </div>
+                    </div>
+                    <p style="padding-top: 5px;"></p>
+                    <div class="container hmo-ReportSettings">
+                        <div class="row" ng-if="IsDashboardSchedule">
+                            <span class="col-md-3" style="text-align: right; padding-top: 8px;"> <label class="control-label">Schedule Range:</label></span>
+                            <span class="col-md-7"><input id="liScheduleRange" ng-model="Job.ScheduleRangeLkupId" type="hidden" /></span>
+                        </div>
+                        <p></p>
+                        <div class="row">
+                            <span class="col-md-3" style="text-align: right; padding-top: 8px;">
+                                <label class="control-label">Report File Format:</label>
+                            </span>
+                            <span class="col-md-7">
+                                <select id="liScheduleFileFormat" ng-model="Job.Schedule.FileFormat">
+                                    <option value=".xlsx" selected="selected">Excel (.xlsx)</option>
+                                    <option value=".xls">Excel (.xls)</option>
+                                    <option value=".csv">Text (.csv)</option>
+                                    <option value=".txt">Pipe (.txt)</option>
+                                </select>
+                            </span>
+                        </div>
+                        <p></p>
+                        <div class="row" ng-if="!IsDashboardSchedule">
+                            <span class="col-md-3" style="text-align: right; padding-top: 8px;">  <label class="control-label">  Report Deadline:&nbsp;&nbsp;</label></span>
+                            <span class="col-md-7">
+                                @* <input type='time' class='form-control'  min='00:00' max= '12:00' ng-model="Job.DeadlineTimeString" style="width: 115px" id='inptJobDeadlineAt' value='{{Job.DeadlineTimeString}}' />*@
+                                @*<div class="input-group" id="inptJobDeadlineAt" style="width: 110px;">
+                                        <input type="text" class="form-control" ng-model="Job.DeadlineTimeString" value={{Job.DeadlineTimeString}}>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </span>
+                                    </div>*@
+
+                                <select id="inptJobDeadlineAt" ng-model="Job.DeadlineTimeString">
+                                    <option value="00:00:01" selected="selected">No Wait time</option>
+                                    <option value="00:30:00">30 minutes</option>
+                                    <option value="01:00:00">One hour</option>
+                                    <option value="01:30:00">One hour and 30 minutes</option>
+                                    <option value="02:00:00">Two hours</option>
+                                    <option value="03:00:00">Three hours</option>
+                                    <option value="04:00:00">Four hours</option>
+                                    <option value="06:00:00">Six hours</option>
+                                    <option value="08:00:00">Eight hours</option>
+                                    <option value="08:00:00">Eight hours</option>
+                                    <option value="12:00:00">Twelve hours</option>
+                                </select>
+                            </span>
+                        </div>
+                        <p ng-if="!IsDashboardSchedule"></p>
+                        <div class="row" ng-if="!IsDashboardSchedule">
+                            @*<label class="control-label">Retry for all files for </label><input ng-model="Job.Schedule.RetryCount" min="0" style="width: inherit; display: inline" max="10" type="number" class="form-control" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Range 0 - 10 Count" value="3" />
+                                <label class="control-label"> times at every </label><input min="0" ng-model="Job.Schedule.RetryInterval" style="width: inherit; display: inline" max="10" type="number" class="form-control" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Range 10 -60 mins Interval" value="10" /> minutes interval and *@
+                            <span class="col-md-3" style="text-align: right; padding-top: 8px;">  <label class="control-label">  Send report:&nbsp;&nbsp;</label></span>
+                            <span class="col-md-7">
+                                <input ng-model="Job.ShouldSendOnlyWhenAllReceived" style="padding-top: 5px;" type="checkbox" data-width="210" data-height="26" data-size="mini" data-onstyle="btn btn-xs btn-danger" data-offstyle="btn btn-xs btn-success" data-toggle="toggle" data-on="only when all files are received" data-off="when atleast one file is received">
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="container hmo-AdvanceSettings-plus" id="spnScheduleAdvanceSetting" style="padding: 0px"><br /></div>
+                    <div id="pnlSchedulAdvanceSettings" class="collapse">
+                        <div class="panel-body" style="padding-top: 0px;">
+                            <div class="row" ng-if="!IsDashboardSchedule">
+                                <span class="col-md-3" style="text-align: right; padding-top: 8px;"> <label class="control-label">Schedule Context Run:</label></span>
+                                <span class="col-md-7"><input id="liReportContextRun" ng-model="Job.ScheduleContextRunkupId" type="hidden" /></span>
+                            </div>
+                            <p ng-if="!IsDashboardSchedule"></p>
+                            <div class="row">
+                                <span class="col-md-3" style="text-align: right; padding-top: 8px;">
+                                    <label class="control-label">Report File Name:</label>
+                                </span>
+                                <span class="col-md-7">
+                                    <input type="text" class="form-control" ng-model="Job.Schedule.ReportFileName" style="width: 45%; display: inline" placeholder="ReportName_{{IsDashboardSchedule?'TemplateName':'FundName'}}" />_{0}{{Job.Schedule.FileFormat}}
+                                </span>
+                            </div>
+                            <p></p>
+                            <div class="row">
+                                <span class="col-md-3" style="text-align: right; padding-top: 8px;"> <label class="control-label">Fund name Preference:</label></span>
+                                <span class="col-md-7"><input id="liFundPreferences" ng-model="Job.Schedule.PreferredFundNameCode" type="hidden" /></span>
+                            </div>
+                            <p></p>
+                            <div class="row">
+                                <span class="col-md-3" style="text-align: right; padding-top: 8px;">
+                                    <label class="control-label">Send Files via SFTP To :</label>
+                                </span>
+                                <span class="col-md-7">
+                                    <input type="hidden" id="liScheduleSFTPFolders" class="form-control" ng-model="Job.Schedule.SFTPFolder" />
+                                    <div ng-show="Job.Schedule.SFTPFolderWorkflowCode!=0 && !IsSFTPFolderHasChanged" style="margin: 0px;" class="ng-show-only" ng-class="Job.Schedule.SFTPFolderWorkflowCode ==1 ?'info-block-left':'error-block-left'">{{Job.Schedule.SFTPFolderWorkflowCode ==1?'Approved By':'Rejected By'}}&nbsp;<b>{{Job.SFTPFolderModifiedBy}}</b> on {{Job.Schedule.SFTPFolderModifiedAt}}</div>
+                                    <label ng-show="Job.Schedule.SFTPFolder!=null && Job.Schedule.SFTPFolder!='' && Job.Schedule.SFTPFolderWorkflowCode==0 && Job.IsSFTPFolderRequestCreatedBySameUser" class="label label-warning ng-show-hide"><i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;{{IsSFTPFolderHasChanged?'Approval Required':'Pending Approval'}}</label>
+                                    <div class="btn-group btn-group-xs ng-show-hide" ng-show="Job.Schedule.SFTPFolder!=null && Job.Schedule.SFTPFolder!=''  && !IsSFTPFolderHasChanged  && Job.Schedule.SFTPFolderWorkflowCode==0 && !Job.IsSFTPFolderRequestCreatedBySameUser">
+                                        <button ng-click="fnApproveOrRejectSFTPFolder(1)" class="btn btn-xs btn-success ng-show-hide"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
+                                        <button tabindex="-1" ng-click="fnApproveOrRejectSFTPFolder(2)" class="btn btn-xs btn-danger ng-show-hide"><i class="glyphicon glyphicon-remove"></i>&nbsp;Reject</button>
+                                        @*<button ng-show="Job.Schedule.SFTPFolderWorkflowCode!=0" class="ng-show-hide btn btn-xs btn-warning"><i class="glyphicon glyphicon-share"></i>&nbsp;Revert</button>*@
+                                    </div>
+                                </span>
+                            </div>
+                            <p></p>
+                            <div class="row">
+                                <span class="col-md-3" style="text-align: right; padding-top: 8px;">
+                                    <label class="control-label">Send Files Internally To :</label>
+                                </span>
+                                <span class="col-md-7">
+                                    <input type="hidden" id="liScheduleInternalFolders" class="form-control" ng-model="Job.Schedule.InternalFolder" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer form-inline" style="padding: 8px 20px 20px;">
+                    <button class="btn btn-sm btn-primary" ng-disabled="(!IsInternalToNotBlank && !IsExternalToNotBlank && !IsInternalFolderIsNotBlank && !IsSFTPFolderIsNotBlank) || !IsInternalToHasValidIds || !IsInternalCCHasValidIds || !IsExternalToHasValidIds" ng-click="fnSaveSchedule()"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Schedule</button>
+                    <a class="btn btn-sm btn-default" data-dismiss="modal">Dismiss</a>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</span>

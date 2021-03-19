@@ -10,7 +10,7 @@ namespace HedgeMark.Operations.Secure.Middleware
 
         public static void BootUp()
         {
-            if (Utility.IsLocal())
+            if (Utility.IsLocal)
                 return;
 
             QueueSystemManager.EstablishConnection();

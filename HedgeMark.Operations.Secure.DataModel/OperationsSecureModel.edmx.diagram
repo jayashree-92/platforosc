@@ -87,6 +87,20 @@
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireFieldId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWirePortalCutoff" Width="1.5" PointX="3.375" PointY="12" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsDashboardPreferenceCodeLkup" Width="1.5" PointX="21.375" PointY="36.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsDashboardPreference" Width="1.5" PointX="23.625" PointY="33.25" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsDashboardScheduleRangeLkup" Width="1.5" PointX="21.375" PointY="31" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsDashboardSchedule" Width="1.5" PointX="23.625" PointY="24.875" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsDashboardTemplate" Width="1.5" PointX="21.375" PointY="33.375" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsScheduleLog" Width="1.5" PointX="23.625" PointY="28.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsSchedule" Width="1.5" PointX="21.375" PointY="23.125" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsScheduleWorkflowLkup" Width="1.5" PointX="5.375" PointY="10.75" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsDashboardSchedules_hmsDashboardTemplateId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsDashboardSchedules_hmsScheduleId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsScheduleLogs_hmsScheduleId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

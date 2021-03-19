@@ -1,0 +1,92 @@
+﻿<div ng-controller="dashboardReportCtrl">
+    <input type="hidden" id="hdnIsDashboardReport" value="true" />
+    <div class="panel panel-default row ng-show-hide" ng-class="{ 'shadowBoxSuccess': IsPreferencesSaved , 'shadowBoxWarning': IsPreferencesChanged && !IsAllAndEverythingSelected}">
+        <div class="panel-heading" style="text-transform: initial; font-size: 12px; border-top: 2px !important; padding: 8px 10px;">
+            <input id="liDashboardTemplates" type="hidden" name="TemplateName" style="width: 250px;" />
+            <span id="btnSetFavorite" class="icon-lg glyphicon" ng-class="SelectedTemplateId == FavoriteTemplateId? 'glyphicon-star':'glyphicon-star-empty'" ng-click="fnSetFavoriteTemplate()" style="color: #107A83; font-size: 16px; padding-top: 2px;"></span>
+            <span class="divider">&nbsp;/&nbsp;</span>
+            <span id="contextDateRange" class="dateRangeSelector">
+                <i class="glyphicon glyphicon-calendar"></i>&nbsp;
+                <span>{{ dateRangeDisplayString }}</span>&nbsp;<b class="caret" style="padding-bottom: 1px;"></b>
+            </span>
+            &nbsp;&nbsp;
+            <span class="btn-group">
+                <button class="btn btn-sm btn-primary" id="btnGetDetails" ng-click="fnLoadDashboard(StartDate,EndDate,fnGetLoadParameters())" style="vertical-align: -webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span id='statusFill'>Loading...</span>"> <i class="glyphicon glyphicon-refresh"></i>&nbsp;Get Details</button>
+            </span>
+            <span class="pull-right">
+
+                <span ng-class="{ 'btn-group': !IsNoTemplateSelected }">
+                    <button type="button" id="btnSaveTemplate" class="btn btn-sm btn-success" ng-click="fnSaveTemplateAndPreferences(true)" ng-class="{ 'disabled': IsAllAndEverythingSelected }"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp; {{IsNoTemplateSelected ?'Create Template':'Save this Template'}}  </button>
+                    <button ng-show="!IsNoTemplateSelected" ng-class="{ 'disabled': IsAllAndEverythingSelected }" class="btn btn-sm btn-success dropdown-toggle ng-show-hide" data-toggle="dropdown"><i class="glyphicon glyphicon-triangle-bottom"></i>&nbsp;</button>
+                    <ul class="dropdown-menu" style="font-size: 12px;">
+                        <li title=".xlsx" ng-click="fnEditTemplateName()"><a href="#">Edit Template Name</a></li>
+                        <li title=".xls" ng-click="fnSaveAsNewTemplate()"><a href="#">Save As New Template</a></li>
+                    </ul>
+                </span>&nbsp;
+                <button type="button" class="btn btn-sm btn-danger" ng-class="{ 'disabled': IsNoTemplateSelected || IsAllAndEverythingSelected }" ng-click="fnDeleteTemplate()">
+                    <i class="glyphicon glyphicon-trash"></i>&nbsp;Delete Template
+                </button>&nbsp;
+                <span ng-class="{ 'btn-group': TotalSchedules>0 && !IsNoTemplateSelected }">
+                    <button ng-show="TotalSchedules>0 && !IsNoTemplateSelected" class="btn btn-sm btn-default ng-show-only" style="cursor: pointer;" data-toggle="collapse" data-target="#panelReportSchedules"><i class="glyphicon glyphicon-time"></i> {{TotalSchedules}}&nbsp;Jobs&nbsp;<span class="caret"></span></button>
+                    <button id="btnAddNewSchedule" ng-class="{ 'disabled': IsNoTemplateSelected  }" class="btn btn-default btn-sm" data-toggle="modal" data-target="#mdlToShowSchedulesConfig"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add new Job</button>
+                </span>&nbsp;
+                <span class="btn-group">
+                    <button class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" ng-class="{ 'disabled': !(IsDashboardLoading) }"><i class="glyphicon glyphicon-download-alt"></i>&nbsp; Export&nbsp;&nbsp;<span class="caret"></span></button>
+                    <ul class="dropdown-menu" style="font-size: 12px;">
+                        <li title=".xlsx" ng-click="fnExportDashboardReport(StartDate,EndDate,'.xlsx',TemplateName)"><a href="#">Excel (.xlsx)</a></li>
+                        <li title=".xls" ng-click="fnExportDashboardReport(StartDate,EndDate,'.xls',TemplateName)"><a href="#">Excel (.xls)</a></li>
+                        <li title=".csv" ng-click="fnExportDashboardReport(StartDate,EndDate,'.csv',TemplateName)"><a href="#">Text (.csv)</a></li>
+                        @*<li title=".csv" ng-click="fnExportDashboardReport(StartDate,EndDate,'.txt')"><a href="#">Pipe (.txt)</a></li>*@
+                    </ul>
+                </span>
+            </span>
+        </div>
+        @Html.Partial("_Schedules")
+        <div class="panel-heading ng-show-hide collapse" id="pnlTemplateSelection" style="height: 40px; cursor: pointer;" data-toggle="collapse" data-target="#pnlDashboardPreferences">
+            <span class="panel-title">Template Selections&nbsp;&nbsp;&nbsp;&nbsp;|</span>
+            <label ng-repeat="preference in AllPreferences">&nbsp;&nbsp;&nbsp;{{preference.Preference}} : <span style="line-height: 1em;" ng-class="preference.TotalSelected=='All' ?'badge badge-primary':'badge badge-success'">{{preference.TotalSelected}}</span> </label>
+            <span class="icon-lg glyphicon pull-right" ng-class="{ 'glyphicon-chevron-right': !IsTemplatePreferencePanelCollapsed , 'glyphicon-chevron-down': IsTemplatePreferencePanelCollapsed }"></span>
+        </div>
+        <div class="panel-body ng-show-hide collapse in" id="pnlDashboardPreferences">
+            <p class="row" ng-repeat="preference in AllPreferences">
+                <span class="col-md-2" style="text-align: right; padding-top: 8px;">
+                    <label>Select {{preference.Preference}}:</label>
+                </span>
+
+                <span class="col-md-8"><input id="li{{preference.Preference}}" type="hidden" ng-disabled="IsAllAndEverythingSelected" /></span>
+
+                <span class="col-md-2">
+                    <span class="btn-group ng-show-hide" ng-hide="IsAllAndEverythingSelected">
+                        <button ng-click="fnSelectAll(preference.Preference)" title="Select All Funds" class="btn btn-sm btn-default"><i class="glyphicon glyphicon-ok"></i></button>
+                        <button ng-click="fnDeSelectAll(preference.Preference)" title="Deselect All Funds" class="btn btn-sm btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+                    </span>
+                </span>
+                <br />
+                <br />
+            </p>
+            <br />
+            <span> * All items will be selected when list is blank</span>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mdlSaveTemplate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="templateName">Save Template Preferences</h4>
+                </div>
+                <div class="modal-body">
+                    <label>Report Template Name: &nbsp;&nbsp;</label>
+                    <input required type="text" autocomplete="off" class="form-control" ng-model="TemplateName" style="width: 300px; display: initial" />&nbsp;&nbsp;&nbsp;
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-sm btn-success" ng-click="fnSaveTemplateAndPreferences(false)"><i class=" glyphicon glyphicon-floppy-save"></i>&nbsp;Save Preferences</button>
+                        <button class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -347,6 +347,16 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <Property Name="dmaOnBoardingAdminChoiceId" Type="bigint" />
           <Property Name="AdminChoice" Type="varchar" MaxLength="1000" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_EmailDomailForFunds">
+          <Key>
+            <PropertyRef Name="RowId" />
+          </Key>
+          <Property Name="RowId" Type="int" Nullable="false" />
+          <Property Name="hmFundId" Type="bigint" />
+          <Property Name="Domain" Type="nvarchar" MaxLength="1000" />
+        </EntityType>
         <Association Name="FK__aspnet_Us__RoleI__2DB1C7EE">
           <End Role="aspnet_Roles" Type="Self.aspnet_Roles" Multiplicity="1" />
           <End Role="aspnet_UsersInRoles" Type="Self.aspnet_UsersInRoles" Multiplicity="*" />
@@ -525,6 +535,13 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
     [vw_CounterpartyAgreements].[AdminChoice] AS [AdminChoice]
     FROM [HMADMIN].[vw_CounterpartyAgreements] AS [vw_CounterpartyAgreements]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="vw_EmailDomailForFunds" EntityType="Self.vw_EmailDomailForFunds" store:Type="Views" store:Schema="HMADMIN">
+            <DefiningQuery>SELECT 
+    [vw_EmailDomailForFunds].[RowId] AS [RowId], 
+    [vw_EmailDomailForFunds].[hmFundId] AS [hmFundId], 
+    [vw_EmailDomailForFunds].[Domain] AS [Domain]
+    FROM [HMADMIN].[vw_EmailDomailForFunds] AS [vw_EmailDomailForFunds]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK__aspnet_Us__RoleI__2DB1C7EE" Association="Self.FK__aspnet_Us__RoleI__2DB1C7EE">
             <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
             <End Role="aspnet_UsersInRoles" EntitySet="aspnet_UsersInRoles" />
@@ -663,6 +680,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
             <End Role="onboardingContactFundMap" EntitySet="onboardingContactFundMaps" />
           </AssociationSet>
           <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
+          <EntitySet Name="vw_EmailDomailForFunds" EntityType="AdminModel.vw_EmailDomailForFunds" />
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -1005,6 +1023,14 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
           <Property Name="FundAdministrator" Type="Int64" />
           <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="FundStructureId" Type="Int64" />
+        </EntityType>
+        <EntityType Name="vw_EmailDomailForFunds">
+          <Key>
+            <PropertyRef Name="RowId" />
+          </Key>
+          <Property Name="RowId" Type="Int32" Nullable="false" />
+          <Property Name="hmFundId" Type="Int64" />
+          <Property Name="Domain" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1418,6 +1444,15 @@ warning 6002: The table/view 'HM.HMADMIN.vw_CounterpartyAgreements' does not hav
                 <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
                 <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
                 <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_EmailDomailForFunds">
+            <EntityTypeMapping TypeName="AdminModel.vw_EmailDomailForFunds">
+              <MappingFragment StoreEntitySet="vw_EmailDomailForFunds">
+                <ScalarProperty Name="Domain" ColumnName="Domain" />
+                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
+                <ScalarProperty Name="RowId" ColumnName="RowId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

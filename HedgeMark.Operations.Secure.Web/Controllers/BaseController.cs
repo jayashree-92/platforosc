@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Web.Mvc;
 using HedgeMark.Operations.Secure.DataModel.Models;
@@ -10,6 +11,7 @@ using System.Net.Mime;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware;
+using HedgeMark.Operations.Secure.Middleware.Util;
 
 namespace HMOSecureWeb.Controllers
 {
@@ -19,6 +21,7 @@ namespace HMOSecureWeb.Controllers
         AuthorizedUserData,
         AuthorizedFundData,
         UserPreferencesInSession,
+        WiresDashboardData
     }
 
     public class AuthorizedRolesAttribute : AuthorizeAttribute
@@ -223,6 +226,11 @@ namespace HMOSecureWeb.Controllers
                 fileStream.Read(returnBytes, 0, returnBytes.Length);
                 return File(returnBytes, MediaTypeNames.Application.Octet, string.IsNullOrWhiteSpace(downloadName) ? fileInfo.Name : downloadName);
             }
+        }
+        public JsonResult GetContextDatesOfTodayAndYesterday()
+        {
+            var thisContextDate = DateTime.Now.Date.GetContextDate();
+            return Json(new { thisContextDate, previousContextDate = thisContextDate.GetContextDate() });
         }
     }
 }

@@ -67,5 +67,13 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsCollateralCashPurposeLkup> hmsCollateralCashPurposeLkups { get; set; }
         public virtual DbSet<hmsWireField> hmsWireFields { get; set; }
         public virtual DbSet<hmsWirePortalCutoff> hmsWirePortalCutoffs { get; set; }
+        public virtual DbSet<hmsDashboardPreferenceCodeLkup> hmsDashboardPreferenceCodeLkups { get; set; }
+        public virtual DbSet<hmsDashboardPreference> hmsDashboardPreferences { get; set; }
+        public virtual DbSet<hmsDashboardScheduleRangeLkup> hmsDashboardScheduleRangeLkups { get; set; }
+        public virtual DbSet<hmsDashboardSchedule> hmsDashboardSchedules { get; set; }
+        public virtual DbSet<hmsDashboardTemplate> hmsDashboardTemplates { get; set; }
+        public virtual DbSet<hmsScheduleLog> hmsScheduleLogs { get; set; }
+        public virtual DbSet<hmsSchedule> hmsSchedules { get; set; }
+        public virtual DbSet<hmsScheduleWorkflowLkup> hmsScheduleWorkflowLkups { get; set; }
     }
 }

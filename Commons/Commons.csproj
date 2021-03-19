@@ -73,6 +73,7 @@
     <Compile Include="IO\DefaultImpersonator.cs" />
     <Compile Include="Mail\MailInfo.cs" />
     <Compile Include="Mail\MailSender.cs" />
+    <Compile Include="NdmSftpTransfer.cs" />
     <Compile Include="PageSecuritySection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Status.cs" />

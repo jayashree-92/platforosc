@@ -15,19 +15,13 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
         public static string Environment = ConfigurationManagerWrapper.StringSetting("Environment");
         public static readonly TextInfo TextInfo = new CultureInfo("en-US", false).TextInfo;
 
-        public static bool IsLocal()
-        {
-            return Environment.Equals("Local");
-        }
+        public static bool IsLocal { get { return Environment.Equals("Local"); } }
+
+        public static bool IsLowerEnvironment { get { return !ConfigurationManagerWrapper.StringSetting("Environment").Equals("Prod"); } }
 
         public static bool IsWorkingDay(DateTime contextDate)
         {
             return contextDate.DayOfWeek != DayOfWeek.Saturday && contextDate.DayOfWeek != DayOfWeek.Sunday;
-        }
-
-        public static bool IsWeekEndDay(DateTime contextDate)
-        {
-            return contextDate.DayOfWeek == DayOfWeek.Saturday || contextDate.DayOfWeek == DayOfWeek.Sunday;
         }
 
         public static DateTime GetContextDate(this DateTime contextDate)
@@ -40,14 +34,14 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
             return contextDate.Date;
         }
 
-        public static DateTime GetCalenderDate(this DateTime contextDate)
+        public static DateTime GetStartOfMonth(this DateTime contextDate)
         {
-            contextDate = contextDate.AddDays(1);
-            while (!IsWorkingDay(contextDate))
-            {
-                contextDate = contextDate.AddDays(1);
-            }
-            return contextDate.Date;
+            return new DateTime(contextDate.Year, contextDate.Month, 1);
+        }
+
+        public static DateTime GetStartOfYear(this DateTime contextDate)
+        {
+            return new DateTime(contextDate.Year, 1, 1);
         }
 
         public static string HumanizeEmail(this string emailId)
@@ -66,6 +60,15 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
         {
             inputStr = inputStr.Replace("-", " ");
             return TextInfo.ToTitleCase(inputStr);
+        }
+
+        public static string GetMailBoxName(this string emailId)
+        {
+            var charIndex = emailId.IndexOf("@", StringComparison.InvariantCultureIgnoreCase);
+            if (charIndex > 0)
+                emailId = emailId.Substring(0, charIndex);
+
+            return emailId;
         }
     }
     public static class ReportName
