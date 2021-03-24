@@ -40,5 +40,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public bool SendToClientPortalForApproval { get; set; }
         public Nullable<System.DateTime> ClientStatusUpdatedAt { get; set; }
         public Nullable<int> Child { get; set; }
+        public Nullable<int> ClientStatusUpdatedBy { get; set; }
     }
 }

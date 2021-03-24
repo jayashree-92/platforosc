@@ -70,7 +70,9 @@ namespace HMOSecureWeb
             bundles.Add(new ScriptBundle("~/bundles/others").Include(
                 "~/Scripts/select2.js",
                 "~/Scripts/dropzone/dropzone.js",
-                "~/Scripts/moment.js"
+                "~/Scripts/moment.js",
+                "~/Scripts/moment-timezone.js",
+                "~/Scripts/moment-timezone-with-data.js"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-addon").Include(
@@ -130,8 +132,8 @@ namespace HMOSecureWeb
                 .Include("~/Content/themes/base/jquery-ui.css", new CssRewriteUrlTransform())
                 .Include("~/Content/site.css", new CssRewriteUrlTransform())
                 );
-#if Local
-            BundleTable.EnableOptimizations = true;
+#if DEBUG
+            BundleTable.EnableOptimizations = false;
 #else
             BundleTable.EnableOptimizations = true;
 #endif

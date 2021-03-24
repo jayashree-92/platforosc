@@ -20,7 +20,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             {
                 return GetUniversalDMAFundListQuery(context, preferredFundName).Where(s => hFundIds.Contains(s.hmFundId)).Select(s => new HFund
                 {
-                    hmFundId = s.hmFundId,
+                    FundId = s.hmFundId,
                     ShortFundName = s.HFund.ShortFundName,
                     PerferredFundName = s.PreferredFundName,
                     HMDataFundName = s.HFund.HMRAName,
@@ -28,6 +28,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                     LegalFundName = s.HFund.LegalFundName,
                     ClientShortName = s.HFund.ClientShortName,
                     ClientLegalName = s.HFund.ClientLegalEntityName,
+                    ClientId = s.HFund.dmaClientOnBoardId ?? 0
 
                 }).ToList();
             }
@@ -49,7 +50,8 @@ namespace HedgeMark.Operations.Secure.Middleware
                             OnBoardFundId = fnd.HFund.OnBoardFundId ?? 0,
                             PreferredFundName = fnd.PreferredFundName ?? "Unknown Fund-" + fnd.HFund.hmFundId,
                             FundType = "DMA",
-                            LegalFundName = fnd.HFund.LegalFundName
+                            LegalFundName = fnd.HFund.LegalFundName,
+                            ClientLegalName = fnd.HFund.ClientLegalEntityName
                             //CalendarIds = fnd.CalendarIds,
                         }).ToList();
             }
@@ -96,6 +98,7 @@ namespace HedgeMark.Operations.Secure.Middleware
         public string PreferredFundName { get; set; }
         public string LegalFundName { get; set; }
         public string FundType { get; set; }
+        public string ClientLegalName { get; set; }
         //public List<int> CalendarIds { get; set; }
     }
 
@@ -116,12 +119,12 @@ namespace HedgeMark.Operations.Secure.Middleware
         public string ShortFundName { get; set; }
         public string HMDataFundName { get; set; }
         public string PerferredFundName { get; set; }
-        public int hmFundId { get; set; }
         public string LegalFundName { get; set; }
         public string Currency { get; set; }
         public List<HFund> Children { get; set; }
-
         public string ClientLegalName { get; set; }
         public string ClientShortName { get; set; }
+        public long ClientId { get; set; }
+        public int FundId { get; set; }
     }
 }

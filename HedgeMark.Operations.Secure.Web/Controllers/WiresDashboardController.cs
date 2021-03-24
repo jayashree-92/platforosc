@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HedgeMark.Operations.Secure.Middleware;
 using HedgeMark.Operations.Secure.Middleware.Models;
-using HedgeMark.Operations.Secure.Middleware.Util;
+using HMOSecureWeb.Utility;
 
 namespace HMOSecureWeb.Controllers
 {
@@ -19,69 +19,81 @@ namespace HMOSecureWeb.Controllers
             return View();
         }
 
+        public static List<DashboardReport.Preferences> GetWirePreferences(List<HFundBasic> authorizedFunds, bool isPrivilegedUser)
+        {
+            //Clients, Funds, AgreementTypes, MessageTypes, Status
 
-        //public static List<DashboardReport.Preferences> GetWirePreferences(List<HFundBasic> authorizedFunds)
-        //{
-        //    var agreementData = TreasuryReportManager.GetQualifiedTreasuryAgreements();
+            var authFundIds = authorizedFunds.Select(s => s.HmFundId).ToList();
+            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, isPrivilegedUser);
 
-        //    var funds = (from agg in agreementData
-        //                 where agg.FundMapId != null && agg.FundMapId > 0
-        //                 join fnd in authorizedFunds on agg.FundMapId ?? 0 equals fnd.HmFundId
-        //                 select new Select2Type() { id = fnd.HmFundId.ToString(), text = fnd.PreferredFundName })
-        //        .Distinct(new Select2HeaderComparer()).OrderBy(s => s.text).ToList();
+            var clientMaps = new Dictionary<long, string>();
+            foreach (var fund in fundDetails.Where(fund => !string.IsNullOrWhiteSpace(fund.ClientName) && fund.dmaClientOnBoardId != null && fund.dmaClientOnBoardId != 0 && !clientMaps.ContainsKey(fund.dmaClientOnBoardId ?? 0)))
+            {
+                clientMaps.Add(fund.dmaClientOnBoardId ?? 0, fund.ClientName);
+            }
 
-        //    var dmaCounterParties = agreementData.Where(s => s.dmaCounterPartyOnBoardId != null && s.dmaCounterPartyOnBoardId > 0)
-        //        .Select(s => new Select2Type { id = s.dmaCounterPartyOnBoardId.ToString(), text = s.CounterpartyName }).Distinct(new Select2HeaderComparer()).OrderBy(s => s.text).ToList();
+            var clients = clientMaps.Select(s => new Select2Type() { id = s.Key.ToString(), text = s.Value }).OrderBy(s => s.text).ToList();
+            var funds = (from fnd in fundDetails where fnd.hmFundId > 0 select new Select2Type() { id = fnd.hmFundId.ToString(), text = fnd.ShortFundName }).Distinct(new Select2HeaderComparer()).OrderBy(s => s.text).ToList();
+            var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
+            var wireMessageTypes = WireDataManager.GetWireMessageTypes().Where(s => s.IsOutbound).Select(s => new Select2Type() { id = s.hmsWireMessageTypeId.ToString(), text = s.MessageType }).ToList();
 
-        //    var stats = ReportDumpToDbManager.TreasuryDBFieldsMap.Where(s => !s.Key.EndsWith("Id", StringComparison.InvariantCultureIgnoreCase)).Select(s => new Select2Type() { id = s.Value, text = s.Key }).ToList();
+            var wireStatus = Enum.GetValues(typeof(WireDataManager.WireStatus)).Cast<int>().Select(x => new Select2Type() { id = ((int)x).ToString(), text = x.ToString() }).ToList();
 
-        //    var currencies = TreasuryReportManager.GetQualifiedFundAccountCurrencies().Select(s => new Select2Type() { id = s, text = s }).ToList();
-
-        //    return new List<DashboardReport.Preferences>()
-        //    {
-        //        new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Funds.ToString(),Options = funds},
-        //        new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Counterparties.ToString(),Options = dmaCounterParties},
-        //        new DashboardReport.Preferences()
-        //        {
-        //            Preference = DashboardReport.PreferenceCode.AgreementTypes.ToString(),
-        //            Options = TreasuryReportManager.QualifiedAgreementForTreasury.Select(s => new Select2Type() { id = s, text = s}).OrderBy(s=>s.text).ToList()
-        //        },
-        //        new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Currencies.ToString(),Options = currencies},
-        //        new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Stats.ToString(),Options=stats}
-        //    };
-        //}
+            return new List<DashboardReport.Preferences>()
+            {
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Clients.ToString(),Options = clients},
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Funds.ToString(),Options = funds},
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AgreementTypes.ToString(),Options = agreementTypes},
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.MessageTypes.ToString(),Options = wireMessageTypes},
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Status.ToString(),Options=wireStatus}
+            };
+        }
 
 
-        ////public JsonResult GetCounterpartyDetails(List<long> hmfundIds)
-        ////{
-        ////    var agreements = TreasuryReportManager.GetQualifiedTreasuryAgreements();
+        public JsonResult GetFundDetails(List<long> clientIds)
+        {
+            var authFundIds = AuthorizedDMAFundData.Select(s => s.HmFundId).ToList();
+            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => clientIds.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
+            var funds = (from fnd in fundDetails where fnd.hmFundId > 0 select new Select2Type() { id = fnd.hmFundId.ToString(), text = fnd.ShortFundName }).Distinct(new Select2HeaderComparer()).OrderBy(s => s.text).ToList();
+            var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
 
-        ////    var filteredAgreements = agreements.Where(s => hmfundIds.Contains(s.FundMapId ?? 0)).ToList();        
-        ////    var dmaCounterParties = filteredAgreements.Select(s => s.dmaCounterPartyOnBoardId).Distinct().ToList();
-        ////    var dmaAgreementTypes = filteredAgreements.Select(s => s.AgreementType).Distinct().ToList();
+            return Json(new List<DashboardReport.Preferences>()
+            {
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Funds.ToString(),Options = funds},
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AgreementTypes.ToString(),Options = agreementTypes},
+            });
+        }
 
-        ////    return Json(new { dmaCounterParties, dmaAgreementTypes }, JsonRequestBehavior.AllowGet);
-        ////}
+        public JsonResult GetAgreementTypes(List<long> fundIds)
+        {
+            var authFundIds = AuthorizedDMAFundData.Select(s => s.HmFundId).ToList();
+            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => fundIds.Contains(s.hmFundId)).ToList();
+            var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
 
+            return Json(new List<DashboardReport.Preferences>()
+            {
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AgreementTypes.ToString(),Options = agreementTypes},
+            });
+        }
 
-        //public JsonResult GetWireLogData(DateTime startDate, DateTime endDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference)
-        //{
-        //    var rowsToBuild = TreasuryReportManager.GetTreasuryReport(startDate, endDate, searchPreference, AuthorizedDMAFundData, AuthorizedReportMapData.First(s => s.ReportName == ReportName.Treasury).ReportMapId);
-        //    SetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString(), rowsToBuild);
-        //    var rows = JsonHelper.GetJson(rowsToBuild);
-        //    return Json(new { rows }, JsonRequestBehavior.AllowGet);
-        //}
+        public JsonResult GetWireLogData(DateTime startDate, DateTime endDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference)
+        {
+            var rowsToBuild = WireDashboardManager.GetWireData(startDate, endDate, searchPreference, AuthorizedDMAFundData);
+            SetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString(), rowsToBuild);
+            var rows = JsonHelper.GetJson(rowsToBuild);
+            return Json(new { rows }, JsonRequestBehavior.AllowGet);
+        }
 
-        //public FileResult ExportReport(DateTime startDate, DateTime endDate, string templateName, string format = ".xlsx")
-        //{
-        //    var rowData = (List<Row>)GetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString());
-        //    var fileName = string.Format("{0}_{1}_{2:yyyyMMdd}_{3:yyyyMMdd}", "Treasury_Data", templateName, startDate, endDate);
-        //    var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, format));
+        public FileResult ExportReport(DateTime startDate, DateTime endDate, string templateName, string format = ".xlsx")
+        {
+            var rowData = (List<Row>)GetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString());
+            var fileName = string.Format("{0}_{1}_{2:yyyyMMdd}_{3:yyyyMMdd}", "Wires_Data", templateName, startDate, endDate);
+            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, format));
 
-        //    var contentToExport = new Dictionary<string, List<Row>>() { { "Treasury Data", rowData } };
-        //    ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
+            var contentToExport = new ExportContent() { Rows = rowData, TabName = "Wires Data" };
+            ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
 
-        //    return DownloadAndDeleteFile(exportFileInfo);
-        //}
+            return DownloadAndDeleteFile(exportFileInfo);
+        }
     }
 }

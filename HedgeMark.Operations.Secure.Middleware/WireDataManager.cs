@@ -576,6 +576,48 @@ namespace HedgeMark.Operations.Secure.Middleware
             }
         }
 
+        public static TimeSpan GetDeadlineToApprove(onBoardingAccount onboardAccount, DateTime valueDate, Dictionary<string, string> timeZones = null)
+        {
+            if (timeZones == null)
+                timeZones = FileSystemManager.GetAllTimeZones();
+
+            if (onboardAccount.WirePortalCutoff == null)
+                onboardAccount.WirePortalCutoff = new hmsWirePortalCutoff();
+
+            var baseTimeZone = timeZones[FileSystemManager.DefaultTimeZone];
+            var destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(baseTimeZone);
+
+            var currentTime = DateTime.Now;
+            if (TimeZoneInfo.Local.Id != baseTimeZone)
+                currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, baseTimeZone);
+
+            var cutOffTimeDeadline = GetCutOffTime(onboardAccount.WirePortalCutoff.CutoffTime, valueDate, onboardAccount.WirePortalCutoff.CutOffTimeZone, timeZones, destinationTimeZone, onboardAccount.WirePortalCutoff.DaystoWire);
+
+            //when there is no cash sweep, use only cut-off time
+            if (onboardAccount.CashSweep == "No")
+                return cutOffTimeDeadline - currentTime;
+
+            var cashSweepTimeDeadline = GetCutOffTime(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0), valueDate, onboardAccount.CashSweepTimeZone, timeZones, destinationTimeZone);
+            return cashSweepTimeDeadline < cutOffTimeDeadline ? cashSweepTimeDeadline - currentTime : cutOffTimeDeadline - currentTime;
+        }
+
+
+        private static DateTime GetCutOffTime(TimeSpan cutOffTime, DateTime valueDate, string cutoffTimeZone, Dictionary<string, string> timeZones, TimeZoneInfo destinationTimeZone, int daysToAdd = 0)
+        {
+            if (string.IsNullOrWhiteSpace(cutoffTimeZone))
+                cutoffTimeZone = destinationTimeZone.Id;
+
+            var cutOff = valueDate.AddDays(daysToAdd).Date.Add(cutOffTime);
+
+            if (cutoffTimeZone == destinationTimeZone.Id)
+                return cutOff;
+
+            var cutOffTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cutoffTimeZone) ? timeZones[cutoffTimeZone] : destinationTimeZone.Id);
+            var deadline = TimeZoneInfo.ConvertTime(new DateTime(cutOff.Ticks, DateTimeKind.Unspecified), cutOffTimeZoneInfo, destinationTimeZone);
+
+            return deadline;
+        }
+
         public static List<hmsWireMessageType> GetWireMessageTypes()
         {
             using (var context = new OperationsSecureContext())

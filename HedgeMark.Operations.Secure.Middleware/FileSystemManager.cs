@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Com.HedgeMark.Commons;
 using HedgeMark.Operations.Secure.DataModel;
+using HedgeMark.Operations.Secure.Middleware.Models;
 
 namespace HedgeMark.Operations.Secure.Middleware
 {
@@ -148,6 +149,9 @@ namespace HedgeMark.Operations.Secure.Middleware
 
             if (!Directory.Exists(OpsSecureSSITemplateFileUploads))
                 Directory.CreateDirectory(OpsSecureSSITemplateFileUploads);
+
+            if (!Directory.Exists(InternalOutputFilesDropPath))
+                Directory.CreateDirectory(InternalOutputFilesDropPath);
         }
 
         private static void Initialise()
@@ -201,6 +205,22 @@ namespace HedgeMark.Operations.Secure.Middleware
                 throw new FileLoadException(string.Format("Invalid file path : {0}", configPath));
 
             return configPath;
+        }
+
+        public static List<Select2Type> FetchFolderData(string path, bool shouldshowRootFiles = true)
+        {
+            var dirInfo = new DirectoryInfo(path);
+            var index = 0;
+            var folders = new List<Select2Type>();
+
+            if (shouldshowRootFiles)
+                folders.Add(new Select2Type { id = "-Root-", text = "-Root-" });
+
+            var rootDirectories = dirInfo.GetDirectories().ToList();
+
+            var folderNames = rootDirectories.Select(s => s.Name).ToList();
+            folders.AddRange(folderNames.Select(s => new Select2Type { id = s, text = s }).OrderBy(s1 => s1.text).ToList());
+            return folders;
         }
 
     }

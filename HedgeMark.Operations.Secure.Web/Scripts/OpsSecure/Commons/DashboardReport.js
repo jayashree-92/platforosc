@@ -112,27 +112,34 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
         if (selectedPref.length === 0)
             return;
 
-        if (preference === "Funds") {
-            //Update Counterparties and agreement Types
-            $http.get("/CollateralDashboard/GetCounterpartyDetails?reportMapIdStr=" + selectedPref).then(
-                function (response) {
-                    $(response.data).each(function (i, v) {
+        var url = "";
 
-                        $scope.PreferenceKeys.push(v.Preference);
-                        //Add All items - options
-                        var allOptions = v.Options;
-                        allOptions.splice(0, 0, { id: -1, text: "All " + v.Preference });
-
-                        //initialize Select2
-                        $("#li" + v.Preference).select2({
-                            data: allOptions, multiple: true, width: "100%", closeOnSelect: false,
-                            formatResult: formatSelect,
-                            formatSelection: formatSelect
-                        });
-
-                    });
-                });
+        if (preference === "Clients") {
+            url = "/WiresDashboard/GetFundDetails?clientIds=" + selectedPref;
+        } else if (preference === "Funds") {
+            url = "/WiresDashboard/GetAgreementTypes?fundIds=" + selectedPref;
         }
+
+        if (url === "")
+            return;
+
+        //Update Counterparties and agreement Types
+        $http.get(url).then(function (response) {
+            $(response.data).each(function (i, v) {
+                $scope.PreferenceKeys.push(v.Preference);
+                //Add All items - options
+                var allOptions = v.Options;
+                allOptions.splice(0, 0, { id: -1, text: "All " + v.Preference });
+
+                //initialize Select2
+                $("#li" + v.Preference).select2({
+                    data: allOptions, multiple: true, width: "100%", closeOnSelect: false,
+                    formatResult: formatSelect,
+                    formatSelection: formatSelect
+                });
+
+            });
+        });
     }
 
     $scope.fnGetAllTemplates = function (defaultTemplateId) {

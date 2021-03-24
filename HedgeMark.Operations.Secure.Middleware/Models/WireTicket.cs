@@ -89,7 +89,6 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         public string PreferredFundName { get; set; }
         public String ShortFundName { get; set; }
         public String ClientLegalName { get; set; }
-        public String ClientShortName { get; set; }
         public string ReceivingAccountName
         {
             get

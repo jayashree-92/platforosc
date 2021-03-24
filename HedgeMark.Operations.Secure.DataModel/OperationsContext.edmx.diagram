@@ -8,13 +8,13 @@
         <EntityTypeShape EntityType="OperationsModel.dmaReport" Width="1.5" PointX="5.375" PointY="0.75" />
         <EntityTypeShape EntityType="OperationsModel.dmaOpsCashCollateral" Width="1.5" PointX="7.625" PointY="9.375" />
         <EntityTypeShape EntityType="OperationsModel.vw_dmaInvoiceReport" Width="1.5" PointX="0.75" PointY="3.75" />
-        <EntityTypeShape EntityType="OperationsModel.vw_HFundOps" Width="1.5" PointX="2.75" PointY="3.75" />
         <EntityTypeShape EntityType="OperationsModel.dmaUserPreference" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="OperationsModel.dmaTreasuryCashBalance" Width="1.5" PointX="7.375" PointY="0.75" />
         <EntityTypeShape EntityType="OperationsModel.vw_ProxyCurrencyConversionData" Width="1.5" PointX="7.375" PointY="4.75" />
         <EntityTypeShape EntityType="OperationsModel.dmaCollateralData" Width="1.5" PointX="5.375" PointY="7.625" />
         <AssociationConnector Association="OperationsModel.FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId" />
         <EntityTypeShape EntityType="OperationsModel.dmaSystemSwitch" Width="1.5" PointX="9.375" PointY="0.75" />
+        <EntityTypeShape EntityType="OperationsModel.vw_HFundOps" Width="1.5" PointX="9.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

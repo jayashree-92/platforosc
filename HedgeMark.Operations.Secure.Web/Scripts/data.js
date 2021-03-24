@@ -896,3 +896,7 @@ function GetContextDatesOfTodayAndYesterday() {
 }
 
 GetContextDatesOfTodayAndYesterday();
+
+function getTimeZoneAbbr() {
+    return moment.tz.zone(moment.tz.guess()).abbr("");
+}

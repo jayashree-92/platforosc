@@ -85,6 +85,8 @@
           <Property Name="AcadiaCallStatus" Type="varchar" MaxLength="100" />
           <Property Name="IsPledgedCptyFileReceived" Type="bit" Nullable="false" />
           <Property Name="IsCollateralReport" Type="bit" Nullable="false" />
+          <Property Name="CounterpartyIA" Type="float" />
+          <Property Name="PendingCollateral" Type="float" />
         </EntityType>
         <EntityType Name="dmaOpsCashCollateral">
           <Key>
@@ -136,10 +138,10 @@
           <Property Name="Currency" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="AccountOrAgreementType" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="ContextDate" Type="date" Nullable="false" />
-          <Property Name="CashBalance" Type="decimal" Precision="18" Scale="0" />
-          <Property Name="MinimunEquity" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="CashBalance" Type="decimal" Precision="28" Scale="12" />
+          <Property Name="MinimunEquity" Type="decimal" Precision="28" Scale="12" />
           <Property Name="RecCreatedDt" Type="datetime" Nullable="false" />
-          <Property Name="MarginBuffer" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="MarginBuffer" Type="decimal" Precision="28" Scale="12" />
         </EntityType>
         <EntityType Name="dmaUserPreference">
           <Key>
@@ -192,6 +194,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_dmaInvoiceReport' does not have a pr
           <Property Name="ApprovedTimestamp" Type="datetime" />
           <Property Name="SendToClientPortalForApproval" Type="bit" Nullable="false" />
           <Property Name="ClientStatusUpdatedAt" Type="datetime" />
+          <Property Name="ClientStatusUpdatedBy" Type="int" />
           <Property Name="Child" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
@@ -216,6 +219,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="AccountingMethod" Type="varchar" MaxLength="200" />
           <Property Name="ClientLegalEntityName" Type="varchar" MaxLength="200" />
           <Property Name="ClientShortName" Type="varchar" MaxLength="200" />
+          <Property Name="dmaClientOnBoardId" Type="bigint" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -275,6 +279,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
     [vw_dmaInvoiceReport].[ApprovedTimestamp] AS [ApprovedTimestamp], 
     [vw_dmaInvoiceReport].[SendToClientPortalForApproval] AS [SendToClientPortalForApproval], 
     [vw_dmaInvoiceReport].[ClientStatusUpdatedAt] AS [ClientStatusUpdatedAt], 
+    [vw_dmaInvoiceReport].[ClientStatusUpdatedBy] AS [ClientStatusUpdatedBy], 
     [vw_dmaInvoiceReport].[Child] AS [Child]
     FROM [dbo].[vw_dmaInvoiceReport] AS [vw_dmaInvoiceReport]</DefiningQuery>
           </EntitySet>
@@ -292,7 +297,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
     [vw_HFundOps].[FundLegalStructure] AS [FundLegalStructure], 
     [vw_HFundOps].[AccountingMethod] AS [AccountingMethod], 
     [vw_HFundOps].[ClientLegalEntityName] AS [ClientLegalEntityName], 
-    [vw_HFundOps].[ClientShortName] AS [ClientShortName]
+    [vw_HFundOps].[ClientShortName] AS [ClientShortName], 
+    [vw_HFundOps].[dmaClientOnBoardId] AS [dmaClientOnBoardId]
     FROM [dbo].[vw_HFundOps] AS [vw_HFundOps]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vw_ProxyCurrencyConversionData" EntityType="Self.vw_ProxyCurrencyConversionData" store:Type="Views" store:Schema="dbo">
@@ -317,7 +323,6 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <EntitySet Name="dmaReports" EntityType="OperationsModel.dmaReport" />
           <EntitySet Name="dmaOpsCashCollaterals" EntityType="OperationsModel.dmaOpsCashCollateral" />
           <EntitySet Name="vw_dmaInvoiceReport" EntityType="OperationsModel.vw_dmaInvoiceReport" />
-          <EntitySet Name="vw_HFundOps" EntityType="OperationsModel.vw_HFundOps" />
           <EntitySet Name="dmaUserPreferences" EntityType="OperationsModel.dmaUserPreference" />
           <EntitySet Name="dmaTreasuryCashBalances" EntityType="OperationsModel.dmaTreasuryCashBalance" />
           <EntitySet Name="vw_ProxyCurrencyConversionData" EntityType="OperationsModel.vw_ProxyCurrencyConversionData" />
@@ -327,6 +332,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
             <End Role="dmaOpsCashCollateral" EntitySet="dmaOpsCashCollaterals" />
           </AssociationSet>
           <EntitySet Name="dmaSystemSwitches" EntityType="OperationsModel.dmaSystemSwitch" />
+          <EntitySet Name="vw_HFundOps" EntityType="OperationsModel.vw_HFundOps" />
         </EntityContainer>
         <EntityType Name="dmaReport">
           <Key>
@@ -399,27 +405,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <Property Name="SendToClientPortalForApproval" Type="Boolean" Nullable="false" />
           <Property Name="ClientStatusUpdatedAt" Type="DateTime" Precision="3" />
           <Property Name="Child" Type="Int32" />
-        </EntityType>
-        <EntityType Name="vw_HFundOps">
-          <Key>
-            <PropertyRef Name="hmFundId" />
-            <PropertyRef Name="FundType" />
-            <PropertyRef Name="LegalFundName" />
-            <PropertyRef Name="HMRAName" />
-          </Key>
-          <Property Name="hmFundId" Type="Int32" Nullable="false" />
-          <Property Name="OnBoardFundId" Type="Int64" />
-          <Property Name="FundType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="LegalFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="HMRAName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FundStatus" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="BaseCurrencyShareclass" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
-          <Property Name="NAVFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FundLegalStructure" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="AccountingMethod" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ClientLegalEntityName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ClientShortName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ClientStatusUpdatedBy" Type="Int32" />
         </EntityType>
         <EntityType Name="dmaUserPreference">
           <Key>
@@ -439,11 +425,11 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <Property Name="onboardAccountId" Type="Int64" Nullable="false" />
           <Property Name="Currency" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="ContextDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="CashBalance" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="MinimunEquity" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="CashBalance" Type="Decimal" Precision="28" Scale="12" />
+          <Property Name="MinimunEquity" Type="Decimal" Precision="28" Scale="12" />
           <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="AccountOrAgreementType" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="MarginBuffer" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="MarginBuffer" Type="Decimal" Precision="28" Scale="12" />
         </EntityType>
         <EntityType Name="vw_ProxyCurrencyConversionData">
           <Key>
@@ -536,6 +522,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <Property Name="IsPledgedCptyFileReceived" Type="Boolean" Nullable="false" />
           <Property Name="IsCollateralReport" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="dmaOpsCashCollaterals" Relationship="OperationsModel.FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId" FromRole="dmaCollateralData" ToRole="dmaOpsCashCollateral" />
+          <Property Name="CounterpartyIA" Type="Double" />
+          <Property Name="PendingCollateral" Type="Double" />
         </EntityType>
         <Association Name="FK_dmaOpsCashCollateral_dmaCollateralData_dmaCollateralDataId">
           <End Type="OperationsModel.dmaCollateralData" Role="dmaCollateralData" Multiplicity="0..1" />
@@ -559,6 +547,28 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <Property Name="Value" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="LastModifiedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="LastModifiedDt" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="vw_HFundOps">
+          <Key>
+            <PropertyRef Name="hmFundId" />
+            <PropertyRef Name="FundType" />
+            <PropertyRef Name="LegalFundName" />
+            <PropertyRef Name="HMRAName" />
+          </Key>
+          <Property Name="hmFundId" Type="Int32" Nullable="false" />
+          <Property Name="OnBoardFundId" Type="Int64" />
+          <Property Name="FundType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LegalFundName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HMRAName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FundStatus" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="BaseCurrencyShareclass" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="NAVFrequency" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FundLegalStructure" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="AccountingMethod" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ClientLegalEntityName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ClientShortName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="dmaClientOnBoardId" Type="Int64" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -601,6 +611,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <EntitySetMapping Name="vw_dmaInvoiceReport">
             <EntityTypeMapping TypeName="OperationsModel.vw_dmaInvoiceReport">
               <MappingFragment StoreEntitySet="vw_dmaInvoiceReport">
+                <ScalarProperty Name="ClientStatusUpdatedBy" ColumnName="ClientStatusUpdatedBy" />
                 <ScalarProperty Name="Child" ColumnName="Child" />
                 <ScalarProperty Name="ClientStatusUpdatedAt" ColumnName="ClientStatusUpdatedAt" />
                 <ScalarProperty Name="SendToClientPortalForApproval" ColumnName="SendToClientPortalForApproval" />
@@ -627,25 +638,6 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
                 <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
                 <ScalarProperty Name="FundId" ColumnName="FundId" />
                 <ScalarProperty Name="dmaInvoiceReportId" ColumnName="dmaInvoiceReportId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="vw_HFundOps">
-            <EntityTypeMapping TypeName="OperationsModel.vw_HFundOps">
-              <MappingFragment StoreEntitySet="vw_HFundOps">
-                <ScalarProperty Name="ClientShortName" ColumnName="ClientShortName" />
-                <ScalarProperty Name="ClientLegalEntityName" ColumnName="ClientLegalEntityName" />
-                <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
-                <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
-                <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />
-                <ScalarProperty Name="BaseCurrencyShareclass" ColumnName="BaseCurrencyShareclass" />
-                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
-                <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
-                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
-                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
-                <ScalarProperty Name="FundType" ColumnName="FundType" />
-                <ScalarProperty Name="OnBoardFundId" ColumnName="OnBoardFundId" />
-                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -689,6 +681,8 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <EntitySetMapping Name="dmaCollateralDatas">
             <EntityTypeMapping TypeName="OperationsModel.dmaCollateralData">
               <MappingFragment StoreEntitySet="dmaCollateralData">
+                <ScalarProperty Name="PendingCollateral" ColumnName="PendingCollateral" />
+                <ScalarProperty Name="CounterpartyIA" ColumnName="CounterpartyIA" />
                 <ScalarProperty Name="IsCollateralReport" ColumnName="IsCollateralReport" />
                 <ScalarProperty Name="IsPledgedCptyFileReceived" ColumnName="IsPledgedCptyFileReceived" />
                 <ScalarProperty Name="AcadiaCallStatus" ColumnName="AcadiaCallStatus" />
@@ -777,6 +771,26 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
                 <ScalarProperty Name="Key" ColumnName="Key" />
                 <ScalarProperty Name="Module" ColumnName="Module" />
                 <ScalarProperty Name="dmaSystemSwitchId" ColumnName="dmaSystemSwitchId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_HFundOps">
+            <EntityTypeMapping TypeName="OperationsModel.vw_HFundOps">
+              <MappingFragment StoreEntitySet="vw_HFundOps">
+                <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
+                <ScalarProperty Name="ClientShortName" ColumnName="ClientShortName" />
+                <ScalarProperty Name="ClientLegalEntityName" ColumnName="ClientLegalEntityName" />
+                <ScalarProperty Name="AccountingMethod" ColumnName="AccountingMethod" />
+                <ScalarProperty Name="FundLegalStructure" ColumnName="FundLegalStructure" />
+                <ScalarProperty Name="NAVFrequency" ColumnName="NAVFrequency" />
+                <ScalarProperty Name="BaseCurrencyShareclass" ColumnName="BaseCurrencyShareclass" />
+                <ScalarProperty Name="FundStatus" ColumnName="FundStatus" />
+                <ScalarProperty Name="HMRAName" ColumnName="HMRAName" />
+                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
+                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
+                <ScalarProperty Name="FundType" ColumnName="FundType" />
+                <ScalarProperty Name="OnBoardFundId" ColumnName="OnBoardFundId" />
+                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

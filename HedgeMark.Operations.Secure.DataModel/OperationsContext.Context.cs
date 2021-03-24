@@ -28,11 +28,11 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<dmaReport> dmaReports { get; set; }
         public virtual DbSet<dmaOpsCashCollateral> dmaOpsCashCollaterals { get; set; }
         public virtual DbSet<vw_dmaInvoiceReport> vw_dmaInvoiceReport { get; set; }
-        public virtual DbSet<vw_HFundOps> vw_HFundOps { get; set; }
         public virtual DbSet<dmaUserPreference> dmaUserPreferences { get; set; }
         public virtual DbSet<dmaTreasuryCashBalance> dmaTreasuryCashBalances { get; set; }
         public virtual DbSet<vw_ProxyCurrencyConversionData> vw_ProxyCurrencyConversionData { get; set; }
         public virtual DbSet<dmaCollateralData> dmaCollateralDatas { get; set; }
         public virtual DbSet<dmaSystemSwitch> dmaSystemSwitches { get; set; }
+        public virtual DbSet<vw_HFundOps> vw_HFundOps { get; set; }
     }
 }

@@ -91,8 +91,8 @@ namespace HedgeMark.Operations.Secure.Middleware.Jobs
 
         public static void AddSchedule(long jobId, bool isDashboard)
         {
-            if (isDashboard)
-                DashboardScheduleHandler.ScheduleDashboard(jobId);
+            //if (isDashboard)
+            DashboardScheduleHandler.ScheduleDashboard(jobId);
         }
 
         public static void RemoveSchedule(long jobId, bool isDashboard)

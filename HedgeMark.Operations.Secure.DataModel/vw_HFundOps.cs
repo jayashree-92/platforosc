@@ -27,5 +27,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string AccountingMethod { get; set; }
         public string ClientLegalEntityName { get; set; }
         public string ClientShortName { get; set; }
+        public Nullable<long> dmaClientOnBoardId { get; set; }
     }
 }

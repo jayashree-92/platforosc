@@ -543,7 +543,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
                             searchPanes: { orthogonal: 'sp' }
                         },
+                        { "mData": "ClientName", "sTitle": "Client Name" },
                         { "mData": "FundName", "sTitle": "Fund Name" },
+                        { "mData": "FundStatus", "sTitle": "Fund Status" },
                         { "mData": "AgreementName", "sTitle": "Agreement Name" },
                         { "mData": "CounterpartyFamilyName", "sTitle": "Counterparty Family" },
                         { "mData": "CounterpartyName", "sTitle": "Counterparty" },

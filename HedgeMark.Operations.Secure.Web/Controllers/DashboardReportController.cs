@@ -31,7 +31,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetAllReportPreferences()
         {
-            return Json("");
+            return Json(WiresDashboardController.GetWirePreferences(AuthorizedDMAFundData, AuthorizedSessionData.IsPrivilegedUser));
         }
 
         public JsonResult GetPreferences(long templateId)

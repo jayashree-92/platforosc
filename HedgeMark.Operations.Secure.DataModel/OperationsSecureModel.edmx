@@ -675,6 +675,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="CashSweepTime" Type="time" Precision="7" />
           <Property Name="CashSweepTimeZone" Type="varchar" MaxLength="10" />
           <Property Name="ClientName" Type="varchar" MaxLength="200" />
+          <Property Name="dmaClientOnBoardId" Type="bigint" />
           <Property Name="LaunchStatus" Type="varchar" MaxLength="100" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
@@ -1318,6 +1319,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
     [vw_FundAccounts].[CashSweepTime] AS [CashSweepTime], 
     [vw_FundAccounts].[CashSweepTimeZone] AS [CashSweepTimeZone], 
     [vw_FundAccounts].[ClientName] AS [ClientName], 
+    [vw_FundAccounts].[dmaClientOnBoardId] AS [dmaClientOnBoardId], 
     [vw_FundAccounts].[LaunchStatus] AS [LaunchStatus]
     FROM [dbo].[vw_FundAccounts] AS [vw_FundAccounts]</DefiningQuery>
           </EntitySet>
@@ -2366,6 +2368,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="TopLevelManagerAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ClientName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="LaunchStatus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="dmaClientOnBoardId" Type="Int64" />
         </EntityType>
         <EntityType Name="hmsSSICallback">
           <Key>
@@ -3493,6 +3496,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="vw_FundAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.vw_FundAccounts">
               <MappingFragment StoreEntitySet="vw_FundAccounts">
+                <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
                 <ScalarProperty Name="LaunchStatus" ColumnName="LaunchStatus" />
                 <ScalarProperty Name="ClientName" ColumnName="ClientName" />
                 <ScalarProperty Name="TopLevelManagerAccountNumber" ColumnName="TopLevelManagerAccountNumber" />

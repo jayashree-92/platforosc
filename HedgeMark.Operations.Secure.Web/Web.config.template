@@ -8,8 +8,7 @@
     <section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler,log4net" />
     <!-- For more information on Entity Framework configuration, visit http://go.microsoft.com/fwlink/?LinkID=237468 -->
     <section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
-    <section name="mailBoxSettings" type="Middleware.CustomConfigs.MailBoxSection, HMOMiddleware" />
-    <section name="fileOriginSettings" type="Middleware.CustomConfigs.FileOriginSection, HMOMiddleware" />
+    <section name="mailBoxSettings" type="HedgeMark.Operations.Secure.Middleware.MailBoxSection, HedgeMark.Operations.Secure.Middleware, Version=1.0.0.0, Culture=neutral"/>
     <sectionGroup name="system.web.webPages.razor" type="System.Web.WebPages.Razor.Configuration.RazorWebSectionGroup, System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <section name="host" type="System.Web.WebPages.Razor.Configuration.HostSection, System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" requirePermission="false" />
       <section name="pages" type="System.Web.WebPages.Razor.Configuration.RazorPagesSection, System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" requirePermission="false" />
@@ -22,7 +21,11 @@
     <add name="HMOpsSecureConnectionString" connectionString="Data Source=W00001N00\MSDMUT05;Initial Catalog=HM;uid=DMAHMUserDEV;password=scG_8&amp;m; Max Pool Size=75; Min Pool Size=5;MultipleActiveResultSets=true;" />
   </connectionStrings>
   <!-- < = &lt; > = &gt; " = &quot; ' = &apos; & = &amp; -->
-
+  <mailBoxSettings>
+    <mailBoxes>
+      <add mailBoxName="hm-ops-qa" username="AMS\O71579795229x" password="M#%v232&amp;%54n"></add>
+    </mailBoxes>
+  </mailBoxSettings>
   <appSettings>
     <add key="webpages:Version" value="2.0.0.0" />
     <add key="webpages:Enabled" value="false" />

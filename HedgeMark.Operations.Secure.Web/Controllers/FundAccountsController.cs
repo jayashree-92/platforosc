@@ -268,6 +268,8 @@ namespace HMOSecureWeb.Controllers
                     CounterpartyFamilyName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].CounterpartyFamily : string.Empty,
                     CounterpartyName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].CounterpartyName : string.Empty,
                     FundName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].LegalFundName : string.Empty,
+                    ClientName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].ClientName : string.Empty,
+                    FundStatus = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].LaunchStatus : string.Empty,
                     ApprovedMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Approved"),
                     PendingApprovalMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Pending Approval"),
 
@@ -445,10 +447,9 @@ namespace HMOSecureWeb.Controllers
 
         public void AddOrUpdateCallback(hmsAccountCallback callback)
         {
-            hmsAccountCallback existingCallback;
             if (callback.hmsAccountCallbackId > 0)
             {
-                existingCallback = FundAccountManager.GetCallbackData(callback.hmsAccountCallbackId);
+                var existingCallback = FundAccountManager.GetCallbackData(callback.hmsAccountCallbackId);
                 callback.RecCreatedDt = existingCallback.RecCreatedDt;
                 callback.RecCreatedBy = existingCallback.RecCreatedBy;
                 if (callback.IsCallbackConfirmed)
@@ -526,7 +527,7 @@ namespace HMOSecureWeb.Controllers
         }
 
 
-        #region Export and Upload
+        #region ExportExport and Upload
 
         public FileResult ExportAllAccountlist()
         {
@@ -559,7 +560,9 @@ namespace HMOSecureWeb.Controllers
                 var row = new Row();
                 row["Account Id"] = account.onBoardingAccountId.ToString();
                 row["Entity Type"] = account.AccountType;
+                row["Client Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].LegalFundName : string.Empty;
                 row["Fund Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].LegalFundName : string.Empty;
+                row["Fund Status"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].LaunchStatus : string.Empty;
                 row["Agreement Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].AgreementShortName : string.Empty;
                 row["Counterparty"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].CounterpartyName : string.Empty;
                 row["Counterparty Family"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].CounterpartyFamily : string.Empty;

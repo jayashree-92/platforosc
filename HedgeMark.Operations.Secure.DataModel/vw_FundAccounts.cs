@@ -46,5 +46,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string TopLevelManagerAccountNumber { get; set; }
         public string ClientName { get; set; }
         public string LaunchStatus { get; set; }
+        public Nullable<long> dmaClientOnBoardId { get; set; }
     }
 }

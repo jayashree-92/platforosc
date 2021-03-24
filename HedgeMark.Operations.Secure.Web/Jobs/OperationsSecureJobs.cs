@@ -17,39 +17,6 @@ namespace HMOSecureWeb.Jobs
         public static readonly string JobName;
     }
 
-    public class CronHelper
-    {
-
-        public CronHelper()
-        {
-            Interval = 1;
-        }
-
-        public int Interval { get; set; }
-
-        public CronHelper Every(int interval = 1)
-        {
-            Interval = interval;
-            return this;
-        }
-
-        public string Minute()
-        {
-            return string.Format("*/{0} * * * *", Interval);
-        }
-
-        public string Hour()
-        {
-            return string.Format("0 */{0} * * *", Interval);
-        }
-
-        public string Day(TimeSpan at)
-        {
-            return string.Format("{0} {1} */{2} * *", at.Minutes, at.Hours, Interval);
-        }
-
-    }
-
     public class BackGroundJobScheduler : IRegisteredObject
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(BackGroundJobScheduler));
