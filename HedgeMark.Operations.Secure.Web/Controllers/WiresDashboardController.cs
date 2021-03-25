@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Com.HedgeMark.Commons.Extensions;
 using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
+using HedgeMark.Operations.FileParseEngine.RuleEngine;
 using HedgeMark.Operations.Secure.Middleware;
 using HedgeMark.Operations.Secure.Middleware.Models;
 using HMOSecureWeb.Utility;
@@ -78,21 +80,55 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetWireLogData(DateTime startDate, DateTime endDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference)
         {
-            var rowsToBuild = WireDashboardManager.GetWireData(startDate, endDate, searchPreference, AuthorizedDMAFundData);
+            var wireData = WireDashboardManager.GetWireTickets(startDate, endDate, searchPreference, false, AuthorizedDMAFundData);
+            var rowsToBuild = ConstructWireDataRows(wireData);
             SetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString(), rowsToBuild);
             var rows = JsonHelper.GetJson(rowsToBuild);
             return Json(new { rows }, JsonRequestBehavior.AllowGet);
         }
+
+
+        private List<Row> ConstructWireDataRows(List<WireTicket> wireData)
+        {
+
+            var rows = new List<Row>();
+
+            foreach (var ticket in wireData)
+            {
+                var thisRow = new Row();
+                thisRow["Wire Status"] = ((WireDataManager.WireStatus)ticket.HMWire.WireStatusId).ToString();
+                thisRow["Swift Status"] = ((WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId).ToString();
+                thisRow["Client"] = ticket.ClientLegalName;
+                thisRow["Fund"] = ticket.PreferredFundName;
+                thisRow["Sending Account Name"] = ticket.SendingAccount.AccountName;
+                thisRow["Sending Account Number"] = ticket.SendingAccountNumber;
+                thisRow["Transfer Type"] = ticket.TransferType;
+                thisRow["Source Report"] = ticket.HMWire.hmsWirePurposeLkup.ReportName;
+                thisRow["Wire Purpose"] = ticket.HMWire.hmsWirePurposeLkup.Purpose;
+                thisRow["Value Date", RuleHelper.DefaultDateFormat] = ticket.HMWire.ValueDate.ToString("yyyy-MM-dd");
+                thisRow["Currency"] = ticket.HMWire.Currency;
+                thisRow["Amount", RuleHelper.DefaultCurrencyFormat] = ticket.HMWire.ToCurrency();
+                thisRow["Template Name"] = ticket.ReceivingAccountName;
+                thisRow["Beneficiary Bank"] = ticket.BeneficiaryBank;
+                thisRow["Beneficiary"] = ticket.Beneficiary;
+                thisRow["Beneficiary A/C Number"] = ticket.BeneficiaryAccountNumber;
+                thisRow["Wire Message Type"] = ticket.HMWire.hmsWireMessageType.MessageType;
+
+                rows.Add(thisRow);
+            }
+
+            return rows;
+
+        }
+
 
         public FileResult ExportReport(DateTime startDate, DateTime endDate, string templateName, string format = ".xlsx")
         {
             var rowData = (List<Row>)GetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString());
             var fileName = string.Format("{0}_{1}_{2:yyyyMMdd}_{3:yyyyMMdd}", "Wires_Data", templateName, startDate, endDate);
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, format));
-
             var contentToExport = new ExportContent() { Rows = rowData, TabName = "Wires Data" };
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
-
             return DownloadAndDeleteFile(exportFileInfo);
         }
     }

@@ -21,12 +21,12 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         }
         public bool IsFundTransfer
         {
-            get { return HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.WireTransferTypeId == 2; }
+            get { return HMWire.WireTransferTypeId == 2; }
         }
 
         public bool Is3rdPartyTransfer
         {
-            get { return HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.WireTransferTypeId == 1; }
+            get { return HMWire.WireTransferTypeId == 1; }
         }
 
         public bool IsNotice
@@ -66,6 +66,93 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
                 _counterparty = value;
             }
         }
+
+
+        public string SendingAccountNumber
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(SendingAccount.FFCNumber) ? SendingAccount.FFCNumber : SendingAccount.UltimateBeneficiaryAccountNumber;
+            }
+        }
+
+        public string BeneficiaryBank
+        {
+            get
+            {
+                if (IsFundTransfer)
+                {
+                    return ReceivingAccount.UltimateBeneficiaryType == "Account Name" ? ReceivingAccount.Beneficiary.BankName : ReceivingAccount.UltimateBeneficiary.BankName;
+                }
+
+                if (!IsNotice)
+                {
+                    return SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.Beneficiary.BankName : SSITemplate.UltimateBeneficiary.BankName;
+                }
+                return "N/A";
+            }
+        }
+
+        public string Beneficiary
+        {
+            get
+            {
+                if (IsFundTransfer)
+                {
+                    return ReceivingAccount.UltimateBeneficiaryType == "Account Name" ? ReceivingAccount.UltimateBeneficiaryAccountName : ReceivingAccount.UltimateBeneficiary.BICorABA;
+                }
+
+                if (!IsNotice)
+                {
+                    return SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.UltimateBeneficiaryAccountName : SSITemplate.UltimateBeneficiary.BICorABA;
+                }
+                return "N/A";
+            }
+        }
+
+
+        public string BeneficiaryAccountNumber
+        {
+            get
+            {
+                if (IsFundTransfer)
+                {
+                    return !string.IsNullOrEmpty(ReceivingAccount.FFCNumber) ? ReceivingAccount.FFCNumber : ReceivingAccount.UltimateBeneficiaryAccountNumber;
+                }
+
+                if (!IsNotice)
+                {
+                    return !string.IsNullOrEmpty(SSITemplate.FFCNumber) ? SSITemplate.FFCNumber : SSITemplate.UltimateBeneficiaryAccountNumber;
+                }
+                return "N/A";
+            }
+        }
+
+        public string ReceivingAccountName
+        {
+            get
+            {
+                var accName = IsFundTransfer ? ReceivingAccount.AccountName : SSITemplate.TemplateName;
+                return string.IsNullOrWhiteSpace(accName) ? "N/A" : accName;
+            }
+        }
+
+        public string ReceivingAccountCurrency
+        {
+            get
+            {
+                return IsNotice ? SendingAccount.Currency : IsFundTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
+            }
+        }
+
+        public bool ShouldIncludeWirePurpose
+        {
+            get
+            {
+                return (SendingAccount.SwiftGroup ?? new hmsSwiftGroup()).SwiftGroup == "Credit Suisse";
+            }
+        }
+
         private hmsWire _hmWire;
         public hmsWire HMWire
         {
@@ -89,28 +176,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         public string PreferredFundName { get; set; }
         public String ShortFundName { get; set; }
         public String ClientLegalName { get; set; }
-        public string ReceivingAccountName
-        {
-            get
-            {
-                return IsFundTransfer ? ReceivingAccount.AccountName : SSITemplate.TemplateName;
-            }
-        }
-        public string ReceivingAccountCurrency
-        {
-            get
-            {
-                return IsNotice ? SendingAccount.Currency : IsFundTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
-            }
-        }
 
-        public bool ShouldIncludeWirePurpose
-        {
-            get
-            {
-                return (SendingAccount.SwiftGroup ?? new hmsSwiftGroup()).SwiftGroup == "Credit Suisse";
-            }
-        }
         public List<FormattedSwiftMessage> SwiftMessages { get; set; }
 
         public hmsWireMessageType CancellationWireMessageType { get; set; }

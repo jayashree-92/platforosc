@@ -11,12 +11,7 @@ namespace HedgeMark.Operations.Secure.Middleware
 {
     public class WireDashboardManager
     {
-        public static List<Row> GetWireData(DateTime startDate, DateTime endDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, List<HFundBasic> authorizedDMAFundData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static List<WireTicket> GetWireTickets(DateTime startContextDate, DateTime endContextDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, List<HFundBasic> authorizedDMAFundData = null)
+        public static List<WireTicket> GetWireTickets(DateTime startContextDate, DateTime endContextDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, bool shouldBringAllPendingWires, List<HFundBasic> authorizedDMAFundData = null)
         {
             var wireData = new List<WireTicket>();
             List<hmsWire> wireStatusDetails;
@@ -43,12 +38,12 @@ namespace HedgeMark.Operations.Secure.Middleware
                 //context.Database.Log = s =>
                 //{
                 //    Logger.Debug(s);
-                //};
+                //};    
 
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
-                wireStatusDetails = context.hmsWires
+                var wireTicketQuery = context.hmsWires
                     .Include(s => s.hmsWireMessageType)
                     .Include(s => s.hmsWirePurposeLkup)
                     .Include(s => s.hmsWireStatusLkup)
@@ -56,16 +51,36 @@ namespace HedgeMark.Operations.Secure.Middleware
                     .Include(s => s.SendingAccount)
                     .Include(s => s.SendingAccount.WirePortalCutoff)
                     .Include(s => s.ReceivingAccount)
-                    .Include(s => s.ReceivingSSITemplate)
-                    .Where(s => ((allStatusIds.Contains(0) || allStatusIds.Contains(2)) && s.WireStatusId == 2)
-                        || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (allStatusIds.Contains(0) || allStatusIds.Contains(s.WireStatusId))
-                        || DbFunctions.TruncateTime(s.CreatedAt) == DbFunctions.TruncateTime(endContextDate) && (allStatusIds.Contains(0) || allStatusIds.Contains(s.WireStatusId))).ToList();
+                    .Include(s => s.ReceivingSSITemplate);
+
+                if (shouldBringAllPendingWires)
+                    wireTicketQuery = wireTicketQuery.Where(s => ((allStatusIds.Contains(0) || allStatusIds.Contains(2)) && s.WireStatusId == 2)
+                           || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (allStatusIds.Contains(0) || allStatusIds.Contains(s.WireStatusId))
+                           || DbFunctions.TruncateTime(s.CreatedAt) == DbFunctions.TruncateTime(endContextDate) && (allStatusIds.Contains(0) || allStatusIds.Contains(s.WireStatusId)));
+
+                else
+                {
+                    wireTicketQuery = wireTicketQuery.Where(s => s.ValueDate >= startContextDate && s.ValueDate <= endContextDate)
+                            .Where(s => fundIds.Contains(-1) || fundIds.Contains(s.hmFundId))
+                            .Where(s => allStatusIds.Contains(-1) || allStatusIds.Contains(s.WireStatusId))
+                            .Where(s => agrTypes.Contains("-1") || agrTypes.Contains(s.SendingAccount.AccountType))
+                            .Where(s => msgTypes.Contains(-1) || msgTypes.Contains(s.WireMessageTypeId));
+
+                }
+
+                wireStatusDetails = wireTicketQuery.ToList();
             }
 
+            if (!agrTypes.Contains("-1") && agrTypes.Any(s => s != "DDA" && s != "Custody"))
+            {
+                var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Agreement" && s.SendingAccount.dmaAgreementOnBoardingId != null).Select(s => s.SendingAccount.dmaAgreementOnBoardingId ?? 0).Distinct().ToList();
+                using (var context = new AdminContext())
+                {
+                    var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
+                    wireStatusDetails = wireStatusDetails.Where(s => agrmtMap.Contains(s.OnBoardAgreementId)).ToList();
+                }
 
-            if (!fundIds.Contains(-1))
-                wireStatusDetails = wireStatusDetails.Where(s => fundIds.Contains(s.hmFundId)).ToList();
-
+            }
 
 
             Dictionary<int, string> users;

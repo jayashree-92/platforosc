@@ -78,15 +78,16 @@ namespace HMOSecureWeb
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-addon").Include(
                 "~/Scripts/bootbox.js",
                 "~/Scripts/daterangepicker.js",
-                //"~/Scripts/clockpicker-gh-pages/dist/bootstrap-clockpicker.js",
+                "~/Scripts/clockpicker-gh-pages/dist/bootstrap-clockpicker.js",
                 "~/Scripts/bootstrap-toggle.js"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/plugins").Include(
-                "~/Scripts/data.js",
                 "~/Scripts/Plugins/NumericCellEditor.js",
                 "~/Scripts/Plugins/ContextMenu.js",
-                "~/Scripts/Plugins/SideNavigationMenu.js"
+                "~/Scripts/Plugins/SideNavigationMenu.js",
+                "~/Scripts/Plugins/AutoCompleteEmail.js",
+                "~/Scripts/data.js"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
@@ -126,7 +127,7 @@ namespace HMOSecureWeb
                 .Include("~/Content/bootstrap3-editable/css/bootstrap-editable.css", new CssRewriteUrlTransform())
                 .Include("~/Content/bootstrap-datepicker.css", new CssRewriteUrlTransform())
                 .Include("~/Content/daterangepicker.css", new CssRewriteUrlTransform())
-                //.Include("~/Scripts/clockpicker-gh-pages/dist/bootstrap-clockpicker.css", new CssRewriteUrlTransform())
+                .Include("~/Scripts/clockpicker-gh-pages/dist/bootstrap-clockpicker.css", new CssRewriteUrlTransform())
                 .Include("~/Content/bootstrap-toggle.less", new CssRewriteUrlTransform())
                 .Include("~/Content/bootstrap-milestones.min.css", new CssRewriteUrlTransform())
                 .Include("~/Content/themes/base/jquery-ui.css", new CssRewriteUrlTransform())

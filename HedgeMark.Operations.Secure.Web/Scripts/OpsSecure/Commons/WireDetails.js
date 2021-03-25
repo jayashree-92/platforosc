@@ -105,115 +105,24 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 { "data": "ClientLegalName", "sTitle": "Client" },
                 { "data": "PreferredFundName", "sTitle": "Fund" },
                 { "data": "SendingAccount.AccountName", "sTitle": "Sending Account Name" },
-                {
-                    "data": "SendingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Sending Account Number", "render":
-                        function (tdata, type, row) {
-                            if (row.SendingAccount.FFCNumber != null && row.SendingAccount.FFCNumber.length > 0)
-                                return row.SendingAccount.FFCNumber;
-                            return tdata;
-                        }
-                },
+                { "data": "SendingAccountNumber", "sTitle": "Sending Account Number" },
                 { "data": "TransferType", "sTitle": "Transfer Type" },
                 { "data": "HMWire.hmsWirePurposeLkup.ReportName", "sTitle": "Source Report" },
                 { "data": "HMWire.hmsWirePurposeLkup.Purpose", "sTitle": "Wire Purpose" },
-                {
-                    "data": "HMWire.ValueDate", "sTitle": "Value Date",
-                    "render": renderDotNetDateOnly
-                },
-
+                { "data": "HMWire.ValueDate", "sTitle": "Value Date", "render": renderDotNetDateOnly },
                 { "data": "HMWire.Currency", "sTitle": "Currency" },
-                {
-                    "data": "HMWire.Amount", "sTitle": "Amount",
-                    "render": renderDataAsCurrency,
-                },
-                {
-                    "data": "ReceivingAccountName", "sTitle": "Template Name",
-                    "render": function (tdata) {
-                        return (tdata == null || tdata.trim() == "") ? "N/A" : tdata;
-                    }
-                },
-                {
-                    "data": "ReceivingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Beneficiary Bank",
-                    "render": function (tdata, type, row) {
-                        if (row.IsFundTransfer) {
-                            if (row.ReceivingAccount.UltimateBeneficiaryType == "Account Name")
-                                return row.ReceivingAccount.Beneficiary.BankName;
-                            else
-                                return row.ReceivingAccount.UltimateBeneficiary.BankName;
-                        }
-                        else if (!row.IsNotice) {
-                            if (row.SSITemplate.UltimateBeneficiaryType == "Account Name")
-                                return row.SSITemplate.Beneficiary.BankName;
-                            else
-                                return row.SSITemplate.UltimateBeneficiary.BankName;
-                        }
-                        return "N/A";
-                    }
-                },
-                {
-                    "data": "ReceivingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Beneficiary",
-                    "render": function (tdata, type, row) {
-                        if (row.IsFundTransfer) {
-                            if (row.ReceivingAccount.UltimateBeneficiaryType == "Account Name")
-                                return row.ReceivingAccount.UltimateBeneficiaryAccountName;
-                            else
-                                return row.ReceivingAccount.UltimateBeneficiary.BICorABA;
-                        }
-                        else if (!row.IsNotice) {
-                            if (row.SSITemplate.UltimateBeneficiaryType == "Account Name")
-                                return row.SSITemplate.UltimateBeneficiaryAccountName;
-                            else
-                                return row.SSITemplate.UltimateBeneficiary.BICorABA;
-                        }
-                        return "N/A";
-                    }
-                },
-                {
-                    "data": "ReceivingAccount.UltimateBeneficiaryAccountNumber", "sTitle": "Beneficiary A/C Number",
-                    "render": function (tdata, type, row) {
-                        if (row.IsFundTransfer) {
-                            if (row.ReceivingAccount.FFCNumber != null && row.ReceivingAccount.FFCNumber.length > 0)
-                                return row.ReceivingAccount.FFCNumber;
-
-                            return row.ReceivingAccount.UltimateBeneficiaryAccountNumber;
-                        }
-                        else if (!row.IsNotice) {
-                            if (row.SSITemplate.FFCNumber != null && row.SSITemplate.FFCNumber.length > 0)
-                                return row.SSITemplate.FFCNumber;
-
-                            return row.SSITemplate.UltimateBeneficiaryAccountNumber;
-                        }
-                        return "N/A";
-                    }
-
-                },
-
+                { "data": "HMWire.Amount", "sTitle": "Amount", "render": renderDataAsCurrency, },
+                { "data": "ReceivingAccountName", "sTitle": "Template Name" },
+                { "data": "BeneficiaryBank", "sTitle": "Beneficiary Bank" },
+                { "data": "Beneficiary", "sTitle": "Beneficiary", },
+                { "data": "BeneficiaryAccountNumber", "sTitle": "Beneficiary A/C Number" },
                 { "data": "HMWire.hmsWireMessageType.MessageType", "sTitle": "Wire Message Type" },
-                {
-                    "mData": "WireCreatedBy", "sTitle": "Initiated By"
-                },
-                {
-                    "data": "HMWire.CreatedAt",
-                    "sTitle": "Initiated At",
-                    "render": renderDotNetDateAndTime
-                },
-                {
-                    "data": "WireLastUpdatedBy", "sTitle": "Last Updated By"
-                },
-                {
-                    "data": "HMWire.LastModifiedAt",
-                    "sTitle": "Last Updated At",
-                    "render": renderDotNetDateAndTime
-                },
-                {
-                    "data": "WireApprovedBy", "sTitle": "Approved By"
-                },
-                {
-                    "data": "HMWire.ApprovedAt",
-                    "sTitle": "Approved At",
-                    "render": renderDotNetDateAndTime
-                }
-
+                { "mData": "WireCreatedBy", "sTitle": "Initiated By" },
+                { "data": "HMWire.CreatedAt", "sTitle": "Initiated At", "render": renderDotNetDateAndTime },
+                { "data": "WireLastUpdatedBy", "sTitle": "Last Updated By" },
+                { "data": "HMWire.LastModifiedAt", "sTitle": "Last Updated At", "render": renderDotNetDateAndTime },
+                { "data": "WireApprovedBy", "sTitle": "Approved By" },
+                { "data": "HMWire.ApprovedAt", "sTitle": "Approved At", "render": renderDotNetDateAndTime }
                 ],
                 "createdRow": function (row, data) {
 
