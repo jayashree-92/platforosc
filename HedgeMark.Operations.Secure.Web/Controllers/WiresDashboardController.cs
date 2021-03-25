@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
 using ExcelUtility.Operations.ManagedAccounts;
@@ -87,6 +88,43 @@ namespace HMOSecureWeb.Controllers
             return Json(new { rows }, JsonRequestBehavior.AllowGet);
         }
 
+        private static readonly string StatusPattern = "<label.*?>(.*?)<\\/label>";
+
+        private string GetStatusLabel(string htmlStr)
+        {
+            var matches = Regex.Matches(htmlStr, StatusPattern);
+            return matches[0].Groups[1].Value;
+        }
+
+        private string GetWireStatusLabel(WireDataManager.WireStatus wireStatus, WireDataManager.SwiftStatus swiftStatus)
+        {
+            switch (wireStatus)
+            {
+                case WireDataManager.WireStatus.Drafted: return "<label class='label label-default'>Drafted</label>";
+                case WireDataManager.WireStatus.Initiated: return "<label class='label label-warning'>Pending</label>";
+                case WireDataManager.WireStatus.Approved: return "<label class='label label-success'>Approved</label>";
+                case WireDataManager.WireStatus.Cancelled: return (int)swiftStatus == 1 ? "<label class='label label-danger'>Rejected</label>" : "<label class='label label-default'>Cancelled</label>";
+                case WireDataManager.WireStatus.Failed: return "<label class='label label-danger'>Failed</label>";
+                case WireDataManager.WireStatus.OnHold: return "<label class='label label-info'>On-Hold</label>";
+                default:
+                    return "Status Unknown";
+            }
+        }
+
+        private string GetSwiftStatusLabel(WireDataManager.SwiftStatus swiftStatus)
+        {
+            switch (swiftStatus)
+            {
+                case WireDataManager.SwiftStatus.NotInitiated: return "<label class='label label-default'>Not Started</label>";
+                case WireDataManager.SwiftStatus.Processing: return "<label class='label label-warning'>Pending Ack</label>";
+                case WireDataManager.SwiftStatus.Acknowledged: return "<label class='label label-success'>Acknowledged</label>";
+                case WireDataManager.SwiftStatus.NegativeAcknowledged: return "<label class='label label-danger'>N-Acknowledged</label>";
+                case WireDataManager.SwiftStatus.Completed: return "<label class='label label-info'>Completed</label>";
+                case WireDataManager.SwiftStatus.Failed: return "<label class='label label-danger'>Failed</label>";
+                default:
+                    return "Status Unknown";
+            }
+        }
 
         private List<Row> ConstructWireDataRows(List<WireTicket> wireData)
         {
@@ -96,8 +134,9 @@ namespace HMOSecureWeb.Controllers
             foreach (var ticket in wireData)
             {
                 var thisRow = new Row();
-                thisRow["Wire Status"] = ((WireDataManager.WireStatus)ticket.HMWire.WireStatusId).ToString();
-                thisRow["Swift Status"] = ((WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId).ToString();
+                thisRow["WireId"] = ticket.WireId.ToString();
+                thisRow["Wire Status"] = GetWireStatusLabel((WireDataManager.WireStatus)ticket.HMWire.WireStatusId, (WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId);
+                thisRow["Swift Status"] = GetSwiftStatusLabel((WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId);
                 thisRow["Client"] = ticket.ClientLegalName;
                 thisRow["Fund"] = ticket.PreferredFundName;
                 thisRow["Sending Account Name"] = ticket.SendingAccount.AccountName;
@@ -155,6 +194,13 @@ namespace HMOSecureWeb.Controllers
             var rowData = (List<Row>)GetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString());
             var fileName = string.Format("{0}_{1}_{2:yyyyMMdd}_{3:yyyyMMdd}", "Wires_Data", templateName, startDate, endDate);
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, format));
+
+            foreach (var row in rowData)
+            {
+                row["Wire Status"] = GetStatusLabel(row["Wire Status"]);
+                row["Swift Status"] = GetStatusLabel(row["Swift Status"]);
+            }
+
             var contentToExport = new ExportContent() { Rows = rowData, TabName = "Wires Data" };
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
             return DownloadAndDeleteFile(exportFileInfo);
