@@ -131,6 +131,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                             // $(row).addClass("info");
                             break;
                         case "Initiated":
+                        case "Pending":
                             $(row).addClass("warning");
                             break;
                         case "Approved":

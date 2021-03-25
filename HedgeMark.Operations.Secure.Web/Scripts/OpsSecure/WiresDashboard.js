@@ -3,7 +3,7 @@
 HmOpsApp.controller("wiresDashboardCtrl", function ($scope, $http, $opsSharedScopes, $q, $filter, $timeout) {
     $opsSharedScopes.store("wiresDashboardCtrl", $scope);
 
-
+    $scope.WireStatusIndex = -1
     $scope.fnLoadDashboard = function (startDate, endDate, preferences) {
 
         $("#btnGetDetails").button("loading");
@@ -41,6 +41,18 @@ HmOpsApp.controller("wiresDashboardCtrl", function ($scope, $http, $opsSharedSco
                         //    leftColumns:5,
                         //},
                         "headerCallback": function (thead, data, start, end, display) {
+
+                            $(thead).each(function (i, v) {
+                                $($(v).html()).each(function (j, y) {
+                                    var header = $(y).text();
+                                    if (header == "Wire Status") {
+                                        $scope.WireStatusIndex = j;
+                                        return;
+                                    }
+                                });
+                            });
+
+
                             $($(thead).find("th:contains(\"(\"),th:contains(\"-\")")).each(function (i, v) {
                                 var header = $(this).html();
                                 if (header.indexOf("<br") < 0) {
@@ -51,29 +63,43 @@ HmOpsApp.controller("wiresDashboardCtrl", function ($scope, $http, $opsSharedSco
                                 if (header.indexOf("(") > 0) {
                                     var split = header.split("(");
                                     var reportName = split[1].replace(")", "");
-                                    var outputHeader = split[0] + "&nbsp;&nbsp;<label class='label " + (reportName == "Cash" ? " label-info" : "label-default") + " shadowBox'>" + reportName + "</label>";
+                                    var outputHeader = split[0] + "&nbsp;&nbsp;<label class='label " + (reportName == "Cash" ? " label-info" : "label-default") + "'>" + reportName + "</label>";
                                     $(this).html(outputHeader);
                                 }
                             });
                         },
-                        "rowCallback": function (row, data, index) {
-                            $(row).find("td:lt(6)").addClass("fixed");
-                            var stringBuilder = "";
-                            angular.forEach(data, function (val, ind) {
-                                if (!isNaN(val) && val.indexOf("/") == -1 && val != "" && ind > 6 && ind != data.length - 3) {
-                                    stringBuilder += "td:eq(" + (ind) + "),";
-                                }
-                            });
-                            stringBuilder = stringBuilder.substring(0, stringBuilder.length - 1);
+                        "rowCallback": function (row, data) {
 
-                            angular.forEach($(stringBuilder, row), function (val, i) {
-                                $(val).html($.convertToCurrency($(val).html(), 2));
-                                $(val).attr("title", $.convertToCurrency($(val).html(), 2));
-                            });
+                            if ($scope.WireStatusIndex == -1)
+                                return;
 
-                            //  $("td:eq(" + ($scope.statusIndex - 2) + ")", row).html(data[$scope.statusIndex] == "True" ? "Complete" : "Pending");
+                            switch ($(data[$scope.WireStatusIndex]).text()) {
+                                case "Drafted":
+                                    // $(row).addClass("info");
+                                    break;
+                                case "Initiated":
+                                case "Pending":
+                                    $(row).addClass("warning");
+                                    break;
+                                case "Approved":
+                                case "Processing":
+                                    $(row).addClass("success");
+                                    break;
+                                case "Cancelled":
+                                    $(row).addClass("blocked");
+                                    break;
+                                case "Completed":
+                                    $(row).addClass("info");
+                                    break;
+                                case "Failed":
+                                    $(row).addClass("danger");
+                                    break;
+                                case "On Hold":
+                                    $(row).addClass("blockedSection");
+                                    break;
+                            }
 
-                        }
+                        },
                     });
 
                 $timeout(function () {
