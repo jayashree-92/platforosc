@@ -114,6 +114,34 @@ namespace HMOSecureWeb.Controllers
                 thisRow["Beneficiary A/C Number"] = ticket.BeneficiaryAccountNumber;
                 thisRow["Wire Message Type"] = ticket.HMWire.hmsWireMessageType.MessageType;
 
+                switch (ticket.HMWire.hmsWireStatusLkup.Status)
+                {
+                    case "Drafted":
+                        // $(row).addClass("info");
+                        break;
+                    case "Initiated":
+                        thisRow.RowHighlight = Row.Highlight.Warning;
+                        break;
+                    case "Approved":
+                    case "Processing":
+                        thisRow.RowHighlight = Row.Highlight.Success;
+                        break;
+                    case "Cancelled":
+                        thisRow.RowHighlight = Row.Highlight.SubHeader;
+                        break;
+                    case "Completed":
+                        thisRow.RowHighlight = Row.Highlight.Info;
+                        break;
+                    case "Failed":
+                        thisRow.RowHighlight = Row.Highlight.Error;
+                        break;
+                    case "On Hold":
+                        thisRow.RowHighlight = Row.Highlight.Header;
+                        break;
+                }
+
+
+
                 rows.Add(thisRow);
             }
 
