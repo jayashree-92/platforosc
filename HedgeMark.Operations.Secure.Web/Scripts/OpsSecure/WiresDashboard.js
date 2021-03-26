@@ -27,7 +27,7 @@ HmOpsApp.controller("wiresDashboardCtrl", function ($scope, $http, $opsSharedSco
                             "sSearch": "",
                             "sInfo": "Showing _START_ to _END_ of _TOTAL_ Wire Data"
                         },
-                        "scrollY": 500,
+                        "scrollY": window.innerHeight - 400,
                         //"bScrollCollapse": true,
                         "deferRender": true,
                         "order": [[0, "asc"]],

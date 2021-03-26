@@ -394,8 +394,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 angular.element("#spnwireStatus").addClass("label-info");
                 return "Approved";
             case 4:
-                angular.element("#spnwireStatus").addClass("label-default");
-                return $scope.WireTicket.SwiftStatusId == 1 ? "Rejected" : "Cancelled";
+                var wireStatus = $scope.WireTicket.SwiftStatusId == 1 ? "Rejected" : "Cancelled";
+                angular.element("#spnwireStatus").addClass(wireStatus == "Rejected" ? "label-danger" : "label-default");
+                return wireStatus;
             case 5:
                 angular.element("#spnwireStatus").addClass("label-danger");
                 return "Failed";
