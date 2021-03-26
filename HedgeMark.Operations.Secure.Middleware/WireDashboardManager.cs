@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.FileParseEngine.Models;
+using HedgeMark.Operations.FileParseEngine.RuleEngine;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware.Models;
 using HedgeMark.Operations.Secure.Middleware.Util;
@@ -305,6 +307,98 @@ namespace HedgeMark.Operations.Secure.Middleware
                     thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingSSITemplates1 =
                         thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingSSITemplates2 = null;
         }
+
+
+        private static string GetWireStatusLabel(WireDataManager.WireStatus wireStatus, WireDataManager.SwiftStatus swiftStatus)
+        {
+            switch (wireStatus)
+            {
+                case WireDataManager.WireStatus.Drafted: return "<label class='label label-default'>Drafted</label>";
+                case WireDataManager.WireStatus.Initiated: return "<label class='label label-warning'>Pending</label>";
+                case WireDataManager.WireStatus.Approved: return "<label class='label label-success'>Approved</label>";
+                case WireDataManager.WireStatus.Cancelled: return (int)swiftStatus == 1 ? "<label class='label label-danger'>Rejected</label>" : "<label class='label label-default'>Cancelled</label>";
+                case WireDataManager.WireStatus.Failed: return "<label class='label label-danger'>Failed</label>";
+                case WireDataManager.WireStatus.OnHold: return "<label class='label label-info'>On-Hold</label>";
+                default:
+                    return "Status Unknown";
+            }
+        }
+
+        private static string GetSwiftStatusLabel(WireDataManager.SwiftStatus swiftStatus)
+        {
+            switch (swiftStatus)
+            {
+                case WireDataManager.SwiftStatus.NotInitiated: return "<label class='label label-default'>Not Started</label>";
+                case WireDataManager.SwiftStatus.Processing: return "<label class='label label-warning'>Pending Ack</label>";
+                case WireDataManager.SwiftStatus.Acknowledged: return "<label class='label label-success'>Acknowledged</label>";
+                case WireDataManager.SwiftStatus.NegativeAcknowledged: return "<label class='label label-danger'>N-Acknowledged</label>";
+                case WireDataManager.SwiftStatus.Completed: return "<label class='label label-info'>Completed</label>";
+                case WireDataManager.SwiftStatus.Failed: return "<label class='label label-danger'>Failed</label>";
+                default:
+                    return "Status Unknown";
+            }
+        }
+
+        public static List<Row> ConstructWireDataRows(List<WireTicket> wireData, bool isExportOnly)
+        {
+            var rows = new List<Row>();
+
+            foreach (var ticket in wireData)
+            {
+                var thisRow = new Row();
+                thisRow["WireId"] = ticket.WireId.ToString();
+                thisRow["Wire Status"] = isExportOnly ? ((WireDataManager.WireStatus)ticket.HMWire.WireStatusId).ToString() : GetWireStatusLabel((WireDataManager.WireStatus)ticket.HMWire.WireStatusId, (WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId);
+                thisRow["Swift Status"] = isExportOnly ? ((WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId).ToString() : GetSwiftStatusLabel((WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId);
+                thisRow["Client"] = ticket.ClientLegalName;
+                thisRow["Fund"] = ticket.PreferredFundName;
+                thisRow["Sending Account Name"] = ticket.SendingAccount.AccountName;
+                thisRow["Sending Account Number"] = ticket.SendingAccountNumber;
+                thisRow["Transfer Type"] = ticket.TransferType;
+                thisRow["Source Report"] = ticket.HMWire.hmsWirePurposeLkup.ReportName;
+                thisRow["Wire Purpose"] = ticket.HMWire.hmsWirePurposeLkup.Purpose;
+                thisRow["Value Date", RuleHelper.DefaultDateFormat] = ticket.HMWire.ValueDate.ToString("yyyy-MM-dd");
+                thisRow["Currency"] = ticket.HMWire.Currency;
+                thisRow["Amount", RuleHelper.DefaultCurrencyFormat] = ticket.HMWire.ToCurrency();
+                thisRow["Template Name"] = ticket.ReceivingAccountName;
+                thisRow["Beneficiary Bank"] = ticket.BeneficiaryBank;
+                thisRow["Beneficiary"] = ticket.Beneficiary;
+                thisRow["Beneficiary A/C Number"] = ticket.BeneficiaryAccountNumber;
+                thisRow["Wire Message Type"] = ticket.HMWire.hmsWireMessageType.MessageType;
+
+                switch (ticket.HMWire.hmsWireStatusLkup.Status)
+                {
+                    case "Drafted":
+                        // $(row).addClass("info");
+                        break;
+                    case "Initiated":
+                        thisRow.RowHighlight = Row.Highlight.Warning;
+                        break;
+                    case "Approved":
+                    case "Processing":
+                        thisRow.RowHighlight = Row.Highlight.Success;
+                        break;
+                    case "Cancelled":
+                        thisRow.RowHighlight = Row.Highlight.SubHeader;
+                        break;
+                    case "Completed":
+                        thisRow.RowHighlight = Row.Highlight.Info;
+                        break;
+                    case "Failed":
+                        thisRow.RowHighlight = Row.Highlight.Error;
+                        break;
+                    case "On Hold":
+                        thisRow.RowHighlight = Row.Highlight.Header;
+                        break;
+                }
+
+                rows.Add(thisRow);
+            }
+
+            return rows;
+
+        }
+
+
     }
 
 }

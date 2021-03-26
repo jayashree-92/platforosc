@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Entity;
 using System.IO;
@@ -43,8 +42,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Jobs
             }
         }
 
-        [DisplayName("Dashboard Schedule of {1} > {2}")]
-        //[UseSelectedQueue(ManagedAccountRecurringJob.SecondaryJobQueue)]
+        [DisplayName("Dashboard Schedule of {0} > {1}")]
         public static void ExecuteDashboardSchedule(long dashboarScheduleId, string templateName)
         {
             //get schedule details
@@ -79,8 +77,9 @@ namespace HedgeMark.Operations.Secure.Middleware.Jobs
         private static ExportContent GetDashboardFileToSend(hmsDashboardSchedule schedule, DateTime startDate, DateTime endDate)
         {
             var preferences = schedule.hmsDashboardTemplate.hmsDashboardPreferences.ToDictionary(s => (DashboardReport.PreferenceCode)s.PreferenceCode, v => v.Preferences);
-            return new ExportContent();
-
+            var wireData = WireDashboardManager.GetWireTickets(startDate, endDate, preferences, false);
+            var rows = WireDashboardManager.ConstructWireDataRows(wireData, false);
+            return new ExportContent() { Rows = rows, TabName = "Wire Logs" };
         }
     }
 }

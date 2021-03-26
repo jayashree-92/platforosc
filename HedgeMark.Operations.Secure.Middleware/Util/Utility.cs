@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Com.HedgeMark.Commons;
 
 namespace HedgeMark.Operations.Secure.Middleware.Util
@@ -70,7 +71,14 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
 
             return emailId;
         }
+
+        private const string HtmlRegexPatten = "<.*?>";
+        public static string StripHtml(this string input)
+        {
+            return Regex.Replace(input, HtmlRegexPatten, String.Empty);
+        }
     }
+
     public static class ReportName
     {
         public static readonly string PositionReconciliation = "2-way Position Rec";

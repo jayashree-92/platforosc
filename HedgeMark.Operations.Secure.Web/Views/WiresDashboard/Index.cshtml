@@ -10,6 +10,11 @@
 
     <div class="panel-body row collapse" style="margin-top: 10px; padding: 5px;" id="pnlDashboardReports">
         <table class="table table-condensed table-striped table-responsive table-hover table-bordered" id="tblWireLogReport"></table>
+        <div class="container-fluid">
+            <div class="row" ng-controller="wireInitiationCtrl">
+                @Html.Partial("_Wires")
+            </div>
+        </div>
     </div>
 </div>
 
@@ -17,4 +22,5 @@
     <script type="text/javascript" src="~/Scripts/OpsSecure/Commons/DashboardReport.js"></script>
     <script type="text/javascript" src="~/Scripts/OpsSecure/Commons/Schedules.js"></script>
     <script type="text/javascript" src="~/Scripts/OpsSecure/WiresDashboard.js"></script>
+    <script src="~/Scripts/OpsSecure/Commons/WireManager.js"></script>
 }

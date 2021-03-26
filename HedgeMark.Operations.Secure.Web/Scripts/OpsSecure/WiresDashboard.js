@@ -3,7 +3,9 @@
 HmOpsApp.controller("wiresDashboardCtrl", function ($scope, $http, $opsSharedScopes, $q, $filter, $timeout) {
     $opsSharedScopes.store("wiresDashboardCtrl", $scope);
 
-    $scope.WireStatusIndex = -1
+    $scope.WireStatusIndex = -1;
+    $scope.WireSourceReportIndex = -1;
+    $scope.WirePurposeIndex = -1;
     $scope.fnLoadDashboard = function (startDate, endDate, preferences) {
 
         $("#btnGetDetails").button("loading");
@@ -47,7 +49,12 @@ HmOpsApp.controller("wiresDashboardCtrl", function ($scope, $http, $opsSharedSco
                                     var header = $(y).text();
                                     if (header == "Wire Status") {
                                         $scope.WireStatusIndex = j;
-                                        return;
+                                    }
+                                    if (header == "Source Report") {
+                                        $scope.WireSourceReportIndex = j;
+                                    }
+                                    if (header == "Wire Purpose") {
+                                        $scope.WirePurposeIndex = j;
                                     }
                                 });
                             });
@@ -114,7 +121,47 @@ HmOpsApp.controller("wiresDashboardCtrl", function ($scope, $http, $opsSharedSco
                 $("#btnGetDetails").button("reset");
                 notifyError(response.data.Message);
             });
+
     };
+
+
+    $("#tblWireLogReport").off("dblclick", "tbody tr").on("dblclick", "tbody tr", function (event) {
+        var wireData = $scope.tblWireLogReport.row($(this)).data();
+        if (wireData == undefined)
+            return;
+
+        $scope.wireObj = {
+            WireId: wireData[0],
+            //AgreementId: 0,
+            //AgreementName: "",
+            //FundId: wireData.HMWire.hmFundId,
+            //ContextDate: $scope.contextDate,
+            Purpose: wireData[$scope.WirePurposeIndex],
+            Report: wireData[$scope.WireSourceReportIndex],
+            //IsAdhocWire: false,
+            //ReportMapId: 0,
+            //IsAdhocPage: true
+        };
+
+        $("#modalToRetrieveWires").modal({ backdrop: 'static', keyboard: true, show: true });
+    });
+
+    $("#modalToRetrieveWires").on("show.bs.modal", function () {
+    }).on("shown.bs.modal", function () {
+        $scope.IsWireTicketModelOpen = true;
+        $opsSharedScopes.get("wireInitiationCtrl").fnLoadWireTicketDetails($scope.wireObj);
+        $scope.$emit("wireTicketModelOpen");
+    }).on("hide.bs.modal", function () {
+        $scope.IsWireTicketModelOpen = false;
+        $("#wireCurrentlyViewedBy").collapse("hide");
+        if ($scope.wireObj.WireId > 0)
+            $scope.fnRemoveActionInProgres($scope.wireObj.WireId);
+        $scope.$emit("wireTicketModelClosed", { statusId: $scope.SelectedStatusId });
+    });
+
+    $scope.fnRemoveActionInProgres = function (wireId) {
+        $http.post("/Home/RemoveActionInProgress?wireId=" + wireId);
+    }
 
     $scope.fnExportDashboardReport = function (startDate, endDate, format, templateName) {
         window.location.href = "/WiresDashboard/ExportReport?startDate=" + startDate + "&endDate=" + endDate + "&format=" + format + "&templateName=" + templateName;
