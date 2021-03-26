@@ -117,7 +117,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 { "data": "Beneficiary", "sTitle": "Beneficiary", },
                 { "data": "BeneficiaryAccountNumber", "sTitle": "Beneficiary A/C Number" },
                 { "data": "HMWire.hmsWireMessageType.MessageType", "sTitle": "Wire Message Type" },
-                { "mData": "WireCreatedBy", "sTitle": "Initiated By" },
+                { "data": "WireCreatedBy", "sTitle": "Initiated By" },
                 { "data": "HMWire.CreatedAt", "sTitle": "Initiated At", "render": renderDotNetDateAndTime },
                 { "data": "WireLastUpdatedBy", "sTitle": "Last Updated By" },
                 { "data": "HMWire.LastModifiedAt", "sTitle": "Last Updated At", "render": renderDotNetDateAndTime },

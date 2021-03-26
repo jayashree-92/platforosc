@@ -18,6 +18,10 @@ namespace HedgeMark.Operations.Secure.Middleware
             var wireData = new List<WireTicket>();
             List<hmsWire> wireStatusDetails;
 
+            var clientIds = new List<long>() { -1 };
+            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Clients))
+                clientIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Clients].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
+
             var fundIds = new List<long>() { -1 };
             if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Funds))
                 fundIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Funds].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
@@ -81,7 +85,14 @@ namespace HedgeMark.Operations.Secure.Middleware
                     var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
                     wireStatusDetails = wireStatusDetails.Where(s => agrmtMap.Contains(s.OnBoardAgreementId)).ToList();
                 }
-
+            }
+            if (!clientIds.Contains(-1))
+            {
+                using (var context = new AdminContext())
+                {
+                    var fundsOfSelectedClients = context.vw_HFund.Where(s => clientIds.Contains(s.dmaClientOnBoardId ?? 0)).Select(s => s.hmFundId).ToList();
+                    wireStatusDetails = wireStatusDetails.Where(s => fundsOfSelectedClients.Contains((int)s.hmFundId)).ToList();
+                }
             }
 
 
@@ -364,6 +375,10 @@ namespace HedgeMark.Operations.Secure.Middleware
                 thisRow["Beneficiary"] = ticket.Beneficiary;
                 thisRow["Beneficiary A/C Number"] = ticket.BeneficiaryAccountNumber;
                 thisRow["Wire Message Type"] = ticket.HMWire.hmsWireMessageType.MessageType;
+                thisRow["Initiated By"] = ticket.WireCreatedBy;
+                thisRow["Initiated At"] = ticket.HMWire.CreatedAt.ToString("MMM dd, yyyy hh:mm tt");
+                thisRow["Approved By"] = ticket.WireApprovedBy;
+                thisRow["Approved At"] = ticket.HMWire.ApprovedAt != null ? (ticket.HMWire.ApprovedAt ?? new DateTime()).ToString("MMM dd, yyyy hh:mm tt") : "-";
 
                 switch (ticket.HMWire.hmsWireStatusLkup.Status)
                 {
