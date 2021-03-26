@@ -56,7 +56,7 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetFundDetails(List<long> clientIds)
         {
             var authFundIds = AuthorizedDMAFundData.Select(s => s.HmFundId).ToList();
-            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => clientIds.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
+            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => clientIds.Contains(-1) || clientIds.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
             var funds = (from fnd in fundDetails where fnd.hmFundId > 0 select new Select2Type() { id = fnd.hmFundId.ToString(), text = fnd.ShortFundName }).Distinct(new Select2HeaderComparer()).OrderBy(s => s.text).ToList();
             var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
 
@@ -70,7 +70,7 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetAgreementTypes(List<long> fundIds)
         {
             var authFundIds = AuthorizedDMAFundData.Select(s => s.HmFundId).ToList();
-            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => fundIds.Contains(s.hmFundId)).ToList();
+            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => fundIds.Contains(-1) || fundIds.Contains(s.hmFundId)).ToList();
             var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
 
             return Json(new List<DashboardReport.Preferences>()
