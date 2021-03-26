@@ -75,7 +75,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
         private const string HtmlRegexPatten = "<.*?>";
         public static string StripHtml(this string input)
         {
-            return Regex.Replace(input, HtmlRegexPatten, String.Empty);
+            return Regex.Replace(input, HtmlRegexPatten, string.Empty);
         }
     }
 
