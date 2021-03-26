@@ -38,6 +38,10 @@ namespace HedgeMark.Operations.Secure.Middleware
             if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.MessageTypes))
                 msgTypes = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.MessageTypes].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
+            var reports = new List<string>() { "-1" };
+            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Reports))
+                reports = searchPreference[DashboardReport.PreferenceCode.Reports].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
 
             using (var context = new OperationsSecureContext())
             {
@@ -70,8 +74,8 @@ namespace HedgeMark.Operations.Secure.Middleware
                             .Where(s => fundIds.Contains(-1) || fundIds.Contains(s.hmFundId))
                             .Where(s => allStatusIds.Contains(-1) || allStatusIds.Contains(s.WireStatusId))
                             .Where(s => agrTypes.Contains("-1") || agrTypes.Contains(s.SendingAccount.AccountType))
-                            .Where(s => msgTypes.Contains(-1) || msgTypes.Contains(s.WireMessageTypeId));
-
+                            .Where(s => msgTypes.Contains(-1) || msgTypes.Contains(s.WireMessageTypeId))
+                            .Where(s => reports.Contains("-1") || reports.Contains(s.hmsWirePurposeLkup.ReportName));
                 }
 
                 wireStatusDetails = wireTicketQuery.ToList();

@@ -21,7 +21,13 @@ PRIMARY KEY  CLUSTERED
 	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Currencies')
 	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Stats')
 	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Status')
+	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Reports')
 
+END
+
+IF NOT EXISTS(SELECT * FROM hmsDashboardPreferenceCodeLkup WHERE [PreferenceName] = 'Reports')
+BEGIN
+	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Reports')
 END
 
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE type='U' AND name='hmsDashboardTemplates')

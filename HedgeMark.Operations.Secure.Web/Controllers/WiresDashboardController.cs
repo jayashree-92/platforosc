@@ -8,6 +8,7 @@ using Com.HedgeMark.Commons.Extensions;
 using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HedgeMark.Operations.FileParseEngine.RuleEngine;
+using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware;
 using HedgeMark.Operations.Secure.Middleware.Models;
 using HedgeMark.Operations.Secure.Middleware.Util;
@@ -42,16 +43,23 @@ namespace HMOSecureWeb.Controllers
             var wireMessageTypes = WireDataManager.GetWireMessageTypes().Where(s => s.IsOutbound).Select(s => new Select2Type() { id = s.hmsWireMessageTypeId.ToString(), text = s.MessageType }).ToList();
             var wireStatus = Enum.GetValues(typeof(WireDataManager.WireStatus)).Cast<int>().Select(x => new Select2Type() { id = ((int)x).ToString(), text = ((WireDataManager.WireStatus)x).ToString() }).ToList();
 
+            List<Select2Type> wireReports;
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                wireReports = context.hmsWirePurposeLkups.Select(s => s.ReportName).Distinct().Select(x => new Select2Type() { id = x, text = x }).ToList();
+            }
+
             return new List<DashboardReport.Preferences>()
             {
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Clients.ToString(),Options = clients},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Funds.ToString(),Options = funds},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AgreementTypes.ToString(),Options = agreementTypes},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.MessageTypes.ToString(),Options = wireMessageTypes},
-                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Status.ToString(),Options=wireStatus}
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Reports.ToString(),Options = wireReports},
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Status.ToString(),Options = wireStatus}
             };
         }
-
 
         public JsonResult GetFundDetails(List<long> clientIds)
         {
