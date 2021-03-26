@@ -78,7 +78,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Jobs
         {
             var preferences = schedule.hmsDashboardTemplate.hmsDashboardPreferences.ToDictionary(s => (DashboardReport.PreferenceCode)s.PreferenceCode, v => v.Preferences);
             var wireData = WireDashboardManager.GetWireTickets(startDate, endDate, preferences, false);
-            var rows = WireDashboardManager.ConstructWireDataRows(wireData, false);
+            var rows = WireDashboardManager.ConstructWireDataRows(wireData, true);
             return new ExportContent() { Rows = rows, TabName = "Wire Logs" };
         }
     }
