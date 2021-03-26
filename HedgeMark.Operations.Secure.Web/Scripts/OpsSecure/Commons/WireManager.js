@@ -91,8 +91,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $(".datepicker").css({
                 'top': popupTop
             });
-        },
-            50);
+        }, 50);
     });
 
     $scope.getWireMessageTypes = function (module) {
