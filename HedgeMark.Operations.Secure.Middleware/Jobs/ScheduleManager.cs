@@ -85,7 +85,8 @@ namespace HedgeMark.Operations.Secure.Middleware.Jobs
 
             foreach (var job in schedules)
             {
-                job.NextRunAt = CrontabSchedule.Parse(job.Schedule.ScheduleExpression).GetNextOccurrence(DateTime.Now);
+                var nextUtcOccurence = CrontabSchedule.Parse(job.Schedule.ScheduleExpression).GetNextOccurrence(DateTime.Now);
+                job.NextRunAt = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(nextUtcOccurence, TimeZones[job.Schedule.TimeZone].Id);
             }
         }
 
