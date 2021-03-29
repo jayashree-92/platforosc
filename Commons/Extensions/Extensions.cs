@@ -112,6 +112,9 @@ namespace Com.HedgeMark.Commons.Extensions
 
         public static string ToCurrency(this object value, string groupSeparator = ",", string currencySymbol = "")
         {
+            if (value == null)
+                return "0";
+
             var nfi = new NumberFormatInfo
             {
                 CurrencyGroupSeparator = groupSeparator,
