@@ -84,5 +84,11 @@ namespace HedgeMark.Operations.Secure.Middleware
         {
             get { return Convert.ToBoolean(this["enableSsl"] ?? "true"); }
         }
+
+        [ConfigurationProperty("port", DefaultValue = 587, IsRequired = false)]
+        public int Port
+        {
+            get { return Convert.ToInt32(this["port"] ?? 587); }
+        }
     }
 }

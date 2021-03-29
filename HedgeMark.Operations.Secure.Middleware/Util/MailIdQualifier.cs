@@ -105,6 +105,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
                 {
                     client.Credentials = new NetworkCredential(configuredMailBox.UserName, configuredMailBox.Password);
                     client.EnableSsl = configuredMailBox.EnableSsl;
+                    client.Port = configuredMailBox.Port;
                 }
                 MailSender.Send(mailInfo, client);
             }
