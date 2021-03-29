@@ -72,6 +72,9 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         {
             get
             {
+                if (WireId == 0)
+                    return string.Empty;
+
                 return !string.IsNullOrEmpty(SendingAccount.FFCNumber) ? SendingAccount.FFCNumber : SendingAccount.UltimateBeneficiaryAccountNumber;
             }
         }
@@ -80,6 +83,9 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         {
             get
             {
+                if (WireId == 0)
+                    return string.Empty;
+
                 if (IsFundTransfer)
                 {
                     return ReceivingAccount.UltimateBeneficiaryType == "Account Name" ? ReceivingAccount.Beneficiary.BankName : ReceivingAccount.UltimateBeneficiary.BankName;
@@ -97,6 +103,9 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         {
             get
             {
+                if (WireId == 0)
+                    return string.Empty;
+
                 if (IsFundTransfer)
                 {
                     return ReceivingAccount.UltimateBeneficiaryType == "Account Name" ? ReceivingAccount.UltimateBeneficiaryAccountName : ReceivingAccount.UltimateBeneficiary.BICorABA;
@@ -115,6 +124,9 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         {
             get
             {
+                if (WireId == 0)
+                    return string.Empty;
+
                 if (IsFundTransfer)
                 {
                     return !string.IsNullOrEmpty(ReceivingAccount.FFCNumber) ? ReceivingAccount.FFCNumber : ReceivingAccount.UltimateBeneficiaryAccountNumber;
@@ -132,6 +144,9 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         {
             get
             {
+                if (WireId == 0)
+                    return string.Empty;
+
                 var accName = IsFundTransfer ? ReceivingAccount.AccountName : SSITemplate.TemplateName;
                 return string.IsNullOrWhiteSpace(accName) ? "N/A" : accName;
             }
