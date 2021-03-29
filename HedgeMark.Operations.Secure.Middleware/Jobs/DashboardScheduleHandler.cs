@@ -63,9 +63,9 @@ namespace HedgeMark.Operations.Secure.Middleware.Jobs
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, job.hmsSchedule.FileFormat));
 
             //Mail this report
-            var subject = string.Format("Dashboard Report of '{0}' for {1}", templateName, ((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).ToString());
+            var subject = string.Format("Wires Dashboard Report of '{0}' for {1}", templateName, ((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).ToString());
 
-            var mailBody = string.Format("Hi, <br/><br/> Please find the attached the dasboard report of '{0}' for {1}.<br/><br/> Thanks, <br/> HM-Operations Team.",
+            var mailBody = string.Format("Hi, <br/><br/> Please find the attached the wires dasboard report of '{0}' for {1}.<br/><br/> Thanks, <br/> HM-Operations Team.",
                 templateName, ((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).ToString());
 
             var contentToExport = GetDashboardFileToSend(job, startDate, endDate);
