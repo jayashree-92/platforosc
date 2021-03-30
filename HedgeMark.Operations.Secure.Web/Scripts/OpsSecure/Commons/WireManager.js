@@ -284,6 +284,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     //    $scope.fnShowFormattedSwiftMsg("Outbound", $scope.wireTicketObj.SwiftMessages["Outbound"]);
     //});
 
+    $scope.getWireComments = function (comments) {
+        return $sce.trustAsHtml(comments);
+    }
+
     $scope.getWireLogText = function (wireLog) {
         if (wireLog == null)
             return "";
@@ -650,7 +654,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isUserActionDone = true;
             $scope.changeButtonStatus(statusId);
             var wireData = statusId == 4 ? $scope.dummyWire : angular.copy($scope.wireTicketObj);
-            $http.post("/Home/SaveWire", JSON.stringify({ wireTicket: wireData, reportMapId: $scope.wireObj.ReportMapId, purpose: $scope.wireObj.Purpose, statusId: statusId, comment: $scope.wireComments }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
+            $http.post("/Home/SaveWire", JSON.stringify({ wireTicket: wireData, reportMapId: $scope.wireObj.ReportMapId, purpose: $scope.wireObj.Purpose, statusId: statusId, comment: $scope.wireComments + $scope.AcknowledgedNotes }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
                 $scope.canSave = true;
                 angular.element("#modalToRetrieveWires").modal("hide");
                 if ($scope.WireTicket.WireStatusId == 0)
@@ -804,10 +808,24 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         //validate against the available cash balances
         if ($scope.CashBalance.IsNewBalanceOffLimit && $("#chkCashBalOff").prop("checked") === false) {
-            $scope.fnShowErrorMessage("Please note that the Amount exceeded the available Cash Balances.");
+            $scope.fnShowErrorMessage("Please note that the Amount exceeded the available cash balances.");
             return false;
         }
 
+        if (!$scope.wireTicketObj.IsNotice && !$scope.CashBalance.IsCashBalanceAvailable && $("#chkCashBalOff").prop("checked") === false) {
+            $scope.fnShowErrorMessage("Please note that the cash balances are not available.");
+            return false;
+        }
+
+        if (!$scope.wireTicketObj.IsNotice && $scope.CashBalance.IsNewBalanceOffLimit && $scope.wireComments.trim() == "") {
+            $scope.fnShowErrorMessage("Please enter the comments to initiate the wire as it exceeds available cash balances.");
+            return false;
+        }
+
+        if (!$scope.wireTicketObj.IsNotice && !$scope.CashBalance.IsCashBalanceAvailable && $scope.wireComments.trim() == "") {
+            $scope.fnShowErrorMessage("Please enter the comments to initiate the wire as cash balances are not available.");
+            return false;
+        }
 
         $("#wireErrorStatus").collapse("hide");
         $scope.validationMsg = "";
@@ -1479,6 +1497,23 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
     };
 
+    $scope.AcknowledgedNotes = "";
+
+    $("#chkCashBalOff").on("change", function () {
+
+        if ($("#chkCashBalOff").prop("checked")) {
+            var message = "";
+
+            if ($scope.CashBalance.IsNewBalanceOffLimit)
+                message = "Acknowledged that amount of this Wire exceeds available Cash balance of " + $.convertToCurrency($scope.CashBalance.AvailableBalance, 2) + " " + $scope.CashBalance.Currency;
+            else if (!$scope.CashBalance.IsCashBalanceAvailable)
+                message = "Acknowledged that the Cash balance calculation is not available for the account";
+
+            $scope.AcknowledgedNotes = "<br/><i class='glyphicon glyphicon-ok'></i><span class='small'>&nbsp;&nbsp;" + message + "</span>";
+        } else {
+            $scope.AcknowledgedNotes = "";
+        }
+    });
 
     angular.element(document).on("change", "#liReceivingBookAccount", function () {
         $timeout(function () {

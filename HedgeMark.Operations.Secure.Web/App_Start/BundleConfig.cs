@@ -27,7 +27,7 @@ namespace HMOSecureWeb
             //"~/Scripts/angular-resource.js",
             //"~/Scripts/angular-sanitize.js",
             //"~/Scripts/angular-route.js",
-            //"~/Scripts/angular-sanitize.js",
+            "~/Scripts/angular-sanitize.js",
             //"~/Scripts/angular-scenario.js",
             //"~/Scripts/angular-touch.js"
 

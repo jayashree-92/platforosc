@@ -1,5 +1,5 @@
-﻿    /// <reference path="../data.js" />
-var HmOpsApp = angular.module("HmOperationsSecureApp", ["ngAnimate", "ngMessages"]);
+﻿/// <reference path="../data.js" />
+var HmOpsApp = angular.module("HmOperationsSecureApp", ["ngAnimate", "ngMessages", "ngSanitize"]);
 
 HmOpsApp.directive("onLastRepeat", function () {
     return function (scope, element, attrs) {
@@ -12,15 +12,15 @@ HmOpsApp.directive("onLastRepeat", function () {
 
 HmOpsApp.directive("multipleEmails", function () {
     return {
-        restrict:'A',
-        require:'ngModel',
+        restrict: 'A',
+        require: 'ngModel',
         link: function (scope, element, attrs, ctrl) {
             function validateMultipleEmails(value) {
                 var emailRgx = /^((\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)\s*[,]{0,1}\s*)+$/;
                 var validity = ctrl.$isEmpty(value) || value.split(',').every(
-                  function (email) {
-                      return emailRgx.test(email.trim());
-                  });
+                    function (email) {
+                        return emailRgx.test(email.trim());
+                    });
                 ctrl.$setValidity("multipleEmails", validity);
                 return validity ? value : undefined;
             }

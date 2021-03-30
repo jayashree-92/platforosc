@@ -484,6 +484,8 @@
     <Content Include="Scripts\angular-messages.js" />
     <Content Include="Scripts\angular-messages.min.js" />
     <Content Include="Scripts\angular-mocks.js" />
+    <Content Include="Scripts\angular-sanitize.js" />
+    <Content Include="Scripts\angular-sanitize.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootbox.js" />
@@ -643,12 +645,13 @@
     <Content Include="pw2\forms\smaceauth.fcc" />
     <Content Include="pw2\forms\smaceauth.properties" />
     <Content Include="pw2\forms\smaceauth.unauth" />
-    <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
     <Content Include="Scripts\angular-messages.min.js.map" />
     <Content Include="Scripts\clockpicker-gh-pages\LICENSE" />
     <Content Include="Scripts\clockpicker-gh-pages\package.json" />
     <Content Include="Scripts\clockpicker-gh-pages\README.md" />
+    <Content Include="Scripts\angular.min.js.map" />
+    <Content Include="Scripts\angular-sanitize.min.js.map" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
