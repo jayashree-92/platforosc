@@ -16,18 +16,22 @@ PRIMARY KEY  CLUSTERED
 	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Clients')
 	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Funds')
 	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Counterparties')
-	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('AgreementTypes')
+	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('AccountTypes')
 	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('MessageTypes')
 	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Currencies')
 	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Stats')
 	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Status')
-	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Reports')
+	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Modules')
 
 END
 
-IF NOT EXISTS(SELECT * FROM hmsDashboardPreferenceCodeLkup WHERE [PreferenceName] = 'Reports')
+IF EXISTS(SELECT * FROM hmsDashboardPreferenceCodeLkup WHERE [PreferenceName] = 'Reports')
 BEGIN
-	INSERT INTO [hmsDashboardPreferenceCodeLkup]([PreferenceName]) VALUES ('Reports')
+	UPDATE [hmsDashboardPreferenceCodeLkup] SET PreferenceName='Modules' WHERE PreferenceName ='Reports'
+END
+IF EXISTS(SELECT * FROM hmsDashboardPreferenceCodeLkup WHERE [PreferenceName] = 'AgreementTypes')
+BEGIN
+	UPDATE [hmsDashboardPreferenceCodeLkup] SET PreferenceName='AccountTypes' WHERE PreferenceName ='AgreementTypes'
 END
 
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE type='U' AND name='hmsDashboardTemplates')
