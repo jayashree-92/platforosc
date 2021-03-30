@@ -1537,18 +1537,18 @@ ul[id^="ctxMenuUI_"] {
     color: #ffffff;
 }
 
-.btn-checkbox-group .active:before,
-.btn-radio-group .active:before {
-    content: "\e013";
-    font-family: "Glyphicons Halflings";
-    color: #ffffff;
-    line-height: 1;
-    margin-left: 5px;
-    /*margin-right: 5px;*/
-    position: relative;
-    display: inline-block;
-    overflow: hidden;
-}
+    .btn-checkbox-group .active:before,
+    .btn-radio-group .active:before {
+        content: "\e013";
+        font-family: "Glyphicons Halflings";
+        color: #ffffff;
+        line-height: 1;
+        margin-left: 5px;
+        /*margin-right: 5px;*/
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+    }
 
 .user-notification {
     margin: -11px 0px 0px -24px;
@@ -1720,7 +1720,11 @@ div#summaryReportData {
 }
 
 .hmo-recurringEvents,
-.hmo-RangeOfRecurrence {
+.hmo-RangeOfRecurrence,
+.hmo-Recepients,
+.hmo-ReportSettings,
+.hmo-AdvanceSettings-plus,
+.hmo-AdvanceSettings-minus {
     /*margin-right: 0;
     margin-left: 0;*/
     background-color: #fff;
@@ -1728,16 +1732,21 @@ div#summaryReportData {
     /*border-width: 1px;*/
     border-radius: 4px 4px 0 0;
     position: relative;
-    padding: 45px 15px 15px;
+    padding: 15px 15px 0px;
     margin: 15px -15px 15px;
     border-color: #e5e5e5 #eee #eee;
     border-style: solid;
     border-width: 1px 0 0 0;
-    -webkit-box-shadow: inset 0 3px 6px rgba(0,0,0,.05);
-    box-shadow: inset 0 3px 6px rgba(0,0,0,.05);
+    /*-webkit-box-shadow: inset 0 3px 6px rgba(0,0,0,.05);*/
+    /*box-shadow: inset 0 3px 6px rgba(0,0,0,.05);*/
 }
 
-    .hmo-recurringEvents:after {
+    .hmo-recurringEvents:after,
+    .hmo-RangeOfRecurrence:after,
+    .hmo-Recepients:after,
+    .hmo-ReportSettings:after,
+    .hmo-AdvanceSettings-plus:after,
+    .hmo-AdvanceSettings-minus:after {
         position: absolute;
         top: -13px;
         left: 15px;
@@ -1747,23 +1756,33 @@ div#summaryReportData {
         color: #959595;
         /*text-transform: uppercase;*/
         letter-spacing: 1px;
-        content: "  Recurring Events  ";
         background-color: white;
+    }
+
+    .hmo-recurringEvents:after {
+        content: " Frequency of Recurrence ";
     }
 
     .hmo-RangeOfRecurrence:after {
-        position: absolute;
-        top: -13px;
-        left: 15px;
-        font-size: 13px;
-        padding: 3px;
-        font-weight: normal;
-        color: #959595;
-        /*text-transform: uppercase;*/
-        letter-spacing: 1px;
-        content: "  Range of recurrence  ";
-        background-color: white;
+        content: " Range of Recurrence ";
     }
+
+    .hmo-Recepients:after {
+        content: " Recepients ";
+    }
+
+    .hmo-ReportSettings:after {
+        content: " Report Settings ";
+    }
+
+    .hmo-AdvanceSettings-plus:after {
+        content: "\2295  Advance Settings ";
+    }
+
+    .hmo-AdvanceSettings-minus:after {
+        content: "\2296  Advance Settings ";
+    }
+
 
 .header-right .dataTables_filter {
     padding-top: 7px;

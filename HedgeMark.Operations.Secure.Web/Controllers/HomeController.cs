@@ -120,7 +120,6 @@ namespace HMOSecureWeb.Controllers
             using (var context = new OperationsSecureContext())
             {
                 var wireMessageTypes = context.hmsWireMessageTypes.ToList();
-                var thisModuleMessageTypes = MessageTypes.ContainsKey(module) ? MessageTypes[module] : new List<string>();
                 var wireMessages = wireMessageTypes.Select(s => new { id = s.hmsWireMessageTypeId, text = s.MessageType }).ToList();
                 var wireTransferTypes = context.hmsWireTransferTypeLKups.Select(s => new { id = s.WireTransferTypeId, text = s.TransferType }).ToList();
                 var wireSenderInformation = context.hmsWireSenderInformations.ToList();
@@ -135,7 +134,7 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public Dictionary<string, List<string>> MessageTypes = new Dictionary<string, List<string>>()
+        public static Dictionary<string, List<string>> MessageTypes = new Dictionary<string, List<string>>()
         {
             { ReportName.AdhocWireReport , new List<string>() { "MT103", "MT202", "MT202 COV", "MT210", "MT540", "MT542" } },
             { ReportName.Collateral, new List<string>() { "MT103", "MT202", "MT202 COV", "MT210" } },

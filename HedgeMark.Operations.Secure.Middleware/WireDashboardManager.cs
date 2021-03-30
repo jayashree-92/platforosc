@@ -31,16 +31,16 @@ namespace HedgeMark.Operations.Secure.Middleware
                 allStatusIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Status].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var agrTypes = new List<string>() { "-1" };
-            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.AgreementTypes))
-                agrTypes = searchPreference[DashboardReport.PreferenceCode.AgreementTypes].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.AccountTypes))
+                agrTypes = searchPreference[DashboardReport.PreferenceCode.AccountTypes].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             var msgTypes = new List<long>() { -1 };
             if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.MessageTypes))
                 msgTypes = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.MessageTypes].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var reports = new List<string>() { "-1" };
-            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Reports))
-                reports = searchPreference[DashboardReport.PreferenceCode.Reports].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Modules))
+                reports = searchPreference[DashboardReport.PreferenceCode.Modules].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
 
             using (var context = new OperationsSecureContext())
@@ -81,13 +81,21 @@ namespace HedgeMark.Operations.Secure.Middleware
                 wireStatusDetails = wireTicketQuery.ToList();
             }
 
-            if (!agrTypes.Contains("-1") && agrTypes.Any(s => s != "DDA" && s != "Custody"))
+            if (!agrTypes.Contains("-1"))
             {
-                var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Agreement" && s.SendingAccount.dmaAgreementOnBoardingId != null).Select(s => s.SendingAccount.dmaAgreementOnBoardingId ?? 0).Distinct().ToList();
-                using (var context = new AdminContext())
+                if (agrTypes.Contains("DDA"))
+                    wireStatusDetails = wireStatusDetails.Where(s => s.SendingAccount.AccountType == "DDA").ToList();
+                if (agrTypes.Contains("Custody"))
+                    wireStatusDetails = wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Custody").ToList();
+
+                if (agrTypes.Any(s => s != "DDA" && s != "Custody"))
                 {
-                    var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
-                    wireStatusDetails = wireStatusDetails.Where(s => agrmtMap.Contains(s.OnBoardAgreementId)).ToList();
+                    var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Agreement" && s.SendingAccount.dmaAgreementOnBoardingId != null).Select(s => s.SendingAccount.dmaAgreementOnBoardingId ?? 0).Distinct().ToList();
+                    using (var context = new AdminContext())
+                    {
+                        var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
+                        wireStatusDetails = wireStatusDetails.Where(s => agrmtMap.Contains(s.OnBoardAgreementId)).ToList();
+                    }
                 }
             }
             if (!clientIds.Contains(-1))
@@ -373,7 +381,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                 thisRow["Wire Purpose"] = ticket.HMWire.hmsWirePurposeLkup.Purpose;
                 thisRow["Value Date", RuleHelper.DefaultDateFormat] = ticket.HMWire.ValueDate.ToString("yyyy-MM-dd");
                 thisRow["Currency"] = ticket.HMWire.Currency;
-                thisRow["Amount", RuleHelper.DefaultCurrencyFormat] = ticket.HMWire.ToCurrency();
+                thisRow["Amount", RuleHelper.DefaultCurrencyFormat] = ticket.HMWire.Amount.ToCurrency();
                 thisRow["Template Name"] = ticket.ReceivingAccountName;
                 thisRow["Beneficiary Bank"] = ticket.BeneficiaryBank;
                 thisRow["Beneficiary"] = ticket.Beneficiary;

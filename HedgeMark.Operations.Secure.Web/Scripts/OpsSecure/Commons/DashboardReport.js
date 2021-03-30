@@ -16,8 +16,9 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
         "endDate": moment(),
         //"datesDisabled": JSON.parse($("#holidayDateList").val()),
         "autoApply": true,
-        "maxDate": moment(),
+        "maxDate": moment().add(10, "days"),
         ranges: {
+            'Today and Future': [moment(), moment().add(10, "days")],
             'Today and Yesterday': ContextDatesOfTodayAndTomorrow,
             'Last 7 Days': [moment().subtract(6, "days"), moment()],
             'Last 30 Days': [moment().subtract(29, "days"), moment()],
@@ -116,9 +117,10 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
 
         if (preference === "Clients") {
             url = "/WiresDashboard/GetFundDetails?clientIds=" + selectedPref;
-        } else if (preference === "Funds") {
-            url = "/WiresDashboard/GetAgreementTypes?fundIds=" + selectedPref;
         }
+        //else if (preference === "Funds") {
+        //    url = "/WiresDashboard/GetAgreementTypes?fundIds=" + selectedPref;
+        //}
 
         if (url === "")
             return;

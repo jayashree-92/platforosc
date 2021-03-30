@@ -24,34 +24,38 @@ namespace HedgeMark.Operations.Secure.Middleware.Jobs
 
         protected static void TryGetStartAndEndDate(DashboardScheduleRange dashboardScheduleRange, out DateTime startDate, out DateTime endDate)
         {
-            var contextDate = DateTime.Today.GetContextDate();
-            endDate = contextDate;
+            var valueDate = DateTime.Today;
+            endDate = valueDate;
 
             switch (dashboardScheduleRange)
             {
                 case DashboardScheduleRange.TodayOnly:
-                    startDate = contextDate;
+                    startDate = valueDate;
+                    break;
+                case DashboardScheduleRange.TodayAndFuture:
+                    startDate = valueDate;
+                    endDate = valueDate.AddDays(10);
                     break;
                 case DashboardScheduleRange.TodayAndYesterday:
-                    startDate = contextDate.GetContextDate();
+                    startDate = valueDate.GetContextDate();
                     break;
                 case DashboardScheduleRange.Last7Days:
-                    startDate = contextDate.AddDays(-7);
+                    startDate = valueDate.AddDays(-7);
                     break;
                 case DashboardScheduleRange.Last30Days:
-                    startDate = contextDate.AddDays(-30);
+                    startDate = valueDate.AddDays(-30);
                     break;
                 case DashboardScheduleRange.ThisMonth:
-                    startDate = contextDate.GetStartOfMonth();
+                    startDate = valueDate.GetStartOfMonth();
                     break;
                 case DashboardScheduleRange.ThisYear:
-                    startDate = contextDate.GetStartOfYear();
+                    startDate = valueDate.GetStartOfYear();
                     break;
                 case DashboardScheduleRange.Last3Months:
-                    startDate = contextDate.AddMonths(-3);
+                    startDate = valueDate.AddMonths(-3);
                     break;
                 default:
-                    startDate = contextDate;
+                    startDate = valueDate;
                     break;
             }
         }

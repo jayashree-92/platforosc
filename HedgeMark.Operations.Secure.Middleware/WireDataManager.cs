@@ -10,6 +10,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 namespace HedgeMark.Operations.Secure.Middleware
 {
@@ -378,11 +379,13 @@ namespace HedgeMark.Operations.Secure.Middleware
             }
         }
 
+        public static readonly List<string> AgreementTypesEligibleForSendingWires = new List<string>() { "Custody", "DDA", "PB", "Synthetic Prime Brokerage" };
+
         private static List<long> AllEligibleAgreementIds()
         {
             using (var context = new AdminContext())
             {
-                return context.vw_CounterpartyAgreements.Where(s => s.AgreementType == "PB" || s.AgreementType == "Custody" || s.AgreementType == "Synthetic Prime Brokerage").Select(s => s.dmaAgreementOnBoardingId).ToList();
+                return context.vw_CounterpartyAgreements.Where(s => AgreementTypesEligibleForSendingWires.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
             }
         }
 

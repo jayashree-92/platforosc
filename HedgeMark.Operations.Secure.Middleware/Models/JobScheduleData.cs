@@ -6,7 +6,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
 {
     public enum DashboardScheduleRange
     {
-        TodayOnly = 1, TodayAndYesterday, Last7Days, Last30Days, ThisMonth, ThisYear, Last3Months
+        TodayOnly = 1, TodayAndFuture, TodayAndYesterday, Last7Days, Last30Days, ThisMonth, ThisYear, Last3Months
     }
 
     public enum ReportScheduleContextRun

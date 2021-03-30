@@ -24,7 +24,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
     {
         public enum PreferenceCode
         {
-            Clients = 1, Funds, Counterparties, AgreementTypes, MessageTypes, Currencies, Stats, Status, Reports
+            Clients = 1, Funds, Counterparties, AccountTypes, MessageTypes, Currencies, Stats, Status, Modules
         }
 
         public class Preferences

@@ -890,7 +890,7 @@ function GetContextDatesOfTodayAndYesterday() {
         "async": false,
         "dataType": "json",
         "success": function (json) {
-            ContextDatesOfTodayAndTomorrow = [moment(json.previousContextDate), moment(json.thisContextDate)];
+            ContextDatesOfTodayAndTomorrow = [moment(json.thisContextDate), moment(new Date())];
         }
     });
 }

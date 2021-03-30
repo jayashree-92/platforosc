@@ -24,6 +24,8 @@ namespace HMOSecureWeb.Controllers
             return View();
         }
 
+        private static readonly List<string> EligibleOutboundMessageTypes = new List<string>() { "MT103", "MT202", "MT202 COV", "MT210" };
+
         public static List<DashboardReport.Preferences> GetWirePreferences(List<HFundBasic> authorizedFunds, bool isPrivilegedUser)
         {
             //Clients, Funds, AgreementTypes, MessageTypes, Status
@@ -39,8 +41,8 @@ namespace HMOSecureWeb.Controllers
 
             var clients = clientMaps.Select(s => new Select2Type() { id = s.Key.ToString(), text = s.Value }).OrderBy(s => s.text).ToList();
             var funds = (from fnd in fundDetails where fnd.hmFundId > 0 select new Select2Type() { id = fnd.hmFundId.ToString(), text = fnd.ShortFundName }).Distinct(new Select2HeaderComparer()).OrderBy(s => s.text).ToList();
-            var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
-            var wireMessageTypes = WireDataManager.GetWireMessageTypes().Where(s => s.IsOutbound).Select(s => new Select2Type() { id = s.hmsWireMessageTypeId.ToString(), text = s.MessageType }).ToList();
+            var accountTypes = WireDataManager.AgreementTypesEligibleForSendingWires.OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
+            var wireMessageTypes = WireDataManager.GetWireMessageTypes().Where(s => s.IsOutbound && EligibleOutboundMessageTypes.Contains(s.MessageType)).Select(s => new Select2Type() { id = s.hmsWireMessageTypeId.ToString(), text = s.MessageType }).ToList();
             var wireStatus = Enum.GetValues(typeof(WireDataManager.WireStatus)).Cast<int>().Select(x => new Select2Type() { id = ((int)x).ToString(), text = ((WireDataManager.WireStatus)x).ToString() }).ToList();
 
             List<Select2Type> wireReports;
@@ -54,9 +56,9 @@ namespace HMOSecureWeb.Controllers
             {
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Clients.ToString(),Options = clients},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Funds.ToString(),Options = funds},
-                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AgreementTypes.ToString(),Options = agreementTypes},
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AccountTypes.ToString(),Options = accountTypes},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.MessageTypes.ToString(),Options = wireMessageTypes},
-                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Reports.ToString(),Options = wireReports},
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Modules.ToString(),Options = wireReports},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Status.ToString(),Options = wireStatus}
             };
         }
@@ -66,26 +68,26 @@ namespace HMOSecureWeb.Controllers
             var authFundIds = AuthorizedDMAFundData.Select(s => s.HmFundId).ToList();
             var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => clientIds.Contains(-1) || clientIds.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
             var funds = (from fnd in fundDetails where fnd.hmFundId > 0 select new Select2Type() { id = fnd.hmFundId.ToString(), text = fnd.ShortFundName }).Distinct(new Select2HeaderComparer()).OrderBy(s => s.text).ToList();
-            var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
+            //            var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
 
             return Json(new List<DashboardReport.Preferences>()
             {
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Funds.ToString(),Options = funds},
-                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AgreementTypes.ToString(),Options = agreementTypes},
+                //new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AccountTypes.ToString(),Options = agreementTypes},
             });
         }
 
-        public JsonResult GetAgreementTypes(List<long> fundIds)
-        {
-            var authFundIds = AuthorizedDMAFundData.Select(s => s.HmFundId).ToList();
-            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => fundIds.Contains(-1) || fundIds.Contains(s.hmFundId)).ToList();
-            var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
+        //public JsonResult GetAgreementTypes(List<long> fundIds)
+        //{
+        //    var authFundIds = AuthorizedDMAFundData.Select(s => s.HmFundId).ToList();
+        //    var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => fundIds.Contains(-1) || fundIds.Contains(s.hmFundId)).ToList();
+        //    var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
 
-            return Json(new List<DashboardReport.Preferences>()
-            {
-                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AgreementTypes.ToString(),Options = agreementTypes},
-            });
-        }
+        //    return Json(new List<DashboardReport.Preferences>()
+        //    {
+        //        new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AccountTypes.ToString(),Options = agreementTypes},
+        //    });
+        //}
 
         public JsonResult GetWireLogData(DateTime startDate, DateTime endDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference)
         {
