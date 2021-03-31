@@ -92,11 +92,11 @@ namespace HedgeMark.Operations.Secure.Middleware
 
                 //if (agrTypes .Any(s => s != "DDA" && s != "Custody"))
                 //{
-                var agreementIds = wireStatusDetails.Where(s => s.OnBoardAgreementId > 0).Select(s => s.OnBoardAgreementId).Distinct().ToList();
+                var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.dmaAgreementOnBoardingId > 0).Select(s => s.SendingAccount.dmaAgreementOnBoardingId).Distinct().ToList();
                 using (var context = new AdminContext())
                 {
                     var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
-                    allWireIds.AddRange(wireStatusDetails.Where(s => agrmtMap.Contains(s.OnBoardAgreementId)).Select(s => s.hmsWireId).ToList());
+                    allWireIds.AddRange(wireStatusDetails.Where(s => agrmtMap.Contains(s.SendingAccount.dmaAgreementOnBoardingId ?? 0)).Select(s => s.hmsWireId).ToList());
                 }
                 //}
 
