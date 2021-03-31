@@ -807,16 +807,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
 
         //validate against the available cash balances
-        if ($scope.CashBalance.IsNewBalanceOffLimit && $("#chkCashBalOff").prop("checked") === false) {
-            $scope.fnShowErrorMessage("Please note that the Amount exceeded the available cash balances.");
-            return false;
-        }
-
-        if (!$scope.wireTicketObj.IsNotice && !$scope.CashBalance.IsCashBalanceAvailable && $("#chkCashBalOff").prop("checked") === false) {
-            $scope.fnShowErrorMessage("Please note that the cash balances are not available.");
-            return false;
-        }
-
         if (!$scope.wireTicketObj.IsNotice && $scope.CashBalance.IsNewBalanceOffLimit) {
 
             if ($scope.wireComments.trim() == "") {
