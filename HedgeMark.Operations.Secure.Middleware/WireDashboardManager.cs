@@ -92,7 +92,7 @@ namespace HedgeMark.Operations.Secure.Middleware
 
                 //if (agrTypes .Any(s => s != "DDA" && s != "Custody"))
                 //{
-                var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.dmaAgreementOnBoardingId != null).Select(s => s.SendingAccount.dmaAgreementOnBoardingId ?? 0).Distinct().ToList();
+                var agreementIds = wireStatusDetails.Where(s => s.OnBoardAgreementId > 0).Select(s => s.OnBoardAgreementId).Distinct().ToList();
                 using (var context = new AdminContext())
                 {
                     var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
@@ -387,7 +387,6 @@ namespace HedgeMark.Operations.Secure.Middleware
                 thisRow["Currency"] = ticket.HMWire.Currency;
                 thisRow["Amount", RuleHelper.DefaultCurrencyFormat] = ticket.HMWire.Amount.ToCurrency();
                 thisRow["Template Name"] = ticket.ReceivingAccountName;
-                thisRow["AccountType"] = ticket.SendingAccount.AccountType;
                 thisRow["Beneficiary Bank"] = ticket.BeneficiaryBank;
                 thisRow["Beneficiary"] = ticket.Beneficiary;
                 thisRow["Beneficiary A/C Number"] = ticket.BeneficiaryAccountNumber;
