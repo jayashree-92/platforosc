@@ -90,15 +90,15 @@ namespace HedgeMark.Operations.Secure.Middleware
                 if (agrTypes.Contains("Custody"))
                     allWireIds.AddRange(wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Custody").Select(s => s.hmsWireId).ToList());
 
-                if (agrTypes.Any(s => s != "DDA" && s != "Custody"))
+                //if (agrTypes .Any(s => s != "DDA" && s != "Custody"))
+                //{
+                var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.dmaAgreementOnBoardingId != null).Select(s => s.SendingAccount.dmaAgreementOnBoardingId ?? 0).Distinct().ToList();
+                using (var context = new AdminContext())
                 {
-                    var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Agreement" && s.SendingAccount.dmaAgreementOnBoardingId != null).Select(s => s.SendingAccount.dmaAgreementOnBoardingId ?? 0).Distinct().ToList();
-                    using (var context = new AdminContext())
-                    {
-                        var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
-                        allWireIds.AddRange(wireStatusDetails.Where(s => agrmtMap.Contains(s.OnBoardAgreementId)).Select(s => s.hmsWireId).ToList());
-                    }
+                    var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
+                    allWireIds.AddRange(wireStatusDetails.Where(s => agrmtMap.Contains(s.OnBoardAgreementId)).Select(s => s.hmsWireId).ToList());
                 }
+                //}
 
                 wireStatusDetails = wireStatusDetails.Where(s => allWireIds.Contains(s.hmsWireId)).ToList();
             }
