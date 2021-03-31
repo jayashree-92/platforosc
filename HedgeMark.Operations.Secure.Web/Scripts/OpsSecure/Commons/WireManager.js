@@ -817,15 +817,30 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return false;
         }
 
-        if (!$scope.wireTicketObj.IsNotice && $scope.CashBalance.IsNewBalanceOffLimit && $scope.wireComments.trim() == "") {
-            $scope.fnShowErrorMessage("Please enter the comments to initiate the wire as it exceeds available cash balances.");
-            return false;
+        if (!$scope.wireTicketObj.IsNotice && $scope.CashBalance.IsNewBalanceOffLimit) {
+
+            if ($scope.wireComments.trim() == "") {
+                $scope.fnShowErrorMessage("Please enter comments " + ($scope.WireTicket.hmsWireDocuments.length == 0 ? " and attach file " : "") + " to initiate the wire as it exceeds available cash balances.");
+                return false;
+            }
+            if ($scope.WireTicket.hmsWireDocuments.length == 0) {
+                $scope.fnShowErrorMessage("Please attach file to initiate the wire as it exceeds available cash balances.");
+                return false;
+            }
         }
 
-        if (!$scope.wireTicketObj.IsNotice && !$scope.CashBalance.IsCashBalanceAvailable && $scope.wireComments.trim() == "") {
-            $scope.fnShowErrorMessage("Please enter the comments to initiate the wire as cash balances are not available.");
-            return false;
+        if (!$scope.wireTicketObj.IsNotice && !$scope.CashBalance.IsCashBalanceAvailable) {
+
+            if ($scope.wireComments.trim() == "") {
+                $scope.fnShowErrorMessage("Please enter comments " + ($scope.WireTicket.hmsWireDocuments.length == 0 ? " and attach file " : "") + " to initiate the wire as cash balances are not available.");
+                return false;
+            }
+            if ($scope.WireTicket.hmsWireDocuments.length == 0) {
+                $scope.fnShowErrorMessage("Please attach file to initiate the wire as cash balances are not available.");
+                return false;
+            }
         }
+
 
         $("#wireErrorStatus").collapse("hide");
         $scope.validationMsg = "";
@@ -847,7 +862,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.fnShowErrorMessage = function (message) {
         $scope.validationMsg = message;
-        $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
+        $("#wireErrorStatus").collapse("show");
     }
 
     $scope.castToDate = function (account) {
