@@ -73,7 +73,6 @@ namespace HedgeMark.Operations.Secure.Middleware
                     wireTicketQuery = wireTicketQuery.Where(s => s.ValueDate >= startContextDate && s.ValueDate <= endContextDate)
                             .Where(s => fundIds.Contains(-1) || fundIds.Contains(s.hmFundId))
                             .Where(s => allStatusIds.Contains(-1) || allStatusIds.Contains(s.WireStatusId))
-                            .Where(s => agrTypes.Contains("-1") || agrTypes.Contains(s.SendingAccount.AccountType))
                             .Where(s => msgTypes.Contains(-1) || msgTypes.Contains(s.WireMessageTypeId))
                             .Where(s => reports.Contains("-1") || reports.Contains(s.hmsWirePurposeLkup.ReportName));
                 }
@@ -90,15 +89,15 @@ namespace HedgeMark.Operations.Secure.Middleware
                 if (agrTypes.Contains("Custody"))
                     allWireIds.AddRange(wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Custody").Select(s => s.hmsWireId).ToList());
 
-                //if (agrTypes .Any(s => s != "DDA" && s != "Custody"))
-                //{
-                var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.dmaAgreementOnBoardingId > 0).Select(s => s.SendingAccount.dmaAgreementOnBoardingId).Distinct().ToList();
-                using (var context = new AdminContext())
+                if (agrTypes.Any(s => s != "DDA" && s != "Custody"))
                 {
-                    var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
-                    allWireIds.AddRange(wireStatusDetails.Where(s => agrmtMap.Contains(s.SendingAccount.dmaAgreementOnBoardingId ?? 0)).Select(s => s.hmsWireId).ToList());
+                    var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Agreement" && s.SendingAccount.dmaAgreementOnBoardingId > 0).Select(s => s.SendingAccount.dmaAgreementOnBoardingId).Distinct().ToList();
+                    using (var context = new AdminContext())
+                    {
+                        var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
+                        allWireIds.AddRange(wireStatusDetails.Where(s => agrmtMap.Contains(s.SendingAccount.dmaAgreementOnBoardingId ?? 0)).Select(s => s.hmsWireId).ToList());
+                    }
                 }
-                //}
 
                 wireStatusDetails = wireStatusDetails.Where(s => allWireIds.Contains(s.hmsWireId)).ToList();
             }
