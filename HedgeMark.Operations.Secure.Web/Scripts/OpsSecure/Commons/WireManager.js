@@ -700,7 +700,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.getInitiateButtonText = function () {
-        if (!$scope.WireTicketStatus.IsWirePurposeAdhoc && $scope.wireObj.Purpose == "Send Call")
+        if (!$scope.wireObj.IsAdhocWire && $scope.wireObj.Purpose == "Send Call")
             return "Pre Advise";
         if ($scope.wireTicketObj.IsNotice)
             return "Initiate & Approve";
