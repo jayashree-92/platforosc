@@ -530,11 +530,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 break;
         }
         if (!isValid) {
-            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
             if ($scope.accountDetail.SwiftGroup.SwiftGroupStatusId == 2)
-                $scope.validationMsg = "Amount cannot exceed 10 for Sender's BIC of status Testing";
+                $scope.fnShowErrorMessage("Amount cannot exceed 10 for Sender's BIC of status Testing") ;
             else
-                $scope.validationMsg = "Wire initiation is not allowed for Sender's BIC of status Requested";
+                $scope.fnShowErrorMessage("Wire initiation is not allowed for Sender's BIC of status Requested") ;
         }
         return isValid;
     }
@@ -672,6 +671,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 angular.element("#modalToRetrieveWires").modal("hide");
                 notifyError("Wire failed due to Internal server error");
             });
+        } else {
+            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
         }
     }
 
@@ -780,7 +781,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return false;
 
         if ($scope.WireTicket.Amount == 0) {
-            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
             $scope.fnShowErrorMessage("Please enter a non-zero amount to initiate the wire");
             return false;
         }
@@ -1300,7 +1300,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             else if ($scope.wireTicketObj.IsFundTransfer)
                 $scope.isWireRequirementsFilled = $("#liSendingAccount").select2("val") != "" && $("#liReceivingBookAccount").select2("val") != "" && $("#liMessageType").select2("val") != "";
             else
-                $scope.isWireRequirementsFilled = $("#liSendingAccount").select2("val") != "" && $("#liReceivingAccount").select2("val") != "";
+                $scope.isWireRequirementsFilled = $("#liSendingAccount").select2("val") != "" && (!$scope.wireObj.IsAdhocWire ? $scope.wireTicketObj.ReceivingAccountName != "" : $("#liReceivingAccount").select2("val") != "");
         }
         else
             $scope.isWireRequirementsFilled = true;

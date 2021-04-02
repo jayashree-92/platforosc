@@ -64,7 +64,7 @@
                                 <label>Receiving Account:</label>
                             </div>
                             <div class="col-md-3" ng-show="!(WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled)">
-                                <input type="text" id="liSSITemplate" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
+                                <input type="text" id="liReceivingAccount" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
                             </div>
                             <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && !wireTicketObj.IsFundTransfer">
                                 <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" ng-disabled="!isReceivingAccountEnabled" />
@@ -153,7 +153,7 @@
                                 <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" ng-disabled="!isReceivingAccountEnabled" />
                             </div>
                             <div class="col-md-3" ng-show="!wireObj.IsAdhocWire">
-                                <input type="text" id="liSSITemplate" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
+                                <input type="text" id="liReceivingAccount" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
                             </div>
                         </div>
                     </div>
@@ -302,7 +302,7 @@
                                         <input type="time" name="cutOffTime" ng-model="accountDetail.WirePortalCutoff.CutoffTime" class="form-control" readonly />
                                     </div>
                                     <div class="col-sm-8 col-md-4 col-lg-4" style="margin-top: 5px; padding-left: 0;">
-                                        <label class="label label-success" style="font-size: 12px; padding: 5px;">{{accountDetail.WirePortalCutoff.DaystoWire}} {{accountDetail.WirePortalCutoff.WirePortalCutoff.DaystoWire > 1 ? "Days" : "Day"}}</label>
+                                        <label class="label label-success" style="font-size: 12px; padding: 5px;">{{accountDetail.WirePortalCutoff.DaystoWire}} {{accountDetail.WirePortalCutoff.DaystoWire > 1 ? "Days" : "Day"}}</label>
                                     </div>
                                 </div>
                             </div>
