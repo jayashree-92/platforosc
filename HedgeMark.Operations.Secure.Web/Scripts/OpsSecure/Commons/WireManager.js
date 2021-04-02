@@ -559,6 +559,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isUserActionDone = !$("#chkDuplicateWireCreation").prop("checked");
         }, 50);
     });
+    
+    $(document).on("click", "#cashBalOffDiv", function (event) {
+        $timeout(function () {
+            $scope.isUserActionDone = !$("#chkCashBalOff").prop("checked");
+        }, 50);
+    });
 
     $scope.bindValues = function () {
         var account = null, receivingAccount = null;
