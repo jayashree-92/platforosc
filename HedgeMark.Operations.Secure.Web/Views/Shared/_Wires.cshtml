@@ -1014,7 +1014,7 @@
                         &nbsp;<span><b>I understand that this is a duplicate wire and still wish to initiate this wire.</b></span>
                     </div>
                     <p></p>
-                    <span id="cashBalOffDiv" ng-show="CashBalance.IsNewBalanceOffLimit || !CashBalance.IsCashBalanceAvailable">
+                    <span id="cashBalOffDiv" ng-if="!wireTicketObj.IsNotice" ng-show="CashBalance.IsNewBalanceOffLimit || !CashBalance.IsCashBalanceAvailable">
                         <input id="chkCashBalOff" type="checkbox" data-size="small" data-width="60" data-height="30" data-onstyle="btn btn-sm btn-success" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on="Yes" data-off="No" />
                         &nbsp;<span ng-if="CashBalance.IsNewBalanceOffLimit"><b>I understand that the amount entered exceeds cash balances and still wish to initiate this wire.</b></span>
                         &nbsp;<span ng-if="!CashBalance.IsCashBalanceAvailable"><b>I understand that Cash balance calculation is not available and still wish to initiate this wire.</b></span>
