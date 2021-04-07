@@ -7,6 +7,7 @@ using ExcelUtility.Operations.ManagedAccounts;
 using Hangfire;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware.Models;
+using Humanizer;
 
 namespace HedgeMark.Operations.Secure.Middleware.Jobs
 {
@@ -66,7 +67,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Jobs
             var subject = string.Format("Wires Dashboard Report of '{0}' for {1}", templateName, ((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).ToString());
 
             var mailBody = string.Format("Hi, <br/><br/> Please find the attached the wires dasboard report of '{0}' for {1}.<br/><br/> Thanks, <br/> HM-Operations Team.",
-                templateName, ((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).ToString());
+                templateName, ((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).Humanize());
 
             var contentToExport = GetDashboardFileToSend(job, startDate, endDate);
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);

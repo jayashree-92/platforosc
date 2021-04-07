@@ -61,6 +61,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalLibraries\HM-Ops-Utils\HedgeMark.Operations.FileParseEngine.dll</HintPath>
     </Reference>
+    <Reference Include="Humanizer">
+      <HintPath>..\packages\Humanizer.Core.2.8.26\lib\netstandard1.0\Humanizer.dll</HintPath>
+    </Reference>
     <Reference Include="IBM.XMS, Version=9.0.0.5, Culture=neutral, PublicKeyToken=d2666ab12fca862b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalLibraries\IBM-MQ\IBM.XMS.dll</HintPath>
@@ -83,9 +86,11 @@
       <HintPath>ExternalLibraries\HM-Ops-Utils\PDFUtility.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
