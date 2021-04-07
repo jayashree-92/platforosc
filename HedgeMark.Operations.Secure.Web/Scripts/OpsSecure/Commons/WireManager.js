@@ -559,12 +559,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.isUserActionDone = !$("#chkDuplicateWireCreation").prop("checked");
         }, 50);
     });
-    
-    $(document).on("click", "#cashBalOffDiv", function (event) {
-        $timeout(function () {
-            $scope.isUserActionDone = !$("#chkCashBalOff").prop("checked");
-        }, 50);
-    });
 
     $scope.bindValues = function () {
         var account = null, receivingAccount = null;
@@ -1509,12 +1503,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     };
 
     $scope.AcknowledgedNotes = "";
-
-    $("#chkCashBalOff").on("change", function () {
-
+    
+    $("body").on("change", "#chkCashBalOff", function () {
+        $scope.AcknowledgedNotes = "";
         if ($("#chkCashBalOff").prop("checked")) {
             var message = "";
-
+           
             if ($scope.CashBalance.IsNewBalanceOffLimit)
                 message = "Acknowledged that amount of this Wire exceeds available Cash balance of " + $.convertToCurrency($scope.CashBalance.AvailableBalance, 2) + " " + $scope.CashBalance.Currency;
             else if (!$scope.CashBalance.IsCashBalanceAvailable)
@@ -1524,6 +1518,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         } else {
             $scope.AcknowledgedNotes = "";
         }
+        $scope.isUserActionDone = $("#chkCashBalOff").prop("checked");
     });
 
     angular.element(document).on("change", "#liReceivingBookAccount", function () {
