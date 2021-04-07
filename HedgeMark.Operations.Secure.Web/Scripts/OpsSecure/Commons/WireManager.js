@@ -1518,7 +1518,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         } else {
             $scope.AcknowledgedNotes = "";
         }
-        $scope.isUserActionDone = $("#chkCashBalOff").prop("checked");
+        $scope.isUserActionDone = !$("#chkCashBalOff").prop("checked");
     });
 
     angular.element(document).on("change", "#liReceivingBookAccount", function () {
