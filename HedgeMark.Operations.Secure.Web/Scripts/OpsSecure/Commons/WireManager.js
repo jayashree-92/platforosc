@@ -1455,7 +1455,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }, 50);
     });
 
-    $scope.CashBalance = { IsCashBalanceAvailable: false };
+    $scope.CashBalance = {};
+    $scope.CashBalance.IsCashBalanceAvailable = false;
+    $scope.CashBalance.CalculatedBalance = "N.A";
+    $scope.CashBalance.IsNewBalanceOffLimit = false;
+
     $scope.fnGetCashBalances = function (valueDate) {
 
         $scope.CashBalance = {};
@@ -1491,7 +1495,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if (!$scope.CashBalance.IsCashBalanceAvailable)
             $scope.CashBalance.CalculatedBalance = "N.A";
         else {
-            var newBalance = $scope.WireTicket.WireStatusId <= 1 && $("#liMessageType").select2("data").text !== "MT210"
+            var newBalance = $scope.WireTicket.WireStatusId <= 1 && !$scope.wireTicketObj.IsNotice
                 ? $.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text())
                 : $.convertToNumber($scope.CashBalance.AvailableBalance);
             $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
