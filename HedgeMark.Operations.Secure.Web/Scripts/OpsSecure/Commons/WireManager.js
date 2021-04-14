@@ -773,8 +773,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if ($scope.WireTicket.WireStatusId == 0)
             $scope.WireTicket.hmFundId = $scope.wireObj.IsAdhocWire ? $("#liFund").select2("val") : 0;
 
-        //Validation not required for Hold Status
-        if (statusId == 6)
+        //Validation required only for Initiating and Approving the wire-not required for - save as draft/Hold/Cancel/Reject/Modify
+        if (statusId !== 2 && statusId !== 3)
             return true;
 
         if ($scope.wireTicketObj.IsSenderInformationRequired && !$scope.validateSenderDescription())
