@@ -4,15 +4,15 @@ using HedgeMark.Operations.Secure.Middleware.SwiftMessageManager;
 using HedgeMark.SwiftMessageHandler.Model;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT9XX;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace HedgeMark.SwiftMessageHandler.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class SwiftMtMessageParserTest
     {
 
-        [TestMethod]
+        [Test]
         public void ParseMt940FromStringTest1()
         {
             var msg = "{1:F01AAAABB99BSMK3513951576}" +
@@ -70,7 +70,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void ParseMessageWithAckTest()
         {
             string fin = "{1:F21FOOLHKH0AXXX0304009999}{4:{177:1608140809}{451:0}}{1:F01FOOLHKH0AXXX0304009999}{2:O9401609160814FOOLHKH0AXXX03040027341608141609N}{4:\n" +
@@ -111,7 +111,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
         /// <summary>
         /// http://api.prowidesoftware.com/core/com/prowidesoftware/swift/model/SwiftMessage.html
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ParseMessageWithNAckTest()
         {
             string fin = "{1:F21FOOLHKH0AXXX0304009999}{4:{177:1608140809}{451:1}{405:T27}}{1:F01FOOLHKH0AXXX0304009999}{2:O9401609160814FOOLHKH0AXXX03040027341608141609N}{4:\n" +
@@ -155,7 +155,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
         /// <summary>
         /// http://api.prowidesoftware.com/core/com/prowidesoftware/swift/model/mt/AckSystemMessage.html
         /// </summary>
-        [TestMethod]
+        [Test]
         public void AckSystemMessageTest()
         {
             var fin = "{1:F21FOOLHKH0AXXX0304009999}{4:{177:1608140809}{451:1}{405:T27}}{1:F01FOOLHKH0AXXX0304009999}{2:O9401609160814FOOLHKH0AXXX03040027341608141609N}{4:\n" +
@@ -179,7 +179,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
             Assert.IsFalse(ackMessgae.IsAck());
 
         }
-        [TestMethod]
+        [Test]
         public void AckMessageComparerTest()
         {
             var original = SwiftMessage.Parse("{1:F01FOOLHKH0AXXX0304009999}{2:O9401609160814FOOLHKH0AXXX03040027341608141609N}{4:\n" +
@@ -221,7 +221,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
         }
 
 
-        [TestMethod]
+        [Test]
         public void AckMessageForEmxTest()
         {
             var message = @"{1:F01IRVTBEBBAXXX0000000000}{2:I950BLKSUS33XANEN}{4: 
@@ -250,7 +250,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
             Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.Block4.GetFieldValue("64"), "C180718EUR0,");
         }
 
-        [TestMethod]
+        [Test]
         public void AckMessageForEmxTest2()
         {
             var message = @"{1:F01BICFOOYYAXXX1234123456}{2:I103BICFOARXXXXXN1}{3:{119:STP}}{4:
@@ -275,7 +275,7 @@ JOE DOE
             Assert.AreEqual(swiftMsg.UnderlyingOriginalSwiftMessage.Block4.GetFieldValue("20"), "REFERENCE");
 
         }
-        [TestMethod]
+        [Test]
         public void AckMessageForEmxTest3()
         {
             var message = @"{1:F01IRVTBEB0XXXX1002100002}{2:I202BNPAUS30PBSXN}{3:{121:cb8ed355-10e8-40b5-a26b-f8f90626f651}}{4:
@@ -300,7 +300,7 @@ BNPAUS30PBS
         }
 
 
-        [TestMethod]
+        [Test]
         public void AckMessageInboundParserTest()
         {
             var message = @"{1:F01HMRKUS30XXXX1010100010}{2:I202IRVTBEB0XXXXN}{3:{121:cb38bd34-99bc-4c6e-b464-36eb49386123}}{4:
@@ -319,7 +319,7 @@ GSILGB2XXXX
         }
 
 
-        [TestMethod]
+        [Test]
         public void ParserTestMT900()
         {
             var message = @"{1:F01HMRKUS30AXXX0000000002}{2:O9001007190319HMRKUS30AXXX00000000021904110000N}{3:{108:GSP180720MT20201}}{4:

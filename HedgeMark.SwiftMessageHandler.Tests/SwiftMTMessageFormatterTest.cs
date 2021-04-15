@@ -1,9 +1,9 @@
 ﻿using HedgeMark.SwiftMessageHandler.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace HedgeMark.SwiftMessageHandler.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class SwiftMtMessageFormatterTest
     {
         static readonly SwiftMessage SwiftMessage103 = SwiftMessage.Parse("{1:F01BACOARB1A0B20000000000}{2:I103ADRBNL21XXXXU2}{3:{108:FOOB3926BE868XXX}}{4:\n" +
@@ -36,7 +36,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
                                          ":72:/BNF/00002695 0001 2005083130110\n" +
                                          "-}{5:{CHK:3916EF336FF7}}");
 
-        [TestMethod]
+        [Test]
         public void TestSwiftMessageSimpleFormattingTest1()
         {
             var swiftMessage = @"{1:F01TESTUS00XXXX1001100001}{2:I202TESTUS0000XXXXN}{3:{121:84481ee1-ec02-451d-bbf9-a34f17ae8ad8}}{4:
@@ -74,7 +74,7 @@ MSNYUS33XXX
         Narrative: 1907 Penso Fund ltd", formattedMessage);
         }
 
-        [TestMethod]
+        [Test]
         public void TestSwiftMessageSimpleFormattingTest()
         {
             Assert.AreEqual(SwiftMessageInterpreter.GetSimpleFormatted(SwiftMessage103).Trim(), @"
@@ -99,7 +99,7 @@ MSNYUS33XXX
 
 
 
-        [TestMethod]
+        [Test]
         public void TestSwiftMessageDetailedFormatting103Test()
         {
             var formattedSwiftMessage = SwiftMessageInterpreter.GetDetailedFormatted(SwiftMessage103).Trim();
@@ -136,7 +136,7 @@ CHK: 3916EF336FF7
 ------------------------------ End Of Message ------------------------------------".Trim());
         }
 
-        [TestMethod]
+        [Test]
         public void TestSwiftMessageDetailedFormatting202Test()
         {
             var formattedSwiftMessage = SwiftMessageInterpreter.GetDetailedFormatted(SwiftMessage202).Trim();
@@ -192,7 +192,7 @@ CHK: 3916EF336FF7
         }
 
 
-        [TestMethod]
+        [Test]
         public void OutboundFormatterTest()
         {
             var message = @"{1:F01HMRKUS30XXXX1001100001}{2:I103IRVTBEB0XXXXN}{3:{121:fc4d9690-ffe6-405d-af33-3b7dc16a4503}}{4:

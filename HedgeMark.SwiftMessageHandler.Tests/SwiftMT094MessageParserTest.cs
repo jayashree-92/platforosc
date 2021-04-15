@@ -1,13 +1,13 @@
 ﻿using HedgeMark.SwiftMessageHandler.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace HedgeMark.SwiftMessageHandler.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class SwiftMT094MessageParserTest
     {
 
-        [TestMethod]
+        [Test]
         public void ParseMt094BroadCastFromStringTest1()
         {
             var fin = @"{1:F01HMRKUS33SXXX0012000073}{2:O0941529190715MTMTXXXX9XXX00504263741907151129S}{4:{135:U}{136:B74929}{129:01/01}{130:/01/BANK

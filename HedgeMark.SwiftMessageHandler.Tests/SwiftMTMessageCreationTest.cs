@@ -2,14 +2,14 @@
 using HedgeMark.SwiftMessageHandler.Model.Blocks;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT1XX;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace HedgeMark.SwiftMessageHandler.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class SwiftMtMessageCreationTest
     {
-        [TestMethod]
+        [Test]
         public void CreateMessageMt103WithFieldsTest1()
         {
 
@@ -46,7 +46,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
         }
 
         //HedgeMark Swift framework currently will not support construction using sequence
-        //        [TestMethod]
+        //        [Test]
         //        public void CreateMessageMt542WithSequenceTest2()
         //        {
         //            /*
@@ -165,7 +165,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
 
         //        }
 
-        [TestMethod]
+        [Test]
         public void CreateMessageMt192WithBlocksTest3()
         {
             var m = new MT192();
@@ -176,7 +176,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
         }
 
 
-        [TestMethod]
+        [Test]
         public void CreateMessageMt103WithBlocksTest3()
         {
             /*

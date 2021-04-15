@@ -6,14 +6,14 @@ using System.Reflection;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT1XX;
 using HedgeMark.SwiftMessageHandler.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace HedgeMark.SwiftMessageHandler.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class SwiftMTMessageCurrencyUnitsTest
     {
-        [TestMethod]
+        [Test]
         public void CurrencyUnitTestBasedOnConfiguration()
         {
             Assert.IsTrue(FieldWithCurrencyAndAmount.CurrencyToDecimalPoints.Any());
