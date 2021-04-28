@@ -29,6 +29,7 @@ namespace HMOSecureWeb
         private static readonly string SiteMinderLogOffUrl = ConfigurationManagerWrapper.StringSetting("SiteMinderLogoffUri", "/Account/LogOff");
         private static readonly int GlobalSessionTimeOut = ConfigurationManagerWrapper.IntegerSetting("GlobalSessionTimeOut", 20);
         private const string SiteMinderHeaderToken = "SMUSER";
+        public static bool ShouldUseSecurityProtocolSetting { get { return !ConfigurationManagerWrapper.BooleanSetting("ShouldUseSecurityProtocolSetting"); } }
 
         protected void Application_Start()
         {
@@ -48,7 +49,10 @@ namespace HMOSecureWeb
 
             //Boot up required assemblies to middleware
             BootUpMiddleware.BootUp();
-            
+
+            if (ShouldUseSecurityProtocolSetting)
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
             AppHeartBeat.Start("HM-Operations-Secure", AppMnemonic.DMO, AppType.WebApp, "HMOpsSecureConnectionString");
         }
 

@@ -37,6 +37,7 @@
     <!-- Environment Variable-->
     <add key="Environment" value ="Local" />
     <add key="ShouldRedirectHttpRequest" value="true" />
+    <add key="ShouldUseSecurityProtocolSetting" value="true" />
 
     <!-- Mail Settings -->
     <add key="MailServer" value="smtpe.bnymellon.net"/>
