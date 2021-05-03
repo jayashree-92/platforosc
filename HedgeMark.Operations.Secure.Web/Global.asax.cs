@@ -29,7 +29,7 @@ namespace HMOSecureWeb
         private static readonly string SiteMinderLogOffUrl = ConfigurationManagerWrapper.StringSetting("SiteMinderLogoffUri", "/Account/LogOff");
         private static readonly int GlobalSessionTimeOut = ConfigurationManagerWrapper.IntegerSetting("GlobalSessionTimeOut", 20);
         private const string SiteMinderHeaderToken = "SMUSER";
-        public static bool ShouldUseSecurityProtocolSetting { get { return !ConfigurationManagerWrapper.BooleanSetting("ShouldUseSecurityProtocolSetting"); } }
+        public static bool ShouldUseSecurityProtocolSetting { get { return ConfigurationManagerWrapper.BooleanSetting("ShouldUseSecurityProtocolSetting", true); } }
 
         protected void Application_Start()
         {
