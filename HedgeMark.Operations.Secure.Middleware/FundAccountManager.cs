@@ -631,9 +631,14 @@ namespace HedgeMark.Operations.Secure.Middleware
                 fndAccount = context.vw_FundAccounts.First(s => s.onBoardingAccountId == sendingFundAccountId);
             }
 
-            return fndAccount.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(fndAccount.AgreementType)
+            var cashbalances = fndAccount.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(fndAccount.AgreementType)
                 ? ComputePBCashBalances(valueDate, contextDate, fndAccount)
                 : ComputeNonPBCashBalances(sendingFundAccountId, valueDate, contextDate);
+
+            if (cashbalances != null)
+                cashbalances.HoldBackAmount = fndAccount.HoldbackAmount ?? 0;
+
+            return cashbalances;
         }
 
         private static CashBalances ComputePBCashBalances(DateTime valueDate, DateTime contextDate, vw_FundAccounts fndAccount)

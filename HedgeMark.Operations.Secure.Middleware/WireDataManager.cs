@@ -88,6 +88,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             get { return TreasuryBalance - TotalWireEntered; }
         }
         public decimal MarginBuffer { get; set; }
+        public double HoldBackAmount { get; set; }
     }
 
     public class WireTicketStatus

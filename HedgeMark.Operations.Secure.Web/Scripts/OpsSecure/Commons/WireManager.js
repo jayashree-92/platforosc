@@ -531,9 +531,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
         if (!isValid) {
             if ($scope.accountDetail.SwiftGroup.SwiftGroupStatusId == 2)
-                $scope.fnShowErrorMessage("Amount cannot exceed 10 for Sender's BIC of status Testing") ;
+                $scope.fnShowErrorMessage("Amount cannot exceed 10 for Sender's BIC of status Testing");
             else
-                $scope.fnShowErrorMessage("Wire initiation is not allowed for Sender's BIC of status Requested") ;
+                $scope.fnShowErrorMessage("Wire initiation is not allowed for Sender's BIC of status Requested");
         }
         return isValid;
     }
@@ -1459,6 +1459,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.CashBalance.IsCashBalanceAvailable = false;
     $scope.CashBalance.CalculatedBalance = "N.A";
     $scope.CashBalance.IsNewBalanceOffLimit = false;
+    $scope.CashBalance.HoldBackAmount = 0;
 
     $scope.fnGetCashBalances = function (valueDate) {
 
@@ -1476,6 +1477,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.CashBalance.TreasuryBalance = $.convertToCurrency($scope.CashBalance.TreasuryBalance, 2);
                 $scope.CashBalance.TotalWireEntered = $.convertToCurrency($scope.CashBalance.TotalWireEntered, 2);
                 $scope.CashBalance.AvailableBalance = !$scope.CashBalance.IsCashBalanceAvailable ? "N.A" : $.convertToCurrency($scope.CashBalance.AvailableBalance, 2);
+                $scope.CashBalance.HoldBackAmount = $.convertToCurrency($scope.CashBalance.HoldBackAmount, 2);
 
                 $($scope.CashBalance.WireDetails).each(function (i, v) {
                     v.ValueDate = moment(v.ValueDate).format("YYYY-MM-DD");
@@ -1495,24 +1497,28 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if (!$scope.CashBalance.IsCashBalanceAvailable)
             $scope.CashBalance.CalculatedBalance = "N.A";
         else {
+
+            if ($scope.isDeadlineCrossed)
+                $scope.CashBalance.AvailableBalance = $scope.CashBalance.HoldBackAmount;
+
             var newBalance = $scope.WireTicket.WireStatusId <= 1 && !$scope.wireTicketObj.IsNotice
                 ? $.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text())
                 : $.convertToNumber($scope.CashBalance.AvailableBalance);
             $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
             $scope.CashBalance.IsNewBalanceOffLimit = newBalance < 0;
-
+            
             if (($scope.CashBalance.CalculatedBalance == "NaN.00" || $scope.CashBalance.CalculatedBalance == "N.A") && !isRetry)
                 $timeout($scope.fnCalculateCashBalance(true), 300);
         }
     };
 
     $scope.AcknowledgedNotes = "";
-    
+
     $("body").on("change", "#chkCashBalOff", function () {
         $scope.AcknowledgedNotes = "";
         if ($("#chkCashBalOff").prop("checked")) {
             var message = "";
-           
+
             if ($scope.CashBalance.IsNewBalanceOffLimit)
                 message = "Acknowledged that amount of this Wire exceeds available Cash balance of " + $.convertToCurrency($scope.CashBalance.AvailableBalance, 2) + " " + $scope.CashBalance.Currency;
             else if (!$scope.CashBalance.IsCashBalanceAvailable)

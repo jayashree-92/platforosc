@@ -47,5 +47,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string ClientName { get; set; }
         public string LaunchStatus { get; set; }
         public Nullable<long> dmaClientOnBoardId { get; set; }
+        public Nullable<double> HoldbackAmount { get; set; }
     }
 }
