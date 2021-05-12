@@ -29,6 +29,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     //var rejectedStatus = "Rejected";
     var pendingStatus = "Pending Approval";
     var createdStatus = "Created";
+    $scope.IsBNYMBroker = false;
+    $scope.IsPendingApproval = false;
 
     $scope.DisabledAgreementForCashInstructions = ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"];
 
@@ -417,6 +419,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.CounterpartyName = $(this).select2('data').text;
             $scope.CounterpartyFamilyName = $(this).select2('data').familyText;
             $scope.CounterpartyFamilyId = $(this).select2('data').familyId;
+            $scope.IsBNYMBroker = $scope.CounterpartyName == "The Bank of New York Mellon";
             $scope.$apply();
             $scope.loadAccountData();
         }
@@ -736,12 +739,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.CounterpartyFamilyId = account.dmaCounterpartyFamilyId;
         $scope.CounterpartyId = account.dmaCounterpartyId;
         $scope.AccountType = account.AccountType;
-
+        $scope.CounterpartyName = rowElement.CounterpartyName;
         $scope.AgreementTypeId = rowElement.AgreementTypeId;
         $scope.AccountStatus = account.onBoardingAccountStatus;
 
         if (account.onBoardingAccountStatus == pendingStatus && account.CreatedBy != $("#userName").val() && account.UpdatedBy != $("#userName").val()) {
             $("#btnAccountStatusButtons button[id='approve']").removeClass("disabled");
+            $scope.IsPendingApproval = true;
         }
         if (account.onBoardingAccountStatus == createdStatus) {
             $("#btnAccountStatusButtons button[id='requestForApproval']").removeClass("disabled");
@@ -749,7 +753,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if (account.onBoardingAccountStatus != createdStatus) {
             $("#btnAccountStatusButtons button[id='revert']").removeClass("disabled");
         }
-
+        $scope.IsBNYMBroker = $scope.CounterpartyName == "The Bank of New York Mellon";
+       
         $("#btnEdit").prop("disabled", false);
 
         $("#btnDel").prop("disabled", false);
@@ -2765,7 +2770,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         "mData": "Title", "sTitle": "Title"
                     },
 
-                    {
+                    /*{
                         "mData": "IsCallbackConfirmed", "sTitle": "Callback Confirmation",
                         "mRender": function (tdata) {
                             if (tdata)
@@ -2773,7 +2778,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
                             return "<button class='btn btn-primary btn-xs btnCallbackConfirm' title='Confirm'>Confirm</button>";
                         }
-                    },
+                    },*/
                     {
                         "mData": "RecCreatedBy", "sTitle": "Created By", "mRender": function (data) {
                             return humanizeEmail(data);
@@ -2787,7 +2792,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                             return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
                         }
                     },
-                    {
+                    /*{
                         "mData": "ConfirmedBy", "sTitle": "Confirmed By", "mRender": function (data, type, row) {
                             return row.IsCallbackConfirmed ? humanizeEmail(data) : "";
                         }
@@ -2802,7 +2807,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
                             return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
                         }
-                    },
+                    },*/
 
                 ],
                 "oLanguage": {
@@ -2811,14 +2816,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     "sInfoFiltered": " - filtering from _MAX_ Callbacks"
                 },
                 "createdRow": function (row, data) {
-                    switch (data.IsCallbackConfirmed) {
-                        case true:
-                            $(row).addClass("success");
-                            break;
-                        case false:
-                            $(row).addClass("warning");
-                            break;
-                    }
+                    $(row).addClass("succcess");
+                    //switch (data.IsCallbackConfirmed) {
+                    //    case true:
+                    //        $(row).addClass("success");
+                    //        break;
+                    //    case false:
+                    //        $(row).addClass("warning");
+                    //        break;
+                    //}
 
                 },
                 //"scrollX": false,

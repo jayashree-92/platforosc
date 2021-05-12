@@ -452,11 +452,11 @@ namespace HMOSecureWeb.Controllers
                 var existingCallback = FundAccountManager.GetCallbackData(callback.hmsAccountCallbackId);
                 callback.RecCreatedDt = existingCallback.RecCreatedDt;
                 callback.RecCreatedBy = existingCallback.RecCreatedBy;
-                if (callback.IsCallbackConfirmed)
-                {
-                    callback.ConfirmedBy = UserName;
-                    callback.ConfirmedAt = DateTime.Now;
-                }
+                //if (callback.IsCallbackConfirmed)
+                //{
+                //    callback.ConfirmedBy = UserName;
+                //    callback.ConfirmedAt = DateTime.Now;
+                //}
             }
             else
             {
