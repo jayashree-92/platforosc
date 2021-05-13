@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
-using System.ServiceModel.Channels;
 using HedgeMark.Operations.Secure.Middleware.UserManagementService;
 using log4net;
 
@@ -24,15 +23,12 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
                 using (new OperationContextScope((IContextChannel)service.InnerChannel))
                 {
                     SetSecurityHeader();
-                    SearchCriteria criteria = new SearchCriteria();
-                    List<UserManagementService.Attribute> attrbs = new List<UserManagementService.Attribute>();
-                    foreach (KeyValuePair<string, string> item in attribs)
+                    var criteria = new SearchCriteria
                     {
-                        attrbs.Add(new UserManagementService.Attribute() { key = item.Key, value = item.Value });
-                    }
+                        filterAttrbs = attribs.Select(item => new UserManagementService.Attribute() { key = item.Key, value = item.Value }).ToArray(),
+                        userType = userType
+                    };
 
-                    criteria.filterAttrbs = attrbs.ToArray();
-                    criteria.userType = userType;
                     result = service.searchByFilter(criteria);
                 }
             }
@@ -61,7 +57,6 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
                 password = ConfigurationManager.AppSettings["UMS_password"]
             };
 
-
             messageHeadersElement.Add(securityHeader);
         }
 
@@ -76,7 +71,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
         public SearchResultUser LookupUserByUserId(string userName, List<string> attribNames)
         {
             var methodName = MethodBase.GetCurrentMethod().Name;
-            SearchResultUser result = new SearchResultUser();
+            var result = new SearchResultUser();
             var service = new LDAPServiceDelegateClient();
             try
             {
@@ -106,10 +101,12 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
 
         public List<string> GetLdapGroupsOfLdapUser(string userName)
         {
-            SearchResultUser result = new SearchResultUser();
-            List<string> attrbs = new List<string>() { "MELLONECOMMERCEAPPACCESS" };
-            result = LookupUserByUserId(userName, attrbs);
-            List<string> groups = (result.userAttributes[0].value != null) ? result.userAttributes[0].value.ToList() : new List<string>();
+            var attrbs = new List<string>() { "MELLONECOMMERCEAPPACCESS" };
+            var result = LookupUserByUserId(userName, attrbs);
+            if (result == null)
+                return new List<string>();
+
+            var groups = (result.userAttributes[0].value != null) ? result.userAttributes[0].value.ToList() : new List<string>();
             return groups;
         }
 

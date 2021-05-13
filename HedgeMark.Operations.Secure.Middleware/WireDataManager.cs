@@ -10,7 +10,6 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 namespace HedgeMark.Operations.Secure.Middleware
 {

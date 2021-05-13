@@ -1,5 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using NUnit.Framework;
 
 namespace HedgeMark.SwiftMessageHandler.Tests.TestExtensions
 {
@@ -7,12 +7,12 @@ namespace HedgeMark.SwiftMessageHandler.Tests.TestExtensions
     {
         static TestUtility()
         {
-            string path = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\HedgeMark.Operations.Secure.Middleware.Tests\\");
+            string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "..\\..\\..\\HedgeMark.SwiftMessageHandler.Tests\\");
             path = path.Replace("TestResults", "UnitTests");
             DirectoryInfo info = new DirectoryInfo(path);
-            AssemblyDirectory = info.FullName.Replace("\\HedgeMark.Operations.Secure.Middleware.Tests\\HedgeMark.Operations.Secure.Middleware.Tests\\", "\\HedgeMark.Operations.Secure.Middleware.Tests\\");
+            AssemblyDirectory = info.FullName.Replace("\\HedgeMark.SwiftMessageHandler.Tests\\HedgeMark.SwiftMessageHandler.Tests\\", "\\HedgeMark.SwiftMessageHandler.Tests\\");
         }
-     
+
         public static string AssemblyDirectory { get; private set; }
     }
 }

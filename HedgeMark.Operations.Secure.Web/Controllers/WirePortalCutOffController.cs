@@ -13,7 +13,7 @@ using HedgeMark.Operations.Secure.Middleware.Models;
 
 namespace HMOSecureWeb.Controllers
 {
-    public class WirePortalCutoffController : BaseController
+    public class WirePortalCutoffController : WireUserBaseController
     {
         // GET: WirePortalCutOff
         public ActionResult Index()

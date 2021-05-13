@@ -8,6 +8,7 @@ using Web.Filters;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
+using System.Web.UI;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware;
@@ -32,8 +33,8 @@ namespace HMOSecureWeb.Controllers
         }
     }
 
+
     [OutputCache(VaryByParam = "*", Duration = 0, NoStore = true)]
-    [AuthorizedRoles(OpsSecureUserRoles.WireInitiator, OpsSecureUserRoles.WireApprover)]
     [Authorize, RedirectToHttps, Compress]
     public abstract class BaseController : Controller
     {
@@ -64,11 +65,6 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public bool IsWireApprover
-        {
-            get { return User.IsInRole(OpsSecureUserRoles.WireApprover); }
-        }
-
         public object GetSessionValue(string key)
         {
             return Session[key];
@@ -77,7 +73,87 @@ namespace HMOSecureWeb.Controllers
         {
             Session[key] = value;
         }
+        public bool IsWireApprover
+        {
+            get { return User.IsInRole(OpsSecureUserRoles.WireApprover); }
+        }
+        public bool IsWireAdmin
+        {
+            get { return User.IsInRole(OpsSecureUserRoles.WireAdmin); }
+        }
 
+
+        protected static readonly string JsonContentType = "application/json";
+        protected static readonly Encoding JsonContentEncoding = Encoding.UTF8;
+        protected new JsonResult Json(object data)
+        {
+            return Json(data, JsonContentType, JsonContentEncoding);
+        }
+
+        protected new JsonResult Json(object data, JsonRequestBehavior behavior)
+        {
+            return Json(data, JsonContentType, JsonContentEncoding);
+        }
+
+        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding)
+        {
+            return new JsonResult()
+            {
+                Data = data,
+                ContentType = contentType, //  "application/json"
+                ContentEncoding = contentEncoding, // Encoding.UTF8,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = int.MaxValue,
+            };
+        }
+
+        public FileContentResult DownloadAndDeleteFile(FileInfo fileInfo, string downloadName = "")
+        {
+            var validFileFullName = FileSystemManager.GetValidatedConfigPath(fileInfo.FullName);
+
+            if (!System.IO.File.Exists(validFileFullName))
+                return null;
+
+            FileContentResult fileContent;
+            using (var fileStream = System.IO.File.Open(validFileFullName, FileMode.Open, FileAccess.Read))
+            {
+                var returnBytes = new byte[fileStream.Length];
+                fileStream.Read(returnBytes, 0, returnBytes.Length);
+                fileContent = File(returnBytes, MediaTypeNames.Application.Octet, string.IsNullOrWhiteSpace(downloadName) ? fileInfo.Name : downloadName);
+            }
+
+            //delete will happen only if the file is in the Temp directory - which is often the case of file creation - this is to avoid junk file creation
+            if (fileInfo.Directory != null && FileSystemManager.UploadTemporaryFilesPath.Contains(fileInfo.Directory.FullName))
+                fileInfo.Delete();
+
+            return fileContent;
+        }
+
+        protected FileResult DownloadFile(FileInfo fileInfo, string downloadName)
+        {
+            var validFileFullName = FileSystemManager.GetValidatedConfigPath(fileInfo.FullName);
+
+            if (!System.IO.File.Exists(validFileFullName))
+                return null;
+
+            using (var fileStream = System.IO.File.Open(validFileFullName, FileMode.Open, FileAccess.Read))
+            {
+                var returnBytes = new byte[fileStream.Length];
+                fileStream.Read(returnBytes, 0, returnBytes.Length);
+                return File(returnBytes, MediaTypeNames.Application.Octet, string.IsNullOrWhiteSpace(downloadName) ? fileInfo.Name : downloadName);
+            }
+        }
+    }
+
+    [AuthorizedRoles(OpsSecureUserRoles.WireAdmin)]
+    public abstract class WireAdminBaseController : BaseController
+    {
+
+    }
+
+    [AuthorizedRoles(OpsSecureUserRoles.WireInitiator, OpsSecureUserRoles.WireApprover)]
+    public abstract class WireUserBaseController : BaseController
+    {
         public List<dmaUserPreference> UserPreferencesInSession
         {
             get
@@ -167,66 +243,6 @@ namespace HMOSecureWeb.Controllers
 
         protected const string DefaultExportFileFormat = ".xlsx";
 
-        protected static readonly string JsonContentType = "application/json";
-        protected static readonly Encoding JsonContentEncoding = Encoding.UTF8;
-        protected new JsonResult Json(object data)
-        {
-            return Json(data, JsonContentType, JsonContentEncoding);
-        }
-
-        protected new JsonResult Json(object data, JsonRequestBehavior behavior)
-        {
-            return Json(data, JsonContentType, JsonContentEncoding);
-        }
-
-        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding)
-        {
-            return new JsonResult()
-            {
-                Data = data,
-                ContentType = contentType, //  "application/json"
-                ContentEncoding = contentEncoding, // Encoding.UTF8,
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                MaxJsonLength = int.MaxValue,
-            };
-        }
-
-        public FileContentResult DownloadAndDeleteFile(FileInfo fileInfo, string downloadName = "")
-        {
-            var validFileFullName = FileSystemManager.GetValidatedConfigPath(fileInfo.FullName);
-
-            if (!System.IO.File.Exists(validFileFullName))
-                return null;
-
-            FileContentResult fileContent;
-            using (var fileStream = System.IO.File.Open(validFileFullName, FileMode.Open, FileAccess.Read))
-            {
-                var returnBytes = new byte[fileStream.Length];
-                fileStream.Read(returnBytes, 0, returnBytes.Length);
-                fileContent = File(returnBytes, MediaTypeNames.Application.Octet, string.IsNullOrWhiteSpace(downloadName) ? fileInfo.Name : downloadName);
-            }
-
-            //delete will happen only if the file is in the Temp directory - which is often the case of file creation - this is to avoid junk file creation
-            if (fileInfo.Directory != null && FileSystemManager.UploadTemporaryFilesPath.Contains(fileInfo.Directory.FullName))
-                fileInfo.Delete();
-
-            return fileContent;
-        }
-
-        protected FileResult DownloadFile(FileInfo fileInfo, string downloadName)
-        {
-            var validFileFullName = FileSystemManager.GetValidatedConfigPath(fileInfo.FullName);
-
-            if (!System.IO.File.Exists(validFileFullName))
-                return null;
-
-            using (var fileStream = System.IO.File.Open(validFileFullName, FileMode.Open, FileAccess.Read))
-            {
-                var returnBytes = new byte[fileStream.Length];
-                fileStream.Read(returnBytes, 0, returnBytes.Length);
-                return File(returnBytes, MediaTypeNames.Application.Octet, string.IsNullOrWhiteSpace(downloadName) ? fileInfo.Name : downloadName);
-            }
-        }
         public JsonResult GetContextDatesOfTodayAndYesterday()
         {
             var thisContextDate = DateTime.Now.Date.GetContextDate();

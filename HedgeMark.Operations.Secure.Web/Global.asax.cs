@@ -94,7 +94,7 @@ namespace HMOSecureWeb
             if (HttpContext.Current.Request.IsLocal)
             {
                 smUserId = ConfigurationManager.AppSettings["LocalSiteMinderCommitId"];
-                roles.Add(OpsSecureUserRoles.WireApprover);
+                roles.Add(OpsSecureUserRoles.WireAdmin);
             }
             var userSso = AccountController.GetUserDetailByCommitId(smUserId);
 
@@ -117,7 +117,7 @@ namespace HMOSecureWeb
             //if (Utility.Util.IsLowerEnvironment)
             //   roles.Add(OpsSecureUserRoles.WireApprover);
 
-            if (!(roles.Contains(OpsSecureUserRoles.WireApprover) || roles.Contains(OpsSecureUserRoles.WireInitiator)))
+            if (!(roles.Contains(OpsSecureUserRoles.WireApprover) || roles.Contains(OpsSecureUserRoles.WireInitiator) || roles.Contains(OpsSecureUserRoles.WireAdmin)))
             {
                 //Logger.InfoFormat(string.Format("LDAP ID: {0}", userSso.CommitId));
 
@@ -129,6 +129,8 @@ namespace HMOSecureWeb
                         roles.Add(OpsSecureUserRoles.WireApprover);
                     else if (ldapGroups.Contains(OpsSecureUserRoles.WireInitiator))
                         roles.Add(OpsSecureUserRoles.WireInitiator);
+                    else if (ldapGroups.Contains(OpsSecureUserRoles.WireAdmin))
+                        roles.Add(OpsSecureUserRoles.WireAdmin);
                 }
             }
 

@@ -9,6 +9,7 @@ using Com.HedgeMark.Commons;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.DataModel.Models;
 using HedgeMark.Operations.Secure.Middleware;
+using HMOSecureWeb.Utility;
 using log4net;
 
 namespace HMOSecureWeb.Controllers
@@ -17,7 +18,7 @@ namespace HMOSecureWeb.Controllers
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(AccountController));
         public static readonly List<string> AllowedDomains = ConfigurationManagerWrapper.StringListSetting("AllowedDomains", "@hedgemark.com,@payoda.com,@bnymellon.com,@inautix.co.in");
-        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", string.Format("{0},{1}", OpsSecureUserRoles.WireInitiator, OpsSecureUserRoles.WireApprover));
+        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", string.Format("{0},{1},{2}", OpsSecureUserRoles.WireInitiator, OpsSecureUserRoles.WireApprover, OpsSecureUserRoles.WireAdmin));
 
         public static hLoginRegistration GetUserDetail(string userName)
         {
@@ -29,6 +30,9 @@ namespace HMOSecureWeb.Controllers
 
         public ActionResult Index(string returnUrl)
         {
+            if (User.IsWireAdmin())
+                return RedirectToAction("Index", "UserOperations");
+
             return RedirectToAction("Index", "Home");
         }
 

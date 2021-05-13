@@ -10,7 +10,7 @@ using HedgeMark.Operations.Secure.Middleware.Models;
 
 namespace HMOSecureWeb.Controllers
 {
-    public class DashboardReportController : BaseController
+    public class DashboardReportController : WireUserBaseController
     {
         public JsonResult GetAllTemplates()
         {

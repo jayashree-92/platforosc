@@ -13,7 +13,7 @@ using HMOSecureWeb.Utility;
 
 namespace HMOSecureWeb.Controllers
 {
-    public class SSITemplateController : BaseController
+    public class SSITemplateController : WireUserBaseController
     {
         public ActionResult Index()
         {

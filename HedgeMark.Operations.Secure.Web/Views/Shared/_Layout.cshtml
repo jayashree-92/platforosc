@@ -8,7 +8,11 @@
 @{
     var userRole = @Util.GetRole(User).Replace("-", " ").Replace("Hm ", string.Empty);
     var commitId = @HttpContext.Current.Session[OpsSecureSessionVars.UserCommitId.ToString()].ToString();
-    var isWireApprover = User.IsWireApprover() ? "true" : "false";
+    var isWireApprover = User.IsWireApprover();
+    var isWireApproverStr = isWireApprover ? "true" : "false";
+    var isWireAdmin = User.IsWireAdmin();
+    var isWireAdminStr = isWireAdmin ? "true" : "false";
+    var indexURL = isWireAdmin ? @Url.Action("Index", "Home") : @Url.Action("Index", "UserOperations");
 }
 <body ng-app="HmOperationsSecureApp">
 
@@ -22,7 +26,7 @@
 
     <div class="navbar navbar-ops navbar-ops-brand">
         <span class="navbar-ops-title-divider"></span><span>
-            <a class="navbar-ops-title" href=@Url.Action("Index", "Home")>
+            <a class="navbar-ops-title" href=@indexURL>
                 HM-OPS-SECURE
                 @if (@Util.IsLowerEnvironment)
                 {
@@ -31,7 +35,7 @@
             </a>
         </span>
         <div class="navbar-brand">
-            <a href=@Url.Action("Index", "Home")> <img src="~/images/bnymellon_logo.png"></a>
+            <a href=@indexURL> <img src="~/images/bnymellon_logo.png"></a>
         </div>
         <ul class="nav navbar-nav navbar-right">
             @*<li title="notifications" id="liMainNavNotifications" style="cursor: pointer;"><a><i class="glyphicon glyphicon-bell icon-lg"></i>&nbsp;<span class="badge user-notification un-success ng-show-hide shadowBox" ng-hide="unReadNotifications==0">{{unReadNotifications}}</span></a></li>*@
@@ -44,23 +48,38 @@
     </div>
     <input type="hidden" id="environment" value="@Util.Environment.ToLower()" />
     <input type="hidden" id="userName" value="@User.Identity.Name" />
-    <input type="hidden" id="IsWireApprover" value="@isWireApprover" />
+    <input type="hidden" id="IsWireApprover" value="@isWireApproverStr" />
+    <input type="hidden" id="IsWireAdmin" value="@isWireAdminStr" />
 
     <div class="navbar-ops-menu">
-        <ul class="nav navbar-nav">
-            <li title="home" id="liMainDashboardHome"><a href=@Url.Action("Index", "Home")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;Home</a></li>
-            <li id="liWiresDashboard">@Html.ActionLink("Dashboard", "Index", "WiresDashboard")</li>
-            <li id="liAccounts">@Html.ActionLink("Fund Accounts", "Index", "FundAccounts")</li>
-            <li id="liSSITemplates">@Html.ActionLink("SSI Templates", "Index", "SSITemplate")</li>
-            <li id="liWirePurpose">@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
-            <li id="liWireCutOffs">@Html.ActionLink("Wire Cutoffs", "Index", "WirePortalCutoff")</li>
-            <li id="liSwiftGroups">@Html.ActionLink("Swift Groups", "Index", "SwiftGroup")</li>
-            <li id="liWireLogs">@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
-            <li id="liUserLogs">@Html.ActionLink("User Audits", "Index", "Audit")</li>
-            <li id="liMQLogs">@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</li>
-        </ul>
+
+        @if (isWireAdmin)
+        {
+            <ul class="nav navbar-nav">
+                <li title="home" id="liUserOperations"><a href=@Url.Action("Index", "UserOperations")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;User Management</a></li>
+            </ul>
+        }
+        else
+        {
+            <ul class="nav navbar-nav">
+                <li title="home" id="liMainDashboardHome"><a href=@Url.Action("Index", "Home")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;Home</a></li>
+                <li id="liWiresDashboard">@Html.ActionLink("Dashboard", "Index", "WiresDashboard")</li>
+                <li id="liAccounts">@Html.ActionLink("Fund Accounts", "Index", "FundAccounts")</li>
+                <li id="liSSITemplates">@Html.ActionLink("SSI Templates", "Index", "SSITemplate")</li>
+                <li id="liWirePurpose">@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
+                <li id="liWireCutOffs">@Html.ActionLink("Wire Cutoffs", "Index", "WirePortalCutoff")</li>
+                <li id="liSwiftGroups">@Html.ActionLink("Swift Groups", "Index", "SwiftGroup")</li>
+                <li id="liWireLogs">@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
+                <li id="liUserLogs">@Html.ActionLink("User Audits", "Index", "Audit")</li>
+                <li id="liMQLogs">@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</li>
+            </ul>
+        }
         <ul class="nav navbar-nav navbar-right">
-            <li title="Hangfire Jobs"><a href="/jobs" target="_blank"><i class="glyphicon glyphicon-stats"></i></a></li>
+
+            @if (!isWireAdmin)
+            {
+                <li title="Hangfire Jobs"><a href="/jobs" target="_blank"><i class="glyphicon glyphicon-stats"></i></a></li>
+            }
             <li title="Logout"><a id="btnLogOff"><i class="glyphicon glyphicon-log-out"></i></a></li>
         </ul>
     </div>

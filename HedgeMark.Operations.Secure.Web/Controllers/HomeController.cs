@@ -17,7 +17,7 @@ using log4net.Config;
 
 namespace HMOSecureWeb.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : WireUserBaseController
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(HomeController));
         public ActionResult Index()

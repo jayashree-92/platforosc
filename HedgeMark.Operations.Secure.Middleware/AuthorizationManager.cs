@@ -59,6 +59,7 @@ namespace HedgeMark.Operations.Secure.Middleware
     {
         public const string WireInitiator = "hm-wire-initiator";
         public const string WireApprover = "hm-wire-approver";
+        public const string WireAdmin = "hm-wire-admin";
         public const string DMAUser = "DMAUser";
         public const string DMAAdmin = "DMAAdmin";
     }
@@ -79,7 +80,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                 return AuthorizedData.GetPrivilegedAccess(userName);
 
             var authHMfund = GetAuthorizedHMFundsEntities(userId).Where(up => up.Level > 0).ToList();
-            
+
             return new AuthorizedData(authHMfund) { UserName = userName };
         }
 

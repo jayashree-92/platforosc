@@ -9,7 +9,7 @@ using HedgeMark.Operations.Secure.Middleware.Util;
 
 namespace HMOSecureWeb.Controllers
 {
-    public class AuditController : BaseController
+    public class AuditController : WireUserBaseController
     {
         // GET: Audit
         public ActionResult Index()

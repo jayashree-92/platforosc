@@ -15,7 +15,7 @@ using HedgeMark.Operations.Secure.Middleware.Models;
 
 namespace HMOSecureWeb.Controllers
 {
-    public class SwiftGroupController : BaseController
+    public class SwiftGroupController : WireUserBaseController
     {
         // GET: SwiftGroup
         public ActionResult Index()

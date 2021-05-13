@@ -47,10 +47,16 @@ namespace HMOSecureWeb.Utility
             if (principal == null)
                 return "Unknown";
 
+            if (principal.IsInRole(OpsSecureUserRoles.WireAdmin)) return OpsSecureUserRoles.WireAdmin.Titleize();
             if (principal.IsInRole(OpsSecureUserRoles.WireInitiator)) return OpsSecureUserRoles.WireInitiator.Titleize();
             if (principal.IsInRole(OpsSecureUserRoles.WireApprover)) return OpsSecureUserRoles.WireApprover.Titleize();
 
             return "Unknown";
+        }
+
+        public static bool IsWireAdmin(this IPrincipal principal)
+        {
+            return principal != null && principal.IsInRole(OpsSecureUserRoles.WireAdmin);
         }
 
         public static bool IsWireApprover(this IPrincipal principal)

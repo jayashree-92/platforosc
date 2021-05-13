@@ -16,7 +16,7 @@ using Humanizer;
 
 namespace HMOSecureWeb.Controllers
 {
-    public class SchedulesController : BaseController
+    public class SchedulesController : WireUserBaseController
     {
         public JsonResult GetScheduleDefaults()
         {

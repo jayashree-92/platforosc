@@ -99,6 +99,16 @@
           <Property Name="CommunicationEmail" Type="varchar" MaxLength="250" Nullable="false" />
           <Property Name="isProcessID" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="LDAPUserDetails">
+          <Key>
+            <PropertyRef Name="LDAPUserDetailId" />
+          </Key>
+          <Property Name="LDAPUserDetailId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LDAPUserID" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="LoginID" Type="int" Nullable="false" />
+          <Property Name="CreatedInLdap" Type="bit" />
+          <Property Name="IsInternal" Type="bit" />
+        </EntityType>
         <EntityType Name="dmaAgreementTypes">
           <Key>
             <PropertyRef Name="dmaAgreementTypeId" />
@@ -414,6 +424,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <EntitySet Name="aspnet_Users" EntityType="Self.aspnet_Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="aspnet_UsersInRoles" EntityType="Self.aspnet_UsersInRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hLoginRegistration" EntityType="Self.hLoginRegistration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LDAPUserDetails" EntityType="Self.LDAPUserDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaAgreementTypes" EntityType="Self.dmaAgreementTypes" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaCounterpartyFamily" EntityType="Self.dmaCounterpartyFamily" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaCounterPartyOnBoarding" EntityType="Self.dmaCounterPartyOnBoarding" Schema="HMADMIN" store:Type="Tables" />
@@ -681,6 +692,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           </AssociationSet>
           <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
           <EntitySet Name="vw_EmailDomailForFunds" EntityType="AdminModel.vw_EmailDomailForFunds" />
+          <EntitySet Name="LDAPUserDetails" EntityType="AdminModel.LDAPUserDetail" />
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -1031,6 +1043,16 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <Property Name="RowId" Type="Int32" Nullable="false" />
           <Property Name="hmFundId" Type="Int64" />
           <Property Name="Domain" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LDAPUserDetail">
+          <Key>
+            <PropertyRef Name="LDAPUserDetailId" />
+          </Key>
+          <Property Name="LDAPUserDetailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LDAPUserID" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="LoginID" Type="Int32" Nullable="false" />
+          <Property Name="CreatedInLdap" Type="Boolean" />
+          <Property Name="IsInternal" Type="Boolean" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1453,6 +1475,17 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
                 <ScalarProperty Name="Domain" ColumnName="Domain" />
                 <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
                 <ScalarProperty Name="RowId" ColumnName="RowId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LDAPUserDetails">
+            <EntityTypeMapping TypeName="AdminModel.LDAPUserDetail">
+              <MappingFragment StoreEntitySet="LDAPUserDetails">
+                <ScalarProperty Name="IsInternal" ColumnName="IsInternal" />
+                <ScalarProperty Name="CreatedInLdap" ColumnName="CreatedInLdap" />
+                <ScalarProperty Name="LoginID" ColumnName="LoginID" />
+                <ScalarProperty Name="LDAPUserID" ColumnName="LDAPUserID" />
+                <ScalarProperty Name="LDAPUserDetailId" ColumnName="LDAPUserDetailId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

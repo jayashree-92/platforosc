@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web.Mvc;
-using Com.HedgeMark.Commons.Extensions;
 using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
-using HedgeMark.Operations.FileParseEngine.RuleEngine;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware;
 using HedgeMark.Operations.Secure.Middleware.Models;
@@ -16,7 +13,7 @@ using HMOSecureWeb.Utility;
 
 namespace HMOSecureWeb.Controllers
 {
-    public class WiresDashboardController : BaseController
+    public class WiresDashboardController : WireUserBaseController
     {
         // GET: WiresDashboard
         public ActionResult Index()

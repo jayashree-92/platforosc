@@ -2,7 +2,7 @@
 
 namespace HMOSecureWeb.Controllers
 {
-    public class WireLogController : BaseController
+    public class WireLogController : WireUserBaseController
     {
         // GET: WireLog
         public ActionResult Index()

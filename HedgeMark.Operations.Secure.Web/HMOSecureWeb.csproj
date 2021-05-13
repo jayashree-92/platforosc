@@ -165,6 +165,7 @@
     <Compile Include="Controllers\SchedulesController.cs" />
     <Compile Include="Controllers\SSITemplateController.cs" />
     <Compile Include="Controllers\SwiftGroupController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WireLogController.cs" />
     <Compile Include="Controllers\WirePortalCutoffController.cs" />
     <Compile Include="Controllers\WiresDashboardController.cs" />
@@ -857,6 +858,7 @@
     <Content Include="Views\Shared\_DashboardReport.cshtml" />
     <Content Include="Views\WiresDashboard\Index.cshtml" />
     <Content Include="Views\Shared\_Schedules.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
     <None Include="Web.Debug.config">
       <SubType>Designer</SubType>
     </None>

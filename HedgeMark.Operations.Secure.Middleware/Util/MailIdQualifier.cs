@@ -6,7 +6,6 @@ using System.Net.Mail;
 using System.Text.RegularExpressions;
 using Com.HedgeMark.Commons.Extensions;
 using Com.HedgeMark.Commons.Mail;
-using HedgeMark.Operations.Secure.DataModel;
 
 namespace HedgeMark.Operations.Secure.Middleware.Util
 {

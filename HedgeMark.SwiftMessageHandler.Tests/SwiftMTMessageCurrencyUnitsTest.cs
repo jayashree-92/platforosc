@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT1XX;
-using HedgeMark.SwiftMessageHandler.Utils;
 using NUnit.Framework;
 
 namespace HedgeMark.SwiftMessageHandler.Tests

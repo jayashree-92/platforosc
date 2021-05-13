@@ -221,6 +221,9 @@
     <Compile Include="hmsWireWorkflowLog.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="LDAPUserDetail.cs">
+      <DependentUpon>AdminModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SynchronizedContext.cs" />
     <Compile Include="Models\UserAccountDetails.cs" />
     <Compile Include="onBoardingAccount.cs">
