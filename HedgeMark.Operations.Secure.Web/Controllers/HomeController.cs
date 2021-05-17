@@ -13,7 +13,6 @@ using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.Middleware;
 using HedgeMark.Operations.Secure.Middleware.Models;
 using HedgeMark.Operations.Secure.Middleware.Util;
-using log4net.Config;
 
 namespace HMOSecureWeb.Controllers
 {

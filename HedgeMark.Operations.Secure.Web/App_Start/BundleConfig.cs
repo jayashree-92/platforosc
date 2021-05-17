@@ -51,6 +51,7 @@ namespace HMOSecureWeb
                 "~/Scripts/DataTables/dataTables.select.js",
                 "~/Scripts/DataTables/dataTables-responsive.js",
                 "~/Scripts/DataTables/dataTables.rowReorder.js",
+                "~/Scripts/DataTables/dataTables.rowGroup.js",
                 "~/Scripts/DataTables/dataTables.colReorder.js",
                 "~/Scripts/DataTables/dataTables.keyTable.js",
                 "~/Scripts/DataTables/datatables.mark.js",
@@ -118,7 +119,8 @@ namespace HMOSecureWeb
                       .Include("~/Content/DataTables/css/buttons.bootstrap.css", new CssRewriteUrlTransform())
                       .Include("~/Content/DataTables/css/dataTables.bootstrap.css", new CssRewriteUrlTransform())
                       .Include("~/Content/DataTables/css/keyTable.bootstrap.css", new CssRewriteUrlTransform())
-                      .Include("~/Content/DataTables/css/rowReorder.bootstrap.css", new CssRewriteUrlTransform())
+                .Include("~/Content/DataTables/css/rowReorder.bootstrap.css", new CssRewriteUrlTransform())
+                .Include("~/Content/DataTables/css/rowGroup.bootstrap.css", new CssRewriteUrlTransform())
                       .Include("~/Content/DataTables/css/colReorder.bootstrap.css", new CssRewriteUrlTransform())
                       .Include("~/Content/DataTables/css/keyTable.bootstrap.css", new CssRewriteUrlTransform())
                       .Include("~/Content/DataTables/css/searchPanes.bootstrap.css", new CssRewriteUrlTransform())

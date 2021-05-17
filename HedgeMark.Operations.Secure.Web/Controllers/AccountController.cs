@@ -30,10 +30,7 @@ namespace HMOSecureWeb.Controllers
 
         public ActionResult Index(string returnUrl)
         {
-            if (User.IsWireAdmin())
-                return RedirectToAction("Index", "UserOperations");
-
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", User.IsWireAdmin() ? "User" : "Home");
         }
 
 

@@ -12,7 +12,7 @@
     var isWireApproverStr = isWireApprover ? "true" : "false";
     var isWireAdmin = User.IsWireAdmin();
     var isWireAdminStr = isWireAdmin ? "true" : "false";
-    var indexURL = isWireAdmin ? @Url.Action("Index", "Home") : @Url.Action("Index", "UserOperations");
+    var indexURL = isWireAdmin ? @Url.Action("Index", "Home") : @Url.Action("Index", "User");
 }
 <body ng-app="HmOperationsSecureApp">
 
@@ -56,7 +56,7 @@
         @if (isWireAdmin)
         {
             <ul class="nav navbar-nav">
-                <li title="home" id="liUserOperations"><a href=@Url.Action("Index", "UserOperations")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;User Management</a></li>
+                <li title="home" id="liUserOperations"><a href=@Url.Action("Index", "User")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;User Management</a></li>
             </ul>
         }
         else

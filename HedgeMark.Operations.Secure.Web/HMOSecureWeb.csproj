@@ -778,6 +778,7 @@
     <Content Include="Scripts\OpsSecure\WirePortalCutoff.js" />
     <Content Include="Scripts\OpsSecure\WirePurpose.js" />
     <Content Include="Scripts\OpsSecure\WiresDashboard.js" />
+    <Content Include="Scripts\OpsSecure\WireUsers.js" />
     <Content Include="Scripts\Plugins\AutoCompleteEmail.js" />
     <Content Include="Scripts\Plugins\ContextMenu.js" />
     <Content Include="Scripts\Plugins\NumericCellEditor.js" />

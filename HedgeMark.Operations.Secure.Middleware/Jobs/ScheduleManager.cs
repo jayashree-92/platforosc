@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using Com.HedgeMark.Commons.Mail;
+using Cronos;
 using Hangfire;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware.Models;
@@ -89,10 +90,17 @@ namespace HedgeMark.Operations.Secure.Middleware.Jobs
 
             foreach (var job in schedules)
             {
-                var nextUtcOccurence = CrontabSchedule.Parse(job.Schedule.ScheduleExpression).GetNextOccurrence(DateTime.Now);
-                job.NextRunAt = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(nextUtcOccurence, TimeZones[job.Schedule.TimeZone].Id);
+                job.NextRunAt = GetNextExecutionTime(job.Schedule.ScheduleExpression, job.Schedule.TimeZone, DateTime.UtcNow);
             }
         }
+
+        public static DateTime GetNextExecutionTime(string cronExpression, string timeZone, DateTime utcNow)
+        {
+            var expression = CronExpression.Parse(cronExpression);
+            var nextUtcOccurence = expression.GetNextOccurrence(utcNow, TimeZones[timeZone], true);
+            return nextUtcOccurence != null ? nextUtcOccurence.Value : new DateTime();
+        }
+
 
         public static void AddSchedule(long jobId, bool isDashboard)
         {

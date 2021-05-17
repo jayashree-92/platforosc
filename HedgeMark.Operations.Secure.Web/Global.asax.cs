@@ -123,8 +123,7 @@ namespace HMOSecureWeb
 
                 if (!string.IsNullOrWhiteSpace(userSso.CommitId))
                 {
-                    var umsLib = new UmsLibrary();
-                    var ldapGroups = umsLib.GetLdapGroupsOfLdapUser(userSso.CommitId);
+                    var ldapGroups = UmsLibrary.GetLdapGroupsOfLdapUser(userSso.CommitId);
                     if (ldapGroups.Contains(OpsSecureUserRoles.WireApprover))
                         roles.Add(OpsSecureUserRoles.WireApprover);
                     else if (ldapGroups.Contains(OpsSecureUserRoles.WireInitiator))

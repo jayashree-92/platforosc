@@ -48,7 +48,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
         /// <summary>
         /// ASP.NET's inbuilt methods don't support the wsse version used by UMS
         /// </summary>
-        public void SetSecurityHeader()
+        public static void SetSecurityHeader()
         {
             var messageHeadersElement = OperationContext.Current.OutgoingMessageHeaders;
             var securityHeader = new SecurityHeader
@@ -68,7 +68,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
             return ex;
         }
 
-        public SearchResultUser LookupUserByUserId(string userName, List<string> attribNames)
+        public static SearchResultUser LookupUserByUserId(string userName, List<string> attribNames)
         {
             var methodName = MethodBase.GetCurrentMethod().Name;
             var result = new SearchResultUser();
@@ -99,7 +99,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
         }
 
 
-        public List<string> GetLdapGroupsOfLdapUser(string userName)
+        public static List<string> GetLdapGroupsOfLdapUser(string userName)
         {
             var attrbs = new List<string>() { "MELLONECOMMERCEAPPACCESS" };
             var result = LookupUserByUserId(userName, attrbs);

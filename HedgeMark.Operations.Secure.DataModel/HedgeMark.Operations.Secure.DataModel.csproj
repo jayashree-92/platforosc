@@ -170,6 +170,9 @@
     <Compile Include="hmsSystemPreference.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsUser.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsUserAuditLog.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
@@ -243,6 +246,12 @@
     </Compile>
     <Compile Include="onBoardingAccountSSITemplateMap.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="onBoardingAssignmentUserGroup.cs">
+      <DependentUpon>AdminModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="onBoardingAssignmentUserGroupMap.cs">
+      <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
     <Compile Include="onBoardingAuthorizedParty.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>

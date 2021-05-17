@@ -117,6 +117,7 @@
     <Compile Include="Models\SwiftGroupData.cs" />
     <Compile Include="Models\WirePortalCutOffData.cs" />
     <Compile Include="Models\WireTicket.cs" />
+    <Compile Include="Models\WireUsers.cs" />
     <Compile Include="NotificationManager.cs" />
     <Compile Include="OnBoardingDataManager.cs" />
     <Compile Include="OpsSystemSwitches.cs" />

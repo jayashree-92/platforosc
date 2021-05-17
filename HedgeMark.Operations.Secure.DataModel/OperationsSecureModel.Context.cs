@@ -75,5 +75,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsScheduleLog> hmsScheduleLogs { get; set; }
         public virtual DbSet<hmsSchedule> hmsSchedules { get; set; }
         public virtual DbSet<hmsScheduleWorkflowLkup> hmsScheduleWorkflowLkups { get; set; }
+        public virtual DbSet<hmsUser> hmsUsers { get; set; }
     }
 }

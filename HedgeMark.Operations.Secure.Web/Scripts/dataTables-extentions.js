@@ -81,7 +81,7 @@ var getVisibleColumns = function (tableId) {
 $.extend($.fn.dataTable.defaults, {
     //"searching": false,
     //"ordering": false,
-    "dom": "<'row'<'col-md-6'i><'col-md-6 pull-right'f>>trI",
+    "dom": "<'row'<'col-md-6 dtFilter'i><'col-md-6 pull-right'f>>trI",
     "pagination": false,
     "processing": false,
     "sScrollX": false,

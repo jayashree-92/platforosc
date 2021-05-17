@@ -4,5 +4,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<legend>User Operations</legend>
+<legend>User Authorization Manager</legend>
 
+<div ng-controller="wireUsersCtrl">
+    <button class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add new User</button>
+    <button class="btn btn-sm btn-default"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export as PDF</button>
+    <table id="tblUserDetails" class="table table-hover table-bordered table-striped" style="background: white; cursor: pointer;"></table>
+</div>
+@section Javascript{
+    <script src="~/Scripts/OpsSecure/WireUsers.js"></script>
+}

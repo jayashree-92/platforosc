@@ -1100,9 +1100,9 @@ ol.status-track li.status-track-bypass:before {
     clear: both;
 }
 
-/*.dataTables_wrapper {
-    min-height: 100px;
-}*/
+.dataTables_wrapper div.dtFilter {
+    padding-left: 0px;
+}
 
 .dataTables_scroll {
     clear: both;
@@ -2187,4 +2187,9 @@ div[class^="dtsp-subRow"] {
 
 .spn-auto-email-error {
     box-shadow: 0px 0px 0px 0px #8a6d3b, 0 0px 5px red;
+}
+
+.required:after {
+    content: "*";
+    color: #d53f1e;
 }

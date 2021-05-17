@@ -22,6 +22,9 @@
         <EntityTypeShape EntityType="AdminModel.vw_HFund" Width="1.5" PointX="0.75" PointY="4.75" />
         <EntityTypeShape EntityType="AdminModel.vw_EmailDomailForFunds" Width="1.5" PointX="0.75" PointY="11.75" />
         <EntityTypeShape EntityType="AdminModel.LDAPUserDetail" Width="1.5" PointX="14.375" PointY="0.75" />
+        <EntityTypeShape EntityType="AdminModel.onBoardingAssignmentUserGroup" Width="1.5" PointX="0.75" PointY="14.875" />
+        <EntityTypeShape EntityType="AdminModel.onBoardingAssignmentUserGroupMap" Width="1.5" PointX="3" PointY="14.875" />
+        <AssociationConnector Association="AdminModel.FK__onBoardin__onBoa__461F9D31" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

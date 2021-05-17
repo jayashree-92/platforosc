@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
-using HedgeMark.Operations.Secure.DataModel;
 using log4net;
 using Hangfire;
-using System;
 using HedgeMark.Operations.Secure.Middleware;
 
 namespace HMOSecureWeb.Jobs

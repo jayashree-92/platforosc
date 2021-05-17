@@ -205,6 +205,26 @@
           <Property Name="ClientSubCategory" Type="varchar" MaxLength="20" />
           <Property Name="ComplainceCert" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="onBoardingAssignmentUserGroup">
+          <Key>
+            <PropertyRef Name="onBoardingAssignmentUserGroupId" />
+          </Key>
+          <Property Name="onBoardingAssignmentUserGroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupName" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="onBoardingAssignmentUserGroupMap">
+          <Key>
+            <PropertyRef Name="onBoardingAssignmentUserGroupMapId" />
+          </Key>
+          <Property Name="onBoardingAssignmentUserGroupMapId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="onBoardingAssignmentUserGroupId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="onboardingContactFundMap">
           <Key>
             <PropertyRef Name="onboardingContactFundMapId" />
@@ -391,6 +411,18 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__onBoardin__onBoa__461F9D31">
+          <End Role="onBoardingAssignmentUserGroup" Type="Self.onBoardingAssignmentUserGroup" Multiplicity="1" />
+          <End Role="onBoardingAssignmentUserGroupMap" Type="Self.onBoardingAssignmentUserGroupMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAssignmentUserGroup">
+              <PropertyRef Name="onBoardingAssignmentUserGroupId" />
+            </Principal>
+            <Dependent Role="onBoardingAssignmentUserGroupMap">
+              <PropertyRef Name="onBoardingAssignmentUserGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId">
           <End Role="dmaCounterpartyFamily" Type="Self.dmaCounterpartyFamily" Multiplicity="0..1" />
           <End Role="dmaCounterPartyOnBoarding" Type="Self.dmaCounterPartyOnBoarding" Multiplicity="*" />
@@ -430,6 +462,8 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <EntitySet Name="dmaCounterPartyOnBoarding" EntityType="Self.dmaCounterPartyOnBoarding" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaFundOnBoardPermissions" EntityType="Self.dmaFundOnBoardPermissions" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="dmaOnBoardingContactDetail" EntityType="Self.dmaOnBoardingContactDetail" Schema="HMADMIN" store:Type="Tables" />
+          <EntitySet Name="onBoardingAssignmentUserGroup" EntityType="Self.onBoardingAssignmentUserGroup" Schema="HMADMIN" store:Type="Tables" />
+          <EntitySet Name="onBoardingAssignmentUserGroupMap" EntityType="Self.onBoardingAssignmentUserGroupMap" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="onboardingContactFundMap" EntityType="Self.onboardingContactFundMap" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="OnBoardingServiceProvider" EntityType="Self.OnBoardingServiceProvider" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="vw_HFund" EntityType="Self.vw_HFund" store:Type="Views" store:Schema="dbo">
@@ -560,6 +594,10 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <AssociationSet Name="FK__aspnet_Us__UserI__2EA5EC27" Association="Self.FK__aspnet_Us__UserI__2EA5EC27">
             <End Role="aspnet_Users" EntitySet="aspnet_Users" />
             <End Role="aspnet_UsersInRoles" EntitySet="aspnet_UsersInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__onBoardin__onBoa__461F9D31" Association="Self.FK__onBoardin__onBoa__461F9D31">
+            <End Role="onBoardingAssignmentUserGroup" EntitySet="onBoardingAssignmentUserGroup" />
+            <End Role="onBoardingAssignmentUserGroupMap" EntitySet="onBoardingAssignmentUserGroupMap" />
           </AssociationSet>
           <AssociationSet Name="FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId" Association="Self.FK_dmaCounterPartyOnBoarding_dmaCounterpartyFamilyId">
             <End Role="dmaCounterpartyFamily" EntitySet="dmaCounterpartyFamily" />
@@ -693,6 +731,12 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <EntitySet Name="vw_HFund" EntityType="AdminModel.vw_HFund" />
           <EntitySet Name="vw_EmailDomailForFunds" EntityType="AdminModel.vw_EmailDomailForFunds" />
           <EntitySet Name="LDAPUserDetails" EntityType="AdminModel.LDAPUserDetail" />
+          <EntitySet Name="onBoardingAssignmentUserGroups" EntityType="AdminModel.onBoardingAssignmentUserGroup" />
+          <EntitySet Name="onBoardingAssignmentUserGroupMaps" EntityType="AdminModel.onBoardingAssignmentUserGroupMap" />
+          <AssociationSet Name="FK__onBoardin__onBoa__461F9D31" Association="AdminModel.FK__onBoardin__onBoa__461F9D31">
+            <End Role="onBoardingAssignmentUserGroup" EntitySet="onBoardingAssignmentUserGroups" />
+            <End Role="onBoardingAssignmentUserGroupMap" EntitySet="onBoardingAssignmentUserGroupMaps" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -1054,6 +1098,40 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <Property Name="CreatedInLdap" Type="Boolean" />
           <Property Name="IsInternal" Type="Boolean" />
         </EntityType>
+        <EntityType Name="onBoardingAssignmentUserGroup">
+          <Key>
+            <PropertyRef Name="onBoardingAssignmentUserGroupId" />
+          </Key>
+          <Property Name="onBoardingAssignmentUserGroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="onBoardingAssignmentUserGroupMaps" Relationship="AdminModel.FK__onBoardin__onBoa__461F9D31" FromRole="onBoardingAssignmentUserGroup" ToRole="onBoardingAssignmentUserGroupMap" />
+        </EntityType>
+        <EntityType Name="onBoardingAssignmentUserGroupMap">
+          <Key>
+            <PropertyRef Name="onBoardingAssignmentUserGroupMapId" />
+          </Key>
+          <Property Name="onBoardingAssignmentUserGroupMapId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="onBoardingAssignmentUserGroupId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="onBoardingAssignmentUserGroup" Relationship="AdminModel.FK__onBoardin__onBoa__461F9D31" FromRole="onBoardingAssignmentUserGroupMap" ToRole="onBoardingAssignmentUserGroup" />
+        </EntityType>
+        <Association Name="FK__onBoardin__onBoa__461F9D31">
+          <End Type="AdminModel.onBoardingAssignmentUserGroup" Role="onBoardingAssignmentUserGroup" Multiplicity="1" />
+          <End Type="AdminModel.onBoardingAssignmentUserGroupMap" Role="onBoardingAssignmentUserGroupMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAssignmentUserGroup">
+              <PropertyRef Name="onBoardingAssignmentUserGroupId" />
+            </Principal>
+            <Dependent Role="onBoardingAssignmentUserGroupMap">
+              <PropertyRef Name="onBoardingAssignmentUserGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1486,6 +1564,28 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
                 <ScalarProperty Name="LoginID" ColumnName="LoginID" />
                 <ScalarProperty Name="LDAPUserID" ColumnName="LDAPUserID" />
                 <ScalarProperty Name="LDAPUserDetailId" ColumnName="LDAPUserDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingAssignmentUserGroups">
+            <EntityTypeMapping TypeName="AdminModel.onBoardingAssignmentUserGroup">
+              <MappingFragment StoreEntitySet="onBoardingAssignmentUserGroup">
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="onBoardingAssignmentUserGroupId" ColumnName="onBoardingAssignmentUserGroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingAssignmentUserGroupMaps">
+            <EntityTypeMapping TypeName="AdminModel.onBoardingAssignmentUserGroupMap">
+              <MappingFragment StoreEntitySet="onBoardingAssignmentUserGroupMap">
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="onBoardingAssignmentUserGroupId" ColumnName="onBoardingAssignmentUserGroupId" />
+                <ScalarProperty Name="onBoardingAssignmentUserGroupMapId" ColumnName="onBoardingAssignmentUserGroupMapId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -14,7 +14,7 @@ namespace HedgeMark.SwiftMessageHandler.Utils
         public static readonly string DefaultDateFormatWithFullYear = "yyyyMMdd";
         public static T DeepCopy<T>(this T source) where T : class
         {
-            return source == null ? default : Cloner.DeepCopy(source);
+            return source == null ? default(T) : Cloner.DeepCopy(source);
         }
 
         public static bool ToBool(this object value, bool defaultValue = false)

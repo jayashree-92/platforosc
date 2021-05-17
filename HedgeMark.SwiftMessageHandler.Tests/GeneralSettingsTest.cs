@@ -17,11 +17,12 @@ namespace HedgeMark.SwiftMessageHandler.Tests
         {
             public int LoginId { get; set; }
             public string CommitId { get; set; }
-            public string UserId { get; set; }
+            public string UserName { get; set; }
             public string LdapRole { get; set; }
+            public string AccountStatus { get; set; }
         }
 
-        //[Test]
+        [Test]
         public void GetUser()
         {
             List<WireUsers> allDMAUsers;
@@ -31,24 +32,26 @@ namespace HedgeMark.SwiftMessageHandler.Tests
                                join usr in context.hLoginRegistrations on aspUser.UserName equals usr.varLoginID
                                join lap in context.LDAPUserDetails on usr.intLoginID equals lap.LoginID
                                where aspUser.aspnet_Roles.Any(r => AuthorizationManager.AuthorizedDmaUserRoles.Contains(r.RoleName)) && !usr.isDeleted
-                               select new WireUsers { LoginId = lap.LoginID, UserId = usr.varLoginID, CommitId = lap.LDAPUserID }).ToList();
+                               select new WireUsers { LoginId = lap.LoginID, UserName = usr.varLoginID, CommitId = lap.LDAPUserID }).ToList();
             }
 
 
+            var attrbs = new List<string>() { "MELLONECOMMERCEAPPACCESS" };
             using (var writer = new CsvWriter(TestUtility.AssemblyDirectory + "\\" + "UserRoleMapping-OpsSecure.csv"))
             {
                 writer.ValueSeparator = ',';
-                writer.WriteHeaderRecord(new List<object>() { "LoginId", "CommitId", "UserId", "LdapRole" });
+                writer.WriteHeaderRecord(new List<object>() { "LoginId", "CommitId", "UserId", "LdapRole", "AccountStatus" });
 
 
                 foreach (var userId in allDMAUsers.Where(userId => !string.IsNullOrWhiteSpace(userId.CommitId)))
                 {
-                    var userRoleMap = new List<string> { userId.LoginId.ToString(), userId.CommitId, userId.UserId };
+                    var result = UmsLibrary.LookupUserByUserId(userId.CommitId, attrbs);
+                    if (result == null)
+                        continue;
 
-                    var ldapGroups = new UmsLibrary().GetLdapGroupsOfLdapUser(userId.CommitId);
+                    var ldapGroups = (result.userAttributes[0].value != null) ? result.userAttributes[0].value.ToList() : new List<string>();
 
                     var ldapRole = string.Empty;
-
                     if (ldapGroups.Contains(OpsSecureUserRoles.WireAdmin))
                         ldapRole = OpsSecureUserRoles.WireAdmin;
                     else if (ldapGroups.Contains(OpsSecureUserRoles.WireApprover))
@@ -59,8 +62,9 @@ namespace HedgeMark.SwiftMessageHandler.Tests
                     if (string.IsNullOrWhiteSpace(ldapRole))
                         continue;
 
-                    userRoleMap.Add(ldapRole);
-                    writer.WriteDataRecords(new List<string[]> { userRoleMap.ToArray() });
+                    var userRoleMap = new[] { userId.LoginId.ToString(), userId.CommitId, userId.UserName, ldapRole, result.accountStatus };
+
+                    writer.WriteDataRecords(new List<string[]> { userRoleMap });
                 }
 
                 writer.Flush();

@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Web;
 using Com.HedgeMark.Commons;
-using Hangfire;
 using HedgeMark.Operations.Secure.DataModel;
-using Hangfire;
-using HMOSecureWeb.Utility;
 using log4net;
 
 namespace HMOSecureWeb.Jobs
