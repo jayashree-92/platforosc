@@ -23,10 +23,5 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         public int TotalWiresInitiated { get; set; }
         public int TotalWiresApproved { get; set; }
         public DateTime LastAccessedOn { get; set; }
-
-        public string CreatedBy { get; set; }
-        public string ApprovedBy { get; set; }
     }
-
-
 }

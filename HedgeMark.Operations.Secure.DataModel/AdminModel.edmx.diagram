@@ -25,6 +25,7 @@
         <EntityTypeShape EntityType="AdminModel.onBoardingAssignmentUserGroup" Width="1.5" PointX="0.75" PointY="14.875" />
         <EntityTypeShape EntityType="AdminModel.onBoardingAssignmentUserGroupMap" Width="1.5" PointX="3" PointY="14.875" />
         <AssociationConnector Association="AdminModel.FK__onBoardin__onBoa__461F9D31" />
+        <EntityTypeShape EntityType="AdminModel.onboardingSubAdvisorFundMap" Width="1.5" PointX="5.375" PointY="14.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

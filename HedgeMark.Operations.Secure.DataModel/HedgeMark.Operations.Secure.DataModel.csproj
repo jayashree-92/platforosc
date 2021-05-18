@@ -277,6 +277,9 @@
     <Compile Include="onBoardingSSITemplateDocument.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="onboardingSubAdvisorFundMap.cs">
+      <DependentUpon>AdminModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="OperationsContext.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

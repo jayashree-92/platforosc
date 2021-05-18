@@ -248,6 +248,19 @@
           <Property Name="FeeType" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="ServiceProvider" Type="varchar" MaxLength="300" Nullable="false" />
         </EntityType>
+        <EntityType Name="onboardingSubAdvisorFundMap">
+          <Key>
+            <PropertyRef Name="onboardingSubAdvisorFundMapId" />
+          </Key>
+          <Property Name="onboardingSubAdvisorFundMapId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dmaFundOnBoardId" Type="bigint" Nullable="false" />
+          <Property Name="UmbrellaFundId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'HM.dbo.vw_HFund' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vw_HFund">
@@ -468,6 +481,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <EntitySet Name="onBoardingAssignmentUserGroupMap" EntityType="Self.onBoardingAssignmentUserGroupMap" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="onboardingContactFundMap" EntityType="Self.onboardingContactFundMap" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="OnBoardingServiceProvider" EntityType="Self.OnBoardingServiceProvider" Schema="HMADMIN" store:Type="Tables" />
+          <EntitySet Name="onboardingSubAdvisorFundMap" EntityType="Self.onboardingSubAdvisorFundMap" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="vw_HFund" EntityType="Self.vw_HFund" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vw_HFund].[hmFundId] AS [hmFundId], 
@@ -739,6 +753,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
             <End Role="onBoardingAssignmentUserGroup" EntitySet="onBoardingAssignmentUserGroups" />
             <End Role="onBoardingAssignmentUserGroupMap" EntitySet="onBoardingAssignmentUserGroupMaps" />
           </AssociationSet>
+          <EntitySet Name="onboardingSubAdvisorFundMaps" EntityType="AdminModel.onboardingSubAdvisorFundMap" />
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -1136,6 +1151,19 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="onboardingSubAdvisorFundMap">
+          <Key>
+            <PropertyRef Name="onboardingSubAdvisorFundMapId" />
+          </Key>
+          <Property Name="onboardingSubAdvisorFundMapId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dmaFundOnBoardId" Type="Int64" Nullable="false" />
+          <Property Name="UmbrellaFundId" Type="Int64" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1592,6 +1620,20 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="onBoardingAssignmentUserGroupId" ColumnName="onBoardingAssignmentUserGroupId" />
                 <ScalarProperty Name="onBoardingAssignmentUserGroupMapId" ColumnName="onBoardingAssignmentUserGroupMapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onboardingSubAdvisorFundMaps">
+            <EntityTypeMapping TypeName="AdminModel.onboardingSubAdvisorFundMap">
+              <MappingFragment StoreEntitySet="onboardingSubAdvisorFundMap">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UmbrellaFundId" ColumnName="UmbrellaFundId" />
+                <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
+                <ScalarProperty Name="onboardingSubAdvisorFundMapId" ColumnName="onboardingSubAdvisorFundMapId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

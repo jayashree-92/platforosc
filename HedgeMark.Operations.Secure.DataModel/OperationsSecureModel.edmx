@@ -254,11 +254,6 @@
           <Property Name="hmsWireUserId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hmLoginId" Type="int" Nullable="false" />
           <Property Name="LdapRole" Type="varchar" MaxLength="30" Nullable="false" />
-          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
-          <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="IsApproved" Type="bit" Nullable="false" />
-          <Property Name="ApprovedAt" Type="datetime" />
-          <Property Name="ApprovedBy" Type="int" />
           <Property Name="AccountStatus" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsWireCollateralAssociation">
@@ -3088,11 +3083,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="hmsWireUserId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="hmLoginId" Type="Int32" Nullable="false" />
           <Property Name="LdapRole" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
-          <Property Name="ApprovedAt" Type="DateTime" Precision="3" />
-          <Property Name="ApprovedBy" Type="Int32" />
           <Property Name="AccountStatus" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
@@ -3823,11 +3813,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsUser">
               <MappingFragment StoreEntitySet="hmsUsers">
                 <ScalarProperty Name="AccountStatus" ColumnName="AccountStatus" />
-                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
-                <ScalarProperty Name="ApprovedAt" ColumnName="ApprovedAt" />
-                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="LdapRole" ColumnName="LdapRole" />
                 <ScalarProperty Name="hmLoginId" ColumnName="hmLoginId" />
                 <ScalarProperty Name="hmsWireUserId" ColumnName="hmsWireUserId" />

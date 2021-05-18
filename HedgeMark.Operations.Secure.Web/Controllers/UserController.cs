@@ -35,7 +35,7 @@ namespace HMOSecureWeb.Controllers
             }
 
             Dictionary<int, string> userEmailMap, userGroupMap;
-            var allUserIds = users.Select(s => s.hmLoginId).Union(users.Select(s => s.CreatedBy).Union(users.Where(s => s.ApprovedBy != null).Select(s => (int)s.ApprovedBy))).Distinct().ToList();
+            var allUserIds = users.Select(s => s.hmLoginId).Distinct().ToList();
 
             using (var context = new AdminContext())
             {
@@ -53,9 +53,7 @@ namespace HMOSecureWeb.Controllers
                                     AuthorizationCode = UserAuthorizationCode.AuthorizedToHandleAllWires,
                                     LastAccessedOn = lastAccessedOnMap.ContainsKey(loginId) ? lastAccessedOnMap[loginId] : new DateTime(),
                                     TotalWiresApproved = approvedCount.ContainsKey(loginId) ? approvedCount[loginId] : 0,
-                                    TotalWiresInitiated = initiatorCount.ContainsKey(loginId) ? initiatorCount[loginId] : 0,
-                                    CreatedBy = userEmailMap.ContainsKey(hmsUser.CreatedBy) ? userEmailMap[hmsUser.CreatedBy] : string.Format("Unknown-user-{0}", hmsUser.CreatedBy),
-                                    ApprovedBy = hmsUser.ApprovedBy == null ? "-" : userEmailMap.ContainsKey(hmsUser.ApprovedBy ?? 0) ? userEmailMap[hmsUser.ApprovedBy ?? 0] : string.Format("Unknown-user-{0}", hmsUser.CreatedBy),
+                                    TotalWiresInitiated = initiatorCount.ContainsKey(loginId) ? initiatorCount[loginId] : 0
                                 }).ToList();
 
             SetSessionValue(OpsSecureSessionVars.WireUserGroupData.ToString(), allWireUsers);

@@ -17,11 +17,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public long hmsWireUserId { get; set; }
         public int hmLoginId { get; set; }
         public string LdapRole { get; set; }
-        public System.DateTime CreatedAt { get; set; }
-        public int CreatedBy { get; set; }
-        public bool IsApproved { get; set; }
-        public Nullable<System.DateTime> ApprovedAt { get; set; }
-        public Nullable<int> ApprovedBy { get; set; }
         public string AccountStatus { get; set; }
     }
 }
