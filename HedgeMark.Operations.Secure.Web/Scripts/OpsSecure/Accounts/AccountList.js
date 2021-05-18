@@ -811,6 +811,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.isEdit = true;
         $scope.fundName = accDetails.FundName;
         $scope.isLoad = true;
+        $scope.IsKeyFieldsChanged = false;
 
         if ($scope.AgreementTypeId > 0) {
             $scope.AgreementType = $.grep($scope.agreementTypes, function (v) { return v.id == $scope.AgreementTypeId; })[0].text;
@@ -1982,6 +1983,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
+    $scope.CheckSSIFieldsChanges = function (val, oldVal) {
+        if (val[0].Description != oldVal[0].Description || val[0].Currency != oldVal[0].currency || val[0].FFCName != oldVal[0].FFCName || val[0].FFCNumber != oldVal[0].FFCNumber || val[0].Reference != oldVal[0].Reference || val[0].MarginAccountNumber != oldVal[0].MarginAccountNumber || val[0].TopLevelManagerAccountNumber != oldVal[0].TopLevelManagerAccountNumber || val[0].IntermediaryAccountNumber != oldVal[0].IntermediaryAccountNumber || val[0].BeneficiaryAccountNumber != oldVal[0].BeneficiaryAccountNumber || val[0].UltimateBeneficiaryAccountNumber != oldVal[0].UltimateBeneficiaryAccountNumber || val[0].IntermediaryType != oldVal[0].IntermediaryType || val[0].BeneficiaryType != oldVal[0].BeneficiaryType || val[0].UltimateBeneficiaryType != oldVal[0].UltimateBeneficiaryType || val[0].Intermediary.BICorABA != oldVal[0].Intermediary.BICorABA || val[0].Beneficiary.BICorABA != oldVal[0].Beneficiary.BICorABA || val[0].UltimateBeneficiary.BICorABA != oldVal[0].UltimateBeneficiary.BICorABA || val[0].Intermediary.BankName != oldVal[0].Intermediary.BankName || val[0].Beneficiary.BankName != oldVal[0].Beneficiary.BankName || val[0].UltimateBeneficiary.BankName != oldVal[0].UltimateBeneficiary.BankName || val[0].UltimateBeneficiaryAccountName != oldVal[0].UltimateBeneficiaryAccountName || val[0].Intermediary.BankAddress != oldVal[0].Intermediary.BankAddress
+            || val[0].Beneficiary.BankAddress != oldVal[0].Beneficiary.BankAddress || val[0].UltimateBeneficiary.BankAddress != oldVal[0].UltimateBeneficiary.BankAddress) {
+            
+                $scope.IsKeyFieldsChanged = true;
+            }
+    }
+
     $scope.$watch('watchAccountDetails', function (val, oldVal) {
 
         if (val == undefined || val.length == 0 || oldVal == undefined || oldVal.length == 0 || $scope.isLoad) {
@@ -1997,7 +2006,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
 
-
+        $scope.CheckSSIFieldsChanges(val, oldVal);
+        
         if ($scope.IsCallBackChanged) {
             return;
         }
