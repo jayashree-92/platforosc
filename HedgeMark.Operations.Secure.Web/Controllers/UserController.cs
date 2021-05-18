@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
+using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware;
 using HedgeMark.Operations.Secure.Middleware.Models;
@@ -32,35 +34,54 @@ namespace HMOSecureWeb.Controllers
                 lastAccessedOnMap = context.hmsWires.GroupBy(s => s.LastUpdatedBy).ToDictionary(s => s.Key, v => v.Max(s1 => s1.LastModifiedAt));
             }
 
-            Dictionary<int, string> userEmailMap;
+            Dictionary<int, string> userEmailMap, userGroupMap;
             var allUserIds = users.Select(s => s.hmLoginId).Union(users.Select(s => s.CreatedBy).Union(users.Where(s => s.ApprovedBy != null).Select(s => (int)s.ApprovedBy))).Distinct().ToList();
 
             using (var context = new AdminContext())
             {
                 userEmailMap = context.hLoginRegistrations.Where(s => allUserIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
-                //var userGroup = context.onb
+                userGroupMap = context.onBoardingAssignmentUserGroupMaps.Include(s => s.onBoardingAssignmentUserGroup).Where(s => s.onBoardingAssignmentUserGroup.IsActive && s.onBoardingAssignmentUserGroup.IsPrimaryGroup && allUserIds.Contains(s.UserId)).GroupBy(s => s.UserId).ToDictionary(s => s.Key, v => v.Select(s1 => s1.onBoardingAssignmentUserGroup.GroupDescription).FirstOrDefault());
             }
 
-            var allWireUsers = new List<WireUsers>();
-            foreach (var thisUser in from hmsUser in users
-                                     let loginId = hmsUser.hmLoginId
-                                     select new WireUsers
-                                     {
-                                         User = hmsUser,
-                                         Email = userEmailMap.ContainsKey(loginId) ? userEmailMap[loginId] : string.Format("Unknown-user-{0}", loginId),
-                                         UserGroup = "",//hmsUser.hmsUserGroup.GroupName,
-                                         AuthorizationCode = UserAuthorizationCode.AuthorizedToHandleAllWires,
-                                         LastAccessedOn = lastAccessedOnMap.ContainsKey(loginId) ? lastAccessedOnMap[loginId] : new DateTime(),
-                                         TotalWiresApproved = approvedCount.ContainsKey(loginId) ? approvedCount[loginId] : 0,
-                                         TotalWiresInitiated = initiatorCount.ContainsKey(loginId) ? initiatorCount[loginId] : 0,
-                                         CreatedBy = userEmailMap.ContainsKey(hmsUser.CreatedBy) ? userEmailMap[hmsUser.CreatedBy] : string.Format("Unknown-user-{0}", hmsUser.CreatedBy),
-                                         ApprovedBy = hmsUser.ApprovedBy == null ? "-" : userEmailMap.ContainsKey(hmsUser.ApprovedBy ?? 0) ? userEmailMap[hmsUser.ApprovedBy ?? 0] : string.Format("Unknown-user-{0}", hmsUser.CreatedBy),
-                                     })
-            {
-                allWireUsers.Add(thisUser);
-            }
+            var allWireUsers = (from hmsUser in users
+                                let loginId = hmsUser.hmLoginId
+                                select new WireUsers
+                                {
+                                    User = hmsUser,
+                                    Email = userEmailMap.ContainsKey(loginId) ? userEmailMap[loginId] : string.Format("Unknown-user-{0}", loginId),
+                                    UserGroup = userGroupMap.ContainsKey(loginId) ? userGroupMap[loginId] : "-Un-categorized User-",
+                                    AuthorizationCode = UserAuthorizationCode.AuthorizedToHandleAllWires,
+                                    LastAccessedOn = lastAccessedOnMap.ContainsKey(loginId) ? lastAccessedOnMap[loginId] : new DateTime(),
+                                    TotalWiresApproved = approvedCount.ContainsKey(loginId) ? approvedCount[loginId] : 0,
+                                    TotalWiresInitiated = initiatorCount.ContainsKey(loginId) ? initiatorCount[loginId] : 0,
+                                    CreatedBy = userEmailMap.ContainsKey(hmsUser.CreatedBy) ? userEmailMap[hmsUser.CreatedBy] : string.Format("Unknown-user-{0}", hmsUser.CreatedBy),
+                                    ApprovedBy = hmsUser.ApprovedBy == null ? "-" : userEmailMap.ContainsKey(hmsUser.ApprovedBy ?? 0) ? userEmailMap[hmsUser.ApprovedBy ?? 0] : string.Format("Unknown-user-{0}", hmsUser.CreatedBy),
+                                }).ToList();
+
+            SetSessionValue(OpsSecureSessionVars.WireUserGroupData.ToString(), allWireUsers);
 
             return Json(allWireUsers);
+        }
+
+
+        public FileResult ExportReport(string groupOption = "All_Groups")
+        {
+            var allWireUsers = (List<WireUsers>)GetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString());
+            var fileName = "HMAuthTrasnfer - " + DateTime.Today.ToString("MM.dd.yyyy") + groupOption + ".pdf";
+            var exportFileInfo = new FileInfo(string.Format("{0}{1}", FileSystemManager.UploadTemporaryFilesPath, fileName));
+
+
+            if (groupOption == "Group_A_only")
+            {
+                allWireUsers = allWireUsers.Where(s => s.Role == "hm-wire-approver").ToList();
+            }
+            else if (groupOption == "Group_B_Only")
+            {
+                allWireUsers = allWireUsers.Where(s => s.Role == "hm-wire-initiator").ToList();
+            }
+            //Create PDF Files using allWireUsers
+
+            return DownloadAndDeleteFile(exportFileInfo);
         }
     }
 }

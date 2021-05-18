@@ -5,10 +5,16 @@
 }
 
 <legend>User Authorization Manager</legend>
-
 <div ng-controller="wireUsersCtrl">
     <button class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add new User</button>
-    <button class="btn btn-sm btn-default"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export as PDF</button>
+    <span class="btn-group">
+        <button class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-download-alt"></i>&nbsp; Export as PDF&nbsp;&nbsp;<span class="caret"></span></button>
+        <ul class="dropdown-menu" style="font-size: 12px;">
+            <li title="All Groups" ng-click="fnExportReport('All_Groups')"><a href="#">All Groups</a></li>
+            <li title="Group A Only" ng-click="fnExportReport('Group_A_only')"><a href="#">Group A Only</a></li>
+            <li title="Group B Only" ng-click="fnExportReport('Group_B_only')"><a href="#">Group B Only</a></li>
+        </ul>
+    </span>
     <table id="tblUserDetails" class="table table-hover table-bordered table-striped" style="background: white; cursor: pointer;"></table>
 </div>
 @section Javascript{

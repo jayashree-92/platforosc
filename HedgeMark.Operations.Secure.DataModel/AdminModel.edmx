@@ -214,6 +214,8 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="GroupDescription" Type="varchar(max)" />
+          <Property Name="IsPrimaryGroup" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="onBoardingAssignmentUserGroupMap">
           <Key>
@@ -1108,6 +1110,8 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="onBoardingAssignmentUserGroupMaps" Relationship="AdminModel.FK__onBoardin__onBoa__461F9D31" FromRole="onBoardingAssignmentUserGroup" ToRole="onBoardingAssignmentUserGroupMap" />
+          <Property Name="GroupDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IsPrimaryGroup" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="onBoardingAssignmentUserGroupMap">
           <Key>
@@ -1570,6 +1574,8 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <EntitySetMapping Name="onBoardingAssignmentUserGroups">
             <EntityTypeMapping TypeName="AdminModel.onBoardingAssignmentUserGroup">
               <MappingFragment StoreEntitySet="onBoardingAssignmentUserGroup">
+                <ScalarProperty Name="IsPrimaryGroup" ColumnName="IsPrimaryGroup" />
+                <ScalarProperty Name="GroupDescription" ColumnName="GroupDescription" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />

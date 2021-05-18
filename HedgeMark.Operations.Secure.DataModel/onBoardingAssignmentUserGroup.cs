@@ -25,6 +25,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public bool IsActive { get; set; }
         public string CreatedBy { get; set; }
         public System.DateTime CreatedAt { get; set; }
+        public string GroupDescription { get; set; }
+        public bool IsPrimaryGroup { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAssignmentUserGroupMap> onBoardingAssignmentUserGroupMaps { get; set; }

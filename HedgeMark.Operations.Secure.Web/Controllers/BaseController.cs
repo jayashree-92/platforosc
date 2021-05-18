@@ -21,7 +21,8 @@ namespace HMOSecureWeb.Controllers
         AuthorizedUserData,
         AuthorizedFundData,
         UserPreferencesInSession,
-        WiresDashboardData
+        WiresDashboardData,
+        WireUserGroupData
     }
 
     public class AuthorizedRolesAttribute : AuthorizeAttribute

@@ -4,6 +4,10 @@ var tblUserDetails
 HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, $q, $filter, $timeout) {
 
 
+    $scope.fnExportReport = function (groupOption) {
+        window.location.href = "/User/ExportReport?groupOption=" + groupOption;
+    }
+
     $http.get("/User/GetWireUsers").then(function (response) {
         if ($("#tblUserDetails").hasClass("initialized")) {
             fnDestroyDataTable("#tblUserDetails");
@@ -62,7 +66,7 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
                 startRender: function (rows, group) {
 
                     var allUsers = rows.data();
-                    
+
                     var authorizedToHandleSystemWiresOnly = true;
                     for (var j = 0; j < allUsers.length; j++) {
                         if (allUsers[j].AuthorizationCode != 2)
