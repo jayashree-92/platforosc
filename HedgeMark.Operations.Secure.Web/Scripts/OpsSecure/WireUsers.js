@@ -13,6 +13,7 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
         window.location.href = "/User/ExportReport?groupOption=" + groupOption;
     }
 
+    $scope.IsGroupedByRole = false;
     $http.get("/User/GetWireUsers").then(function (response) {
         if ($("#tblUserDetails").hasClass("initialized")) {
             fnDestroyDataTable("#tblUserDetails");
@@ -33,28 +34,7 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
                 },
                 { "sTitle": "Role", "mData": "User.LdapRole", "mRender": function (tdata, td, row, rowObj) { return tdata == "hm-wire-approver" ? "<label class='label label-primary'>hm-wire-approver</label>" : "<label class='label label-info'>hm-wire-initiator</label>" } },
                 { "sTitle": "Group", "mData": "UserGroup", "visible": false },
-                //{
-                //    "sTitle": "Added By", "mData": "CreatedBy", "mRender": function (tdata, td, row, rowObj) { return tdata == null ? "-" : tdata; }
-                //},
-                //{
-                //    "sTitle": "Added At",
-                //    "mData": "User.CreatedAt",
-                //    "type": "dotnet-date",
-                //    "mRender": function (tdata) {
-                //        return "<div title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + (moment(tdata).fromNow()) + "</div>";
-                //    }
-                //},
-                //{
-                //    "sTitle": "Approved By", "mData": "ApprovedBy", "mRender": function (tdata, td, row, rowObj) { return tdata == null ? "-" : tdata; }
-                //},
-                //{
-                //    "sTitle": "Approved At",
-                //    "mData": "User.ApprovedAt",
-                //    "type": "dotnet-date",
-                //    "mRender": function (tdata) {
-                //        return "<div title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + (moment(tdata).fromNow()) + "</div>";
-                //    }
-                //},
+
                 //{ "sTitle": "Wires Initiated", "mData": "TotalWiresInitiated" },
                 //{ "sTitle": "Wires Approved", "mData": "TotalWiresApproved" },
                 { "sTitle": "Account Status", "mData": "User.AccountStatus", "mRender": function (tdata, td, row, rowObj) { return tdata.toLowerCase() == "active" ? "<label class='label label-success'>Active</label>" : "<label class='label label-danger'>" + tdata + "</label>"; } },
@@ -83,7 +63,12 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
                     if (authorizedToHandleSystemWiresOnly)
                         message = "<i><span class='required'></span>The members of this group have wire approval authorization limited to system generated wires and those have not been subsequently edited</i>";
 
-                    return group + ' (' + rows.count() + ' users)        ' + message;
+                    var groupRoleInfo = "";
+                    if ($scope.IsGroupedByRole) {
+                        groupRoleInfo = group == "hm-wire-approver" ? "Group A : Authorized for Callbacks and Wire Approvals : " : "Group B - Electronic Wire Entry Only, Not Authorized for Callbacks or Wire Approvals :";
+                    }
+
+                    return groupRoleInfo + "" + group + ' (' + rows.count() + ' users)        ' + message;
                 },
                 dataSrc: ["UserGroup"]
             },
@@ -106,14 +91,22 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
             }
         });
 
-        
+
         $scope.tblUserDetails.on('rowgroup-datasrc', function (e, dt, val) {
-            $scope.tblUserDetails.order.fixed({ pre: [[val, 'asc']] }).draw();
+
+            var orderIndex = 3;
+            $scope.IsGroupedByRole = false;
+            if (val == "Role") {
+                orderIndex = 2;
+                $scope.IsGroupedByRole = true;
+            }
+
+            $scope.tblUserDetails.order.fixed({ pre: [[orderIndex, 'asc']] }).draw();
         });
 
     });
 
-    
+
     $scope.fnGroupResultsByColumn = function (val) {
         $scope.tblUserDetails.rowGroup().dataSrc(val);
     }

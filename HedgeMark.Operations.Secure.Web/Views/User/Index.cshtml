@@ -5,17 +5,17 @@
 }
 
 <legend>User Authorization Manager</legend>
-<div ng-controller="wireUsersCtrl">
-    <button class="btn btn-sm btn-primary" ng-click="fnRefreshUserList()"><i class="glyphicon glyphicon-repeat"></i>&nbsp;Refresh User List</button>
-    <div class="btn-group" data-toggle="buttons">
-        <label class="btn btn-default active">
-            <input type="radio" ng-change="fnGroupResultsByColumn(3)" name="options" id="option1" checked> Group by Teams
-        </label>
-        <label class="btn btn-default">
-            <input type="radio" ng-change="fnGroupResultsByColumn(4)" name="options" id="option2"> Group by Roles
-        </label>
-    </div>
+<div ng-controller="wireUsersCtrl" class="container-fluid">
 
+    <div class="btn-group" data-toggle="buttons">
+        <button class="btn btn-default btn-sm active" data-column="3" ng-click="fnGroupResultsByColumn('UserGroup')">
+            <input type="radio" name="options" id="option1" checked> Group by Teams
+        </button>
+        <button class="btn btn-default btn-sm" data-column="4" ng-click="fnGroupResultsByColumn('Role')">
+            <input type="radio" name="options" id="option2"> Group by Roles
+        </button>
+    </div>
+    <button class="btn btn-sm btn-primary" ng-click="fnRefreshUserList()"><i class="glyphicon glyphicon-repeat"></i>&nbsp;Refresh User List</button>
     <span class="btn-group">
         <button class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-download-alt"></i>&nbsp; Export as PDF&nbsp;&nbsp;<span class="caret"></span></button>
         <ul class="dropdown-menu" style="font-size: 12px;">
