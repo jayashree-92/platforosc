@@ -929,6 +929,22 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.deliveryCharges = [{ id: "BEN", text: "Beneficiary" }, { id: "OUR", text: "Our customer charged" }, { id: "SHA", text: " Shared charges" }];
 
+    function formatAccountList(selectData) {
+
+        if (selectData == null || selectData.text == null)
+            return "";
+
+        if (selectData.text.indexOf("(") != -1) {
+            var split = selectData.text.split("(");
+            var reportName = split[1].replace(")", "");
+            selectData.text = split[0] + "&nbsp;&nbsp;<label class='label label-info'>" + reportName + "</label>";
+        }
+
+
+        return selectData.text;
+    }
+
+
     function formatSelect(selectData) {
         return selectData.text.indexOf("-") != -1 ? selectData.text.split("-")[0] : selectData.text;
     }
@@ -998,7 +1014,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                 data: [],
                 allowClear: true,
-                closeOnSelect: false
+                closeOnSelect: false,
+                formatSelection: formatAccountList,
+                formatResult: formatAccountList,
             });
 
             angular.element("#liReceivingBookAccount").select2("destroy").val("");
@@ -1006,7 +1024,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 placeholder: "Select Receiving Account",
                 data: [],
                 allowClear: true,
-                closeOnSelect: false
+                closeOnSelect: false,
+                formatSelection: formatAccountList,
+                formatResult: formatAccountList,
             });
 
             angular.element("#liReceivingAccount").select2("destroy").val("");
@@ -1039,6 +1059,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             angular.element("#liSendingAccount").select2({
                 placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                 data: $scope.sendingAccountsList,
+                formatSelection: formatAccountList,
+                formatResult: formatAccountList,
                 closeOnSelect: false
             });
             angular.element("#liSendingAccount").select2("val", $scope.sendingAccountsList[0].id).trigger("change");
@@ -1055,7 +1077,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                     data: $scope.sendingAccountsList,
                     allowClear: true,
-                    closeOnSelect: false
+                    closeOnSelect: false,
+                    formatSelection: formatAccountList,
+                    formatResult: formatAccountList,
                 });
                 $scope.isSendingAccountEnabled = true;
                 angular.element("#liSendingAccount").select2("val", $scope.WireTicket.OnBoardAccountId).trigger("change");
@@ -1365,7 +1389,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                     data: $scope.sendingAccountsList,
                     allowClear: true,
-                    closeOnSelect: false
+                    closeOnSelect: false,
+                    formatSelection: formatAccountList,
+                    formatResult: formatAccountList,
                 });
                 $scope.isSendingAccountEnabled = true;
             }
@@ -1406,7 +1432,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     }
                     else {
                         $scope.receivingBookAccountList = $filter("filter")(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
-                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2("val");
+                            var selectedAccount = $("#liSendingAccount").select2("data");
+                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2("val") && (!selectedAccount.isSubAdvisorFund || acc.isParentFund);
                         }, true);
 
                         angular.element("#liReceivingBookAccount").select2("destroy");
@@ -1414,7 +1441,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                             placeholder: "Select Receiving Account",
                             data: $scope.receivingBookAccountList,
                             allowClear: true,
-                            closeOnSelect: false
+                            closeOnSelect: false,
+                            formatSelection: formatAccountList,
+                            formatResult: formatAccountList,
                         });
                         $scope.isReceivingAccountEnabled = true;
                         if ($scope.WireTicket.hmsWireId > 0)
@@ -1506,7 +1535,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 : $.convertToNumber($scope.CashBalance.AvailableBalance);
             $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
             $scope.CashBalance.IsNewBalanceOffLimit = newBalance < 0;
-            
+
             if (($scope.CashBalance.CalculatedBalance == "NaN.00" || $scope.CashBalance.CalculatedBalance == "N.A") && !isRetry)
                 $timeout($scope.fnCalculateCashBalance(true), 300);
         }
