@@ -26,7 +26,7 @@ namespace HedgeMark.Operations.Secure.Middleware
         public decimal Amount { get; set; }
         public bool IsParentFund { get; set; }
         public bool IsSubAdvisorFund { get; set; }
-        public string FundName { get; set; }
+        public long FundId { get; set; }
 
         public string AccountNameAndNumber
         {
@@ -387,9 +387,9 @@ namespace HedgeMark.Operations.Secure.Middleware
                                         FFCNumber = oAccnt.FFCNumber,
                                         IsAuthorizedSendingAccount = isAuthorizedSendingAccount,
                                         Currency = oAccnt.Currency,
-                                        IsParentFund = oAccnt.hmFundId == hmFundId || parentFundIds.Contains(oAccnt.hmFundId),
+                                        IsParentFund = parentFundIds.Contains(oAccnt.hmFundId),
                                         IsSubAdvisorFund = subFundIds.Contains(oAccnt.hmFundId),
-                                        //FundName = oAccnt.fun
+                                        FundId = oAccnt.hmFundId
                                     }).Distinct().ToList();
 
                 return fundAccounts;
