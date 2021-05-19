@@ -387,7 +387,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                                         FFCNumber = oAccnt.FFCNumber,
                                         IsAuthorizedSendingAccount = isAuthorizedSendingAccount,
                                         Currency = oAccnt.Currency,
-                                        IsParentFund = parentFundIds.Contains(oAccnt.hmFundId),
+                                        IsParentFund = oAccnt.hmFundId == hmFundId || parentFundIds.Contains(oAccnt.hmFundId),
                                         IsSubAdvisorFund = subFundIds.Contains(oAccnt.hmFundId),
                                         //FundName = oAccnt.fun
                                     }).Distinct().ToList();

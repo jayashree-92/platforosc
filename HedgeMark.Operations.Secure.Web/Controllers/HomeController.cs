@@ -158,7 +158,7 @@ namespace HMOSecureWeb.Controllers
                     : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId ?? 0, reportId);
             }
 
-            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new
+            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount && s.IsParentFund).Select(s => new
             {
                 id = s.OnBoardAccountId,
                 text = s.AccountNameAndNumber + (s.IsSubAdvisorFund ? " (Sub-advisor)" : ""),
@@ -653,7 +653,7 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetApprovedAccountsForFund(long fundId, WireDataManager.TransferType wireTransferType)
         {
             var fundAccounts = WireDataManager.GetApprovedFundAccounts(fundId, wireTransferType);
-            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new
+            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount && s.IsParentFund).Select(s => new
             {
                 id = s.OnBoardAccountId,
                 text = s.AccountNameAndNumber + (s.IsSubAdvisorFund ? " (Sub-advisor)" : ""),
