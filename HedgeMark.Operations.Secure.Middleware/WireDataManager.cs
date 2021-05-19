@@ -24,6 +24,9 @@ namespace HedgeMark.Operations.Secure.Middleware
         public DateTime ValueDate { get; set; }
         public int WireStatusId { get; set; }
         public decimal Amount { get; set; }
+        public bool IsParentFund { get; set; }
+        public bool IsSubAdvisorFund { get; set; }
+        public string FundName { get; set; }
 
         public string AccountNameAndNumber
         {
@@ -345,16 +348,50 @@ namespace HedgeMark.Operations.Secure.Middleware
             var isFundTransfer = wireTransferType == TransferType.FundTransfer;
             var isNotice = wireTransferType == TransferType.Notice;
 
+            Dictionary<long, IEnumerable<long>> umberllaFundMap;
+            using (var context = new AdminContext())
+            {
+                var onbFundId = context.vw_HFund.Where(s => s.hmFundId == hmFundId).Select(s => s.dmaFundOnBoardId).FirstOrDefault() ?? 0;
+                umberllaFundMap = context.onboardingSubAdvisorFundMaps.Include(s => s.parentFund).Include(s => s.umberllaFund).Where(s => !s.IsDeleted && (s.dmaFundOnBoardId == onbFundId || s.UmbrellaFundId == onbFundId))
+                    .Select(s => new { parentFundId = s.parentFund.FundMapId ?? 0, umberllaFundId = s.umberllaFund.FundMapId ?? 0 }).GroupBy(s => s.parentFundId).ToDictionary(s => s.Key, v => v.Select(s => s.umberllaFundId));
+            }
+
+            List<long> parentFundIds = new List<long>(), subFundIds = new List<long>();
+
+            foreach (var umberllaMap in umberllaFundMap)
+            {
+                parentFundIds.Add(umberllaMap.Key);
+                subFundIds.AddRange(umberllaMap.Value);
+            }
+
+            var allFundIds = new List<long>() { hmFundId };
+            allFundIds.AddRange(parentFundIds.Union(subFundIds));
+            allFundIds = allFundIds.Distinct().ToList();
+
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
+
                 var fundAccounts = (from oAccnt in context.onBoardingAccounts
-                                    where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed"
+                                    where allFundIds.Contains(oAccnt.hmFundId) && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed"
                                     let isAuthorizedSendingAccount = (currency == null || oAccnt.Currency == currency) && oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
                                     let isAuthorizedSendingAccountFinal = isNotice ? isAuthorizedSendingAccount && oAccnt.SwiftGroup.AcceptedMessages.Contains("MT210") : isAuthorizedSendingAccount
                                     where (isFundTransfer || isAuthorizedSendingAccountFinal)
-                                    select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.UltimateBeneficiaryAccountNumber, FFCNumber = oAccnt.FFCNumber, IsAuthorizedSendingAccount = isAuthorizedSendingAccount, Currency = oAccnt.Currency }).Distinct().ToList();
+
+                                    select new WireAccountBaseData
+                                    {
+                                        OnBoardAccountId = oAccnt.onBoardingAccountId,
+                                        AccountName = oAccnt.AccountName,
+                                        AccountNumber = oAccnt.UltimateBeneficiaryAccountNumber,
+                                        FFCNumber = oAccnt.FFCNumber,
+                                        IsAuthorizedSendingAccount = isAuthorizedSendingAccount,
+                                        Currency = oAccnt.Currency,
+                                        IsParentFund = parentFundIds.Contains(oAccnt.hmFundId),
+                                        IsSubAdvisorFund = subFundIds.Contains(oAccnt.hmFundId),
+                                        //FundName = oAccnt.fun
+                                    }).Distinct().ToList();
+
                 return fundAccounts;
             }
         }
@@ -374,7 +411,15 @@ namespace HedgeMark.Operations.Secure.Middleware
                                     let dmaReports = oAccnt.onBoardingAccountModuleAssociations.Select(s => s.onBoardingModule).Select(s => s.dmaReportsId)
                                     let isAuthorizedSendingAccount = (oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0)))
                                     where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved" && isAuthorizedSendingAccount && dmaReports.Contains(reportId)
-                                    select new WireAccountBaseData { OnBoardAccountId = oAccnt.onBoardingAccountId, AccountName = oAccnt.AccountName, AccountNumber = oAccnt.UltimateBeneficiaryAccountNumber, FFCNumber = oAccnt.FFCNumber, IsAuthorizedSendingAccount = isAuthorizedSendingAccount, Currency = oAccnt.Currency }).ToList();
+                                    select new WireAccountBaseData
+                                    {
+                                        OnBoardAccountId = oAccnt.onBoardingAccountId,
+                                        AccountName = oAccnt.AccountName,
+                                        AccountNumber = oAccnt.UltimateBeneficiaryAccountNumber,
+                                        FFCNumber = oAccnt.FFCNumber,
+                                        IsAuthorizedSendingAccount = isAuthorizedSendingAccount,
+                                        Currency = oAccnt.Currency
+                                    }).ToList();
                 return fundAccounts;
             }
         }

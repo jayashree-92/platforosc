@@ -158,8 +158,23 @@ namespace HMOSecureWeb.Controllers
                     : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId ?? 0, reportId);
             }
 
-            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
-            var receivingAccountsList = fundAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber }).ToList();
+            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new
+            {
+                id = s.OnBoardAccountId,
+                text = s.AccountNameAndNumber + (s.IsSubAdvisorFund ? " (Sub-advisor)" : ""),
+                Currency = s.Currency,
+                isParentFund = s.IsParentFund,
+                isSubAdvisorFund = s.IsSubAdvisorFund
+            }).ToList();
+
+            var receivingAccountsList = fundAccounts.Select(s => new
+            {
+                id = s.OnBoardAccountId,
+                text = s.AccountNameAndNumber + (s.IsSubAdvisorFund ? " (Sub-advisor)" : ""),
+                Currency = s.Currency,
+                isParentFund = s.IsParentFund,
+                isSubAdvisorFund = s.IsSubAdvisorFund
+            }).ToList();
 
             //Also include who is currently viewing this wire 
             var currentlyViewedBy = GetCurrentlyViewingUsers(wireId);
@@ -638,8 +653,24 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetApprovedAccountsForFund(long fundId, WireDataManager.TransferType wireTransferType)
         {
             var fundAccounts = WireDataManager.GetApprovedFundAccounts(fundId, wireTransferType);
-            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber, Currency = s.Currency }).ToList();
-            var receivingAccountsList = fundAccounts.Select(s => new { id = s.OnBoardAccountId, text = s.AccountNameAndNumber, Currency = s.Currency }).ToList();
+            var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount).Select(s => new
+            {
+                id = s.OnBoardAccountId,
+                text = s.AccountNameAndNumber + (s.IsSubAdvisorFund ? " (Sub-advisor)" : ""),
+                Currency = s.Currency,
+                isParentFund = s.IsParentFund,
+                isSubAdvisorFund = s.IsSubAdvisorFund
+            }).ToList();
+
+            var receivingAccountsList = fundAccounts.Select(s => new
+            {
+                id = s.OnBoardAccountId,
+                text = s.AccountNameAndNumber + (s.IsSubAdvisorFund ? " (Sub-advisor)" : ""),
+                Currency = s.Currency,
+                isParentFund = s.IsParentFund,
+                isSubAdvisorFund = s.IsSubAdvisorFund
+            }).ToList();
+
             var currencies = sendingAccountsList.Select(s => new { id = s.Currency, text = s.Currency }).Distinct().OrderBy(s => s.text).ToList();
             return Json(new { sendingAccountsList, receivingAccountsList, currencies });
         }

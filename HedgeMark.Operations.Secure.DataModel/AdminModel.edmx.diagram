@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="414b691953974c01be2844de38379599" Name="Diagram1" ZoomLevel="16">
+      <Diagram DiagramId="414b691953974c01be2844de38379599" Name="Diagram1" ZoomLevel="72">
         <EntityTypeShape EntityType="AdminModel.aspnet_Roles" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.aspnet_Users" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AdminModel.hLoginRegistration" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
@@ -26,6 +26,11 @@
         <EntityTypeShape EntityType="AdminModel.onBoardingAssignmentUserGroupMap" Width="1.5" PointX="3" PointY="14.875" />
         <AssociationConnector Association="AdminModel.FK__onBoardin__onBoa__461F9D31" />
         <EntityTypeShape EntityType="AdminModel.onboardingSubAdvisorFundMap" Width="1.5" PointX="5.375" PointY="14.75" />
+        <EntityTypeShape EntityType="AdminModel.onboardingFund" Width="1.5" PointX="0.75" PointY="0.75" />
+        <AssociationConnector Association="AdminModel.FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId" />
+        <AssociationConnector Association="AdminModel.FK_onboardingContactFundMap_dmaFundOnBoardId" />
+        <AssociationConnector Association="AdminModel.FK_onboardingSubAdvisorFundMap_dmaFundOnBoardId" />
+        <AssociationConnector Association="AdminModel.FK_onboardingSubAdvisorFundMap_UmbrellaFundId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

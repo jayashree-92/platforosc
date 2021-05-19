@@ -45,7 +45,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
         if (selectData.text.indexOf("(") != -1) {
             var split = selectData.text.split("(");
             var reportName = split[1].replace(")", "");
-            selectData.text = split[0] + "&nbsp;&nbsp;<label class='label " + (reportName == "Cash" ? " label-info" : "label-default") + " shadowBox'>" + reportName + "</label>";
+            selectData.text = split[0] + "&nbsp;&nbsp;<label class='label " + (reportName == "Cash" ? " label-info" : "label-default") + " '>" + reportName + "</label>";
         }
 
 

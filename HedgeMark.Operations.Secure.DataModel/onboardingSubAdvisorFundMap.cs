@@ -22,5 +22,8 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string UpdatedBy { get; set; }
         public System.DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
+    
+        public virtual onboardingFund parentFund { get; set; }
+        public virtual onboardingFund umberllaFund { get; set; }
     }
 }

@@ -24,5 +24,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public bool IsDeleted { get; set; }
     
         public virtual dmaOnBoardingContactDetail dmaOnBoardingContactDetail { get; set; }
+        public virtual onboardingFund onboardingFund { get; set; }
     }
 }
