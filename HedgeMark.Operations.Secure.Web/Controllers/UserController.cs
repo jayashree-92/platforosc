@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
+using HedgeMark.Operations.FileParseEngine.Models;
 using ExcelUtility.Operations.ManagedAccounts;
+using PDFUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware;
 using HedgeMark.Operations.Secure.Middleware.Models;
@@ -77,9 +79,25 @@ namespace HMOSecureWeb.Controllers
             {
                 allWireUsers = allWireUsers.Where(s => s.Role == "hm-wire-initiator").ToList();
             }
+            var userRows = ConstructWireUserRows(allWireUsers);
             //Create PDF Files using allWireUsers
 
             return DownloadAndDeleteFile(exportFileInfo);
+        }
+
+        public static List<Row> ConstructWireUserRows(List<WireUsers> wireUsers)
+        {
+            var rows = new List<Row>();
+            foreach (var user in wireUsers)
+            {
+                var thisRow = new Row();
+                thisRow["UserName"] = user.UserName.ToString();
+                thisRow["Role"] = user.User.LdapRole.ToString();
+                thisRow["Group"] = user.UserGroup.ToString();
+                rows.Add(thisRow);
+            }
+            return rows;
+
         }
     }
 }
