@@ -4,8 +4,6 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using Com.HedgeMark.Commons.Extensions;
-using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware;
 using HedgeMark.Operations.Secure.Middleware.Models;
@@ -24,13 +22,13 @@ namespace HMOSecureWeb.Controllers
         public JsonResult GetWireUsers()
         {
             List<hmsUser> users;
-            Dictionary<int, int> initiatorCount, approvedCount;
+            //Dictionary<int, int> initiatorCount, approvedCount;
             Dictionary<int, DateTime> lastAccessedOnMap;
             using (var context = new OperationsSecureContext())
             {
                 users = context.hmsUsers.ToList();
-                initiatorCount = context.hmsWires.Where(s => s.WireStatusId != (int)WireDataManager.WireStatus.Cancelled && s.WireStatusId != (int)WireDataManager.WireStatus.Failed).GroupBy(s => s.CreatedBy).ToDictionary(s => s.Key, v => v.Count());
-                approvedCount = context.hmsWires.Where(s => s.ApprovedBy != null && s.WireStatusId != (int)WireDataManager.WireStatus.Cancelled && s.WireStatusId != (int)WireDataManager.WireStatus.Failed).GroupBy(s => s.ApprovedBy).ToDictionary(s => s.Key.ToInt(), v => v.Count());
+                //initiatorCount = context.hmsWires.Where(s => s.WireStatusId != (int)WireDataManager.WireStatus.Cancelled && s.WireStatusId != (int)WireDataManager.WireStatus.Failed).GroupBy(s => s.CreatedBy).ToDictionary(s => s.Key, v => v.Count());
+                //approvedCount = context.hmsWires.Where(s => s.ApprovedBy != null && s.WireStatusId != (int)WireDataManager.WireStatus.Cancelled && s.WireStatusId != (int)WireDataManager.WireStatus.Failed).GroupBy(s => s.ApprovedBy).ToDictionary(s => s.Key.ToInt(), v => v.Count());
                 lastAccessedOnMap = context.hmsWires.GroupBy(s => s.LastUpdatedBy).ToDictionary(s => s.Key, v => v.Max(s1 => s1.LastModifiedAt));
             }
 
@@ -52,8 +50,8 @@ namespace HMOSecureWeb.Controllers
                                     UserGroup = userGroupMap.ContainsKey(loginId) ? userGroupMap[loginId] : "-Un-categorized User-",
                                     AuthorizationCode = UserAuthorizationCode.AuthorizedToHandleAllWires,
                                     LastAccessedOn = lastAccessedOnMap.ContainsKey(loginId) ? lastAccessedOnMap[loginId] : new DateTime(),
-                                    TotalWiresApproved = approvedCount.ContainsKey(loginId) ? approvedCount[loginId] : 0,
-                                    TotalWiresInitiated = initiatorCount.ContainsKey(loginId) ? initiatorCount[loginId] : 0
+                                    //TotalWiresApproved = approvedCount.ContainsKey(loginId) ? approvedCount[loginId] : 0,
+                                    //TotalWiresInitiated = initiatorCount.ContainsKey(loginId) ? initiatorCount[loginId] : 0
                                 }).ToList();
 
             SetSessionValue(OpsSecureSessionVars.WireUserGroupData.ToString(), allWireUsers);
