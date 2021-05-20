@@ -183,6 +183,7 @@
     <Compile Include="Jobs\OperationsSecureJobs.cs" />
     <Compile Include="Jobs\OverdueWireCancellationScheduleManager.cs" />
     <Compile Include="Jobs\SSITemplateDeactivator.cs" />
+    <Compile Include="Jobs\WireUserListRefresher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utility\HtmlExtensions.cs" />
