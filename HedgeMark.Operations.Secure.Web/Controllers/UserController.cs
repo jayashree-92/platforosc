@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
+using PDFUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware;
