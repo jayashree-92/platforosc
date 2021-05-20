@@ -74,6 +74,18 @@ namespace HMOSecureWeb.Jobs
             ScheduleReceiptOfInboundAckMessages(false);
             ScheduleAutoApprovalOfNoticeWires(false);
             ScheduleSSITemplateDeactivation(false);
+            ScheduleRefreshWireUserList(false);
+        }
+
+        public static void ScheduleRefreshWireUserList(bool isDisabled)
+        {
+            if (isDisabled)
+            {
+                RecurringJob.RemoveIfExists(WireUserListRefresher.JobName);
+                return;
+            }
+
+            RecurringJob.AddOrUpdate(WireUserListRefresher.JobName, () => WireUserListRefresher.RefreshWireUserList(), new CronHelper().Every().Day(new TimeSpan(23, 30, 00)));
         }
 
         public static void ScheduleSSITemplateDeactivation(bool isDisabled)

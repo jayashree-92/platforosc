@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.FileParseEngine.Models;
-using ExcelUtility.Operations.ManagedAccounts;
-using PDFUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware;
 using HedgeMark.Operations.Secure.Middleware.Models;
 using HedgeMark.Operations.Secure.Middleware.Util;
+using HMOSecureWeb.Jobs;
 
 namespace HMOSecureWeb.Controllers
 {
@@ -28,7 +28,6 @@ namespace HMOSecureWeb.Controllers
             List<hmsUser> users;
             Dictionary<int, int> initiatorCount, approvedCount;
             Dictionary<int, DateTime> lastAccessedOnMap;
-
 
             using (var context = new OperationsSecureContext())
             {
@@ -102,5 +101,11 @@ namespace HMOSecureWeb.Controllers
             return rows;
 
         }
+
+        public void RefreshUserList()
+        {
+            WireUserListRefresher.RefreshWireUserList();
+        }
+
     }
 }
