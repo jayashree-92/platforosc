@@ -1048,8 +1048,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             angular.element("#liWireTransferType").select2("val", 1).trigger("change");
             $scope.isPurposeEnabled = false;
             $scope.isFundsChanged = false;
-            $scope.isSendingAccountEnabled = false;
-            $scope.isReceivingAccountEnabled = false;
             $scope.WireTicket.OnBoardAccountId = "";
             $scope.WireTicket.OnBoardSSITemplateId = "";
             $scope.WireTicket.ReceivingOnBoardAccountId = "";
@@ -1081,19 +1079,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     formatSelection: formatAccountList,
                     formatResult: formatAccountList,
                 });
-                $scope.isSendingAccountEnabled = true;
                 angular.element("#liSendingAccount").select2("val", $scope.WireTicket.OnBoardAccountId).trigger("change");
                 angular.element("#liSenderInformation").select2("enable");
                 angular.element("#liCollateralPurpose").select2("enable");
                 angular.element("#wireSenderDescription").removeAttr("disabled");
             }, 50);
-            //$timeout(function () {
-            //    if ($scope.wireTicketObj.IsFundTransfer)
-            //        angular.element("#liReceivingBookAccount").select2('val', $scope.WireTicket.ReceivingOnBoardAccountId).trigger('change');
-            //    else
-            //        angular.element("#liReceivingAccount").select2('val', $scope.WireTicket.OnBoardSSITemplateId).trigger('change');
-            //}, 50);
-        }
+           }
         else {
             angular.element("#liMessageType").select2("disable");
             angular.element("#liSenderInformation").select2("disable");
@@ -1343,32 +1334,40 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }, 50);
     });
     angular.element(document).on("change", "#liFund", function () {
+
+        $("#liCurrency").select2("val", "").trigger("change");
+        $("#liCurrency").select2("disable");
+
+        if ($scope.wireTicketObj.IsFundTransfer) {
+            $("#liReceivingBookAccount").select2("val", "").trigger("change");
+            $("#liReceivingBookAccount").select2("disable");
+        } else {
+            $("#liSendingAccount").select2("val", "").trigger("change");
+            $("#liSendingAccount").select2("disable");
+            $("#liReceivingAccount").select2("val", "").trigger("change");
+            $("#liReceivingAccount").select2("disable");
+        }
+
+        $("#liSenderInformation").select2("val", "").trigger("change");
+
         $timeout(function () {
             if ($("#liFund").select2("val") != "") {
                 $scope.isFundsChanged = true;
+                $("#liCurrencyLoading").show();
                 $http.get("/Home/GetApprovedAccountsForFund?fundId=" + $("#liFund").select2("val") + "&wireTransferType=" + $("#liWireTransferType").val()).then(function (response) {
                     $scope.sendingAccountsListOfFund = response.data.sendingAccountsList;
                     $scope.receivingAccountsListOfFund = response.data.receivingAccountsList;
                     $scope.currencies = response.data.currencies;
 
-                    angular.element("#liCurrency").select2({
+                    $("#liCurrency").select2({
                         placeholder: "Select Currency",
                         data: $scope.currencies,
                         allowClear: true,
                         closeOnSelect: false
                     });
 
-                    //var currency = $scope.currencies.length == 0 ? null : $scope.currencies[0].id;
-
-                    //var isUsdAvailable = false;
-                    //$.each($scope.currencies,
-                    //    function (i, v) {
-                    //        if (v.id == "USD")
-                    //            isUsdAvailable = true;
-                    //    });
-
-                    // $("#liCurrency").select2('val', isUsdAvailable ? "USD" : currency).trigger('change');
-                    $scope.isSendingAccountEnabled = true;
+                    $("#liCurrency").select2("enable");
+                    $("#liCurrencyLoading").hide();
                 });
             }
             else {
@@ -1382,8 +1381,20 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
 
     angular.element(document).on("change", "#liCurrency", function () {
+
+        if ($scope.wireTicketObj.IsFundTransfer) {
+            $("#liReceivingBookAccount").select2("val", "").trigger("change");
+            $("#liReceivingBookAccount").select2("disable");
+        } else {
+            $("#liSendingAccount").select2("val", "").trigger("change");
+            $("#liSendingAccount").select2("disable");
+            $("#liReceivingAccount").select2("val", "").trigger("change");
+            $("#liReceivingAccount").select2("disable");
+        }
+
         $timeout(function () {
             if ($("#liCurrency").select2("val") != "" && $scope.WireTicket.hmsWireId == 0) {
+                $("#liSendingAccountLoading").show();
                 $scope.sendingAccountsList = $filter("filter")(angular.copy($scope.sendingAccountsListOfFund), { 'Currency': $("#liCurrency").select2("val") }, true);
                 angular.element("#liSendingAccount").select2({
                     placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
@@ -1394,6 +1405,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     formatResult: formatAccountList,
                 });
                 $scope.isSendingAccountEnabled = true;
+                $("#liSendingAccount").select2("enable");
+                $("#liSendingAccountLoading").hide();
             }
             else if ($scope.WireTicket.hmsWireId == 0) {
                 $scope.isFundsChanged = false;
@@ -1411,6 +1424,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             if ($("#liSendingAccount").select2("val") != "") {
                 if ($scope.WireTicketStatus.IsWirePurposeAdhoc && !$scope.wireTicketObj.IsNotice) {
                     if (!$scope.wireTicketObj.IsFundTransfer) {
+
+                        $("#liReceivingAccountLoading").show();
+
                         $http.get("/Home/GetApprovedSSITemplatesForAccount?accountId=" + $scope.WireTicket.OnBoardAccountId + "&isNormalTransfer=" + $scope.IsNormalTransfer).then(function (response) {
                             $scope.receivingAccounts = response.data.receivingAccounts;
                             $scope.receivingAccountList = response.data.receivingAccountList;
@@ -1423,14 +1439,18 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                                 closeOnSelect: false
                             });
 
-                            $scope.isReceivingAccountEnabled = true;
+                            $("#liReceivingAccount").select2("enable");
                             $scope.WireTicketStatus.ShouldEnableCollateralPurpose = response.data.shouldEnableCollateralPurpose;
 
                             if ($scope.WireTicket.hmsWireId > 0)
                                 angular.element("#liReceivingAccount").select2("val", $scope.WireTicket.OnBoardSSITemplateId).trigger("change");
+
+                            $("#liReceivingAccountLoading").hide();
                         });
                     }
                     else {
+
+                        $("#liReceivingBookAccountLoading").show();
                         $scope.receivingBookAccountList = $filter("filter")(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
                             var selectedAccount = $("#liSendingAccount").select2("data");
                             return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2("val") && (!selectedAccount.isSubAdvisorFund || acc.isParentFund);
@@ -1445,9 +1465,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                             formatSelection: formatAccountList,
                             formatResult: formatAccountList,
                         });
-                        $scope.isReceivingAccountEnabled = true;
+                        $("#liReceivingBookAccount").select2("enable");
                         if ($scope.WireTicket.hmsWireId > 0)
                             angular.element("#liReceivingBookAccount").select2("val", $scope.WireTicket.ReceivingOnBoardAccountId).trigger("change");
+
+                        $("#liReceivingBookAccountLoading").hide();
                     }
                 }
                 //var account = $filter('filter')(angular.copy($scope.sendingAccounts), function (account) {
@@ -1471,7 +1493,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 });
             }
             else {
-                $scope.isReceivingAccountEnabled = false;
                 $scope.accountDetail = angular.copy($scope.wireTicketObj.SendingAccount);
                 $interval.cancel($scope.promise);
                 $scope.timeToShow = "00 : 00 : 00";
@@ -1672,6 +1693,13 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $("#liCurrency").select2("val", "").trigger("change");
             $("#liAgreement").select2("val", "").trigger("change");
             $("#liSendingAccount").select2("val", "").trigger("change");
+            $("#liCurrency").select2("disable");
+            $("#liSendingAccount").select2("disable");
+
+            if ($scope.wireTicketObj.IsFundTransfer)
+                $("#liReceivingBookAccount").select2("disable");
+            else
+                $("#liReceivingAccount").select2("disable");
 
             $timeout(function () {
                 if ($scope.wireTicketObj.IsNotice)

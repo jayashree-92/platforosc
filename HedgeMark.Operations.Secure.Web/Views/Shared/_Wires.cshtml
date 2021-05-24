@@ -52,7 +52,7 @@
                                 <input type="text" id="liWireAccount" class="form-control primary-info" ng-model="accountDetail.AccountName" readonly />
                             </div>
                             <div class="col-md-3" ng-show="WireTicketStatus.IsEditEnabled">
-                                <input id="liSendingAccount" type="text" class="form-control primary-info" name="liSendingAccount" ng-disabled="!isSendingAccountEnabled" />
+                                <input id="liSendingAccount" type="text" class="form-control primary-info" name="liSendingAccount" />
                             </div>
                         </div>
                     </div>
@@ -67,10 +67,10 @@
                                 <input type="text" id="liReceivingAccount" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
                             </div>
                             <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && !wireTicketObj.IsFundTransfer">
-                                <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" ng-disabled="!isReceivingAccountEnabled" />
+                                <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" />
                             </div>
                             <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && wireTicketObj.IsFundTransfer">
-                                <input id="liReceivingBookAccount" type="text" class="form-control primary-info" name="liReceivingBookAccount" ng-disabled="!isReceivingAccountEnabled" />
+                                <input id="liReceivingBookAccount" type="text" class="form-control primary-info" name="liReceivingBookAccount" />
                             </div>
                         </div>
                     </div>
@@ -119,6 +119,7 @@
                             <div class="col-md-3">
                                 <input id="liCurrency" type="text" name="liCurrency" class="form-control primary-info" ng-disabled="!WireTicketStatus.IsEditEnabled" />
                             </div>
+                            <img style="margin: 15px 0px 0px 0px;display:none" src="..\Images\spinner.gif" alt="Loading..."  id="liCurrencyLoading"/>
                         </div>
                     </div>
                     <p style="height:5px;" ng-show="wireObj.IsAdhocWire" />
@@ -128,8 +129,9 @@
                                 <label>Select {{wireTicketObj.IsNotice?'Receiving':'Sending'}} Account:</label>
                             </div>
                             <div class="col-md-3">
-                                <input id="liSendingAccount" type="text" class="form-control primary-info" name="liSendingAccount" ng-disabled="!isSendingAccountEnabled" />
+                                <input id="liSendingAccount" type="text" class="form-control primary-info" name="liSendingAccount" />
                             </div>
+                            <img style="margin: 15px 0px 0px 0px;display:none" src="..\Images\spinner.gif" alt="Loading..." id="liSendingAccountLoading" />
                         </div>
                     </div>
                     <p style="height:5px;" />
@@ -139,8 +141,9 @@
                                 <label>Select Receiving Account:</label>
                             </div>
                             <div class="col-md-3">
-                                <input id="liReceivingBookAccount" type="text" class="form-control primary-info" name="liReceivingBookAccount" ng-disabled="!isReceivingAccountEnabled" />
+                                <input id="liReceivingBookAccount" type="text" class="form-control primary-info" name="liReceivingBookAccount" />
                             </div>
+                            <img style="margin: 15px 0px 0px 0px;display:none" src="..\Images\spinner.gif" alt="Loading..." id="liReceivingBookAccountLoading" />
                         </div>
                     </div>
                     <p style="height:5px;" ng-show="wireTicketObj.IsFundTransfer" />
@@ -150,11 +153,12 @@
                                 <label>Select Receiving Account:</label>
                             </div>
                             <div class="col-md-3" ng-show="wireObj.IsAdhocWire">
-                                <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" ng-disabled="!isReceivingAccountEnabled" />
+                                <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" />
                             </div>
                             <div class="col-md-3" ng-show="!wireObj.IsAdhocWire">
                                 <input type="text" id="liReceivingAccount" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
                             </div>
+                            <img style="margin: 15px 0px 0px 0px;display:none" src="..\Images\spinner.gif" alt="Loading..." id="liReceivingAccountLoading" />
                         </div>
                     </div>
                     <p style="height:5px;" ng-show="!wireTicketObj.IsFundTransfer && !wireTicketObj.IsNotice" />
@@ -994,7 +998,9 @@
                             &nbsp;<button class="btn btn-default btn-xs ng-show-hide" ng-hide="SwiftFormatMessageActiveTag==''" ng-click="fnPrintSwiftMessage($event)"><i class="glyphicon glyphicon-print"></i>&nbsp;Print</button>
                             &nbsp;<button class="btn btn-default btn-xs ng-show-hide" ng-hide="SwiftFormatMessageActiveTag==''" ng-click="fnCopySwiftMessageToClipboard($event)"><i class="glyphicon glyphicon-copy"></i>&nbsp;Copy to Clipboard</button>
                         </span>
-                        <ol class="status-track" style="text-align: center;    padding-bottom: 0px;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ">
+                        <ol class="status-track" style="        text-align: center;
+        padding-bottom: 0px;
+    ">
                             <li class="{{value.OriginalFinMsg ==''?'status-track-todo': key.indexOf('N-Ack')>=0 ? 'status-track-failed' : 'status-track-done'}}" ng-class="{'status-active': SwiftFormatMessageActiveTag==key}" ng-repeat="(key, value) in wireTicketObj.SwiftMessages" ng-click="fnShowFormattedSwiftMsg($event,key,value)">{{key}}</li>
                         </ol>
                         <span class="glyphicon  pull-right" style="top:-15px" ng-class="{ 'glyphicon-chevron-right': !isSwiftMessagesCollapsed , 'glyphicon-chevron-down': isSwiftMessagesCollapsed }"></span>
