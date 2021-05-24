@@ -114,9 +114,6 @@ namespace HMOSecureWeb
                 return;
             }
 
-            if (Utility.Util.IsLowerEnvironment)
-               roles.Add(OpsSecureUserRoles.WireAdmin);
-
             if (!(roles.Contains(OpsSecureUserRoles.WireApprover) || roles.Contains(OpsSecureUserRoles.WireInitiator) || roles.Contains(OpsSecureUserRoles.WireAdmin)))
             {
                 //Logger.InfoFormat(string.Format("LDAP ID: {0}", userSso.CommitId));
