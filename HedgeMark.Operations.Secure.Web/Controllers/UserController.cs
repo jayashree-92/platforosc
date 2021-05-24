@@ -89,7 +89,7 @@ namespace HMOSecureWeb.Controllers
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
-        public static List<SecureExporter.ExportContent> ConstructWireUserRows(List<WireUsers> wireUsers,string groupBy)
+        /*public static List<SecureExporter.ExportContent> ConstructWireUserRows(List<WireUsers> wireUsers,string groupBy)
         {
             var wireGroupedData = groupBy== "UserGroup" ? wireUsers.GroupBy(s => s.UserGroup).ToDictionary(s => s.Key, v => v) : wireUsers.GroupBy(s => s.User.LdapRole).ToDictionary(s => s.Key, v => v);
             var contentToExport = new List<SecureExporter.ExportContent>();
@@ -160,7 +160,7 @@ namespace HMOSecureWeb.Controllers
                 });
             }
             return contentToExport;            
-        }
+        }*/
 
         public void RefreshUserList()
         {
