@@ -17,7 +17,7 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
     }
 
     $scope.fnExportReport = function (groupOption) {
-        window.location.href = "/User/ExportReport?groupOption=" + groupOption;
+        window.location.href = "/User/ExportReport?groupBy=" + $scope.GroupByOption+"&groupOption=" + groupOption;
     }
 
     $scope.IsGroupedByRole = false;
@@ -130,6 +130,7 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
     $scope.fnLoadUserGrid();
 
     $scope.fnGroupResultsByColumn = function (val) {
+        $scope.GroupByOption = val;
         $scope.tblUserDetails.rowGroup().dataSrc(val);
     }
 

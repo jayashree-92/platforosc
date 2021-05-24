@@ -66,9 +66,9 @@ namespace HMOSecureWeb.Controllers
         }
 
 
-        public FileResult ExportReport(string groupOption = "All_Groups")
+        public FileResult ExportReport(string groupBy, string groupOption = "All_Groups")
         {
-            var allWireUsers = (List<WireUsers>)GetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString());
+            var allWireUsers = (List<WireUsers>)GetSessionValue(OpsSecureSessionVars.WireUserGroupData.ToString());
             var fileName = "HMAuthTrasnfer - " + DateTime.Today.ToString("MM.dd.yyyy") + groupOption + ".pdf";
             var exportFileInfo = new FileInfo(string.Format("{0}{1}", FileSystemManager.UploadTemporaryFilesPath, fileName));
 
@@ -81,25 +81,36 @@ namespace HMOSecureWeb.Controllers
             {
                 allWireUsers = allWireUsers.Where(s => s.Role == "hm-wire-initiator").ToList();
             }
-            var userRows = ConstructWireUserRows(allWireUsers);
+            var userRows = ConstructWireUserRows(allWireUsers, groupBy);
             //Create PDF Files using allWireUsers
 
+            exportFileInfo = SecureExporter.CreateWireUserPdfFile(userRows, groupBy, exportFileInfo.FullName);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
-        public static List<Row> ConstructWireUserRows(List<WireUsers> wireUsers)
+        public static List<SecureExporter.ExportContent> ConstructWireUserRows(List<WireUsers> wireUsers,string groupBy)
         {
-            var rows = new List<Row>();
-            foreach (var user in wireUsers)
+            var wireGroupedData = groupBy== "UserGroup" ? wireUsers.GroupBy(s => s.UserGroup).ToDictionary(s => s.Key, v => v) : wireUsers.GroupBy(s => s.User.LdapRole).ToDictionary(s => s.Key, v => v);
+            var contentToExport = new List<SecureExporter.ExportContent>();
+            foreach (var group in wireGroupedData)
             {
-                var thisRow = new Row();
-                thisRow["UserName"] = user.UserName.ToString();
-                thisRow["Role"] = user.User.LdapRole.ToString();
-                thisRow["Group"] = user.UserGroup.ToString();
-                rows.Add(thisRow);
-            }
-            return rows;
+                var rows = new List<Row>();
 
+                foreach (var user in group.Value)
+                {
+                    var thisRow = new Row();
+                    thisRow["UserName"] = user.UserName.ToString();
+                    thisRow["Role"] = user.User.LdapRole.ToString();
+                    thisRow["Group"] = user.UserGroup.ToString();
+                    rows.Add(thisRow);
+                }
+                contentToExport.Add(new SecureExporter.ExportContent()
+                {
+                    TabName = group.Key,
+                    Rows =rows
+                });
+            }
+            return contentToExport;            
         }
 
         public void RefreshUserList()
