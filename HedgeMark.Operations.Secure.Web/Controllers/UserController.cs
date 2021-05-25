@@ -70,7 +70,7 @@ namespace HMOSecureWeb.Controllers
         public FileResult ExportReport(string groupOption = "All_Groups")
         {
             var allWireUsers = (List<WireUsers>)GetSessionValue(OpsSecureSessionVars.WireUserGroupData.ToString());
-            var fileName = "HMAuthTrasnfer - " + DateTime.Today.ToString("MM.dd.yyyy") + groupOption + ".pdf";
+            var fileName = "HMAuthTransfer - " + DateTime.Today.ToString("MM.dd.yyyy") + groupOption + ".pdf";
             var exportFileInfo = new FileInfo(string.Format("{0}{1}", FileSystemManager.UploadTemporaryFilesPath, fileName));
 
             if (groupOption == "Group_A_only")

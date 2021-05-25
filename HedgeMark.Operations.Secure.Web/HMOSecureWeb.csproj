@@ -97,8 +97,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="PDFUtility.Operations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
- 		<SpecificVersion>False</SpecificVersion>      
-		<HintPath>..\packages\HedgeMark.PDFUtility.Operations.2.0.0\lib\net46\PDFUtility.Operations.dll</HintPath>
+<SpecificVersion>False</SpecificVersion>       
+<HintPath>..\packages\HedgeMark.PDFUtility.Operations.4.0.0\lib\net46\PDFUtility.Operations.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
