@@ -888,7 +888,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0)) {
             notifyWarning("Please add atleast one Callback check to approve account");
-            $scope.IsKeyFieldsChanged=false;
+            //$scope.IsKeyFieldsChanged=false;
             return;
         }
         
@@ -1068,7 +1068,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         return $http.post("/FundAccounts/AddAccounts", { onBoardingAccounts: $scope.onBoardingAccountDetails }).then(function () {
             if (!$scope.isHigherStatus)
                 notifySuccess("Account Saved successfully");
-
             $scope.onBoardingAccountDetails = [];
             $scope.accountDetail = {};
             $scope.fnGetAccounts();
@@ -2732,6 +2731,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             })
         }).then(function (response) {
             notifySuccess("Account Call back added successfully");
+            if ($scope.callback.hmsAccountCallbackId == undefined)
+                $scope.IsKeyFieldsChanged = false;
             $scope.IsCallBackChanged = true;
             $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId);
         });

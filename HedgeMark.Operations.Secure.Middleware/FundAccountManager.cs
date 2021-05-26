@@ -593,6 +593,16 @@ namespace HedgeMark.Operations.Secure.Middleware
             }
         }
 
+        public static void UpdateIsKeyFieldsChanged(long onBoardingAccountId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var onBoardingAccount = context.onBoardingAccounts.FirstOrDefault(s => s.onBoardingAccountId == onBoardingAccountId);
+                onBoardingAccount.IsKeyFieldsChanged = false;
+                context.SaveChanges();
+            }
+        }
+
         public static Dictionary<int, string> GetSwiftGroupStatus()
         {
             using (var context = new OperationsSecureContext())
