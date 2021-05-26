@@ -499,6 +499,7 @@
           <Property Name="dmaCounterpartyId" Type="bigint" />
           <Property Name="MarginAccountNumber" Type="varchar" MaxLength="100" />
           <Property Name="TopLevelManagerAccountNumber" Type="varchar" MaxLength="100" />
+          <Property Name="IsKeyFieldsChanged" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -2533,6 +2534,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccount" ToRole="onBoardingAccountSSITemplateMap" />
           <Property Name="TopLevelManagerAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="WirePortalCutoff" Relationship="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId" FromRole="onBoardingAccount" ToRole="hmsWirePortalCutoff" />
+          <Property Name="IsKeyFieldsChanged" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
@@ -3611,6 +3613,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="onBoardingAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccount">
               <MappingFragment StoreEntitySet="onBoardingAccount">
+                <ScalarProperty Name="IsKeyFieldsChanged" ColumnName="IsKeyFieldsChanged" />
                 <ScalarProperty Name="TopLevelManagerAccountNumber" ColumnName="TopLevelManagerAccountNumber" />
                 <ScalarProperty Name="MarginAccountNumber" ColumnName="MarginAccountNumber" />
                 <ScalarProperty Name="dmaCounterpartyId" ColumnName="dmaCounterpartyId" />

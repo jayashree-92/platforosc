@@ -811,7 +811,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.isEdit = true;
         $scope.fundName = accDetails.FundName;
         $scope.isLoad = true;
-        $scope.IsKeyFieldsChanged = false;//accDetails.IsKeyFieldsChanged;
+        $scope.IsKeyFieldsChanged = accDetails.IsKeyFieldsChanged;
 
         if ($scope.AgreementTypeId > 0) {
             $scope.AgreementType = $.grep($scope.agreementTypes, function (v) { return v.id == $scope.AgreementTypeId; })[0].text;
@@ -888,19 +888,20 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0)) {
             notifyWarning("Please add atleast one Callback check to approve account");
-            $scope.IsKeyFieldsChanged = false;
+            $scope.IsKeyFieldsChanged=false;
             return;
         }
-        if ($scope.IsKeyFieldsChanged) {
-            notifyWarning("Please add one Callback check to approve account");
-            return;
-        }
+        
         $scope.AccountStatus = status;
         var confirmationMsg = "Are you sure you want to " + ((statusAction === "Request for Approval") ? "<b>request</b> for approval of" : "<b>" + (statusAction == "Revert" ? "save changes or sending approval for" : statusAction) + "</b>") + " the selected account?";
         if (statusAction == "Request for Approval") {
             $("#btnSaveComment").addClass("btn-warning").removeClass("btn-success").removeClass("btn-primary");
             $("#btnSaveComment").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
         } else if (statusAction == "Approve") {
+            if ($scope.IsKeyFieldsChanged) {
+                notifyWarning("Please add one Callback check to approve account");
+                return;
+            }
             $("#btnSaveComment").removeClass("btn-warning").addClass("btn-success").removeClass("btn-primary");
             $("#btnSaveComment").html('<i class="glyphicon glyphicon-ok"></i>&nbsp;Approve');
         }
@@ -1012,7 +1013,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         var isAccountNameEmpty = false;
 
         var value = $scope.onBoardingAccountDetails[0];
-        //value.IsKeyFieldsChanged = $scope.IsKeyFieldsChanged;
+        value.IsKeyFieldsChanged = $scope.IsKeyFieldsChanged;
         value.Description = $("#liAccountDescriptions0").val();
 
         if ($("#cashSweep0").val() == "Yes") {
