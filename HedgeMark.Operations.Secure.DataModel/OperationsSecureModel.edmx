@@ -626,6 +626,7 @@
           <Property Name="IntermediaryBICorABAId" Type="bigint" />
           <Property Name="UltimateBeneficiaryBICorABAId" Type="bigint" />
           <Property Name="LastUsedAt" Type="datetime" Nullable="false" />
+          <Property Name="IsKeyFieldsChanged" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="OnBoardingSSITemplateAccountType">
           <Key>
@@ -2226,6 +2227,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="LastUsedAt" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="hmsSSICallbacks" Relationship="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsSSICallback" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsWire" />
+          <Property Name="IsKeyFieldsChanged" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_onBoardingSSITemplate_BeneficiaryBICorABAId">
           <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
@@ -3438,6 +3440,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="onBoardingSSITemplates">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingSSITemplate">
               <MappingFragment StoreEntitySet="onBoardingSSITemplate">
+                <ScalarProperty Name="IsKeyFieldsChanged" ColumnName="IsKeyFieldsChanged" />
                 <ScalarProperty Name="LastUsedAt" ColumnName="LastUsedAt" />
                 <ScalarProperty Name="UltimateBeneficiaryBICorABAId" ColumnName="UltimateBeneficiaryBICorABAId" />
                 <ScalarProperty Name="IntermediaryBICorABAId" ColumnName="IntermediaryBICorABAId" />

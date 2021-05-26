@@ -2009,12 +2009,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
             return;
         }
-
-        $scope.CheckSSIFieldsChanges(val, oldVal);
         
         if ($scope.IsCallBackChanged) {
             return;
         }
+
+        $scope.CheckSSIFieldsChanges(val, oldVal);
+
 
         if (val[0].onBoardingAccountId == oldVal[0].onBoardingAccountId) {
             $scope.isApproved = false;
