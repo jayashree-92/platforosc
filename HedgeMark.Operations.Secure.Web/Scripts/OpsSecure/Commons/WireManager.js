@@ -1084,7 +1084,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 angular.element("#liCollateralPurpose").select2("enable");
                 angular.element("#wireSenderDescription").removeAttr("disabled");
             }, 50);
-           }
+        }
         else {
             angular.element("#liMessageType").select2("disable");
             angular.element("#liSenderInformation").select2("disable");
@@ -1548,8 +1548,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.CashBalance.CalculatedBalance = "N.A";
         else {
 
-            if ($scope.isDeadlineCrossed)
-                $scope.CashBalance.AvailableBalance = $scope.CashBalance.HoldBackAmount;
+            if ($scope.isDeadlineCrossed) {
+                $scope.CashBalance.AvailableBalance = $.convertToCurrency(Math.min($.convertToNumber($scope.CashBalance.HoldBackAmount), $.convertToNumber($scope.CashBalance.AvailableBalance)), 2);
+            }
+            $scope.CashBalance.HoldBackAmount = $.convertToCurrency($scope.CashBalance.HoldBackAmount, 2);
 
             var newBalance = $scope.WireTicket.WireStatusId <= 1 && !$scope.wireTicketObj.IsNotice
                 ? $.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text())
