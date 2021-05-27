@@ -887,6 +887,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         $scope.fnValidateBasicWireDetails();
         $scope.fnResetDeadlineTimer();
+        $scope.fnCalculateCashBalance(true);
     }
 
     $scope.fnHideErrorMessage = function () {
