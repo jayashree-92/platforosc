@@ -45,6 +45,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aspose.Pdf, Version=11.6.0.0, Culture=neutral, PublicKeyToken=6947866647e416ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\Aspose.Pdf.11.6.0\lib\net40-client\Aspose.Pdf.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -94,8 +97,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="PDFUtility.Operations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\HedgeMark.PDFUtility.Operations.1.0.0\lib\net46\PDFUtility.Operations.dll</HintPath>
+		<SpecificVersion>False</SpecificVersion>       
+		<HintPath>..\packages\HedgeMark.PDFUtility.Operations.5.0.0\lib\net46\PDFUtility.Operations.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -432,6 +435,8 @@
     <Content Include="Images\bny-mellon_name-logo.jpg" />
     <Content Include="Images\bnymellon-arrow-icon.png" />
     <Content Include="Images\bnymellon_logo.png" />
+    <Content Include="Images\BNY_LOGO_Address.PNG" />
+    <Content Include="Images\BNY_LOGO_NAME.PNG" />
     <Content Include="Images\BNY_Mellon_Company.png" />
     <Content Include="Images\clear.png" />
     <Content Include="Images\grippy.png" />

@@ -529,6 +529,7 @@ namespace HMOSecureWeb.Controllers
             {
                 callback.RecCreatedBy = UserName;
                 callback.RecCreatedDt = DateTime.Now;
+                SSITemplateManager.UpdateIsKeyFieldsChanged(callback.onBoardingSSITemplateId);
             }
 
             SSITemplateManager.AddOrUpdateCallback(callback);

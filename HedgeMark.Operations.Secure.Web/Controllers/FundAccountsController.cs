@@ -459,6 +459,8 @@ namespace HMOSecureWeb.Controllers
             {
                 callback.RecCreatedBy = UserName;
                 callback.RecCreatedDt = DateTime.Now;
+                FundAccountManager.UpdateIsKeyFieldsChanged(callback.onBoardingAccountId);
+
             }
 
             FundAccountManager.AddOrUpdateCallback(callback);

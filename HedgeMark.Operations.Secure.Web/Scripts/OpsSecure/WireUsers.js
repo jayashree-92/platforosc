@@ -17,7 +17,7 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
     }
 
     $scope.fnExportReport = function (groupOption) {
-        window.location.href = "/User/ExportReport?groupBy=" + $scope.GroupByOption+"&groupOption=" + groupOption;
+        window.location.href = "/User/ExportReport?groupOption=" + groupOption;
     }
 
     $scope.IsGroupedByRole = false;

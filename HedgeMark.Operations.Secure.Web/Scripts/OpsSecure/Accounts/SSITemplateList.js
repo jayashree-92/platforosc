@@ -502,6 +502,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
 
         if (rowElement.SSITemplateStatus == pendingStatus && rowElement.CreatedBy != $("#userName").val() && rowElement.UpdatedBy != $("#userName").val()) {
             $("#btnSSITemplateStatusButtons button[id='approve']").removeClass("disabled");
+            $scope.IsPendingApproval = true;
         }
         if (rowElement.SSITemplateStatus == createdStatus) {
             $("#btnSSITemplateStatusButtons button[id='requestForApproval']").removeClass("disabled");

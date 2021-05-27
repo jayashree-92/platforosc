@@ -67,12 +67,11 @@ namespace HMOSecureWeb.Controllers
         }
 
 
-        public FileResult ExportReport(string groupBy, string groupOption = "All_Groups")
+        public FileResult ExportReport(string groupOption = "All_Groups")
         {
             var allWireUsers = (List<WireUsers>)GetSessionValue(OpsSecureSessionVars.WireUserGroupData.ToString());
-            var fileName = "HMAuthTrasnfer - " + DateTime.Today.ToString("MM.dd.yyyy") + groupOption + ".pdf";
+            var fileName = "HMAuthTransfer - " + DateTime.Today.ToString("MM.dd.yyyy") + groupOption + ".pdf";
             var exportFileInfo = new FileInfo(string.Format("{0}{1}", FileSystemManager.UploadTemporaryFilesPath, fileName));
-
 
             if (groupOption == "Group_A_only")
             {
@@ -82,68 +81,21 @@ namespace HMOSecureWeb.Controllers
             {
                 allWireUsers = allWireUsers.Where(s => s.Role == "hm-wire-initiator").ToList();
             }
-            //var userRows = ConstructWireUserRows(allWireUsers, groupBy);
+            var userRows = ConstructWireUserRows(allWireUsers);
             //Create PDF Files using allWireUsers
 
-            //exportFileInfo = SecureExporter.CreateWireUserPdfFile(userRows, groupBy, exportFileInfo.FullName);
+            exportFileInfo = SecureExporter.CreateWireUserPdfFile(userRows, groupOption, exportFileInfo.FullName);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
-        /*public static List<SecureExporter.ExportContent> ConstructWireUserRows(List<WireUsers> wireUsers,string groupBy)
+        public static List<ExportContent> ConstructWireUserRows(List<WireUsers> wireUsers)
         {
-            var wireGroupedData = groupBy== "UserGroup" ? wireUsers.GroupBy(s => s.UserGroup).ToDictionary(s => s.Key, v => v) : wireUsers.GroupBy(s => s.User.LdapRole).ToDictionary(s => s.Key, v => v);
-            var contentToExport = new List<SecureExporter.ExportContent>();
-
-            var data = wireUsers.GroupBy(s => new { s.Role, s.UserGroup }).ToDictionary(s => s.Key, v => v).OrderBy(s=>s.Key.Role);
-
-            var groupAData = wireUsers.Where(s => s.Role == "hm-wire-approver").GroupBy(s => s.UserGroup).ToDictionary(s => s.Key, v => v);
-            var groupBData = wireUsers.Where(s => s.Role == "hm-wire-initiator").GroupBy(s => s.UserGroup).ToDictionary(s => s.Key, v => v);
-             
-            int i = 1;
-            foreach (var group in groupAData)
-            {
-                var rows = new List<Row>();
-                foreach (var user in group.Value)
-                {
-                    int j = 0;
-                    Row thisRow=new Row();
-                    if (i % 3 == 1)
-                    {
-                        //thisRow = new Row();
-                        thisRow["Column1"] = user.UserName.ToString();
-                        j++;
-                    }
-                    //if (i % 3 == 2)
-                    //    thisRow["Column2"] = user.UserName.ToString();
-                    //if (i % 3 == 3)
-                    //    thisRow["Column3"] = user.UserName.ToString();
-                    //thisRow["IsHeader"] = "true";
-                    rows.Add(thisRow);
-
-                    if (i % 3 == 2)
-                    {
-                        rows[j].CellValues.Add(new KeyValuePair<Row.Header, Row.Cell>(new Row.Header { Name = "Column2" }, new Row.Cell(user.UserName.ToString())));//( "Column2", user.UserName.ToString() );
-                    }
-                    if (i % 3 == 3)
-                    {
-                        rows[j].CellValues.Add(new KeyValuePair<Row.Header, Row.Cell>(new Row.Header { Name = "Column3" }, new Row.Cell(user.UserName.ToString())));//( "Column2", user.UserName.ToString() );
-
-                    }
-
-                }
-                i++;
-                contentToExport.Add(new SecureExporter.ExportContent()
-                {
-                    TabName = "Group A",
-                    GroupName = group.Key,
-                    Rows = rows
-                });
-            }
+            var contentToExport = new List<ExportContent>();
+            var data = wireUsers.GroupBy(s => new { s.Role, s.UserGroup }).ToDictionary(s => s.Key, v => v).OrderBy(s=>s.Key.Role);            
 
             foreach (var group in data)
             {
                 var rows = new List<Row>();
-
                 foreach (var user in group.Value)
                 {
                     var thisRow = new Row();
@@ -152,7 +104,7 @@ namespace HMOSecureWeb.Controllers
                     thisRow["Group"] = user.UserGroup.ToString();
                     rows.Add(thisRow);
                 }
-                contentToExport.Add(new SecureExporter.ExportContent()
+                contentToExport.Add(new ExportContent()
                 {
                     TabName = group.Key.Role,
                     GroupName=group.Key.UserGroup,
@@ -160,7 +112,7 @@ namespace HMOSecureWeb.Controllers
                 });
             }
             return contentToExport;            
-        }*/
+        }
 
         public void RefreshUserList()
         {

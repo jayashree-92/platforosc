@@ -206,5 +206,15 @@ namespace HedgeMark.Operations.Secure.Middleware
                 context.SaveChanges();
             }
         }
+
+        public static void UpdateIsKeyFieldsChanged(long onBoardingSSITemplateId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var onBoardingAccount = context.onBoardingSSITemplates.FirstOrDefault(s => s.onBoardingSSITemplateId == onBoardingSSITemplateId);
+                onBoardingAccount.IsKeyFieldsChanged = false;
+                context.SaveChanges();
+            }
+        }
     }
 }

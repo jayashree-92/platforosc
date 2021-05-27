@@ -9,6 +9,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.serviceProvider = "";
     $scope.reasonDetail = "";
     $scope.BrokerTemplateTypeId = 2;
+    $scope.IsBNYMBroker = false;
+    $scope.IsPendingApproval = false;
     $scope.SSITemplateTypeData = [{ id: "Broker", text: "Broker" }, { id: "Fee/Expense Payment", text: "Fee/Expense Payment" }];
     $scope.messageTypes = [{ id: "MT103", text: "MT103" }, { id: "MT202", text: "MT202" }, { id: "MT202 COV", text: "MT202 COV" }];
     // { id: "MT210", text: "MT210" }, { id: "MT540", text: "MT540" },{ id: "MT542", text: "MT542" }
@@ -464,6 +466,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $("#liBroker").change(function () {
         if ($scope.SSITemplateType == "Broker") {
             $scope.broker = ($(this).val() > 0) ? $("#liBroker").select2("data").text : "";
+            $scope.IsBNYMBroker = $scope.broker == "The Bank of New York Mellon";
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
         }
     });
@@ -514,6 +517,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $scope.reasonDetail = $scope.ssiTemplate.ReasonDetail;
             // $scope.SSITemplateType = $scope.ssiTemplate.SSITemplateType;
             $scope.ssiTemplate.CreatedAt = moment($scope.ssiTemplate.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
+            $scope.IsKeyFieldsChanged = $scope.ssiTemplate.IsKeyFieldsChanged;
             if ($scope.ssiTemplate.SSITemplateType == "Broker") {
                 var templateList = $scope.ssiTemplate.TemplateName.split("-");
                 $scope.broker = templateList[0].trim();
@@ -522,6 +526,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 $scope.reasonDetail = templateList[3].trim();
 
             }
+            $scope.IsBNYMBroker = $scope.broker == "The Bank of New York Mellon";
+
             if ($scope.reasonDetail == "Other") {
                 $("#otherReason").show();
             } else
@@ -558,6 +564,14 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         $scope.fnConstructDocumentTable(JSON.parse("{" + documentData + "}"));
     }
 
+    $scope.CheckSSIFieldsChanges = function (val, oldVal) {
+        if (val.Description != oldVal.Description || val.Currency != oldVal.currency || val.FFCName != oldVal.FFCName || val.FFCNumber != oldVal.FFCNumber || val.Reference != oldVal.Reference || val.IntermediaryAccountNumber != oldVal.IntermediaryAccountNumber || val.BeneficiaryAccountNumber != oldVal.BeneficiaryAccountNumber || val.UltimateBeneficiaryAccountNumber != oldVal.UltimateBeneficiaryAccountNumber || val.IntermediaryType != oldVal.IntermediaryType || val.BeneficiaryType != oldVal.BeneficiaryType || val.UltimateBeneficiaryType != oldVal.UltimateBeneficiaryType || val.Intermediary.BICorABA != oldVal.Intermediary.BICorABA || val.Beneficiary.BICorABA != oldVal.Beneficiary.BICorABA || val.UltimateBeneficiary.BICorABA != oldVal.UltimateBeneficiary.BICorABA || val.Intermediary.BankName != oldVal.Intermediary.BankName || val.Beneficiary.BankName != oldVal.Beneficiary.BankName || val.UltimateBeneficiary.BankName != oldVal.UltimateBeneficiary.BankName || val.UltimateBeneficiaryAccountName != oldVal.UltimateBeneficiaryAccountName || val.Intermediary.BankAddress != oldVal.Intermediary.BankAddress
+            || val.Beneficiary.BankAddress != oldVal.Beneficiary.BankAddress || val.UltimateBeneficiary.BankAddress != oldVal.UltimateBeneficiary.BankAddress) {
+
+            $scope.IsKeyFieldsChanged = true;
+        }
+    }
+
     $scope.$watch("watchSSITemplate", function (val, oldVal) {
 
         if (val == undefined || oldVal == undefined || $scope.isLoad) {
@@ -568,6 +582,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         if ($scope.IsCallBackChanged) {
             return;
         }
+
+        $scope.CheckSSIFieldsChanges(val, oldVal);
 
         $scope.isSSITemplateChanged = val != oldVal;
 
@@ -791,6 +807,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
             if (rowElement.Status == "Pending Approval" && rowElement.onBoardingAccountSSITemplateMapId > 0 && rowElement.UpdatedBy != $("#userName").val()) {
                 $("#btnAccountMapStatusButtons a[title='Approve']").removeClass("disabled");
+                $scope.IsPendingApproval = true;
             }
 
         });
@@ -835,7 +852,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         if (statusAction == "Request for Approval") {
             $("#btnMapSaveComment").addClass("btn-warning").removeClass("btn-success").removeClass("btn-info");
             $("#btnMapSaveComment").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
-        } else if (statusAction == "Approve") {
+        } else if (statusAction == "Approve") {            
             $("#btnMapSaveComment").removeClass("btn-warning").addClass("btn-success").removeClass("btn-info");
             $("#btnMapSaveComment").html('<i class="glyphicon glyphicon-ok"></i>&nbsp;Approve');
         }
@@ -1345,6 +1362,10 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             //  $("#btnSaveCommentAgreements").addClass("btn-warning").removeClass("btn-success").removeClass("btn-info");
             $("#btnSaveCommentAgreements").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
         } else if (statusAction == "Approve") {
+            if ($scope.IsKeyFieldsChanged) {
+                notifyWarning("Please add one Callback check to approve account");
+                return;
+            }
             $("#btnSaveCommentAgreements").removeClass("btn-warning").addClass("btn-success").removeClass("btn-primary");
             $("#btnSaveCommentAgreements").html('<i class="glyphicon glyphicon-ok"></i>&nbsp;Approve');
         } else if (statusAction == "Revert") {
@@ -1402,7 +1423,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 {
                     "mData": "Title", "sTitle": "Title"
                 },
-
+                /*
                 {
                     "mData": "IsCallbackConfirmed", "sTitle": "Callback Confirmation",
                     "mRender": function (tdata) {
@@ -1411,7 +1432,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
                         return "<button class='btn btn-primary btn-xs btnCallbackConfirm' title='Confirm'>Confirm</button>";
                     }
-                },
+                },*/
                 {
                     "mData": "RecCreatedBy", "sTitle": "Created By", "mRender": function (data) {
                         return humanizeEmail(data);
@@ -1425,7 +1446,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                         return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
                     }
                 },
-                {
+                /*{
                     "mData": "ConfirmedBy", "sTitle": "Confirmed By", "mRender": function (data, type, row) {
                         return row.IsCallbackConfirmed ? humanizeEmail(data) : "";
                     }
@@ -1440,7 +1461,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
                         return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
                     }
-                },
+                },*/
 
             ],
             "oLanguage": {
@@ -1449,14 +1470,14 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 "sInfoFiltered": " - filtering from _MAX_ Callbacks"
             },
             "createdRow": function (row, data) {
-                switch (data.IsCallbackConfirmed) {
-                    case true:
-                        $(row).addClass("success");
-                        break;
-                    case false:
-                        $(row).addClass("warning");
-                        break;
-                }
+                //switch (data.IsCallbackConfirmed) {
+                //    case true:
+                //        $(row).addClass("success");
+                //        break;
+                //    case false:
+                //        $(row).addClass("warning");
+                //        break;
+                //}
 
             },
             //"scrollX": false,
@@ -1583,6 +1604,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             })
         }).then(function (response) {
             notifySuccess("SSI Call back added successfully");
+            if ($scope.callback.hmsSSICallbackId == undefined)
+                $scope.IsKeyFieldsChanged = false;
             $scope.fnGetSSICallbackData($scope.ssiTemplate.onBoardingSSITemplateId);
         });
 

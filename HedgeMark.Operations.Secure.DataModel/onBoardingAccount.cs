@@ -79,6 +79,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public Nullable<long> dmaCounterpartyId { get; set; }
         public string MarginAccountNumber { get; set; }
         public string TopLevelManagerAccountNumber { get; set; }
+        public bool IsKeyFieldsChanged { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsAccountCallback> hmsAccountCallbacks { get; set; }
