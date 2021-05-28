@@ -646,7 +646,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                 : ComputeNonPBCashBalances(sendingFundAccountId, valueDate, contextDate);
 
             if (cashbalances != null)
-                cashbalances.HoldBackAmount = fndAccount.HoldbackAmount ?? 0;
+                cashbalances.HoldBackAmount = (decimal)(fndAccount.HoldbackAmount ?? 0);
 
             return cashbalances;
         }

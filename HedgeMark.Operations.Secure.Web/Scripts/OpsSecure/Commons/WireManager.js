@@ -1549,19 +1549,25 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.CashBalance.CalculatedBalance = "N.A";
         else {
 
-            if ($scope.isDeadlineCrossed) {
-                $scope.CashBalance.AvailableBalance = $.convertToCurrency(Math.min($.convertToNumber($scope.CashBalance.HoldBackAmount), $.convertToNumber($scope.CashBalance.AvailableBalance)), 2);
-            }
-            $scope.CashBalance.HoldBackAmount = $.convertToCurrency($scope.CashBalance.HoldBackAmount, 2);
+            var holdBackBalance = $scope.WireTicket.WireStatusId <= 1 && !$scope.wireTicketObj.IsNotice
+                ? $.convertToNumber($scope.CashBalance.AvailableHoldBackBalance) - $.convertToNumber($("#wireAmount").text())
+                : $.convertToNumber($scope.CashBalance.AvailableHoldBackBalance);
 
             var newBalance = $scope.WireTicket.WireStatusId <= 1 && !$scope.wireTicketObj.IsNotice
                 ? $.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text())
                 : $.convertToNumber($scope.CashBalance.AvailableBalance);
-            $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
-            $scope.CashBalance.IsNewBalanceOffLimit = newBalance < 0;
+
+            if ($scope.isDeadlineCrossed)
+                $scope.CashBalance.CalculatedBalance = $.convertToCurrency(Math.min($.convertToNumber(holdBackBalance), $.convertToNumber(newBalance)), 2);
+            else
+                $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
+
+            $scope.CashBalance.IsNewBalanceOffLimit = $.convertToNumber($scope.CashBalance.CalculatedBalance) < 0;
+            $scope.CashBalance.HoldBackAmount = $.convertToCurrency($scope.CashBalance.HoldBackAmount, 2);
 
             if (($scope.CashBalance.CalculatedBalance == "NaN.00" || $scope.CashBalance.CalculatedBalance == "N.A") && !isRetry)
                 $timeout($scope.fnCalculateCashBalance(true), 300);
+
         }
     };
 
