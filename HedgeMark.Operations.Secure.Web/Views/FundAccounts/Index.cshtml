@@ -170,7 +170,7 @@
                                 <li><a href="#accountBasicInfo_0">Basic Info</a></li>
                                 <li><a href="#accountSwiftInfo_0">Swift Info</a></li>
                                 <li><a href="#accountSSIInfo_0">Account SSI</a></li>
-                                <li ng-if=" (isEdit && IsPendingApproval && !IsBNYMBroker) || IsKeyFieldsChanged"><a href="#accountCallback_0">Callback Check&nbsp;<span class="label label-info">{{ CallBackChecks.length }}</span>  </a></li>
+                                <li ng-if="!IsBNYMBroker && ((isEdit && IsPendingApproval)|| (isEdit && IsApproved)|| (IsKeyFieldsChanged))"><a href="#accountCallback_0">Callback Check&nbsp;<span class="label label-info">{{ CallBackChecks.length }}</span>  </a></li>
                                 <li><a href="#accountContactInfo_0">Contacts&nbsp;<span class="label label-info">{{ onboardingContacts.length }}</span>   </a></li>
                                 <li ng-if="isEdit"><a href="#accountAttachment_0">Attachments&nbsp;<span class="label label-info">{{ accountDocuments.length }}</span></a></li>
                                 <li ng-if="!accountDetail.IsReceivingAccount"><a href="#accountSsiAssociation_0">Associated SSI&nbsp;<span class="label label-info">{{ ssiTemplateMaps.length }}</span></a></li>
@@ -578,7 +578,7 @@
                                     <p></p>
                                 </div>
                             </div>
-                            <div class="panel panel-default ng-show-hide" id="accountCallback_0" plindex="0" data-toggle='collapse' ng-if="(isEdit && IsPendingApproval && !IsBNYMBroker) || ( IsKeyFieldsChanged)">
+                            <div class="panel panel-default ng-show-hide" id="accountCallback_0" plindex="0" data-toggle='collapse' ng-if="!IsBNYMBroker && ((isEdit && IsPendingApproval)|| (isEdit && IsApproved)|| (IsKeyFieldsChanged))">
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountCallbackInfo_0" aria-expanded="false" aria-controls="accountCallbackInfo_0" ng-click="adjustContainer(true)" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Callback Check</b>&nbsp;<span style="color: red"> *</span>
                                     <span class="pull-right">
