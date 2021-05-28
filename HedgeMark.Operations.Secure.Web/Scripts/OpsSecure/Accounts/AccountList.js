@@ -916,7 +916,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#btnSaveComment").addClass("btn-warning").removeClass("btn-success").removeClass("btn-primary");
             $("#btnSaveComment").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
         } else if (statusAction == "Approve") {
-            if ($scope.IsKeyFieldsChanged) {
+            if ($scope.IsKeyFieldsChanged && !$scope.IsBNYMBroker) {
                 notifyWarning("Please add one Callback check to approve account");
                 return;
             }
