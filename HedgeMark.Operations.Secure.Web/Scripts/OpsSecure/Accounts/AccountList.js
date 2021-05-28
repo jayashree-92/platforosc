@@ -31,6 +31,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     var createdStatus = "Created";
     $scope.IsBNYMBroker = false;
     $scope.IsPendingApproval = false;
+    $scope.IsApproved = false;
 
     $scope.DisabledAgreementForCashInstructions = ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"];
 
@@ -747,6 +748,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#btnAccountStatusButtons button[id='approve']").removeClass("disabled");
             $scope.IsPendingApproval = true;
         }
+        if (account.onBoardingAccountStatus == approvedStatus)
+            $scope.IsApproved = true;
         if (account.onBoardingAccountStatus == createdStatus) {
             $("#btnAccountStatusButtons button[id='requestForApproval']").removeClass("disabled");
         }
