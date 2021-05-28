@@ -757,7 +757,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#btnAccountStatusButtons button[id='revert']").removeClass("disabled");
         }
         $scope.IsBNYMBroker = $scope.CounterpartyName == "The Bank of New York Mellon";
-       
+
         $("#btnEdit").prop("disabled", false);
 
         $("#btnDel").prop("disabled", false);
@@ -875,8 +875,23 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (!$scope.isStatusUpdate) {
                 angular.element("#basicDetailCP").collapse("hide");
             }
+         
+
             $timeout(function () {
                 $(window).scrollTop(0);
+
+                $("#txtHoldbackAmount").numericEditor({
+                    bAllowNegative: false,
+                    fnFocusInCallback: function () {
+                        if ($(this).text() == "0")  
+                            $(this).html("");
+                    },
+                    fnFocusOutCallback: function () {
+                        var number = Math.abs($.convertToNumber($(this).val(), true));
+                        $scope.onBoardingAccountDetails[0].HoldbackAmount = number;
+                        $scope.$apply();
+                    }
+                });
             }, 100);
 
         });
@@ -894,7 +909,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             //$scope.IsKeyFieldsChanged=false;
             return;
         }
-        
+
         $scope.AccountStatus = status;
         var confirmationMsg = "Are you sure you want to " + ((statusAction === "Request for Approval") ? "<b>request</b> for approval of" : "<b>" + (statusAction == "Revert" ? "save changes or sending approval for" : statusAction) + "</b>") + " the selected account?";
         if (statusAction == "Request for Approval") {
@@ -1492,7 +1507,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.onBoardingAccountDetails[0].hmsAccountCallbacks = response.data;
             $scope.CallBackChecks = response.data;
             $scope.viewCallbackTable($scope.CallBackChecks);
-            $timeout(function() { $scope.IsCallBackChanged = false; }, 1000);
+            $timeout(function () { $scope.IsCallBackChanged = false; }, 1000);
         });
     }
 
@@ -1993,9 +2008,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.CheckSSIFieldsChanges = function (val, oldVal) {
         if (val[0].Description != oldVal[0].Description || val[0].Currency != oldVal[0].currency || val[0].FFCName != oldVal[0].FFCName || val[0].FFCNumber != oldVal[0].FFCNumber || val[0].Reference != oldVal[0].Reference || val[0].MarginAccountNumber != oldVal[0].MarginAccountNumber || val[0].TopLevelManagerAccountNumber != oldVal[0].TopLevelManagerAccountNumber || val[0].IntermediaryAccountNumber != oldVal[0].IntermediaryAccountNumber || val[0].BeneficiaryAccountNumber != oldVal[0].BeneficiaryAccountNumber || val[0].UltimateBeneficiaryAccountNumber != oldVal[0].UltimateBeneficiaryAccountNumber || val[0].IntermediaryType != oldVal[0].IntermediaryType || val[0].BeneficiaryType != oldVal[0].BeneficiaryType || val[0].UltimateBeneficiaryType != oldVal[0].UltimateBeneficiaryType || val[0].Intermediary.BICorABA != oldVal[0].Intermediary.BICorABA || val[0].Beneficiary.BICorABA != oldVal[0].Beneficiary.BICorABA || val[0].UltimateBeneficiary.BICorABA != oldVal[0].UltimateBeneficiary.BICorABA || val[0].Intermediary.BankName != oldVal[0].Intermediary.BankName || val[0].Beneficiary.BankName != oldVal[0].Beneficiary.BankName || val[0].UltimateBeneficiary.BankName != oldVal[0].UltimateBeneficiary.BankName || val[0].UltimateBeneficiaryAccountName != oldVal[0].UltimateBeneficiaryAccountName || val[0].Intermediary.BankAddress != oldVal[0].Intermediary.BankAddress
             || val[0].Beneficiary.BankAddress != oldVal[0].Beneficiary.BankAddress || val[0].UltimateBeneficiary.BankAddress != oldVal[0].UltimateBeneficiary.BankAddress) {
-            
-                $scope.IsKeyFieldsChanged = true;
-            }
+
+            $scope.IsKeyFieldsChanged = true;
+        }
     }
 
     $scope.$watch('watchAccountDetails', function (val, oldVal) {
@@ -2012,7 +2027,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
             return;
         }
-        
+
         if ($scope.IsCallBackChanged) {
             return;
         }
@@ -2355,7 +2370,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
     angular.element("#txtCurrency").on("focusin", function () { angular.element("#txtCurrency").popover("hide"); });
 
-    
+
     $scope.validateAccountNumber = function (isFfc) {
 
         var onBoardingAccount = $scope.onBoardingAccountDetails[0];
@@ -2911,7 +2926,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }).then(function (response) {
             $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId, 0);
             notifySuccess("Account callback confirmed successfully");
-          
+
         });
     });
 
