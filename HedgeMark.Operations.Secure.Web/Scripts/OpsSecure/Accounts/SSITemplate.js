@@ -11,6 +11,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.BrokerTemplateTypeId = 2;
     $scope.IsBNYMBroker = false;
     $scope.IsPendingApproval = false;
+    $scope.IsApproved = false;
     $scope.SSITemplateTypeData = [{ id: "Broker", text: "Broker" }, { id: "Fee/Expense Payment", text: "Fee/Expense Payment" }];
     $scope.messageTypes = [{ id: "MT103", text: "MT103" }, { id: "MT202", text: "MT202" }, { id: "MT202 COV", text: "MT202 COV" }];
     // { id: "MT210", text: "MT210" }, { id: "MT540", text: "MT540" },{ id: "MT542", text: "MT542" }
@@ -527,6 +528,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
             }
             $scope.IsBNYMBroker = $scope.broker == "The Bank of New York Mellon";
+            $scope.IsPendingApproval = $scope.ssiTemplate.SSITemplateStatus == "Pending Approval";
+            $scope.IsApproved = $scope.ssiTemplate.SSITemplateStatus == "Approved";
 
             if ($scope.reasonDetail == "Other") {
                 $("#otherReason").show();
@@ -804,10 +807,9 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             var selectedRow = $(this);
             var rowElement = $scope.ssiMapTable.row(selectedRow).data();
             $scope.onBoardingAccountSSITemplateMapId = rowElement.onBoardingAccountSSITemplateMapId;
-
             if (rowElement.Status == "Pending Approval" && rowElement.onBoardingAccountSSITemplateMapId > 0 && rowElement.UpdatedBy != $("#userName").val()) {
                 $("#btnAccountMapStatusButtons a[title='Approve']").removeClass("disabled");
-                $scope.IsPendingApproval = true;
+                //$scope.IsPendingApproval = true;
             }
 
         });
