@@ -1273,6 +1273,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
         $scope.ssiTemplate.UltimateBeneficiaryBankName = $("#ultimateBankName").val();
         $scope.ssiTemplate.UltimateBeneficiaryBankAddress = $("#ultimateBankAddress").val();
+        $scope.ssiTemplate.IsKeyFieldsChanged = $scope.IsKeyFieldsChanged;
 
         return $http.post("/SSITemplate/AddSsiTemplate", { ssiTemplate: $scope.ssiTemplate, accountType: $scope.accountType, broker: $scope.broker }).then(function (response) {
 
