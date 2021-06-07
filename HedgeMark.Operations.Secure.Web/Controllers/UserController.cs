@@ -68,16 +68,17 @@ namespace HMOSecureWeb.Controllers
         public FileResult ExportReport(string groupOption = "All_Groups")
         {
             var allWireUsers = (List<WireUsers>)GetSessionValue(OpsSecureSessionVars.WireUserGroupData.ToString());
-            var fileName = "HMAuthTransfer_" + DateTime.Today.ToString("yyyy_MM_dd") + groupOption + ".pdf";
+            var fileName = string.Format("HMAuthTransfer_{0:yyyy_MM_dd}_{1}.pdf", DateTime.Today, groupOption);
             var exportFileInfo = new FileInfo(string.Format("{0}{1}", FileSystemManager.UploadTemporaryFilesPath, fileName));
 
-            if (groupOption == "Group_A_only")
+            switch (groupOption)
             {
-                allWireUsers = allWireUsers.Where(s => s.Role == "hm-wire-approver").ToList();
-            }
-            else if (groupOption == "Group_B_Only")
-            {
-                allWireUsers = allWireUsers.Where(s => s.Role == "hm-wire-initiator").ToList();
+                case "Group_A_only":
+                    allWireUsers = allWireUsers.Where(s => s.Role == "hm-wire-approver").ToList();
+                    break;
+                case "Group_B_Only":
+                    allWireUsers = allWireUsers.Where(s => s.Role == "hm-wire-initiator").ToList();
+                    break;
             }
             var userRows = ConstructWireUserRows(allWireUsers);
             //Create PDF Files using allWireUsers
