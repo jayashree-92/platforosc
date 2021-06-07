@@ -29,8 +29,6 @@ namespace HMOSecureWeb
         private static readonly string SiteMinderLogOffUrl = ConfigurationManagerWrapper.StringSetting("SiteMinderLogoffUri", "/Account/LogOff");
         private static readonly int GlobalSessionTimeOut = ConfigurationManagerWrapper.IntegerSetting("GlobalSessionTimeOut", 20);
         private const string SiteMinderHeaderToken = "SMUSER";
-        public static bool ShouldUseSecurityProtocolSetting { get { return ConfigurationManagerWrapper.BooleanSetting("ShouldUseSecurityProtocolSetting", true); } }
-
         protected void Application_Start()
         {
             //Log4Net Instantiator
@@ -50,8 +48,7 @@ namespace HMOSecureWeb
             //Boot up required assemblies to middleware
             BootUpMiddleware.BootUp();
 
-            if (ShouldUseSecurityProtocolSetting)
-                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+            System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls12;
 
             AppHeartBeat.Start("HM-Operations-Secure", AppMnemonic.DMO, AppType.WebApp, "HMOpsSecureConnectionString");
         }
@@ -94,7 +91,7 @@ namespace HMOSecureWeb
             if (HttpContext.Current.Request.IsLocal)
             {
                 smUserId = ConfigurationManager.AppSettings["LocalSiteMinderCommitId"];
-                roles.Add(OpsSecureUserRoles.WireApprover);
+                roles.Add(OpsSecureUserRoles.WireAdmin);
             }
             var userSso = AccountController.GetUserDetailByCommitId(smUserId);
 

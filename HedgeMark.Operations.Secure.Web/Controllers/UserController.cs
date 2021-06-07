@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
-using PDFUtility.Operations.ManagedAccounts;
-using HedgeMark.Operations.FileParseEngine.Models;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware;
 using HedgeMark.Operations.Secure.Middleware.Models;
 using HedgeMark.Operations.Secure.Middleware.Util;
 using HMOSecureWeb.Jobs;
+using PDFUtility.Operations.ManagedAccounts;
 
 namespace HMOSecureWeb.Controllers
 {
@@ -70,7 +68,7 @@ namespace HMOSecureWeb.Controllers
         public FileResult ExportReport(string groupOption = "All_Groups")
         {
             var allWireUsers = (List<WireUsers>)GetSessionValue(OpsSecureSessionVars.WireUserGroupData.ToString());
-            var fileName = "HMAuthTransfer - " + DateTime.Today.ToString("MM.dd.yyyy") + groupOption + ".pdf";
+            var fileName = "HMAuthTransfer_" + DateTime.Today.ToString("yyyy_MM_dd") + groupOption + ".pdf";
             var exportFileInfo = new FileInfo(string.Format("{0}{1}", FileSystemManager.UploadTemporaryFilesPath, fileName));
 
             if (groupOption == "Group_A_only")
@@ -84,34 +82,19 @@ namespace HMOSecureWeb.Controllers
             var userRows = ConstructWireUserRows(allWireUsers);
             //Create PDF Files using allWireUsers
 
-            exportFileInfo = SecureExporter.CreateWireUserPdfFile(userRows, groupOption, exportFileInfo.FullName);
+            exportFileInfo = SecureExporter.ExportSignedReport(userRows, groupOption, exportFileInfo, null);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
-        public static List<ExportContent> ConstructWireUserRows(List<WireUsers> wireUsers)
+        public static List<WireUserExportContent> ConstructWireUserRows(List<WireUsers> wireUsers)
         {
-            var contentToExport = new List<ExportContent>();
-            var data = wireUsers.GroupBy(s => new { s.Role, s.UserGroup }).ToDictionary(s => s.Key, v => v).OrderBy(s=>s.Key.Role);            
-
-            foreach (var group in data)
+            return wireUsers.Select(user => new WireUserExportContent
             {
-                var rows = new List<Row>();
-                foreach (var user in group.Value)
-                {
-                    var thisRow = new Row();
-                    thisRow["UserName"] = user.UserName.ToString();
-                    thisRow["Role"] = user.User.LdapRole.ToString();
-                    thisRow["Group"] = user.UserGroup.ToString();
-                    rows.Add(thisRow);
-                }
-                contentToExport.Add(new ExportContent()
-                {
-                    TabName = group.Key.Role,
-                    GroupName=group.Key.UserGroup,
-                    Rows =rows
-                });
-            }
-            return contentToExport;            
+                UserName = user.UserName,
+                UserGroup = user.UserGroup,
+                UserRole = user.User.LdapRole
+            }).ToList();
+
         }
 
         public void RefreshUserList()
