@@ -1349,6 +1349,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $("#liReceivingAccount").select2("disable");
         }
 
+        $("#wireAmount").text("0");
+        $("#wireSenderDescription").val("");
+
         $("#liSenderInformation").select2("val", "").trigger("change");
 
         $timeout(function () {
@@ -1393,6 +1396,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $("#liReceivingAccount").select2("disable");
         }
 
+        $("#wireAmount").text("0");
+        $("#wireSenderDescription").val("");
+
         $timeout(function () {
             if ($("#liCurrency").select2("val") != "" && $scope.WireTicket.hmsWireId == 0) {
                 $("#liSendingAccountLoading").show();
@@ -1420,6 +1426,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
 
     angular.element(document).on("change", "#liSendingAccount", function () {
+
+        $("#wireAmount").text("0");
+        $("#wireSenderDescription").val("");
+
         $timeout(function () {
             $scope.WireTicket.OnBoardAccountId = angular.copy($("#liSendingAccount").select2("val"));
             if ($("#liSendingAccount").select2("val") != "") {
@@ -1591,6 +1601,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
 
     angular.element(document).on("change", "#liReceivingBookAccount", function () {
+
+        $("#wireAmount").text("0");
+        $("#wireSenderDescription").val("");
+
         $timeout(function () {
             $scope.WireTicket.ReceivingOnBoardAccountId = angular.copy($("#liReceivingBookAccount").select2("val"));
             if ($scope.WireTicket.ReceivingOnBoardAccountId != "") {
@@ -1642,6 +1656,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
 
     angular.element(document).on("change", "#liReceivingAccount", function () {
+
+        $("#wireAmount").text("0");
+        $("#wireSenderDescription").val("");
+
         $timeout(function () {
             $scope.WireTicket.OnBoardSSITemplateId = angular.copy($("#liReceivingAccount").select2("val"));
             if ($scope.WireTicket.OnBoardSSITemplateId != "") {
@@ -1704,6 +1722,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $("#liSendingAccount").select2("val", "").trigger("change");
             $("#liCurrency").select2("disable");
             $("#liSendingAccount").select2("disable");
+            $("#wireAmount").text("0");
+            $("#wireSenderDescription").val("");
 
             if ($scope.wireTicketObj.IsFundTransfer)
                 $("#liReceivingBookAccount").select2("disable");

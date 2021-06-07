@@ -91,7 +91,7 @@ namespace HMOSecureWeb
             if (HttpContext.Current.Request.IsLocal)
             {
                 smUserId = ConfigurationManager.AppSettings["LocalSiteMinderCommitId"];
-                roles.Add(OpsSecureUserRoles.WireAdmin);
+                roles.Add(OpsSecureUserRoles.WireApprover);
             }
             var userSso = AccountController.GetUserDetailByCommitId(smUserId);
 
