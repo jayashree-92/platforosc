@@ -147,7 +147,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                             if (action == "Deleted") {
                                 actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-default\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
                             }
-                            else if (action == "Edited" || action == "Updated") {
+                            else if (action == "Edited" || action == "Updated" || action == "Download") {
                                 actionsMessage += "<button type=\"button\" class=\"btn btn-sm btn-default\" onclick=\"$('#tblAuditLogsDetails').dataTable().fnFilter('" + action + "', " + actionIndex + ");\" id=" + action + ">" + action + "</button>";
                             }
                             else if (action == "Added") {
@@ -179,6 +179,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                                     return "<span class=\"label label-default ignoreMark\"> " + tdata + "</span>";
                                 case "Edited":
                                 case "Updated":
+                                case "Download":
                                     return "<span class=\"label label-warning ignoreMark\"> " + tdata + "</span>";
                                 case "Added":
                                     return "<span class=\"label label-success ignoreMark\"> " + tdata + "</span>";
@@ -208,6 +209,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                         switch (row.Action) {
                             case "Logged In":
                             case "Logged Out":
+                            case "Download":
                             case "Added":
                                 return "";
                             case "Edited":
@@ -229,6 +231,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
                         switch (row.Action) {
                             case "Logged In":
                             case "Logged Out":
+                            case "Download":
                             case "Deleted":
                                 return "";
                             case "Edited":
