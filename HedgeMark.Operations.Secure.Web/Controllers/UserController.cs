@@ -71,7 +71,7 @@ namespace HMOSecureWeb.Controllers
             {
                 Action = "Download",
                 Module = "User Management",
-                Log = groupOption + " Exported by  " + User.Identity.Name,
+                Log = groupOption + " Exported by  " + UserName.HumanizeEmail(),
                 CreatedAt = DateTime.Now,
                 UserName = User.Identity.Name
             };
