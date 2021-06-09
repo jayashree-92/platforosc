@@ -67,6 +67,16 @@ namespace HMOSecureWeb.Controllers
 
         public FileResult ExportReport(string groupOption = "All_Groups")
         {
+            var auditData = new hmsUserAuditLog
+            {
+                Action = "Download",
+                Module = "User Management",
+                Log = groupOption + " Exported by  " + User.Identity.Name,
+                CreatedAt = DateTime.Now,
+                UserName = User.Identity.Name
+            };
+            AuditManager.LogAudit(auditData);
+
             var allWireUsers = (List<WireUsers>)GetSessionValue(OpsSecureSessionVars.WireUserGroupData.ToString());
             var fileName = string.Format("HMAuthTransfer_{0:yyyy_MM_dd}_{1}.pdf", DateTime.Today, groupOption);
             var exportFileInfo = new FileInfo(string.Format("{0}{1}", FileSystemManager.UploadTemporaryFilesPath, fileName));
