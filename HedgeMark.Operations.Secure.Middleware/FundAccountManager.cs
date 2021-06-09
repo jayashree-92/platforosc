@@ -709,6 +709,12 @@ namespace HedgeMark.Operations.Secure.Middleware
                                                          .Select(s => s.FX_RATE).FirstOrDefault() ?? 0
                                         select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum();
 
+            var totalPendingWiredInLocalCur = (from wire in wires
+                                               where wire.WireStatusId != (int)WireDataManager.WireStatus.Approved
+                                               let fxRate = conversionData.Where(s => s.FROM_CRNCY == wire.Currency && s.TO_CRNCY == fndAccount.Currency)
+                                                                .Select(s => s.FX_RATE).FirstOrDefault() ?? 0
+                                               select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum();
+
             var converForTreasuryBal = conversionData.Where(s => s.FROM_CRNCY == treasuryBal.Currency && s.TO_CRNCY == fndAccount.Currency)
                                            .Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
 
@@ -716,6 +722,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             {
                 IsCashBalanceAvailable = true,
                 TotalWireEntered = totalWiredInLocalCur,
+                TotalPendingWireEntered = totalPendingWiredInLocalCur,
                 TreasuryBalance = converForTreasuryBal == 0 ? treasuryBal.CashBalance ?? 0 : (treasuryBal.CashBalance ?? 0) * converForTreasuryBal,
                 MarginBuffer = converForTreasuryBal == 0 ? treasuryBal.MarginBuffer ?? 0 : (treasuryBal.MarginBuffer ?? 0) * converForTreasuryBal,
                 Currency = converForTreasuryBal == 0 ? treasuryBal.Currency : fndAccount.Currency,
@@ -779,6 +786,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             {
                 IsCashBalanceAvailable = true,
                 TotalWireEntered = wires.Sum(s => s.Amount),
+                TotalPendingWireEntered = wires.Where(s => s.WireStatusId != (int)WireDataManager.WireStatus.Approved).Sum(s => s.Amount),
                 TreasuryBalance = treasuryBal.CashBalance ?? 0,
                 Currency = treasuryBal.Currency,
                 ContextDate = treasuryBal.ContextDate,

@@ -84,6 +84,7 @@ namespace HedgeMark.Operations.Secure.Middleware
         public DateTime ContextDate { get; set; }
         public decimal TreasuryBalance { get; set; }
         public decimal TotalWireEntered { get; set; }
+        public decimal TotalPendingWireEntered { get; set; }
         public string Currency { get; set; }
         public decimal AvailableBalance
         {
@@ -92,7 +93,7 @@ namespace HedgeMark.Operations.Secure.Middleware
 
         public decimal AvailableHoldBackBalance
         {
-            get { return HoldBackAmount - TotalWireEntered; }
+            get { return HoldBackAmount - TotalPendingWireEntered; }
         }
 
         public decimal MarginBuffer { get; set; }
