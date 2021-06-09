@@ -7,13 +7,13 @@
   <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
   <property name="ProjectFile" value="../HedgeMark.Operations.Secure.Web/HMOSecureWeb.csproj"/>   
   <property name="OutputFile1" value="../HedgeMark.Operations.Secure.Web/obj/Release/"/>   
-  <property name="sourcePackageLocation" value="\\wc08a10009pv00\d$\Operations_Secure_Jenkins\Test"/>   
+  <property name="sourcePackageLocation" value="\\WT81B10085TV00\d\Operations_Secure_Jenkins\Test"/>   
   <property name="UnitTestProjectReference" value="../HedgeMark.SwiftMessageHandler.Tests/bin/QA/HedgeMark.SwiftMessageHandler.Tests.dll" />  
   
   <!-- <property name="DevPathToCopyServer1" value="\\W002UYN0C\OPS_Secure_Dev01"/> -->
   <property name="primaryServers" value="  
-	  \\wc08a10009pv00\d$\OPS_Secure_Test01,
-	  \\wc08a10010pv00\d$\OPS_Secure_Test01"/>
+	  \\WT81B10085TV00\d$\OPS_Secure_Test01,
+	  \\WT81B10086TV00\d$\OPS_Secure_Test01"/>
 
    <!--SQL Properties-->
    <property name="sql.DB" value="HM_WIRES"/>
