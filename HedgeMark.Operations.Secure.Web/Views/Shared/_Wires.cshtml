@@ -48,10 +48,10 @@
                             <div class="col-md-3">
                                 <label>Sending Account:</label>
                             </div>
-                            <div class="col-md-3" ng-show="!WireTicketStatus.IsEditEnabled">
-                                <input type="text" id="liWireAccount" class="form-control primary-info" ng-model="accountDetail.AccountName" readonly />
+                            <div class="col-md-3" ng-show="!WireTicketStatus.IsEditEnabled || !WireTicketStatus.IsWirePurposeAdhoc">
+                                <input type="text" class="form-control primary-info" ng-model="accountDetail.AccountName" readonly />
                             </div>
-                            <div class="col-md-3" ng-show="WireTicketStatus.IsEditEnabled">
+                            <div class="col-md-3" ng-show="WireTicketStatus.IsEditEnabled && WireTicketStatus.IsWirePurposeAdhoc">
                                 <input id="liSendingAccount" type="text" class="form-control primary-info" name="liSendingAccount" />
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                                 <label>Receiving Account:</label>
                             </div>
                             <div class="col-md-3" ng-show="!(WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled)">
-                                <input type="text" id="liReceivingAccount" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
+                                <input type="text" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
                             </div>
                             <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && !wireTicketObj.IsFundTransfer">
                                 <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" />

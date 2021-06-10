@@ -1464,7 +1464,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         $("#liReceivingBookAccountLoading").show();
                         $scope.receivingBookAccountList = $filter("filter")(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
                             var selectedAccount = $("#liSendingAccount").select2("data");
-                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2("val") && (!selectedAccount.isSubAdvisorFund || acc.isParentFund);
+                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2("val") && (!selectedAccount.isSubAdvisorFund || acc.isParentFund);  
                         }, true);
 
                         angular.element("#liReceivingBookAccount").select2("destroy");
@@ -1538,6 +1538,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.CashBalance.TreasuryBalance = $.convertToCurrency($scope.CashBalance.TreasuryBalance, 2);
                 $scope.CashBalance.TotalWireEntered = $.convertToCurrency($scope.CashBalance.TotalWireEntered, 2);
                 $scope.CashBalance.AvailableBalance = !$scope.CashBalance.IsCashBalanceAvailable ? "N.A" : $.convertToCurrency($scope.CashBalance.AvailableBalance, 2);
+                $scope.CashBalance.AvailableHoldBackBalance = !$scope.CashBalance.IsCashBalanceAvailable ? "N.A" : $.convertToCurrency($scope.CashBalance.AvailableHoldBackBalance, 2);
                 $scope.CashBalance.HoldBackAmount = $.convertToCurrency($scope.CashBalance.HoldBackAmount, 2);
 
                 $($scope.CashBalance.WireDetails).each(function (i, v) {
@@ -1553,7 +1554,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.fnCalculateCashBalance = function (isRetry) {
 
-        $scope.CashBalance.IsNewBalanceOffLimit = false;
+        $scope.CashBalance.IsNewBalanceOffLimit = false; 
         $("#chkCashBalOff").prop("checked", false).trigger("change");
         if (!$scope.CashBalance.IsCashBalanceAvailable)
             $scope.CashBalance.CalculatedBalance = "N.A";

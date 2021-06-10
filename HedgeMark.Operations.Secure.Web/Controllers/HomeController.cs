@@ -148,15 +148,15 @@ namespace HMOSecureWeb.Controllers
             var fundAccounts = new List<WireAccountBaseData>();
             long reportId = 0;
 
-            //if (wireTicketStatus.IsEditEnabled)
-            //{
-            if (!wireTicketStatus.IsWirePurposeAdhoc)
-                reportId = FileSystemManager.GetReportId(wireTicket.HMWire.hmsWirePurposeLkup.ReportName);
+            if (wireTicketStatus.IsEditEnabled)
+            {
+                if (!wireTicketStatus.IsWirePurposeAdhoc)
+                    reportId = FileSystemManager.GetReportId(wireTicket.HMWire.hmsWirePurposeLkup.ReportName);
 
-            fundAccounts = wireTicketStatus.IsWirePurposeAdhoc
-                ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, (WireDataManager.TransferType)wireTicket.HMWire.WireTransferTypeId, wireTicket.SendingAccount.Currency)
-                : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId ?? 0, reportId);
-            //}
+                fundAccounts = wireTicketStatus.IsWirePurposeAdhoc
+                    ? WireDataManager.GetApprovedFundAccounts(wireTicket.HMWire.hmFundId, (WireDataManager.TransferType)wireTicket.HMWire.WireTransferTypeId, wireTicket.SendingAccount.Currency)
+                    : WireDataManager.GetApprovedFundAccountsForModule(wireTicket.HMWire.hmFundId, wireTicket.HMWire.OnBoardSSITemplateId ?? 0, reportId);
+            }
 
             var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount && s.FundId == wireTicket.HMWire.hmFundId).Select(s => new
             {
