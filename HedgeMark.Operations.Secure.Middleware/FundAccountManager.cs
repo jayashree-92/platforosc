@@ -633,10 +633,6 @@ namespace HedgeMark.Operations.Secure.Middleware
         {
             var contextDate = DateTime.Today.GetContextDate();
 
-
-
-
-
             vw_FundAccounts fndAccount;
 
             //Is PB Account 
