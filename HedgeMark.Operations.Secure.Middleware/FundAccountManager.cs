@@ -802,7 +802,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                 IsCashBalanceAvailable = true,
                 TotalWireEntered = wires.Sum(s => s.Amount),
                 TotalPendingWireEntered = wires.Where(s => s.WireStatusId != (int)WireDataManager.WireStatus.Approved).Sum(s => s.Amount),
-                TotalApprovedWireAfterDeadline = wires.Where(s => s.ApprovedAt != null && s.ApprovedAt > deadline).Sum(s => s.Amount),
+                TotalApprovedWireAfterDeadline = wires.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved && s.ApprovedAt != null && s.ApprovedAt > deadline).Sum(s => s.Amount),
                 TreasuryBalance = treasuryBal.CashBalance ?? 0,
                 Currency = treasuryBal.Currency,
                 ContextDate = treasuryBal.ContextDate,
@@ -820,7 +820,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                     ApprovedCount = detail.Value.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved),
                     PendingCount = detail.Value.Count(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated),
                     ApprovedWireAmount = detail.Value.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved).Sum(s => s.Amount),
-                    PendingWireAmount = detail.Value.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated).Sum(s => s.Amount)
+                    PendingWireAmount = detail.Value.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated).Sum(s => s.Amount),
                 });
             }
 
