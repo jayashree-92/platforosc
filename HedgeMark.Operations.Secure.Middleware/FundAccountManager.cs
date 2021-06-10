@@ -629,7 +629,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             get { return SystemSwitches.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit; }
         }
 
-        public static CashBalances GetAccountCashBalances(long sendingFundAccountId, DateTime valueDate)
+        public static CashBalances GetAccountCashBalances(long sendingFundAccountId, DateTime valueDate, TimeSpan deadline)
         {
             var contextDate = DateTime.Today.GetContextDate();
 
@@ -642,8 +642,8 @@ namespace HedgeMark.Operations.Secure.Middleware
             }
 
             var cashbalances = fndAccount.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(fndAccount.AgreementType)
-                ? ComputePBCashBalances(valueDate, contextDate, fndAccount)
-                : ComputeNonPBCashBalances(sendingFundAccountId, valueDate, contextDate);
+                ? ComputePBCashBalances(valueDate, contextDate, fndAccount, deadline)
+                : ComputeNonPBCashBalances(sendingFundAccountId, valueDate, contextDate, deadline);
 
             if (cashbalances != null)
                 cashbalances.HoldBackAmount = (decimal)(fndAccount.HoldbackAmount ?? 0);
@@ -651,7 +651,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             return cashbalances;
         }
 
-        private static CashBalances ComputePBCashBalances(DateTime valueDate, DateTime contextDate, vw_FundAccounts fndAccount)
+        private static CashBalances ComputePBCashBalances(DateTime valueDate, DateTime contextDate, vw_FundAccounts fndAccount, TimeSpan deadline)
         {
             List<dmaTreasuryCashBalance> allTreasuryBals;
             using (var context = new OperationsContext())
@@ -684,7 +684,8 @@ namespace HedgeMark.Operations.Secure.Middleware
                              Amount = wire.Amount,
                              WireStatusId = wire.WireStatusId,
                              ValueDate = wire.ValueDate,
-                             Currency = wire.Currency
+                             Currency = wire.Currency,
+                             ApprovedAt = wire.ApprovedAt
                          }).ToList();
             }
 
@@ -715,6 +716,15 @@ namespace HedgeMark.Operations.Secure.Middleware
                                                                 .Select(s => s.FX_RATE).FirstOrDefault() ?? 0
                                                select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum();
 
+
+            var deadlineDate = DateTime.Now - deadline;
+
+            var totalApprovedAfterDeadlineInLocalCur = (from wire in wires
+                                                        where wire.WireStatusId == (int)WireDataManager.WireStatus.Approved && wire.ApprovedAt != null && wire.ApprovedAt > deadlineDate
+                                                        let fxRate = conversionData.Where(s => s.FROM_CRNCY == wire.Currency && s.TO_CRNCY == fndAccount.Currency)
+                                                                         .Select(s => s.FX_RATE).FirstOrDefault() ?? 0
+                                                        select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum();
+
             var converForTreasuryBal = conversionData.Where(s => s.FROM_CRNCY == treasuryBal.Currency && s.TO_CRNCY == fndAccount.Currency)
                                            .Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
 
@@ -723,6 +733,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                 IsCashBalanceAvailable = true,
                 TotalWireEntered = totalWiredInLocalCur,
                 TotalPendingWireEntered = totalPendingWiredInLocalCur,
+                TotalApprovedWireAfterDeadline = totalApprovedAfterDeadlineInLocalCur,
                 TreasuryBalance = converForTreasuryBal == 0 ? treasuryBal.CashBalance ?? 0 : (treasuryBal.CashBalance ?? 0) * converForTreasuryBal,
                 MarginBuffer = converForTreasuryBal == 0 ? treasuryBal.MarginBuffer ?? 0 : (treasuryBal.MarginBuffer ?? 0) * converForTreasuryBal,
                 Currency = converForTreasuryBal == 0 ? treasuryBal.Currency : fndAccount.Currency,
@@ -754,7 +765,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             return cashBalances;
         }
 
-        private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate)
+        private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate, TimeSpan deadline)
         {
             dmaTreasuryCashBalance treasuryBal;
             using (var context = new OperationsContext())
@@ -778,15 +789,20 @@ namespace HedgeMark.Operations.Secure.Middleware
                         Amount = s.Amount,
                         WireStatusId = s.WireStatusId,
                         ValueDate = s.ValueDate,
-                        Currency = s.Currency
+                        Currency = s.Currency,
+                        ApprovedAt = s.ApprovedAt
                     }).ToList();
             }
+
+
+            var deadlineDate = DateTime.Now - deadline;
 
             var cashBalances = new CashBalances()
             {
                 IsCashBalanceAvailable = true,
                 TotalWireEntered = wires.Sum(s => s.Amount),
                 TotalPendingWireEntered = wires.Where(s => s.WireStatusId != (int)WireDataManager.WireStatus.Approved).Sum(s => s.Amount),
+                TotalApprovedWireAfterDeadline = wires.Where(s => s.ApprovedAt != null && s.ApprovedAt > deadlineDate).Sum(s => s.Amount),
                 TreasuryBalance = treasuryBal.CashBalance ?? 0,
                 Currency = treasuryBal.Currency,
                 ContextDate = treasuryBal.ContextDate,

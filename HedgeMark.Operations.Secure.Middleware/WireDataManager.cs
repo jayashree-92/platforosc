@@ -38,6 +38,8 @@ namespace HedgeMark.Operations.Secure.Middleware
                 return string.Format("{0}-{1}-{2}", FFCNumber, AccountNumber, AccountName);
             }
         }
+
+        public DateTime? ApprovedAt { get; set; }
     }
 
     public class FormattedSwiftMessage
@@ -84,17 +86,20 @@ namespace HedgeMark.Operations.Secure.Middleware
         public DateTime ContextDate { get; set; }
         public decimal TreasuryBalance { get; set; }
         public decimal TotalWireEntered { get; set; }
-        public decimal TotalPendingWireEntered { get; set; }
         public string Currency { get; set; }
         public decimal AvailableBalance
         {
             get { return TreasuryBalance - TotalWireEntered; }
         }
 
+        public decimal TotalPendingWireEntered { get; set; }
+        public decimal TotalApprovedWireAfterDeadline { get; set; }
+
         public decimal AvailableHoldBackBalance
         {
-            get { return HoldBackAmount - TotalPendingWireEntered; }
+            get { return HoldBackAmount - TotalPendingWireEntered - TotalApprovedWireAfterDeadline; }
         }
+
 
         public decimal MarginBuffer { get; set; }
         public decimal HoldBackAmount { get; set; }

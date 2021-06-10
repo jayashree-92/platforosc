@@ -1425,6 +1425,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }, 50);
     });
 
+    $scope.DeadlineToApprove = {};
+
     angular.element(document).on("change", "#liSendingAccount", function () {
 
         if (!$scope.WireTicketStatus.IsEditEnabled || !$scope.WireTicketStatus.IsWirePurposeAdhoc)
@@ -1495,6 +1497,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     var account = response.data.onboardAccount;
                     $scope.fnSetWireCutOffDetails(response.data.deadlineToApprove, response.data.IsWireCutOffApproved);
 
+                    $scope.DeadlineToApprove = response.data.deadlineToApprove;
+
                     $scope.castToDate(account);
                     //$scope.getApprovalTime(account);
                     $scope.accountDetail = account;
@@ -1504,6 +1508,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         angular.element("#liMessageType").select2("val", wireMessageType.id).trigger("change");
                     }
                     $scope.isValidWireInitiation = $scope.validateWireInitiationofBIC();
+                    $scope.fnGetCashBalances($("#wireValueDate").text());
                 });
             }
             else {
@@ -1515,7 +1520,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }
 
             $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
-            $scope.fnGetCashBalances($("#wireValueDate").text());
+            
         }, 50);
     });
 
@@ -1535,7 +1540,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if ($scope.WireTicket.OnBoardAccountId == undefined || $scope.WireTicket.OnBoardAccountId == 0)
             return;
 
-        $http.get("/Home/GetCashBalances?sendingAccountId=" + $scope.WireTicket.OnBoardAccountId + "&valueDate=" + valueDate)
+        $http.get("/Home/GetCashBalances?sendingAccountId=" + $scope.WireTicket.OnBoardAccountId + "&valueDate=" + valueDate + "&deadline=" + $scope.DeadlineToApprove)
             .then(function (response) {
                 $scope.CashBalance = response.data;
                 $scope.CashBalance.TreasuryBalance = $.convertToCurrency($scope.CashBalance.TreasuryBalance, 2);
