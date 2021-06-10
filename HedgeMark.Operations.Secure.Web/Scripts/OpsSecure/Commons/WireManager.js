@@ -1427,6 +1427,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     angular.element(document).on("change", "#liSendingAccount", function () {
 
+        if (!$scope.WireTicketStatus.IsEditEnabled || !$scope.WireTicketStatus.IsWirePurposeAdhoc)
+            return;
+
         $("#wireAmount").text("0");
         $("#wireSenderDescription").val("");
 
@@ -1464,7 +1467,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         $("#liReceivingBookAccountLoading").show();
                         $scope.receivingBookAccountList = $filter("filter")(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
                             var selectedAccount = $("#liSendingAccount").select2("data");
-                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2("val") && (!selectedAccount.isSubAdvisorFund || acc.isParentFund);  
+                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2("val") && (!selectedAccount.isSubAdvisorFund || acc.isParentFund);
                         }, true);
 
                         angular.element("#liReceivingBookAccount").select2("destroy");
@@ -1554,7 +1557,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.fnCalculateCashBalance = function (isRetry) {
 
-        $scope.CashBalance.IsNewBalanceOffLimit = false; 
+        $scope.CashBalance.IsNewBalanceOffLimit = false;
         $("#chkCashBalOff").prop("checked", false).trigger("change");
         if (!$scope.CashBalance.IsCashBalanceAvailable)
             $scope.CashBalance.CalculatedBalance = "N.A";
@@ -1602,6 +1605,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
 
     angular.element(document).on("change", "#liReceivingBookAccount", function () {
+        if (!$scope.WireTicketStatus.IsEditEnabled || !$scope.WireTicketStatus.IsWirePurposeAdhoc)
+            return;
 
         $("#wireAmount").text("0");
         $("#wireSenderDescription").val("");
@@ -1658,6 +1663,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     angular.element(document).on("change", "#liReceivingAccount", function () {
 
+        if (!$scope.WireTicketStatus.IsEditEnabled || !$scope.WireTicketStatus.IsWirePurposeAdhoc)
+            return;
+
         $("#wireAmount").text("0");
         $("#wireSenderDescription").val("");
 
@@ -1705,6 +1713,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
 
     $(document).on("change", "#liWireTransferType", function (event) {
+        if (!$scope.WireTicketStatus.IsEditEnabled || !$scope.WireTicketStatus.IsWirePurposeAdhoc)
+            return;
+
         $timeout(function () {
             $scope.WireTicket.WireTransferTypeId = angular.copy($("#liWireTransferType").select2("val"));
             $scope.wireTicketObj.IsFundTransfer = $scope.WireTicket.WireTransferTypeId == 2;
