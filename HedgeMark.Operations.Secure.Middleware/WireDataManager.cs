@@ -657,8 +657,22 @@ namespace HedgeMark.Operations.Secure.Middleware
             if (onboardAccount.CashSweep == "No")
                 return cutOffTimeDeadline - currentTime;
 
-            var cashSweepTimeDeadline = GetCutOffTime(onboardAccount.CashSweepTime ?? new TimeSpan(23, 59, 0), valueDate, onboardAccount.CashSweepTimeZone, timeZones, destinationTimeZone);
+            var cashSweepTimeDeadline = GetCashSweepDeadline(valueDate, onboardAccount.CashSweepTime, onboardAccount.CashSweepTimeZone, destinationTimeZone, timeZones);
             return cashSweepTimeDeadline < cutOffTimeDeadline ? cashSweepTimeDeadline - currentTime : cutOffTimeDeadline - currentTime;
+
+        }
+
+        public static DateTime GetCashSweepDeadline(DateTime valueDate, TimeSpan? cashSweepTime, string cashSweepTimeZone, TimeZoneInfo destinationTimeZone = null, Dictionary<string, string> timeZones = null)
+        {
+            if (timeZones == null)
+                timeZones = FileSystemManager.GetAllTimeZones();
+            if (destinationTimeZone == null)
+            {
+                var baseTimeZone = timeZones[FileSystemManager.DefaultTimeZone];
+                destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(baseTimeZone);
+            }
+
+            return GetCutOffTime(cashSweepTime ?? new TimeSpan(23, 59, 0), valueDate, cashSweepTimeZone, timeZones, destinationTimeZone);
         }
 
 

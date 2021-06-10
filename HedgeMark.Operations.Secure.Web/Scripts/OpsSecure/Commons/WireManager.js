@@ -1520,7 +1520,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             }
 
             $scope.isWireRequirementsFilled = !$scope.isWireRequirementsFilled;
-            
+
         }, 50);
     });
 
@@ -1539,8 +1539,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         if ($scope.WireTicket.OnBoardAccountId == undefined || $scope.WireTicket.OnBoardAccountId == 0)
             return;
-
-        $http.get("/Home/GetCashBalances?sendingAccountId=" + $scope.WireTicket.OnBoardAccountId + "&valueDate=" + valueDate + "&deadline=" + $scope.DeadlineToApprove)
+        
+        $http.get("/Home/GetCashBalances?sendingAccountId=" + $scope.WireTicket.OnBoardAccountId + "&valueDate=" + valueDate)
             .then(function (response) {
                 $scope.CashBalance = response.data;
                 $scope.CashBalance.TreasuryBalance = $.convertToCurrency($scope.CashBalance.TreasuryBalance, 2);

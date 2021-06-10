@@ -742,9 +742,9 @@ namespace HMOSecureWeb.Controllers
             return Json(new { onboardAccount, deadlineToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.hmsWirePortalCutoffId == 0 || onboardAccount.WirePortalCutoff.IsApproved });
         }
 
-        public JsonResult GetCashBalances(long sendingAccountId, DateTime valueDate, TimeSpan deadline)
+        public JsonResult GetCashBalances(long sendingAccountId, DateTime valueDate)
         {
-            var cashBalance = FundAccountManager.GetAccountCashBalances(sendingAccountId, valueDate, deadline);
+            var cashBalance = FundAccountManager.GetAccountCashBalances(sendingAccountId, valueDate);
             return Json(cashBalance);
         }
 

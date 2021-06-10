@@ -629,9 +629,13 @@ namespace HedgeMark.Operations.Secure.Middleware
             get { return SystemSwitches.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit; }
         }
 
-        public static CashBalances GetAccountCashBalances(long sendingFundAccountId, DateTime valueDate, TimeSpan deadline)
+        public static CashBalances GetAccountCashBalances(long sendingFundAccountId, DateTime valueDate)
         {
             var contextDate = DateTime.Today.GetContextDate();
+
+
+
+
 
             vw_FundAccounts fndAccount;
 
@@ -640,6 +644,8 @@ namespace HedgeMark.Operations.Secure.Middleware
             {
                 fndAccount = context.vw_FundAccounts.First(s => s.onBoardingAccountId == sendingFundAccountId);
             }
+
+            var deadline = WireDataManager.GetCashSweepDeadline(valueDate, fndAccount.CashSweepTime, fndAccount.CashSweepTimeZone);
 
             var cashbalances = fndAccount.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(fndAccount.AgreementType)
                 ? ComputePBCashBalances(valueDate, contextDate, fndAccount, deadline)
@@ -651,7 +657,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             return cashbalances;
         }
 
-        private static CashBalances ComputePBCashBalances(DateTime valueDate, DateTime contextDate, vw_FundAccounts fndAccount, TimeSpan deadline)
+        private static CashBalances ComputePBCashBalances(DateTime valueDate, DateTime contextDate, vw_FundAccounts fndAccount, DateTime deadline)
         {
             List<dmaTreasuryCashBalance> allTreasuryBals;
             using (var context = new OperationsContext())
@@ -716,11 +722,8 @@ namespace HedgeMark.Operations.Secure.Middleware
                                                                 .Select(s => s.FX_RATE).FirstOrDefault() ?? 0
                                                select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum();
 
-
-            var deadlineDate = DateTime.Now - deadline;
-
             var totalApprovedAfterDeadlineInLocalCur = (from wire in wires
-                                                        where wire.WireStatusId == (int)WireDataManager.WireStatus.Approved && wire.ApprovedAt != null && wire.ApprovedAt > deadlineDate
+                                                        where wire.WireStatusId == (int)WireDataManager.WireStatus.Approved && wire.ApprovedAt != null && wire.ApprovedAt > deadline
                                                         let fxRate = conversionData.Where(s => s.FROM_CRNCY == wire.Currency && s.TO_CRNCY == fndAccount.Currency)
                                                                          .Select(s => s.FX_RATE).FirstOrDefault() ?? 0
                                                         select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum();
@@ -765,7 +768,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             return cashBalances;
         }
 
-        private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate, TimeSpan deadline)
+        private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate, DateTime deadline)
         {
             dmaTreasuryCashBalance treasuryBal;
             using (var context = new OperationsContext())
@@ -794,15 +797,12 @@ namespace HedgeMark.Operations.Secure.Middleware
                     }).ToList();
             }
 
-
-            var deadlineDate = DateTime.Now - deadline;
-
             var cashBalances = new CashBalances()
             {
                 IsCashBalanceAvailable = true,
                 TotalWireEntered = wires.Sum(s => s.Amount),
                 TotalPendingWireEntered = wires.Where(s => s.WireStatusId != (int)WireDataManager.WireStatus.Approved).Sum(s => s.Amount),
-                TotalApprovedWireAfterDeadline = wires.Where(s => s.ApprovedAt != null && s.ApprovedAt > deadlineDate).Sum(s => s.Amount),
+                TotalApprovedWireAfterDeadline = wires.Where(s => s.ApprovedAt != null && s.ApprovedAt > deadline).Sum(s => s.Amount),
                 TreasuryBalance = treasuryBal.CashBalance ?? 0,
                 Currency = treasuryBal.Currency,
                 ContextDate = treasuryBal.ContextDate,
