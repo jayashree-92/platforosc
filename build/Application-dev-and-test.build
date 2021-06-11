@@ -7,7 +7,7 @@
   <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
   <property name="ProjectFile" value="../HedgeMark.Operations.Secure.Web/HMOSecureWeb.csproj"/>   
   <property name="OutputFile1" value="../HedgeMark.Operations.Secure.Web/obj/Release/"/>   
-  <property name="sourcePackageLocation" value="\\WT81B10085TV00\d\Operations_Secure_Jenkins\Test"/>   
+  <property name="sourcePackageLocation" value="\\WT81B10085TV00\Operations_Secure_Jenkins\Test"/>   
   <property name="UnitTestProjectReference" value="../HedgeMark.SwiftMessageHandler.Tests/bin/QA/HedgeMark.SwiftMessageHandler.Tests.dll" />  
   
   <property name="allServers" value="WT81B10085TV00,WT81B10086TV00" />
