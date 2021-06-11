@@ -14,8 +14,8 @@
   <property name="appPoolName" value="OPS-secure_Test01" />
   
   <property name="primaryServers" value="  
-	  \\Wt81b10085tv00\d\OPS-secure_Test01,
-	  \\WT81B10086TV00\d\OPS-secure_Test01"/>
+	  \\Wt81b10085tv00\OPS-secure_Test01,
+	  \\WT81B10086TV00\OPS-secure_Test01"/>
 
    <!--SQL Properties-->
    <property name="sql.DB" value="HM_WIRES"/>
