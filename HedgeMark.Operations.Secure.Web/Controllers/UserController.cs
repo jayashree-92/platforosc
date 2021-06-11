@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Com.HedgeMark.Commons.CustomConfigs;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.DataModel;
 using HedgeMark.Operations.Secure.Middleware;
@@ -93,7 +94,13 @@ namespace HMOSecureWeb.Controllers
             var userRows = ConstructWireUserRows(allWireUsers);
             //Create PDF Files using allWireUsers
 
-            exportFileInfo = SecureExporter.ExportSignedReport(userRows, groupOption, exportFileInfo, null);
+            var digiSignInfo = new DigitalSignatureInfo()
+            {
+                PfxFile = new FileInfo(FileSystemManager.OpsSecureInternalConfigFiles + "\\" + SecretsConfiguration.GetSecret("DigiSignatureFileName")),
+                Password = SecretsConfiguration.GetSecret("DigiSignaturePassword")
+            };
+
+            exportFileInfo = SecureExporter.ExportSignedReport(userRows, groupOption, exportFileInfo, digiSignInfo.PfxFile.Exists ? digiSignInfo : null);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 

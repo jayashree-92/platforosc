@@ -13,7 +13,7 @@ namespace HedgeMark.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = ConfigurationManagerWrapper.StringSetting("OpsSecureRootDirectory", @"C:\ManagedAccountFiles\");
+                var configPath = ConfigurationManagerWrapper.StringSetting("OpsSecureRootDirectory", @"D:\HM-Operations-Secure\");
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -22,7 +22,7 @@ namespace HedgeMark.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = ConfigurationManagerWrapper.StringSetting("ManagedAccountRootDirectory", @"D:\ManagedAccountFiles\");
+                var configPath = ConfigurationManagerWrapper.StringSetting("ManagedAccountRootDirectory", @"D:\HM-Operations\ManagedAccountFiles\");
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -70,6 +70,14 @@ namespace HedgeMark.Operations.Secure.Middleware
             get
             {
                 var configPath = string.Format(@"{0}\AccountsFileUploads\", OpsSecureRootDirectory);
+                return GetValidatedConfigPath(configPath);
+            }
+        }
+        public static string OpsSecureInternalConfigFiles
+        {
+            get
+            {
+                var configPath = string.Format(@"{0}\InternalConfigFiles\", OpsSecureRootDirectory);
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -152,6 +160,9 @@ namespace HedgeMark.Operations.Secure.Middleware
 
             if (!Directory.Exists(InternalOutputFilesDropPath))
                 Directory.CreateDirectory(InternalOutputFilesDropPath);
+
+            if (!Directory.Exists(OpsSecureInternalConfigFiles))
+                Directory.CreateDirectory(OpsSecureInternalConfigFiles);
         }
 
         private static void Initialise()

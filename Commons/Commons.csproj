@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationManagerWrapper.cs" />
+    <Compile Include="CustomConfigs\SecretsConfiguration.cs" />
     <Compile Include="Extensions\Cloner.cs" />
     <Compile Include="Extensions\Clone\SelectiveCloner.cs" />
     <Compile Include="Extensions\Clone\IPropertyCopier.cs" />

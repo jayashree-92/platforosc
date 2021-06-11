@@ -9,6 +9,7 @@
     <!-- For more information on Entity Framework configuration, visit http://go.microsoft.com/fwlink/?LinkID=237468 -->
     <section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
     <section name="mailBoxSettings" type="HedgeMark.Operations.Secure.Middleware.MailBoxSection, HedgeMark.Operations.Secure.Middleware, Version=1.0.0.0, Culture=neutral"/>
+    <section name="secretSettings" type="Com.HedgeMark.Commons.CustomConfigs.SecretSection, Com.HedgeMark.Commons, Version=1.0.0.0, Culture=neutral"/>
     <sectionGroup name="system.web.webPages.razor" type="System.Web.WebPages.Razor.Configuration.RazorWebSectionGroup, System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <section name="host" type="System.Web.WebPages.Razor.Configuration.HostSection, System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" requirePermission="false" />
       <section name="pages" type="System.Web.WebPages.Razor.Configuration.RazorPagesSection, System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" requirePermission="false" />
@@ -26,6 +27,14 @@
       <add mailBoxName="hm-ops-qa" username="AMS\O71579795229x" password="M#%v232&amp;%54n"></add>
     </mailBoxes>
   </mailBoxSettings>
+  <secretSettings>
+    <secrets>
+      <add key="UMS_username" value="dmum00m"/>
+      <add key="UMS_password" value="mellon@123"/>
+      <add key="DigiSignatureFileName" value="HedgeMarkOperationsQA.pfx"/>
+      <add key="DigiSignaturePassword" value="C@$+0R0!l"/>
+    </secrets>
+  </secretSettings>
   <appSettings>
     <add key="webpages:Version" value="2.0.0.0" />
     <add key="webpages:Enabled" value="false" />
@@ -46,9 +55,6 @@
     <add key="FromMailAddress" value="no-reply-qa@bnymellon.com"/>
     <add key="ToMailAddress" value="Nadhiya.Rajendran@bnymellon.com,madhanraj.jayavel@bnymellon.com,Mohansrikant.RameshKumar@bnymellon.com"/>
     <add key="HMOpsFromAddress" value="hm-ops-dev@bnymellon.com"/>
-    <add key="UMS_username" value="dmum00m"/>
-    <add key="UMS_password" value="mellon@123"/>
-
   </appSettings>
   <system.web>
     <sessionState timeout="20" mode="InProc" ></sessionState>
@@ -112,7 +118,7 @@
       <customHeaders>
         <remove name="X-Powered-By" />
         <remove name="SERVER" />
-        <add name="X-Frame-Options" value="DENY" />  
+        <add name="X-Frame-Options" value="DENY" />
         <add name="X-Xss-Protection" value="1; mode=block" />
         <add name="Strict-Transport-Security" value="max-age=31536000; includeSubDomains; preload" />
         <add name="X-Content-Type-Options" value="nosniff" />

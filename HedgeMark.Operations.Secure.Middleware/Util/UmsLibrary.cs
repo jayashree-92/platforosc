@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
+using Com.HedgeMark.Commons.CustomConfigs;
 using HedgeMark.Operations.Secure.Middleware.UserManagementService;
 using log4net;
 
@@ -53,8 +54,8 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
             var messageHeadersElement = OperationContext.Current.OutgoingMessageHeaders;
             var securityHeader = new SecurityHeader
             {
-                userName = ConfigurationManager.AppSettings["UMS_username"],
-                password = ConfigurationManager.AppSettings["UMS_password"]
+                userName = SecretsConfiguration.GetSecret("UMS_username"),
+                password = SecretsConfiguration.GetSecret("UMS_password")
             };
 
             messageHeadersElement.Add(securityHeader);
