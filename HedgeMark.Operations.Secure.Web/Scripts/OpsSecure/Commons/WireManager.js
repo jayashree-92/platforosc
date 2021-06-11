@@ -1563,7 +1563,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.fnCalculateCashBalance = function (isRetry) {
 
         $scope.CashBalance.IsNewBalanceOffLimit = false;
-        $("#chkCashBalOff").prop("checked", false).trigger("change");
+        if ($("#chkCashBalOff").prop("checked"))
+            $("#chkCashBalOff").prop("checked", false).trigger("change");
         if (!$scope.CashBalance.IsCashBalanceAvailable)
             $scope.CashBalance.CalculatedBalance = "N.A";
         else {
