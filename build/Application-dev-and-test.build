@@ -11,11 +11,13 @@
   <property name="UnitTestProjectReference" value="../HedgeMark.SwiftMessageHandler.Tests/bin/QA/HedgeMark.SwiftMessageHandler.Tests.dll" />  
   
   <property name="allServers" value="WT81B10085TV00,WT81B10086TV00" />
-  <property name="appPoolName" value="OPS-secure_Test01" />
+  <property name="appPoolName" value="OPS-secure_Test01,OPS-secure_Test03" />
   
   <property name="primaryServers" value="  
 	  \\Wt81b10085tv00\OPS-secure_Test01,
-	  \\WT81B10086TV00\OPS-secure_Test01"/>
+	  \\Wt81b10085tv00\OPS-secure_Test03,
+	  \\Wt81b10086tv00\OPS-secure_Test01,
+	  \\WT81B10086TV00\OPS-secure_Test03"/>
 
    <!--SQL Properties-->
    <property name="sql.DB" value="HM_WIRES"/>
