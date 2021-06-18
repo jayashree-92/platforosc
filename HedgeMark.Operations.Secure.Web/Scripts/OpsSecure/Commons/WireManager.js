@@ -1350,7 +1350,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
 
 
-        if ($scope.WireTicket.WireStatusId == 1) {
+        if ($scope.WireTicket.WireStatusId <= 1) {
             $("#wireAmount").text("0");
             $("#wireSenderDescription").val("");
         }
@@ -1399,7 +1399,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $("#liReceivingAccount").select2("disable");
         }
 
-        if ($scope.WireTicket.WireStatusId == 1) {
+        if ($scope.WireTicket.WireStatusId <= 1) {
             $("#wireAmount").text("0");
             $("#wireSenderDescription").val("");
         }
@@ -1436,8 +1436,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         if (!$scope.WireTicketStatus.IsEditEnabled || !$scope.WireTicketStatus.IsWirePurposeAdhoc)
             return;
-        
-        if ($scope.WireTicket.WireStatusId == 1) {
+
+        if ($scope.WireTicket.WireStatusId <= 1) {
             $("#wireAmount").text("0");
             $("#wireSenderDescription").val("");
         }
@@ -1620,8 +1620,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     angular.element(document).on("change", "#liReceivingBookAccount", function () {
         if (!$scope.WireTicketStatus.IsEditEnabled || !$scope.WireTicketStatus.IsWirePurposeAdhoc)
             return;
-        
-        if ($scope.WireTicket.WireStatusId == 1) {
+
+        if ($scope.WireTicket.WireStatusId <= 1) {
             $("#wireAmount").text("0");
             $("#wireSenderDescription").val("");
         }
@@ -1681,7 +1681,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if (!$scope.WireTicketStatus.IsEditEnabled || !$scope.WireTicketStatus.IsWirePurposeAdhoc)
             return;
 
-        if ($scope.WireTicket.WireStatusId == 1) {
+        if ($scope.WireTicket.WireStatusId <= 1) {
             $("#wireAmount").text("0");
             $("#wireSenderDescription").val("");
         }
@@ -1751,8 +1751,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $("#liSendingAccount").select2("val", "").trigger("change");
             $("#liCurrency").select2("disable");
             $("#liSendingAccount").select2("disable");
-            $("#wireAmount").text("0");
-            $("#wireSenderDescription").val("");
+            if ($scope.WireTicket.WireStatusId <= 1) {
+                $("#wireAmount").text("0");
+                $("#wireSenderDescription").val("");
+            }
 
             if ($scope.wireTicketObj.IsFundTransfer)
                 $("#liReceivingBookAccount").select2("disable");
