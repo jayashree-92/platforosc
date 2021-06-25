@@ -12,8 +12,8 @@ var configuration = Argument("configuration", "Debug");
 var solution = File(Argument("sln", GetFiles("./*.sln").FirstOrDefault().ToString()));
 var testPattern = Argument("test", "*.Tests");
 var sonarUrl = Argument("sonarurl", "https://sonarqube.bnymellon.net");
-var sonarExclude = Argument("sonarexclude", "HedgeMark.Operations*/Scripts/**/*");
-var namespacePattern = Argument("namespace", "HedgeMark.Operations" + "*");
+var sonarExclude = Argument("sonarexclude", "HedgeMark.Operations.Secure*/Scripts/**/*");
+var namespacePattern = Argument("namespace", "HedgeMark.Operations.Secure" + "*");
 var testAssemblies = "./**/bin/" + configuration + "/" + testPattern + ".dll";
 var groupId = Argument("groupid", OrFromPom("//*[local-name()='project' and namespace-uri() != '']/*[local-name()='groupId']"));
 var artifactId = Argument("artifactid", OrFromPom("//*[local-name()='project' and namespace-uri() != '']/*[local-name()='artifactId']"));
@@ -189,7 +189,7 @@ Task("package")
     .IsDependentOn("sonarqube-end")
     .Does(() =>
     { 
-                  MSBuild("./HedgeMark.Operations.Web/HMOWeb.csproj", settings => 
+                  MSBuild("./HedgeMark.Operations.Secure.Web/HMOSecureWeb.csproj", settings => 
                       settings.SetConfiguration(configuration)
             .UseToolVersion(MSBuildToolVersion.VS2019) 
             .WithTarget("WebPublish")

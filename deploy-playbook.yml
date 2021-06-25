@@ -1,0 +1,94 @@
+---
+ 
+- hosts: all
+  gather_facts: 'true'
+  vars:
+    Nexus_code_available_path: D:\AnsibleDeployment\Ops-Test-Deploy
+    backupDir: D:\AnsibleDeployment\Ops-Secure-Test-Backup
+    backupConfig: D:\AnsibleDeployment\Ops-Secure-Test-Backup\web.config
+    appDir_test01: D:\OPS-secure_Test01\
+    appDir_test02: D:\OPS-secure_Test03\
+    copy_to_backup: yes
+    download_nexus_artifact: yes 
+    uncompress_zip: yes
+    remove_downloaded_zip_folder: yes
+    repo: d-BNYMellon-snapshots
+    group: dmo.bnym
+    artifact: HM-Ops-Secure
+    version: 0.0.1-SNAPSHOT
+    extension: zip
+
+  tasks:
+    - name: download artifact from Nexus
+      win_get_url:
+        url: http://nexus.bnymellon.net/nexus/service/local/artifact/maven/redirect?r={{ repo }}&g={{ group }}&a={{ artifact }}&v={{ version }}&e={{ extension }}
+        dest: 'D:\AnsibleDeployment\Ops-Test-Deploy\artifacts.zip'
+    
+    - name: Extract in VM Machine
+      win_unzip:
+        src:  'D:\AnsibleDeployment\Ops-Secure-Test-Deploy\artifacts.zip'
+        dest:  'D:\AnsibleDeployment\Ops-Secure-Test-Deploy\artifacts'
+        remote_src: yes
+        delete_archive: yes
+
+    - name: Assinging backup folder value to variable
+      set_fact:
+        backup_dir: 'D:\AnsibleDeployment\Ops-Secure-Test-Backup_{{ ansible_date_time.iso8601_basic_short }}'
+
+    - name: Create backup folder
+      win_file:
+        path: "{{ backup_dir }}"
+        state: directory
+
+    - name: Stop IIS
+      win_shell: |
+        Stop-WebAppPool -Name OPS-secure_Test01
+    
+    - name: Stop IIS
+      win_shell: |
+        Stop-WebAppPool -Name OPS-secure_Test03
+
+    - name: call this task if backup copy of Existing Code
+      win_copy:
+        src: "{{ appDir_test01 }}"
+        dest: "{{ backup_dir }}/Secure_test_01"
+        remote_src: yes
+
+    - name: call this task if backup copy of Existing Code
+      win_copy:
+        src: "{{ appDir_test02 }}"
+        dest: "{{ backup_dir }}/Secure_test_03"
+        remote_src: yes   
+
+    - name: call this task to copy source code to Ops Deployment Path
+      win_copy:
+        src: 'D:\AnsibleDeployment\Ops-Secure-Test-Deploy\artifacts\'
+        dest: "{{ appDir_test01 }}"
+        remote_src: yes
+    
+    - name: call this task to copy source code to Ops Deployment Path
+      win_copy:
+        src: 'D:\AnsibleDeployment\Ops-Secure-Test-Deploy\artifacts\'
+        dest: "{{ appDir_test02 }}"
+        remote_src: yes   
+
+    - name: call this task to copy web.config from backup to Ops Deployment Path
+      win_copy:
+        src: "{{ backup_dir }}/Secure_test_01/web.config"
+        dest: "{{ appDir_test01 }}"
+        remote_src: yes
+
+    - name: call this task to copy web.config from backup to Ops Deployment Path
+      win_copy:
+        src: "{{ backup_dir }}/Secure_test_03/web.config"
+        dest: "{{ appDir_test02 }}"
+        remote_src: yes   
+    
+    - name: Start IIS
+      win_shell: |
+        Start-WebAppPool -Name OPS-secure_Test01
+
+    - name: Start IIS
+      win_shell: |
+        Start-WebAppPool -Name OPS-secure_Test03
+        

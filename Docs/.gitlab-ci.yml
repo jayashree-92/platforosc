@@ -3,23 +3,11 @@ include:
     ref: master
     file: '/gitlab-ci/dotnetfw-ci-common-core.yml'
 
-Build:
-  stage: build
-  extends: .dotnetfw4x_build_core
-  before_script:
-    - git config core.longpaths true
-  after_script:
-    - .\ConvertFilesforGitLab.ps1
-  artifacts:
-    reports:
-      junit: "TestResults/JUnitResults.xml"
-
-
 
 variables:
 #  GLB_COMMON_NO_TEST: 'yes'
 #  GLB_COMMON_NO_BUILD: 'yes'
- ENABLE_ANSIBLE_DEPLOYMENT: 'yes'
+ ENABLE_ANSIBLE_DEPLOYMENT: 'no'
  GIT_STRATEGY: clone
  APPSCAN_INCLUDE_FILENAMES_PATTERN: '*'
  APPSCAN_MNEMONIC: 'DMO'
