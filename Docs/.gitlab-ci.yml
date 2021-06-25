@@ -24,6 +24,6 @@ variables:
  JDK_ANSIBLE_AWX_URL: 'https://ansibletower-nonprod.bnymellon.net'
  NEXUS_REPO_ID: 'd-BNYMellon-snapshots'
  NEXUS_GROUP: 'dmo.bnym'
- NEXUS_ARTIFACT: 'HM-Operations'
+ NEXUS_ARTIFACT: 'HM-Ops-Secure'
  NEXUS_ARTIFACT_VERSION: '0.0.1-SNAPSHOT'
 #  APPSCAN_REPOSITORY_ID: 'd-BNYMellon-snapshots'
