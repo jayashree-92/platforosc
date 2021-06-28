@@ -18,11 +18,11 @@ namespace HedgeMark.Operations.Secure.DataModel
         public onBoardingAccount()
         {
             this.hmsAccountCallbacks = new HashSet<hmsAccountCallback>();
-            this.hmsWires = new HashSet<hmsWire>();
-            this.hmsWires1 = new HashSet<hmsWire>();
             this.onBoardingAccountDocuments = new HashSet<onBoardingAccountDocument>();
             this.onBoardingAccountModuleAssociations = new HashSet<onBoardingAccountModuleAssociation>();
             this.onBoardingAccountSSITemplateMaps = new HashSet<onBoardingAccountSSITemplateMap>();
+            this.hmsWires = new HashSet<hmsWire>();
+            this.hmsWires1 = new HashSet<hmsWire>();
         }
     
         public long onBoardingAccountId { get; set; }
@@ -84,10 +84,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsAccountCallback> hmsAccountCallbacks { get; set; }
         public virtual hmsSwiftGroup SwiftGroup { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hmsWire> hmsWires { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hmsWire> hmsWires1 { get; set; }
         public virtual onBoardingAccountBICorABA Beneficiary { get; set; }
         public virtual onBoardingAccountBICorABA Intermediary { get; set; }
         public virtual onBoardingAccountBICorABA UltimateBeneficiary { get; set; }
@@ -98,5 +94,9 @@ namespace HedgeMark.Operations.Secure.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
         public virtual hmsWirePortalCutoff WirePortalCutoff { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsWire> hmsWires { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsWire> hmsWires1 { get; set; }
     }
 }

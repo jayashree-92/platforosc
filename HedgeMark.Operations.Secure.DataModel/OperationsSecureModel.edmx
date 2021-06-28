@@ -377,7 +377,7 @@
             <PropertyRef Name="hmsWireId" />
           </Key>
           <Property Name="hmsWireId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetimeoffset" Precision="7" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="WirePurposeId" Type="int" Nullable="false" />
           <Property Name="ContextDate" Type="date" Nullable="false" />
@@ -394,7 +394,7 @@
           <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="WireMessageTypeId" Type="int" Nullable="false" />
           <Property Name="WireStatusId" Type="int" Nullable="false" />
-          <Property Name="LastModifiedAt" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedAt" Type="datetimeoffset" Precision="7" Nullable="false" />
           <Property Name="LastUpdatedBy" Type="int" Nullable="false" />
           <Property Name="DeliveryCharges" Type="varchar" MaxLength="20" />
           <Property Name="SwiftStatusId" Type="int" Nullable="false" />
@@ -402,7 +402,7 @@
           <Property Name="NotesToApprover" Type="varchar" MaxLength="1000" />
           <Property Name="SenderInformationId" Type="int" />
           <Property Name="SenderDescription" Type="varchar" MaxLength="500" />
-          <Property Name="ApprovedAt" Type="datetime" />
+          <Property Name="ApprovedAt" Type="datetimeoffset" Precision="7" />
           <Property Name="ApprovedBy" Type="int" />
           <Property Name="ReceivingOnBoardAccountId" Type="bigint" />
           <Property Name="hmsWireFieldId" Type="bigint" />
@@ -437,7 +437,7 @@
           <Property Name="hmsWireId" Type="bigint" Nullable="false" />
           <Property Name="WireStatusId" Type="int" Nullable="false" />
           <Property Name="Comment" Type="varchar" MaxLength="8000" Nullable="false" />
-          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetimeoffset" Precision="7" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
           <Property Name="SwiftStatusId" Type="int" Nullable="false" />
         </EntityType>
@@ -1531,15 +1531,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySet Name="hmsWireMessageTypes" EntityType="OperationsSecureModel.hmsWireMessageType" />
           <EntitySet Name="hmsWireStatusLkups" EntityType="OperationsSecureModel.hmsWireStatusLkup" />
           <EntitySet Name="hmsSwiftStatusLkups" EntityType="OperationsSecureModel.hmsSwiftStatusLkup" />
-          <EntitySet Name="hmsWireWorkflowLogs" EntityType="OperationsSecureModel.hmsWireWorkflowLog" />
-          <AssociationSet Name="FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId">
-            <End Role="hmsSwiftStatusLkup" EntitySet="hmsSwiftStatusLkups" />
-            <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId" Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId">
-            <End Role="hmsWireStatusLkup" EntitySet="hmsWireStatusLkups" />
-            <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
-          </AssociationSet>
           <EntitySet Name="hmsWireJobSchedules" EntityType="OperationsSecureModel.hmsWireJobSchedule" />
           <EntitySet Name="hmsNotificationStagings" EntityType="OperationsSecureModel.hmsNotificationStaging" />
           <EntitySet Name="hmsWirePurposeLkups" EntityType="OperationsSecureModel.hmsWirePurposeLkup" />
@@ -1553,10 +1544,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           </AssociationSet>
           <AssociationSet Name="FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId">
             <End Role="hmsWireMessageType" EntitySet="hmsWireMessageTypes" />
-            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
-            <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
             <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
           </AssociationSet>
           <EntitySet Name="hmsUserAuditLogs" EntityType="OperationsSecureModel.hmsUserAuditLog" />
@@ -1616,19 +1603,87 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
             <End Role="hmsSSICallback" EntitySet="hmsSSICallbacks" />
           </AssociationSet>
-          <EntitySet Name="hmsWires" EntityType="OperationsSecureModel.hmsWire" />
           <EntitySet Name="onBoardingAccounts" EntityType="OperationsSecureModel.onBoardingAccount" />
           <AssociationSet Name="FK_hmsAccountCallback_onBoardingAccountId" Association="OperationsSecureModel.FK_hmsAccountCallback_onBoardingAccountId">
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
             <End Role="hmsAccountCallback" EntitySet="hmsAccountCallbacks" />
           </AssociationSet>
-          <AssociationSet Name="FK_hmsActionInProgress_hmsWireId" Association="OperationsSecureModel.FK_hmsActionInProgress_hmsWireId">
-            <End Role="hmsWire" EntitySet="hmsWires" />
-            <End Role="hmsActionInProgress" EntitySet="hmsActionInProgresses" />
-          </AssociationSet>
           <AssociationSet Name="FK_onBoardingAccount_SwiftGroupId" Association="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId">
             <End Role="hmsSwiftGroup" EntitySet="hmsSwiftGroups" />
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccount_BeneficiaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingAccount_BeneficiaryBICorABAId">
+            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccount_IntermediaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingAccount_IntermediaryBICorABAId">
+            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccount_UltimateBeneficiaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingAccount_UltimateBeneficiaryBICorABAId">
+            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccountDocument_onBoardingAccountId" Association="OperationsSecureModel.FK_onBoardingAccountDocument_onBoardingAccountId">
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+            <End Role="onBoardingAccountDocument" EntitySet="onBoardingAccountDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId" Association="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId">
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+            <End Role="onBoardingAccountModuleAssociation" EntitySet="onBoardingAccountModuleAssociations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_AccountId" Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId">
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+            <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMaps" />
+          </AssociationSet>
+          <EntitySet Name="hmsCollateralCashPurposeLkups" EntityType="OperationsSecureModel.hmsCollateralCashPurposeLkup" />
+          <EntitySet Name="hmsWireFields" EntityType="OperationsSecureModel.hmsWireField" />
+          <AssociationSet Name="FK_hmsWireFields_hmsCollateralCashPurposeLkupId" Association="OperationsSecureModel.FK_hmsWireFields_hmsCollateralCashPurposeLkupId">
+            <End Role="hmsCollateralCashPurposeLkup" EntitySet="hmsCollateralCashPurposeLkups" />
+            <End Role="hmsWireField" EntitySet="hmsWireFields" />
+          </AssociationSet>
+          <EntitySet Name="hmsWirePortalCutoffs" EntityType="OperationsSecureModel.hmsWirePortalCutoff" />
+          <AssociationSet Name="FK_onBoardingAccount_WirePortalCutoffId" Association="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId">
+            <End Role="hmsWirePortalCutoff" EntitySet="hmsWirePortalCutoffs" />
+            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+          </AssociationSet>
+          <EntitySet Name="hmsDashboardPreferenceCodeLkups" EntityType="OperationsSecureModel.hmsDashboardPreferenceCodeLkup" />
+          <EntitySet Name="hmsDashboardPreferences" EntityType="OperationsSecureModel.hmsDashboardPreference" />
+          <EntitySet Name="hmsDashboardScheduleRangeLkups" EntityType="OperationsSecureModel.hmsDashboardScheduleRangeLkup" />
+          <EntitySet Name="hmsDashboardSchedules" EntityType="OperationsSecureModel.hmsDashboardSchedule" />
+          <EntitySet Name="hmsDashboardTemplates" EntityType="OperationsSecureModel.hmsDashboardTemplate" />
+          <EntitySet Name="hmsScheduleLogs" EntityType="OperationsSecureModel.hmsScheduleLog" />
+          <EntitySet Name="hmsSchedules" EntityType="OperationsSecureModel.hmsSchedule" />
+          <EntitySet Name="hmsScheduleWorkflowLkups" EntityType="OperationsSecureModel.hmsScheduleWorkflowLkup" />
+          <AssociationSet Name="FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode" Association="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode">
+            <End Role="hmsDashboardPreferenceCodeLkup" EntitySet="hmsDashboardPreferenceCodeLkups" />
+            <End Role="hmsDashboardPreference" EntitySet="hmsDashboardPreferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId" Association="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId">
+            <End Role="hmsDashboardTemplate" EntitySet="hmsDashboardTemplates" />
+            <End Role="hmsDashboardPreference" EntitySet="hmsDashboardPreferences" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId" Association="OperationsSecureModel.FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId">
+            <End Role="hmsDashboardScheduleRangeLkup" EntitySet="hmsDashboardScheduleRangeLkups" />
+            <End Role="hmsDashboardSchedule" EntitySet="hmsDashboardSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardSchedules_hmsDashboardTemplateId" Association="OperationsSecureModel.FK_hmsDashboardSchedules_hmsDashboardTemplateId">
+            <End Role="hmsDashboardTemplate" EntitySet="hmsDashboardTemplates" />
+            <End Role="hmsDashboardSchedule" EntitySet="hmsDashboardSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsDashboardSchedules_hmsScheduleId" Association="OperationsSecureModel.FK_hmsDashboardSchedules_hmsScheduleId">
+            <End Role="hmsSchedule" EntitySet="hmsSchedules" />
+            <End Role="hmsDashboardSchedule" EntitySet="hmsDashboardSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsScheduleLogs_hmsScheduleId" Association="OperationsSecureModel.FK_hmsScheduleLogs_hmsScheduleId">
+            <End Role="hmsSchedule" EntitySet="hmsSchedules" />
+            <End Role="hmsScheduleLog" EntitySet="hmsScheduleLogs" />
+          </AssociationSet>
+          <EntitySet Name="hmsUsers" EntityType="OperationsSecureModel.hmsUser" />
+          <EntitySet Name="hmsWires" EntityType="OperationsSecureModel.hmsWire" />
+          <AssociationSet Name="FK_hmsActionInProgress_hmsWireId" Association="OperationsSecureModel.FK_hmsActionInProgress_hmsWireId">
+            <End Role="hmsWire" EntitySet="hmsWires" />
+            <End Role="hmsActionInProgress" EntitySet="hmsActionInProgresses" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" Association="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
             <End Role="hmsSwiftStatusLkup" EntitySet="hmsSwiftStatusLkups" />
@@ -1641,6 +1696,10 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <AssociationSet Name="FK_hmsWireDocument_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId">
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireDocument" EntitySet="hmsWireDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWires_hmsWireFieldId" Association="OperationsSecureModel.FK_hmsWires_hmsWireFieldId">
+            <End Role="hmsWireField" EntitySet="hmsWireFields" />
+            <End Role="hmsWire" EntitySet="hmsWires" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
             <End Role="hmsWire" EntitySet="hmsWires" />
@@ -1686,82 +1745,23 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
             <End Role="hmsWire" EntitySet="hmsWires" />
           </AssociationSet>
+          <EntitySet Name="hmsWireWorkflowLogs" EntityType="OperationsSecureModel.hmsWireWorkflowLog" />
+          <AssociationSet Name="FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId">
+            <End Role="hmsSwiftStatusLkup" EntitySet="hmsSwiftStatusLkups" />
+            <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
+            <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
+            <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
+          </AssociationSet>
           <AssociationSet Name="FK_hmsWireWorkflowLog_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId">
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
           </AssociationSet>
-          <AssociationSet Name="FK_onBoardingAccount_BeneficiaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingAccount_BeneficiaryBICorABAId">
-            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
+          <AssociationSet Name="FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId" Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId">
+            <End Role="hmsWireStatusLkup" EntitySet="hmsWireStatusLkups" />
+            <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
           </AssociationSet>
-          <AssociationSet Name="FK_onBoardingAccount_IntermediaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingAccount_IntermediaryBICorABAId">
-            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_onBoardingAccount_UltimateBeneficiaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingAccount_UltimateBeneficiaryBICorABAId">
-            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_onBoardingAccountDocument_onBoardingAccountId" Association="OperationsSecureModel.FK_onBoardingAccountDocument_onBoardingAccountId">
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
-            <End Role="onBoardingAccountDocument" EntitySet="onBoardingAccountDocuments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId" Association="OperationsSecureModel.FK_onBoardingAccountModuleAssociation_onBoardingAccount_onBoardingAccountId">
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
-            <End Role="onBoardingAccountModuleAssociation" EntitySet="onBoardingAccountModuleAssociations" />
-          </AssociationSet>
-          <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_AccountId" Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId">
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
-            <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMaps" />
-          </AssociationSet>
-          <EntitySet Name="hmsCollateralCashPurposeLkups" EntityType="OperationsSecureModel.hmsCollateralCashPurposeLkup" />
-          <EntitySet Name="hmsWireFields" EntityType="OperationsSecureModel.hmsWireField" />
-          <AssociationSet Name="FK_hmsWireFields_hmsCollateralCashPurposeLkupId" Association="OperationsSecureModel.FK_hmsWireFields_hmsCollateralCashPurposeLkupId">
-            <End Role="hmsCollateralCashPurposeLkup" EntitySet="hmsCollateralCashPurposeLkups" />
-            <End Role="hmsWireField" EntitySet="hmsWireFields" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsWires_hmsWireFieldId" Association="OperationsSecureModel.FK_hmsWires_hmsWireFieldId">
-            <End Role="hmsWireField" EntitySet="hmsWireFields" />
-            <End Role="hmsWire" EntitySet="hmsWires" />
-          </AssociationSet>
-          <EntitySet Name="hmsWirePortalCutoffs" EntityType="OperationsSecureModel.hmsWirePortalCutoff" />
-          <AssociationSet Name="FK_onBoardingAccount_WirePortalCutoffId" Association="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId">
-            <End Role="hmsWirePortalCutoff" EntitySet="hmsWirePortalCutoffs" />
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
-          </AssociationSet>
-          <EntitySet Name="hmsDashboardPreferenceCodeLkups" EntityType="OperationsSecureModel.hmsDashboardPreferenceCodeLkup" />
-          <EntitySet Name="hmsDashboardPreferences" EntityType="OperationsSecureModel.hmsDashboardPreference" />
-          <EntitySet Name="hmsDashboardScheduleRangeLkups" EntityType="OperationsSecureModel.hmsDashboardScheduleRangeLkup" />
-          <EntitySet Name="hmsDashboardSchedules" EntityType="OperationsSecureModel.hmsDashboardSchedule" />
-          <EntitySet Name="hmsDashboardTemplates" EntityType="OperationsSecureModel.hmsDashboardTemplate" />
-          <EntitySet Name="hmsScheduleLogs" EntityType="OperationsSecureModel.hmsScheduleLog" />
-          <EntitySet Name="hmsSchedules" EntityType="OperationsSecureModel.hmsSchedule" />
-          <EntitySet Name="hmsScheduleWorkflowLkups" EntityType="OperationsSecureModel.hmsScheduleWorkflowLkup" />
-          <AssociationSet Name="FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode" Association="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode">
-            <End Role="hmsDashboardPreferenceCodeLkup" EntitySet="hmsDashboardPreferenceCodeLkups" />
-            <End Role="hmsDashboardPreference" EntitySet="hmsDashboardPreferences" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId" Association="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId">
-            <End Role="hmsDashboardTemplate" EntitySet="hmsDashboardTemplates" />
-            <End Role="hmsDashboardPreference" EntitySet="hmsDashboardPreferences" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId" Association="OperationsSecureModel.FK_hmsDashboardSchedules_DashboardScheduleRangeLkupId">
-            <End Role="hmsDashboardScheduleRangeLkup" EntitySet="hmsDashboardScheduleRangeLkups" />
-            <End Role="hmsDashboardSchedule" EntitySet="hmsDashboardSchedules" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsDashboardSchedules_hmsDashboardTemplateId" Association="OperationsSecureModel.FK_hmsDashboardSchedules_hmsDashboardTemplateId">
-            <End Role="hmsDashboardTemplate" EntitySet="hmsDashboardTemplates" />
-            <End Role="hmsDashboardSchedule" EntitySet="hmsDashboardSchedules" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsDashboardSchedules_hmsScheduleId" Association="OperationsSecureModel.FK_hmsDashboardSchedules_hmsScheduleId">
-            <End Role="hmsSchedule" EntitySet="hmsSchedules" />
-            <End Role="hmsDashboardSchedule" EntitySet="hmsDashboardSchedules" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsScheduleLogs_hmsScheduleId" Association="OperationsSecureModel.FK_hmsScheduleLogs_hmsScheduleId">
-            <End Role="hmsSchedule" EntitySet="hmsSchedules" />
-            <End Role="hmsScheduleLog" EntitySet="hmsScheduleLogs" />
-          </AssociationSet>
-          <EntitySet Name="hmsUsers" EntityType="OperationsSecureModel.hmsUser" />
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -1792,8 +1792,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           </Key>
           <Property Name="hmsWireStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireStatusLkup" ToRole="hmsWireWorkflowLog" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireStatusLkup" ToRole="hmsWire" />
+          <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireStatusLkup" ToRole="hmsWireWorkflowLog" />
         </EntityType>
         <EntityType Name="hmsSwiftStatusLkup">
           <Key>
@@ -1801,49 +1801,9 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           </Key>
           <Property Name="hmsSwiftStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Status" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsSwiftStatusLkup" ToRole="hmsWireWorkflowLog" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsSwiftStatusLkup" ToRole="hmsWire" />
+          <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsSwiftStatusLkup" ToRole="hmsWireWorkflowLog" />
         </EntityType>
-        <EntityType Name="hmsWireWorkflowLog">
-          <Key>
-            <PropertyRef Name="hmsWireWorkflowLogId" />
-          </Key>
-          <Property Name="hmsWireWorkflowLogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
-          <Property Name="WireStatusId" Type="Int32" Nullable="false" />
-          <Property Name="Comment" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="SwiftStatusId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="hmsSwiftStatusLkup" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsWireWorkflowLog" ToRole="hmsSwiftStatusLkup" />
-          <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireWorkflowLog" ToRole="hmsWireStatusLkup" />
-          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" FromRole="hmsWireWorkflowLog" ToRole="hmsWireLog" />
-          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWireWorkflowLog" ToRole="hmsWire" />
-        </EntityType>
-        <Association Name="FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId">
-          <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireWorkflowLog" Role="hmsWireWorkflowLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsSwiftStatusLkup">
-              <PropertyRef Name="hmsSwiftStatusId" />
-            </Principal>
-            <Dependent Role="hmsWireWorkflowLog">
-              <PropertyRef Name="SwiftStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId">
-          <End Type="OperationsSecureModel.hmsWireStatusLkup" Role="hmsWireStatusLkup" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireWorkflowLog" Role="hmsWireWorkflowLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireStatusLkup">
-              <PropertyRef Name="hmsWireStatusId" />
-            </Principal>
-            <Dependent Role="hmsWireWorkflowLog">
-              <PropertyRef Name="WireStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="hmsWireJobSchedule">
           <Key>
             <PropertyRef Name="hmsWireJobSchedulerId" />
@@ -1918,8 +1878,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="hmsWireLogTypeLkup" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" FromRole="hmsWireLog" ToRole="hmsWireLogTypeLkup" />
           <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWireLog" ToRole="hmsWireMessageType" />
-          <NavigationProperty Name="hmsWireWorkflowLog" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" FromRole="hmsWireLog" ToRole="hmsWireWorkflowLog" />
           <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" FromRole="hmsWireLog" ToRole="hmsWire" />
+          <NavigationProperty Name="hmsWireWorkflowLog" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" FromRole="hmsWireLog" ToRole="hmsWireWorkflowLog" />
         </EntityType>
         <EntityType Name="hmsWireLogTypeLkup">
           <Key>
@@ -1950,18 +1910,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Principal>
             <Dependent Role="hmsWireLog">
               <PropertyRef Name="WireMessageTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
-          <End Type="OperationsSecureModel.hmsWireWorkflowLog" Role="hmsWireWorkflowLog" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireWorkflowLog">
-              <PropertyRef Name="hmsWireWorkflowLogId" />
-            </Principal>
-            <Dependent Role="hmsWireLog">
-              <PropertyRef Name="hmsWireWorkflowLogId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2226,8 +2174,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <NavigationProperty Name="onBoardingSSITemplateDocuments" Relationship="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingSSITemplateDocument" />
           <Property Name="LastUsedAt" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="hmsSSICallbacks" Relationship="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsSSICallback" />
-          <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsWire" />
           <Property Name="IsKeyFieldsChanged" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsWire" />
         </EntityType>
         <Association Name="FK_onBoardingSSITemplate_BeneficiaryBICorABAId">
           <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
@@ -2415,58 +2363,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="hmsWire">
-          <Key>
-            <PropertyRef Name="hmsWireId" />
-          </Key>
-          <Property Name="hmsWireId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="WirePurposeId" Type="Int32" Nullable="false" />
-          <Property Name="ContextDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="OnBoardAccountId" Type="Int64" Nullable="false" />
-          <Property Name="OnBoardSSITemplateId" Type="Int64" />
-          <Property Name="OnBoardAgreementId" Type="Int64" Nullable="false" />
-          <Property Name="hmFundId" Type="Int64" Nullable="false" />
-          <Property Name="ValueDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="PaymentOrReceipt" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="SendingAccountNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="SendingPlatform" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ReceivingAccountNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Currency" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="WireMessageTypeId" Type="Int32" Nullable="false" />
-          <Property Name="WireStatusId" Type="Int32" Nullable="false" />
-          <Property Name="LastModifiedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="LastUpdatedBy" Type="Int32" Nullable="false" />
-          <Property Name="DeliveryCharges" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SwiftStatusId" Type="Int32" Nullable="false" />
-          <Property Name="WireTransferTypeId" Type="Int32" Nullable="false" />
-          <Property Name="NotesToApprover" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="SenderInformationId" Type="Int32" />
-          <Property Name="SenderDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ApprovedAt" Type="DateTime" Precision="3" />
-          <Property Name="ApprovedBy" Type="Int32" />
-          <Property Name="ReceivingOnBoardAccountId" Type="Int64" />
-          <NavigationProperty Name="hmsActionInProgresses" Relationship="OperationsSecureModel.FK_hmsActionInProgress_hmsWireId" FromRole="hmsWire" ToRole="hmsActionInProgress" />
-          <NavigationProperty Name="hmsSwiftStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsSwiftStatusLkup" />
-          <NavigationProperty Name="hmsWireCollateralAssociations" Relationship="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireCollateralAssociation" />
-          <NavigationProperty Name="hmsWireDocuments" Relationship="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireDocument" />
-          <NavigationProperty Name="hmsWireInvoiceAssociations" Relationship="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireInvoiceAssociation" />
-          <NavigationProperty Name="hmsWireJobSchedules" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireJobSchedule" />
-          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireLog" />
-          <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWire" ToRole="hmsWireMessageType" />
-          <NavigationProperty Name="hmsWirePurposeLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" FromRole="hmsWire" ToRole="hmsWirePurposeLkup" />
-          <NavigationProperty Name="hmsWireSenderInformation" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireSenderInformation_SenderInformationId" FromRole="hmsWire" ToRole="hmsWireSenderInformation" />
-          <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsWireStatusLkup" />
-          <NavigationProperty Name="hmsWireTransferTypeLKup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" FromRole="hmsWire" ToRole="hmsWireTransferTypeLKup" />
-          <NavigationProperty Name="SendingAccount" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardAccountId" FromRole="hmsWire" ToRole="onBoardingAccount" />
-          <NavigationProperty Name="ReceivingSSITemplate" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="hmsWire" ToRole="onBoardingSSITemplate" />
-          <NavigationProperty Name="ReceivingAccount" Relationship="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" FromRole="hmsWire" ToRole="onBoardingAccount" />
-          <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireWorkflowLog" />
-          <Property Name="hmsWireFieldId" Type="Int64" />
-          <NavigationProperty Name="hmsWireField" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireFieldId" FromRole="hmsWire" ToRole="hmsWireField" />
-          </EntityType>
         <EntityType Name="onBoardingAccount">
           <Key>
             <PropertyRef Name="onBoardingAccountId" />
@@ -2526,8 +2422,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="MarginAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsAccountCallbacks" Relationship="OperationsSecureModel.FK_hmsAccountCallback_onBoardingAccountId" FromRole="onBoardingAccount" ToRole="hmsAccountCallback" />
           <NavigationProperty Name="SwiftGroup" Relationship="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" FromRole="onBoardingAccount" ToRole="hmsSwiftGroup" />
-          <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardAccountId" FromRole="onBoardingAccount" ToRole="hmsWire" />
-          <NavigationProperty Name="hmsWires1" Relationship="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" FromRole="onBoardingAccount" ToRole="hmsWire" />
           <NavigationProperty Name="Beneficiary" Relationship="OperationsSecureModel.FK_onBoardingAccount_BeneficiaryBICorABAId" FromRole="onBoardingAccount" ToRole="onBoardingAccountBICorABA" />
           <NavigationProperty Name="Intermediary" Relationship="OperationsSecureModel.FK_onBoardingAccount_IntermediaryBICorABAId" FromRole="onBoardingAccount" ToRole="onBoardingAccountBICorABA" />
           <NavigationProperty Name="UltimateBeneficiary" Relationship="OperationsSecureModel.FK_onBoardingAccount_UltimateBeneficiaryBICorABAId" FromRole="onBoardingAccount" ToRole="onBoardingAccountBICorABA" />
@@ -2537,6 +2431,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="TopLevelManagerAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="WirePortalCutoff" Relationship="OperationsSecureModel.FK_onBoardingAccount_WirePortalCutoffId" FromRole="onBoardingAccount" ToRole="hmsWirePortalCutoff" />
           <Property Name="IsKeyFieldsChanged" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardAccountId" FromRole="onBoardingAccount" ToRole="hmsWire" />
+          <NavigationProperty Name="hmsWires1" Relationship="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" FromRole="onBoardingAccount" ToRole="hmsWire" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
@@ -2550,18 +2446,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_hmsActionInProgress_hmsWireId">
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsActionInProgress" Role="hmsActionInProgress" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWire">
-              <PropertyRef Name="hmsWireId" />
-            </Principal>
-            <Dependent Role="hmsActionInProgress">
-              <PropertyRef Name="hmsWireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_onBoardingAccount_SwiftGroupId">
           <End Type="OperationsSecureModel.hmsSwiftGroup" Role="hmsSwiftGroup" Multiplicity="0..1" />
           <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="*" />
@@ -2571,186 +2455,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Principal>
             <Dependent Role="onBoardingAccount">
               <PropertyRef Name="SwiftGroupId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
-          <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsSwiftStatusLkup">
-              <PropertyRef Name="hmsSwiftStatusId" />
-            </Principal>
-            <Dependent Role="hmsWire">
-              <PropertyRef Name="SwiftStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireCollateralAssociation_hmsWires_hmsWireId">
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireCollateralAssociation" Role="hmsWireCollateralAssociation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWire">
-              <PropertyRef Name="hmsWireId" />
-            </Principal>
-            <Dependent Role="hmsWireCollateralAssociation">
-              <PropertyRef Name="hmsWireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireDocument_hmsWires_hmsWireId">
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireDocument" Role="hmsWireDocument" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWire">
-              <PropertyRef Name="hmsWireId" />
-            </Principal>
-            <Dependent Role="hmsWireDocument">
-              <PropertyRef Name="hmsWireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireInvoiceAssociation" Role="hmsWireInvoiceAssociation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWire">
-              <PropertyRef Name="hmsWireId" />
-            </Principal>
-            <Dependent Role="hmsWireInvoiceAssociation">
-              <PropertyRef Name="hmsWireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId">
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireJobSchedule" Role="hmsWireJobSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWire">
-              <PropertyRef Name="hmsWireId" />
-            </Principal>
-            <Dependent Role="hmsWireJobSchedule">
-              <PropertyRef Name="hmsWireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireLogs_hmsWires_hmsWireId">
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWire">
-              <PropertyRef Name="hmsWireId" />
-            </Principal>
-            <Dependent Role="hmsWireLog">
-              <PropertyRef Name="hmsWireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWires_hmsWireMessageType_WireMessageTypeId">
-          <End Type="OperationsSecureModel.hmsWireMessageType" Role="hmsWireMessageType" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireMessageType">
-              <PropertyRef Name="hmsWireMessageTypeId" />
-            </Principal>
-            <Dependent Role="hmsWire">
-              <PropertyRef Name="WireMessageTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWires_hmsWirePurposeLkup_WirePurposeID">
-          <End Type="OperationsSecureModel.hmsWirePurposeLkup" Role="hmsWirePurposeLkup" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWirePurposeLkup">
-              <PropertyRef Name="hmsWirePurposeId" />
-            </Principal>
-            <Dependent Role="hmsWire">
-              <PropertyRef Name="WirePurposeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWires_hmsWireSenderInformation_SenderInformationId">
-          <End Type="OperationsSecureModel.hmsWireSenderInformation" Role="hmsWireSenderInformation" Multiplicity="0..1" />
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireSenderInformation">
-              <PropertyRef Name="hmsWireSenderInformationId" />
-            </Principal>
-            <Dependent Role="hmsWire">
-              <PropertyRef Name="SenderInformationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWires_hmsWireStatusLkup_WireStatusId">
-          <End Type="OperationsSecureModel.hmsWireStatusLkup" Role="hmsWireStatusLkup" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireStatusLkup">
-              <PropertyRef Name="hmsWireStatusId" />
-            </Principal>
-            <Dependent Role="hmsWire">
-              <PropertyRef Name="WireStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId">
-          <End Type="OperationsSecureModel.hmsWireTransferTypeLKup" Role="hmsWireTransferTypeLKup" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireTransferTypeLKup">
-              <PropertyRef Name="WireTransferTypeId" />
-            </Principal>
-            <Dependent Role="hmsWire">
-              <PropertyRef Name="WireTransferTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWires_OnBoardAccountId">
-          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingAccount">
-              <PropertyRef Name="onBoardingAccountId" />
-            </Principal>
-            <Dependent Role="hmsWire">
-              <PropertyRef Name="OnBoardAccountId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWires_OnBoardSSITemplateId">
-          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="0..1" />
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingSSITemplate">
-              <PropertyRef Name="onBoardingSSITemplateId" />
-            </Principal>
-            <Dependent Role="hmsWire">
-              <PropertyRef Name="OnBoardSSITemplateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWires_ReceivingOnBoardAccountId">
-          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="0..1" />
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingAccount">
-              <PropertyRef Name="onBoardingAccountId" />
-            </Principal>
-            <Dependent Role="hmsWire">
-              <PropertyRef Name="ReceivingOnBoardAccountId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireWorkflowLog_hmsWires_hmsWireId">
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireWorkflowLog" Role="hmsWireWorkflowLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWire">
-              <PropertyRef Name="hmsWireId" />
-            </Principal>
-            <Dependent Role="hmsWireWorkflowLog">
-              <PropertyRef Name="hmsWireId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2853,18 +2557,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Principal>
             <Dependent Role="hmsWireField">
               <PropertyRef Name="hmsCollateralCashPurposeLkupId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWires_hmsWireFieldId">
-          <End Type="OperationsSecureModel.hmsWireField" Role="hmsWireField" Multiplicity="0..1" />
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWireField">
-              <PropertyRef Name="hmsWireFieldId" />
-            </Principal>
-            <Dependent Role="hmsWire">
-              <PropertyRef Name="hmsWireFieldId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3089,6 +2781,314 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="LdapRole" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="AccountStatus" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="hmsWire">
+          <Key>
+            <PropertyRef Name="hmsWireId" />
+          </Key>
+          <Property Name="hmsWireId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreatedAt" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="WirePurposeId" Type="Int32" Nullable="false" />
+          <Property Name="ContextDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="OnBoardAccountId" Type="Int64" Nullable="false" />
+          <Property Name="OnBoardSSITemplateId" Type="Int64" />
+          <Property Name="OnBoardAgreementId" Type="Int64" Nullable="false" />
+          <Property Name="hmFundId" Type="Int64" Nullable="false" />
+          <Property Name="ValueDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="PaymentOrReceipt" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SendingAccountNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SendingPlatform" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ReceivingAccountNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Currency" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="WireMessageTypeId" Type="Int32" Nullable="false" />
+          <Property Name="WireStatusId" Type="Int32" Nullable="false" />
+          <Property Name="LastModifiedAt" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="LastUpdatedBy" Type="Int32" Nullable="false" />
+          <Property Name="DeliveryCharges" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SwiftStatusId" Type="Int32" Nullable="false" />
+          <Property Name="WireTransferTypeId" Type="Int32" Nullable="false" />
+          <Property Name="NotesToApprover" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="SenderInformationId" Type="Int32" />
+          <Property Name="SenderDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ApprovedAt" Type="DateTimeOffset" Precision="7" />
+          <Property Name="ApprovedBy" Type="Int32" />
+          <Property Name="ReceivingOnBoardAccountId" Type="Int64" />
+          <Property Name="hmsWireFieldId" Type="Int64" />
+          <NavigationProperty Name="hmsActionInProgresses" Relationship="OperationsSecureModel.FK_hmsActionInProgress_hmsWireId" FromRole="hmsWire" ToRole="hmsActionInProgress" />
+          <NavigationProperty Name="hmsSwiftStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsSwiftStatusLkup" />
+          <NavigationProperty Name="hmsWireCollateralAssociations" Relationship="OperationsSecureModel.FK_hmsWireCollateralAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireCollateralAssociation" />
+          <NavigationProperty Name="hmsWireDocuments" Relationship="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireDocument" />
+          <NavigationProperty Name="hmsWireField" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireFieldId" FromRole="hmsWire" ToRole="hmsWireField" />
+          <NavigationProperty Name="hmsWireInvoiceAssociations" Relationship="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireInvoiceAssociation" />
+          <NavigationProperty Name="hmsWireJobSchedules" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireJobSchedule" />
+          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireLog" />
+          <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWire" ToRole="hmsWireMessageType" />
+          <NavigationProperty Name="hmsWirePurposeLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" FromRole="hmsWire" ToRole="hmsWirePurposeLkup" />
+          <NavigationProperty Name="hmsWireSenderInformation" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireSenderInformation_SenderInformationId" FromRole="hmsWire" ToRole="hmsWireSenderInformation" />
+          <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsWireStatusLkup" />
+          <NavigationProperty Name="hmsWireTransferTypeLKup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" FromRole="hmsWire" ToRole="hmsWireTransferTypeLKup" />
+          <NavigationProperty Name="SendingAccount" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardAccountId" FromRole="hmsWire" ToRole="onBoardingAccount" />
+          <NavigationProperty Name="ReceivingSSITemplate" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="hmsWire" ToRole="onBoardingSSITemplate" />
+          <NavigationProperty Name="ReceivingAccount" Relationship="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" FromRole="hmsWire" ToRole="onBoardingAccount" />
+          <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireWorkflowLog" />
+        </EntityType>
+        <Association Name="FK_hmsActionInProgress_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsActionInProgress" Role="hmsActionInProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsActionInProgress">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
+          <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSwiftStatusLkup">
+              <PropertyRef Name="hmsSwiftStatusId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="SwiftStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireCollateralAssociation_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireCollateralAssociation" Role="hmsWireCollateralAssociation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireCollateralAssociation">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireDocument_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireDocument" Role="hmsWireDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireDocument">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_hmsWireFieldId">
+          <End Type="OperationsSecureModel.hmsWireField" Role="hmsWireField" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireField">
+              <PropertyRef Name="hmsWireFieldId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="hmsWireFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireInvoiceAssociation" Role="hmsWireInvoiceAssociation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireInvoiceAssociation">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireJobSchedule" Role="hmsWireJobSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireJobSchedule">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireLogs_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireLog">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_hmsWireMessageType_WireMessageTypeId">
+          <End Type="OperationsSecureModel.hmsWireMessageType" Role="hmsWireMessageType" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireMessageType">
+              <PropertyRef Name="hmsWireMessageTypeId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="WireMessageTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_hmsWirePurposeLkup_WirePurposeID">
+          <End Type="OperationsSecureModel.hmsWirePurposeLkup" Role="hmsWirePurposeLkup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWirePurposeLkup">
+              <PropertyRef Name="hmsWirePurposeId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="WirePurposeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_hmsWireSenderInformation_SenderInformationId">
+          <End Type="OperationsSecureModel.hmsWireSenderInformation" Role="hmsWireSenderInformation" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireSenderInformation">
+              <PropertyRef Name="hmsWireSenderInformationId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="SenderInformationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_hmsWireStatusLkup_WireStatusId">
+          <End Type="OperationsSecureModel.hmsWireStatusLkup" Role="hmsWireStatusLkup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireStatusLkup">
+              <PropertyRef Name="hmsWireStatusId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="WireStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId">
+          <End Type="OperationsSecureModel.hmsWireTransferTypeLKup" Role="hmsWireTransferTypeLKup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireTransferTypeLKup">
+              <PropertyRef Name="WireTransferTypeId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="WireTransferTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_OnBoardAccountId">
+          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccount">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="OnBoardAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_OnBoardSSITemplateId">
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="OnBoardSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_ReceivingOnBoardAccountId">
+          <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccount">
+              <PropertyRef Name="onBoardingAccountId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="ReceivingOnBoardAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsWireWorkflowLog">
+          <Key>
+            <PropertyRef Name="hmsWireWorkflowLogId" />
+          </Key>
+          <Property Name="hmsWireWorkflowLogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
+          <Property Name="WireStatusId" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="SwiftStatusId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="hmsSwiftStatusLkup" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsWireWorkflowLog" ToRole="hmsSwiftStatusLkup" />
+          <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" FromRole="hmsWireWorkflowLog" ToRole="hmsWireLog" />
+          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWireWorkflowLog" ToRole="hmsWire" />
+          <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId" FromRole="hmsWireWorkflowLog" ToRole="hmsWireStatusLkup" />
+        </EntityType>
+        <Association Name="FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId">
+          <End Type="OperationsSecureModel.hmsSwiftStatusLkup" Role="hmsSwiftStatusLkup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireWorkflowLog" Role="hmsWireWorkflowLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSwiftStatusLkup">
+              <PropertyRef Name="hmsSwiftStatusId" />
+            </Principal>
+            <Dependent Role="hmsWireWorkflowLog">
+              <PropertyRef Name="SwiftStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
+          <End Type="OperationsSecureModel.hmsWireWorkflowLog" Role="hmsWireWorkflowLog" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireLog" Role="hmsWireLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireWorkflowLog">
+              <PropertyRef Name="hmsWireWorkflowLogId" />
+            </Principal>
+            <Dependent Role="hmsWireLog">
+              <PropertyRef Name="hmsWireWorkflowLogId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireWorkflowLog_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireWorkflowLog" Role="hmsWireWorkflowLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireWorkflowLog">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId">
+          <End Type="OperationsSecureModel.hmsWireStatusLkup" Role="hmsWireStatusLkup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireWorkflowLog" Role="hmsWireWorkflowLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireStatusLkup">
+              <PropertyRef Name="hmsWireStatusId" />
+            </Principal>
+            <Dependent Role="hmsWireWorkflowLog">
+              <PropertyRef Name="WireStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3130,19 +3130,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
               <MappingFragment StoreEntitySet="hmsSwiftStatusLkup">
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="hmsSwiftStatusId" ColumnName="hmsSwiftStatusId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="hmsWireWorkflowLogs">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireWorkflowLog">
-              <MappingFragment StoreEntitySet="hmsWireWorkflowLog">
-                <ScalarProperty Name="SwiftStatusId" ColumnName="SwiftStatusId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="WireStatusId" ColumnName="WireStatusId" />
-                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
-                <ScalarProperty Name="hmsWireWorkflowLogId" ColumnName="hmsWireWorkflowLogId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3577,42 +3564,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="hmsWires">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWire">
-              <MappingFragment StoreEntitySet="hmsWires">
-                <ScalarProperty Name="hmsWireFieldId" ColumnName="hmsWireFieldId" />
-                <ScalarProperty Name="ReceivingOnBoardAccountId" ColumnName="ReceivingOnBoardAccountId" />
-                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
-                <ScalarProperty Name="ApprovedAt" ColumnName="ApprovedAt" />
-                <ScalarProperty Name="SenderDescription" ColumnName="SenderDescription" />
-                <ScalarProperty Name="SenderInformationId" ColumnName="SenderInformationId" />
-                <ScalarProperty Name="NotesToApprover" ColumnName="NotesToApprover" />
-                <ScalarProperty Name="WireTransferTypeId" ColumnName="WireTransferTypeId" />
-                <ScalarProperty Name="SwiftStatusId" ColumnName="SwiftStatusId" />
-                <ScalarProperty Name="DeliveryCharges" ColumnName="DeliveryCharges" />
-                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
-                <ScalarProperty Name="LastModifiedAt" ColumnName="LastModifiedAt" />
-                <ScalarProperty Name="WireStatusId" ColumnName="WireStatusId" />
-                <ScalarProperty Name="WireMessageTypeId" ColumnName="WireMessageTypeId" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="ReceivingAccountNumber" ColumnName="ReceivingAccountNumber" />
-                <ScalarProperty Name="SendingPlatform" ColumnName="SendingPlatform" />
-                <ScalarProperty Name="SendingAccountNumber" ColumnName="SendingAccountNumber" />
-                <ScalarProperty Name="PaymentOrReceipt" ColumnName="PaymentOrReceipt" />
-                <ScalarProperty Name="ValueDate" ColumnName="ValueDate" />
-                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
-                <ScalarProperty Name="OnBoardAgreementId" ColumnName="OnBoardAgreementId" />
-                <ScalarProperty Name="OnBoardSSITemplateId" ColumnName="OnBoardSSITemplateId" />
-                <ScalarProperty Name="OnBoardAccountId" ColumnName="OnBoardAccountId" />
-                <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
-                <ScalarProperty Name="WirePurposeId" ColumnName="WirePurposeId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="onBoardingAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccount">
               <MappingFragment StoreEntitySet="onBoardingAccount">
@@ -3822,6 +3773,55 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
                 <ScalarProperty Name="LdapRole" ColumnName="LdapRole" />
                 <ScalarProperty Name="hmLoginId" ColumnName="hmLoginId" />
                 <ScalarProperty Name="hmsWireUserId" ColumnName="hmsWireUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWires">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWire">
+              <MappingFragment StoreEntitySet="hmsWires">
+                <ScalarProperty Name="hmsWireFieldId" ColumnName="hmsWireFieldId" />
+                <ScalarProperty Name="ReceivingOnBoardAccountId" ColumnName="ReceivingOnBoardAccountId" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="ApprovedAt" ColumnName="ApprovedAt" />
+                <ScalarProperty Name="SenderDescription" ColumnName="SenderDescription" />
+                <ScalarProperty Name="SenderInformationId" ColumnName="SenderInformationId" />
+                <ScalarProperty Name="NotesToApprover" ColumnName="NotesToApprover" />
+                <ScalarProperty Name="WireTransferTypeId" ColumnName="WireTransferTypeId" />
+                <ScalarProperty Name="SwiftStatusId" ColumnName="SwiftStatusId" />
+                <ScalarProperty Name="DeliveryCharges" ColumnName="DeliveryCharges" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="LastModifiedAt" ColumnName="LastModifiedAt" />
+                <ScalarProperty Name="WireStatusId" ColumnName="WireStatusId" />
+                <ScalarProperty Name="WireMessageTypeId" ColumnName="WireMessageTypeId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="ReceivingAccountNumber" ColumnName="ReceivingAccountNumber" />
+                <ScalarProperty Name="SendingPlatform" ColumnName="SendingPlatform" />
+                <ScalarProperty Name="SendingAccountNumber" ColumnName="SendingAccountNumber" />
+                <ScalarProperty Name="PaymentOrReceipt" ColumnName="PaymentOrReceipt" />
+                <ScalarProperty Name="ValueDate" ColumnName="ValueDate" />
+                <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
+                <ScalarProperty Name="OnBoardAgreementId" ColumnName="OnBoardAgreementId" />
+                <ScalarProperty Name="OnBoardSSITemplateId" ColumnName="OnBoardSSITemplateId" />
+                <ScalarProperty Name="OnBoardAccountId" ColumnName="OnBoardAccountId" />
+                <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
+                <ScalarProperty Name="WirePurposeId" ColumnName="WirePurposeId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWireWorkflowLogs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireWorkflowLog">
+              <MappingFragment StoreEntitySet="hmsWireWorkflowLog">
+                <ScalarProperty Name="SwiftStatusId" ColumnName="SwiftStatusId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="WireStatusId" ColumnName="WireStatusId" />
+                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+                <ScalarProperty Name="hmsWireWorkflowLogId" ColumnName="hmsWireWorkflowLogId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

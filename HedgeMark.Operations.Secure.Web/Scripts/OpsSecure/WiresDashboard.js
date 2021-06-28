@@ -9,7 +9,10 @@ HmOpsApp.controller("wiresDashboardCtrl", function ($scope, $http, $opsSharedSco
     $scope.fnLoadDashboard = function (startDate, endDate, preferences) {
 
         $("#btnGetDetails").button("loading");
-        $http.post("/WiresDashboard/GetWireLogData", JSON.stringify({ startDate: startDate, endDate: endDate, searchPreference: preferences }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(
+        $http.post("/WiresDashboard/GetWireLogData", JSON.stringify({
+            startDate: startDate, endDate: endDate, searchPreference: preferences,
+            timeZone: getTimeZoneAbbr()
+        }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(
             function (response) {
                 if ($("#tblWireLogReport").hasClass("initialized")) {
                     fnDestroyDataTable("#tblWireLogReport");

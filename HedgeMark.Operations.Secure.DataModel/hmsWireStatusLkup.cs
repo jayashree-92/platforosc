@@ -17,16 +17,16 @@ namespace HedgeMark.Operations.Secure.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public hmsWireStatusLkup()
         {
-            this.hmsWireWorkflowLogs = new HashSet<hmsWireWorkflowLog>();
             this.hmsWires = new HashSet<hmsWire>();
+            this.hmsWireWorkflowLogs = new HashSet<hmsWireWorkflowLog>();
         }
     
         public int hmsWireStatusId { get; set; }
         public string Status { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWire> hmsWires { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
     }
 }

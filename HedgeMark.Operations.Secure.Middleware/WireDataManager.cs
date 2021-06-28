@@ -39,7 +39,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             }
         }
 
-        public DateTime? ApprovedAt { get; set; }
+        public DateTimeOffset? ApprovedAt { get; set; }
     }
 
     public class FormattedSwiftMessage
@@ -534,12 +534,12 @@ namespace HedgeMark.Operations.Secure.Middleware
                 if (userId != -1 && wireStatus != WireStatus.Approved)
                 {
                     wire.LastUpdatedBy = userId;
-                    wire.LastModifiedAt = DateTime.Now;
+                    wire.LastModifiedAt = DateTime.UtcNow;
                 }
 
                 if (wireStatus == WireStatus.Approved && userId != -1)
                 {
-                    wire.ApprovedAt = DateTime.Now;
+                    wire.ApprovedAt = DateTime.UtcNow;
                     wire.ApprovedBy = userId;
                 }
                 else if (swiftStatus == SwiftStatus.NotInitiated)
@@ -565,7 +565,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                     WireStatusId = (int)wireStatus,
                     SwiftStatusId = (int)swiftStatus,
                     Comment = comment ?? string.Empty,
-                    CreatedAt = DateTime.Now,
+                    CreatedAt = DateTime.UtcNow,
                     CreatedBy = userId,
                 };
                 context.hmsWireWorkflowLogs.AddOrUpdate(wireWorkFlowLog);
@@ -592,8 +592,8 @@ namespace HedgeMark.Operations.Secure.Middleware
                     wireTicket.HMWire.WireStatusId = (int)wireStatus;
                     wireTicket.HMWire.SwiftStatusId = (int)SwiftStatus.NotInitiated;
                     wireTicket.HMWire.CreatedBy = userId;
-                    wireTicket.HMWire.CreatedAt = DateTime.Now;
-                    wireTicket.HMWire.LastModifiedAt = DateTime.Now;
+                    wireTicket.HMWire.CreatedAt = DateTime.UtcNow;
+                    wireTicket.HMWire.LastModifiedAt = DateTime.UtcNow;
                     wireTicket.HMWire.LastUpdatedBy = userId;
 
                     if (wireTicket.HMWire.OnBoardSSITemplateId == 0)

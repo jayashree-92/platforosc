@@ -14,6 +14,8 @@ namespace HedgeMark.Operations.Secure.Middleware.Util
         //    get { return Holidays.Select(s => s.HolidayContextDate.Date).ToList(); }
         //}
         public static string Environment = ConfigurationManagerWrapper.StringSetting("Environment");
+
+        public static readonly TimeZoneInfo DefaultSystemTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
         public static readonly TextInfo TextInfo = new CultureInfo("en-US", false).TextInfo;
 
         public static bool IsLocal { get { return Environment.Equals("Local"); } }

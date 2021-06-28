@@ -27,7 +27,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         }
     
         public long hmsWireId { get; set; }
-        public System.DateTime CreatedAt { get; set; }
+        public System.DateTimeOffset CreatedAt { get; set; }
         public int CreatedBy { get; set; }
         public int WirePurposeId { get; set; }
         public System.DateTime ContextDate { get; set; }
@@ -44,7 +44,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public decimal Amount { get; set; }
         public int WireMessageTypeId { get; set; }
         public int WireStatusId { get; set; }
-        public System.DateTime LastModifiedAt { get; set; }
+        public System.DateTimeOffset LastModifiedAt { get; set; }
         public int LastUpdatedBy { get; set; }
         public string DeliveryCharges { get; set; }
         public int SwiftStatusId { get; set; }
@@ -52,7 +52,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string NotesToApprover { get; set; }
         public Nullable<int> SenderInformationId { get; set; }
         public string SenderDescription { get; set; }
-        public Nullable<System.DateTime> ApprovedAt { get; set; }
+        public Nullable<System.DateTimeOffset> ApprovedAt { get; set; }
         public Nullable<int> ApprovedBy { get; set; }
         public Nullable<long> ReceivingOnBoardAccountId { get; set; }
         public Nullable<long> hmsWireFieldId { get; set; }
@@ -64,6 +64,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual ICollection<hmsWireCollateralAssociation> hmsWireCollateralAssociations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireDocument> hmsWireDocuments { get; set; }
+        public virtual hmsWireField hmsWireField { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireInvoiceAssociation> hmsWireInvoiceAssociations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -80,6 +81,5 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual onBoardingAccount ReceivingAccount { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
-        public virtual hmsWireField hmsWireField { get; set; }
     }
 }

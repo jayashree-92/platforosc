@@ -63,8 +63,6 @@ namespace HMOSecureWeb.Jobs
 
     public class OperationsSecureRecurringJob
     {
-
-        public static readonly TimeZoneInfo TimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
         private static readonly string InboundMessagesReceiptJobName = "InboundMessagesReceipt-Requester";
         private static readonly string InboundAckMessagesReceiptJobName = "InboundAckMessagesReceipt-Requester";
         public static void Initialise()

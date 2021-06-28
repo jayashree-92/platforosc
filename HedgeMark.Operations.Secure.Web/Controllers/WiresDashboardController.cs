@@ -86,9 +86,9 @@ namespace HMOSecureWeb.Controllers
         //    });
         //}
 
-        public JsonResult GetWireLogData(DateTime startDate, DateTime endDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference)
+        public JsonResult GetWireLogData(DateTime startDate, DateTime endDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, string timeZone)
         {
-            var wireData = WireDashboardManager.GetWireTickets(startDate, endDate, searchPreference, false, AuthorizedDMAFundData);
+            var wireData = WireDashboardManager.GetWireTickets(startDate, endDate, searchPreference, false, timeZone, AuthorizedDMAFundData);
             var rowsToBuild = WireDashboardManager.ConstructWireDataRows(wireData, false);
             SetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString(), rowsToBuild);
             var rows = JsonHelper.GetJson(rowsToBuild);

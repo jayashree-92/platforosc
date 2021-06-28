@@ -25,7 +25,7 @@ namespace HedgeMark.Operations.Secure.DataModel
     
         public virtual hmsWireLogTypeLkup hmsWireLogTypeLkup { get; set; }
         public virtual hmsWireMessageType hmsWireMessageType { get; set; }
-        public virtual hmsWireWorkflowLog hmsWireWorkflowLog { get; set; }
         public virtual hmsWire hmsWire { get; set; }
+        public virtual hmsWireWorkflowLog hmsWireWorkflowLog { get; set; }
     }
 }

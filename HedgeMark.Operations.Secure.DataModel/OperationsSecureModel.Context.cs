@@ -29,7 +29,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsWireMessageType> hmsWireMessageTypes { get; set; }
         public virtual DbSet<hmsWireStatusLkup> hmsWireStatusLkups { get; set; }
         public virtual DbSet<hmsSwiftStatusLkup> hmsSwiftStatusLkups { get; set; }
-        public virtual DbSet<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
         public virtual DbSet<hmsWireJobSchedule> hmsWireJobSchedules { get; set; }
         public virtual DbSet<hmsNotificationStaging> hmsNotificationStagings { get; set; }
         public virtual DbSet<hmsWirePurposeLkup> hmsWirePurposeLkups { get; set; }
@@ -62,7 +61,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsCurrency> hmsCurrencies { get; set; }
         public virtual DbSet<vw_FundAccounts> vw_FundAccounts { get; set; }
         public virtual DbSet<hmsSSICallback> hmsSSICallbacks { get; set; }
-        public virtual DbSet<hmsWire> hmsWires { get; set; }
         public virtual DbSet<onBoardingAccount> onBoardingAccounts { get; set; }
         public virtual DbSet<hmsCollateralCashPurposeLkup> hmsCollateralCashPurposeLkups { get; set; }
         public virtual DbSet<hmsWireField> hmsWireFields { get; set; }
@@ -76,5 +74,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsSchedule> hmsSchedules { get; set; }
         public virtual DbSet<hmsScheduleWorkflowLkup> hmsScheduleWorkflowLkups { get; set; }
         public virtual DbSet<hmsUser> hmsUsers { get; set; }
+        public virtual DbSet<hmsWire> hmsWires { get; set; }
+        public virtual DbSet<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
     }
 }

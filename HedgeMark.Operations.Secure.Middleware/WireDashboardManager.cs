@@ -6,6 +6,7 @@ using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HedgeMark.Operations.FileParseEngine.RuleEngine;
 using HedgeMark.Operations.Secure.DataModel;
+using HedgeMark.Operations.Secure.Middleware.Jobs;
 using HedgeMark.Operations.Secure.Middleware.Models;
 using HedgeMark.Operations.Secure.Middleware.Util;
 
@@ -13,7 +14,7 @@ namespace HedgeMark.Operations.Secure.Middleware
 {
     public class WireDashboardManager
     {
-        public static List<WireTicket> GetWireTickets(DateTime startContextDate, DateTime endContextDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, bool shouldBringAllPendingWires, List<HFundBasic> authorizedDMAFundData = null)
+        public static List<WireTicket> GetWireTickets(DateTime startContextDate, DateTime endContextDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, bool shouldBringAllPendingWires, string timeZone, List<HFundBasic> authorizedDMAFundData = null)
         {
             var wireData = new List<WireTicket>();
             List<hmsWire> wireStatusDetails;
@@ -153,6 +154,22 @@ namespace HedgeMark.Operations.Secure.Middleware
                 wireData.Add(thisWire);
             }
 
+            var timeZoneInfo = ScheduleManager.TimeZones.ContainsKey(timeZone) ? ScheduleManager.TimeZones[timeZone] : Utility.DefaultSystemTimeZone;
+
+            foreach (var s in wireData)
+            {
+                s.HMWire.CreatedAt = TimeZoneInfo.ConvertTime(s.HMWire.CreatedAt, timeZoneInfo);
+                s.HMWire.LastModifiedAt = TimeZoneInfo.ConvertTime(s.HMWire.LastModifiedAt, timeZoneInfo);
+
+                if (s.HMWire.ApprovedAt != null)
+                    s.HMWire.ApprovedAt = TimeZoneInfo.ConvertTime(s.HMWire.ApprovedAt ?? new DateTime(), timeZoneInfo);
+
+                foreach (var workflowLog in s.HMWire.hmsWireWorkflowLogs)
+                {
+                    workflowLog.CreatedAt = TimeZoneInfo.ConvertTime(workflowLog.CreatedAt, timeZoneInfo);
+                }
+            }
+
             //Custom ordering as per HMOS-56
             var customWireStatusOrder = new[] { 2, 5, 1, 4, 3 };
             var customSwiftStatusOrder = new[] { 2, 4, 6, 3, 5, 1 };
@@ -166,7 +183,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             if (thisWire.HMWire.WireStatusId == 1)
             {
                 thisWire.WireLastUpdatedBy = "-";
-                thisWire.HMWire.LastModifiedAt = new DateTime(1, 1, 1);
+                thisWire.HMWire.LastModifiedAt = new DateTimeOffset(1, 1, 1, 1, 1, 1, new TimeSpan());
                 thisWire.WireApprovedBy = "-";
                 thisWire.HMWire.ApprovedAt = null;
             }
@@ -187,7 +204,7 @@ namespace HedgeMark.Operations.Secure.Middleware
             if (thisWire.WireLastUpdatedBy == thisWire.WireCreatedBy)
             {
                 thisWire.WireLastUpdatedBy = "-";
-                thisWire.HMWire.LastModifiedAt = new DateTime(1, 1, 1);
+                thisWire.HMWire.LastModifiedAt = new DateTimeOffset(1, 1, 1, 1, 1, 1, new TimeSpan());
             }
         }
 

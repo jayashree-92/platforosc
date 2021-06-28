@@ -24,14 +24,14 @@ namespace HedgeMark.Operations.Secure.DataModel
         public long hmsWireId { get; set; }
         public int WireStatusId { get; set; }
         public string Comment { get; set; }
-        public System.DateTime CreatedAt { get; set; }
+        public System.DateTimeOffset CreatedAt { get; set; }
         public int CreatedBy { get; set; }
         public int SwiftStatusId { get; set; }
     
         public virtual hmsSwiftStatusLkup hmsSwiftStatusLkup { get; set; }
-        public virtual hmsWireStatusLkup hmsWireStatusLkup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireLog> hmsWireLogs { get; set; }
         public virtual hmsWire hmsWire { get; set; }
+        public virtual hmsWireStatusLkup hmsWireStatusLkup { get; set; }
     }
 }

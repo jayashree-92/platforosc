@@ -11,6 +11,7 @@ using HMOSecureWeb.Utility;
 using System.Data.Entity;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.Secure.Middleware;
+using HedgeMark.Operations.Secure.Middleware.Jobs;
 using HedgeMark.Operations.Secure.Middleware.Models;
 using HedgeMark.Operations.Secure.Middleware.Util;
 
@@ -101,7 +102,7 @@ namespace HMOSecureWeb.Controllers
             return Json(wireStatusCount);
         }
 
-        public JsonResult GetWireStatusDetails(DateTime startContextDate, DateTime endContextDate, string statusIds)
+        public JsonResult GetWireStatusDetails(DateTime startContextDate, DateTime endContextDate, string statusIds, string timeZone)
         {
             var searchPreference = new Dictionary<DashboardReport.PreferenceCode, string>()
             {
@@ -109,7 +110,7 @@ namespace HMOSecureWeb.Controllers
                 {DashboardReport.PreferenceCode.Status,statusIds }
             };
 
-            var wireData = WireDashboardManager.GetWireTickets(startContextDate, endContextDate, searchPreference, true, AuthorizedDMAFundData);
+            var wireData = WireDashboardManager.GetWireTickets(startContextDate, endContextDate, searchPreference, true, timeZone, AuthorizedDMAFundData);
 
             return Json(new { wireData, AuthorizedSessionData.IsPrivilegedUser, isAdmin = User.IsInRole(OpsSecureUserRoles.DMAAdmin) });
         }

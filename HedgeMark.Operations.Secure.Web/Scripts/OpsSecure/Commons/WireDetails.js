@@ -36,7 +36,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
 
         $("#btnGetWireLogs").button("loading");
 
-        $http.get("/Home/GetWireStatusDetails?startContextDate=" + startContextDate + "&endContextDate=" + endContextDate + "&statusIds=" + statusId).then(function (response) {
+        $http.get("/Home/GetWireStatusDetails?startContextDate=" + startContextDate + "&endContextDate=" + endContextDate + "&statusIds=" + statusId + "&timeZone=" + getTimeZoneAbbr()).then(function (response) {
 
             //$scope.userDetails = response.data.userData;
             var wireDetails = response.data.wireData;
@@ -118,11 +118,11 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 { "data": "BeneficiaryAccountNumber", "sTitle": "Beneficiary A/C Number" },
                 { "data": "HMWire.hmsWireMessageType.MessageType", "sTitle": "Wire Message Type" },
                 { "data": "WireCreatedBy", "sTitle": "Initiated By" },
-                { "data": "HMWire.CreatedAt", "sTitle": "Initiated At", "render": renderDotNetDateAndTime },
+                { "data": "HMWire.CreatedAt", "sTitle": "Initiated At (" + getTimeZoneAbbr() + ")", "render": renderDotNetDateAndTime },
                 { "data": "WireLastUpdatedBy", "sTitle": "Last Updated By" },
-                { "data": "HMWire.LastModifiedAt", "sTitle": "Last Updated At", "render": renderDotNetDateAndTime },
+                { "data": "HMWire.LastModifiedAt", "sTitle": "Last Updated At (" + getTimeZoneAbbr() + ")", "render": renderDotNetDateAndTime },
                 { "data": "WireApprovedBy", "sTitle": "Approved By" },
-                { "data": "HMWire.ApprovedAt", "sTitle": "Approved At", "render": renderDotNetDateAndTime }
+                { "data": "HMWire.ApprovedAt", "sTitle": "Approved At (" + getTimeZoneAbbr() + ")", "render": renderDotNetDateAndTime }
                 ],
                 "createdRow": function (row, data) {
 
