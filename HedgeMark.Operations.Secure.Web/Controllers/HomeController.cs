@@ -110,7 +110,7 @@ namespace HMOSecureWeb.Controllers
                 {DashboardReport.PreferenceCode.Status,statusIds }
             };
 
-            var wireData = WireDashboardManager.GetWireTickets(startContextDate, endContextDate, searchPreference, true, timeZone, AuthorizedDMAFundData);
+            var wireData = WireDashboardManager.GetWireTickets(startContextDate, endContextDate,AuthorizedSessionData.IsPrivilegedUser, searchPreference, true, timeZone, AuthorizedDMAFundData);
 
             return Json(new { wireData, AuthorizedSessionData.IsPrivilegedUser, isAdmin = User.IsInRole(OpsSecureUserRoles.DMAAdmin) });
         }

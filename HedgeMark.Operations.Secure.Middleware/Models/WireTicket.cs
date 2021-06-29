@@ -191,6 +191,7 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         public string PreferredFundName { get; set; }
         public String ShortFundName { get; set; }
         public String ClientLegalName { get; set; }
+        public String AdminName { get; set; }
 
         public List<FormattedSwiftMessage> SwiftMessages { get; set; }
 

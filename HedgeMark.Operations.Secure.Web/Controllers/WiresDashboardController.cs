@@ -36,7 +36,14 @@ namespace HMOSecureWeb.Controllers
                 clientMaps.Add(fund.dmaClientOnBoardId ?? 0, fund.ClientName);
             }
 
+            var adminMaps = new Dictionary<long, string>();
+            foreach (var fund in fundDetails.Where(fund => !string.IsNullOrWhiteSpace(fund.AdminChoice) && fund.dmaOnBoardingAdminChoiceId != null && fund.dmaOnBoardingAdminChoiceId != 0 && !adminMaps.ContainsKey(fund.dmaOnBoardingAdminChoiceId ?? 0)))
+            {
+                adminMaps.Add(fund.dmaOnBoardingAdminChoiceId ?? 0, fund.AdminChoice);
+            }
+
             var clients = clientMaps.Select(s => new Select2Type() { id = s.Key.ToString(), text = s.Value }).OrderBy(s => s.text).ToList();
+            var admins = adminMaps.Select(s => new Select2Type() { id = s.Key.ToString(), text = s.Value }).OrderBy(s => s.text).ToList();
             var funds = (from fnd in fundDetails where fnd.hmFundId > 0 select new Select2Type() { id = fnd.hmFundId.ToString(), text = fnd.ShortFundName }).Distinct(new Select2HeaderComparer()).OrderBy(s => s.text).ToList();
             var accountTypes = WireDataManager.AgreementTypesEligibleForSendingWires.OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
             var wireMessageTypes = WireDataManager.GetWireMessageTypes().Where(s => s.IsOutbound && EligibleOutboundMessageTypes.Contains(s.MessageType)).Select(s => new Select2Type() { id = s.hmsWireMessageTypeId.ToString(), text = s.MessageType }).ToList();
@@ -53,10 +60,12 @@ namespace HMOSecureWeb.Controllers
             {
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Clients.ToString(),Options = clients},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Funds.ToString(),Options = funds},
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Admins.ToString(),Options = admins},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AccountTypes.ToString(),Options = accountTypes},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.MessageTypes.ToString(),Options = wireMessageTypes},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Modules.ToString(),Options = wireReports},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Status.ToString(),Options = wireStatus}
+
             };
         }
 
@@ -66,10 +75,17 @@ namespace HMOSecureWeb.Controllers
             var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => clientIds.Contains(-1) || clientIds.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
             var funds = (from fnd in fundDetails where fnd.hmFundId > 0 select new Select2Type() { id = fnd.hmFundId.ToString(), text = fnd.ShortFundName }).Distinct(new Select2HeaderComparer()).OrderBy(s => s.text).ToList();
             //            var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
+            var adminMaps = new Dictionary<long, string>();
+            foreach (var fund in fundDetails.Where(fund => !string.IsNullOrWhiteSpace(fund.AdminChoice) && fund.dmaOnBoardingAdminChoiceId != null && fund.dmaOnBoardingAdminChoiceId != 0 && !adminMaps.ContainsKey(fund.dmaOnBoardingAdminChoiceId ?? 0)))
+            {
+                adminMaps.Add(fund.dmaOnBoardingAdminChoiceId ?? 0, fund.AdminChoice);
+            }
+            var admins = adminMaps.Select(s => new Select2Type() { id = s.Key.ToString(), text = s.Value }).OrderBy(s => s.text).ToList();
 
             return Json(new List<DashboardReport.Preferences>()
             {
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Funds.ToString(),Options = funds},
+                new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Admins.ToString(),Options = admins}
                 //new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AccountTypes.ToString(),Options = agreementTypes},
             });
         }
@@ -88,7 +104,7 @@ namespace HMOSecureWeb.Controllers
 
         public JsonResult GetWireLogData(DateTime startDate, DateTime endDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, string timeZone)
         {
-            var wireData = WireDashboardManager.GetWireTickets(startDate, endDate, searchPreference, false, timeZone, AuthorizedDMAFundData);
+            var wireData = WireDashboardManager.GetWireTickets(startDate, endDate, AuthorizedSessionData.IsPrivilegedUser, searchPreference, false, timeZone, AuthorizedDMAFundData);
             var rowsToBuild = WireDashboardManager.ConstructWireDataRows(wireData, false);
             SetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString(), rowsToBuild);
             var rows = JsonHelper.GetJson(rowsToBuild);

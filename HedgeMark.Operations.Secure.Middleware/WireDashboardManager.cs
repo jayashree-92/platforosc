@@ -14,7 +14,7 @@ namespace HedgeMark.Operations.Secure.Middleware
 {
     public class WireDashboardManager
     {
-        public static List<WireTicket> GetWireTickets(DateTime startContextDate, DateTime endContextDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, bool shouldBringAllPendingWires, string timeZone, List<HFundBasic> authorizedDMAFundData = null)
+        public static List<WireTicket> GetWireTickets(DateTime startContextDate, DateTime endContextDate,bool isPrivilegedUser, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, bool shouldBringAllPendingWires, string timeZone, List<HFundBasic> authorizedDMAFundData = null)
         {
             var wireData = new List<WireTicket>();
             List<hmsWire> wireStatusDetails;
@@ -26,6 +26,10 @@ namespace HedgeMark.Operations.Secure.Middleware
             var fundIds = new List<long>() { -1 };
             if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Funds))
                 fundIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Funds].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
+
+            var adminIds = new List<long>() { -1 };
+            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Admins))
+                adminIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Admins].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var allStatusIds = new List<long>() { -1 };
             if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Status))
@@ -110,6 +114,14 @@ namespace HedgeMark.Operations.Secure.Middleware
                     wireStatusDetails = wireStatusDetails.Where(s => fundsOfSelectedClients.Contains((int)s.hmFundId)).ToList();
                 }
             }
+            if (!adminIds.Contains(-1))
+            {
+                using (var context = new AdminContext())
+                {
+                    var fundsOfSelectedAdmins = context.vw_HFund.Where(s => adminIds.Contains(s.FundAdministrator ?? 0)).Select(s => s.hmFundId).ToList();
+                    wireStatusDetails = wireStatusDetails.Where(s => fundsOfSelectedAdmins.Contains((int)s.hmFundId)).ToList();
+                }
+            }
 
 
             Dictionary<int, string> users;
@@ -125,9 +137,13 @@ namespace HedgeMark.Operations.Secure.Middleware
 
             var authorizedFundMap = authorizedDMAFundData == null ? AdminFundManager.GetHFundsCreatedForDMAOnly(PreferencesManager.FundNameInDropDown.OpsShortName).ToDictionary(s => s.HmFundId, v => v) : authorizedDMAFundData.ToDictionary(s => s.HmFundId, v => v);
             var timeZones = FileSystemManager.GetAllTimeZones();
+            var authFundIds = authorizedFundMap.Select(s => s.Key).ToList();
+            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, isPrivilegedUser).Where(s => clientIds.Contains(-1) || clientIds.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
+
             foreach (var wire in wireStatusDetails)
             {
                 var fund = authorizedFundMap.ContainsKey(wire.hmFundId) ? authorizedFundMap[wire.hmFundId] : new HFundBasic();
+                var admin = fundDetails.FirstOrDefault(s => s.hmFundId == wire.hmFundId);
                 var thisWire = new WireTicket
                 {
                     HMWire = wire,
@@ -137,6 +153,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                     PreferredFundName = fund.PreferredFundName ?? string.Empty,
                     ShortFundName = fund.PreferredFundName ?? string.Empty,
                     ClientLegalName = fund.ClientLegalName ?? string.Empty,
+                    AdminName = admin==null? string.Empty:admin.AdminChoice
                 };
 
                 thisWire.Deadline = wire.WireStatusId == 2
@@ -394,6 +411,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                 thisRow["Swift Status"] = isExportOnly ? ((WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId).ToString() : GetSwiftStatusLabel((WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId);
                 thisRow["Client"] = ticket.ClientLegalName;
                 thisRow["Fund"] = ticket.PreferredFundName;
+                thisRow["Admin"] = ticket.AdminName;
                 thisRow["Sending Account Name"] = ticket.SendingAccount.AccountName;
                 thisRow["Sending Account Number"] = ticket.SendingAccountNumber;
                 thisRow["Transfer Type"] = ticket.TransferType;

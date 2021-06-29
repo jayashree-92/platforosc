@@ -689,6 +689,8 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="dmaClientOnBoardId" Type="bigint" />
           <Property Name="LaunchStatus" Type="varchar" MaxLength="100" />
           <Property Name="HoldbackAmount" Type="float" />
+          <Property Name="dmaOnBoardingAdminChoiceId" Type="bigint" />
+          <Property Name="AdminChoice" Type="varchar" MaxLength="1000" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
@@ -1334,7 +1336,9 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
     [vw_FundAccounts].[ClientName] AS [ClientName], 
     [vw_FundAccounts].[dmaClientOnBoardId] AS [dmaClientOnBoardId], 
     [vw_FundAccounts].[LaunchStatus] AS [LaunchStatus], 
-    [vw_FundAccounts].[HoldbackAmount] AS [HoldbackAmount]
+    [vw_FundAccounts].[HoldbackAmount] AS [HoldbackAmount], 
+    [vw_FundAccounts].[dmaOnBoardingAdminChoiceId] AS [dmaOnBoardingAdminChoiceId], 
+    [vw_FundAccounts].[AdminChoice] AS [AdminChoice]
     FROM [dbo].[vw_FundAccounts] AS [vw_FundAccounts]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_hmsAccountCallback_onBoardingAccountId" Association="Self.FK_hmsAccountCallback_onBoardingAccountId">
@@ -2334,6 +2338,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="LaunchStatus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="dmaClientOnBoardId" Type="Int64" />
           <Property Name="HoldbackAmount" Type="Double" />
+          <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="dmaOnBoardingAdminChoiceId" Type="Int64" />
         </EntityType>
         <EntityType Name="hmsSSICallback">
           <Key>
@@ -3511,6 +3517,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="vw_FundAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.vw_FundAccounts">
               <MappingFragment StoreEntitySet="vw_FundAccounts">
+                <ScalarProperty Name="dmaOnBoardingAdminChoiceId" ColumnName="dmaOnBoardingAdminChoiceId" />
+                <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
                 <ScalarProperty Name="HoldbackAmount" ColumnName="HoldbackAmount" />
                 <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
                 <ScalarProperty Name="LaunchStatus" ColumnName="LaunchStatus" />

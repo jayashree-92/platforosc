@@ -99,6 +99,7 @@ namespace HedgeMark.Operations.Secure.Middleware
         public string LegalFundName { get; set; }
         public string FundType { get; set; }
         public string ClientLegalName { get; set; }
+        public string AdminName { get; set; }
         //public List<int> CalendarIds { get; set; }
     }
 
