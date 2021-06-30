@@ -434,12 +434,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             if ($scope.WireTicket.WireMessageTypeId != "") {
                 if ($scope.wireTicketObj.IsFundTransfer) {
                     if ($scope.accountDetail.onBoardingAccountId != 0 && $scope.receivingAccountDetail.onBoardingAccountId != 0) {
-                        $scope.validateAccountsForMessageType();
                         angular.element("#liDeliveryCharges").select2("val", ($scope.WireTicket.WireMessageTypeId != "1" ? null : "OUR")).trigger("change");
                     }
                 } else if ($scope.accountDetail.onBoardingAccountId != 0 &&
                     $scope.ssiTemplate.onBoardingSSITemplateId != 0) {
-                    $scope.validateAccountsForMessageType();
                 }
                 var messageType = $("#liMessageType").select2("data").text;
                 if (messageType.indexOf("MT103") > -1 || messageType.indexOf("MT202") > -1) {
@@ -616,11 +614,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         return true;
     }
 
-    $scope.fnIsValidToInitiateWire = function () {
-        return !$scope.isMandatoryFieldsMissing && $scope.fnIsWireRequirementsFilled();
-    };
-
-
     $scope.fnIsValidWireData = function (statusId) {
 
         //Validation required only for Initiating and Approving the wire-not required for - save as draft/Hold/Cancel/Reject/Modify
@@ -629,11 +622,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         if ($scope.wireTicketObj.IsSenderInformationRequired && !$scope.fnIsSenderDescriptionValid())
             return false;
-
-        if ($scope.isMandatoryFieldsMissing) {
-            $scope.fnShowErrorMessage($scope.mandatoryFieldMsg);
-            return false;
-        }
 
         if (!$scope.fnIsWireAmountValid())
             return false;
@@ -699,25 +687,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
 
         return true;
-    }
-
-    $scope.isMandatoryFieldsMissing = false;
-    $scope.validateAccountsForMessageType = function () {
-        $http.post("/Home/ValidateAccountDetails",
-            JSON.stringify({
-                wireMessageType: $("#liMessageType").select2("data").text,
-                account: $scope.accountDetail,
-                receivingAccount: $scope.receivingAccountDetail,
-                ssiTemplate: $scope.ssiTemplate,
-                isFundTransfer: $scope.wireTicketObj.IsFundTransfer
-            }),
-            { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
-                $scope.isMandatoryFieldsMissing = response.data.isMandatoryFieldsMissing;
-                $scope.mandatoryFieldMsg = response.data.validationMsg;
-                if ($scope.isMandatoryFieldsMissing) {
-                    $scope.fnShowErrorMessage($scope.mandatoryFieldMsg);
-                }
-            });
     }
 
     $scope.fnShowErrorMessage = function (message) {
