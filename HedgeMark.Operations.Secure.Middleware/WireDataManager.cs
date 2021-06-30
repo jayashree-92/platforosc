@@ -592,8 +592,9 @@ namespace HedgeMark.Operations.Secure.Middleware
                     wireTicket.HMWire.WireStatusId = (int)wireStatus;
                     wireTicket.HMWire.SwiftStatusId = (int)SwiftStatus.NotInitiated;
                     wireTicket.HMWire.CreatedBy = userId;
-                    wireTicket.HMWire.CreatedAt = DateTime.UtcNow;
-                    wireTicket.HMWire.LastModifiedAt = DateTime.UtcNow;
+                    var currentUtcTime = DateTime.UtcNow;
+                    wireTicket.HMWire.CreatedAt = currentUtcTime;
+                    wireTicket.HMWire.LastModifiedAt = currentUtcTime;
                     wireTicket.HMWire.LastUpdatedBy = userId;
 
                     if (wireTicket.HMWire.OnBoardSSITemplateId == 0)

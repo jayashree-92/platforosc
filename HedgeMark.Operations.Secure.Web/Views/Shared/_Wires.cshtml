@@ -1035,7 +1035,7 @@
                         style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ WireTicketStatus.IsLastModifiedUser ?  'Modifying' : 'Reverting to Draft' }}...</span>">
                     <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;{{ WireTicketStatus.IsLastModifiedUser ? "Modify" : "Save as Draft" }}
                 </button>
-                <button id="initiateWire" type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="fnIsWireRequirementsFilled()" ng-if="WireTicketStatus.IsEditEnabled" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Initiating...</span>">
+                <button id="initiateWire" type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="!fnIsWireRequirementsFilled()" ng-if="WireTicketStatus.IsEditEnabled" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Initiating...</span>">
                     <i class="glyphicon glyphicon-open"></i>&nbsp;{{ getInitiateButtonText() }}
                 </button>
                 <button id="holdWire" type="button" class="btn btn-sm btn-info ng-show-only" title="Save" ng-if="WireTicketStatus.IsWireStatusInitiated" ng-click="fnUpdateWireWithStatus(6)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Holding...</span>">

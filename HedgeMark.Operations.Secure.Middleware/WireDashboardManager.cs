@@ -14,7 +14,7 @@ namespace HedgeMark.Operations.Secure.Middleware
 {
     public class WireDashboardManager
     {
-        public static List<WireTicket> GetWireTickets(DateTime startContextDate, DateTime endContextDate,bool isPrivilegedUser, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, bool shouldBringAllPendingWires, string timeZone, List<HFundBasic> authorizedDMAFundData = null)
+        public static List<WireTicket> GetWireTickets(DateTime startContextDate, DateTime endContextDate, bool isPrivilegedUser, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, bool shouldBringAllPendingWires, string timeZone, List<HFundBasic> authorizedDMAFundData = null)
         {
             var wireData = new List<WireTicket>();
             List<hmsWire> wireStatusDetails;
@@ -153,7 +153,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                     PreferredFundName = fund.PreferredFundName ?? string.Empty,
                     ShortFundName = fund.PreferredFundName ?? string.Empty,
                     ClientLegalName = fund.ClientLegalName ?? string.Empty,
-                    AdminName = admin==null? string.Empty:admin.AdminChoice
+                    AdminName = admin == null ? string.Empty : admin.AdminChoice
                 };
 
                 thisWire.Deadline = wire.WireStatusId == 2
@@ -218,7 +218,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                 thisWire.WireApprovedBy = "System";
             }
 
-            if (thisWire.WireLastUpdatedBy == thisWire.WireCreatedBy)
+            if (thisWire.HMWire.CreatedAt == thisWire.HMWire.LastModifiedAt)
             {
                 thisWire.WireLastUpdatedBy = "-";
                 thisWire.HMWire.LastModifiedAt = new DateTimeOffset(1, 1, 1, 1, 1, 1, new TimeSpan());
