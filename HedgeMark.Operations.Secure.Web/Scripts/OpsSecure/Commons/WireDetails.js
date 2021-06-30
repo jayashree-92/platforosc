@@ -1,4 +1,6 @@
-﻿var tblWireStatusDetails;
+﻿/// <reference path="../../data.js" />
+/// <reference path="../../angular.js" />
+var tblWireStatusDetails;
 
 HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSharedScopes, $interval) {
 

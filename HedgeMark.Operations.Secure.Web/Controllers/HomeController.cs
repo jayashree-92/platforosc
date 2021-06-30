@@ -190,7 +190,7 @@ namespace HMOSecureWeb.Controllers
                 deadlineToApprove,
                 sendingAccountsList,
                 receivingAccountsList,
-                IsWireCreated = false,
+                IsDuplicateWireCreated = false,
                 currentlyViewedBy,
                 wireSourceModule,
                 IsWireCutOffApproved = wireTicket.SendingAccount.WirePortalCutoff.hmsWirePortalCutoffId == 0 || wireTicket.SendingAccount.WirePortalCutoff.IsApproved
@@ -283,7 +283,7 @@ namespace HMOSecureWeb.Controllers
             wireTicket.HMWire.hmsWireField = new hmsWireField();
 
             var wireTicketStatus = new WireTicketStatus(wireTicket, UserId, User.IsWireApprover(), true);
-            return Json(new { wireTicket, wireTicketStatus, IsWireCreated = false });
+            return Json(new { wireTicket, wireTicketStatus, IsDuplicateWireCreated = false });
         }
 
         private List<string> GetCurrentlyViewingUsers(long wireId)
@@ -332,14 +332,14 @@ namespace HMOSecureWeb.Controllers
             }
         }
 
-        public JsonResult IsWireCreated(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId, long receivingSSITemplateId, long wireId)
+        public JsonResult IsThisWireDuplicate(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId, long receivingSSITemplateId, long wireId)
         {
-            var isWireCreated = false;
+            var isDuplicateWire = false;
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                isWireCreated = context.hmsWires.Any(s => s.ValueDate == valueDate
+                isDuplicateWire = context.hmsWires.Any(s => s.ValueDate == valueDate
                                                           && s.hmsWirePurposeLkup.Purpose == purpose
                                                           && s.hmsWireId != wireId
                                                           && s.OnBoardAccountId == sendingAccountId
@@ -347,7 +347,7 @@ namespace HMOSecureWeb.Controllers
                                                               && s.ReceivingOnBoardAccountId == receivingAccountId));
             }
 
-            return Json(isWireCreated);
+            return Json(isDuplicateWire);
         }
 
         public void SaveWire(WireTicket wireTicket, int statusId, string comment)
