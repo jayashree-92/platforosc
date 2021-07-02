@@ -633,7 +633,7 @@ namespace HedgeMark.Operations.Secure.Middleware
                         SaveWireData(wireTicket, WireStatus.Approved, comment, userId);
                 }
 
-                return existingWireTicket;
+                return wireTicket;
             }
         }
 
@@ -736,35 +736,6 @@ namespace HedgeMark.Operations.Secure.Middleware
             }
         }
 
-        public static hmsWireJobSchedule GetJobSchedule(long wireId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.hmsWireJobSchedules.FirstOrDefault(s => s.hmsWireId == wireId);
-
-            }
-        }
-
-        public static void EditJobSchedule(hmsWireJobSchedule schedule)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.hmsWireJobSchedules.AddOrUpdate(schedule);
-                context.SaveChanges();
-            }
-        }
-
-        public static List<hmsWireJobSchedule> GetSchedulesWithoutJobsData()
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.hmsWireJobSchedules.Where(s => !s.IsJobCreated).ToList();
-            }
-        }
 
         public static List<long> GetNoticeWiresAwaitingApproval()
         {

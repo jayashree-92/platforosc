@@ -29,7 +29,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsWireMessageType> hmsWireMessageTypes { get; set; }
         public virtual DbSet<hmsWireStatusLkup> hmsWireStatusLkups { get; set; }
         public virtual DbSet<hmsSwiftStatusLkup> hmsSwiftStatusLkups { get; set; }
-        public virtual DbSet<hmsWireJobSchedule> hmsWireJobSchedules { get; set; }
         public virtual DbSet<hmsNotificationStaging> hmsNotificationStagings { get; set; }
         public virtual DbSet<hmsWirePurposeLkup> hmsWirePurposeLkups { get; set; }
         public virtual DbSet<hmsWireTransferTypeLKup> hmsWireTransferTypeLKups { get; set; }
@@ -76,5 +75,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual DbSet<hmsUser> hmsUsers { get; set; }
         public virtual DbSet<hmsWire> hmsWires { get; set; }
         public virtual DbSet<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
+        public virtual DbSet<hmsWireAutoCancellationJob> hmsWireAutoCancellationJobs { get; set; }
     }
 }

@@ -179,6 +179,9 @@
     <Compile Include="hmsWire.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsWireAutoCancellationJob.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsWireCollateralAssociation.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
@@ -192,9 +195,6 @@
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="hmsWireInvoiceAssociation.cs">
-      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="hmsWireJobSchedule.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
     <Compile Include="hmsWireLog.cs">

@@ -21,9 +21,9 @@ namespace HedgeMark.Operations.Secure.DataModel
             this.hmsWireCollateralAssociations = new HashSet<hmsWireCollateralAssociation>();
             this.hmsWireDocuments = new HashSet<hmsWireDocument>();
             this.hmsWireInvoiceAssociations = new HashSet<hmsWireInvoiceAssociation>();
-            this.hmsWireJobSchedules = new HashSet<hmsWireJobSchedule>();
             this.hmsWireLogs = new HashSet<hmsWireLog>();
             this.hmsWireWorkflowLogs = new HashSet<hmsWireWorkflowLog>();
+            this.hmsWireAutoCancellationJobs = new HashSet<hmsWireAutoCancellationJob>();
         }
     
         public long hmsWireId { get; set; }
@@ -68,8 +68,6 @@ namespace HedgeMark.Operations.Secure.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireInvoiceAssociation> hmsWireInvoiceAssociations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hmsWireJobSchedule> hmsWireJobSchedules { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireLog> hmsWireLogs { get; set; }
         public virtual hmsWireMessageType hmsWireMessageType { get; set; }
         public virtual hmsWirePurposeLkup hmsWirePurposeLkup { get; set; }
@@ -81,5 +79,7 @@ namespace HedgeMark.Operations.Secure.DataModel
         public virtual onBoardingAccount ReceivingAccount { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsWireAutoCancellationJob> hmsWireAutoCancellationJobs { get; set; }
     }
 }

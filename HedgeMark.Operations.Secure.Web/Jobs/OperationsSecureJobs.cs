@@ -101,12 +101,12 @@ namespace HMOSecureWeb.Jobs
         {
             if (isDisabled)
             {
-                RecurringJob.RemoveIfExists(OverdueWireCancellationScheduleManager.JobName);
+                RecurringJob.RemoveIfExists(OverdueWireAutoCancellationJobManager.JobName);
                 return;
             }
 
             //This can be minutly for now 
-            RecurringJob.AddOrUpdate(OverdueWireCancellationScheduleManager.JobName, () => OverdueWireCancellationScheduleManager.ScheduleOverdueWiresCancellation(), Cron.Minutely);
+            RecurringJob.AddOrUpdate(OverdueWireAutoCancellationJobManager.JobName, () => OverdueWireAutoCancellationJobManager.ScheduleOverdueWiresCancellation(), Cron.Minutely);
         }
 
         public static void ScheduleAutoApprovalOfNoticeWires(bool isDisabled)

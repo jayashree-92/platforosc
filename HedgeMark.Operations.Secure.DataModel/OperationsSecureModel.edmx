@@ -256,6 +256,18 @@
           <Property Name="LdapRole" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="AccountStatus" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsWireAutoCancellationJobs">
+          <Key>
+            <PropertyRef Name="hmsWireJobSchedulerId" />
+          </Key>
+          <Property Name="hmsWireJobSchedulerId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="hmsWireId" Type="bigint" Nullable="false" />
+          <Property Name="ScheduledDate" Type="datetime" Nullable="false" />
+          <Property Name="IsJobExecuted" Type="bit" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedAt" Type="datetime" Nullable="false" />
+          <Property Name="JobId" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="hmsWireCollateralAssociation">
           <Key>
             <PropertyRef Name="hmsWireCollateralAssociationId" />
@@ -297,20 +309,6 @@
           <Property Name="hmsWireInvoiceAssociationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hmsWireId" Type="bigint" Nullable="false" />
           <Property Name="InvoiceId" Type="bigint" Nullable="false" />
-        </EntityType>
-        <EntityType Name="hmsWireJobSchedules">
-          <Key>
-            <PropertyRef Name="hmsWireJobSchedulerId" />
-          </Key>
-          <Property Name="hmsWireJobSchedulerId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="hmsWireId" Type="bigint" Nullable="false" />
-          <Property Name="ScheduledDate" Type="datetime" Nullable="false" />
-          <Property Name="IsJobCreated" Type="bit" Nullable="false" />
-          <Property Name="IsJobInActive" Type="bit" Nullable="false" />
-          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
-          <Property Name="CreatedBy" Type="int" Nullable="false" />
-          <Property Name="UpdatedBy" Type="int" Nullable="false" />
-          <Property Name="LastModifiedAt" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsWireLogs">
           <Key>
@@ -868,12 +866,12 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
         </Association>
         <Association Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId">
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
-          <End Role="hmsWireJobSchedules" Type="Self.hmsWireJobSchedules" Multiplicity="*" />
+          <End Role="hmsWireAutoCancellationJobs" Type="Self.hmsWireAutoCancellationJobs" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="hmsWires">
               <PropertyRef Name="hmsWireId" />
             </Principal>
-            <Dependent Role="hmsWireJobSchedules">
+            <Dependent Role="hmsWireAutoCancellationJobs">
               <PropertyRef Name="hmsWireId" />
             </Dependent>
           </ReferentialConstraint>
@@ -1273,12 +1271,12 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySet Name="hmsSystemPreferences" EntityType="Self.hmsSystemPreferences" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUserAuditLog" EntityType="Self.hmsUserAuditLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUsers" EntityType="Self.hmsUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsWireAutoCancellationJobs" EntityType="Self.hmsWireAutoCancellationJobs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireCollateralAssociation" EntityType="Self.hmsWireCollateralAssociation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireCutoffTimeZones" EntityType="Self.hmsWireCutoffTimeZones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireDocument" EntityType="Self.hmsWireDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireFields" EntityType="Self.hmsWireFields" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireInvoiceAssociation" EntityType="Self.hmsWireInvoiceAssociation" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="hmsWireJobSchedules" EntityType="Self.hmsWireJobSchedules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireLogs" EntityType="Self.hmsWireLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireLogTypeLkup" EntityType="Self.hmsWireLogTypeLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireMessageType" EntityType="Self.hmsWireMessageType" Schema="dbo" store:Type="Tables" />
@@ -1399,7 +1397,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           </AssociationSet>
           <AssociationSet Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId" Association="Self.FK_hmsWireJobScheduler_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
-            <End Role="hmsWireJobSchedules" EntitySet="hmsWireJobSchedules" />
+            <End Role="hmsWireAutoCancellationJobs" EntitySet="hmsWireAutoCancellationJobs" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId" Association="Self.FK_hmsWireLogs_hmsWireLogTypeLkup_hmsWireLogTypeId">
             <End Role="hmsWireLogTypeLkup" EntitySet="hmsWireLogTypeLkup" />
@@ -1535,7 +1533,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySet Name="hmsWireMessageTypes" EntityType="OperationsSecureModel.hmsWireMessageType" />
           <EntitySet Name="hmsWireStatusLkups" EntityType="OperationsSecureModel.hmsWireStatusLkup" />
           <EntitySet Name="hmsSwiftStatusLkups" EntityType="OperationsSecureModel.hmsSwiftStatusLkup" />
-          <EntitySet Name="hmsWireJobSchedules" EntityType="OperationsSecureModel.hmsWireJobSchedule" />
           <EntitySet Name="hmsNotificationStagings" EntityType="OperationsSecureModel.hmsNotificationStaging" />
           <EntitySet Name="hmsWirePurposeLkups" EntityType="OperationsSecureModel.hmsWirePurposeLkup" />
           <EntitySet Name="hmsWireTransferTypeLKups" EntityType="OperationsSecureModel.hmsWireTransferTypeLKup" />
@@ -1709,10 +1706,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireInvoiceAssociation" EntitySet="hmsWireInvoiceAssociations" />
           </AssociationSet>
-          <AssociationSet Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId">
-            <End Role="hmsWire" EntitySet="hmsWires" />
-            <End Role="hmsWireJobSchedule" EntitySet="hmsWireJobSchedules" />
-          </AssociationSet>
           <AssociationSet Name="FK_hmsWireLogs_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId">
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireLog" EntitySet="hmsWireLogs" />
@@ -1766,6 +1759,11 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="hmsWireStatusLkup" EntitySet="hmsWireStatusLkups" />
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLogs" />
           </AssociationSet>
+          <EntitySet Name="hmsWireAutoCancellationJobs" EntityType="OperationsSecureModel.hmsWireAutoCancellationJob" />
+          <AssociationSet Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId">
+            <End Role="hmsWire" EntitySet="hmsWires" />
+            <End Role="hmsWireAutoCancellationJob" EntitySet="hmsWireAutoCancellationJobs" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -1807,21 +1805,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="Status" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsSwiftStatusLkup" ToRole="hmsWire" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" FromRole="hmsSwiftStatusLkup" ToRole="hmsWireWorkflowLog" />
-        </EntityType>
-        <EntityType Name="hmsWireJobSchedule">
-          <Key>
-            <PropertyRef Name="hmsWireJobSchedulerId" />
-          </Key>
-          <Property Name="hmsWireJobSchedulerId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
-          <Property Name="ScheduledDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsJobCreated" Type="Boolean" Nullable="false" />
-          <Property Name="IsJobInActive" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="UpdatedBy" Type="Int32" Nullable="false" />
-          <Property Name="LastModifiedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWireJobSchedule" ToRole="hmsWire" />
         </EntityType>
         <EntityType Name="hmsNotificationStaging">
           <Key>
@@ -2827,7 +2810,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <NavigationProperty Name="hmsWireDocuments" Relationship="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireDocument" />
           <NavigationProperty Name="hmsWireField" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireFieldId" FromRole="hmsWire" ToRole="hmsWireField" />
           <NavigationProperty Name="hmsWireInvoiceAssociations" Relationship="OperationsSecureModel.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireInvoiceAssociation" />
-          <NavigationProperty Name="hmsWireJobSchedules" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireJobSchedule" />
           <NavigationProperty Name="hmsWireLogs" Relationship="OperationsSecureModel.FK_hmsWireLogs_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireLog" />
           <NavigationProperty Name="hmsWireMessageType" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireMessageType_WireMessageTypeId" FromRole="hmsWire" ToRole="hmsWireMessageType" />
           <NavigationProperty Name="hmsWirePurposeLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" FromRole="hmsWire" ToRole="hmsWirePurposeLkup" />
@@ -2838,6 +2820,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <NavigationProperty Name="ReceivingSSITemplate" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="hmsWire" ToRole="onBoardingSSITemplate" />
           <NavigationProperty Name="ReceivingAccount" Relationship="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" FromRole="hmsWire" ToRole="onBoardingAccount" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireWorkflowLog" />
+          <NavigationProperty Name="hmsWireAutoCancellationJobs" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireAutoCancellationJob" />
         </EntityType>
         <Association Name="FK_hmsActionInProgress_hmsWireId">
           <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
@@ -2907,18 +2890,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
               <PropertyRef Name="hmsWireId" />
             </Principal>
             <Dependent Role="hmsWireInvoiceAssociation">
-              <PropertyRef Name="hmsWireId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId">
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsWireJobSchedule" Role="hmsWireJobSchedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsWire">
-              <PropertyRef Name="hmsWireId" />
-            </Principal>
-            <Dependent Role="hmsWireJobSchedule">
               <PropertyRef Name="hmsWireId" />
             </Dependent>
           </ReferentialConstraint>
@@ -3095,6 +3066,31 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="hmsWireAutoCancellationJob">
+          <Key>
+            <PropertyRef Name="hmsWireJobSchedulerId" />
+          </Key>
+          <Property Name="hmsWireJobSchedulerId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
+          <Property Name="ScheduledDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsJobExecuted" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="JobId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWireAutoCancellationJob" ToRole="hmsWire" />
+        </EntityType>
+        <Association Name="FK_hmsWireJobScheduler_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireAutoCancellationJob" Role="hmsWireAutoCancellationJob" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireAutoCancellationJob">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3136,21 +3132,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
               <MappingFragment StoreEntitySet="hmsSwiftStatusLkup">
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="hmsSwiftStatusId" ColumnName="hmsSwiftStatusId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="hmsWireJobSchedules">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireJobSchedule">
-              <MappingFragment StoreEntitySet="hmsWireJobSchedules">
-                <ScalarProperty Name="LastModifiedAt" ColumnName="LastModifiedAt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="IsJobInActive" ColumnName="IsJobInActive" />
-                <ScalarProperty Name="IsJobCreated" ColumnName="IsJobCreated" />
-                <ScalarProperty Name="ScheduledDate" ColumnName="ScheduledDate" />
-                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
-                <ScalarProperty Name="hmsWireJobSchedulerId" ColumnName="hmsWireJobSchedulerId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3830,6 +3811,19 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
                 <ScalarProperty Name="WireStatusId" ColumnName="WireStatusId" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
                 <ScalarProperty Name="hmsWireWorkflowLogId" ColumnName="hmsWireWorkflowLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWireAutoCancellationJobs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireAutoCancellationJob">
+              <MappingFragment StoreEntitySet="hmsWireAutoCancellationJobs">
+                <ScalarProperty Name="JobId" ColumnName="JobId" />
+                <ScalarProperty Name="LastModifiedAt" ColumnName="LastModifiedAt" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="IsJobExecuted" ColumnName="IsJobExecuted" />
+                <ScalarProperty Name="ScheduledDate" ColumnName="ScheduledDate" />
+                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+                <ScalarProperty Name="hmsWireJobSchedulerId" ColumnName="hmsWireJobSchedulerId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

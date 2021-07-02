@@ -12,17 +12,15 @@ namespace HedgeMark.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class hmsWireJobSchedule
+    public partial class hmsWireAutoCancellationJob
     {
         public long hmsWireJobSchedulerId { get; set; }
         public long hmsWireId { get; set; }
         public System.DateTime ScheduledDate { get; set; }
-        public bool IsJobCreated { get; set; }
-        public bool IsJobInActive { get; set; }
+        public bool IsJobExecuted { get; set; }
         public System.DateTime CreatedAt { get; set; }
-        public int CreatedBy { get; set; }
-        public int UpdatedBy { get; set; }
         public System.DateTime LastModifiedAt { get; set; }
+        public string JobId { get; set; }
     
         public virtual hmsWire hmsWire { get; set; }
     }
