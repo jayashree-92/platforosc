@@ -195,6 +195,11 @@ namespace HMOSecureWeb.Controllers
                 if (ssiTemplateToBeDeleted == null) return;
                 ssiTemplateToBeDeleted.IsDeleted = true;
                 context.SaveChanges();
+
+                var allAssociationsTothisSSIId = context.onBoardingAccountSSITemplateMaps.Where(s => s.onBoardingSSITemplateId == ssiTemplateId).ToList();
+                allAssociationsTothisSSIId.ForEach(s => s.Status = "Deleted");
+                context.SaveChanges();
+
                 //var auditLog = new onBoardingUserAuditLog
                 //{
                 //    UpdatedAt = DateTime.Now,
