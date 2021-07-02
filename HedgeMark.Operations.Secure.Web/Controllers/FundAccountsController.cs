@@ -21,7 +21,10 @@ namespace HMOSecureWeb.Controllers
             return View();
         }
 
-
+        public ActionResult BankAddress()
+        {
+            return View();
+        }
 
         public JsonResult GetAccountPreloadData()
         {
@@ -475,16 +478,29 @@ namespace HMOSecureWeb.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
-        public void AddAccountBiCorAba(onBoardingAccountBICorABA accountBiCorAba)
+        public void AddorEditAccountBiCorAba(onBoardingAccountBICorABA accountBiCorAba)
         {
-            accountBiCorAba.IsDeleted = false;
-            accountBiCorAba.UpdatedAt = DateTime.Now;
-            accountBiCorAba.CreatedAt = DateTime.Now;
-            accountBiCorAba.CreatedBy = UserName;
+            if(accountBiCorAba.onBoardingAccountBICorABAId==0)
+            {
+                accountBiCorAba.IsDeleted = false;
+                accountBiCorAba.CreatedAt = DateTime.Now;
+                accountBiCorAba.CreatedBy = UserName;
+            }           
+            accountBiCorAba.UpdatedAt = DateTime.Now;           
             accountBiCorAba.UpdatedBy = UserName;
 
-            FundAccountManager.AddAccountBiCorAba(accountBiCorAba);
+            FundAccountManager.AddorUpdateAccountBiCorAba(accountBiCorAba);
+        }        
+
+        public JsonResult DeleteAccountBiCorAba(long onBoardingAccountBICorABAId)
+        {
+            var isDeleted=FundAccountManager.DeleteAccountBiCorAba(onBoardingAccountBICorABAId);
+            return Json(new
+            {
+                isDeleted
+            }, JsonContentType, JsonContentEncoding);
         }
+
 
         public void UpdateAccountStatus(string accountStatus, long accountId, string comments)
         {
@@ -546,6 +562,40 @@ namespace HMOSecureWeb.Controllers
 
             Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
             return DownloadAndDeleteFile(exportFileInfo);
+        }
+
+        public FileResult ExportAccountBICorABAlist()
+        {
+            var accountBicorAbaList = FundAccountManager.GetAllAccountBicorAba();
+            var accountListRows = BuildAccountBICorABAExportRows(accountBicorAbaList);
+
+            var contentToExport = new Dictionary<string, List<Row>>() { { "List of AccountBICorABA", accountListRows } };
+            var fileName = string.Format("AccountBICorABAList_{0:yyyyMMdd}", DateTime.Now);
+            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+
+            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            return DownloadAndDeleteFile(exportFileInfo);
+        }
+
+        private List<Row> BuildAccountBICorABAExportRows(List<onBoardingAccountBICorABA> accountBicorAbaList)
+        {
+            var accountRows = new List<Row>();
+
+            foreach (var account in accountBicorAbaList)
+            {
+                var row = new Row();
+                row["BICorABA"] = account.BICorABA;
+                row["BankName"] = account.BankName;
+                row["Type"] = account.IsABA ? "ÄBA" : "BIC";
+                row["CreatedBy"] = account.CreatedBy;
+                row["CreatedAt"] = account.CreatedAt+"";
+                row["UpdatedBy"] = account.UpdatedBy;
+                row["UpdatedAt"] = account.UpdatedAt+"";
+
+                accountRows.Add(row);
+            }
+
+            return accountRows;
         }
 
         //Build Account Rows

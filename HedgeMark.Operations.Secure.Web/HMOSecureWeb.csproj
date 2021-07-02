@@ -771,6 +771,7 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\OpsSecure\Accounts\BankAddressManager.js" />
     <Content Include="Scripts\OpsSecure\Accounts\AccountList.js" />
     <Content Include="Scripts\OpsSecure\Accounts\SSITemplate.js" />
     <Content Include="Scripts\OpsSecure\Accounts\SSITemplateList.js" />
@@ -870,6 +871,7 @@
     <Content Include="Views\WiresDashboard\Index.cshtml" />
     <Content Include="Views\Shared\_Schedules.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\FundAccounts\BankAddress.cshtml" />
     <None Include="Web.Debug.config">
       <SubType>Designer</SubType>
     </None>

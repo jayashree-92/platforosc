@@ -504,13 +504,38 @@ namespace HedgeMark.Operations.Secure.Middleware
             }
         }
 
-        public static void AddAccountBiCorAba(onBoardingAccountBICorABA accountBiCorAba)
+        public static bool DeleteAccountBiCorAba(long onBoardingAccountBICorABAId)
         {
             using (var context = new OperationsSecureContext())
             {
-                context.onBoardingAccountBICorABAs.Add(accountBiCorAba);
+                var existingAccountMapping = context.onBoardingAccounts.Where(s => s.IntermediaryBICorABAId == onBoardingAccountBICorABAId || s.UltimateBeneficiaryBICorABAId == onBoardingAccountBICorABAId || s.BeneficiaryBICorABAId == onBoardingAccountBICorABAId).ToList();
+                var existingSSIMapping = context.onBoardingSSITemplates.Where(s => s.IntermediaryBICorABAId == onBoardingAccountBICorABAId || s.UltimateBeneficiaryBICorABAId == onBoardingAccountBICorABAId || s.BeneficiaryBICorABAId == onBoardingAccountBICorABAId).ToList();
+                if (existingAccountMapping.Count > 0 || existingSSIMapping.Count > 0)
+                    return false;
+                var accountToBeDeleted = context.onBoardingAccountBICorABAs.FirstOrDefault(s => s.onBoardingAccountBICorABAId == onBoardingAccountBICorABAId);
+                if (accountToBeDeleted == null) return false;
+                accountToBeDeleted.IsDeleted = true;
+                context.SaveChanges();
+                return true;
+            }
+        }
+        public static void AddorUpdateAccountBiCorAba(onBoardingAccountBICorABA accountBiCorAba)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                if (accountBiCorAba.onBoardingAccountBICorABAId > 0)
+                {
+                    var account = context.onBoardingAccountBICorABAs.FirstOrDefault(s => s.onBoardingAccountBICorABAId == accountBiCorAba.onBoardingAccountBICorABAId);
+                    if (account != null)
+                    {
+                        accountBiCorAba.CreatedAt = account.CreatedAt;
+                        accountBiCorAba.CreatedBy = account.CreatedBy;
+                    }
+                }
+                context.onBoardingAccountBICorABAs.AddOrUpdate(accountBiCorAba);
                 context.SaveChanges();
             }
+                
         }
 
         public static hmsWirePortalCutoff GetCutoffTime(string cashInstruction, string currency)
