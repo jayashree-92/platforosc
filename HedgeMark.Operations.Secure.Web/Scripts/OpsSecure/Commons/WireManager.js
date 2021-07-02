@@ -1532,15 +1532,26 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     $scope.fnSetWireCutOffDetails(response.data.deadlineToApprove, response.data.IsWireCutOffApproved);
 
                     $scope.DeadlineToApprove = response.data.deadlineToApprove;
-
                     $scope.castToDate(account);
-                    //$scope.getApprovalTime(account);
                     $scope.accountDetail = account;
                     if ($scope.wireTicketObj.IsNotice) {
                         $scope.wireTicketObj.ReceivingAccountCurrency = $scope.accountDetail.Currency;
                         var wireMessageType = $filter("filter")($scope.MessageTypes, function (message) { return message.text == "MT210" }, true)[0];
                         angular.element("#liMessageType").select2("val", wireMessageType.id).trigger("change");
                     }
+                    if ($scope.wireTicketObj.IsFundTransfer) {
+                        var acceptedMsg = $scope.accountDetail.SwiftGroup.AcceptedMessages.split(",");
+                        var acceptedWireMessageType = $filter("filter")($scope.QualifiedMessageTypes, function (message) { return acceptedMsg.indexOf(message.text) > -1 }, true);
+                        angular.element("#liMessageType").select2({
+                            placeholder: "Select Message Type",
+                            data: acceptedWireMessageType,
+                            allowClear: true,
+                            closeOnSelect: false
+                        });
+
+                        $("#liMessageType").select2("val", "").trigger("change");
+                    }
+
                     $scope.fnGetCashBalances($("#wireValueDate").text());
                 });
             }
@@ -1774,13 +1785,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
             $("#liReceivingBookAccount").select2("val", "").trigger("change");
             $("#liReceivingAccount").select2("val", "").trigger("change");
+
+            //*** NOTE: For a Fund Transfer "MT202 COV" is not qualified  - hence restricting only to MT103 and MT202 *****/
             if ($scope.wireTicketObj.IsFundTransfer)
-                $scope.filteredMessageTypes = $filter("filter")(angular.copy($scope.MessageTypes), function (message) { return (message.text == "MT103" || message.text == "MT202") }, true);
+                $scope.QualifiedMessageTypes = $filter("filter")($scope.MessageTypes, function (message) { return (message.text == "MT103" || message.text == "MT202") }, true);
             else
-                $scope.filteredMessageTypes = angular.copy(angular.copy($scope.MessageTypes));
+                $scope.QualifiedMessageTypes = angular.copy($scope.MessageTypes);
             angular.element("#liMessageType").select2({
                 placeholder: "Select Message Type",
-                data: $scope.filteredMessageTypes,
+                data: $scope.QualifiedMessageTypes,
                 allowClear: true,
                 closeOnSelect: false
             });
