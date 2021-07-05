@@ -1,0 +1,4 @@
+IF EXISTS( SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'hmsWireJobSchedules' AND COLUMN_NAME = 'IsJobExecuted')
+BEGIN
+	UPDATE hmsWireJobSchedules SET IsJobExecuted=0 WHERE ScheduledDate >GETDATE();
+END

@@ -11,7 +11,6 @@ END
 IF EXISTS( SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'hmsWireJobSchedules' AND COLUMN_NAME = 'IsJobCreated')
 BEGIN
 	EXEC sp_rename 'dbo.hmsWireJobSchedules.IsJobCreated', 'IsJobExecuted', 'COLUMN'
-	UPDATE hmsWireJobSchedules SET IsJobExecuted=0 WHERE ScheduledDate >GETDATE();
 END
 
 IF EXISTS( SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'hmsWireJobSchedules' AND COLUMN_NAME = 'IsJobInActive')
@@ -32,7 +31,6 @@ END
 IF EXISTS( SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'hmsWireJobSchedules')
 BEGIN
 	Exec sp_rename 'dbo.hmsWireJobSchedules','hmsWireAutoCancellationJobs'
-	UPDATE hmsWireAutoCancellationJobs SET IsJobExecuted=0 WHERE ScheduledDate > GETDATE()
 END
 
 
