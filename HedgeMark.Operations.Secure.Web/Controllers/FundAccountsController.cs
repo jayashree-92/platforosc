@@ -478,6 +478,29 @@ namespace HMOSecureWeb.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
+        public JsonResult GetAllBankAccountAddress()
+        {
+            var addressList = FundAccountManager.GetAllBankAccountAddress();
+            return Json(new
+            {
+                addressList
+            }, JsonContentType, JsonContentEncoding);
+        }
+
+        public void AddorEditBankAccountAddress(hmsBankAccountAddress accountAddress)
+        {
+            if (accountAddress.hmsBankAccountAddressId == 0)
+            {
+                accountAddress.IsDeleted = false;
+                accountAddress.CreatedAt = DateTime.Now;
+                accountAddress.CreatedBy = UserName;
+            }
+            accountAddress.UpdatedAt = DateTime.Now;
+            accountAddress.UpdatedBy = UserName;
+
+            FundAccountManager.AddorUpdateAccountAddress(accountAddress);
+        }
+
         public void AddorEditAccountBiCorAba(onBoardingAccountBICorABA accountBiCorAba)
         {
             if(accountBiCorAba.onBoardingAccountBICorABAId==0)
@@ -495,6 +518,15 @@ namespace HMOSecureWeb.Controllers
         public JsonResult DeleteAccountBiCorAba(long onBoardingAccountBICorABAId)
         {
             var isDeleted=FundAccountManager.DeleteAccountBiCorAba(onBoardingAccountBICorABAId);
+            return Json(new
+            {
+                isDeleted
+            }, JsonContentType, JsonContentEncoding);
+        }
+
+        public JsonResult DeleteAccountAddress(long hmsBankAccountAddressId)
+        {
+            var isDeleted = FundAccountManager.DeleteAccountAddress(hmsBankAccountAddressId);
             return Json(new
             {
                 isDeleted
@@ -591,6 +623,39 @@ namespace HMOSecureWeb.Controllers
                 row["CreatedAt"] = account.CreatedAt+"";
                 row["UpdatedBy"] = account.UpdatedBy;
                 row["UpdatedAt"] = account.UpdatedAt+"";
+
+                accountRows.Add(row);
+            }
+
+            return accountRows;
+        }
+
+        public FileResult ExportBankAccountlist()
+        {
+            var accountList = FundAccountManager.GetAllBankAccountAddress();
+            var accountListRows = BuildBankAccountExportRows(accountList);
+
+            var contentToExport = new Dictionary<string, List<Row>>() { { "List of Account Address", accountListRows } };
+            var fileName = string.Format("Bank Account Address List_{0:yyyyMMdd}", DateTime.Now);
+            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+
+            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            return DownloadAndDeleteFile(exportFileInfo);
+        }
+
+        private List<Row> BuildBankAccountExportRows(List<hmsBankAccountAddress> accountList)
+        {
+            var accountRows = new List<Row>();
+
+            foreach (var account in accountList)
+            {
+                var row = new Row();
+                row["AccountName"] = account.AccountName;
+                row["AccountAddress"] = account.AccountAddress;
+                row["CreatedBy"] = account.CreatedBy;
+                row["CreatedAt"] = account.CreatedAt + "";
+                row["UpdatedBy"] = account.UpdatedBy;
+                row["UpdatedAt"] = account.UpdatedAt + "";
 
                 accountRows.Add(row);
             }

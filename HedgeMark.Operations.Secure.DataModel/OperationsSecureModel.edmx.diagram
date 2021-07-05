@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="21922e52691542eda2a5b6d3ddb68a43" Name="Diagram1" ZoomLevel="84">
+      <Diagram DiagramId="21922e52691542eda2a5b6d3ddb68a43" Name="Diagram1" ZoomLevel="13">
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireDocument" Width="1.5" PointX="11.875" PointY="6.375" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireMessageType" Width="1.5" PointX="8.25" PointY="7.5" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireStatusLkup" Width="1.5" PointX="5.625" PointY="1" />
@@ -102,6 +102,7 @@
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWireStatusLkup_WireStatusId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireAutoCancellationJob" Width="1.5" PointX="29.75" PointY="12.125" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsBankAccountAddress" Width="1.5" PointX="10.375" PointY="12.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

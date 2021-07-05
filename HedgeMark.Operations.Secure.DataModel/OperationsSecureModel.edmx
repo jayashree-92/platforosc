@@ -29,6 +29,19 @@
           <Property Name="UserName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="RecCreatedDt" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsBankAccountAddress">
+          <Key>
+            <PropertyRef Name="hmsBankAccountAddressId" />
+          </Key>
+          <Property Name="hmsBankAccountAddressId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountName" Type="varchar" MaxLength="500" />
+          <Property Name="AccountAddress" Type="varchar" MaxLength="3000" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsBulkUploadLog">
           <Key>
             <PropertyRef Name="hmsBulkUploadLogId" />
@@ -1251,6 +1264,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
         <EntityContainer Name="OperationsSecureModelStoreContainer">
           <EntitySet Name="hmsAccountCallback" EntityType="Self.hmsAccountCallback" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsActionInProgress" EntityType="Self.hmsActionInProgress" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsBankAccountAddress" EntityType="Self.hmsBankAccountAddress" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsBulkUploadLog" EntityType="Self.hmsBulkUploadLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsCollateralCashPurposeLkup" EntityType="Self.hmsCollateralCashPurposeLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsCurrency" EntityType="Self.hmsCurrency" Schema="dbo" store:Type="Tables" />
@@ -1764,6 +1778,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireAutoCancellationJob" EntitySet="hmsWireAutoCancellationJobs" />
           </AssociationSet>
+          <EntitySet Name="hmsBankAccountAddresses" EntityType="OperationsSecureModel.hmsBankAccountAddress" />
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -3091,6 +3106,19 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="hmsBankAccountAddress">
+          <Key>
+            <PropertyRef Name="hmsBankAccountAddressId" />
+          </Key>
+          <Property Name="hmsBankAccountAddressId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AccountAddress" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3824,6 +3852,20 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
                 <ScalarProperty Name="ScheduledDate" ColumnName="ScheduledDate" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
                 <ScalarProperty Name="hmsWireJobSchedulerId" ColumnName="hmsWireJobSchedulerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsBankAccountAddresses">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsBankAccountAddress">
+              <MappingFragment StoreEntitySet="hmsBankAccountAddress">
+                <ScalarProperty Name="AccountAddress" ColumnName="AccountAddress" />
+                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="hmsBankAccountAddressId" ColumnName="hmsBankAccountAddressId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

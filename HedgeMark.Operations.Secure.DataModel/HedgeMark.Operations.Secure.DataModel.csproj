@@ -116,6 +116,9 @@
     <Compile Include="hmsActionInProgress.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsBankAccountAddress.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsBulkUploadLog.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

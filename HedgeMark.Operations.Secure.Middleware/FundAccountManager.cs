@@ -504,6 +504,16 @@ namespace HedgeMark.Operations.Secure.Middleware
             }
         }
 
+        public static List<hmsBankAccountAddress> GetAllBankAccountAddress()
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.hmsBankAccountAddresses.AsNoTracking().Where(s => !s.IsDeleted).ToList();
+            }
+        }
+
         public static bool DeleteAccountBiCorAba(long onBoardingAccountBICorABAId)
         {
             using (var context = new OperationsSecureContext())
@@ -513,6 +523,18 @@ namespace HedgeMark.Operations.Secure.Middleware
                 if (existingAccountMapping.Count > 0 || existingSSIMapping.Count > 0)
                     return false;
                 var accountToBeDeleted = context.onBoardingAccountBICorABAs.FirstOrDefault(s => s.onBoardingAccountBICorABAId == onBoardingAccountBICorABAId);
+                if (accountToBeDeleted == null) return false;
+                accountToBeDeleted.IsDeleted = true;
+                context.SaveChanges();
+                return true;
+            }
+        }
+
+        public static bool DeleteAccountAddress(long hmsBankAccountAddressId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var accountToBeDeleted = context.hmsBankAccountAddresses.FirstOrDefault(s => s.hmsBankAccountAddressId == hmsBankAccountAddressId);
                 if (accountToBeDeleted == null) return false;
                 accountToBeDeleted.IsDeleted = true;
                 context.SaveChanges();
@@ -536,6 +558,25 @@ namespace HedgeMark.Operations.Secure.Middleware
                 context.SaveChanges();
             }
                 
+        }
+
+        public static void AddorUpdateAccountAddress(hmsBankAccountAddress accountAddress)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                if (accountAddress.hmsBankAccountAddressId > 0)
+                {
+                    var account = context.hmsBankAccountAddresses.FirstOrDefault(s => s.hmsBankAccountAddressId == accountAddress.hmsBankAccountAddressId);
+                    if (account != null)
+                    {
+                        accountAddress.CreatedAt = account.CreatedAt;
+                        accountAddress.CreatedBy = account.CreatedBy;
+                    }
+                }
+                context.hmsBankAccountAddresses.AddOrUpdate(accountAddress);
+                context.SaveChanges();
+            }
+
         }
 
         public static hmsWirePortalCutoff GetCutoffTime(string cashInstruction, string currency)

@@ -1,77 +1,92 @@
 ﻿HmOpsApp.controller("BankAddressController", function ($scope, $http, $timeout, $filter, $q) {
-    var accountTable;
+    var accountTable, accountBICorABATable;
+    $scope.AddorEditAccountText = "Add";
+    $scope.AddorEditText = "Add";
+    $(document).on("click", "#accountTable tbody tr ", function () {
+        $scope.AddorEditAccountText = "Edit";
+        var rowElement = accountTable.row(this).data();
+        $scope.hmsBankAccountAddressId = rowElement.hmsBankAccountAddressId;
 
-    $scope.ValidateAccountBICorABA = function () {
-
-        if ($("#txtBICorABA").val() == undefined || $("#txtBICorABA").val() == "") {
-            $("#txtBICorABA").popover({
-                placement: "right",
-                trigger: "manual",
-                container: "body",
-                content: "BIC or ABA cannot be empty. Please add a valid BIC or ABA",
-                html: true,
-                width: "250px"
-            });
-
-            $("#txtBICorABA").popover("show");
-            return;
+        $("#accountTable tbody tr").removeClass("info");
+        if (!$(this).hasClass("info")) {
+            $(this).addClass("info");
         }
+        $("#btnEditAccount").prop("disabled", false);
+        $("#btnDelAccount").prop("disabled", false);
+    });
 
-        var isExists = false;
-        $($scope.accountBicorAba).each(function (i, v) {
-            if ($("#txtBICorABA").val() == v.BICorABA) {
-                isExists = true;
-                return false;
-            }
+    $(document).on("dblclick", "#accountTable tbody tr", function () {
+        $scope.AddorEditAccountText = "Edit";
+        var rowElement = accountTable.row(this).data();
+        $scope.fnEditAccountDetails(rowElement);
+    });
+    $scope.fnAddAccountDetails = function (rowElement) {
+        $scope.AddorEditAccountText = "Add";
+        $("#txtAccountBankName").val("");
+        $("#txtAccountBankAddress").val("");
+        $("#beneficiaryAccountModal").modal({
+            show: true,
+            keyboard: true
+        }).on("hidden.bs.modal", function () {
+            $("#txtAccountBankAddress").popover("hide");
+            $("#txtAccountBankName").popover("hide");
         });
+        $scope.hmsBankAccountAddressId = 0;
+    }
 
-        if (isExists) {
-            $("#txtBICorABA").popover({
-                placement: "right",
-                trigger: "manual",
-                container: "body",
-                content: "BIC or ABA is already exists. Please enter a valid BIC or ABA",
-                html: true,
-                width: "250px"
-            });
-            $("#txtBICorABA").popover("show");
-            $(".popover-content").html("BIC or ABA is already exists. Please enter a valid BIC or ABA");
-            return;
-        }
-        if ($("#btnBICorABA").prop("checked") && ($("#txtBICorABA").val().length != 9 || !$.isNumeric($("#txtBICorABA").val()))) {
-            $("#txtBICorABA").popover({
-                placement: "right",
-                trigger: "manual",
-                container: "body",
-                content: "ABA is 9 digit numeric value. Please enter a valid ABA",
-                html: true,
-                width: "250px"
-            });
-            $("#txtBICorABA").popover("show");
-            $(".popover-content").html("ABA is 9 digit numeric value. Please enter a valid ABA");
-            return;
-        }
+    $scope.fnEditAccount = function () {
+        $scope.AddorEditAccountText = "Edit";
+        var rowElement = accountTable.row(".info").data();
+        $scope.accountDetail = rowElement;
+        $scope.fnEditAccountDetails();
+    }
 
-        if (!$("#btnBICorABA").prop("checked") && (!($("#txtBICorABA").val().length > 7 && $("#txtBICorABA").val().length < 12) || $.isNumeric($("#txtBICorABA").val()))) {
 
-            $("#txtBICorABA").popover({
-                placement: "right",
-                trigger: "manual",
-                container: "body",
-                content: "BIC is 8 or 11 digit alpha numeric value. Please enter a valid BIC",
-                html: true,
-                width: "250px"
-            });
-            $("#txtBICorABA").popover("show");
-            $(".popover-content").html("BIC is 8 or 11 digit alpha numeric value. Please enter a valid BIC");
-            return;
-        }
+    $scope.fnEditAccountDetails = function () {
+        $scope.AddorEditAccountText = "Edit";
+        $("#txtAccountBankName").val($scope.accountDetail.BankName);
+        $("#txtAccountBankAddress").val($scope.accountDetail.BankAddress);
+        $("#beneficiaryAccountModal").modal({
+            show: true,
+            keyboard: true
+        }).on("hidden.bs.modal", function () {
+            $("#txtAccountBankAddress").popover("hide");
+            $("#txtAccountBankName").popover("hide");
+        });
+    }
 
-        $("#txtBICorABA").popover("hide");
+    $scope.fnDeleteAccount = function () {
+        showMessage("Are you sure do you want to delete account? ", "Delete Account", [
+            {
+                label: "Delete",
+                className: "btn btn-sm btn-danger",
+                callback: function () {
+                    $http.post("/FundAccounts/DeleteAccountAddress", { hmsBankAccountAddressId: $scope.hmsBankAccountAddressId }).then(function (response) {
+                        if (response.data.isDeleted)
+                            notifySuccess("Bank Address deleted successfully");
+                        else
+                            notifyInfo("Bank account associated to Live account, Can't be deleted");
 
-        if ($("#txtBankName").val() == undefined || $("#txtBankName").val() == "") {
+                        accountTable.row(".info").remove().draw();
+                        $scope.hmsBankAccountAddressId = 0;
+                        $("#btnEdit").prop("disabled", true);
+                        $("#btnDel").prop("disabled", true);
+                    });
+                }
+            },
+            {
+                label: "Cancel",
+                className: "btn btn-sm btn-default"
+            }
+        ]);
+    }
+
+    $scope.SaveAccount = function () {
+        
+
+        if ($("#txtAccountBankName").val() == undefined || $("#txtAccountBankName").val() == "") {
             //pop-up    
-            $("#txtBankName").popover({
+            $("#txtAccountBankName").popover({
                 placement: "right",
                 trigger: "manual",
                 container: "body",
@@ -80,15 +95,15 @@
                 width: "250px"
             });
 
-            $("#txtBankName").popover("show");
+            $("#txtAccountBankName").popover("show");
             return;
         }
 
-        $("#txtBankName").popover("hide");
+        $("#txtAccountBankName").popover("hide");
 
-        if ($("#txtBankAddress").val() == undefined || $("#txtBankAddress").val() == "") {
+        if ($("#txtAccountBankAddress").val() == undefined || $("#txtAccountBankAddress").val() == "") {
             //pop-up    
-            $("#txtBankAddress").popover({
+            $("#txtAccountBankAddress").popover({
                 placement: "right",
                 trigger: "manual",
                 container: "body",
@@ -97,20 +112,108 @@
                 width: "250px"
             });
 
-            $("#txtBankAddress").popover("show");
+            $("#txtAccountBankAddress").popover("show");
             return;
         }
 
-        $("#txtBankAddress").popover("hide");
+        $("#txtAccountBankAddress").popover("hide");
+        $scope.accountAddress = {
+            hmsBankAccountAddressId: $scope.hmsBankAccountAddressId,
+            BankName: $("#txtAccountBankName").val(),
+            BankAddress: $("#txtAccountBankAddress").val(),
+        }
+        $http.post("/FundAccounts/AddorEditBankAccountAddress", { accountAddress: $scope.accountAddress }).then(function (response) {
+            notifySuccess("Bank Address " + $scope.AddorEditText + "ed successfully");
+            $scope.hmsBankAccountAddressId = 0;
+            $scope.fnGetAccountList();
+            $("#txtAccountBankName").val("");
+            $("#txtAccountBankAddress").val("");
+        });
 
+        $("#beneficiaryAccountModal").modal("hide");
     }
 
-    $(document).on("click", "#accountTable tbody tr ", function () {
-        //$scope.AddorEditText = "Edit";
-        var rowElement = accountTable.row(this).data();
+    $scope.fnGetAccountList = function () {
+        return $http.get("/FundAccounts/GetAllBankAccountAddress").then(function (response) {
+            $scope.accountList = response.data.addressList;
+            if ($("#accountTable").hasClass("initialized")) {
+                accountTable.clear();
+                accountTable.rows.add($scope.accountList);
+                accountTable.draw();
+
+            } else {
+                accountTable = $("#accountTable").DataTable({
+                    aaData: $scope.accountList,
+                    pageResize: true,
+                    rowId: "hmsBankAccountAddressId",
+                    "bDestroy": true,
+                    iDisplayLength: -1,
+                    //fixedColumns: {
+                    //    leftColumns: 4
+                    //},
+                    //"autoWidth": true,
+                    "order": [[1, "asc"]],
+                    sScrollY: $scope.accountList.length > 10 ? (window.innerHeight - 300) : false,
+                    "scrollX": true,
+                    "columns": [
+                        { "mData": "hmsBankAccountAddressId", visible: false },
+                        
+                        {
+                            "mData": "AccountName",
+                            "sTitle": "Account Name"
+                        }, {
+                            "mData": "AccountAddress",
+                            "sTitle": "Account Address"
+                        },
+                         {
+                            "mData": "CreatedBy",
+                            "sTitle": "CreatedBy"
+                        },
+                        {
+                            "mData": "CreatedAt",
+                            "sTitle": "CreatedAt",
+                            "mRender": renderDotNetDateAndTime
+                        },
+                        {
+                            "mData": "UpdatedBy",
+                            "sTitle": "UpdatedBy"
+                        },
+                        {
+                            "mData": "UpdatedAt",
+                            "sTitle": "UpdatedAt",
+                            "mRender": renderDotNetDateAndTime
+                        }
+
+
+                    ],
+                    "drawCallback": function (settings) {
+
+                    },
+                    "rowCallback": function (row, data, index) {
+
+                    }
+
+                });
+            }
+        });
+        $timeout(function () {
+            accountTable.columns.adjust().draw(true);
+        }, 50);
+
+
+    }
+    $scope.fnExportAllAccountlist = function () {
+        window.location.assign("/FundAccounts/ExportBankAccountlist");
+    }
+
+    $scope.fnGetAccountList();
+
+    $(document).on("click", "#accountBICorABATable tbody tr ", function () {
+        $scope.AddorEditText = "Edit";
+        var rowElement = accountBICorABATable.row(this).data();
         $scope.onBoardingAccountBICorABAId = rowElement.onBoardingAccountBICorABAId;
 
-        $("#accountTable tbody tr").removeClass("info");
+        $("#accountBICorABATable tbody tr").removeClass("info");
         if (!$(this).hasClass("info")) {
             $(this).addClass("info");
         }
@@ -118,19 +221,17 @@
         $("#btnDel").prop("disabled", false);
     });
 
-    $(document).on("dblclick", "#accountTable tbody tr", function () {
-        //$scope.AddorEditText = "Edit";
-        var rowElement = accountTable.row(this).data();
+    $(document).on("dblclick", "#accountBICorABATable tbody tr", function () {
+        $scope.AddorEditText = "Edit";
+        var rowElement = accountBICorABATable.row(this).data();
         $scope.fnEditAccountDetails(rowElement);
     });
 
-    $scope.fnAddorEditBICorABA = function () {
-        //$scope.ValidateAccountBICorABA();       
-        $scope.SaveAccountBiCorAba();
-    }
+   
 
-    $scope.fnAddAccountDetails = function (rowElement) {
+    $scope.fnAddAccountBICorABADetails = function (rowElement) {
         $scope.AddorEditText = "Add";
+        $scope.BICorABAText =  "BIC";
         $("#txtBICorABA").val("");
         $("#txtBankName").val("");
         $("#txtBankAddress").val("");
@@ -145,14 +246,15 @@
             });
         $scope.onBoardingAccountBICorABAId = 0;
     }
-    $scope.fnEditAccount = function () {
-        var rowElement = accountTable.row(".info").data();
+    $scope.fnEditBICorABAAccount = function () {
+        var rowElement = accountBICorABATable.row(".info").data();
         $scope.accountDetail = rowElement;
-        $scope.fnEditAccountDetails();
+        $scope.fnEditBICorABAAccountDetails();
     }
 
-    $scope.fnEditAccountDetails = function () {
+    $scope.fnEditBICorABAAccountDetails = function () {
         $scope.AddorEditText = "Edit";
+        $scope.BICorABAText = $scope.accountDetail.IsABA ? "ABA" : "BIC";
         $("#txtBICorABA").val($scope.accountDetail.BICorABA);
         $("#txtBankName").val($scope.accountDetail.BankName);
         $("#txtBankAddress").val($scope.accountDetail.BankAddress);
@@ -167,7 +269,7 @@
             });
     }
 
-    $scope.fnDeleteAccount = function () {
+    $scope.fnDeleteBICorABAAccount = function () {
         showMessage("Are you sure do you want to delete account? ", "Delete Account", [
             {
                 label: "Delete",
@@ -318,29 +420,26 @@
     angular.element("#txtBICorABA").on("focusin", function () { angular.element("#txtBICorABA").popover("hide"); });
     angular.element("#txtBankName").on("focusin", function () { angular.element("#txtBankName").popover("hide"); });
     angular.element("#txtBankAddress").on("focusin", function () { angular.element("#txtBankAddress").popover("hide"); });
+    angular.element("#txtAccountBankName").on("focusin", function () { angular.element("#txtAccountBankName").popover("hide"); });
+    angular.element("#txtAccountBankAddress").on("focusin", function () { angular.element("#txtAccountBankAddress").popover("hide"); });
+       
 
-    $scope.fnAddBeneficiaryModal = function () {
-        $("#beneficiaryABABICModal").modal({
-            show: true,
-            keyboard: true
-        }).on("hidden.bs.modal", function () {
-            $("#txtBICorABA").popover("hide");
-            $("#txtBankAddress").popover("hide");
-            $("#txtBankName").popover("hide");
-        });
-    }   
-
+    $("#btnBICorABA").on('change', function () {
+        $timeout(function () {
+            $scope.BICorABAText = $("#btnBICorABA").prop("checked") ? "ABA" : "BIC";
+        }, 50);
+    });
 
     $scope.fnGetBicorAba = function () {
         return $http.get("/FundAccounts/GetAllAccountBicorAba").then(function (response) {
             $scope.accountBicorAba = response.data.accountBicorAba;
-            if ($("#accountTable").hasClass("initialized")) {
-                accountTable.clear();
-                accountTable.rows.add($scope.accountBicorAba);
-                accountTable.draw();
+            if ($("#accountBICorABATable").hasClass("initialized")) {
+                accountBICorABATable.clear();
+                accountBICorABATable.rows.add($scope.accountBicorAba);
+                accountBICorABATable.draw();
 
             } else {
-                accountTable = $("#accountTable").DataTable({
+                accountBICorABATable = $("#accountBICorABATable").DataTable({
                     aaData: $scope.accountBicorAba,
                     pageResize: true,
                     rowId: "onBoardingAccountBICorABAId",
@@ -399,7 +498,10 @@
 
                 });
             }
-            });
+        });
+        $timeout(function () {
+           accountBICorABATable.columns.adjust().draw(false);
+        }, 100);
     
     }
     $scope.fnExportAllAccountBICorABAlist = function () {
@@ -407,4 +509,6 @@
     }
 
     $scope.fnGetBicorAba();
+
+
 });
