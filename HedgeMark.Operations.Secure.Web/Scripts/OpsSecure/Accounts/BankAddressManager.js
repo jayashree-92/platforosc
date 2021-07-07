@@ -122,8 +122,8 @@
         $("#txtAccountBankAddress").popover("hide");
         $scope.accountAddress = {
             hmsBankAccountAddressId: $scope.hmsBankAccountAddressId,
-            BankName: $("#txtAccountBankName").val(),
-            BankAddress: $("#txtAccountBankAddress").val(),
+            AccountName: $("#txtAccountBankName").val(),
+            AccountAddress: $("#txtAccountBankAddress").val(),
         }
         $http.post("/FundAccounts/AddorEditBankAccountAddress", { accountAddress: $scope.accountAddress }).then(function (response) {
             notifySuccess("Bank Address " + $scope.AddorEditText + "ed successfully");
