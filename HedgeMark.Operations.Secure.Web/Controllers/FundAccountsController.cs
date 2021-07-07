@@ -616,9 +616,9 @@ namespace HMOSecureWeb.Controllers
             foreach (var account in accountBicorAbaList)
             {
                 var row = new Row();
+                row["Type"] = account.IsABA ? "ÄBA" : "BIC";
                 row["BICorABA"] = account.BICorABA;
                 row["BankName"] = account.BankName;
-                row["Type"] = account.IsABA ? "ÄBA" : "BIC";
                 row["BankAddress"] = account.BankAddress;
                 row["CreatedBy"] = account.CreatedBy;
                 row["CreatedAt"] = account.CreatedAt+"";

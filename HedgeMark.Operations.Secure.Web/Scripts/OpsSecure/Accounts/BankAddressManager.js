@@ -170,20 +170,20 @@
                         },
                          {
                             "mData": "CreatedBy",
-                            "sTitle": "CreatedBy"
+                            "sTitle": "Created By"
                         },
                         {
                             "mData": "CreatedAt",
-                            "sTitle": "CreatedAt",
+                            "sTitle": "Created At",
                             "mRender": renderDotNetDateAndTime
                         },
                         {
                             "mData": "UpdatedBy",
-                            "sTitle": "UpdatedBy"
+                            "sTitle": "Updated By"
                         },
                         {
                             "mData": "UpdatedAt",
-                            "sTitle": "UpdatedAt",
+                            "sTitle": "Updated At",
                             "mRender": renderDotNetDateAndTime
                         }
 
@@ -461,14 +461,6 @@
                     "columns": [
                         { "mData": "onBoardingAccountBICorABAId", visible: false },
                         {
-                            "mData": "BICorABA",
-                            "sTitle": "BICorABA"
-                        },
-                        {
-                            "mData": "BankName",
-                            "sTitle": "Bank Name"
-                        },
-                        {
                             "mData": "IsABA",
                             "sTitle": "Type",
                             "mRender": function (tdata, type, row) {
@@ -476,24 +468,32 @@
                             }
                         },
                         {
+                            "mData": "BICorABA",
+                            "sTitle": "BICorABA"
+                        },
+                        {
+                            "mData": "BankName",
+                            "sTitle": "Bank Name"
+                        },                       
+                        {
                             "mData": "BankAddress",
                             "sTitle": "Bank Address"
                         },{
                             "mData": "CreatedBy",
-                            "sTitle": "CreatedBy"
+                            "sTitle": "Created By"
                         },
                         {
                             "mData": "CreatedAt",
-                            "sTitle": "CreatedAt",
+                            "sTitle": "Created At",
                             "mRender": renderDotNetDateAndTime
                         },
                         {
                             "mData": "UpdatedBy",
-                            "sTitle": "UpdatedBy"
+                            "sTitle": "Updated By"
                         },
                         {
                             "mData": "UpdatedAt",
-                            "sTitle": "UpdatedAt",
+                            "sTitle": "Updated At",
                             "mRender": renderDotNetDateAndTime
                         }
 
