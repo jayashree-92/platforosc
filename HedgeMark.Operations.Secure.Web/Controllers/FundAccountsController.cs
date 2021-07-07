@@ -619,6 +619,7 @@ namespace HMOSecureWeb.Controllers
                 row["BICorABA"] = account.BICorABA;
                 row["BankName"] = account.BankName;
                 row["Type"] = account.IsABA ? "ÄBA" : "BIC";
+                row["BankAddress"] = account.BankAddress;
                 row["CreatedBy"] = account.CreatedBy;
                 row["CreatedAt"] = account.CreatedAt+"";
                 row["UpdatedBy"] = account.UpdatedBy;

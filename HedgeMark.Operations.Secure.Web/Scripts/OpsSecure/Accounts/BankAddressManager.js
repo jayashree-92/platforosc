@@ -18,6 +18,7 @@
     $(document).on("dblclick", "#accountTable tbody tr", function () {
         $scope.AddorEditAccountText = "Edit";
         var rowElement = accountTable.row(this).data();
+        $scope.accountDetail = rowElement;
         $scope.fnEditAccountDetails(rowElement);
     });
     $scope.fnAddAccountDetails = function (rowElement) {
@@ -43,9 +44,11 @@
 
 
     $scope.fnEditAccountDetails = function () {
-        $scope.AddorEditAccountText = "Edit";
-        $("#txtAccountBankName").val($scope.accountDetail.BankName);
-        $("#txtAccountBankAddress").val($scope.accountDetail.BankAddress);
+        $timeout(function () {
+            $scope.AddorEditAccountText = "Edit";
+        }, 100);
+        $("#txtAccountBankName").val($scope.accountDetail.AccountName);
+        $("#txtAccountBankAddress").val($scope.accountDetail.AccountAddress);
         $("#beneficiaryAccountModal").modal({
             show: true,
             keyboard: true
@@ -224,7 +227,8 @@
     $(document).on("dblclick", "#accountBICorABATable tbody tr", function () {
         $scope.AddorEditText = "Edit";
         var rowElement = accountBICorABATable.row(this).data();
-        $scope.fnEditAccountDetails(rowElement);
+        $scope.accountDetail = rowElement;
+        $scope.fnEditBICorABAAccountDetails(rowElement);
     });
 
    
@@ -311,12 +315,14 @@
         }
 
         var isExists = false;
-        $($scope.accountBicorAba).each(function (i, v) {
-            if ($("#txtBICorABA").val() == v.BICorABA) {
-                isExists = true;
-                return false;
-            }
-        });
+        if ($scope.AddorEditText == "Add") {
+            $($scope.accountBicorAba).each(function (i, v) {
+                if ($("#txtBICorABA").val() == v.BICorABA) {
+                    isExists = true;
+                    return false;
+                }
+            });
+        }
 
         if (isExists) {
             $("#txtBICorABA").popover({
@@ -468,7 +474,11 @@
                             "mRender": function (tdata, type, row) {
                                 return tdata ? "ABA" : "BIC";
                             }
-                        }, {
+                        },
+                        {
+                            "mData": "BankAddress",
+                            "sTitle": "Bank Address"
+                        },{
                             "mData": "CreatedBy",
                             "sTitle": "CreatedBy"
                         },
