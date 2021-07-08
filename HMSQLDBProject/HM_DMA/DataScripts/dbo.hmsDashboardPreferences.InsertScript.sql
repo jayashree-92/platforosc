@@ -4,25 +4,29 @@ GO
 IF OBJECT_ID('dbo.Split') IS NOT NULL
   DROP FUNCTION Split
 GO
+DECLARE @query NVARCHAR(MAX);
 
+                SET @query  = '
 CREATE FUNCTION [dbo].[Split](@data NVARCHAR(MAX), @delimiter NVARCHAR(5))
 RETURNS @t TABLE (Val NVARCHAR(max))
 AS
 BEGIN
    
 	DECLARE @tempData varchar(max)
-	SET @tempData = REPLACE(@data, @delimiter, '</d><d>')
-	SET @tempData = REPLACE(@tempData, '&', '&amp;')
+	SET @tempData = REPLACE(@data, @delimiter, ''</d><d>'')
+	SET @tempData = REPLACE(@tempData, ''&'', ''&amp;'')
 	
     DECLARE @textXML XML;
-    SELECT    @textXML = CAST('<d>' + @tempData + '</d>' AS XML);
+    SELECT    @textXML = CAST(''<d>'' + @tempData + ''</d>'' AS XML);
  
     INSERT INTO @t(Val)
-    SELECT  T.split.value('.', 'nvarchar(max)') AS Val
-    FROM    @textXML.nodes('/d') T(split)
+    SELECT  T.split.value(''.'', ''nvarchar(max)'') AS Val
+    FROM    @textXML.nodes(''/d'') T(split)
    
     RETURN
-END
+END'
+				
+	EXEC sp_executesql @query ;
 
 GO
 
