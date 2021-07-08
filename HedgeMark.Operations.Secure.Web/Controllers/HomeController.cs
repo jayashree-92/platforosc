@@ -396,6 +396,7 @@ namespace HMOSecureWeb.Controllers
                 hmsWireId = wireId,
                 CreatedAt = DateTime.Now,
                 IsJobExecuted = false,
+                JobId = string.Empty
             };
 
             if (workflowStatus == WireDataManager.WireStatus.Initiated)
@@ -412,8 +413,12 @@ namespace HMOSecureWeb.Controllers
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(thisWireSchedule.JobId))
-                    BackgroundJob.Delete(thisWireSchedule.JobId);
+                if (string.IsNullOrWhiteSpace(thisWireSchedule.JobId))
+                    return;
+
+                BackgroundJob.Delete(thisWireSchedule.JobId);
+                thisWireSchedule.JobId = string.Empty;
+                OverdueWireAutoCancellationJobManager.AddOrUpdateWireCancellationJob(thisWireSchedule);
             }
         }
 
