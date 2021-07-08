@@ -401,6 +401,10 @@ namespace HMOSecureWeb.Controllers
             if (workflowStatus == WireDataManager.WireStatus.Initiated)
             {
                 var schedule = thisWireSchedule;
+
+                if (!string.IsNullOrWhiteSpace(thisWireSchedule.JobId))
+                    BackgroundJob.Delete(thisWireSchedule.JobId);
+
                 thisWireSchedule.ScheduledDate = valueDate.AddDays(daysToAdd).Date.Add(new TimeSpan(23, 59, 0));
                 var jobId = BackgroundJob.Schedule(() => OverdueWireAutoCancellationJobManager.CancelThisWire(wireId, schedule), new DateTimeOffset(thisWireSchedule.ScheduledDate));
                 thisWireSchedule.JobId = jobId;
