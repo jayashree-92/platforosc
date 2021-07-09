@@ -124,11 +124,11 @@ namespace HedgeMark.Operations.Secure.Middleware.SwiftMessageManager
 
             var f50K = new Field50K().setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setNameAndAddressLine1(isFFCNameAvailable ? wire.SendingAccount.FFCName : wire.SendingAccount.UltimateBeneficiaryAccountName)
-                .setNameAndAddressLine2(wire.SendingAccount.UltimateBeneficiary.BankAddress);
+                .setNameAndAddressLine2(wire.SendingAccount.UltimateBeneficiary.BankAddress)
+                .setNameAndAddressLine3(wire.FundRegisterAddress);
 
             return f50K;
         }
-
 
         private static void SetField52X(AbstractMT mtMessage, WireTicket wire)
         {
@@ -137,7 +137,6 @@ namespace HedgeMark.Operations.Secure.Middleware.SwiftMessageManager
             else
                 mtMessage.addField(GetField52D(wire));
         }
-
 
         /// <summary>
         /// "Ordering Customer"
@@ -168,7 +167,8 @@ namespace HedgeMark.Operations.Secure.Middleware.SwiftMessageManager
 
             var f52D = new Field52D()
                 .setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
-                .setNameAndAddressLine1(isFFCNameAvailable ? wire.SendingAccount.FFCName : wire.SendingAccount.UltimateBeneficiaryAccountName);
+                .setNameAndAddressLine1(isFFCNameAvailable ? wire.SendingAccount.FFCName : wire.SendingAccount.UltimateBeneficiaryAccountName)
+                .setNameAndAddressLine2(wire.FundRegisterAddress);
 
             return f52D;
         }
@@ -297,6 +297,8 @@ namespace HedgeMark.Operations.Secure.Middleware.SwiftMessageManager
                 .setAccount(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountNumber : wire.SSITemplate.UltimateBeneficiaryAccountNumber)
                 .setBIC(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryType == "ABA" ? string.Empty :
                     wire.ReceivingAccount.UltimateBeneficiary.BICorABA : wire.SSITemplate.UltimateBeneficiaryType == "ABA" ? string.Empty : wire.SSITemplate.UltimateBeneficiary.BICorABA);
+
+
             return f58A;
         }
 
@@ -311,7 +313,10 @@ namespace HedgeMark.Operations.Secure.Middleware.SwiftMessageManager
                     : wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountNumber : wire.SSITemplate.UltimateBeneficiaryAccountNumber);
 
             if (!isAbaAvailable)
-                f58D.setNameAndAddress(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountName : wire.SSITemplate.UltimateBeneficiaryAccountName);
+            {
+                f58D.setNameAndAddress(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountName : wire.SSITemplate.UltimateBeneficiaryAccountName)
+                    .setNameAndAddressLine1(wire.IsFundTransfer ? wire.FundRegisterAddress : wire.ReceivingSsiUltimateBeneAccountAddress);
+            }
 
             if (!isAbaAvailable)
                 return f58D;
@@ -329,7 +334,8 @@ namespace HedgeMark.Operations.Secure.Middleware.SwiftMessageManager
         {
             var f59 = new Field59()
                 .setAccount(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountNumber : wire.SSITemplate.UltimateBeneficiaryAccountNumber)
-                .setNameAndAddressLine1(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountName : wire.SSITemplate.UltimateBeneficiaryAccountName);
+                .setNameAndAddressLine1(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountName : wire.SSITemplate.UltimateBeneficiaryAccountName)
+                .setNameAndAddressLine2(wire.IsFundTransfer ? wire.FundRegisterAddress : wire.ReceivingSsiUltimateBeneAccountAddress);
 
             return f59;
         }

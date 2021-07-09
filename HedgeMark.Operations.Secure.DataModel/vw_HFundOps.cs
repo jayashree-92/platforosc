@@ -28,5 +28,10 @@ namespace HedgeMark.Operations.Secure.DataModel
         public string ClientLegalEntityName { get; set; }
         public string ClientShortName { get; set; }
         public Nullable<long> dmaClientOnBoardId { get; set; }
+        public string DataProviderName { get; set; }
+        public Nullable<int> DataProviderId { get; set; }
+        public Nullable<long> AdminId { get; set; }
+        public string AdminName { get; set; }
+        public string RegisterAddress { get; set; }
     }
 }

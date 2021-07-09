@@ -220,6 +220,11 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_HFundOps' does not have a primary ke
           <Property Name="ClientLegalEntityName" Type="varchar" MaxLength="200" />
           <Property Name="ClientShortName" Type="varchar" MaxLength="200" />
           <Property Name="dmaClientOnBoardId" Type="bigint" />
+          <Property Name="DataProviderName" Type="varchar(max)" />
+          <Property Name="DataProviderId" Type="int" />
+          <Property Name="AdminId" Type="bigint" />
+          <Property Name="AdminName" Type="varchar" MaxLength="1000" />
+          <Property Name="RegisterAddress" Type="varchar" MaxLength="1000" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -298,7 +303,12 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
     [vw_HFundOps].[AccountingMethod] AS [AccountingMethod], 
     [vw_HFundOps].[ClientLegalEntityName] AS [ClientLegalEntityName], 
     [vw_HFundOps].[ClientShortName] AS [ClientShortName], 
-    [vw_HFundOps].[dmaClientOnBoardId] AS [dmaClientOnBoardId]
+    [vw_HFundOps].[dmaClientOnBoardId] AS [dmaClientOnBoardId], 
+    [vw_HFundOps].[DataProviderName] AS [DataProviderName], 
+    [vw_HFundOps].[DataProviderId] AS [DataProviderId], 
+    [vw_HFundOps].[AdminId] AS [AdminId], 
+    [vw_HFundOps].[AdminName] AS [AdminName], 
+    [vw_HFundOps].[RegisterAddress] AS [RegisterAddress]
     FROM [dbo].[vw_HFundOps] AS [vw_HFundOps]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vw_ProxyCurrencyConversionData" EntityType="Self.vw_ProxyCurrencyConversionData" store:Type="Views" store:Schema="dbo">
@@ -569,6 +579,11 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <Property Name="ClientLegalEntityName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ClientShortName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="dmaClientOnBoardId" Type="Int64" />
+          <Property Name="DataProviderName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DataProviderId" Type="Int32" />
+          <Property Name="AdminId" Type="Int64" />
+          <Property Name="AdminName" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="RegisterAddress" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -777,6 +792,11 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <EntitySetMapping Name="vw_HFundOps">
             <EntityTypeMapping TypeName="OperationsModel.vw_HFundOps">
               <MappingFragment StoreEntitySet="vw_HFundOps">
+                <ScalarProperty Name="RegisterAddress" ColumnName="RegisterAddress" />
+                <ScalarProperty Name="AdminName" ColumnName="AdminName" />
+                <ScalarProperty Name="AdminId" ColumnName="AdminId" />
+                <ScalarProperty Name="DataProviderId" ColumnName="DataProviderId" />
+                <ScalarProperty Name="DataProviderName" ColumnName="DataProviderName" />
                 <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
                 <ScalarProperty Name="ClientShortName" ColumnName="ClientShortName" />
                 <ScalarProperty Name="ClientLegalEntityName" ColumnName="ClientLegalEntityName" />

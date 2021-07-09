@@ -51,7 +51,9 @@ namespace HedgeMark.Operations.Secure.Middleware
                             PreferredFundName = fnd.PreferredFundName ?? "Unknown Fund-" + fnd.HFund.hmFundId,
                             FundType = "DMA",
                             LegalFundName = fnd.HFund.LegalFundName,
-                            ClientLegalName = fnd.HFund.ClientLegalEntityName
+                            ClientLegalName = fnd.HFund.ClientLegalEntityName,
+                            RegisteredAddress = fnd.HFund.RegisterAddress
+
                             //CalendarIds = fnd.CalendarIds,
                         }).ToList();
             }
@@ -100,6 +102,7 @@ namespace HedgeMark.Operations.Secure.Middleware
         public string FundType { get; set; }
         public string ClientLegalName { get; set; }
         public string AdminName { get; set; }
+        public string RegisteredAddress { get; set; }
         //public List<int> CalendarIds { get; set; }
     }
 

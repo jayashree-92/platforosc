@@ -189,9 +189,13 @@ namespace HedgeMark.Operations.Secure.Middleware.Models
         public onBoardingAccount ReceivingAccount { get; set; }
         public onBoardingSSITemplate SSITemplate { get; set; }
         public string PreferredFundName { get; set; }
-        public String ShortFundName { get; set; }
-        public String ClientLegalName { get; set; }
-        public String AdminName { get; set; }
+        public string ShortFundName { get; set; }
+        public string ClientLegalName { get; set; }
+        public string AdminName { get; set; }
+        public string FundRegisterAddress { get; set; }
+
+        //Populated from  hmsBankAccountAddress
+        public string ReceivingSsiUltimateBeneAccountAddress { get; set; }
 
         public List<FormattedSwiftMessage> SwiftMessages { get; set; }
 
