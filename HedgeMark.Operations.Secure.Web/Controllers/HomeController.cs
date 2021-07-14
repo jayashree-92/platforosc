@@ -391,7 +391,7 @@ namespace HMOSecureWeb.Controllers
 
         private static void SaveWireCancellationSchedule(long wireId, DateTime valueDate, WireDataManager.WireStatus workflowStatus, int daysToAdd)
         {
-            var thisWireSchedule = OverdueWireAutoCancellationJobManager.GetWireCancellationJob(wireId) ?? new hmsWireAutoCancellationJob()
+            var thisWireSchedule = OverdueWireAutoCancellationJobManager.GetWireCancellationJobByWireId(wireId) ?? new hmsWireAutoCancellationJob()
             {
                 hmsWireId = wireId,
                 CreatedAt = DateTime.Now,
@@ -407,7 +407,7 @@ namespace HMOSecureWeb.Controllers
                     BackgroundJob.Delete(thisWireSchedule.JobId);
 
                 thisWireSchedule.ScheduledDate = valueDate.AddDays(daysToAdd).Date.Add(new TimeSpan(23, 59, 0));
-                var jobId = BackgroundJob.Schedule(() => OverdueWireAutoCancellationJobManager.CancelThisWire(wireId, schedule), new DateTimeOffset(thisWireSchedule.ScheduledDate));
+                var jobId = BackgroundJob.Schedule(() => OverdueWireAutoCancellationJobManager.CancelThisWire(schedule.hmsWireJobSchedulerId), new DateTimeOffset(thisWireSchedule.ScheduledDate));
                 thisWireSchedule.JobId = jobId;
                 OverdueWireAutoCancellationJobManager.AddOrUpdateWireCancellationJob(thisWireSchedule);
             }
@@ -517,8 +517,6 @@ namespace HMOSecureWeb.Controllers
             var timeToApprove = WireDataManager.GetDeadlineToApprove(onboardAccount, valueDate);
             return Json(new { timeToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.hmsWirePortalCutoffId == 0 || onboardAccount.WirePortalCutoff.IsApproved });
         }
-
-
 
         public JsonResult GetWirePurposes()
         {
