@@ -667,6 +667,7 @@ namespace HedgeMark.Operations.Secure.Middleware
         {
             if (timeZones == null)
                 timeZones = FileSystemManager.GetAllTimeZones();
+
             if (destinationTimeZone == null)
             {
                 var baseTimeZone = timeZones[FileSystemManager.DefaultTimeZone];

@@ -17,13 +17,18 @@ namespace HMOSecureWeb.Jobs
         private static readonly ILog Logger = LogManager.GetLogger(typeof(OverdueWireAutoCancellationJobManager));
 
         [DisplayName("Wire cancellation schedule for > {0}")]
-        public static void CancelThisWire(long wireId, hmsWireAutoCancellationJob wireSchedule)
+        public static void CancelThisWire(long hmsWireJobSchedulerId)
         {
-            var wireStatus = WireDataManager.GetWireStatus(wireId);
+            var wireSchedule = GetWireCancellationJobByScheduleId(hmsWireJobSchedulerId);
+
+            if (wireSchedule == null || wireSchedule.IsJobExecuted)
+                return;
+
+            var wireStatus = WireDataManager.GetWireStatus(wireSchedule.hmsWireId);
             if (wireStatus.WireStatus != WireDataManager.WireStatus.Initiated)
                 return;
 
-            var wireTicket = WireDataManager.GetWireData(wireId);
+            var wireTicket = WireDataManager.GetWireData(wireSchedule.hmsWireId);
             var workflowComment = "Auto Rejected by system as deadline crossed.";
             WireDataManager.SaveWireData(wireTicket, WireDataManager.WireStatus.Cancelled, workflowComment, -1);
             wireSchedule.IsJobExecuted = true;
@@ -36,15 +41,15 @@ namespace HMOSecureWeb.Jobs
             foreach (var schedule in joblessWireSchedules)
             {
                 if (!string.IsNullOrWhiteSpace(schedule.JobId))
-                    BackgroundJob.Delete(schedule.JobId);
+                    return;
 
-                var jobId = BackgroundJob.Schedule(() => CancelThisWire(schedule.hmsWireId, schedule), new DateTimeOffset(schedule.ScheduledDate));
+                var jobId = BackgroundJob.Schedule(() => CancelThisWire(schedule.hmsWireJobSchedulerId), new DateTimeOffset(schedule.ScheduledDate));
                 schedule.JobId = jobId;
                 AddOrUpdateWireCancellationJob(schedule);
             }
         }
 
-        public static hmsWireAutoCancellationJob GetWireCancellationJob(long wireId)
+        public static hmsWireAutoCancellationJob GetWireCancellationJobByWireId(long wireId)
         {
             using (var context = new OperationsSecureContext())
             {
@@ -54,12 +59,35 @@ namespace HMOSecureWeb.Jobs
             }
         }
 
+        public static hmsWireAutoCancellationJob GetWireCancellationJobByScheduleId(long wireCancellationJobId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.hmsWireAutoCancellationJobs.FirstOrDefault(s => s.hmsWireJobSchedulerId == wireCancellationJobId);
+            }
+        }
+
         public static void AddOrUpdateWireCancellationJob(hmsWireAutoCancellationJob schedule)
         {
             schedule.LastModifiedAt = DateTime.Now;
             using (var context = new OperationsSecureContext())
             {
                 context.hmsWireAutoCancellationJobs.AddOrUpdate(schedule);
+                context.SaveChanges();
+            }
+        }
+        public static void RemoveWireCancellationJob(long scheduleId)
+        {
+            var wireSchedule = GetWireCancellationJobByScheduleId(scheduleId);
+
+            if (wireSchedule == null)
+                return;
+
+            using (var context = new OperationsSecureContext())
+            {
+                context.hmsWireAutoCancellationJobs.Remove(wireSchedule);
                 context.SaveChanges();
             }
         }

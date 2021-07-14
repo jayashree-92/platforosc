@@ -597,13 +597,16 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.fnIsAllConditionsAcknowledged = function () {
+        if ($scope.wireTicketObj.IsNotice)
+            return true;
+
         if ($scope.IsDuplicateWireCreated && !$("#chkDuplicateWireCreation").prop("checked"))
             return false;
 
         if ($scope.IsDeadlineCrossed && !$("#chkDeadlineCrossed").prop("checked"))
             return false;
 
-        if (!$scope.wireTicketObj.IsNotice && $scope.IsDeadlineCrossed && $scope.wireComments.trim() == "") {
+        if ($scope.IsDeadlineCrossed && $scope.wireComments.trim() == "") {
             $scope.fnShowErrorMessage("Please enter the comments to initiate the wire as deadline is crossed.");
             return false;
         }
@@ -849,7 +852,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         $scope.changeButtonStatus(statusId);
         var wireData = statusId == 4 ? $scope.dummyWire : angular.copy($scope.wireTicketObj);
-        var wireComments = $scope.wireComments + $scope.fnGetAllAckNotes();
+        var wireComments = $scope.wireComments + (statusId == 1 ? "" : $scope.fnGetAllAckNotes());
         $http.post("/Home/SaveWire", JSON.stringify({
             wireTicket: wireData, reportMapId: $scope.wireObj.ReportMapId, purpose: $scope.wireObj.Purpose, statusId: statusId,
             comment: wireComments
