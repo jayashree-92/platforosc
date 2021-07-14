@@ -212,8 +212,9 @@
                                         <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.Beneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName" disabled />
                                     </div>
                                     <div class="col-md-2">
+                                        <input type="text" class="form-control" ng-model="ssiTemplate.UltimateBeneficiaryAccountName" id="liUltimateBeneficiaryAccount" ng-change="fnGetAccountAddressDetails(ssiTemplate.UltimateBeneficiaryAccountName)" style="display: none;" />
                                         <input type="text" name='BankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="ssiTemplate.UltimateBeneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="ultimateBankName" disabled />
-                                        <input type="text" name='AccountName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control" ng-model="ssiTemplate.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName" style="display: none;" />
+                                        @*<input type="text" name='AccountName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control" ng-model="ssiTemplate.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName" style="display: none;" />*@
                                     </div>
                                 </div>
                                 <p></p>

@@ -217,6 +217,13 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         });
     }
 
+    $scope.fnGetAccountAddressDetails = function (accountName) {
+        $timeout(function () {
+        var ultimateAccount = $.grep($scope.bankAddressList, function (v) { return v.AccountName == accountName; })[0];
+            $scope.ssiTemplate.UltimateBeneficiary.BankAddress = ultimateAccount.AccountAddress;
+        }, 100);
+    }
+
     $scope.fnGetBankDetails = function (biCorAbaValue, id) {
         $timeout(function () {
             var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.BICorABA == biCorAbaValue; })[0];
@@ -301,20 +308,31 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 //$scope.ssiTemplate.IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + index).prop("checked");
                 $scope.ssiTemplate.UltimateBeneficiaryType = item;
                 if (item == "Account Name") {
+                    $scope.fnGetAccountAddressDetails($scope.ssiTemplate.UltimateBeneficiaryAccountName);
                     $("#divUltimateBeneficiaryBICorABA").hide();
+                    $("#liUltimateBeneficiaryAccount").show()
                     $("#ultimateBankName").hide();
-                    $("#ultimateBankAddress").hide();
-                    $("#accountName").show();
+                    $("#ultimateBankAddress").show();
+                    $("#accountName").hide();
                     $scope.ssiTemplate.UltimateBeneficiary = {};
                     //$scope.ssiTemplate.UltimateBeneficiaryBICorABA = null;
                     //$scope.ssiTemplate.UltimateBeneficiaryBankName = null;
                     //$scope.ssiTemplate.UltimateBeneficiaryBankAddress = null;
+                    if ($("#liUltimateBeneficiaryAccount").data("select2")) {
+                        $("#liUltimateBeneficiaryAccount").select2("destroy");
+                    }
+                    $("#liUltimateBeneficiaryAccount").select2({
+                        placeholder: "Select Account",
+                        allowClear: true,
+                        data: $scope.accountAddressList
+                    });
                     return;
                 } else {
                     $("#divUltimateBeneficiaryBICorABA").show();
                     $("#ultimateBankName").show();
                     $("#ultimateBankAddress").show();
                     $("#accountName").hide();
+                    $("#liUltimateBeneficiaryAccount").hide();
                     $scope.ssiTemplate.UltimateBeneficiaryAccountName = null;
                 }
                 var ultimateBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
@@ -332,7 +350,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     placeholder: "Select a ultimate beneficiary BIC or ABA",
                     allowClear: true,
                     data: ultimateBicorAbaData
-                });
+                });               
 
                 break;
         }
@@ -372,6 +390,12 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         });
     }
 
+    $scope.fnGetAccountAddressList = function () {
+        $http.get("/FundAccounts/GetAllBankAccountAddress").then(function (response) {
+            $scope.bankAddressList = response.data.addressList;
+           
+        });
+    }
 
     $("#liUltimateBeneficiaryType").on("change", function (e) {
         $("#liUltimateBeneficiaryBICorABA").select2("val", '').trigger("change");
@@ -397,6 +421,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $scope.ssiTemplates = response.data.templates;
             $scope.AccountTypes = response.data.accountTypes;
             $scope.currencies = response.data.currencies;
+            $scope.accountAddressList = response.data.addressList;
             //$scope.serviceProviders = response.data.serviceProviders;            
 
             $("#liSSITemplateType").select2({
@@ -447,7 +472,14 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 data: $scope.messageTypes
             });
             $scope.fnGetBicorAba(false);
+            $scope.fnGetAccountAddressList();
 
+            $("#liUltimateBeneficiaryAccount").select2({
+                placeholder: "Select Account",
+                allowClear: true,
+                data: $scope.accountAddressList
+            });
+            $("#liUltimateBeneficiaryAccount").hide();
             // if ($scope.ssiTemplate.Currency != "") $("#liCurrency").val($scope.ssiTemplate.Currency);
 
             //$scope.ssiTemplate.SSITemplateType != "" && $scope.ssiTemplate.SSITemplateType != "undefined" && 

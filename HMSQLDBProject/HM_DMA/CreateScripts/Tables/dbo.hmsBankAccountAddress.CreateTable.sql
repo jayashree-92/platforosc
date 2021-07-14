@@ -19,3 +19,9 @@ PRIMARY KEY CLUSTERED
 END
 GO
 
+IF NOT EXISTS(SELECT * FROM SYS.objects WHERE NAME = 'UK_hmsBankAccountAddress_AccountName')
+BEGIN
+ALTER TABLE hmsBankAccountAddress ADD CONSTRAINT UK_hmsBankAccountAddress_AccountName UNIQUE (AccountName)
+END
+GO
+
