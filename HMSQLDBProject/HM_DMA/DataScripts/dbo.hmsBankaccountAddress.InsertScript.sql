@@ -3,7 +3,7 @@ IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME= 'onBoar
 BEGIN
      
 	SELECT * INTO dmabackup.onBoardingSSITemplate_bkup_allData_v13_0 FROM onBoardingSSITemplate
-	SELECT  * INTO DMABackup.onBoardingSSITemplate_bkup_v13_0 FROM (SELECT  ROW_NUMBER() OVER (PARTITION BY UltimateBeneficiaryAccountName ORDER BY ssi.onBoardingSSITemplateId) AS RowId,ssi.* FROM   onBoardingSSITemplate ssi  WHERE  UltimateBeneficiaryType='Account Name' and UltimateBeneficiaryAccountName is not null)a WHERE   a.RowId = 1
+	SELECT  ROW_NUMBER() OVER (ORDER BY ssi.onBoardingSSITemplateId) AS RowId,SSI.*  FROM onBoardingSSITemplate ssi WHERE UltimateBeneficiaryType='Account Name' and UltimateBeneficiaryAccountName is not null
 	DECLARE @count INT,@i INT = 1
 
 	SELECT @count = (SELECT COUNT(*) FROM DMABackup.onBoardingSSITemplate_bkup_v13_0)
@@ -11,7 +11,8 @@ BEGIN
 	BEGIN
 		DECLARE @AccountName VARCHAR(MAX) 
 		SELECT @AccountName = UltimateBeneficiaryAccountName FROM DMABackup.onBoardingSSITemplate_bkup_v13_0 WHERE RowId=@i
-		
+		IF NOT EXISTS (SELECT * FROM hmsBankAccountAddress WHERE UltimateBeneficiaryAccountName=@AccountName)
+		BEGIN
 			INSERT INTO [dbo].[hmsBankAccountAddress]
 			   ([AccountName]
 			   ,[AccountAddress]
@@ -28,7 +29,7 @@ BEGIN
 			   ,'Data Migration'
 			   ,getdate()
 			   ,0)
-	
+		END
 		   SET @i = @i + 1;
 	END
 END
