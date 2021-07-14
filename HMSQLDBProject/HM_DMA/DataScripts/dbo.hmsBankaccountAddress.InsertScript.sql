@@ -11,7 +11,7 @@ BEGIN
 	BEGIN
 		DECLARE @AccountName VARCHAR(MAX) 
 		SELECT @AccountName = UltimateBeneficiaryAccountName FROM DMABackup.onBoardingSSITemplate_bkup_v13_0 WHERE RowId=@i
-		IF NOT EXISTS (SELECT * FROM hmsBankAccountAddress WHERE UltimateBeneficiaryAccountName=@AccountName)
+		IF NOT EXISTS (SELECT * FROM hmsBankAccountAddress WHERE AccountName=@AccountName)
 		BEGIN
 			INSERT INTO [dbo].[hmsBankAccountAddress]
 			   ([AccountName]
