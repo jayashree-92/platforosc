@@ -1,9 +1,9 @@
 ﻿using System;
-using HedgeMark.Operations.Secure.Middleware.Models;
-using HedgeMark.Operations.Secure.Middleware.SwiftMessageManager;
 using HedgeMark.SwiftMessageHandler.Model;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT9XX;
+using HM.Operations.Secure.Middleware.Models;
+using HM.Operations.Secure.Middleware.SwiftMessageManager;
 using NUnit.Framework;
 
 namespace HedgeMark.SwiftMessageHandler.Tests

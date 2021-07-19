@@ -1,0 +1,155 @@
+/* CSS Document */
+
+form {margin:0;padding:0}
+
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color:#666666;
+}
+
+td {	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color:#666666;
+}
+
+.bodytext {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color:#666666;
+}
+
+A.bodytext {
+	font-size: 11px;
+}
+
+
+
+H1 { font-family: Arial, Helvetica, sans-serif; font-size:16px; color:#666666; margin-top:0px; }
+
+.logintitle {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color:#A29060;
+	font-weight: bold;
+}
+
+.formtitle {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color:#000000;
+	font-weight: bold;
+}
+
+
+.rightcol {
+	background-color:#E4E4E4;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color:#5A5A5A;
+}
+
+
+.errormsg {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color:red;
+	font-weight: bold;
+	padding-top:12px;
+}
+
+
+/* LINKS */
+
+a {
+	color:#666666;
+	text-decoration: underline;
+}
+
+a:visited {
+	color:#666666;
+	text-decoration: underline;
+}
+
+a:hover {
+	color:#008127;
+}
+
+/* COPYRIGHT & FOOTER */
+
+.copyright {
+	color: #666666;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+.footer {
+	color: #FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+
+
+
+
+.footer a:link {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color:#ffffff;
+	text-decoration: none;
+}
+
+.footer a:visited {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color:#ffffff;
+	text-decoration: none;
+}
+
+.footer a:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color:#ffffff;
+	text-decoration: underline;
+}
+
+
+.tinylink {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color:#5A5A5A;
+}
+
+
+.tinylink a:link {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color:#5A5A5A;
+	text-decoration: none;
+}
+
+.tinylink a:visited {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color:#5A5A5A;
+	text-decoration: none;
+}
+
+.tinylink a:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color:#5A5A5A;
+	text-decoration: underline;
+}
+
+
+
+#headerTable { border-bottom:1px solid #ccc; }
+#mainContent { width:600px;font-size:11px;margin:15px;margin-top:0px; }
+#loginTools { display:block;text-align:right;width:600px;font-size:11px;margin:0px;margin-top:10px; }
+#loginTools A { color:008127; }

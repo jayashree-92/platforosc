@@ -1,0 +1,67 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using HM.Operations.Secure.DataModel;
+using HM.Operations.Secure.Middleware.Models;
+using Com.HedgeMark.Commons.Extensions;
+
+namespace HM.Operations.Secure.Middleware
+{
+    public class NotificationManager
+    {
+
+        public static void NotifyOpsUser(long wireId)
+        {
+            var wireTicket = WireDataManager.GetWireData(wireId);
+            NotifyOpsUser(wireTicket);
+        }
+
+        public static void NotifyOpsUser(WireTicket wireTicket)
+        {
+            //Notification is generated 
+            //  to initiator when the approver approves the wire
+            //  to initiator and approver when Swift status is complete
+            //  to initiator and approver when Swift status is failed
+
+
+            var isSwiftStatusNotInitiated = wireTicket.HMWire.SwiftStatusId == (int)WireDataManager.SwiftStatus.NotInitiated;
+            var wireStatus = isSwiftStatusNotInitiated ? ((WireDataManager.WireStatus)wireTicket.HMWire.WireStatusId).ToString() : ((WireDataManager.SwiftStatus)wireTicket.HMWire.SwiftStatusId).ToString();
+
+            var message = new StringBuilder();
+
+            message.AppendFormat("{0}{1} Wire of {2} for ", wireTicket.IsFundTransfer ? "Fund transfer -" : string.Empty, wireTicket.HMWire.hmsWireMessageType.MessageType, wireTicket.HMWire.Amount.ToCurrency());
+
+            //message.Append(wireTicket.IsFundTransfer
+            //    ? wireTicket.FundName
+            //    : wireTicket.Agreement.AgreementShortName);
+            message.Append(wireTicket.PreferredFundName);
+
+            message.AppendFormat(" is {0}", wireStatus);
+
+            //need to derive recipients 
+            var qualifiedReceipients = isSwiftStatusNotInitiated
+                ? wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == 2).Select(s => s.CreatedBy).ToList()
+                : wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == 2 || s.WireStatusId == 3).Select(s => s.CreatedBy).ToList();
+
+            using (var context = new OperationsSecureContext())
+            {
+                var notificationList = new List<hmsNotificationStaging>();
+                qualifiedReceipients.ForEach(toUserId =>
+                {
+                    notificationList.Add(new hmsNotificationStaging()
+                    {
+                        FromUserId = -1,
+                        ToUserId = toUserId,
+                        Message = message.ToString(),
+                        Title = wireStatus,
+                        CreatedAt = DateTime.Now
+                    });
+                });
+
+                context.hmsNotificationStagings.AddRange(notificationList);
+                context.SaveChanges();
+            }
+        }
+    }
+}
