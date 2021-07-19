@@ -121,14 +121,6 @@
       <Project>{61be155b-657b-4611-8cea-74b188cd1ee0}</Project>
       <Name>Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HedgeMark.Operations.Secure.DataModel\HedgeMark.Operations.Secure.DataModel.csproj">
-      <Project>{87DDFAA9-89C6-411B-B1B8-2B451A3C605C}</Project>
-      <Name>HedgeMark.Operations.Secure.DataModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HedgeMark.Operations.Secure.Middleware\HedgeMark.Operations.Secure.Middleware.csproj">
-      <Project>{e16cb811-24a6-4439-a807-f52c209afe35}</Project>
-      <Name>HedgeMark.Operations.Secure.Middleware</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HedgeMark.SwiftMessageHandler\HedgeMark.SwiftMessageHandler.csproj">
       <Project>{f4b70a85-b67c-412f-bcad-22db58e1110a}</Project>
       <Name>HedgeMark.SwiftMessageHandler</Name>
