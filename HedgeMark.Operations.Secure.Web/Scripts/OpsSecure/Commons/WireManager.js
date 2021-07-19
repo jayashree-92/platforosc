@@ -569,7 +569,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         } else {
             $scope.CashBalanceAcknowledgedNotes = "";
         }
-        $scope.$apply();
     });
 
     $("body").on("change", "#chkDuplicateWireCreation", function () {
@@ -578,7 +577,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         } else {
             $scope.DeadlineCrossedAcknowledgedNotes = "";
         }
-        $scope.$apply();
     });
 
     $("body").on("change", "#chkDeadlineCrossed", function () {
@@ -587,7 +585,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         } else {
             $scope.DuplicateWireCreatedAcknowledgedNotes = "";
         }
-        $scope.$apply();
     });
 
     $scope.fnResetAcknowledgementAllToggle = function () {

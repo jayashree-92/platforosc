@@ -1,4 +1,5 @@
-﻿HmOpsApp.controller("BankAddressController", function ($scope, $http, $timeout, $filter, $q) {
+﻿$("#liABAOrBIC").addClass("active");
+HmOpsApp.controller("BankAddressController", function ($scope, $http, $timeout, $filter, $q) {
     var accountTable, accountBICorABATable;
     $scope.AddorEditAccountText = "Add";
     $scope.AddorEditText = "Add";
