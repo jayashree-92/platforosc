@@ -1,0 +1,35 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Wire Logs";
+}
+
+<div ng-controller="WireLogsCtrl">
+    <div class="row-fluid">
+        <h4 style="display: inline-block">Wire Logs /</h4>
+        <span id="wireLogDateRange" class="dateRangeSelector">
+            <i class="glyphicon glyphicon-calendar"></i>&nbsp;
+            <span></span><b class="caret" style="padding-bottom: 1px;"></b>
+        </span>
+        &nbsp;<h4 style="display: inline-block">/</h4>&nbsp;
+        <button class="btn btn-sm btn-primary" id="btnGetWireLogs" ng-click="fnGetWireLogs()" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-refresh"></i>&nbsp;Get Logs</button>
+       &nbsp; <span id="spnCustomButtons"></span>
+        <hr class="dashHr" />
+    </div>
+
+    <div ng-controller="wireDetailsCtrl">
+        <table id="tblWireStatusDetails" class="table table-hover table-striped shadowBox" style="background: white;"></table>
+        <br />
+    </div>
+    <div class="container-fluid">
+        <div class="row" ng-controller="wireInitiationCtrl">
+            @Html.Partial("_Wires")
+        </div>
+    </div>
+</div>
+
+@section Javascript{
+    <script src="~/Scripts/OpsSecure/Commons/WireManager.js"></script>
+    <script src="~/Scripts/OpsSecure/Commons/WireDetails.js"></script>
+    <script src="~/Scripts/OpsSecure/WireLog.js"></script>
+}

@@ -1,0 +1,157 @@
+label {
+    padding: 0px 0px !important;
+}
+
+/* OpenID Connect Portal Styles */
+.oidc-logo {
+    color: #ffffff;
+    font-size: 15px;
+    padding-bottom: 5px;
+    margin-top: -7px;
+}
+
+.oidc-container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+@media (min-width: 1280px) {
+    .oidc-container {
+        width: 1260px;
+    }
+}
+
+@media (min-width: 768px) {
+    .nxn-bnym-logo,
+    .nxn-header-logo {
+        background-image: url("../img/logo_nxn_sm.png");
+        background-position: left -2px;
+        background-repeat: no-repeat;
+        width: 270px;
+        height: 34px;
+    }
+}
+
+.nxn-bnym-logo,
+.nxn-header-logo {
+    display: inline-block;
+    background-image: url("../img/logo_nxn_sm.png");
+    background-position: left 7px;
+    background-repeat: no-repeat;
+    width: 126px;
+    height: 25px;
+}
+
+.hyper-link {
+    font-size: 12px;
+    color: #fff;
+}
+
+.fa {
+    color: #fe8e75;
+}
+
+.oidc-tabset {
+    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    padding: 15px 15px 15px 15px;
+    background-color: #ffffff;
+    margin-bottom: 20px;
+    border: 0 solid #cfcfcf;
+    border-radius: 2px;
+}
+
+.errorMessage {
+    color: #fe8e75;
+}
+
+.error-span {
+    font-size: 14px;
+}
+
+.jumbotron p {
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: 200;
+}
+
+.successMessage {
+    color: #008000;
+}
+
+.user-info {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.sign-in-links {
+    text-align: right;
+}
+
+/* for warning banner */
+.nxn-alert-directive {
+    padding: 5px 2px 7px 60px;
+    font-size: 13px;
+}
+
+.nxn-fa-icons {
+    font-size: 20px;
+}
+
+.nxn-herotext-tagline-welcome {
+    margin-bottom: 0;
+    color: #ffffff;
+    font-size: 0.7em;
+}
+
+.nxn-herotext-tagline-info {
+    margin-bottom: 0px;
+    padding-top: 4%;
+    color: oldlace;
+    font-size: 0.4em;
+}
+
+.about-us-link {
+    color: #89b5e6;
+}
+
+.table-of-contents a {
+    display: block;
+}
+
+.help-img {
+    max-width: 100%;
+    height: auto;
+    width: auto\9;
+}
+
+.nxn-btn-primary.disabled,
+.btn.disabled,
+.nxn-btn-primary[disabled],
+.btn[disabled],
+fieldset[disabled] .nxn-btn-primary,
+fieldset[disabled] .btn,
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn,
+.nxn-btn-primary.disabled,
+.nxn-btn-primary[disabled],
+fieldset[disabled] .nxn-btn-primary,
+.nxn-btn-secondary.disabled,
+.nxn-btn-secondary[disabled],
+fieldset[disabled] .nxn-btn-secondary {
+    color: #777777;
+    color: rgba(0, 0, 0, 0.4);
+    background-color: #1b7481;
+    border-color: #1b7481;
+    opacity: 1;
+    filter: alpha(opacity=100);
+    -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.index-container {
+    padding: 2px;
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<License>
+  <Data>
+    <LicensedTo>Bank of New York</LicensedTo>
+    <EmailTo>DEPLOYMENT_PROVISIONING@BNYMELLON.COM</EmailTo>
+    <LicenseType>Site Small Business</LicenseType>
+    <LicenseNote>Limited to 10 physical locations, not to exceed 10 developers</LicenseNote>
+    <OrderID>150507171836</OrderID>
+    <UserID>300746</UserID>
+    <OEM>This is not a redistributable license</OEM>
+    <Products>
+      <Product>Aspose.Pdf for .NET</Product>
+    </Products>
+    <EditionType>Enterprise</EditionType>
+    <SerialNumber>40bf988e-24a8-402c-8ee0-d594c635a41f</SerialNumber>
+    <SubscriptionExpiry>20160507</SubscriptionExpiry>
+    <LicenseVersion>3.0</LicenseVersion>
+    <LicenseInstructions>http://www.aspose.com/corporate/purchase/license-instructions.aspx</LicenseInstructions>
+  </Data>
+  <Signature>lLtQIAx4N3OeeJQQJCtPifZzI1a+RP2mmvV+PEX0bMzYviYA2fbwuwbB8uv5Xtogl3A+FRA5luz/DvC21AxJ13SOUOl9qIxNgO4i1A/TqympKflQdLOBhn/rmiwckcGzpmHEZMocKEgCZvV7c9p7KWsFVino0txg5YniFdpmNiU=</Signature>
+</License>

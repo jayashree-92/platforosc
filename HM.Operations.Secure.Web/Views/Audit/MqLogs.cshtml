@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+    ViewBag.Title = "MQ Logs";
+}
+
+<div ng-controller="MQLogsCtrl">
+
+    <h4 style="display: inline-block"> MQ Logs /</h4>
+    <span id="inboundLogDateRange" class="dateRangeSelector">
+        <i class="glyphicon glyphicon-calendar"></i>
+        <span></span>&nbsp;<b class="caret" style="padding-bottom: 1px;"></b>
+    </span>
+    &nbsp;<h4 style="display: inline-block">/</h4>&nbsp;
+    <button id="btnGetInboundLogs" class="btn btn-sm btn-primary" ng-click="fnGetInboundLogs()" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-refresh"></i>&nbsp;Get Logs</button>
+    <hr class="dashHr" />
+
+    <div class="panel">
+        <div class="panel-body">
+            <table id="tblInboundLogsDetails" class="table table-bordered table-striped"><tfoot></tfoot></table>
+        </div>
+    </div>
+</div>
+
+@section Javascript{
+    <script src="~/Scripts/OpsSecure/MQLog.js"></script>
+}
