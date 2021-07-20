@@ -60,6 +60,15 @@ namespace HM.Operations.Secure.Middleware
                     .Include(x => x.hmsSSICallbacks)
                     .First(template => template.onBoardingSSITemplateId == templateId);
 
+
+                if (!string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryType) && !string.IsNullOrWhiteSpace(ssiTemplate.UltimateBeneficiaryAccountName) && ssiTemplate.UltimateBeneficiaryType == "Account Name")
+                {
+                    if (ssiTemplate.UltimateBeneficiary == null)
+                        ssiTemplate.UltimateBeneficiary = new onBoardingAccountBICorABA();
+
+                    ssiTemplate.UltimateBeneficiary.BankAddress = context.hmsBankAccountAddresses.Where(s => s.AccountName == ssiTemplate.UltimateBeneficiaryAccountName).Select(s => s.AccountAddress ?? string.Empty).FirstOrDefault();
+                }
+
                 return SetSSITemplateDefaults(ssiTemplate);
             }
         }

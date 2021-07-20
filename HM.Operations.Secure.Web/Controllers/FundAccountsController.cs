@@ -144,15 +144,16 @@ namespace HM.Operations.Secure.Web.Controllers
 
         }
 
+
         public JsonResult GetOnBoardingAccount(long accountId)
         {
             var onBoardingAccount = FundAccountManager.GetOnBoardingAccount(accountId);
-
+            var registedAddress = WireDataManager.GetFundRegistedAddress(onBoardingAccount.hmFundId);
             return Json(new
             {
                 OnBoardingAccount = onBoardingAccount,
-                isAuthorizedUserToApprove = (User.IsWireApprover() && onBoardingAccount.onBoardingAccountStatus == "Pending Approval" && onBoardingAccount.CreatedBy != UserName && onBoardingAccount.UpdatedBy != UserName)
-
+                isAuthorizedUserToApprove = (User.IsWireApprover() && onBoardingAccount.onBoardingAccountStatus == "Pending Approval" && onBoardingAccount.CreatedBy != UserName && onBoardingAccount.UpdatedBy != UserName),
+                registedAddress
             }, JsonContentType, JsonContentEncoding);
         }
 

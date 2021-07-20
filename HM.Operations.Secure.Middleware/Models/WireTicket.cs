@@ -195,7 +195,13 @@ namespace HM.Operations.Secure.Middleware.Models
         public string FundRegisterAddress { get; set; }
 
         //Populated from  hmsBankAccountAddress
-        public string ReceivingSsiUltimateBeneAccountAddress { get; set; }
+        public string ReceivingSsiUltimateBeneAccountAddress
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(SSITemplate.UltimateBeneficiaryType) && SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.UltimateBeneficiary.BankAddress : string.Empty;
+            }
+        }
 
         public List<FormattedSwiftMessage> SwiftMessages { get; set; }
 

@@ -774,6 +774,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.onBoardingAccountDetails = [];
         $scope.fnPreloadAccountData().then($scope.fnInitPreLoadEvents());
         $scope.isAuthorizedUserToApprove = false;
+        $scope.FundRegistedAddress = "";
         $scope.isEdit = false;
         $scope.isStatusUpdate = false;
         $scope.CounterpartyFamilyName = "";
@@ -822,16 +823,19 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $http.get("/FundAccounts/GetOnBoardingAccount?accountId=" + $scope.onBoardingAccountId).then(function (response) {
             var account = response.data.OnBoardingAccount;
+
             //$(".accntActions button").hide();
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
+            $scope.FundRegistedAddress  = response.data.registedAddress;
+
             if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val())
                 $("#btnApprove").show();
 
             if (account.CashSweepTime != null && account.CashSweepTime != "" && account.CashSweepTime != undefined) {
                 //var times = account.CashSweepTime.split(':');
                 account.CashSweepTime = new Date(2014, 0, 1, account.CashSweepTime.Hours, account.CashSweepTime.Minutes, account.CashSweepTime.Seconds);
-
             }
+
             if (account.WirePortalCutoff.CutoffTime != null && account.WirePortalCutoff.CutoffTime != "" && account.WirePortalCutoff.CutoffTime != undefined) {
                 //var cutoffTimes = account.CutoffTime.split(':');
                 account.WirePortalCutoff.CutoffTime = new Date(2014, 0, 1, account.WirePortalCutoff.CutoffTime.Hours, account.WirePortalCutoff.CutoffTime.Minutes, account.WirePortalCutoff.CutoffTime.Seconds);

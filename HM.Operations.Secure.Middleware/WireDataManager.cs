@@ -228,6 +228,13 @@ namespace HM.Operations.Secure.Middleware
             return string.Format("{0}DMO{1}", environmentStr, wireIdStr);
         }
 
+        public static string GetFundRegistedAddress(long hmFundId)
+        {
+            using (var context = new OperationsContext())
+            {
+                return context.vw_HFundOps.Where(s => s.hmFundId == hmFundId).Select(s => s.RegisterAddress).FirstOrDefault();
+            }
+        }
 
         public static WireTicket GetWireData(long wireId)
         {
@@ -264,6 +271,7 @@ namespace HM.Operations.Secure.Middleware
                 hmWire.hmsWireLogs = context.hmsWireLogs.Where(s => s.hmsWireId == wireId).ToList();
             }
 
+
             hmWire.SendingAccount = FundAccountManager.GetOnBoardingAccount(hmWire.OnBoardAccountId);
 
             if (hmWire.ReceivingOnBoardAccountId != null)
@@ -271,6 +279,7 @@ namespace HM.Operations.Secure.Middleware
 
             if (hmWire.OnBoardSSITemplateId != null)
                 hmWire.ReceivingSSITemplate = SSITemplateManager.GetSsiTemplate(hmWire.OnBoardSSITemplateId ?? 0);
+
 
             hmWire.hmsWireLogs.ForEach(s =>
             {
@@ -342,6 +351,7 @@ namespace HM.Operations.Secure.Middleware
             {
                 HMWire = hmWire,
                 //Agreement = wireAgreement,
+                FundRegisterAddress = GetFundRegistedAddress(hmWire.hmFundId),
                 SendingAccount = hmWire.SendingAccount,
                 ReceivingAccount = hmWire.WireTransferTypeId == 2 ? hmWire.ReceivingAccount : new onBoardingAccount(),
                 SSITemplate = hmWire.ReceivingSSITemplate ?? new onBoardingSSITemplate(),
