@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
-using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
@@ -250,7 +249,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     Directory.CreateDirectory(fileInfo.Directory.FullName);
 
                 file.SaveAs(fileInfo.FullName);
-                var templateListRows = new Parser().ParseAsRows(fileInfo, "List of SSI Template", string.Empty, true);
+                var templateListRows =  ReportDeliveryManager.ParseAsRows(fileInfo, "List of SSI Template", string.Empty, true);
 
                 if (templateListRows.Count > 0)
                 {
@@ -425,7 +424,7 @@ namespace HM.Operations.Secure.Web.Controllers
             contentToExport.Add("List of SSI Template", templateListRows);
 
             //Export the account file
-            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo, true);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
@@ -551,7 +550,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
             contentToExport.Add("List of SSI Template", accountListRows);
             //Export the checklist file
-            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 

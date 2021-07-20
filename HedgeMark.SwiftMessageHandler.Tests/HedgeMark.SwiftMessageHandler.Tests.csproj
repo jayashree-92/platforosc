@@ -125,6 +125,10 @@
       <Project>{f4b70a85-b67c-412f-bcad-22db58e1110a}</Project>
       <Name>HedgeMark.SwiftMessageHandler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HM.Operations.Secure.Middleware\HM.Operations.Secure.Middleware.csproj">
+      <Project>{e16cb811-24a6-4439-a807-f52c209afe35}</Project>
+      <Name>HM.Operations.Secure.Middleware</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

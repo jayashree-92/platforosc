@@ -4,7 +4,6 @@ using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
@@ -149,7 +148,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, ".xlsx"));
             contentToExport.Add("Wire Portal CutOff Data", accountListRows);
             //Export the checklist file
-            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo, true);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 

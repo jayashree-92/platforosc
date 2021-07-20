@@ -16,6 +16,22 @@ namespace HM.Operations.Secure.Middleware
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(ReportDeliveryManager));
 
+        public static List<Row> ParseAsRows(FileInfo fileInfo, string sheetname, string password, bool isFirstLineHeader)
+        {
+            return new Parser().ParseAsRows(fileInfo, sheetname, password, isFirstLineHeader);
+        }
+
+        public static void CreateExportFile(Dictionary<string, List<Row>> contentToExport, FileInfo exportFileInfo, bool shouldUseExportHeader = true)
+        {
+            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, shouldUseExportHeader);
+        }
+
+        public static void CreateExportFile(List<Row> rowData, string tabName, FileInfo exportFileInfo, bool shouldExcludeIsExportable = true)
+        {
+            var contentToExport = new ExportContent() { Rows = rowData, TabName = tabName };
+            ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
+        }
+
         public static void CreateExportFile(ExportContent contentToExport, FileInfo exportFileInfo, bool shouldExcludeIsExportable = true)
         {
             if (exportFileInfo.Extension.ToLower() == ".csv" || exportFileInfo.Extension.ToLower() == ".txt")

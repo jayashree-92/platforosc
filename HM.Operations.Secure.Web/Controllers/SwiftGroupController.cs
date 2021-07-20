@@ -5,7 +5,6 @@ using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
@@ -147,11 +146,10 @@ namespace HM.Operations.Secure.Web.Controllers
             var accountListRows = BuildExportRows(swiftGroupData);
             //File name and path
             var fileName = string.Format("{0}_{1:yyyyMMdd}", "SwiftGroupData", DateTime.Now);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath,
-                fileName, ".xlsx"));
+            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, ".xlsx"));
             contentToExport.Add("Swift Group Data", accountListRows);
             //Export the file
-            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo, true);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 

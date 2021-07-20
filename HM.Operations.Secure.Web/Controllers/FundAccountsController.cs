@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
-using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
@@ -592,7 +591,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
             //Export the checklist file
 
-            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
@@ -605,7 +604,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var fileName = string.Format("AccountBICorABAList_{0:yyyyMMdd}", DateTime.Now);
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
 
-            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo, true);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
@@ -640,7 +639,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var fileName = string.Format("Bank Account Address List_{0:yyyyMMdd}", DateTime.Now);
             var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
 
-            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo, true);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
@@ -813,7 +812,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
                 file.SaveAs(fileInfo.FullName);
 
-                var accountRows = new Parser().ParseAsRows(fileInfo, "List of Accounts", string.Empty, true);
+                var accountRows = ReportDeliveryManager.ParseAsRows(fileInfo, "List of Accounts", string.Empty, true);
 
                 if (accountRows.Count > 0)
                 {
@@ -1112,7 +1111,7 @@ namespace HM.Operations.Secure.Web.Controllers
             contentToExport.Add("List of Accounts", accountListRows);
 
             //Export the account file
-            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, true);
+            ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo, true);
             return DownloadAndDeleteFile(exportFileInfo);
         }
 

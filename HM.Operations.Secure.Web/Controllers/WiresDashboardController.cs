@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
 using HM.Operations.Secure.Middleware.Models;
-using HM.Operations.Secure.Middleware.Util;
 using HM.Operations.Secure.Web.Utility;
 
 namespace HM.Operations.Secure.Web.Controllers
@@ -90,18 +88,6 @@ namespace HM.Operations.Secure.Web.Controllers
             });
         }
 
-        //public JsonResult GetAgreementTypes(List<long> fundIds)
-        //{
-        //    var authFundIds = AuthorizedDMAFundData.Select(s => s.HmFundId).ToList();
-        //    var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => fundIds.Contains(-1) || fundIds.Contains(s.hmFundId)).ToList();
-        //    var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
-
-        //    return Json(new List<DashboardReport.Preferences>()
-        //    {
-        //        new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.AccountTypes.ToString(),Options = agreementTypes},
-        //    });
-        //}
-
         public JsonResult GetWireLogData(DateTime startDate, DateTime endDate, Dictionary<DashboardReport.PreferenceCode, string> searchPreference, string timeZone)
         {
             var wireData = WireDashboardManager.GetWireTickets(startDate, endDate, AuthorizedSessionData.IsPrivilegedUser, searchPreference, false, timeZone, AuthorizedDMAFundData);
@@ -119,12 +105,11 @@ namespace HM.Operations.Secure.Web.Controllers
 
             foreach (var row in rowData)
             {
-                row["Wire Status"] = row["Wire Status"].StripHtml();
-                row["Swift Status"] = row["Swift Status"].StripHtml();
+                row["Wire Status"] = Middleware.Util.Utility.StripHtml(row["Wire Status"]);
+                row["Swift Status"] = Middleware.Util.Utility.StripHtml(row["Swift Status"]);
             }
 
-            var contentToExport = new ExportContent() { Rows = rowData, TabName = "Wires Data" };
-            ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
+            ReportDeliveryManager.CreateExportFile(rowData, "Wires Data", exportFileInfo);
             return DownloadAndDeleteFile(exportFileInfo);
         }
     }
