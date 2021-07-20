@@ -189,7 +189,7 @@ Task("package")
     .IsDependentOn("sonarqube-end")
     .Does(() =>
     { 
-                  MSBuild("./HedgeMark.Operations.Secure.Web/HMOSecureWeb.csproj", settings => 
+                  MSBuild("./HM.Operations.Secure.Web/HM.Operations.Secure.Web.csproj", settings => 
                       settings.SetConfiguration(configuration)
             .UseToolVersion(MSBuildToolVersion.VS2019) 
             .WithTarget("WebPublish")
