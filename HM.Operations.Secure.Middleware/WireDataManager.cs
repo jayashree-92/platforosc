@@ -351,7 +351,7 @@ namespace HM.Operations.Secure.Middleware
             {
                 HMWire = hmWire,
                 //Agreement = wireAgreement,
-                FundRegisterAddress = GetFundRegistedAddress(hmWire.hmFundId),
+                FundRegisterAddress = hFund.RegisteredAddress,
                 SendingAccount = hmWire.SendingAccount,
                 ReceivingAccount = hmWire.WireTransferTypeId == 2 ? hmWire.ReceivingAccount : new onBoardingAccount(),
                 SSITemplate = hmWire.ReceivingSSITemplate ?? new onBoardingSSITemplate(),

@@ -723,8 +723,9 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var onboardAccount = FundAccountManager.GetOnBoardingAccount(onBoardingAccountId);
             var deadlineToApprove = WireDataManager.GetDeadlineToApprove(onboardAccount, valueDate);
+            var registerdAddress = WireDataManager.GetFundRegistedAddress(onboardAccount.hmFundId);
 
-            return Json(new { onboardAccount, deadlineToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.hmsWirePortalCutoffId == 0 || onboardAccount.WirePortalCutoff.IsApproved });
+            return Json(new { onboardAccount, deadlineToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.hmsWirePortalCutoffId == 0 || onboardAccount.WirePortalCutoff.IsApproved, registerdAddress });
         }
 
         public JsonResult GetCashBalances(long sendingAccountId, DateTime valueDate)

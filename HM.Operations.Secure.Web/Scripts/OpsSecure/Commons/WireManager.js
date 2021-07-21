@@ -173,6 +173,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
             $scope.castToDate($scope.wireTicketObj.SendingAccount);
             $scope.accountDetail = angular.copy($scope.wireTicketObj.SendingAccount);
+
+            $scope.FundRegistedAddress = $scope.wireTicketObj.FundRegisterAddress;
+
             if ($scope.wireTicketObj.IsFundTransfer) {
                 $scope.castToDate($scope.wireTicketObj.ReceivingAccount);
                 $scope.receivingAccountDetail = angular.copy($scope.wireTicketObj.ReceivingAccount);
@@ -1458,6 +1461,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     });
 
     $scope.DeadlineToApprove = {};
+    $scope.FundRegistedAddress = "";
 
     angular.element(document).on("change", "#liSendingAccount", function () {
 
@@ -1529,6 +1533,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $http.get("/Home/GetFundAccount?onBoardingAccountId=" + $scope.WireTicket.OnBoardAccountId + "&valueDate=" + $("#wireValueDate").text()).then(function (response) {
 
                     var account = response.data.onboardAccount;
+                    $scope.FundRegistedAddress = response.data.registerdAddress;
                     $scope.fnSetWireCutOffDetails(response.data.deadlineToApprove, response.data.IsWireCutOffApproved);
 
                     $scope.DeadlineToApprove = response.data.deadlineToApprove;
