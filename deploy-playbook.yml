@@ -62,6 +62,24 @@
         remote_src: yes    
       when: appDir03 is defined
 
+    - name: "Clean Up Deploy Folder"
+      win_file:
+        path: "{{ appDir01 }}"
+        state: absent
+      when: appDir01 is defined
+
+    - name: "Clean Up Deploy Folder"
+      win_file:
+        path: "{{ appDir02 }}"
+        state: absent
+      when: appDir02 is defined
+
+    - name: "Clean Up Deploy Folder"
+      win_file:
+        path: "{{ appDir03 }}"
+        state: absent
+      when: appDir03 is defined
+
     - name: call this task to copy source code to Ops Deployment Path
       win_copy:
         src: "{{nexus_code_available_path}}/artifacts/"
