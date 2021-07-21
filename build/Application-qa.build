@@ -24,9 +24,9 @@
    <property name="sql.svr" value="WSOMQCLDMUSQL02\MSDMUQ07"/> 
 
   <target name="cleanAndDeployPackage" >	
-	<nant buildfile="TestBuildAndPublish.build" />  
+	<!--<nant buildfile="TestBuildAndPublish.build" /> --> 
 	<nant buildfile="SQL-UAT.Build" />  
-	<nant buildfile="CleanAndDeployPackage.build" />
+	<!--<nant buildfile="CleanAndDeployPackage.build" />-->
   </target>
   
 </project>

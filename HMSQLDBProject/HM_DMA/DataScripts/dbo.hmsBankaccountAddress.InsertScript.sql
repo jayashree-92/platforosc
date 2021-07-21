@@ -3,7 +3,7 @@ IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME= 'onBoar
 BEGIN
      
 	SELECT * INTO dmabackup.onBoardingSSITemplate_bkup_allData_v13_0 FROM onBoardingSSITemplate
-	SELECT  ROW_NUMBER() OVER (ORDER BY ssi.onBoardingSSITemplateId) AS RowId,SSI.*  FROM onBoardingSSITemplate ssi WHERE UltimateBeneficiaryType='Account Name' and UltimateBeneficiaryAccountName is not null
+	SELECT  ROW_NUMBER() OVER (ORDER BY ssi.onBoardingSSITemplateId) AS RowId,SSI.* INTO DMABackup.onBoardingSSITemplate_bkup_v13_0  FROM onBoardingSSITemplate ssi WHERE UltimateBeneficiaryType='Account Name' and UltimateBeneficiaryAccountName is not null
 	DECLARE @count INT,@i INT = 1
 
 	SELECT @count = (SELECT COUNT(*) FROM DMABackup.onBoardingSSITemplate_bkup_v13_0)

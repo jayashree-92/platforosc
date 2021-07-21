@@ -23,7 +23,7 @@
    <property name="sql.DB" value="HM_WIRES"/>
 
   <target name="cleanAndDeployPackage" >	
-	<nant buildfile="TestBuildAndPublish.build" />  
+	 <!--<nant buildfile="TestBuildAndPublish.build" />  -->
 	
 	<nant buildfile="SQL.Build">
 		<properties>
@@ -42,7 +42,7 @@
     </properties>
 	</nant>
 	
-	<nant buildfile="CleanAndDeployPackage.build" />
+	<!--<nant buildfile="CleanAndDeployPackage.build" />-->
   </target>
   
 </project>
