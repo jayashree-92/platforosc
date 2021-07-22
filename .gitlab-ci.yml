@@ -61,7 +61,7 @@ variables:
  NEXUS_ARTIFACT_EXTENSION: 'zip'
  SOURCE_CODE_LANGUAGE: 'dotnet'
  DEPLOYMENT_HOSTS_TEST: 'wt81b10086tv00.ams.bnymellon.net:wt81b10085tv00.ams.bnymellon.net'
- DEPLOYMENT_HOSTS_QA: 'wt85b10254qv00.ams.bnymellon.net:wt85b10255qv00.ams.bnymellon.net'
+ DEPLOYMENT_HOSTS_QA: 'wt85b10254qv00.ams.bnymellon.net:wt85b10255qv00.ams.bnymellon.net:wc08a10003pv00.ams.bnymellon.net:ams.bnymellon.net'
  VM_PLATFORM: 'windows'
  OPERATOR_ID: 'dmum76m'
  CI_ENVIRONMENT_NAME: 'test'
