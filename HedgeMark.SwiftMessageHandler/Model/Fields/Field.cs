@@ -71,7 +71,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             return this;
         }
 
-        protected static string RemoveInvalidXCharacterSet(string inputLine)
+        public static string RemoveInvalidXCharacterSet(string inputLine)
         {
             if (string.IsNullOrWhiteSpace(inputLine))
                 return inputLine;

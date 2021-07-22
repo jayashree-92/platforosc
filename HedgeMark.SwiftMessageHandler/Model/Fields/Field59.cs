@@ -30,5 +30,10 @@
         {
             return setNameAndAddressLine3(this, nameAndAddressLine3);
         }
+
+        public Field59 setNameAndAddressLine4(string nameAndAddressLine4)
+        {
+            return setNameAndAddressLine4(this, nameAndAddressLine4);
+        }
     }
 }

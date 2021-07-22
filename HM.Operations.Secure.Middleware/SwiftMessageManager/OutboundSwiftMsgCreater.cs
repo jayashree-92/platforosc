@@ -10,13 +10,15 @@ using HedgeMark.SwiftMessageHandler.Model.MT.MT2XX;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT5XX;
 using HM.Operations.Secure.Middleware.Models;
 using HM.Operations.Secure.Middleware.Util;
+using Extensions = HedgeMark.SwiftMessageHandler.Utils.Extensions;
 
 namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 {
     public class OutboundSwiftMsgCreator
     {
         protected static readonly string HMBIC = ConfigurationManagerWrapper.StringSetting("HMBIC", "HMRKUS30");
-        protected static readonly string HMBICSender = string.Format("{0}{1}", HMBIC, ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX"));
+        protected static readonly string HMBICSender =
+            $"{HMBIC}{ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX")}";
         public static AbstractMT CreateMessage(WireTicket wire, string messageType, string originalMessageType, string referenceTag = "")
         {
             switch (messageType)
@@ -48,7 +50,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                     return CreateMt542(wire);
             }
 
-            throw new InvalidDataException(string.Format("Wire Message type {0} not handled", messageType));
+            throw new InvalidDataException($"Wire Message type {messageType} not handled");
         }
 
         private static Field11S GetField11S(WireTicket wire)
@@ -62,7 +64,8 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         private static Field20 GetField20(WireTicket wire, string referenceTag = "")
         {
             var transactionId = WireDataManager.GetWireTransactionId(wire.WireId);
-            return new Field20(string.Format("{0}{1}{2}", transactionId, string.IsNullOrWhiteSpace(referenceTag) ? string.Empty : "/", referenceTag));
+            return new Field20(
+                $"{transactionId}{(string.IsNullOrWhiteSpace(referenceTag) ? string.Empty : "/")}{referenceTag}");
         }
 
         private static Field21 GetField21ForCancellation(WireTicket wire)
@@ -122,10 +125,13 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             var isFFCAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber);
             var isFFCNameAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCName);
 
-            var f50K = new Field50K().setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
-                .setNameAndAddressLine1(isFFCNameAvailable ? wire.SendingAccount.FFCName : wire.SendingAccount.UltimateBeneficiaryAccountName)
-                .setNameAndAddressLine2(wire.SendingAccount.UltimateBeneficiary.BankAddress)
-                .setNameAndAddressLine3(wire.FundRegisterAddress);
+            var nameAndAddress = isFFCNameAvailable ? wire.SendingAccount.FFCName : wire.SendingAccount.UltimateBeneficiaryAccountName;
+            nameAndAddress += $"\n{wire.SendingAccount.UltimateBeneficiary.BankAddress}";
+            nameAndAddress += $"\n{wire.FundRegisterAddress}";
+
+            var f50K = new Field50K()
+                .setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
+                .setNameAndAddress(nameAndAddress);
 
             return f50K;
         }
@@ -159,16 +165,17 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             return f52A;
         }
 
-
         private static Field52D GetField52D(WireTicket wire)
         {
             var isFFCAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber);
             var isFFCNameAvailable = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCName);
 
+            var nameAndAddress = isFFCNameAvailable ? wire.SendingAccount.FFCName : wire.SendingAccount.UltimateBeneficiaryAccountName;
+            nameAndAddress += $"\n{wire.FundRegisterAddress}";
+
             var f52D = new Field52D()
                 .setAccount(isFFCAvailable ? wire.SendingAccount.FFCNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
-                .setNameAndAddressLine1(isFFCNameAvailable ? wire.SendingAccount.FFCName : wire.SendingAccount.UltimateBeneficiaryAccountName)
-                .setNameAndAddressLine2(wire.FundRegisterAddress);
+                .setNameAndAddress(nameAndAddress);
 
             return f52D;
         }
@@ -249,14 +256,14 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 ? wire.ReceivingAccount.IntermediaryType == "ABA" ? wire.ReceivingAccount.Intermediary.BICorABA : string.Empty
                 : wire.SSITemplate.IntermediaryType == "ABA" ? wire.SSITemplate.Intermediary.BICorABA : string.Empty;
 
-            var f56D = new Field56D().setAccount(!string.IsNullOrWhiteSpace(interBicOrAba) ? string.Format("/FW{0}", interBicOrAba) : string.Empty);
+            var f56D = new Field56D().setAccount(!string.IsNullOrWhiteSpace(interBicOrAba) ? $"/FW{interBicOrAba}" : string.Empty);
 
             if (string.IsNullOrWhiteSpace(interBicOrAba))
                 return f56D;
 
             var nameAndAddressed = wire.IsFundTransfer
-                ? string.Format("{0}\n{1}", wire.ReceivingAccount.Intermediary.BankName, wire.ReceivingAccount.Intermediary.BankAddress)
-                : string.Format("{0}\n{1}", wire.SSITemplate.Intermediary.BankName, wire.SSITemplate.Intermediary.BankAddress);
+                ? $"{wire.ReceivingAccount.Intermediary.BankName}\n{wire.ReceivingAccount.Intermediary.BankAddress}"
+                : $"{wire.SSITemplate.Intermediary.BankName}\n{wire.SSITemplate.Intermediary.BankAddress}";
 
             f56D.setNameAndAddress(nameAndAddressed);
             return f56D;
@@ -277,14 +284,15 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 ? wire.ReceivingAccount.BeneficiaryType == "ABA" ? wire.ReceivingAccount.Beneficiary.BICorABA : string.Empty
                 : wire.SSITemplate.BeneficiaryType == "ABA" ? wire.SSITemplate.Beneficiary.BICorABA : string.Empty;
 
-            var f57D = new Field57D().setAccount(!string.IsNullOrWhiteSpace(beneficiaryBicOrAba) ? string.Format("/FW{0}", beneficiaryBicOrAba) : string.Empty);
+            var f57D = new Field57D().setAccount(!string.IsNullOrWhiteSpace(beneficiaryBicOrAba) ? $"/FW{beneficiaryBicOrAba}"
+                : string.Empty);
 
             if (string.IsNullOrWhiteSpace(beneficiaryBicOrAba))
                 return f57D;
 
             var nameAndAddressed = wire.IsFundTransfer
-                ? string.Format("{0}\n{1}", wire.ReceivingAccount.Beneficiary.BankName, wire.ReceivingAccount.Beneficiary.BankAddress)
-                : string.Format("{0}\n{1}", wire.SSITemplate.Beneficiary.BankName, wire.SSITemplate.Beneficiary.BankAddress);
+                ? $"{wire.ReceivingAccount.Beneficiary.BankName}\n{wire.ReceivingAccount.Beneficiary.BankAddress}"
+                : $"{wire.SSITemplate.Beneficiary.BankName}\n{wire.SSITemplate.Beneficiary.BankAddress}";
 
             f57D.setNameAndAddress(nameAndAddressed);
 
@@ -309,21 +317,22 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 : wire.SSITemplate.UltimateBeneficiaryType == "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiary.BICorABA);
 
             var f58D = new Field58D()
-                .setAccount(isAbaAvailable ? string.Format("/FW{0}", wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiary.BICorABA : wire.SSITemplate.UltimateBeneficiary.BICorABA)
+                .setAccount(isAbaAvailable ? $"/FW{(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiary.BICorABA : wire.SSITemplate.UltimateBeneficiary.BICorABA)}"
                     : wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountNumber : wire.SSITemplate.UltimateBeneficiaryAccountNumber);
 
             if (!isAbaAvailable)
             {
-                f58D.setNameAndAddress(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountName : wire.SSITemplate.UltimateBeneficiaryAccountName)
-                    .setNameAndAddressLine1(wire.IsFundTransfer ? wire.FundRegisterAddress : wire.ReceivingSsiUltimateBeneAccountAddress);
+                f58D.setNameAndAddress(wire.IsFundTransfer
+                    ? $"{wire.ReceivingAccount.UltimateBeneficiaryAccountName}\n{wire.FundRegisterAddress}"
+                    : $"{wire.SSITemplate.UltimateBeneficiaryAccountName}\n{wire.ReceivingSsiUltimateBeneAccountAddress}");
             }
 
             if (!isAbaAvailable)
                 return f58D;
 
             var nameAndAddressed = wire.IsFundTransfer
-                ? string.Format("{0}\n{1}", wire.ReceivingAccount.UltimateBeneficiary.BankName, wire.ReceivingAccount.UltimateBeneficiary.BankAddress)
-                : string.Format("{0}\n{1}", wire.SSITemplate.UltimateBeneficiary.BankName, wire.SSITemplate.UltimateBeneficiary.BankAddress);
+                ? $"{wire.ReceivingAccount.UltimateBeneficiary.BankName}\n{wire.ReceivingAccount.UltimateBeneficiary.BankAddress}"
+                : $"{wire.SSITemplate.UltimateBeneficiary.BankName}\n{wire.SSITemplate.UltimateBeneficiary.BankAddress}";
 
             f58D.setNameAndAddress(nameAndAddressed);
 
@@ -334,8 +343,9 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         {
             var f59 = new Field59()
                 .setAccount(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountNumber : wire.SSITemplate.UltimateBeneficiaryAccountNumber)
-                .setNameAndAddressLine1(wire.IsFundTransfer ? wire.ReceivingAccount.UltimateBeneficiaryAccountName : wire.SSITemplate.UltimateBeneficiaryAccountName)
-                .setNameAndAddressLine2(wire.IsFundTransfer ? wire.FundRegisterAddress : wire.ReceivingSsiUltimateBeneAccountAddress);
+                .setNameAndAddress(wire.IsFundTransfer
+                    ? $"{wire.ReceivingAccount.UltimateBeneficiaryAccountName}\n{wire.FundRegisterAddress}"
+                    : $"{wire.SSITemplate.UltimateBeneficiaryAccountName}\n{wire.ReceivingSsiUltimateBeneAccountAddress}");
 
             return f59;
         }
@@ -406,51 +416,56 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 {
                     case 0:
                         narrativeLine = wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral
-                            ? string.Format("/{0}/{1}", wire.DefaultSenderInformation, wire.ShouldIncludeWirePurpose ? wire.CollateralPaymentReason : wire.ShortFundName)
-                            : string.Format("/{0}/{1}", wire.DefaultSenderInformation, wire.ShouldIncludeWirePurpose ? wire.HMWire.hmsWirePurposeLkup.Purpose : ffcNumber);
+                            ? $"/{wire.DefaultSenderInformation}/{(wire.ShouldIncludeWirePurpose ? wire.CollateralPaymentReason : wire.ShortFundName)}"
+                            : $"/{wire.DefaultSenderInformation}/{(wire.ShouldIncludeWirePurpose ? wire.HMWire.hmsWirePurposeLkup.Purpose : ffcNumber)}";
 
                         f72.setNarrativeLine1(narrativeLine.Length > 30 ? narrativeLine.Substring(0, 30) : narrativeLine);
                         break;
                     case 1:
                         {
                             if (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral)
-                                narrativeLine = string.Format("{0}", wire.ShouldIncludeWirePurpose ? wire.ShortFundName : ffcNumber);
+                                narrativeLine = $"{(wire.ShouldIncludeWirePurpose ? wire.ShortFundName : ffcNumber)}";
                             else if (wire.ShouldIncludeWirePurpose)
-                                narrativeLine = string.Format("{0}", (!string.IsNullOrEmpty(ffcNumber) ? ffcNumber : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty));
+                                narrativeLine =
+                                    $"{(!string.IsNullOrEmpty(ffcNumber) ? ffcNumber : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
                             else
-                                narrativeLine = string.Format("{0}", (!string.IsNullOrEmpty(ffcName) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty));
+                                narrativeLine =
+                                    $"{(!string.IsNullOrEmpty(ffcName) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
                             if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
-                                f72.setNarrativeLine2(string.Format("//{0}", narrativeLine.Length > 33 ? narrativeLine.Substring(0, 33) : narrativeLine));
+                                f72.setNarrativeLine2(
+                                    $"//{(narrativeLine.Length > 33 ? narrativeLine.Substring(0, 33) : narrativeLine)}");
                             break;
                         }
                     case 2:
                         narrativeLine = wire.ShouldIncludeWirePurpose
-                            ? string.Format("{0}", !string.IsNullOrEmpty(ffcName) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)
-                            : string.Format("{0}", !string.IsNullOrEmpty(reference) ? reference : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty);
+                            ? $"{(!string.IsNullOrEmpty(ffcName) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}"
+                            : $"{(!string.IsNullOrEmpty(reference) ? reference : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
                         if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
-                            f72.setNarrativeLine3(string.Format("//{0}", narrativeLine));
+                            f72.setNarrativeLine3($"//{narrativeLine}");
                         break;
                     case 3:
                         narrativeLine = wire.ShouldIncludeWirePurpose
-                            ? string.Format("{0}", !string.IsNullOrEmpty(reference) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)
-                            : string.Format("{0}", descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty);
+                            ? $"{(!string.IsNullOrEmpty(reference) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}"
+                            : $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
                         if (!string.IsNullOrWhiteSpace(narrativeLine))
-                            f72.setNarrativeLine4(string.Format("//{0}", narrativeLine));
+                            f72.setNarrativeLine4($"//{narrativeLine}");
                         break;
                     case 4:
-                        narrativeLine = string.Format("{0}", descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty);
+                        narrativeLine =
+                            $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
                         if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
-                            f72.setNarrativeLine5(string.Format("//{0}", narrativeLine));
+                            f72.setNarrativeLine5($"//{narrativeLine}");
                         break;
                     case 5:
-                        narrativeLine = string.Format("{0}", descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty);
+                        narrativeLine =
+                            $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
                         if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
-                            f72.setNarrativeLine6(string.Format("//{0}", narrativeLine));
+                            f72.setNarrativeLine6($"//{narrativeLine}");
                         break;
                     default: break;
                 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using HedgeMark.SwiftMessageHandler.Model.Fields;
 
 namespace HedgeMark.SwiftMessageHandler.Utils
 {
@@ -71,7 +72,7 @@ namespace HedgeMark.SwiftMessageHandler.Utils
 
         public static double Default(this double? source)
         {
-            return source.HasValue ? source.Value : 0.0;
+            return source ?? 0.0;
         }
 
         public static bool IsTrue(this bool? source)
@@ -124,9 +125,8 @@ namespace HedgeMark.SwiftMessageHandler.Utils
 
         public static TV GetValue<TK, TV>(this Dictionary<TK, TV> dictionary, TK key)
         {
-            TV value;
-            if (!dictionary.TryGetValue(key, out value))
-                throw new KeyNotFoundException(string.Format("Key '{0}' not found in dictionary", key));
+            if (!dictionary.TryGetValue(key, out var value))
+                throw new KeyNotFoundException($"Key '{key}' not found in dictionary");
             return value;
         }
 
@@ -160,12 +160,9 @@ namespace HedgeMark.SwiftMessageHandler.Utils
             return type.IsArray || type.GetInterfaces().Contains(typeof(IEnumerable));
         }
 
-
         public static double? Add(this double? value1, double? value2)
         {
-            if (!value1.HasValue && !value2.HasValue)
-                return null;
-            return (value1.HasValue ? value1.Value : 0) + (value2.HasValue ? value2.Value : 0);
+            return !value1.HasValue && !value2.HasValue ? (double?)null : (value1 ?? 0) + (value2 ?? 0);
         }
 
         public static string StripCommas(this string untrimmedString)
@@ -218,8 +215,7 @@ namespace HedgeMark.SwiftMessageHandler.Utils
 
             if (string.IsNullOrWhiteSpace(value)) return 0.ToString("C", nfi);
 
-            decimal decimalNo;
-            decimal.TryParse(value, NumberStyles.Currency | NumberStyles.Any, null, out decimalNo);
+            decimal.TryParse(value, NumberStyles.Currency | NumberStyles.Any, null, out var decimalNo);
 
             return decimalNo.ToString("C", nfi);
         }
@@ -235,6 +231,21 @@ namespace HedgeMark.SwiftMessageHandler.Utils
             return addressLine.Substring(0, length);
         }
 
+        public static List<string> GetMultiLines(this string addressLine, int length = 35)
+        {
+            if (string.IsNullOrWhiteSpace(addressLine))
+                return new List<string>() { addressLine };
 
+            if (addressLine.Length <= length)
+                return new List<string>() { addressLine };
+
+            var addressSplits = addressLine.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (addressSplits.Length == 2)
+                return addressSplits.ToList();
+
+            var formattedAddress = Field.RemoveInvalidXCharacterSet(addressLine);
+            return Enumerable.Range(0, formattedAddress.Length / length).Select(i => formattedAddress.Substring(i * length, length)).ToList();
+        }
     }
 }
