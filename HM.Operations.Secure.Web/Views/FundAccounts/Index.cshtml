@@ -1,4 +1,5 @@
 ﻿@using HM.Operations.Secure.Web.Utility
+@using Web.Util
 @{
     ViewBag.Title = "Fund Accounts";
 }
@@ -1002,6 +1003,6 @@
 
 @section javascript
 {
-    <script src="~/Scripts/OpsSecure/Accounts/AccountList.js"></script>
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/Accounts/AccountList.js".GetModifiedStaticFileUrl())></script>
 }
 

@@ -1,10 +1,10 @@
-﻿
+﻿@using Web.Util
 @{
     ViewBag.Title = "User Operations";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <legend>Authorized Signatory List</legend>
+<legend>Authorized Signatory List</legend>
 <div ng-controller="wireUsersCtrl" class="container-fluid">
 
     <div class="btn-group" data-toggle="buttons">
@@ -27,5 +27,5 @@
     <table id="tblUserDetails" class="table table-hover table-bordered table-striped" style="background: white; cursor: pointer;"></table>
 </div>
 @section Javascript{
-    <script src="~/Scripts/OpsSecure/WireUsers.js"></script>
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/WireUsers.js".GetModifiedStaticFileUrl())></script>
 }

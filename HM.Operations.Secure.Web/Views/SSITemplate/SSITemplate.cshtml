@@ -1,4 +1,5 @@
 ﻿@using HM.Operations.Secure.Web.Utility
+@using Web.Util
 @{
     ViewBag.Title = "SSI Template";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -233,7 +234,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel panel-default ng-show-hide" id="panelCallBack" plindex="0" data-toggle='collapse'  ng-if="ssiTemplateId != 0 && !IsBNYMBroker && (IsPendingApproval || IsApproved || IsKeyFieldsChanged)">
+                        <div class="panel panel-default ng-show-hide" id="panelCallBack" plindex="0" data-toggle='collapse' ng-if="ssiTemplateId != 0 && !IsBNYMBroker && (IsPendingApproval || IsApproved || IsKeyFieldsChanged)">
                             <div class="panel-heading" data-toggle="collapse" data-target="#ssiCallBack" aria-expanded="false" aria-controls="ssiCallBack" ng-click="adjustContainer(true)">
                                 <b>Callback Check</b>&nbsp;<span style="color: red"> *</span>
                                 <span class="pull-right">
@@ -314,50 +315,50 @@
             </form>
         </div>
 
-    <div class="modal fade" id="callbackModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4>Add Callback</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-8 col-md-4 col-lg-4">
-                            <label for="txtContactName" class="control-label">Contact Name:</label>
+        <div class="modal fade" id="callbackModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>Add Callback</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-8 col-md-4 col-lg-4">
+                                <label for="txtContactName" class="control-label">Contact Name:</label>
+                            </div>
+                            <div class="col-sm-8 col-md-8 col-lg-8">
+                                <input type="text" id="txtContactName" ng-model="callback.ContactName" class="modalInputWidth form-control" placeholder="Contact Name" />
+                            </div>
                         </div>
-                        <div class="col-sm-8 col-md-8 col-lg-8">
-                            <input type="text" id="txtContactName" ng-model="callback.ContactName" class="modalInputWidth form-control" placeholder="Contact Name" />
+                        <p></p>
+                        <div class="row">
+                            <div class="col-sm-8 col-md-4 col-lg-4">
+                                <label for="txtContactNumber" class="control-label">Contact Number:</label>
+                            </div>
+                            <div class="col-sm-8 col-md-8 col-lg-8">
+                                <input type="text" id="txtContactNumber" ng-model="callback.ContactNumber" class="modalInputWidth form-control" placeholder="Contact Number" />
+                            </div>
+                        </div>
+                        <p></p>
+                        <div class="row">
+                            <div class="col-sm-8 col-md-4 col-lg-4">
+                                <label for="txtTitle" class="control-label">Title:</label>
+                            </div>
+                            <div class="col-sm-8 col-md-8 col-lg-8">
+                                <input type="text" id="txtTitle" ng-model="callback.Title" class="modalInputWidth form-control" placeholder="Title" />
+                            </div>
                         </div>
                     </div>
-                    <p></p>
-                    <div class="row">
-                        <div class="col-sm-8 col-md-4 col-lg-4">
-                            <label for="txtContactNumber" class="control-label">Contact Number:</label>
-                        </div>
-                        <div class="col-sm-8 col-md-8 col-lg-8">
-                            <input type="text" id="txtContactNumber" ng-model="callback.ContactNumber" class="modalInputWidth form-control" placeholder="Contact Number" />
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnSaveCallback()">
+                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Save Callback
+                        </button>
+                        <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                     </div>
-                    <p></p>
-                    <div class="row">
-                        <div class="col-sm-8 col-md-4 col-lg-4">
-                            <label for="txtTitle" class="control-label">Title:</label>
-                        </div>
-                        <div class="col-sm-8 col-md-8 col-lg-8">
-                            <input type="text" id="txtTitle" ng-model="callback.Title" class="modalInputWidth form-control" placeholder="Title" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnSaveCallback()">
-                        <i class="glyphicon glyphicon-copy"></i>&nbsp;Save Callback
-                    </button>
-                    <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                 </div>
             </div>
         </div>
-    </div>
 
         <div class="modal fade" id="updateSSITemplateModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="UpdateSSITemplateModal" aria-hidden="true" style="width: 100%">
             <div class="modal-dialog" role="document">
@@ -546,6 +547,6 @@
         var ssiTemplateId = '@ViewBag.ssiTemplateId';
         var userName = '@ViewBag.UserName';
     </script>
-    <script src="~/Scripts/OpsSecure/Accounts/SSITemplate.js"></script>
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/Accounts/SSITemplate.js".GetModifiedStaticFileUrl())></script>
 }
 

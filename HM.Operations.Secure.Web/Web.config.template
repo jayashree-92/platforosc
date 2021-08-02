@@ -93,6 +93,21 @@
   </system.web.extensions>
   <system.webServer>
     <validation validateIntegratedModeConfiguration="false" />
+    <rewrite>
+      <outboundRules rewriteBeforeCache="true">
+        <rule name="Remove Server header">
+          <match serverVariable="RESPONSE_SERVER" pattern=".*" />
+          <action type="Rewrite" value="" />
+        </rule>
+      </outboundRules>
+      <rules>
+        <rule name="Remove Modified Time from HTML JS CSS files">
+          <match url="^(.*)\.[\d]{16}\.(css|js|html)" />
+          <conditions logicalGrouping="MatchAny" />
+          <action type="Rewrite" url="{R:1}.{R:2}" />
+        </rule>
+      </rules>
+    </rewrite>
     <modules>
     </modules>
     <handlers>

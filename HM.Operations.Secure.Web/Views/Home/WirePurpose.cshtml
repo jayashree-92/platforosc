@@ -1,4 +1,5 @@
-﻿@model dynamic
+﻿@using Web.Util
+@model dynamic
 
 @{
     ViewBag.Title = "title";
@@ -57,5 +58,5 @@
 </div>
 
 @section Javascript{
-    <script src="~/Scripts/OpsSecure/WirePurpose.js"></script>
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/WirePurpose.js".GetModifiedStaticFileUrl())></script>
 }

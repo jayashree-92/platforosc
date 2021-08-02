@@ -204,6 +204,7 @@
     <Compile Include="Utility\HtmlExtensions.cs" />
     <Compile Include="Utility\JsonHelper.cs" />
     <Compile Include="Utility\Select2List.cs" />
+    <Compile Include="Utility\StaticFileUrlModifier.cs" />
     <Compile Include="Utility\Util.cs" />
   </ItemGroup>
   <ItemGroup>

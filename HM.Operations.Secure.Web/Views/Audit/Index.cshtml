@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Web.Util
+@{
     Layout = "../Shared/_Layout.cshtml";
     ViewBag.Title = "Audits";
 }
@@ -52,5 +53,7 @@
 </div>
 
 @section Javascript{
-    <script src="~/Scripts/OpsSecure/UserAuditLog.js"></script>
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/UserAuditLog.js".GetModifiedStaticFileUrl())></script>
 }
+
+

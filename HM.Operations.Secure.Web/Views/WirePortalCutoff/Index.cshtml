@@ -1,4 +1,5 @@
 ﻿@using HM.Operations.Secure.Web.Utility
+@using Web.Util
 @{
     ViewBag.Title = "Wire Cutoffs";
 }
@@ -129,5 +130,5 @@
 
 @section javascript
 {
-    <script src="~/Scripts/OpsSecure/wirePortalCutoff.js"></script>
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/wirePortalCutoff.js".GetModifiedStaticFileUrl())></script>
 }

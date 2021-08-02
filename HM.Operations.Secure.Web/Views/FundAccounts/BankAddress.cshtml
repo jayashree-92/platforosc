@@ -1,4 +1,5 @@
 ﻿@using HM.Operations.Secure.Web.Utility
+@using Web.Util
 @{
     ViewBag.Title = "Bank Address";
 }
@@ -86,7 +87,7 @@
                             </div>
                             <div class="col-sm-8 col-md-8 col-lg-8">
                                 <input type="text" id="txtBICorABA" class="modalInputWidth form-control" placeholder="{{BICorABAText}} Name" />
-                            </div>                            
+                            </div>
                         </div>
                         <p></p>
                         <div class="row">
@@ -158,7 +159,7 @@
 
 @section javascript
 {
-        <script src="~/Scripts/OpsSecure/Accounts/BankAddressManager.js"></script>
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/Accounts/BankAddressManager.js".GetModifiedStaticFileUrl())></script>
 }
 
 

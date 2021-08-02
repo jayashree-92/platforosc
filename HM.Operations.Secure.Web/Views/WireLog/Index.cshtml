@@ -1,4 +1,5 @@
-﻿@model dynamic
+﻿@using Web.Util
+@model dynamic
 
 @{
     ViewBag.Title = "Wire Logs";
@@ -13,7 +14,7 @@
         </span>
         &nbsp;<h4 style="display: inline-block">/</h4>&nbsp;
         <button class="btn btn-sm btn-primary" id="btnGetWireLogs" ng-click="fnGetWireLogs()" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-refresh"></i>&nbsp;Get Logs</button>
-       &nbsp; <span id="spnCustomButtons"></span>
+        &nbsp; <span id="spnCustomButtons"></span>
         <hr class="dashHr" />
     </div>
 
@@ -29,7 +30,7 @@
 </div>
 
 @section Javascript{
-    <script src="~/Scripts/OpsSecure/Commons/WireManager.js"></script>
-    <script src="~/Scripts/OpsSecure/Commons/WireDetails.js"></script>
-    <script src="~/Scripts/OpsSecure/WireLog.js"></script>
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/Commons/WireManager.js".GetModifiedStaticFileUrl())></script>
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/Commons/WireDetails.js".GetModifiedStaticFileUrl())></script>
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/WireLog.js".GetModifiedStaticFileUrl())></script>
 }
