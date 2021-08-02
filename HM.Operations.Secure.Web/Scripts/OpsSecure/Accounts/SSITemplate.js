@@ -146,7 +146,11 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             "aoColumns": [
                 {
                     "sTitle": "File Name",
-                    "mData": "FileName"
+                    "mData": "FileName",
+                    "mRender": function (data) {
+                        var href = "/SSITemplate/DownloadSsiTemplateFile?fileName=" + escape(data) + "&ssiTemplateId=" + ssiTemplateId;
+                        return "<a target='_blank' title='click to download this file' href='" + href + "'><i class='glyphicon glyphicon-file' ></i>&nbsp;" + data + "</a>";
+                    }
                 },
                 {
                     "sTitle": "Uploaded By",
@@ -179,11 +183,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             pagination: true,
             "scrollX": false,
             "order": [[2, "desc"]],
-            "fnRowCallback": function (nRow, aData) {
-                if (aData.FileName != "") {
-                    $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/SSITemplate/DownloadSsiTemplateFile?fileName=" + getFormattedFileName(aData.FileName) + "&ssiTemplateId=" + ssiTemplateId + "'>" + aData.FileName + "</a>");
-                }
-            },
             "scrollY": $("#panelAttachment").offset().top + 300,
             "oLanguage": {
                 "sSearch": "",
@@ -219,7 +218,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $scope.fnGetAccountAddressDetails = function (accountName) {
         $timeout(function () {
-        var ultimateAccount = $.grep($scope.bankAddressList, function (v) { return v.AccountName == accountName; })[0];
+            var ultimateAccount = $.grep($scope.bankAddressList, function (v) { return v.AccountName == accountName; })[0];
             $scope.ssiTemplate.UltimateBeneficiary.BankAddress = ultimateAccount.AccountAddress;
         }, 100);
     }
@@ -350,7 +349,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     placeholder: "Select a ultimate beneficiary BIC or ABA",
                     allowClear: true,
                     data: ultimateBicorAbaData
-                });               
+                });
 
                 break;
         }
@@ -393,7 +392,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.fnGetAccountAddressList = function () {
         $http.get("/FundAccounts/GetAllBankAccountAddress").then(function (response) {
             $scope.bankAddressList = response.data.addressList;
-           
+
         });
     }
 
@@ -887,7 +886,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         if (statusAction == "Request for Approval") {
             $("#btnMapSaveComment").addClass("btn-warning").removeClass("btn-success").removeClass("btn-info");
             $("#btnMapSaveComment").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
-        } else if (statusAction == "Approve") {            
+        } else if (statusAction == "Approve") {
             $("#btnMapSaveComment").removeClass("btn-warning").addClass("btn-success").removeClass("btn-info");
             $("#btnMapSaveComment").html('<i class="glyphicon glyphicon-ok"></i>&nbsp;Approve');
         }

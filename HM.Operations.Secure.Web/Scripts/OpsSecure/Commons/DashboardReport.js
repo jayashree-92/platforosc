@@ -127,7 +127,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
 
         //Update Counterparties and agreement Types
         $http.get(url).then(function (response) {
-            $(response.data).each(function (i, v) {
+            $.each(response.data, function (i, v) {
                 $scope.PreferenceKeys.push(v.Preference);
                 //Add All items - options
                 var allOptions = v.Options;
@@ -209,7 +209,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
             function (response) {
                 $timeout(function () {
                     $scope.IsTemplateLoadingInProgress = true;
-                    $(response.data).each(function (i, v) {
+                    $.each(response.data, function (i, v) {
                         $("#li" + v.Preference).select2("val", v.SelectedIds).trigger("change");
                     });
                     $scope.IsTemplateLoadingInProgress = false;
