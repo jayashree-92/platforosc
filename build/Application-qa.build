@@ -26,7 +26,7 @@
   <target name="cleanAndDeployPackage" >	
 	<!--<nant buildfile="TestBuildAndPublish.build" /> --> 
 	<nant buildfile="SQL-UAT.Build" />  
-	<!--<nant buildfile="CleanAndDeployPackage.build" />-->
+	<nant buildfile="RestartIISAppPool.build" />
   </target>
   
 </project>

@@ -42,7 +42,7 @@
     </properties>
 	</nant>
 	
-	<!--<nant buildfile="CleanAndDeployPackage.build" />-->
+	<nant buildfile="RestartIISAppPool.build" />
   </target>
   
 </project>

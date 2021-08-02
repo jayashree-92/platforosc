@@ -1,0 +1,12 @@
+
+<project name="Application" default="restartIISAppPool" basedir=".">
+  <target name = "restartIISAppPool" >
+	<if test="${property::exists('allServers')}">
+		<foreach item="String" in="${allServers}" delim="," property="serverName">
+			<foreach item="String" in="${appPoolName}" delim="," property="appPool">
+				<iisapppool action="Restart" pool="${appPool}" server="${serverName}" failonerror="false" verbose="true"/>
+			</foreach>
+		</foreach>
+	</if>
+  </target>
+ </project>
