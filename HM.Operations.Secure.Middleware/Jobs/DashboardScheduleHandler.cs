@@ -28,8 +28,7 @@ namespace HM.Operations.Secure.Middleware.Jobs
             var scheduleName = GetScheduleName(job.hmsDashboardScheduleId, true);
 
             //Schedule the given job
-            RecurringJob.AddOrUpdate(scheduleName,
-                () => ExecuteDashboardSchedule(job.hmsDashboardScheduleId, job.hmsDashboardTemplate.TemplateName),
+            RecurringJob.AddOrUpdate(scheduleName, () => ExecuteDashboardSchedule(job.hmsDashboardScheduleId, job.hmsDashboardTemplate.TemplateName),
                 job.hmsSchedule.ScheduleExpression, TimeZones[job.hmsSchedule.TimeZone]);
         }
 
@@ -56,18 +55,16 @@ namespace HM.Operations.Secure.Middleware.Jobs
                 return;
             }
 
-            DateTime startDate, endDate;
-            TryGetStartAndEndDate((DashboardScheduleRange)job.DashboardScheduleRangeLkupId, out startDate, out endDate);
+            TryGetStartAndEndDate((DashboardScheduleRange)job.DashboardScheduleRangeLkupId, out var startDate, out var endDate);
 
             var reportFileName = string.IsNullOrWhiteSpace(job.hmsSchedule.ReportFileName) ? templateName : job.hmsSchedule.ReportFileName;
-            var fileName = startDate == endDate ? string.Format("{0}-{1:yyyyMMdd}", reportFileName, startDate) : string.Format("{0}-{1:yyyyMMdd}-{2:yyyyMMdd}", reportFileName, startDate, endDate);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, job.hmsSchedule.FileFormat));
+            var fileName = startDate == endDate ? $"{reportFileName}-{startDate:yyyyMMdd}" : $"{reportFileName}-{startDate:yyyyMMdd}-{endDate:yyyyMMdd}";
+            var exportFileInfo = new FileInfo($"{FileSystemManager.UploadTemporaryFilesPath}{fileName}{job.hmsSchedule.FileFormat}");
 
             //Mail this report
-            var subject = string.Format("Wires Dashboard Report of '{0}' for {1}", templateName, ((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).ToString());
+            var subject = $"Wires Dashboard Report of '{templateName}' for {((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).ToString()}";
 
-            var mailBody = string.Format("Hi, <br/><br/> Please find the attached the wires dasboard report of '{0}' for {1}.<br/><br/> Thanks, <br/> HM-Operations Team.",
-                templateName, ((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).Humanize());
+            var mailBody = $"Hi, <br/><br/> Please find the attached the wires dasboard report of '{templateName}' for {((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).Humanize()}.<br/><br/> Thanks, <br/> HM-Operations Team.";
 
             var contentToExport = GetDashboardFileToSend(job, startDate, endDate);
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);

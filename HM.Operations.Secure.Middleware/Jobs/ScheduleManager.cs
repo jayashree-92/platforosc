@@ -116,8 +116,8 @@ namespace HM.Operations.Secure.Middleware.Jobs
         protected static string GetScheduleName(long jobId, bool isDashboard)
         {
             var scheduleName = isDashboard
-                ? string.Format("Dashboard-Schedule-{0}", jobId)
-                : string.Format("Report-Schedule-{0}", jobId);
+                ? $"Dashboard-Schedule-{jobId}"
+                : $"Report-Schedule-{jobId}";
             return scheduleName;
         }
 
@@ -146,7 +146,7 @@ namespace HM.Operations.Secure.Middleware.Jobs
         {
             var allToEmails = job.To;
             if (!string.IsNullOrWhiteSpace(job.ExternalToApproved))
-                allToEmails = string.Format("{0},{1}", allToEmails, job.ExternalToApproved);
+                allToEmails = $"{allToEmails},{job.ExternalToApproved}";
 
             var newMail = new MailInfo(subject, mailBody, allToEmails, isNoFilesReceived ? null : exportFileInfo, ccAddress: job.CC);
             var mailSentResult = MailIdQualifier.SendMailToQualifiedIds(newMail);
