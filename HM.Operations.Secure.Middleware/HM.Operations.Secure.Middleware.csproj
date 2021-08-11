@@ -81,11 +81,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalLibraries\IBM-MQ\IBM.XMS.dll</HintPath>
     </Reference>
-    <Reference Include="Kent.Boogaart.HelperTrinity">
-      <HintPath>..\packages\Kent.Boogaart.HelperTrinity.2.0.1\lib\portable-win8+net403+sl40+wp+xbox40\Kent.Boogaart.HelperTrinity.dll</HintPath>
+    <Reference Include="KBCsv, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc96fa93a217f7a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\KBCsv.6.0.0\lib\netstandard2.0\KBCsv.dll</HintPath>
     </Reference>
-    <Reference Include="Kent.Boogaart.KBCsv">
-      <HintPath>..\packages\Kent.Boogaart.KBCsv.1.4.0.0\lib\net40\Kent.Boogaart.KBCsv.dll</HintPath>
+    <Reference Include="KBCsv.Extensions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc96fa93a217f7a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\KBCsv.Extensions.6.0.0\lib\netstandard2.0\KBCsv.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="KBCsv.Extensions.Data, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc96fa93a217f7a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\KBCsv.Extensions.Data.6.0.0\lib\netstandard2.0\KBCsv.Extensions.Data.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>

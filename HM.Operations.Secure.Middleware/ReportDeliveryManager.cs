@@ -7,7 +7,7 @@ using Com.HedgeMark.Commons;
 using Com.HedgeMark.Commons.Extensions;
 using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
-using Kent.Boogaart.KBCsv;
+using KBCsv;
 using log4net;
 
 namespace HM.Operations.Secure.Middleware
@@ -54,24 +54,27 @@ namespace HM.Operations.Secure.Middleware
 
             colNames = colNames.Where(s => !ignoreHeaders.Contains(s)).ToList();
 
-            using (var writer = new CsvWriter(file.FullName.GetValidatedConfigPath()))
+            using (var streamWriter = new System.IO.StreamWriter(file.FullName.GetValidatedConfigPath(), false))
             {
-                writer.ValueSeparator = file.Extension.ToLower() == ".csv" ? ',' : '|';
-                writer.WriteHeaderRecord(colNames);
+                using (var writer = new CsvWriter(streamWriter))
+                {
+                    writer.ValueSeparator = file.Extension.ToLower() == ".csv" ? ',' : '|';
+                    writer.WriteRecord(colNames);
 
-                var content = contentTable.Select(row => row.CellValues.Where(cell => cell.Key.IsExportable && colNames.Contains(cell.Key.Name)).Select(cell => Convert.ToString(cell.Value.Value)).ToArray()).ToList();
-                writer.WriteDataRecords(content);
+                    var content = contentTable.Select(row => row.CellValues.Where(cell => cell.Key.IsExportable && colNames.Contains(cell.Key.Name)).Select(cell => Convert.ToString(cell.Value.Value))).ToList();
+                    content.ForEach(s => { writer.WriteRecord(s); });
 
-                writer.Flush();
-                writer.Close();
+                    writer.Flush();
+                    writer.Close();
+                }
             }
         }
 
         public static bool SendReportToInternalDir(string clientFolderName, FileInfo reportFile)
         {
-            var deliveryPath = string.Format("{0}\\{1}\\", FileSystemManager.InternalOutputFilesDropPath, clientFolderName).GetValidatedConfigPath();
+            var deliveryPath = $"{FileSystemManager.InternalOutputFilesDropPath}\\{clientFolderName}\\".GetValidatedConfigPath();
 
-            var fileToDeliver = string.Format("{0}\\{1}", deliveryPath, reportFile.Name).GetValidatedConfigPath();
+            var fileToDeliver = $"{deliveryPath}\\{reportFile.Name}".GetValidatedConfigPath();
 
             if (!Directory.Exists(deliveryPath))
                 Directory.CreateDirectory(deliveryPath);
@@ -86,9 +89,9 @@ namespace HM.Operations.Secure.Middleware
 
         public static bool SftpThisReport(string clientFolderName, FileInfo reportFile)
         {
-            var deliveryPath = string.Format("{0}\\{1}\\", FileSystemManager.SftpOutputFilesPath, clientFolderName).GetValidatedConfigPath();
+            var deliveryPath = $"{FileSystemManager.SftpOutputFilesPath}\\{clientFolderName}\\".GetValidatedConfigPath();
 
-            var fileToDeliver = string.Format("{0}\\{1}", deliveryPath, reportFile.Name).GetValidatedConfigPath();
+            var fileToDeliver = $"{deliveryPath}\\{reportFile.Name}".GetValidatedConfigPath();
 
             if (!Directory.Exists(deliveryPath))
                 Directory.CreateDirectory(deliveryPath);
