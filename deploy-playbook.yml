@@ -29,17 +29,17 @@
     - name: Stop IIS
       win_shell: |
         Stop-WebAppPool -Name {{dir01}}
-      when: appDir01 is defined
+      when: appDir01 is defined and cnj is not defined
 
     - name: Stop IIS
       win_shell: |
         Stop-WebAppPool -Name {{dir02}}
-      when: appDir02 is defined
+      when: appDir02 is defined and cnj is not defined
 
     - name: Stop IIS
       win_shell: |
         Stop-WebAppPool -Name {{dir03}}
-      when: appDir03 is defined
+      when: appDir03 is defined and cnj is not defined
 
     - name: call this task if backup copy of Existing Code
       win_copy:
@@ -125,14 +125,14 @@
     - name: Start IIS
       win_shell: |
         Start-WebAppPool -Name {{dir01}}
-      when: appDir01 is defined 
+      when: appDir01 is defined and cnj is not defined
 
     - name: Start IIS
       win_shell: |
         Start-WebAppPool -Name {{dir02}}
-      when: appDir02 is defined 
+      when: appDir02 is defined and cnj is not defined
 
     - name: Start IIS
       win_shell: |
         Start-WebAppPool -Name {{dir03}}
-      when: appDir03 is defined
+      when: appDir03 is defined and cnj is not defined
