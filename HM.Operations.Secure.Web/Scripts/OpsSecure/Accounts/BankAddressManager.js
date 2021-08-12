@@ -105,7 +105,7 @@ HmOpsApp.controller("BankAddressController", function ($scope, $http, $timeout, 
 
         $("#txtAccountBankName").popover("hide");
 
-        if ($("#txtAccountBankAddress").val() == undefined || $("#txtAccountBankAddress").val() == "") {
+        /*if ($("#txtAccountBankAddress").val() == undefined || $("#txtAccountBankAddress").val() == "") {
             //pop-up    
             $("#txtAccountBankAddress").popover({
                 placement: "right",
@@ -118,7 +118,7 @@ HmOpsApp.controller("BankAddressController", function ($scope, $http, $timeout, 
 
             $("#txtAccountBankAddress").popover("show");
             return;
-        }
+        }*/
 
         $("#txtAccountBankAddress").popover("hide");
         $scope.accountAddress = {
