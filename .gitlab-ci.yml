@@ -29,6 +29,14 @@ VM Deployment QA:
       trap "EDP_ANSIBLE_ENV=ansibletower-nonprod" DEBUG
   stage: deploy  
 
+Build: 
+  extends: .dotnetfw4x_build_core
+  rules:
+    - if: '$CI_ENVIRONMENT_NAME == "test" && $CI_BUILD_REF_NAME == "release"'
+      variables:
+        configuration: "Release"
+    - when: always
+    
 Upload_artifact:
   extends: .Dotnetfw_upload_artifact
   rules:
