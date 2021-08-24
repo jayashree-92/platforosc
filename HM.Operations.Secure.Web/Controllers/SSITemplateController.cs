@@ -59,11 +59,11 @@ namespace HM.Operations.Secure.Web.Controllers
                 BrokerSsiTemplates = brokerSsiTemplates.Select(template => new
                 {
                     SSITemplate = SSITemplateManager.SetSSITemplateDefaults(template),
-                    AgreementType = (agreementTypes.ContainsKey(template.dmaAgreementTypeId) && string.IsNullOrEmpty(template.ServiceProvider)) ? agreementTypes[template.dmaAgreementTypeId] : string.Empty,
-                    Broker = (counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty)
+                    AgreementType = agreementTypes.ContainsKey(template.dmaAgreementTypeId) && string.IsNullOrEmpty(template.ServiceProvider) ? agreementTypes[template.dmaAgreementTypeId] : string.Empty,
+                    Broker = counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty
                 }).ToList(),
                 counterParties = counterParties.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
-                serviceProviders = serviceProviders.Select(y => new { id = y.ServiceProvider, text = y.ServiceProvider }).DistinctBy(x => x.id).OrderBy(x => x.id).ToList(),
+                serviceProviders = serviceProviders.Select(servProv => new { id = servProv, text = servProv }).ToList(),
                 //AllSSITemplateTypes = brokerSsiTemplates.Select(s => s.SSITemplateType).Distinct().OrderBy(s => s).ToList(),
                 //AllStatus = brokerSsiTemplates.Select(s => s.SSITemplateStatus).Distinct().OrderBy(s => s).ToList(),
             });
@@ -87,7 +87,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public JsonResult GetAllServiceProviderList()
         {
-            var serviceProviders = SSITemplateManager.GetAllServiceProviderList().Select(y => new { id = y.ServiceProvider, text = y.ServiceProvider }).DistinctBy(x => x.id).OrderBy(x => x.id).ToList();
+            var serviceProviders = SSITemplateManager.GetAllServiceProviderList().Select(servProv => new { id = servProv, text = servProv }).ToList();
             return Json(serviceProviders, JsonRequestBehavior.AllowGet);
         }
 
@@ -140,12 +140,11 @@ namespace HM.Operations.Secure.Web.Controllers
             }
 
             var ssiTemplateId = SSITemplateManager.AddSsiTemplate(ssiTemplate, UserName);
-            if (ssiTemplateId > 0)
-            {
-                var auditLogList = AuditManager.GetAuditLogs(ssiTemplate, accountType, broker, UserName);
-                AuditManager.Log(auditLogList);
-            }
+            if (ssiTemplateId <= 0)
+                return ssiTemplateId;
 
+            var auditLogList = AuditManager.GetAuditLogs(ssiTemplate, accountType, broker, UserName);
+            AuditManager.Log(auditLogList);
             return ssiTemplateId;
         }
 
@@ -233,15 +232,17 @@ namespace HM.Operations.Secure.Web.Controllers
                 if (file == null)
                     throw new Exception("unable to retrive file information");
 
-                var fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "SSITemplate", DateTime.Now.ToString("yyyy-MM-dd"), file.FileName));
+                var fileInfo = new FileInfo(
+                    $"{FileSystemManager.OpsSecureBulkFileUploads}\\SSITemplate\\{DateTime.Now:yyyy-MM-dd}\\{file.FileName}");
 
                 var newFileName = file.FileName;
                 var splitFileNames = file.FileName.Split('.');
                 var ind = 1;
                 while (System.IO.File.Exists(fileInfo.FullName))
                 {
-                    newFileName = string.Format("{0}_{1}.{2}", splitFileNames[0], ind++, splitFileNames[1]);
-                    fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", DateTime.Now.ToString("yyyy-MM-dd"), newFileName));
+                    newFileName = $"{splitFileNames[0]}_{ind++}.{splitFileNames[1]}";
+                    fileInfo = new FileInfo(
+                        $"{FileSystemManager.OpsSecureBulkFileUploads}\\FundAccount\\{DateTime.Now}:yyyy-MM-dd\\{newFileName}");
                 }
 
 
@@ -249,27 +250,35 @@ namespace HM.Operations.Secure.Web.Controllers
                     Directory.CreateDirectory(fileInfo.Directory.FullName);
 
                 file.SaveAs(fileInfo.FullName);
-                var templateListRows =  ReportDeliveryManager.ParseAsRows(fileInfo, "List of SSI Template", string.Empty, true);
+                var templateListRows = ReportDeliveryManager.ParseAsRows(fileInfo, "List of SSI Template", string.Empty, true);
 
                 if (templateListRows.Count > 0)
                 {
                     foreach (var template in templateListRows)
                     {
-                        var templateDetail = new onBoardingSSITemplate();
+                        var templateDetail = new onBoardingSSITemplate
+                        {
+                            Beneficiary = new onBoardingAccountBICorABA(),
+                            Intermediary = new onBoardingAccountBICorABA(),
+                            UltimateBeneficiary = new onBoardingAccountBICorABA(),
+                            onBoardingSSITemplateId = string.IsNullOrWhiteSpace(template["SSI Template Id"])
+                                ? 0
+                                : long.Parse(template["SSI Template Id"]),
+                            TemplateTypeId = SSITemplateManager.BrokerTemplateTypeId,
+                            TemplateEntityId = counterParties.FirstOrDefault(x => x.Value == template["Legal Entity"])
+                                .Key,
+                            dmaAgreementTypeId = agreementTypes.FirstOrDefault(x => x.Value == template["Account Type"])
+                                .Key,
+                            ServiceProvider = template["Service Provider"],
+                            Currency = template["Currency"],
+                            ReasonDetail = template["Payment/Receipt Reason Detail"],
+                            OtherReason = template["Other Reason"],
+                            MessageType = messageTypes.Contains(template["Message Type"].Trim())
+                                ? template["Message Type"].Trim()
+                                : string.Empty
+                        };
 
-                        templateDetail.Beneficiary = new onBoardingAccountBICorABA();
-                        templateDetail.Intermediary = new onBoardingAccountBICorABA();
-                        templateDetail.UltimateBeneficiary = new onBoardingAccountBICorABA();
 
-                        templateDetail.onBoardingSSITemplateId = string.IsNullOrWhiteSpace(template["SSI Template Id"]) ? 0 : long.Parse(template["SSI Template Id"]);
-                        templateDetail.TemplateTypeId = SSITemplateManager.BrokerTemplateTypeId;
-                        templateDetail.TemplateEntityId = counterParties.FirstOrDefault(x => x.Value == template["Legal Entity"]).Key;
-                        templateDetail.dmaAgreementTypeId = agreementTypes.FirstOrDefault(x => x.Value == template["Account Type"]).Key;
-                        templateDetail.ServiceProvider = template["Service Provider"];
-                        templateDetail.Currency = template["Currency"];
-                        templateDetail.ReasonDetail = template["Payment/Receipt Reason Detail"];
-                        templateDetail.OtherReason = template["Other Reason"];
-                        templateDetail.MessageType = messageTypes.Contains(template["Message Type"].Trim()) ? template["Message Type"].Trim() : string.Empty;
                         templateDetail.TemplateName = template["SSI Template Type"] == "Broker" ? template["Legal Entity"] + " - " + template["Account Type"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : (!string.IsNullOrWhiteSpace(template["SSI Template Type"]) ? template["Service Provider"] + " - " + templateDetail.Currency + " - " + template["Payment/Receipt Reason Detail"] : template["Template Name"]);
                         if (templateDetail.onBoardingSSITemplateId == 0)
                         {
@@ -381,46 +390,48 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var contentToExport = new Dictionary<string, List<Row>>();
 
-            var row = new Row();
+            var row = new Row
+            {
+                ["Template Name"] = string.Empty,
+                ["SSI Template Type"] = string.Empty,
+                ["Legal Entity"] = string.Empty,
+                ["Account Type"] = string.Empty,
+                ["Service Provider"] = string.Empty,
+                ["Currency"] = string.Empty,
+                ["Payment/Receipt Reason Detail"] = string.Empty,
+                ["Other Reason"] = string.Empty,
+                ["Message Type"] = string.Empty,
+                ["Beneficiary Type"] = "ABA/BIC",
+                ["Beneficiary BIC or ABA"] = string.Empty,
+                ["Beneficiary Account Number"] = string.Empty,
+                ["Intermediary Beneficiary Type"] = "ABA/BIC",
+                ["Intermediary BIC or ABA"] = string.Empty,
+                ["Intermediary Account Number"] = string.Empty,
+                ["Ultimate Beneficiary Type"] = "ABA/BIC",
+                ["Ultimate Beneficiary BIC or ABA"] = String.Empty,
+                ["Ultimate Beneficiary Account Name"] = string.Empty,
+                ["Ultimate Beneficiary Account Number"] = string.Empty,
+                ["FFC Name"] = string.Empty,
+                ["FFC Number"] = string.Empty,
+                ["Reference"] = string.Empty,
+                ["CreatedBy"] = string.Empty,
+                ["CreatedDate"] = string.Empty,
+                ["UpdatedBy"] = string.Empty,
+                ["ModifiedDate"] = string.Empty,
+                ["ApprovedBy"] = string.Empty
+            };
             //row["SSI Template Id"] = string.Empty;
-            row["Template Name"] = string.Empty;
-            row["SSI Template Type"] = string.Empty;
-            row["Legal Entity"] = string.Empty;
-            row["Account Type"] = string.Empty;
-            row["Service Provider"] = string.Empty;
-            row["Currency"] = string.Empty;
-            row["Payment/Receipt Reason Detail"] = string.Empty;
-            row["Other Reason"] = string.Empty;
-            row["Message Type"] = string.Empty;
-            row["Beneficiary Type"] = "ABA/BIC";
-            row["Beneficiary BIC or ABA"] = string.Empty;
             //row["Beneficiary Bank Name"] = String.Empty;
             //row["Beneficiary Bank Address"] = String.Empty;
-            row["Beneficiary Account Number"] = string.Empty;
-            row["Intermediary Beneficiary Type"] = "ABA/BIC";
-            row["Intermediary BIC or ABA"] = string.Empty;
             //row["Intermediary Bank Name"] = String.Empty;
             //row["Intermediary Bank Address"] = String.Empty;
-            row["Intermediary Account Number"] = string.Empty;
-            row["Ultimate Beneficiary Type"] = "ABA/BIC";
-            row["Ultimate Beneficiary BIC or ABA"] = String.Empty;
             // row["Ultimate Beneficiary Bank Name"] = String.Empty;
             //row["Ultimate Beneficiary Bank Address"] = String.Empty;
-            row["Ultimate Beneficiary Account Name"] = string.Empty;
-            row["Ultimate Beneficiary Account Number"] = string.Empty;
-            row["FFC Name"] = string.Empty;
-            row["FFC Number"] = string.Empty;
-            row["Reference"] = string.Empty;
-            row["CreatedBy"] = string.Empty;
-            row["CreatedDate"] = string.Empty;
-            row["UpdatedBy"] = string.Empty;
-            row["ModifiedDate"] = string.Empty;
-            row["ApprovedBy"] = string.Empty;
             var templateListRows = new List<Row> { row };
 
             //File name and path
-            var fileName = string.Format("{0}_{1:yyyyMMdd}", "SSITemplateList", DateTime.Now);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+            var fileName = $"SSITemplateList_{DateTime.Now:yyyyMMdd}";
+            var exportFileInfo = new FileInfo($"{FileSystemManager.UploadTemporaryFilesPath}{fileName}{DefaultExportFileFormat}");
             contentToExport.Add("List of SSI Template", templateListRows);
 
             //Export the account file
@@ -484,7 +495,8 @@ namespace HM.Operations.Secure.Web.Controllers
             {
                 var document = context.onBoardingSSITemplateDocuments.FirstOrDefault(x => x.onBoardingSSITemplateDocumentId == documentId);
                 if (document == null) return;
-                var fileName = string.Format("{0}{1}\\{2}", FileSystemManager.OpsSecureSSITemplateFileUploads, document.onBoardingSSITemplateId, document.FileName);
+                var fileName =
+                    $"{FileSystemManager.OpsSecureSSITemplateFileUploads}{document.onBoardingSSITemplateId}\\{document.FileName}";
                 var fileinfo = new FileInfo(fileName);
 
                 if (System.IO.File.Exists(fileinfo.FullName))
@@ -546,8 +558,9 @@ namespace HM.Operations.Secure.Web.Controllers
             var contentToExport = new Dictionary<string, List<Row>>();
             var accountListRows = BuildSsiTemplateRows(ssiTemplates);
             //File name and path
-            var fileName = string.Format("{0}_{1:yyyyMMdd}", "SSITemplateList", DateTime.Now);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+            var fileName = $"{"SSITemplateList"}_{DateTime.Now:yyyyMMdd}";
+            var exportFileInfo = new FileInfo(
+                $"{FileSystemManager.UploadTemporaryFilesPath}{fileName}{DefaultExportFileFormat}");
             contentToExport.Add("List of SSI Template", accountListRows);
             //Export the checklist file
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
@@ -622,7 +635,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public FileResult DownloadSsiTemplateFile(string fileName, long ssiTemplateId)
         {
-            var file = new FileInfo(string.Format("{0}{1}\\{2}", FileSystemManager.OpsSecureSSITemplateFileUploads, ssiTemplateId, fileName));
+            var file = new FileInfo($"{FileSystemManager.OpsSecureSSITemplateFileUploads}{ssiTemplateId}\\{fileName}");
             return DownloadFile(file, file.Name);
         }
 
@@ -641,8 +654,8 @@ namespace HM.Operations.Secure.Web.Controllers
                     if (file == null)
                         throw new Exception("unable to retrive file information");
 
-                    var fileName = string.Format("{0}{1}\\{2}", FileSystemManager.OpsSecureSSITemplateFileUploads,
-                        ssiTemplateId, file.FileName);
+                    var fileName =
+                        $"{FileSystemManager.OpsSecureSSITemplateFileUploads}{ssiTemplateId}\\{file.FileName}";
                     var fileinfo = new FileInfo(fileName);
 
                     if (fileinfo.Directory != null && !Directory.Exists(fileinfo.Directory.FullName))

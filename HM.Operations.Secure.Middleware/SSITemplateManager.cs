@@ -5,11 +5,13 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using Com.HedgeMark.Commons.Extensions;
 using HM.Operations.Secure.DataModel;
+using log4net;
 
 namespace HM.Operations.Secure.Middleware
 {
     public class SSITemplateManager
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(SSITemplateManager));
 
         public const int BrokerTemplateTypeId = 2;
         public static List<onBoardingSSITemplate> GetAllBrokerSsiTemplates()
@@ -102,13 +104,13 @@ namespace HM.Operations.Secure.Middleware
             return ssiTemplate;
         }
 
-        public static List<OnBoardingServiceProvider> GetAllServiceProviderList()
+        public static List<string> GetAllServiceProviderList()
         {
             using (var context = new AdminContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.OnBoardingServiceProviders.ToList();
+                return context.OnBoardingServiceProviders.Select(s => s.ServiceProvider).Distinct().OrderBy(s => s).ToList();
             }
         }
 

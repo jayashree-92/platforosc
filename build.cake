@@ -8,7 +8,7 @@
 #tool "nuget:?package=ReportGenerator&version=4.5.6"
 
 var target = Argument("target", "package");
-var configuration = EnvironmentVariable<string>("configuration", "Debug");
+var configuration = Argument("configuration", "Test");
 var solution = File(Argument("sln", GetFiles("./*.sln").FirstOrDefault().ToString()));
 var testPattern = Argument("test", "*.Tests");
 var sonarUrl = Argument("sonarurl", "https://sonarqube.bnymellon.net");
@@ -133,7 +133,7 @@ Task("test")
 
     var testSettings = new NUnit3Settings ()
     {
-        Configuration = "Debug",
+        Configuration = configuration,
         DisposeRunners = true,
         NoResults = false,
         SkipNonTestAssemblies = true,
