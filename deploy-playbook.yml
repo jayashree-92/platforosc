@@ -15,7 +15,7 @@
         src:  "{{nexus_code_available_path}}/artifacts.zip"
         dest:  "{{nexus_code_available_path}}/artifacts"
         remote_src: yes
-        delete_archive: yes
+        delete_archive: yes  
 
     - name: Assinging backup folder value to variable
       set_fact:
@@ -26,20 +26,37 @@
         path: "{{ backup_dir }}"
         state: directory
 
-    - name: Stop IIS
-      win_shell: |
-        Stop-WebAppPool -Name {{dir01}}
-      when: appDir01 is defined and cnj is not defined
+    - name: Delete Backup older than 7 days
+      win_shell: 
+        Get-ChildItem -Path {{backupfolderspath}} -Directory -recurse| where {$_.LastWriteTime -le $(get-date).AddDays(-7)} | Remove-Item -recurse -force
 
-    - name: Stop IIS
-      win_shell: |
-        Stop-WebAppPool -Name {{dir02}}
-      when: appDir02 is defined and cnj is not defined
+    - name: Copy htm file to directories
+      win_copy:
+        src: "{{ htmfile }}"
+        dest: "{{ appDir01 }}"
+        remote_src: yes
+      when: appDir01 is defined
 
-    - name: Stop IIS
-      win_shell: |
-        Stop-WebAppPool -Name {{dir03}}
-      when: appDir03 is defined and cnj is not defined
+    - name: Copy htm file to directories
+      win_copy:
+        src: "{{ htmfile }}"
+        dest: "{{ appDir02 }}"
+        remote_src: yes
+      when: appDir02 is defined
+
+    - name: Copy htm file to directories
+      win_copy:
+        src: "{{ htmfile }}"
+        dest: "{{ appDir03 }}"
+        remote_src: yes
+      when: appDir03 is defined    
+
+    - name: Copy htm file to directories
+      win_copy:
+        src: "{{ htmfile }}"
+        dest: "{{nexus_code_available_path}}/artifacts/"
+        remote_src: yes
+      when: appDir03 is defined    
 
     - name: call this task if backup copy of Existing Code
       win_copy:
@@ -61,7 +78,7 @@
         dest: "{{ backup_dir }}/{{dir03}}"
         remote_src: yes    
       when: appDir03 is defined
-
+    
     - name: "Clean Up Deploy Folder"
       win_file:
         path: "{{ appDir01 }}"
@@ -79,7 +96,7 @@
         path: "{{ appDir03 }}"
         state: absent
       when: appDir03 is defined
-
+      
     - name: call this task to copy source code to Ops Deployment Path
       win_copy:
         src: "{{nexus_code_available_path}}/artifacts/"
@@ -100,6 +117,11 @@
         dest: "{{ appDir03 }}"
         remote_src: yes    
       when: appDir03 is defined
+
+    - name: "Clean Up Test-Deploy Folder inside AnisbleDeployment"
+      win_file:
+        path: "{{nexus_code_available_path}}/artifacts/"
+        state: absent
 
     - name: call this task to copy web.config from backup to Ops Deployment Path
       win_copy:
@@ -122,17 +144,35 @@
         remote_src: yes    
       when: appDir03 is defined
     
+    - name: remove htm file from deployment folder
+      win_file:
+        path: "{{ appDir01 }}/app_offline.htm"
+        state: absent
+      when: appDir01 is defined 
+
+    - name: remove htm file from deployment folder
+      win_file:
+        path: "{{ appDir02 }}/app_offline.htm"
+        state: absent
+      when: appDir02 is defined 
+
+    - name: remove htm file from deployment folder
+      win_file:
+        path: "{{ appDir03 }}/app_offline.htm"
+        state: absent
+      when: appDir03 is defined   
+
     - name: Start IIS
       win_shell: |
-        Start-WebAppPool -Name {{dir01}}
+        Restart-WebAppPool -Name {{dir01}}
       when: appDir01 is defined and cnj is not defined
 
     - name: Start IIS
       win_shell: |
-        Start-WebAppPool -Name {{dir02}}
+        Restart-WebAppPool -Name {{dir02}}
       when: appDir02 is defined and cnj is not defined
 
     - name: Start IIS
       win_shell: |
-        Start-WebAppPool -Name {{dir03}}
+        Restart-WebAppPool -Name {{dir03}}
       when: appDir03 is defined and cnj is not defined
