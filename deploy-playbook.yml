@@ -122,27 +122,6 @@
       win_file:
         path: "{{nexus_code_available_path}}/artifacts/"
         state: absent
-
-    - name: call this task to copy web.config from backup to Ops Deployment Path
-      win_copy:
-        src: "{{ backup_dir }}/{{dir01}}/web.config"
-        dest: "{{ appDir01 }}"
-        remote_src: yes
-      when: appDir01 is defined
-
-    - name: call this task to copy web.config from backup to Ops Deployment Path
-      win_copy:
-        src: "{{ backup_dir }}/{{dir02}}/web.config"
-        dest: "{{ appDir02 }}"
-        remote_src: yes
-      when: appDir02 is defined
-
-    - name: call this task to copy web.config from backup to Ops Deployment Path
-      win_copy:
-        src: "{{ backup_dir }}/{{dir03}}/web.config"
-        dest: "{{ appDir03 }}"
-        remote_src: yes    
-      when: appDir03 is defined
     
     - name: remove htm file from deployment folder
       win_file:
