@@ -97,6 +97,25 @@
         state: absent
       when: appDir03 is defined
       
+    - name: Creates directories
+      win_file:
+        path: "{{ appDir01 }}"
+        state: directory
+      when: appDir01 is defined  
+
+    - name: Creates directories
+      win_file:
+        path: "{{ appDir02 }}"
+        state: directory
+      when: appDir02 is defined
+      
+    - name: Creates directories
+      win_file:
+        path: "{{ appDir03 }}"
+        state: directory
+      when: appDir03 is defined  
+  
+      
     - name: call this task to copy source code to Ops Deployment Path
       win_copy:
         src: "{{nexus_code_available_path}}/artifacts/"
@@ -122,7 +141,7 @@
       win_file:
         path: "{{nexus_code_available_path}}/artifacts/"
         state: absent
-    
+        
     - name: remove htm file from deployment folder
       win_file:
         path: "{{ appDir01 }}/app_offline.htm"
