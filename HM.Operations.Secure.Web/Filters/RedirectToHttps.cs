@@ -13,7 +13,7 @@ namespace HM.Operations.Secure.Web.Filters
             if (!string.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
                 throw new InvalidOperationException("Only GET methods will be redirected");
 
-            var url = string.Format("https://{0}{1}", filterContext.HttpContext.Request.Url.Host, filterContext.HttpContext.Request.RawUrl);
+            var url = $"https://{filterContext.HttpContext.Request.Url.Host}{filterContext.HttpContext.Request.RawUrl}";
             filterContext.Result = new RedirectResult(url);
         }
     }

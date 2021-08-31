@@ -113,10 +113,10 @@ namespace HM.Operations.Secure.Web.Controllers
             {
                 Action = isDeleted ? "Deleted" : originalCutOff.hmsWirePortalCutoffId > 0 ? "Edited" : "Added",
                 Module = "Wire Cutoff",
-                Log = string.Format("Cash Instruction: <i>{0}</i><br/>Currency: <i>{1}</i>", wirePortalCutoff.CashInstruction, wirePortalCutoff.Currency),
+                Log = $"Cash Instruction: <i>{wirePortalCutoff.CashInstruction}</i><br/>Currency: <i>{wirePortalCutoff.Currency}</i>",
                 Field = string.Join(",<br>", fieldsChanged),
-                PreviousStateValue = string.Format("TimeZone: <i>{0}</i><br/>Cutoff Time: <i>{1}</i><br/>Days to Wire:<i>{2}</i><br/>IsApproved:<i>{3}</i>", originalCutOff.CutOffTimeZone, originalCutOff.CutoffTime, originalCutOff.DaystoWire, originalCutOff.IsApproved),
-                ModifiedStateValue = string.Format("TimeZone: <i>{0}</i><br/>Cutoff Time: <i>{1}</i><br/>Days to Wire:<i>{2}</i><br/>IsApproved:<i>{3}</i>", wirePortalCutoff.CutOffTimeZone, wirePortalCutoff.CutoffTime, wirePortalCutoff.DaystoWire, originalCutOff.IsApproved),
+                PreviousStateValue = $"TimeZone: <i>{originalCutOff.CutOffTimeZone}</i><br/>Cutoff Time: <i>{originalCutOff.CutoffTime}</i><br/>Days to Wire:<i>{originalCutOff.DaystoWire}</i><br/>IsApproved:<i>{originalCutOff.IsApproved}</i>",
+                ModifiedStateValue = $"TimeZone: <i>{wirePortalCutoff.CutOffTimeZone}</i><br/>Cutoff Time: <i>{wirePortalCutoff.CutoffTime}</i><br/>Days to Wire:<i>{wirePortalCutoff.DaystoWire}</i><br/>IsApproved:<i>{originalCutOff.IsApproved}</i>",
                 CreatedAt = DateTime.Now,
                 UserName = User.Identity.Name
             };
@@ -144,8 +144,8 @@ namespace HM.Operations.Secure.Web.Controllers
             var contentToExport = new Dictionary<string, List<Row>>();
             var accountListRows = BuildExportRows(wireCutoffData);
             //File name and path
-            var fileName = string.Format("{0}_{1:yyyyMMdd}", "WireCutOffData", DateTime.Now);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, ".xlsx"));
+            var fileName = $"WireCutOffData_{DateTime.Now:yyyyMMdd}";
+            var exportFileInfo = new FileInfo($"{FileSystemManager.UploadTemporaryFilesPath}{fileName}{".xlsx"}");
             contentToExport.Add("Wire Portal CutOff Data", accountListRows);
             //Export the checklist file
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo, true);

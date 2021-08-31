@@ -22,8 +22,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public JsonResult GetSwiftGroupData()
         {
-            Dictionary<long, string> brokerLegalEntityData;
-            var swiftGroupData = GetAllSwiftGroupData(out brokerLegalEntityData);
+            var swiftGroupData = GetAllSwiftGroupData(out var brokerLegalEntityData);
             var wireMessageTypes = WireDataManager.GetWireMessageTypes();
             return Json(new
             {
@@ -140,13 +139,12 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public FileResult ExportData()
         {
-            Dictionary<long, string> brokerLegalEntityData;
-            var swiftGroupData = GetAllSwiftGroupData(out brokerLegalEntityData);
+            var swiftGroupData = GetAllSwiftGroupData(out var brokerLegalEntityData);
             var contentToExport = new Dictionary<string, List<Row>>();
             var accountListRows = BuildExportRows(swiftGroupData);
             //File name and path
-            var fileName = string.Format("{0}_{1:yyyyMMdd}", "SwiftGroupData", DateTime.Now);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, ".xlsx"));
+            var fileName = $"SwiftGroupData_{DateTime.Now:yyyyMMdd}";
+            var exportFileInfo = new FileInfo($"{FileSystemManager.UploadTemporaryFilesPath}{fileName}.xlsx");
             contentToExport.Add("Swift Group Data", accountListRows);
             //Export the file
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo, true);
@@ -159,17 +157,19 @@ namespace HM.Operations.Secure.Web.Controllers
 
             foreach (var swift in swiftGroupData)
             {
-                var row = new Row();
-                row["Swift Group"] = swift.SwiftGroup.SwiftGroup;
-                row["Sender's BIC"] = swift.SwiftGroup.SendersBIC;
-                row["Broker"] = swift.Broker;
-                row["Status"] = swift.SwiftGroupStatus;
-                row["MT Messages"] = swift.SwiftGroup.AcceptedMessages;
-                row["Notes"] = swift.SwiftGroup.Notes;
-                row["Requested By"] = swift.RequestedBy;
-                row["Requested At"] = swift.SwiftGroup.RequestedAt + "";
-                row["Approved By"] = swift.ApprovedBy;
-                row["Approved At"] = swift.SwiftGroup.ApprovedAt + "";
+                var row = new Row
+                {
+                    ["Swift Group"] = swift.SwiftGroup.SwiftGroup,
+                    ["Sender's BIC"] = swift.SwiftGroup.SendersBIC,
+                    ["Broker"] = swift.Broker,
+                    ["Status"] = swift.SwiftGroupStatus,
+                    ["MT Messages"] = swift.SwiftGroup.AcceptedMessages,
+                    ["Notes"] = swift.SwiftGroup.Notes,
+                    ["Requested By"] = swift.RequestedBy,
+                    ["Requested At"] = swift.SwiftGroup.RequestedAt + "",
+                    ["Approved By"] = swift.ApprovedBy,
+                    ["Approved At"] = swift.SwiftGroup.ApprovedAt + ""
+                };
                 swiftGroupRows.Add(row);
             }
 
@@ -185,15 +185,15 @@ namespace HM.Operations.Secure.Web.Controllers
             if (originalSwiftGroup.SwiftGroup != swiftGroup.SwiftGroup)
             {
                 fieldsChanged.Add("Swift Group");
-                previousState += string.Format("Swift Group: <i>{0}</i><br/>", originalSwiftGroup.SwiftGroup);
-                modifiedState += string.Format("Swift Group: <i>{0}</i><br/>", swiftGroup.SwiftGroup);
+                previousState += $"Swift Group: <i>{originalSwiftGroup.SwiftGroup}</i><br/>";
+                modifiedState += $"Swift Group: <i>{swiftGroup.SwiftGroup}</i><br/>";
             }
 
             if (originalSwiftGroup.SendersBIC != swiftGroup.SendersBIC)
             {
                 fieldsChanged.Add("Sender's BIC");
-                previousState += string.Format("Sender's BIC: <i>{0}</i><br/>", originalSwiftGroup.SendersBIC);
-                modifiedState += string.Format("Sender's BIC: <i>{0}</i><br/>", swiftGroup.SendersBIC);
+                previousState += $"Sender's BIC: <i>{originalSwiftGroup.SendersBIC}</i><br/>";
+                modifiedState += $"Sender's BIC: <i>{swiftGroup.SendersBIC}</i><br/>";
             }
 
             if (originalSwiftGroup.BrokerLegalEntityId != swiftGroup.BrokerLegalEntityId)
@@ -202,8 +202,8 @@ namespace HM.Operations.Secure.Web.Controllers
                 var modifiedFamilyName = OnBoardingDataManager.GetCounterpartyFamilyName(swiftGroup.BrokerLegalEntityId ?? 0);
 
                 fieldsChanged.Add("Broker");
-                previousState += string.Format("Broker: <i>{0}</i><br/>", originalFamilyName);
-                modifiedState += string.Format("Broker: <i>{0}</i><br/>", modifiedFamilyName);
+                previousState += $"Broker: <i>{originalFamilyName}</i><br/>";
+                modifiedState += $"Broker: <i>{modifiedFamilyName}</i><br/>";
             }
 
             if (originalSwiftGroup.SwiftGroupStatusId != swiftGroup.SwiftGroupStatusId)
@@ -211,22 +211,22 @@ namespace HM.Operations.Secure.Web.Controllers
                 var statusLkup = FundAccountManager.GetSwiftGroupStatus();
 
                 fieldsChanged.Add("Swift Group Status");
-                previousState += string.Format("Swift Group Status: <i>{0}</i><br/>", statusLkup.ContainsKey(originalSwiftGroup.SwiftGroupStatusId ?? 0) ? statusLkup[originalSwiftGroup.SwiftGroupStatusId ?? 0] : string.Empty);
-                modifiedState += string.Format("Swift Group Status: <i>{0}</i><br/>", statusLkup.ContainsKey(swiftGroup.SwiftGroupStatusId ?? 0) ? statusLkup[swiftGroup.SwiftGroupStatusId ?? 0] : string.Empty);
+                previousState += $"Swift Group Status: <i>{(statusLkup.ContainsKey(originalSwiftGroup.SwiftGroupStatusId ?? 0) ? statusLkup[originalSwiftGroup.SwiftGroupStatusId ?? 0] : string.Empty)}</i><br/>";
+                modifiedState += $"Swift Group Status: <i>{(statusLkup.ContainsKey(swiftGroup.SwiftGroupStatusId ?? 0) ? statusLkup[swiftGroup.SwiftGroupStatusId ?? 0] : string.Empty)}</i><br/>";
             }
 
             if (originalSwiftGroup.AcceptedMessages != swiftGroup.AcceptedMessages)
             {
                 fieldsChanged.Add("Swift Messages");
-                previousState += string.Format("Swift Messages: <i>{0}</i><br/>", originalSwiftGroup.AcceptedMessages ?? string.Empty);
-                modifiedState += string.Format("Swift Messages: <i>{0}</i><br/>", swiftGroup.AcceptedMessages ?? string.Empty);
+                previousState += $"Swift Messages: <i>{originalSwiftGroup.AcceptedMessages ?? string.Empty}</i><br/>";
+                modifiedState += $"Swift Messages: <i>{swiftGroup.AcceptedMessages ?? string.Empty}</i><br/>";
             }
 
             if (originalSwiftGroup.Notes != swiftGroup.Notes)
             {
                 fieldsChanged.Add("Notes");
-                previousState += string.Format("Notes: <i>{0}</i><br/>", originalSwiftGroup.Notes ?? string.Empty);
-                modifiedState += string.Format("Notes: <i>{0}</i><br/>", swiftGroup.Notes ?? string.Empty);
+                previousState += $"Notes: <i>{originalSwiftGroup.Notes ?? string.Empty}</i><br/>";
+                modifiedState += $"Notes: <i>{swiftGroup.Notes ?? string.Empty}</i><br/>";
             }
 
             if (!fieldsChanged.Any())
@@ -238,10 +238,8 @@ namespace HM.Operations.Secure.Web.Controllers
                 Action = isDeleted ? "Deleted" : originalSwiftGroup.hmsSwiftGroupId > 0 ? "Edited" : "Added",
                 Module = "Swift Group",
                 Log = isDeleted
-                    ? string.Format("Swift Group: <i>{0}</i><br/>Sender's BIC: <i>{1}</i>",
-                        originalSwiftGroup.SwiftGroup, originalSwiftGroup.SendersBIC)
-                    : string.Format("Swift Group: <i>{0}</i><br/>Sender's BIC: <i>{1}</i>", swiftGroup.SwiftGroup,
-                        swiftGroup.SendersBIC),
+                    ? $"Swift Group: <i>{originalSwiftGroup.SwiftGroup}</i><br/>Sender's BIC: <i>{originalSwiftGroup.SendersBIC}</i>"
+                    : $"Swift Group: <i>{swiftGroup.SwiftGroup}</i><br/>Sender's BIC: <i>{swiftGroup.SendersBIC}</i>",
                 Field = string.Join(",<br>", fieldsChanged),
                 PreviousStateValue = previousState,
                 ModifiedStateValue = modifiedState,

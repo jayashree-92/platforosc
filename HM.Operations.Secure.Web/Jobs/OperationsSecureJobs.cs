@@ -22,10 +22,7 @@ namespace HM.Operations.Secure.Web.Jobs
         private static readonly ILog log = LogManager.GetLogger(typeof(BackGroundJobScheduler));
         private static readonly BackGroundJobScheduler BackgroundJobScheduler = new BackGroundJobScheduler();
 
-        public static bool KeepBackGroundAlive
-        {
-            get { return ConfigurationManagerWrapper.BooleanSetting("ShouldKeepBackGroundJobsAlive", true); }
-        }
+        public static bool KeepBackGroundAlive => ConfigurationManagerWrapper.BooleanSetting("ShouldKeepBackGroundJobsAlive", true);
 
         private static void KeepAlive()
         {

@@ -405,30 +405,32 @@ namespace HM.Operations.Secure.Middleware
 
             foreach (var ticket in wireData)
             {
-                var thisRow = new Row();
-                thisRow["WireId"] = ticket.WireId.ToString();
-                thisRow["Wire Status"] = isExportOnly ? ((WireDataManager.WireStatus)ticket.HMWire.WireStatusId).ToString() : GetWireStatusLabel((WireDataManager.WireStatus)ticket.HMWire.WireStatusId, (WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId);
-                thisRow["Swift Status"] = isExportOnly ? ((WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId).ToString() : GetSwiftStatusLabel((WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId);
-                thisRow["Client"] = ticket.ClientLegalName;
-                thisRow["Fund"] = ticket.PreferredFundName;
-                thisRow["Admin"] = ticket.AdminName;
-                thisRow["Sending Account Name"] = ticket.SendingAccount.AccountName;
-                thisRow["Sending Account Number"] = ticket.SendingAccountNumber;
-                thisRow["Transfer Type"] = ticket.TransferType;
-                thisRow["Source Report"] = ticket.HMWire.hmsWirePurposeLkup.ReportName;
-                thisRow["Wire Purpose"] = ticket.HMWire.hmsWirePurposeLkup.Purpose;
-                thisRow["Value Date", RuleHelper.DefaultDateFormat] = ticket.HMWire.ValueDate.ToString("yyyy-MM-dd");
-                thisRow["Currency"] = ticket.HMWire.Currency;
-                thisRow["Amount", RuleHelper.DefaultCurrencyFormat] = ticket.HMWire.Amount.ToCurrency();
-                thisRow["Template Name"] = ticket.ReceivingAccountName;
-                thisRow["Beneficiary Bank"] = ticket.BeneficiaryBank;
-                thisRow["Beneficiary"] = ticket.Beneficiary;
-                thisRow["Beneficiary A/C Number"] = ticket.BeneficiaryAccountNumber;
-                thisRow["Wire Message Type"] = ticket.HMWire.hmsWireMessageType.MessageType;
-                thisRow["Initiated By"] = ticket.WireCreatedBy;
-                thisRow["Initiated At"] = ticket.HMWire.CreatedAt.ToString("MMM dd, yyyy hh:mm tt");
-                thisRow["Approved By"] = ticket.WireApprovedBy;
-                thisRow["Approved At"] = ticket.HMWire.ApprovedAt != null ? (ticket.HMWire.ApprovedAt ?? new DateTime()).ToString("MMM dd, yyyy hh:mm tt") : "-";
+                var thisRow = new Row
+                {
+                    ["WireId"] = ticket.WireId.ToString(),
+                    ["Wire Status"] = isExportOnly ? ((WireDataManager.WireStatus)ticket.HMWire.WireStatusId).ToString() : GetWireStatusLabel((WireDataManager.WireStatus)ticket.HMWire.WireStatusId, (WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId),
+                    ["Swift Status"] = isExportOnly ? ((WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId).ToString() : GetSwiftStatusLabel((WireDataManager.SwiftStatus)ticket.HMWire.SwiftStatusId),
+                    ["Client"] = ticket.ClientLegalName,
+                    ["Fund"] = ticket.PreferredFundName,
+                    ["Admin"] = ticket.AdminName,
+                    ["Sending Account Name"] = ticket.SendingAccount.AccountName,
+                    ["Sending Account Number"] = ticket.SendingAccountNumber,
+                    ["Transfer Type"] = ticket.TransferType,
+                    ["Source Report"] = ticket.HMWire.hmsWirePurposeLkup.ReportName,
+                    ["Wire Purpose"] = ticket.HMWire.hmsWirePurposeLkup.Purpose,
+                    ["Value Date", RuleHelper.DefaultDateFormat] = ticket.HMWire.ValueDate.ToString("yyyy-MM-dd"),
+                    ["Currency"] = ticket.HMWire.Currency,
+                    ["Amount", RuleHelper.DefaultCurrencyFormat] = ticket.HMWire.Amount.ToCurrency(),
+                    ["Template Name"] = ticket.ReceivingAccountName,
+                    ["Beneficiary Bank"] = ticket.BeneficiaryBank,
+                    ["Beneficiary"] = ticket.Beneficiary,
+                    ["Beneficiary A/C Number"] = ticket.BeneficiaryAccountNumber,
+                    ["Wire Message Type"] = ticket.HMWire.hmsWireMessageType.MessageType,
+                    ["Initiated By"] = ticket.WireCreatedBy,
+                    ["Initiated At"] = ticket.HMWire.CreatedAt.ToString("MMM dd, yyyy hh:mm tt"),
+                    ["Approved By"] = ticket.WireApprovedBy,
+                    ["Approved At"] = ticket.HMWire.ApprovedAt != null ? (ticket.HMWire.ApprovedAt ?? new DateTime()).ToString("MMM dd, yyyy hh:mm tt") : "-"
+                };
 
                 switch (ticket.HMWire.hmsWireStatusLkup.Status)
                 {

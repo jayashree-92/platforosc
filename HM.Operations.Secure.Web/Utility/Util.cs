@@ -19,28 +19,13 @@ namespace HM.Operations.Secure.Web.Utility
             }
         }
 
-        public static bool IsSiteminder
-        {
-            get { return !string.IsNullOrWhiteSpace(System.Web.HttpContext.Current.Request.Headers["SMUSER"]); }
-        }
+        public static bool IsSiteminder => !string.IsNullOrWhiteSpace(System.Web.HttpContext.Current.Request.Headers["SMUSER"]);
 
-        public static bool IsLowerEnvironment
-        {
-            get { return !Environment.Equals("Prod"); }
-        }
+        public static bool IsLowerEnvironment => !Environment.Equals("Prod");
 
-        public static string LowerEnvironmentFlag
-        {
-            get { return !IsLowerEnvironment ? string.Empty : string.Format("| {0}", Environment); }
-        }
+        public static string LowerEnvironmentFlag => !IsLowerEnvironment ? string.Empty : $"| {Environment}";
 
-        public static string OnBoardingSubDomainPath
-        {
-            get
-            {
-                return ConfigurationManagerWrapper.StringSetting("OnBoardingSubDomainPath", "https://hm-admin-test01.bnymellon.com/onboard/");
-            }
-        }
+        public static string OnBoardingSubDomainPath => ConfigurationManagerWrapper.StringSetting("OnBoardingSubDomainPath", "https://hm-admin-test01.bnymellon.com/onboard/");
 
         public static string GetRole(this IPrincipal principal)
         {

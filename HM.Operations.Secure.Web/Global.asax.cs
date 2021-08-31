@@ -32,7 +32,7 @@ namespace HM.Operations.Secure.Web
         protected void Application_Start()
         {
             //Log4Net Instantiator
-            XmlConfigurator.ConfigureAndWatch(new FileInfo(string.Format("{0}web.config", AppDomain.CurrentDomain.BaseDirectory)));
+            XmlConfigurator.ConfigureAndWatch(new FileInfo($"{AppDomain.CurrentDomain.BaseDirectory}web.config"));
 
             //Security measure - hide server details in the response header
             MvcHandler.DisableMvcResponseHeader = true;
@@ -97,7 +97,7 @@ namespace HM.Operations.Secure.Web
 
             if (userSso == null)
             {
-                Logger.Warn(string.Format("access denied to user '{0}', user not registered", smUserId));
+                Logger.Warn($"access denied to user '{smUserId}', user not registered");
                 SiteMinderLogOff("access denied, user not registered");
                 return;
             }
@@ -106,7 +106,7 @@ namespace HM.Operations.Secure.Web
 
             if (AccountController.AllowedDomains.All(domain => !email.EndsWith(domain, StringComparison.InvariantCultureIgnoreCase)))
             {
-                Logger.Warn(string.Format("access denied to user '{0}', invalid user domain", email));
+                Logger.Warn($"access denied to user '{email}', invalid user domain");
                 SiteMinderLogOff("User domain is invalid/not authorized");
                 return;
             }
@@ -129,7 +129,7 @@ namespace HM.Operations.Secure.Web
 
             if (AccountController.AllowedUserRoles.All(role => !roles.Contains(role)))
             {
-                Logger.Error(string.Format("access denied to user '{0}', user role not available", email));
+                Logger.Error($"access denied to user '{email}', user role not available");
                 SiteMinderLogOff("User not authorized");
                 return;
             }
@@ -259,7 +259,7 @@ namespace HM.Operations.Secure.Web
         private void SiteMinderLogOff(string reasonStr)
         {
             Response.StatusCode = 303;
-            Response.Redirect(string.Format("{0}?reasonStr={1}", SiteMinderLogOffUrl, reasonStr), false);
+            Response.Redirect($"{SiteMinderLogOffUrl}?reasonStr={reasonStr}", false);
         }
     }
 }

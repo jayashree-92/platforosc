@@ -7,15 +7,10 @@ namespace HM.Operations.Secure.Middleware
 {
     public class SystemSwitches : Switches
     {
-        public static List<string> TreasuryReportAgreementTypesToUseMarginExcessOrDeficit { get { return ((string)SystemSwitches[SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit]).ToStringList(); } }
-        public static int SchedulerProcessId { get { return ((int)SystemSwitches[SwitchKey.SchedulerProcessId]); } }
-        public dynamic this[SwitchKey key]
-        {
-            get
-            {
-                return GetSwitch(key);
-            }
-        }
+        public static List<string> TreasuryReportAgreementTypesToUseMarginExcessOrDeficit => ((string)SystemSwitches[SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit]).ToStringList();
+        public static int SchedulerProcessId => (int)SystemSwitches[SwitchKey.SchedulerProcessId];
+
+        public dynamic this[SwitchKey key] => GetSwitch(key);
 
         private static dynamic GetSwitch(SwitchKey switchKey)
         {

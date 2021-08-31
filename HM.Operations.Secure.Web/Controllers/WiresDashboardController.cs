@@ -100,8 +100,8 @@ namespace HM.Operations.Secure.Web.Controllers
         public FileResult ExportReport(DateTime startDate, DateTime endDate, string templateName, string format = ".xlsx")
         {
             var rowData = (List<Row>)GetSessionValue(OpsSecureSessionVars.WiresDashboardData.ToString());
-            var fileName = string.Format("{0}_{1}_{2:yyyyMMdd}_{3:yyyyMMdd}", "Wires_Data", templateName, startDate, endDate);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, format));
+            var fileName = $"Wires_Data_{templateName}_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}";
+            var exportFileInfo = new FileInfo($"{FileSystemManager.UploadTemporaryFilesPath}{fileName}{format}");
 
             foreach (var row in rowData)
             {

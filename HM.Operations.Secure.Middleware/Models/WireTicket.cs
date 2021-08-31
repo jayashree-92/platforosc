@@ -12,32 +12,15 @@ namespace HM.Operations.Secure.Middleware.Models
 {
     public class WireTicket
     {
-        public long WireId
-        {
-            get
-            {
-                return HMWire == null ? 0 : HMWire.hmsWireId;
-            }
-        }
-        public bool IsFundTransfer
-        {
-            get { return HMWire.WireTransferTypeId == 2; }
-        }
+        public long WireId => HMWire?.hmsWireId ?? 0;
 
-        public bool Is3rdPartyTransfer
-        {
-            get { return HMWire.WireTransferTypeId == 1; }
-        }
+        public bool IsFundTransfer => HMWire.WireTransferTypeId == 2;
 
-        public bool IsNotice
-        {
-            get { return HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.TransferType == "Notice"; }
-        }
+        public bool Is3rdPartyTransfer => HMWire.WireTransferTypeId == 1;
 
-        public string TransferType
-        {
-            get { return HMWire.hmsWireTransferTypeLKup == null ? "3rd Party Transfer" : HMWire.hmsWireTransferTypeLKup.TransferType; }
-        }
+        public bool IsNotice => HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.TransferType == "Notice";
+
+        public string TransferType => HMWire.hmsWireTransferTypeLKup == null ? "3rd Party Transfer" : HMWire.hmsWireTransferTypeLKup.TransferType;
 
         public bool IsSenderInformationRequired
         {
@@ -61,10 +44,7 @@ namespace HM.Operations.Secure.Middleware.Models
                     default: return _counterparty;
                 }
             }
-            set
-            {
-                _counterparty = value;
-            }
+            set => _counterparty = value;
         }
 
 
@@ -152,34 +132,17 @@ namespace HM.Operations.Secure.Middleware.Models
             }
         }
 
-        public string ReceivingAccountCurrency
-        {
-            get
-            {
-                return IsNotice ? SendingAccount.Currency : IsFundTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
-            }
-        }
+        public string ReceivingAccountCurrency => IsNotice ? SendingAccount.Currency : IsFundTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
 
-        public bool ShouldIncludeWirePurpose
-        {
-            get
-            {
-                return (SendingAccount.SwiftGroup ?? new hmsSwiftGroup()).SwiftGroup == "Credit Suisse";
-            }
-        }
+        public bool ShouldIncludeWirePurpose => (SendingAccount.SwiftGroup ?? new hmsSwiftGroup()).SwiftGroup == "Credit Suisse";
 
         private hmsWire _hmWire;
         public hmsWire HMWire
         {
-            get
-            {
-                return _hmWire == null ? new hmsWire() : _hmWire;
-            }
-            set
-            {
-                _hmWire = value;
-            }
+            get => _hmWire ?? new hmsWire();
+            set => _hmWire = value;
         }
+
         public string WireCreatedBy { get; set; }
         public string WireLastUpdatedBy { get; set; }
         public string WireApprovedBy { get; set; }
@@ -195,34 +158,16 @@ namespace HM.Operations.Secure.Middleware.Models
         public string FundRegisterAddress { get; set; }
 
         //Populated from  hmsBankAccountAddress
-        public string ReceivingSsiUltimateBeneAccountAddress
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(SSITemplate.UltimateBeneficiaryType) && SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.UltimateBeneficiary.BankAddress : string.Empty;
-            }
-        }
+        public string ReceivingSsiUltimateBeneAccountAddress => !string.IsNullOrWhiteSpace(SSITemplate.UltimateBeneficiaryType) && SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.UltimateBeneficiary.BankAddress : string.Empty;
 
         public List<FormattedSwiftMessage> SwiftMessages { get; set; }
 
         public hmsWireMessageType CancellationWireMessageType { get; set; }
 
         // Default Properties
-        public string CollateralPaymentReason
-        {
-            get
-            {
-                return "Collateral Payment";
-            }
-        }
+        public string CollateralPaymentReason => "Collateral Payment";
 
-        public string DefaultSenderInformation
-        {
-            get
-            {
-                return HMWire.hmsWireSenderInformation == null ? "BNF" : HMWire.hmsWireSenderInformation.SenderInformation;
-            }
-        }
+        public string DefaultSenderInformation => HMWire.hmsWireSenderInformation == null ? "BNF" : HMWire.hmsWireSenderInformation.SenderInformation;
 
         public TimeSpan Deadline { get; set; }
     }

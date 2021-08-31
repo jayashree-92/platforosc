@@ -138,7 +138,7 @@ namespace HM.Operations.Secure.Web.Controllers
             else if (!string.IsNullOrWhiteSpace(lastname) && string.IsNullOrWhiteSpace(firstname))
                 contactName = lastname;
             else if (!string.IsNullOrWhiteSpace(lastname) && !string.IsNullOrWhiteSpace(firstname))
-                contactName = string.Format("{0} {1}", lastname, firstname);
+                contactName = $"{lastname} {firstname}";
 
             return contactName;
 
@@ -588,8 +588,9 @@ namespace HM.Operations.Secure.Web.Controllers
             //File name and path
 
             var contentToExport = new Dictionary<string, List<Row>>() { { "List of Accounts", accountListRows } };
-            var fileName = string.Format("AccountList_{0:yyyyMMdd}", DateTime.Now);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+            var fileName = $"AccountList_{DateTime.Now:yyyyMMdd}";
+            var exportFileInfo = new FileInfo(
+                $"{FileSystemManager.UploadTemporaryFilesPath}{fileName}{DefaultExportFileFormat}");
             //Export the checklist file
 
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
@@ -602,8 +603,9 @@ namespace HM.Operations.Secure.Web.Controllers
             var accountListRows = BuildAccountBICorABAExportRows(accountBicorAbaList);
 
             var contentToExport = new Dictionary<string, List<Row>>() { { "List of AccountBICorABA", accountListRows } };
-            var fileName = string.Format("AccountBICorABAList_{0:yyyyMMdd}", DateTime.Now);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+            var fileName = $"AccountBICorABAList_{DateTime.Now:yyyyMMdd}";
+            var exportFileInfo = new FileInfo(
+                $"{FileSystemManager.UploadTemporaryFilesPath}{fileName}{DefaultExportFileFormat}");
 
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo, true);
             return DownloadAndDeleteFile(exportFileInfo);
@@ -637,8 +639,9 @@ namespace HM.Operations.Secure.Web.Controllers
             var accountListRows = BuildBankAccountExportRows(accountList);
 
             var contentToExport = new Dictionary<string, List<Row>>() { { "List of Account Address", accountListRows } };
-            var fileName = string.Format("Bank Account Address List_{0:yyyyMMdd}", DateTime.Now);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+            var fileName = $"Bank Account Address List_{DateTime.Now:yyyyMMdd}";
+            var exportFileInfo = new FileInfo(
+                $"{FileSystemManager.UploadTemporaryFilesPath}{fileName}{DefaultExportFileFormat}");
 
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo, true);
             return DownloadAndDeleteFile(exportFileInfo);
@@ -797,7 +800,8 @@ namespace HM.Operations.Secure.Web.Controllers
                 if (file == null)
                     throw new Exception("unable to retrieve file information");
 
-                var fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2:yyyy-MM-dd}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", DateTime.Now, file.FileName));
+                var fileInfo = new FileInfo(
+                    $"{FileSystemManager.OpsSecureBulkFileUploads}\\{"FundAccount"}\\{DateTime.Now:yyyy-MM-dd}\\{file.FileName}");
 
                 if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
                     Directory.CreateDirectory(fileInfo.Directory.FullName);
@@ -807,8 +811,9 @@ namespace HM.Operations.Secure.Web.Controllers
                 var ind = 1;
                 while (System.IO.File.Exists(fileInfo.FullName))
                 {
-                    newFileName = string.Format("{0}_{1}.{2}", splitFileNames[0], ind++, splitFileNames[1]);
-                    fileInfo = new FileInfo(string.Format("{0}\\{1}\\{2:yyyy-MM-dd}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, "FundAccount", DateTime.Now, newFileName));
+                    newFileName = $"{splitFileNames[0]}_{ind++}.{splitFileNames[1]}";
+                    fileInfo = new FileInfo(
+                        $"{FileSystemManager.OpsSecureBulkFileUploads}\\{"FundAccount"}\\{DateTime.Now:yyyy-MM-dd}\\{newFileName}");
                 }
 
                 file.SaveAs(fileInfo.FullName);
@@ -1107,8 +1112,9 @@ namespace HM.Operations.Secure.Web.Controllers
             var accountListRows = new List<Row> { row };
 
             //File name and path
-            var fileName = string.Format("{0}_{1:yyyyMMdd}", "AccountList", DateTime.Now);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}{2}", FileSystemManager.UploadTemporaryFilesPath, fileName, DefaultExportFileFormat));
+            var fileName = $"{"AccountList"}_{DateTime.Now:yyyyMMdd}";
+            var exportFileInfo = new FileInfo(
+                $"{FileSystemManager.UploadTemporaryFilesPath}{fileName}{DefaultExportFileFormat}");
             contentToExport.Add("List of Accounts", accountListRows);
 
             //Export the account file
@@ -1118,7 +1124,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public FileResult DownloadAccountFile(string fileName, long accountId)
         {
-            var file = new FileInfo(string.Format("{0}{1}\\{2}", FileSystemManager.OpsSecureAccountsFileUploads, accountId, fileName));
+            var file = new FileInfo($"{FileSystemManager.OpsSecureAccountsFileUploads}{accountId}\\{fileName}");
             return DownloadFile(file, file.Name);
         }
 
@@ -1133,7 +1139,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
                     if (file == null)
                         throw new Exception("unable to retrive file information");
-                    var fileName = string.Format("{0}{1}\\{2}", FileSystemManager.OpsSecureAccountsFileUploads, accountId, file.FileName);
+                    var fileName = $"{FileSystemManager.OpsSecureAccountsFileUploads}{accountId}\\{file.FileName}";
                     var fileinfo = new FileInfo(fileName);
 
                     if (fileinfo.Directory != null && !Directory.Exists(fileinfo.Directory.FullName))

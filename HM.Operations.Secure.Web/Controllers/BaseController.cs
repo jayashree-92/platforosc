@@ -40,14 +40,11 @@ namespace HM.Operations.Secure.Web.Controllers
         private string thisUserName;
         public string UserName
         {
-            get { return thisUserName ?? User.Identity.Name; }
-            set { thisUserName = value; }
+            get => thisUserName ?? User.Identity.Name;
+            set => thisUserName = value;
         }
 
-        public int UserId
-        {
-            get { return UserDetails.Id; }
-        }
+        public int UserId => UserDetails.Id;
 
         public UserAccountDetails UserDetails
         {
@@ -72,14 +69,9 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             Session[key] = value;
         }
-        public bool IsWireApprover
-        {
-            get { return User.IsInRole(OpsSecureUserRoles.WireApprover); }
-        }
-        public bool IsWireAdmin
-        {
-            get { return User.IsInRole(OpsSecureUserRoles.WireAdmin); }
-        }
+        public bool IsWireApprover => User.IsInRole(OpsSecureUserRoles.WireApprover);
+
+        public bool IsWireAdmin => User.IsInRole(OpsSecureUserRoles.WireAdmin);
 
 
         protected static readonly string JsonContentType = "application/json";
@@ -157,7 +149,7 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             get
             {
-                var preferncesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.UserPreferencesInSession);
+                var preferncesKey = $"{UserId}{OpsSecureSessionVars.UserPreferencesInSession}";
                 if (GetSessionValue(preferncesKey) != null)
                     return (List<dmaUserPreference>)GetSessionValue(preferncesKey);
 
@@ -181,21 +173,18 @@ namespace HM.Operations.Secure.Web.Controllers
 
         private void ResetPreferencesInSession()
         {
-            var preferencesKey = string.Format("{0}{1}", UserId, OpsSecureSessionVars.UserPreferencesInSession);
+            var preferencesKey = $"{UserId}{OpsSecureSessionVars.UserPreferencesInSession}";
             SetSessionValue(preferencesKey, null);
         }
 
 
-        public PreferencesManager.FundNameInDropDown PreferredFundNameInSession
-        {
-            get { return (PreferencesManager.FundNameInDropDown)GetPreferenceInSession(PreferencesManager.ShowRiskOrShortFundNames).ToInt(0); }
-        }
+        public PreferencesManager.FundNameInDropDown PreferredFundNameInSession => (PreferencesManager.FundNameInDropDown)GetPreferenceInSession(PreferencesManager.ShowRiskOrShortFundNames).ToInt(0);
 
         public AuthorizedData AuthorizedSessionData
         {
             get
             {
-                var preferncesKey = string.Format("{0}{1}", UserName, OpsSecureSessionVars.AuthorizedUserData);
+                var preferncesKey = $"{UserName}{OpsSecureSessionVars.AuthorizedUserData}";
                 if (GetSessionValue(preferncesKey) != null)
                     return (AuthorizedData)GetSessionValue(preferncesKey);
 
@@ -205,14 +194,14 @@ namespace HM.Operations.Secure.Web.Controllers
             }
             protected set
             {
-                var preferncesKey = string.Format("{0}{1}", UserName, OpsSecureSessionVars.AuthorizedUserData);
+                var preferncesKey = $"{UserName}{OpsSecureSessionVars.AuthorizedUserData}";
                 SetSessionValue(preferncesKey, value);
             }
         }
 
         private void ResetAuthorizedFundData()
         {
-            var preferncesKey = string.Format("{0}{1}", UserName, OpsSecureSessionVars.AuthorizedFundData);
+            var preferncesKey = $"{UserName}{OpsSecureSessionVars.AuthorizedFundData}";
             var authorizedData = AdminFundManager.GetFundData(AuthorizedSessionData, PreferredFundNameInSession);
             SetSessionValue(preferncesKey, authorizedData);
         }
@@ -221,7 +210,7 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             get
             {
-                var preferncesKey = string.Format("{0}{1}", UserName, OpsSecureSessionVars.AuthorizedFundData);
+                var preferncesKey = $"{UserName}{OpsSecureSessionVars.AuthorizedFundData}";
                 var authorizedData = new List<HFundBasic>();
                 if (GetSessionValue(preferncesKey) != null)
                     authorizedData = (List<HFundBasic>)GetSessionValue(preferncesKey);
@@ -235,7 +224,7 @@ namespace HM.Operations.Secure.Web.Controllers
             }
             private set
             {
-                var preferncesKey = string.Format("{0}{1}", UserName, OpsSecureSessionVars.AuthorizedFundData);
+                var preferncesKey = $"{UserName}{OpsSecureSessionVars.AuthorizedFundData}";
                 SetSessionValue(preferncesKey, value);
             }
         }

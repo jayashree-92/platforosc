@@ -251,7 +251,7 @@ namespace HM.Operations.Secure.Web.Utility
             jsonBuilder.Append("{ ");
             foreach (var item in reports)
             {
-                jsonBuilder.Append(string.Format("\"{0}\" : ", item.Key));
+                jsonBuilder.Append($"\"{item.Key}\" : ");
                 jsonBuilder.Append("[");
                 jsonBuilder.Append(string.Join(",", item.Value));
                 jsonBuilder.Append("],");

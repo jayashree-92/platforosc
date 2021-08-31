@@ -49,8 +49,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public void SaveSchedule(JobSchedule job, long primaryId, bool isDashboard)
         {
-            long jobId;
-            SaveDashboardSchedule(job, primaryId, out jobId);
+            SaveDashboardSchedule(job, primaryId, out var jobId);
 
             //Schedule this job
             ScheduleManager.AddSchedule(jobId, isDashboard);
@@ -192,8 +191,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         private JobSchedule ConstructJobData(hmsSchedule schedule)
         {
-            int nthQuarterlyMonth;
-            var due = CronHelper.GetDue(schedule.ScheduleExpression, (CronHelper.ScheduleFrequency)Enum.Parse(typeof(CronHelper.ScheduleFrequency), schedule.Frequency), out nthQuarterlyMonth);
+            var due = CronHelper.GetDue(schedule.ScheduleExpression, (CronHelper.ScheduleFrequency)Enum.Parse(typeof(CronHelper.ScheduleFrequency), schedule.Frequency), out var nthQuarterlyMonth);
 
             schedule.hmsDashboardSchedules = null;
 

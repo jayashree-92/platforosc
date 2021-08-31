@@ -50,7 +50,8 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public FileResult DownloadLogFile(string fileName, bool isFundAccountLog, DateTime createdDate)
         {
-            var file = new FileInfo(string.Format("{0}\\{1}\\{2}\\{3}", FileSystemManager.OpsSecureBulkFileUploads, isFundAccountLog ? "FundAccount" : "SSITemplate", createdDate.ToString("yyyy-MM-dd"), fileName));
+            var file = new FileInfo(
+                $"{FileSystemManager.OpsSecureBulkFileUploads}\\{(isFundAccountLog ? "FundAccount" : "SSITemplate")}\\{createdDate:yyyy-MM-dd}\\{fileName}");
             return DownloadFile(file, fileName);
         }
 

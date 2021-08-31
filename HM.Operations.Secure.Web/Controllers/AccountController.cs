@@ -18,7 +18,8 @@ namespace HM.Operations.Secure.Web.Controllers
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(AccountController));
         public static readonly List<string> AllowedDomains = ConfigurationManagerWrapper.StringListSetting("AllowedDomains", "@hedgemark.com,@payoda.com,@bnymellon.com,@inautix.co.in");
-        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", string.Format("{0},{1},{2}", OpsSecureUserRoles.WireInitiator, OpsSecureUserRoles.WireApprover, OpsSecureUserRoles.WireAdmin));
+        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles",
+            $"{OpsSecureUserRoles.WireInitiator},{OpsSecureUserRoles.WireApprover},{OpsSecureUserRoles.WireAdmin}");
 
         public static hLoginRegistration GetUserDetail(string userName)
         {

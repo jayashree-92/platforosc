@@ -15,8 +15,8 @@ namespace HM.Operations.Secure.Web.Utility
 
         public string GetScript()
         {
-            var options = dictionary.Keys.Where(x => x != "id").Select(attr => string.Format("{0}:'{1}'", attr, dictionary[attr]));
-            var optionsMap = string.Format("{{{0}}}", string.Join(",", options));
+            var options = dictionary.Keys.Where(x => x != "id").Select(attr => $"{attr}:'{dictionary[attr]}'");
+            var optionsMap = $"{{{string.Join(",", options)}}}";
             var scriptBuilder = new StringBuilder();
             scriptBuilder.AppendFormat(@"<script type=""text/javascript"">
                                             $(document).ready(function () {{ $('#{0}').select2({1}); }});

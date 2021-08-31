@@ -40,13 +40,7 @@ namespace HM.Operations.Secure.Web.Controllers
             public int CancelledAndProcessing { get; set; }
             public int OnHold { get; set; }
 
-            public int Total
-            {
-                get
-                {
-                    return Pending + Approved + Cancelled + Completed + Failed + CancelledAndProcessing + OnHold;
-                }
-            }
+            public int Total => Pending + Approved + Cancelled + Completed + Failed + CancelledAndProcessing + OnHold;
         }
 
         public JsonResult GetWireStatusCount(DateTime valueDate)
@@ -127,8 +121,20 @@ namespace HM.Operations.Secure.Web.Controllers
                 {
                     wireMessages,
                     wireTransferTypes,
-                    wireSenderInformation = wireSenderInformation.Select(s => new { id = s.hmsWireSenderInformationId, text = string.Format("{0}-{1}", s.SenderInformation, s.Description), value = s.SenderInformation }).ToList(),
-                    wireCollateralCashPurpose = collateralCashPurpose.Select(s => new { id = s.hmsCollateralCashPurposeLkupId, text = string.Format("{0}-{1}", s.PurposeCode, s.Description), value = s.PurposeCode }).ToList()
+                    wireSenderInformation = wireSenderInformation.Select(s => new
+                    {
+                        id = s.hmsWireSenderInformationId,
+                        text =
+                        $"{s.SenderInformation}-{s.Description}",
+                        value = s.SenderInformation
+                    }).ToList(),
+                    wireCollateralCashPurpose = collateralCashPurpose.Select(s => new
+                    {
+                        id = s.hmsCollateralCashPurposeLkupId,
+                        text =
+                        $"{s.PurposeCode}-{s.Description}",
+                        value = s.PurposeCode
+                    }).ToList()
                 });
             }
         }
@@ -357,17 +363,18 @@ namespace HM.Operations.Secure.Web.Controllers
                 var deadlineToApprove = WireDataManager.GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
                 var daysToAdd = deadlineToApprove.Hours / 24;
                 SaveWireCancellationSchedule(wireTicket.WireId, wireTicket.HMWire.ValueDate, (WireDataManager.WireStatus)statusId, daysToAdd);
-                var tempFilePath = string.Format("Temp\\{0}", UserName);
+                var tempFilePath = $"Temp\\{UserName}";
 
                 foreach (var file in wireTicket.HMWire.hmsWireDocuments)
                 {
-                    var fileName = string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureWiresFilesPath, tempFilePath, file.FileName);
+                    var fileName = $"{FileSystemManager.OpsSecureWiresFilesPath}\\{tempFilePath}\\{file.FileName}";
                     var fileInfo = new FileInfo(fileName);
 
                     if (!System.IO.File.Exists(fileInfo.FullName))
                         continue;
 
-                    var newFileName = string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureWiresFilesPath, wireTicket.WireId, file.FileName);
+                    var newFileName =
+                        $"{FileSystemManager.OpsSecureWiresFilesPath}\\{wireTicket.WireId}\\{file.FileName}";
                     var newFileInfo = new FileInfo(newFileName);
 
                     if (newFileInfo.Directory != null && !Directory.Exists(newFileInfo.Directory.FullName))
@@ -429,7 +436,7 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult UploadWireFiles(long wireId)
         {
             var aDocments = new List<hmsWireDocument>();
-            var tempFilePath = string.Format("Temp\\{0}", UserName);
+            var tempFilePath = $"Temp\\{UserName}";
             for (var i = 0; i < Request.Files.Count; i++)
             {
                 var file = Request.Files[i];
@@ -437,7 +444,8 @@ namespace HM.Operations.Secure.Web.Controllers
                 if (file == null)
                     throw new Exception("unable to retrive file information");
 
-                var fileName = string.Format("{0}\\{1}\\{2}", FileSystemManager.OpsSecureWiresFilesPath, (wireId > 0 ? wireId.ToString() : tempFilePath), file.FileName);
+                var fileName =
+                    $"{FileSystemManager.OpsSecureWiresFilesPath}\\{(wireId > 0 ? wireId.ToString() : tempFilePath)}\\{file.FileName}";
                 var fileInfo = new FileInfo(fileName);
 
                 if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
@@ -477,8 +485,9 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public FileResult DownloadWireFile(string fileName, long wireId)
         {
-            var tempFilePath = string.Format("Temp\\{0}", UserName);
-            var file = new FileInfo(string.Format("{0}{1}\\{2}", FileSystemManager.OpsSecureWiresFilesPath, (wireId > 0 ? wireId.ToString() : tempFilePath), fileName));
+            var tempFilePath = $"Temp\\{UserName}";
+            var file = new FileInfo(
+                $"{FileSystemManager.OpsSecureWiresFilesPath}{(wireId > 0 ? wireId.ToString() : tempFilePath)}\\{fileName}");
             return DownloadFile(file, fileName);
         }
 
@@ -497,16 +506,16 @@ namespace HM.Operations.Secure.Web.Controllers
             switch (invoice.FileSource)
             {
                 case "Manual":
-                    return new FileInfo(string.Format("{0}/{1}/{2}", FileSystemManager.InvoicesFileAttachement, invoice.dmaInvoiceReportId, invoice.FileName));
+                    return new FileInfo(
+                        $"{FileSystemManager.InvoicesFileAttachement}/{invoice.dmaInvoiceReportId}/{invoice.FileName}");
                 case "Overriden":
-                    return new FileInfo(string.Format("{0}/{1}/{2}", FileSystemManager.RawFilesOverridesPath, invoice.OriginalContextMonth.ToString("yyyy-MM-dd"), invoice.FileName));
+                    return new FileInfo(
+                        $"{FileSystemManager.RawFilesOverridesPath}/{invoice.OriginalContextMonth:yyyy-MM-dd}/{invoice.FileName}");
                 default:
                     return invoice.FileSource == "Config"
-                ? new FileInfo(string.Format("{0}{1}", FileSystemManager.InternalConfigFiles, invoice.FileName))
-                : new FileInfo(string.Format("{0}{1}",
-                    (invoice.FileSource == "Overriden") && (!invoice.FileName.StartsWith("Overrides\\") || !invoice.FileName.StartsWith("Overrides/"))
-                        ? FileSystemManager.RawFilesOverridesPath
-                        : FileSystemManager.SftpRawFilesOfHM, invoice.FilePath));  // FileOriginManager.GetRawFileDirectoryIncludingSubSir(fileOrigin, contextDate)
+                ? new FileInfo($"{FileSystemManager.InternalConfigFiles}{invoice.FileName}")
+                : new FileInfo(
+                    $"{((invoice.FileSource == "Overriden") && (!invoice.FileName.StartsWith("Overrides\\") || !invoice.FileName.StartsWith("Overrides/")) ? FileSystemManager.RawFilesOverridesPath : FileSystemManager.SftpRawFilesOfHM)}{invoice.FilePath}");  // FileOriginManager.GetRawFileDirectoryIncludingSubSir(fileOrigin, contextDate)
             }
         }
 
@@ -713,7 +722,12 @@ namespace HM.Operations.Secure.Web.Controllers
             {
                 var entityIds = receivingAccounts.Select(s => s.TemplateEntityId).Distinct().ToList();
                 var counterparties = context.dmaCounterPartyOnBoardings.Where(s => entityIds.Contains(s.dmaCounterPartyOnBoardId)).ToDictionary(s => s.dmaCounterPartyOnBoardId.ToString(), v => v.CounterpartyName);
-                var receivingAccountList = receivingAccounts.Select(s => new { id = s.onBoardingSSITemplateId, text = string.IsNullOrWhiteSpace(s.FFCNumber) ? string.Format("{0}-{1}", s.UltimateBeneficiaryAccountNumber, s.TemplateName) : string.Format("{0}-{1}-{2}", s.FFCNumber, s.UltimateBeneficiaryAccountNumber, s.TemplateName) }).ToList();
+                var receivingAccountList = receivingAccounts.Select(s => new
+                {
+                    id = s.onBoardingSSITemplateId,
+                    text = string.IsNullOrWhiteSpace(s.FFCNumber) ? $"{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}"
+                    : $"{s.FFCNumber}-{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}"
+                }).ToList();
                 return Json(new { receivingAccounts, receivingAccountList, counterparties, shouldEnableCollateralPurpose });
             }
         }

@@ -24,17 +24,17 @@ namespace HM.Operations.Secure.Web.Jobs
 
         public string Minute()
         {
-            return string.Format("*/{0} * * * *", Interval);
+            return $"*/{Interval} * * * *";
         }
 
         public string Hour()
         {
-            return string.Format("0 */{0} * * *", Interval);
+            return $"0 */{Interval} * * *";
         }
 
         public string Day(TimeSpan at)
         {
-            return string.Format("{0} {1} */{2} * *", at.Minutes, at.Hours, Interval);
+            return $"{at.Minutes} {at.Hours} */{Interval} * *";
         }
 
         private static readonly Dictionary<char, string> DayNumberMap = new Dictionary<char, string>()
@@ -71,16 +71,16 @@ namespace HM.Operations.Secure.Web.Jobs
             //0 0 ? 1 MON#1 | At 00:00 AM on the first Monday of the January
 
             if (frequency == ScheduleFrequency.Daily)
-                return string.Format("{0} {1} * * 1-5", due.DueTime.Minutes, due.DueTime.Hours);
+                return $"{due.DueTime.Minutes} {due.DueTime.Hours} * * 1-5";
 
             if (frequency == ScheduleFrequency.Weekly)
             {
                 if (due.DueDaysOfWeek != null && due.DueDaysOfWeek.Length > 0)
                 {
-                    return string.Format("{0} {1} * * {2}", due.DueTime.Minutes, due.DueTime.Hours, string.Join(",", due.DueDaysOfWeek));
+                    return $"{due.DueTime.Minutes} {due.DueTime.Hours} * * {string.Join(",", due.DueDaysOfWeek)}";
                 }
 
-                return string.Format("{0} {1} * * {2}", due.DueTime.Minutes, due.DueTime.Hours, due.DueDayOfWeek);
+                return $"{due.DueTime.Minutes} {due.DueTime.Hours} * * {due.DueDayOfWeek}";
             }
 
             if (nthMonthInQuarter <= 0)
@@ -102,18 +102,12 @@ namespace HM.Operations.Secure.Web.Jobs
 
                 var weekOr4ThString = due.ShouldGetNthBusinessDayOfMonth ? "1-5" : "*";
 
-                return string.Format("{0} {1} {2}", due.DueTime.Minutes, due.DueTime.Hours,
-                    !due.IsMonthlyNthDaySelected
-                        ? string.Format("{0} {1} {2}", due.DueDayOfMonth < 0
-                                ? string.Format("L-{0}{1}", (due.DueDayOfMonth * -1), due.ShouldGetNthBusinessDayOfMonth ? "W" : "")
-                                : due.DueDayOfMonth + (due.ShouldGetNthBusinessDayOfMonth ? "W" : ""), monthOr3RdString, weekOr4ThString)
-
-                        : due.MonthlyNthDayOfWeek == "weekday" ? string.Format("{0}W {1} 1-5", NumberToTextMap.First(s => s.Value == due.MonthlyNthDay).Key, monthOr3RdString)
-                        : due.MonthlyNthDay == "last" ? string.Format("* {0} {1}L", monthOr3RdString, DayNumberMap.First(s => s.Value == due.MonthlyNthDayOfWeek).Key)
-                        : string.Format("* {0} {1}#{2}", monthOr3RdString, DayNumberMap.First(s => s.Value == due.MonthlyNthDayOfWeek).Key, NumberToTextMap.First(s => s.Value == due.MonthlyNthDay).Key));
+                return
+                    $"{due.DueTime.Minutes} {due.DueTime.Hours} {(!due.IsMonthlyNthDaySelected ? $"{(due.DueDayOfMonth < 0 ? $"L-{(due.DueDayOfMonth * -1)}{(due.ShouldGetNthBusinessDayOfMonth ? "W" : "")}" : due.DueDayOfMonth + (due.ShouldGetNthBusinessDayOfMonth ? "W" : ""))} {monthOr3RdString} {weekOr4ThString}" : due.MonthlyNthDayOfWeek == "weekday" ? $"{NumberToTextMap.First(s => s.Value == due.MonthlyNthDay).Key}W {monthOr3RdString} 1-5" : due.MonthlyNthDay == "last" ? $"* {monthOr3RdString} {DayNumberMap.First(s => s.Value == due.MonthlyNthDayOfWeek).Key}L" : $"* {monthOr3RdString} {DayNumberMap.First(s => s.Value == due.MonthlyNthDayOfWeek).Key}#{NumberToTextMap.First(s => s.Value == due.MonthlyNthDay).Key}")}";
             }
 
-            return string.Format("{0} {1} * {2} {3}", due.DueTime.Minutes, frequency == ScheduleFrequency.Quarterly ? nthMonthInQuarter + "/3" : "*", due.DueTime.Hours, due.ShouldGetNthBusinessDayOfMonth ? "1-5" : "*");
+            return
+                $"{due.DueTime.Minutes} {(frequency == ScheduleFrequency.Quarterly ? nthMonthInQuarter + "/3" : "*")} * {due.DueTime.Hours} {(due.ShouldGetNthBusinessDayOfMonth ? "1-5" : "*")}";
         }
 
         public static DueDate GetDue(string cronExpression, ScheduleFrequency frequency, out int nthQuarterlyMonth)
@@ -150,7 +144,8 @@ namespace HM.Operations.Secure.Web.Jobs
             var charactes = cronExpression.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
             if (charactes.Length < 5)
-                throw new FormatException(string.Format("'{0}' is Invalid CRON Expression and system is unable to parse it", cronExpression));
+                throw new FormatException(
+                    $"'{cronExpression}' is Invalid CRON Expression and system is unable to parse it");
 
             //Char[0] = minutes
             //Char[1] = hours
@@ -281,15 +276,15 @@ namespace HM.Operations.Secure.Web.Jobs
                 case ScheduleFrequency.Minutely:
                     if (scheduleTime.Minutes == 0)
                         throw new Exception("Minutes is zero");
-                    return string.Format("*/{0} * * * *", scheduleTime.Minutes);
+                    return $"*/{scheduleTime.Minutes} * * * *";
                 case ScheduleFrequency.MinutelyOnWeekDays:
                     if (scheduleTime.Minutes == 0)
                         throw new Exception("Minutes is zero");
-                    return string.Format("*/{0} * * * 1-5", scheduleTime.Minutes);
+                    return $"*/{scheduleTime.Minutes} * * * 1-5";
                 case ScheduleFrequency.Hourly:
                     if (scheduleTime.Hours == 0)
                         throw new Exception("Hours is zero");
-                    return string.Format("* */{0} * * *", scheduleTime.Hours);
+                    return $"* */{scheduleTime.Hours} * * *";
                 case ScheduleFrequency.Daily:
                 default:
                     {

@@ -52,7 +52,7 @@ namespace HM.Operations.Secure.Web.Controllers
                                 select new WireUsers
                                 {
                                     User = hmsUser,
-                                    Email = userEmailMap.ContainsKey(loginId) ? userEmailMap[loginId] : string.Format("Unknown-user-{0}", loginId),
+                                    Email = userEmailMap.ContainsKey(loginId) ? userEmailMap[loginId] : $"Unknown-user-{loginId}",
                                     UserGroup = userGroupMap.ContainsKey(loginId) ? userGroupMap[loginId] : "-Un-categorized User-",
                                     AuthorizationCode = UserAuthorizationCode.AuthorizedToHandleAllWires,
                                     LastAccessedOn = lastAccessedOnMap.ContainsKey(loginId) ? lastAccessedOnMap[loginId] : new DateTime(),
@@ -79,8 +79,8 @@ namespace HM.Operations.Secure.Web.Controllers
             AuditManager.LogAudit(auditData);
 
             var allWireUsers = (List<WireUsers>)GetSessionValue(OpsSecureSessionVars.WireUserGroupData.ToString());
-            var fileName = string.Format("HMAuthTransfer_{0:yyyy_MM_dd}_{1}.pdf", DateTime.Today, groupOption);
-            var exportFileInfo = new FileInfo(string.Format("{0}{1}", FileSystemManager.UploadTemporaryFilesPath, fileName));
+            var fileName = $"HMAuthTransfer_{DateTime.Today:yyyy_MM_dd}_{groupOption}.pdf";
+            var exportFileInfo = new FileInfo($"{FileSystemManager.UploadTemporaryFilesPath}{fileName}");
 
             switch (groupOption)
             {

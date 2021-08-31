@@ -14,13 +14,8 @@ namespace HM.Operations.Secure.Web.Jobs
 
         private static readonly ILog Logger = LogManager.GetLogger(typeof(SSITemplateDeactivator));
 
-        private static int DeactivationPeriodInMonths
-        {
-            get
-            {
-                return ConfigurationManagerWrapper.IntegerSetting("DeactivationPeriodInMonths", 12);
-            }
-        }
+        private static int DeactivationPeriodInMonths => ConfigurationManagerWrapper.IntegerSetting("DeactivationPeriodInMonths", 12);
+
         [DisplayName("SSITemplate-Deactivator")]
         public static void DeacitvateStaleSSITemplates()
         {
