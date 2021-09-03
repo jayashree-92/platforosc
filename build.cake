@@ -18,6 +18,10 @@ var testAssemblies = "./**/bin/" + configuration + "/" + testPattern + ".dll";
 var groupId = Argument("groupid", OrFromPom("//*[local-name()='project' and namespace-uri() != '']/*[local-name()='groupId']"));
 var artifactId = Argument("artifactid", OrFromPom("//*[local-name()='project' and namespace-uri() != '']/*[local-name()='artifactId']"));
 var version = Argument("version", OrFromPom("//*[local-name()='project' and namespace-uri() != '']/*[local-name()='version']"));
+if(configuration == "QA")
+{
+    version = Argument("version", "0.0.2-SNAPSHOT");
+}
 var publishDir = "/publish";
 var testResultsDir = "TestResults";
 var coverageFilePath = $"./{testResultsDir}/OpenCover.xml";

@@ -40,7 +40,7 @@ Build:
 Upload_artifact:
   extends: .Dotnetfw_upload_artifact
   rules:
-    - if: $CI_BUILD_REF_NAME == "develop"
+    - if: '$CI_BUILD_REF_NAME == "develop" && $CI_BUILD_REF_NAME == "release"'
   stage: publish  
 
 Defendbot_scan:
