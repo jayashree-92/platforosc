@@ -8,7 +8,7 @@
 #tool "nuget:?package=ReportGenerator&version=4.5.6"
 
 var target = Argument("target", "package");
-var configuration = Argument("configuration", "Test");
+var configuration = EnvironmentVariable<string>("configuration", "Test");
 var solution = File(Argument("sln", GetFiles("./*.sln").FirstOrDefault().ToString()));
 var testPattern = Argument("test", "*.Tests");
 var sonarUrl = Argument("sonarurl", "https://sonarqube.bnymellon.net");
