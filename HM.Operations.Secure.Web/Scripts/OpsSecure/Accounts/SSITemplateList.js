@@ -26,6 +26,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
     }
 
     $scope.fnGetSSITemplates = function () {
+        $("#btnAddNewSSITemplate").button("loading");
         $http.get("/SSITemplate/GetAllBrokerSsiTemplates").then(function (response) {
 
             if (response.data.BrokerSsiTemplates.length > 0)
@@ -180,7 +181,8 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                     //"bPaginate": false,
                     iDisplayLength: -1
                 });
-
+            
+            $("#btnAddNewSSITemplate").button("reset");
             var searchText = decodeURI(getUrlParameter("searchText"));
 
             if (searchText != "" && searchText != undefined && searchText != 'undefined') {

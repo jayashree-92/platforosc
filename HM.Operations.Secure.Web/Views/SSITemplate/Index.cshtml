@@ -21,7 +21,7 @@
                 <div class="panel-heading" style="min-height: 50px;">
                     @if (User.IsWireUser())
                     {
-                        <button ng-click="fnCreateSSITemplate()" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-plus"></i>&nbsp; Add SSI Template</button>
+                        <button ng-click="fnCreateSSITemplate()" id="btnAddNewSSITemplate" class="btn btn-info btn-sm" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-plus"></i>&nbsp; Add SSI Template</button>
                         <button class="btn btn-default btn-sm" ng-click="fnClearAdvanceSearch()" data-toggle="collapse" data-target="#ssiSearchPane"><i class="glyphicon glyphicon-filter"></i>&nbsp;Advance Filter</button>
 
                         <div class="pull-right btn-group" style="padding-right: 2px;">
@@ -67,11 +67,9 @@
                     <div id="loading" style="display: none; text-align: center;">
                         <img id="loading-image" src="/Images/spinner.gif" alt="Loading..." />
                     </div>
-                    <table id="ssiTemplateTable" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+                    <table id="ssiTemplateTable" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
                 </div>
             </div>
-
-
         </div>
         <div id="dvAssociation" class="tab-pane">
             <div class="panel panel-default container" id="basicDetail">
