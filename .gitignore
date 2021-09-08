@@ -22,8 +22,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 Web.config
-Web.*.config
-
+WebConfigs/
 
 # Visual Studio 2015 cache/options directory
 .vs/
