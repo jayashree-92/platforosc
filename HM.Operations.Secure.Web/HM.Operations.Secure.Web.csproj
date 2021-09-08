@@ -888,6 +888,12 @@
     <Content Include="Views\Shared\_Schedules.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\FundAccounts\BankAddress.cshtml" />
+    <Content Include="Web.QA.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Test.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
     <None Include="WebConfigs\Web.Local.config">
       <SubType>Designer</SubType>
     </None>

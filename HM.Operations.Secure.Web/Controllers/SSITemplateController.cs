@@ -8,6 +8,7 @@ using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
+using HM.Operations.Secure.Middleware.Util;
 using HM.Operations.Secure.Web.Utility;
 
 namespace HM.Operations.Secure.Web.Controllers
@@ -50,22 +51,29 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public JsonResult GetAllBrokerSsiTemplates()
         {
-            var brokerSsiTemplates = SSITemplateManager.GetAllBrokerSsiTemplates();
+            var ssiTemplates = SSITemplateManager.GetAllBrokerSsiTemplates();
             var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties();
             var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
             var serviceProviders = SSITemplateManager.GetAllServiceProviderList();
+
+            ssiTemplates.ForEach(ssi =>
+            {
+                ssi.CreatedBy = ssi.CreatedBy.HumanizeEmail();
+                ssi.UpdatedBy = ssi.UpdatedBy.HumanizeEmail();
+            });
+
+            var brokerSsiTemplates = ssiTemplates.AsParallel().Select(template => new
+            {
+                SSITemplate = SSITemplateManager.SetSSITemplateDefaults(template),
+                AgreementType = agreementTypes.ContainsKey(template.dmaAgreementTypeId) && string.IsNullOrEmpty(template.ServiceProvider) ? agreementTypes[template.dmaAgreementTypeId] : string.Empty,
+                Broker = counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty
+            }).ToList();
+
             return Json(new
             {
-                BrokerSsiTemplates = brokerSsiTemplates.Select(template => new
-                {
-                    SSITemplate = SSITemplateManager.SetSSITemplateDefaults(template),
-                    AgreementType = agreementTypes.ContainsKey(template.dmaAgreementTypeId) && string.IsNullOrEmpty(template.ServiceProvider) ? agreementTypes[template.dmaAgreementTypeId] : string.Empty,
-                    Broker = counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty
-                }).ToList(),
+                BrokerSsiTemplates = brokerSsiTemplates,
                 counterParties = counterParties.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
-                serviceProviders = serviceProviders.Select(servProv => new { id = servProv, text = servProv }).ToList(),
-                //AllSSITemplateTypes = brokerSsiTemplates.Select(s => s.SSITemplateType).Distinct().OrderBy(s => s).ToList(),
-                //AllStatus = brokerSsiTemplates.Select(s => s.SSITemplateStatus).Distinct().OrderBy(s => s).ToList(),
+                serviceProviders = serviceProviders.Select(servProv => new { id = servProv, text = servProv }).ToList()
             });
         }
 
@@ -74,8 +82,6 @@ namespace HM.Operations.Secure.Web.Controllers
             var onBoardingSsiTemplate = SSITemplateManager.GetSsiTemplate(templateId);
             var document = onBoardingSsiTemplate.onBoardingSSITemplateDocuments.ToList();
             onBoardingSsiTemplate.onBoardingSSITemplateDocuments = null;
-
-            //associatedAccounts
 
             return Json(new
             {

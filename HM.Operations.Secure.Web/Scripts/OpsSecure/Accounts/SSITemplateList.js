@@ -126,9 +126,9 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         { "mData": "SSITemplate.StatusComments", "sTitle": "Comments" },
                         {
                             "mData": "SSITemplate.CreatedBy", "sTitle": "Created By",
-                            "mRender": function (data) {
-                                return humanizeEmail(data);
-                            }
+                            //"mRender": function (data) {
+                            //    return humanizeEmail(data);
+                            //}
                         },
                         {
                             "mData": "SSITemplate.CreatedAt",
@@ -137,9 +137,9 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         },
                         {
                             "mData": "SSITemplate.UpdatedBy", "sTitle": "Last Modified By",
-                            "mRender": function (data) {
-                                return humanizeEmail(data);
-                            }
+                            //"mRender": function (data) {
+                            //    return humanizeEmail(data);
+                            //}
                         },
                         {
                             "mData": "SSITemplate.UpdatedAt",
