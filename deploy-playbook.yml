@@ -120,7 +120,7 @@
       when: appDir03 is defined
     
     - name: "Clean Up Test-Deploy Folder inside AnisbleDeployment"
-      win_shell: Remove-Item ""{{nexus_code_available_path}}/artifacts/*" -Force -Recurse
+      win_shell: Remove-Item {{nexus_code_available_path}}/artifacts/*" -Force -Recurse
          
     - name: remove htm file from deployment folder
       win_file:
