@@ -90,42 +90,7 @@
     - name: "clean Up Deploy Folder"
       win_shell: Remove-Item "{{ appDir03 }}*" -Force -Recurse
       when: appDir03 is defined  
-    # - name: "Clean Up Deploy Folder"
-    #   win_file:
-    #     path: "{{ appDir01 }}"
-    #     state: absent
-    #   when: appDir01 is defined
-
-    # - name: Creates directories
-    #   win_file:
-    #     path: "{{ appDir01 }}"
-    #     state: directory
-    #   when: appDir01 is defined  
-
-    # - name: "Clean Up Deploy Folder"
-    #   win_file:
-    #     path: "{{ appDir02 }}"
-    #     state: absent
-    #   when: appDir02 is defined
-
-    # - name: Creates directories
-    #   win_file:
-    #     path: "{{ appDir02 }}"
-    #     state: directory
-    #   when: appDir02 is defined  
-
-    # - name: "Clean Up Deploy Folder"
-    #   win_file:
-    #     path: "{{ appDir03 }}"
-    #     state: absent
-    #   when: appDir03 is defined
-      
-    # - name: Creates directories
-    #   win_file:
-    #     path: "{{ appDir03 }}"
-    #     state: directory
-    #   when: appDir03 is defined  
-
+    
     - name: "Remove extra config file and Rename enviroment specific config file"
       win_shell: |
         Remove-Item -Path "{{nexus_code_available_path}}/artifacts/Web.config" 
@@ -153,12 +118,10 @@
         dest: "{{ appDir03 }}"
         remote_src: yes    
       when: appDir03 is defined
-
+    
     - name: "Clean Up Test-Deploy Folder inside AnisbleDeployment"
-      win_file:
-        path: "{{nexus_code_available_path}}/artifacts/"
-        state: absent
-        
+      win_shell: Remove-Item ""{{nexus_code_available_path}}/artifacts/*" -Force -Recurse
+         
     - name: remove htm file from deployment folder
       win_file:
         path: "{{ appDir01 }}/app_offline.htm"

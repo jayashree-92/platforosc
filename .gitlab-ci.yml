@@ -35,7 +35,10 @@ Build:
     - if: '$CI_ENVIRONMENT_NAME == "test" && $CI_BUILD_REF_NAME == "release"'
       variables:
         configuration: "QA"
-    - when: always  
+    - if: $CI_BUILD_REF_NAME == "release" 
+      when: never
+    - when: always
+  stage: build   
 
 Upload_artifact:
   extends: .Dotnetfw_upload_artifact
