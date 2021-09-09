@@ -255,25 +255,33 @@ namespace HM.Operations.Secure.Web.Controllers
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
             var receivingAccountTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.ReceivingAgreementTypesForAccount).Split(',').ToList();
 
+            onBoardingAccounts.ForEach(fndAcc =>
+            {
+                fndAcc.CreatedBy = fndAcc.CreatedBy.HumanizeEmail();
+                fndAcc.UpdatedBy = fndAcc.UpdatedBy.HumanizeEmail();
+            });
+
+
+            var allFundAccounts = onBoardingAccounts.AsParallel().Select(account => new
+            {
+                Account = FundAccountManager.SetAccountDefaults(account),
+                AccountNumber = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].AccountNumber : string.Empty,
+                AgreementName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].AgreementShortName : string.Empty,
+                AgreementTypeId = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].dmaAgreementTypeId ?? 0 : 0,
+                CounterpartyFamilyName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].CounterpartyFamily : string.Empty,
+                CounterpartyName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].CounterpartyName : string.Empty,
+                FundName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].LegalFundName : string.Empty,
+                ClientName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].ClientName : string.Empty,
+                FundStatus = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].LaunchStatus : string.Empty,
+                ApprovedMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Approved"),
+                PendingApprovalMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Pending Approval"),
+            }).ToList();
+
             return Json(new
             {
                 accountTypes = accountTypes.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
                 receivingAccountTypes,
-                OnBoardingAccounts = onBoardingAccounts.Select(account => new
-                {
-                    Account = FundAccountManager.SetAccountDefaults(account),
-                    AccountNumber = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].AccountNumber : string.Empty,
-                    AgreementName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].AgreementShortName : string.Empty,
-                    AgreementTypeId = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].dmaAgreementTypeId ?? 0 : 0,
-                    CounterpartyFamilyName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].CounterpartyFamily : string.Empty,
-                    CounterpartyName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].CounterpartyName : string.Empty,
-                    FundName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].LegalFundName : string.Empty,
-                    ClientName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].ClientName : string.Empty,
-                    FundStatus = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].LaunchStatus : string.Empty,
-                    ApprovedMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Approved"),
-                    PendingApprovalMaps = account.onBoardingAccountSSITemplateMaps.Count(s => s.Status == "Pending Approval"),
-
-                }).ToList()
+                OnBoardingAccounts = allFundAccounts
             });
         }
 
