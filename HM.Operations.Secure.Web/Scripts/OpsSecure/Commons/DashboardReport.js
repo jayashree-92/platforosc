@@ -68,46 +68,48 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
         function (response) {
             $scope.AllPreferences = response.data;
             $scope.PreferenceKeys = [];
-            $timeout(function () {
-                $($scope.AllPreferences).each(function (i, v) {
-
-                    $scope.PreferenceKeys.push(v.Preference);
-                    //Add All items - options
-                    var allOptions = v.Options;
-                    allOptions.splice(0, 0, { id: -1, text: "All " + v.Preference });
-
-                    //initialize Select2
-                    $("#li" + v.Preference).select2({
-                        data: allOptions, multiple: true, width: "100%", closeOnSelect: false,
-                        formatResult: formatSelect,
-                        formatSelection: formatSelect
-                    });
-
-                    $("#li" + v.Preference).select2("container").find("ul.select2-choices").sortable({
-                        containment: "parent",
-                        start: function () { $("#li" + v.Preference).select2("onSortStart"); },
-                        update: function () { $("#li" + v.Preference).select2("onSortEnd"); }
-                    });
-
-                    $("#li" + v.Preference).on("change", function () {
-                        var selectedPref = $("#li" + v.Preference).select2("val");
-                        v.TotalSelected = selectedPref.length == 0 || selectedPref.indexOf("-1") >= 0 ? "All" : $("#li" + v.Preference).select2("val").length;
-
-                        $scope.IsDashboardLoading = false;
-                        if (!$scope.IsTemplateLoadingInProgress && !$scope.IsNoTemplateSelected) {
-                            $scope.IsPreferencesChanged = true;
-                        }
-
-                        $scope.fnUpdatePrefernceChoices(v.Preference, selectedPref);
-                    });
-                });
-
+            $timeout(function () {               
+                $scope.SetAllPreferences();
                 //Load Templates
                 $scope.fnGetAllTemplates();
 
             }, 200);
         });
+    $scope.SetAllPreferences = function (preferencesToSet) {
+        $($scope.AllPreferences).each(function (i, v) {
+            if (preferencesToSet != null && preferencesToSet.indexOf(v.Preference) < 0)
+                return;
+            $scope.PreferenceKeys.push(v.Preference);
+            //Add All items - options
+            var allOptions = v.Options;
+            allOptions.splice(0, 0, { id: -1, text: "All " + v.Preference });
 
+            //initialize Select2
+            $("#li" + v.Preference).select2({
+                data: allOptions, multiple: true, width: "100%", closeOnSelect: false,
+                formatResult: formatSelect,
+                formatSelection: formatSelect
+            });
+
+            $("#li" + v.Preference).select2("container").find("ul.select2-choices").sortable({
+                containment: "parent",
+                start: function () { $("#li" + v.Preference).select2("onSortStart"); },
+                update: function () { $("#li" + v.Preference).select2("onSortEnd"); }
+            });
+
+            $("#li" + v.Preference).on("change", function () {
+                var selectedPref = $("#li" + v.Preference).select2("val");
+                v.TotalSelected = selectedPref.length == 0 || selectedPref.indexOf("-1") >= 0 ? "All" : $("#li" + v.Preference).select2("val").length;
+
+                $scope.IsDashboardLoading = false;
+                if (!$scope.IsTemplateLoadingInProgress && !$scope.IsNoTemplateSelected) {
+                    $scope.IsPreferencesChanged = true;
+                }
+
+                $scope.fnUpdatePrefernceChoices(v.Preference, selectedPref);
+            });
+        });
+    }
     $scope.fnUpdatePrefernceChoices = function (preference, selectedPref) {
 
         if (selectedPref.length === 0)
@@ -203,6 +205,8 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
         $scope.IsNoTemplateSelected = false;
         $scope.TemplateName = $("#liDashboardTemplates").select2("data").text;
         $scope.IsAllAndEverythingSelected = $scope.TemplateName === "All & Everything";
+
+        $scope.SetAllPreferences(["Funds", "Counterparties", "AccountTypes", "Admins"]);
 
         //Get the preferences of the template
         $http.get("/DashboardReport/GetPreferences?templateId=" + $scope.SelectedTemplateId).then(
