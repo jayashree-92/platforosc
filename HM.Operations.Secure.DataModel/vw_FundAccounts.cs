@@ -50,5 +50,6 @@ namespace HM.Operations.Secure.DataModel
         public Nullable<double> HoldbackAmount { get; set; }
         public string AdminChoice { get; set; }
         public Nullable<long> dmaOnBoardingAdminChoiceId { get; set; }
+        public bool IsUmberllaFund { get; set; }
     }
 }

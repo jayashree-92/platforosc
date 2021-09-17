@@ -257,6 +257,16 @@
                                                 <textarea cols="10" rows="3" ng-model="FundRegistedAddress" class="form-control control-label" disabled="disabled"></textarea>
                                             </div>
                                         </div>
+                                        <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
+                                            <div class="col-sm-8 col-md-4 col-lg-4">
+                                                <label class="control-label">Treasury Margin Check</label>
+                                            </div>
+                                            <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                                <div ng-model="accountDetail.IsExcludedFromTreasuryMarginCheck" ng-click="accountDetail.IsExcludedFromTreasuryMarginCheck=!accountDetail.IsExcludedFromTreasuryMarginCheck">
+                                                    <input id="chkIsExcludedFromMarginCheck" type="checkbox" data-size="mini" data-width="200" data-height="25" data-onstyle="btn btn-xs btn-danger" data-offstyle="btn btn-xs btn-success" data-toggle="toggle" data-off="Included" data-on="Excluded">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <p></p>
                                 </div>

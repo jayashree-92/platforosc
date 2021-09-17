@@ -80,6 +80,7 @@ namespace HM.Operations.Secure.DataModel
         public string MarginAccountNumber { get; set; }
         public string TopLevelManagerAccountNumber { get; set; }
         public bool IsKeyFieldsChanged { get; set; }
+        public bool IsExcludedFromTreasuryMarginCheck { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsAccountCallback> hmsAccountCallbacks { get; set; }

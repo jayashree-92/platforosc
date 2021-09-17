@@ -511,6 +511,7 @@
           <Property Name="MarginAccountNumber" Type="varchar" MaxLength="100" />
           <Property Name="TopLevelManagerAccountNumber" Type="varchar" MaxLength="100" />
           <Property Name="IsKeyFieldsChanged" Type="bit" Nullable="false" />
+          <Property Name="IsExcludedFromTreasuryMarginCheck" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="onBoardingAccountBICorABA">
           <Key>
@@ -665,6 +666,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             <PropertyRef Name="hmFundId" />
             <PropertyRef Name="AccountName" />
             <PropertyRef Name="UltimateBeneficiaryAccountNumber" />
+            <PropertyRef Name="IsUmberllaFund" />
           </Key>
           <Property Name="onBoardingAccountId" Type="bigint" Nullable="false" />
           <Property Name="dmaAgreementOnBoardingId" Type="bigint" />
@@ -702,6 +704,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="HoldbackAmount" Type="float" />
           <Property Name="dmaOnBoardingAdminChoiceId" Type="bigint" />
           <Property Name="AdminChoice" Type="varchar" MaxLength="1000" />
+          <Property Name="IsUmberllaFund" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
@@ -1350,7 +1353,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
     [vw_FundAccounts].[LaunchStatus] AS [LaunchStatus], 
     [vw_FundAccounts].[HoldbackAmount] AS [HoldbackAmount], 
     [vw_FundAccounts].[dmaOnBoardingAdminChoiceId] AS [dmaOnBoardingAdminChoiceId], 
-    [vw_FundAccounts].[AdminChoice] AS [AdminChoice]
+    [vw_FundAccounts].[AdminChoice] AS [AdminChoice], 
+    [vw_FundAccounts].[IsUmberllaFund] AS [IsUmberllaFund]
     FROM [dbo].[vw_FundAccounts] AS [vw_FundAccounts]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_hmsAccountCallback_onBoardingAccountId" Association="Self.FK_hmsAccountCallback_onBoardingAccountId">
@@ -2301,6 +2305,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <PropertyRef Name="hmFundId" />
             <PropertyRef Name="AccountName" />
             <PropertyRef Name="UltimateBeneficiaryAccountNumber" />
+            <PropertyRef Name="IsUmberllaFund" />
           </Key>
           <Property Name="onBoardingAccountId" Type="Int64" Nullable="false" />
           <Property Name="dmaAgreementOnBoardingId" Type="Int64" />
@@ -2338,6 +2343,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="HoldbackAmount" Type="Double" />
           <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="dmaOnBoardingAdminChoiceId" Type="Int64" />
+          <Property Name="IsUmberllaFund" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsSSICallback">
           <Key>
@@ -2437,6 +2443,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="IsKeyFieldsChanged" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardAccountId" FromRole="onBoardingAccount" ToRole="hmsWire" />
           <NavigationProperty Name="hmsWires1" Relationship="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" FromRole="onBoardingAccount" ToRole="hmsWire" />
+          <Property Name="IsExcludedFromTreasuryMarginCheck" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Type="OperationsSecureModel.onBoardingAccount" Role="onBoardingAccount" Multiplicity="1" />
@@ -3526,6 +3533,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="vw_FundAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.vw_FundAccounts">
               <MappingFragment StoreEntitySet="vw_FundAccounts">
+                <ScalarProperty Name="IsUmberllaFund" ColumnName="IsUmberllaFund" />
                 <ScalarProperty Name="dmaOnBoardingAdminChoiceId" ColumnName="dmaOnBoardingAdminChoiceId" />
                 <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
                 <ScalarProperty Name="HoldbackAmount" ColumnName="HoldbackAmount" />
@@ -3584,6 +3592,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="onBoardingAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingAccount">
               <MappingFragment StoreEntitySet="onBoardingAccount">
+                <ScalarProperty Name="IsExcludedFromTreasuryMarginCheck" ColumnName="IsExcludedFromTreasuryMarginCheck" />
                 <ScalarProperty Name="IsKeyFieldsChanged" ColumnName="IsKeyFieldsChanged" />
                 <ScalarProperty Name="TopLevelManagerAccountNumber" ColumnName="TopLevelManagerAccountNumber" />
                 <ScalarProperty Name="MarginAccountNumber" ColumnName="MarginAccountNumber" />

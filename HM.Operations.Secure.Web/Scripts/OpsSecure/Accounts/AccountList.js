@@ -860,6 +860,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 account.IsReceivingAccount = false;
             $scope.onBoardingAccountDetails[0] = account;
 
+
+            $timeout(function () {
+                $("#chkIsExcludedFromMarginCheck").bootstrapToggle();
+                $("#chkIsExcludedFromMarginCheck").prop("checked", account.IsExcludedFromTreasuryMarginCheck).change();
+            }, 200);
+
+
             //$scope.accountDetail = account;
         });
         $scope.fnPreloadAccountData().then($scope.fnInitPreLoadEvents());
@@ -1059,7 +1066,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         value.IntermediaryBankAddress = $("#intermediaryBankAddress0").val();
 
         var data = $("#liAccountModule_0").select2("data") == undefined ? [] : $("#liAccountModule_0").select2("data");
-        value.AccountModule = data.map(s => { return s.id }).join(",");
+        var allsIds = data.map(s => { return s.id });
+        value.AccountModule = allsIds.length > 0 ? data.map(s => { return s.id }).join(",") : "";
 
         value.UltimateBeneficiaryBankName = $("#ultimateBankName0").val();
         value.UltimateBeneficiaryBankAddress = $("#ultimateBankAddress0").val();
