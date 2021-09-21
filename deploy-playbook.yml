@@ -5,6 +5,11 @@
   vars:
 
   tasks:
+    - name: Create Deployment Folder if not exist
+      win_shell: |
+        if (!(Test-Path {{nexus_code_available_path}}))
+              { New-Item -itemType Directory -Path {{nexus_code_available_path}} -Name deploymentfolder}
+
     - name: download artifact from Nexus
       win_get_url:
         url: http://nexus.bnymellon.net/nexus/service/local/artifact/maven/redirect?r={{ repo }}&g={{ group }}&a={{ artifact }}&v={{ version }}&e={{ extension }}
