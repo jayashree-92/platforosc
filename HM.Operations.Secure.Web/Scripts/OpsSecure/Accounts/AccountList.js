@@ -911,7 +911,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
 
-        if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0) && !$scope.IsBNYMBroker && status!="Closed") {
+        if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0) && !$scope.IsBNYMBroker && $scope.onBoardingAccountDetails[0].AccountStatus != "Closed") {
             notifyWarning("Please add atleast one Callback check to approve account");
             //$scope.IsKeyFieldsChanged=false;
             return;
@@ -923,7 +923,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#btnSaveComment").addClass("btn-warning").removeClass("btn-success").removeClass("btn-primary");
             $("#btnSaveComment").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
         } else if (statusAction == "Approve") {
-            if ($scope.IsKeyFieldsChanged && !$scope.IsBNYMBroker) {
+            if ($scope.IsKeyFieldsChanged && !$scope.IsBNYMBroker && $scope.onBoardingAccountDetails[0].AccountStatus != "Closed") {
                 notifyWarning("Please add one Callback check to approve account");
                 return;
             }
@@ -2023,8 +2023,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
 
-        $scope.CheckSSIFieldsChanges(val, oldVal);
-
+        if (val[0].onBoardingAccountId != 0)
+            $scope.CheckSSIFieldsChanges(val, oldVal);
 
         if (val[0].onBoardingAccountId == oldVal[0].onBoardingAccountId) {
             $scope.isApproved = false;
