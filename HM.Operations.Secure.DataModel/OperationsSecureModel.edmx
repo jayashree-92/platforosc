@@ -675,6 +675,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             <PropertyRef Name="AccountName" />
             <PropertyRef Name="UltimateBeneficiaryAccountNumber" />
             <PropertyRef Name="IsUmberllaFund" />
+            <PropertyRef Name="IsExcludedFromTreasuryMarginCheck" />
           </Key>
           <Property Name="onBoardingAccountId" Type="bigint" Nullable="false" />
           <Property Name="dmaAgreementOnBoardingId" Type="bigint" />
@@ -713,6 +714,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="dmaOnBoardingAdminChoiceId" Type="bigint" />
           <Property Name="AdminChoice" Type="varchar" MaxLength="1000" />
           <Property Name="IsUmberllaFund" Type="bit" Nullable="false" />
+          <Property Name="IsExcludedFromTreasuryMarginCheck" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
@@ -1375,7 +1377,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
     [vw_FundAccounts].[HoldbackAmount] AS [HoldbackAmount], 
     [vw_FundAccounts].[dmaOnBoardingAdminChoiceId] AS [dmaOnBoardingAdminChoiceId], 
     [vw_FundAccounts].[AdminChoice] AS [AdminChoice], 
-    [vw_FundAccounts].[IsUmberllaFund] AS [IsUmberllaFund]
+    [vw_FundAccounts].[IsUmberllaFund] AS [IsUmberllaFund], 
+    [vw_FundAccounts].[IsExcludedFromTreasuryMarginCheck] AS [IsExcludedFromTreasuryMarginCheck]
     FROM [dbo].[vw_FundAccounts] AS [vw_FundAccounts]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_hmsAccountCallback_onBoardingAccountId" Association="Self.FK_hmsAccountCallback_onBoardingAccountId">
@@ -2336,6 +2339,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <PropertyRef Name="AccountName" />
             <PropertyRef Name="UltimateBeneficiaryAccountNumber" />
             <PropertyRef Name="IsUmberllaFund" />
+            <PropertyRef Name="IsExcludedFromTreasuryMarginCheck" />
           </Key>
           <Property Name="onBoardingAccountId" Type="Int64" Nullable="false" />
           <Property Name="dmaAgreementOnBoardingId" Type="Int64" />
@@ -2374,6 +2378,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="dmaOnBoardingAdminChoiceId" Type="Int64" />
           <Property Name="IsUmberllaFund" Type="Boolean" Nullable="false" />
+          <Property Name="IsExcludedFromTreasuryMarginCheck" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsSSICallback">
           <Key>
@@ -3585,6 +3590,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="vw_FundAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.vw_FundAccounts">
               <MappingFragment StoreEntitySet="vw_FundAccounts">
+                <ScalarProperty Name="IsExcludedFromTreasuryMarginCheck" ColumnName="IsExcludedFromTreasuryMarginCheck" />
                 <ScalarProperty Name="IsUmberllaFund" ColumnName="IsUmberllaFund" />
                 <ScalarProperty Name="dmaOnBoardingAdminChoiceId" ColumnName="dmaOnBoardingAdminChoiceId" />
                 <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
