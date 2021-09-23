@@ -77,5 +77,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual DbSet<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
         public virtual DbSet<hmsWireAutoCancellationJob> hmsWireAutoCancellationJobs { get; set; }
         public virtual DbSet<hmsBankAccountAddress> hmsBankAccountAddresses { get; set; }
+        public virtual DbSet<hmsWireInterestAssociation> hmsWireInterestAssociations { get; set; }
     }
 }

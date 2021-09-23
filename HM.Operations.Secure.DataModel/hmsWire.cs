@@ -24,6 +24,7 @@ namespace HM.Operations.Secure.DataModel
             this.hmsWireLogs = new HashSet<hmsWireLog>();
             this.hmsWireWorkflowLogs = new HashSet<hmsWireWorkflowLog>();
             this.hmsWireAutoCancellationJobs = new HashSet<hmsWireAutoCancellationJob>();
+            this.hmsWireInterestAssociations = new HashSet<hmsWireInterestAssociation>();
         }
     
         public long hmsWireId { get; set; }
@@ -81,5 +82,7 @@ namespace HM.Operations.Secure.DataModel
         public virtual ICollection<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireAutoCancellationJob> hmsWireAutoCancellationJobs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsWireInterestAssociation> hmsWireInterestAssociations { get; set; }
     }
 }

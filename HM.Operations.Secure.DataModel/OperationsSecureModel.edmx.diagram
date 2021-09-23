@@ -103,6 +103,8 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireAutoCancellationJob" Width="1.5" PointX="29.75" PointY="12.125" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsBankAccountAddress" Width="1.5" PointX="10.375" PointY="12.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsWireInterestAssociation" Width="1.5" PointX="29.75" PointY="15.625" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWireInterestAssociation_hmsWires_hmsWireId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -315,6 +315,14 @@
           <Property Name="hmsWireFieldId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hmsCollateralCashPurposeLkupId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsWireInterestAssociation">
+          <Key>
+            <PropertyRef Name="hmsWireInterestAssociationId" />
+          </Key>
+          <Property Name="hmsWireInterestAssociationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="hmsWireId" Type="bigint" Nullable="false" />
+          <Property Name="dmaInterestReportEodDataId" Type="bigint" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsWireInvoiceAssociation">
           <Key>
             <PropertyRef Name="hmsWireInvoiceAssociationId" />
@@ -868,6 +876,18 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_hmsWireInterestAssociation_hmsWires_hmsWireId">
+          <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
+          <End Role="hmsWireInterestAssociation" Type="Self.hmsWireInterestAssociation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWires">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireInterestAssociation">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="1" />
           <End Role="hmsWireInvoiceAssociation" Type="Self.hmsWireInvoiceAssociation" Multiplicity="*" />
@@ -1293,6 +1313,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySet Name="hmsWireCutoffTimeZones" EntityType="Self.hmsWireCutoffTimeZones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireDocument" EntityType="Self.hmsWireDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireFields" EntityType="Self.hmsWireFields" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsWireInterestAssociation" EntityType="Self.hmsWireInterestAssociation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireInvoiceAssociation" EntityType="Self.hmsWireInvoiceAssociation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireLogs" EntityType="Self.hmsWireLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireLogTypeLkup" EntityType="Self.hmsWireLogTypeLkup" Schema="dbo" store:Type="Tables" />
@@ -1408,6 +1429,10 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <AssociationSet Name="FK_hmsWireFields_hmsCollateralCashPurposeLkupId" Association="Self.FK_hmsWireFields_hmsCollateralCashPurposeLkupId">
             <End Role="hmsCollateralCashPurposeLkup" EntitySet="hmsCollateralCashPurposeLkup" />
             <End Role="hmsWireFields" EntitySet="hmsWireFields" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWireInterestAssociation_hmsWires_hmsWireId" Association="Self.FK_hmsWireInterestAssociation_hmsWires_hmsWireId">
+            <End Role="hmsWires" EntitySet="hmsWires" />
+            <End Role="hmsWireInterestAssociation" EntitySet="hmsWireInterestAssociation" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId" Association="Self.FK_hmsWireInvoiceAssociation_hmsWires_hmsWireId">
             <End Role="hmsWires" EntitySet="hmsWires" />
@@ -1783,6 +1808,11 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="hmsWireAutoCancellationJob" EntitySet="hmsWireAutoCancellationJobs" />
           </AssociationSet>
           <EntitySet Name="hmsBankAccountAddresses" EntityType="OperationsSecureModel.hmsBankAccountAddress" />
+          <EntitySet Name="hmsWireInterestAssociations" EntityType="OperationsSecureModel.hmsWireInterestAssociation" />
+          <AssociationSet Name="FK_hmsWireInterestAssociation_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireInterestAssociation_hmsWires_hmsWireId">
+            <End Role="hmsWire" EntitySet="hmsWires" />
+            <End Role="hmsWireInterestAssociation" EntitySet="hmsWireInterestAssociations" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -2843,6 +2873,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <NavigationProperty Name="ReceivingAccount" Relationship="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" FromRole="hmsWire" ToRole="onBoardingAccount" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireWorkflowLog" />
           <NavigationProperty Name="hmsWireAutoCancellationJobs" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireAutoCancellationJob" />
+          <NavigationProperty Name="hmsWireInterestAssociations" Relationship="OperationsSecureModel.FK_hmsWireInterestAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireInterestAssociation" />
         </EntityType>
         <Association Name="FK_hmsActionInProgress_hmsWireId">
           <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
@@ -3126,6 +3157,27 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsWireInterestAssociation">
+          <Key>
+            <PropertyRef Name="hmsWireInterestAssociationId" />
+          </Key>
+          <Property Name="hmsWireInterestAssociationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsWireId" Type="Int64" Nullable="false" />
+          <Property Name="dmaInterestReportEodDataId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireInterestAssociation_hmsWires_hmsWireId" FromRole="hmsWireInterestAssociation" ToRole="hmsWire" />
+        </EntityType>
+        <Association Name="FK_hmsWireInterestAssociation_hmsWires_hmsWireId">
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWireInterestAssociation" Role="hmsWireInterestAssociation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWire">
+              <PropertyRef Name="hmsWireId" />
+            </Principal>
+            <Dependent Role="hmsWireInterestAssociation">
+              <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3875,6 +3927,15 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="hmsBankAccountAddressId" ColumnName="hmsBankAccountAddressId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWireInterestAssociations">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireInterestAssociation">
+              <MappingFragment StoreEntitySet="hmsWireInterestAssociation">
+                <ScalarProperty Name="dmaInterestReportEodDataId" ColumnName="dmaInterestReportEodDataId" />
+                <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
+                <ScalarProperty Name="hmsWireInterestAssociationId" ColumnName="hmsWireInterestAssociationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

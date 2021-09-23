@@ -217,6 +217,9 @@
     <Compile Include="hmsWireField.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsWireInterestAssociation.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsWireInvoiceAssociation.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
