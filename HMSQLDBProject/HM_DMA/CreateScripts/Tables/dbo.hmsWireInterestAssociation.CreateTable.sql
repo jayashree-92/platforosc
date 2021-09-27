@@ -16,3 +16,9 @@ BEGIN
 END
 GO
 
+
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'CallType' AND TABLE_NAME = 'hmsWireInterestAssociation')
+BEGIN
+	ALTER TABLE hmsWireInterestAssociation ADD CallType varchar(15)
+END
+GO

@@ -88,6 +88,35 @@
           <Property Name="CounterpartyIA" Type="float" />
           <Property Name="PendingCollateral" Type="float" />
         </EntityType>
+        <EntityType Name="dmaInterestReportEodData">
+          <Key>
+            <PropertyRef Name="dmaInterestReportEodDataId" />
+          </Key>
+          <Property Name="dmaInterestReportEodDataId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="startDate" Type="date" Nullable="false" />
+          <Property Name="endDate" Type="date" Nullable="false" />
+          <Property Name="brokerName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="hmInterestRateCalc" Type="float" Nullable="false" />
+          <Property Name="counterpartyInterestRateCalc" Type="float" Nullable="false" />
+          <Property Name="AgreedAmount" Type="float" />
+          <Property Name="SettlementOfInterest" Type="varchar" MaxLength="10" />
+          <Property Name="ModifiedAt" Type="datetime" Nullable="false" />
+          <Property Name="isOverrideSettlementIntr" Type="bit" />
+          <Property Name="hmInterestRateCalcIA" Type="float" Nullable="false" />
+          <Property Name="counterpartyInterestRateCalcIA" Type="float" Nullable="false" />
+          <Property Name="AgreedAmountIA" Type="float" />
+          <Property Name="SettlementOfInterestIA" Type="varchar" MaxLength="10" />
+          <Property Name="IsOverrideCounterpartyIntr" Type="bit" Nullable="false" />
+          <Property Name="IsOverrideCounterpartyIntrIA" Type="bit" Nullable="false" />
+          <Property Name="InterestSettlementDate" Type="datetime" />
+          <Property Name="InterestSettlementDateIA" Type="datetime" />
+          <Property Name="CompletedBy" Type="varchar" MaxLength="50" />
+          <Property Name="CompletedAt" Type="datetime" />
+          <Property Name="AgreementId" Type="bigint" />
+          <Property Name="Status" Type="varchar" MaxLength="50" />
+          <Property Name="dmaReportMapId" Type="bigint" />
+          <Property Name="Currency" Type="varchar" MaxLength="20" />
+        </EntityType>
         <EntityType Name="dmaOpsCashCollateral">
           <Key>
             <PropertyRef Name="dmaOpsCashCollateralId" />
@@ -252,6 +281,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
         </Association>
         <EntityContainer Name="DMA_HMModelStoreContainer">
           <EntitySet Name="dmaCollateralData" EntityType="Self.dmaCollateralData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="dmaInterestReportEodData" EntityType="Self.dmaInterestReportEodData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaOpsCashCollateral" EntityType="Self.dmaOpsCashCollateral" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaReports" EntityType="Self.dmaReports" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaSystemSwitches" EntityType="Self.dmaSystemSwitches" Schema="dbo" store:Type="Tables" />
@@ -343,6 +373,7 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           </AssociationSet>
           <EntitySet Name="dmaSystemSwitches" EntityType="OperationsModel.dmaSystemSwitch" />
           <EntitySet Name="vw_HFundOps" EntityType="OperationsModel.vw_HFundOps" />
+          <EntitySet Name="dmaInterestReportEodDatas" EntityType="OperationsModel.dmaInterestReportEodData" />
         </EntityContainer>
         <EntityType Name="dmaReport">
           <Key>
@@ -585,6 +616,35 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <Property Name="AdminName" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="RegisterAddress" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="dmaInterestReportEodData">
+          <Key>
+            <PropertyRef Name="dmaInterestReportEodDataId" />
+          </Key>
+          <Property Name="dmaInterestReportEodDataId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="startDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="endDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="brokerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="hmInterestRateCalc" Type="Double" Nullable="false" />
+          <Property Name="counterpartyInterestRateCalc" Type="Double" Nullable="false" />
+          <Property Name="AgreedAmount" Type="Double" />
+          <Property Name="SettlementOfInterest" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ModifiedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="isOverrideSettlementIntr" Type="Boolean" />
+          <Property Name="hmInterestRateCalcIA" Type="Double" Nullable="false" />
+          <Property Name="counterpartyInterestRateCalcIA" Type="Double" Nullable="false" />
+          <Property Name="AgreedAmountIA" Type="Double" />
+          <Property Name="SettlementOfInterestIA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="IsOverrideCounterpartyIntr" Type="Boolean" Nullable="false" />
+          <Property Name="IsOverrideCounterpartyIntrIA" Type="Boolean" Nullable="false" />
+          <Property Name="InterestSettlementDate" Type="DateTime" Precision="3" />
+          <Property Name="InterestSettlementDateIA" Type="DateTime" Precision="3" />
+          <Property Name="CompletedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CompletedAt" Type="DateTime" Precision="3" />
+          <Property Name="AgreementId" Type="Int64" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="dmaReportMapId" Type="Int64" />
+          <Property Name="Currency" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -811,6 +871,36 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
                 <ScalarProperty Name="FundType" ColumnName="FundType" />
                 <ScalarProperty Name="OnBoardFundId" ColumnName="OnBoardFundId" />
                 <ScalarProperty Name="hmFundId" ColumnName="hmFundId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dmaInterestReportEodDatas">
+            <EntityTypeMapping TypeName="OperationsModel.dmaInterestReportEodData">
+              <MappingFragment StoreEntitySet="dmaInterestReportEodData">
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="dmaReportMapId" ColumnName="dmaReportMapId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="AgreementId" ColumnName="AgreementId" />
+                <ScalarProperty Name="CompletedAt" ColumnName="CompletedAt" />
+                <ScalarProperty Name="CompletedBy" ColumnName="CompletedBy" />
+                <ScalarProperty Name="InterestSettlementDateIA" ColumnName="InterestSettlementDateIA" />
+                <ScalarProperty Name="InterestSettlementDate" ColumnName="InterestSettlementDate" />
+                <ScalarProperty Name="IsOverrideCounterpartyIntrIA" ColumnName="IsOverrideCounterpartyIntrIA" />
+                <ScalarProperty Name="IsOverrideCounterpartyIntr" ColumnName="IsOverrideCounterpartyIntr" />
+                <ScalarProperty Name="SettlementOfInterestIA" ColumnName="SettlementOfInterestIA" />
+                <ScalarProperty Name="AgreedAmountIA" ColumnName="AgreedAmountIA" />
+                <ScalarProperty Name="counterpartyInterestRateCalcIA" ColumnName="counterpartyInterestRateCalcIA" />
+                <ScalarProperty Name="hmInterestRateCalcIA" ColumnName="hmInterestRateCalcIA" />
+                <ScalarProperty Name="isOverrideSettlementIntr" ColumnName="isOverrideSettlementIntr" />
+                <ScalarProperty Name="ModifiedAt" ColumnName="ModifiedAt" />
+                <ScalarProperty Name="SettlementOfInterest" ColumnName="SettlementOfInterest" />
+                <ScalarProperty Name="AgreedAmount" ColumnName="AgreedAmount" />
+                <ScalarProperty Name="counterpartyInterestRateCalc" ColumnName="counterpartyInterestRateCalc" />
+                <ScalarProperty Name="hmInterestRateCalc" ColumnName="hmInterestRateCalc" />
+                <ScalarProperty Name="brokerName" ColumnName="brokerName" />
+                <ScalarProperty Name="endDate" ColumnName="endDate" />
+                <ScalarProperty Name="startDate" ColumnName="startDate" />
+                <ScalarProperty Name="dmaInterestReportEodDataId" ColumnName="dmaInterestReportEodDataId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

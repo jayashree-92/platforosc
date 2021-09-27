@@ -34,5 +34,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual DbSet<dmaCollateralData> dmaCollateralDatas { get; set; }
         public virtual DbSet<dmaSystemSwitch> dmaSystemSwitches { get; set; }
         public virtual DbSet<vw_HFundOps> vw_HFundOps { get; set; }
+        public virtual DbSet<dmaInterestReportEodData> dmaInterestReportEodDatas { get; set; }
     }
 }

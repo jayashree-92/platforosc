@@ -17,6 +17,7 @@ namespace HM.Operations.Secure.DataModel
         public long hmsWireInterestAssociationId { get; set; }
         public long hmsWireId { get; set; }
         public long dmaInterestReportEodDataId { get; set; }
+        public string CallType { get; set; }
     
         public virtual hmsWire hmsWire { get; set; }
     }

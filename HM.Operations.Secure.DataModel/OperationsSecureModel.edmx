@@ -322,6 +322,7 @@
           <Property Name="hmsWireInterestAssociationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hmsWireId" Type="bigint" Nullable="false" />
           <Property Name="dmaInterestReportEodDataId" Type="bigint" Nullable="false" />
+          <Property Name="CallType" Type="varchar" MaxLength="15" />
         </EntityType>
         <EntityType Name="hmsWireInvoiceAssociation">
           <Key>
@@ -3170,6 +3171,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="hmsWireId" Type="Int64" Nullable="false" />
           <Property Name="dmaInterestReportEodDataId" Type="Int64" Nullable="false" />
           <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireInterestAssociation_hmsWires_hmsWireId" FromRole="hmsWireInterestAssociation" ToRole="hmsWire" />
+          <Property Name="CallType" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_hmsWireInterestAssociation_hmsWires_hmsWireId">
           <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
@@ -3939,6 +3941,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="hmsWireInterestAssociations">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsWireInterestAssociation">
               <MappingFragment StoreEntitySet="hmsWireInterestAssociation">
+                <ScalarProperty Name="CallType" ColumnName="CallType" />
                 <ScalarProperty Name="dmaInterestReportEodDataId" ColumnName="dmaInterestReportEodDataId" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
                 <ScalarProperty Name="hmsWireInterestAssociationId" ColumnName="hmsWireInterestAssociationId" />

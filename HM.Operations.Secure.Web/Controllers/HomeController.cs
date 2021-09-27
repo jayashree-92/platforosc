@@ -260,6 +260,22 @@ namespace HM.Operations.Secure.Web.Controllers
 
                 }
             }
+            else if (wireTicket.HMWire.hmsWireInterestAssociations.Any())
+            {
+                wireSourceModule.SourceModuleName = "Interest Payment";
+
+                using (var context = new OperationsContext())
+                {
+                    var interestId = wireTicket.HMWire.hmsWireInterestAssociations.Last().dmaInterestReportEodDataId;
+                    var interestReport = context.dmaInterestReportEodDatas.First(s => s.dmaInterestReportEodDataId == interestId);                  
+
+                    wireSourceModule.Details.Add("Start Date", interestReport.startDate.ToShortDateString());
+                    wireSourceModule.Details.Add("End Date", interestReport.endDate.ToShortDateString());
+                    wireSourceModule.Details.Add("Broker Name", interestReport.brokerName);
+                    wireSourceModule.Details.Add("Agreed Amount", interestReport.AgreedAmount.ToCurrency());
+                }
+
+            }
 
             //else
             //{

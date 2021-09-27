@@ -109,6 +109,9 @@
     <Compile Include="dmaFundOnBoardPermission.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="dmaInterestReportEodData.cs">
+      <DependentUpon>OperationsContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="dmaOnBoardingContactDetail.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>

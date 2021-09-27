@@ -306,6 +306,7 @@ namespace HM.Operations.Secure.Middleware
 
             hmWire.hmsWireCollateralAssociations.ForEach(s => s.hmsWire = null);
             hmWire.hmsWireInvoiceAssociations.ForEach(s => s.hmsWire = null);
+            hmWire.hmsWireInterestAssociations.ForEach(s => s.hmsWire = null);
 
             if (hmWire.hmsWireField != null)
             {
