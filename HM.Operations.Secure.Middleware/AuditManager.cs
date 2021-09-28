@@ -42,7 +42,8 @@ namespace HM.Operations.Secure.Middleware
 
         public static string GetAssociationToLog(AuditLogData auditData)
         {
-            var association = string.Format("Purpose: <i>{0}</i><br/>Sending Account: <i>{1}</i><br/>Receiving Account: <i>{2}</i><br/>Transfer Type:<i>{3}</i>", auditData.Purpose, auditData.SendingAccount, (string.IsNullOrWhiteSpace(auditData.ReceivingAccount) ? "N/A" : auditData.ReceivingAccount), auditData.TransferType);
+            var association =
+                $"Purpose: <i>{auditData.Purpose}</i><br/>Sending Account: <i>{auditData.SendingAccount}</i><br/>Receiving Account: <i>{(string.IsNullOrWhiteSpace(auditData.ReceivingAccount) ? "N/A" : auditData.ReceivingAccount)}</i><br/>Transfer Type:<i>{auditData.TransferType}</i>";
 
             return association;
         }
@@ -90,7 +91,8 @@ namespace HM.Operations.Secure.Middleware
                             ModifiedStateValue = propertyVal,
                             Action = isNewAccount ? "Added" : "Edited",
                             Field = propertyInfo.Name,
-                            Log = String.Format("Onboarding Name: <i>SSI Template</i><br/>SSI Template Name: <i>{0}</i>", ssiTemplate.TemplateName)
+                            Log =
+                                $"Onboarding Name: <i>SSI Template</i><br/>SSI Template Name: <i>{ssiTemplate.TemplateName}</i>"
                         }).ToList();
 
 
@@ -131,7 +133,7 @@ namespace HM.Operations.Secure.Middleware
                             ModifiedStateValue = propertyVal,
                             Action = isNewAccount ? "Added" : "Edited",
                             Field = propertyInfo.Name,
-                            Log = String.Format("Onboarding Name: <i>Account</i><br/>Account Name: <i>{0}</i>", account.AccountName)
+                            Log = $"Onboarding Name: <i>Account</i><br/>Account Name: <i>{account.AccountName}</i>"
                         }).ToList();
 
 
@@ -141,15 +143,15 @@ namespace HM.Operations.Secure.Middleware
             {
                 if (!string.IsNullOrWhiteSpace(fundName))
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Fund",
-                        isNewAccount ? "Added" : "Edited", "", fundName, userName));
+                        "Added", "", fundName, userName));
 
                 if (!string.IsNullOrWhiteSpace(agreement))
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Agreement",
-                        isNewAccount ? "Added" : "Edited", "", agreement, userName));
+                        "Added", "", agreement, userName));
 
                 if (!string.IsNullOrWhiteSpace(broker))
                     auditLogList.Add(AuditManager.BuildOnboardingAuditLog("Account", account.AccountName, "Broker",
-                        isNewAccount ? "Added" : "Edited", "", broker, userName));
+                        "Added", "", broker, userName));
 
             }
 
@@ -174,17 +176,15 @@ namespace HM.Operations.Secure.Middleware
             switch (onboardingType)
             {
                 case "Account":
-                    auditLog.Log = String.Format("Onboarding Name: <i>Account</i><br/>Account Name: <i>{0}</i>", onboardingName);
+                    auditLog.Log = $"Onboarding Name: <i>Account</i><br/>Account Name: <i>{onboardingName}</i>";
                     break;
                 case "SSITemplate":
-                    auditLog.Log = String.Format("Onboarding Name: <i>SSITemplate</i><br/>SSI Template Name: <i>{0}</i>", onboardingName);
+                    auditLog.Log =
+                        $"Onboarding Name: <i>SSITemplate</i><br/>SSI Template Name: <i>{onboardingName}</i>";
                     break;
 
             }
-            //auditLog.Association = ((onboardingType == "Client") ?
-            //                       String.Format("Onboarding Name: <i>{0}</i><br/>Client Name: <i>{1}</i>", onboardingType, onboardingName) :
-            //                       String.Format("Onboarding Name: <i>{0}</i><br/>Fund Name: <i>{1}</i>", onboardingType, onboardingName));
-
+            
             return auditLog;
         }
 

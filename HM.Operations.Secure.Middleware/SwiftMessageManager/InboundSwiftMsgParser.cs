@@ -16,8 +16,8 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             var inBoundWireMessage = new WireInBoundMessage().Parse(swiftMessage);
 
             if (inBoundWireMessage.WireId == 0)
-                throw new UnhandledWireMessageException(string.Format("Unknown Transaction ref for MT {0}:{1}/{2}", inBoundWireMessage.SwiftMessage.GetMTType(),
-                    inBoundWireMessage.SwiftMessage.GetFieldValue(FieldDirectory.FIELD_20), inBoundWireMessage.SwiftMessage.GetFieldValue(FieldDirectory.FIELD_21)));
+                throw new UnhandledWireMessageException(
+                    $"Unknown Transaction ref for MT {inBoundWireMessage.SwiftMessage.GetMTType()}:{inBoundWireMessage.SwiftMessage.GetFieldValue(FieldDirectory.FIELD_20)}/{inBoundWireMessage.SwiftMessage.GetFieldValue(FieldDirectory.FIELD_21)}");
 
             if (inBoundWireMessage.IsFeAck)
                 return inBoundWireMessage;
@@ -41,7 +41,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
         private static WireInBoundMessage ParseUnHandled(WireInBoundMessage message)
         {
-            message.ExceptionMessage = string.Format("Wire Message type MT{0} not handled", message.MessageType);
+            message.ExceptionMessage = $"Wire Message type MT{message.MessageType} not handled";
             return message;
         }
 
@@ -54,7 +54,8 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 return message;
 
             message.IsNegativeAcknowledged = true;
-            message.ExceptionMessage = string.Format("Swift returned Un-acknowledged for wire ticket Id :{0}  with errorCode: {1}", message.WireId, message.SwiftMessage.GetNackReasonCode());
+            message.ExceptionMessage =
+                $"Swift returned Un-acknowledged for wire ticket Id :{message.WireId}  with errorCode: {message.SwiftMessage.GetNackReasonCode()}";
             return message;
         }
 

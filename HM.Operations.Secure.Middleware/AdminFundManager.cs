@@ -113,10 +113,7 @@ namespace HM.Operations.Secure.Middleware
         {
             Children = new List<HFund>();
         }
-        public bool IsGroupLine
-        {
-            get { return !IsMasterFund && !IsFeederFund && !IsStandAloneFund; }
-        }
+        public bool IsGroupLine => !IsMasterFund && !IsFeederFund && !IsStandAloneFund;
         public bool IsMasterFund { get; set; }
         public bool IsFeederFund { get; set; }
         public bool IsStandAloneFund { get; set; }

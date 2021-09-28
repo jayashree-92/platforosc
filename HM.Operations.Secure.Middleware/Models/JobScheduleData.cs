@@ -21,16 +21,10 @@ namespace HM.Operations.Secure.Middleware.Models
     public class DueDate
     {
         public string CronExpression { get; set; }
-        public string CronDescription
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(CronExpression) ? ExpressionDescriptor.GetDescription(CronExpression) : "Invalid Expression";
-            }
-        }
+        public string CronDescription => !string.IsNullOrEmpty(CronExpression) ? ExpressionDescriptor.GetDescription(CronExpression) : "Invalid Expression";
         public string Frequency { get; set; }
         public TimeSpan DueTime { get; set; }
-        public string DueTimeStamp { get { return string.Format("{0:00}:{1:00}:{2:00}", DueTime.Hours, DueTime.Minutes, DueTime.Seconds); } }
+        public string DueTimeStamp => $"{DueTime.Hours:00}:{DueTime.Minutes:00}:{DueTime.Seconds:00}";
         public int DueDayOfWeek { get; set; }
         public int[] DueDaysOfWeek { get; set; }
         public int DueDayOfMonth { get; set; }

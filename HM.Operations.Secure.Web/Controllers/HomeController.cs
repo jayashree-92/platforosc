@@ -267,7 +267,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 using (var context = new OperationsContext())
                 {
                     var interestId = wireTicket.HMWire.hmsWireInterestAssociations.Last().dmaInterestReportEodDataId;
-                    var interestReport = context.dmaInterestReportEodDatas.First(s => s.dmaInterestReportEodDataId == interestId);                  
+                    var interestReport = context.dmaInterestReportEodDatas.First(s => s.dmaInterestReportEodDataId == interestId);
 
                     wireSourceModule.Details.Add("Start Date", interestReport.startDate.ToShortDateString());
                     wireSourceModule.Details.Add("End Date", interestReport.endDate.ToShortDateString());
@@ -706,7 +706,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     .ToList();
 
                 shouldEnableCollateralPurpose = isNormalTransfer && context.onBoardingAccounts.Include(s => s.SwiftGroup)
-                    .Any(s => s.onBoardingAccountId == accountId && s.AuthorizedParty == "Hedgemark" && s.SwiftGroup.SwiftGroup.StartsWith("State Street"));
+                    .Any(s => s.onBoardingAccountId == accountId && s.AuthorizedParty == "Hedgemark" && WireTicketStatus.SwiftBicToEnableField21.Contains(s.SwiftGroup.SendersBIC));
             }
 
             //remove proxies to avoid circular dependency issue

@@ -78,7 +78,8 @@ namespace HM.Operations.Secure.Middleware
                     throw new InvalidOperationException("Cannot generate cancellation of an un-approved Wire ticket");
 
                 if (currentStatus.SwiftStatus == WireDataManager.SwiftStatus.Completed || currentStatus.SwiftStatus == WireDataManager.SwiftStatus.Failed)
-                    throw new InvalidOperationException(string.Format("The Wire transaction already {0}. Cannot process cancellation.", currentStatus.SwiftStatus.ToString()));
+                    throw new InvalidOperationException(
+                        $"The Wire transaction already {currentStatus.SwiftStatus.ToString()}. Cannot process cancellation.");
 
                 if (currentStatus.WireStatus == WireDataManager.WireStatus.Approved)
                 {
@@ -106,7 +107,7 @@ namespace HM.Operations.Secure.Middleware
             }
             catch (Exception ex)
             {
-                var failureMsg = string.Format("Wire Transaction failed with System exception: {0}", ex.Message);
+                var failureMsg = $"Wire Transaction failed with System exception: {ex.Message}";
                 Logger.Error(failureMsg, ex);
                 WireDataManager.SetWireStatusAndWorkFlow(wire.HMWire, WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.Failed, failureMsg, -1);
                 throw;
@@ -120,7 +121,8 @@ namespace HM.Operations.Secure.Middleware
                 var originalMessageType = wire.HMWire.hmsWireMessageType.MessageType.Replace("MT", string.Empty);
 
                 //For cancellation of a processing wire, we will send a different message Type
-                var cancelMsgTypeStr = string.Format("MT{0}", originalMessageType.StartsWith("1") ? MTDirectory.MT_192 : MTDirectory.MT_292);
+                var cancelMsgTypeStr =
+                    $"MT{(originalMessageType.StartsWith("1") ? MTDirectory.MT_192 : MTDirectory.MT_292)}";
 
                 hmsWireMessageType cancellationMessageType;
                 using (var context = new OperationsSecureContext())
@@ -136,7 +138,7 @@ namespace HM.Operations.Secure.Middleware
             }
             catch (Exception ex)
             {
-                var failureMsg = string.Format("Wire Cancellation failed with System exception: {0}", ex.Message);
+                var failureMsg = $"Wire Cancellation failed with System exception: {ex.Message}";
                 Logger.Error(failureMsg, ex);
                 WireDataManager.SetWireStatusAndWorkFlow(wire.WireId, WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.Failed, failureMsg, -1);
                 throw;
@@ -203,7 +205,8 @@ namespace HM.Operations.Secure.Middleware
             var isCancellationMessage = confirmationData.MessageType.EndsWith("192") || confirmationData.MessageType.EndsWith("292");
             var wireTicket = WireDataManager.GetWire(confirmationData.WireId);
             if (wireTicket == null)
-                throw new UnhandledWireMessageException(string.Format("Unknown Transaction - unable to wire with id {0}", confirmationData.WireId));
+                throw new UnhandledWireMessageException(
+                    $"Unknown Transaction - unable to wire with id {confirmationData.WireId}");
 
             hmsWireWorkflowLog workflowLog = null;
             if (confirmationData.IsAckOrNack && confirmationData.IsAcknowledged)
@@ -217,7 +220,8 @@ namespace HM.Operations.Secure.Middleware
                 workflowLog = WireDataManager.SetWireStatusAndWorkFlow(wireTicket, isCancellationMessage ? WireDataManager.WireStatus.Cancelled : WireDataManager.WireStatus.Approved, WireDataManager.SwiftStatus.Completed, confirmationData.ConfirmationMessage, -1);
 
             else if (!string.IsNullOrWhiteSpace(confirmationData.ExceptionMessage))
-                workflowLog = WireDataManager.SetWireStatusAndWorkFlow(wireTicket, isCancellationMessage ? WireDataManager.WireStatus.Cancelled : WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.Failed, string.Format("Wire Transaction Failed with error: {0}", confirmationData.ExceptionMessage), -1);
+                workflowLog = WireDataManager.SetWireStatusAndWorkFlow(wireTicket, isCancellationMessage ? WireDataManager.WireStatus.Cancelled : WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.Failed,
+                    $"Wire Transaction Failed with error: {confirmationData.ExceptionMessage}", -1);
 
             //Put an entry to Wire Log table with the parameters used to create Swift Message
             LogInBoundWireTransaction(confirmationData, workflowLog.hmsWireWorkflowLogId);

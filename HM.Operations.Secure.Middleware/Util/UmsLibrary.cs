@@ -34,12 +34,12 @@ namespace HM.Operations.Secure.Middleware.Util
             }
             catch (FaultException ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error($"{methodName} - Error Message : {ex.Message}");
                 return null;
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error($"{methodName} - Error Message : {ex.Message}");
                 throw ex;
             }
             return result.ToList();
@@ -62,9 +62,14 @@ namespace HM.Operations.Secure.Middleware.Util
 
         public FaultException CreateException(string errorMessage, string errorCode, int UmsCode)
         {
-            var ex = new FaultException(errorMessage);
-            ex.Data["UmsCode"] = UmsCode;
-            ex.Data["ErrorCode"] = errorCode;
+            var ex = new FaultException(errorMessage)
+            {
+                Data =
+                {
+                    ["UmsCode"] = UmsCode,
+                    ["ErrorCode"] = errorCode
+                }
+            };
             return ex;
         }
 
@@ -92,7 +97,7 @@ namespace HM.Operations.Secure.Middleware.Util
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("{0} - Error Message : {1}", methodName, ex.Message));
+                Logger.Error($"{methodName} - Error Message : {ex.Message}");
                 throw;
             }
             return result;

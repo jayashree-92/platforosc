@@ -65,22 +65,23 @@ namespace HM.Operations.Secure.Middleware.Util
 
         private static string GetFilterMailList(string ids)
         {
-            var recepientList = GetAllEmails(ids);
+            var recipientList = GetAllEmails(ids);
 
             if (Utility.IsLowerEnvironment)
             {
-                recepientList = DevQaMailList.Where(x => x.In(recepientList)).ToList();
+                recipientList = DevQaMailList.Where(x => x.In(recipientList)).ToList();
             }
-            ids = string.Join(",", recepientList.Distinct());
+            ids = string.Join(",", recipientList.Distinct());
             return ids;
         }
 
         public static string SendMailToQualifiedIds(MailInfo mailInfo)
         {
-            var qualifiedIds = FilterMailIds(string.Format("{0}|{1}", mailInfo.ToAddress ?? string.Empty, mailInfo.CcAddress ?? string.Empty));
+            var qualifiedIds = FilterMailIds(
+                $"{mailInfo.ToAddress ?? string.Empty}|{mailInfo.CcAddress ?? string.Empty}");
 
             if (string.IsNullOrWhiteSpace(qualifiedIds.AllQualifiedIds) || string.IsNullOrWhiteSpace(qualifiedIds.To))
-                return string.Format("The following Id's are blocked in current Environment \n {0} ", string.Join(",", qualifiedIds.BlockedIds));
+                return $"The following Id's are blocked in current Environment \n {string.Join(",", qualifiedIds.BlockedIds)} ";
 
             if (!string.IsNullOrWhiteSpace(qualifiedIds.To))
                 mailInfo.ToAddress = qualifiedIds.To;
@@ -93,12 +94,12 @@ namespace HM.Operations.Secure.Middleware.Util
 
             //Append environment flag for lower environment
             if (Utility.IsLowerEnvironment)
-                mailInfo.Subject = string.Format("{0} | {1}", Utility.Environment.ToUpper(), mailInfo.Subject);
+                mailInfo.Subject = $"{Utility.Environment.ToUpper()} | {mailInfo.Subject}";
 
             //Get MailBox Information from Config.
             var configuredMailBox = MailBoxConfigurations.AllMailBoxConfigs.FirstOrDefault(s => s.MailBoxName.ToLower() == mailInfo.FromAddress.GetMailBoxName().ToLower());
 
-            using (SmtpClient client = new SmtpClient(mailInfo.Server))
+            using (var client = new SmtpClient(mailInfo.Server))
             {
                 if (configuredMailBox != null)
                 {
@@ -115,8 +116,7 @@ namespace HM.Operations.Secure.Middleware.Util
         private static string GetMailResponse(QualifiedMailIds qualifiedIds)
         {
             return !string.IsNullOrWhiteSpace(qualifiedIds.BlockedIds)
-                ? string.Format("Mail Sent for:{0} ; But The following Id's are blocked in {1} Environment: {2}",
-                    string.Join(",", qualifiedIds.AllQualifiedIds), Utility.Environment, string.Join(",", qualifiedIds.BlockedIds))
+                ? $"Mail Sent for:{string.Join(",", qualifiedIds.AllQualifiedIds)} ; But The following Id's are blocked in {Utility.Environment} Environment: {string.Join(",", qualifiedIds.BlockedIds)}"
                 : "success";
         }
     }

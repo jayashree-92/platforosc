@@ -364,7 +364,8 @@ namespace HM.Operations.Secure.Middleware
                 if (document == null)
                     return;
 
-                var fileName = string.Format("{0}{1}\\{2}", FileSystemManager.OpsSecureAccountsFileUploads, document.onBoardingAccountId, document.FileName);
+                var fileName =
+                    $"{FileSystemManager.OpsSecureAccountsFileUploads}{document.onBoardingAccountId}\\{document.FileName}";
                 var fileinfo = new FileInfo(fileName);
 
                 if (File.Exists(fileinfo.FullName))
@@ -690,10 +691,7 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-        private static List<string> TreasuryAgreementTypesToUseMarginExcessOrDeficit
-        {
-            get { return SystemSwitches.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit; }
-        }
+        private static List<string> TreasuryAgreementTypesToUseMarginExcessOrDeficit => SystemSwitches.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit;
 
         public static CashBalances GetAccountCashBalances(long sendingFundAccountId, DateTime valueDate)
         {

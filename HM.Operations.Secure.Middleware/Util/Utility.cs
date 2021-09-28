@@ -18,9 +18,9 @@ namespace HM.Operations.Secure.Middleware.Util
         public static readonly TimeZoneInfo DefaultSystemTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
         public static readonly TextInfo TextInfo = new CultureInfo("en-US", false).TextInfo;
 
-        public static bool IsLocal { get { return Environment.Equals("Local"); } }
+        public static bool IsLocal => Environment.Equals("Local");
 
-        public static bool IsLowerEnvironment { get { return !ConfigurationManagerWrapper.StringSetting("Environment").Equals("Prod"); } }
+        public static bool IsLowerEnvironment => !ConfigurationManagerWrapper.StringSetting("Environment").Equals("Prod");
 
         public static bool IsWorkingDay(DateTime contextDate)
         {

@@ -18,19 +18,21 @@ namespace HM.Operations.Secure.Middleware.Queues
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(QueueSystemManager));
 
-        private static string QueueManagerName { get { return ConfigurationManagerWrapper.StringSetting("QueueManagerName", "LQAL"); } }
-        private static string HostName { get { return ConfigurationManagerWrapper.StringSetting("ChannelConnectionName", "r26ln00.bnymellon.net"); } }
-        private static int ChannelConnectionPort { get { return ConfigurationManagerWrapper.IntegerSetting("ChannelConnectionPort", 1462); } }
-        private static string ClientChannelName { get { return ConfigurationManagerWrapper.StringSetting("ClientChannelName", QueueManagerName + ".DMO.CLIENT"); } }
+        private static string QueueManagerName => ConfigurationManagerWrapper.StringSetting("QueueManagerName", "LQAL");
+        private static string HostName => ConfigurationManagerWrapper.StringSetting("ChannelConnectionName", "r26ln00.bnymellon.net");
+        private static int ChannelConnectionPort => ConfigurationManagerWrapper.IntegerSetting("ChannelConnectionPort", 1462);
+        private static string ClientChannelName => ConfigurationManagerWrapper.StringSetting("ClientChannelName", QueueManagerName + ".DMO.CLIENT");
 
-        private static string QueueManagerCcIdProperty { get { return ConfigurationManagerWrapper.StringSetting("QueueManagerCCIdProperty", "1208"); } }
+        private static string QueueManagerCcIdProperty => ConfigurationManagerWrapper.StringSetting("QueueManagerCCIdProperty", "1208");
 
         /*Out-Bound Parameters*/
-        private static string SenderQueueName { get { return ConfigurationManagerWrapper.StringSetting("SenderQueueName", "DMO.EMX.DMO2EMX.OUTBOUND.U1.F"); } }
+        private static string SenderQueueName => ConfigurationManagerWrapper.StringSetting("SenderQueueName", "DMO.EMX.DMO2EMX.OUTBOUND.U1.F");
+
         /*In-Bound Parameters*/
-        private static string ReceiverQueueName { get { return ConfigurationManagerWrapper.StringSetting("ReceiverQueueName", "DMO.EMX.EMX2DMO.INBOUND.U1.F"); } }
+        private static string ReceiverQueueName => ConfigurationManagerWrapper.StringSetting("ReceiverQueueName", "DMO.EMX.EMX2DMO.INBOUND.U1.F");
+
         /*Ack In-Bound Parameters*/
-        private static string ReceiverAckQueueName { get { return ConfigurationManagerWrapper.StringSetting("ReceiverAckQueueName", "DMO.EMX.EMX2DMO.ACK.U1.F"); } }
+        private static string ReceiverAckQueueName => ConfigurationManagerWrapper.StringSetting("ReceiverAckQueueName", "DMO.EMX.EMX2DMO.ACK.U1.F");
 
         //We might need to create Queue based on Environmental parametes
 
@@ -61,7 +63,8 @@ namespace HM.Operations.Secure.Middleware.Queues
             }
             catch (MQException mexc)
             {
-                var message = string.Format("Unable to connect to Queue Manager: {0} ReasonCode: {1}{2}", mexc.Message, mexc.ReasonCode, mexc.StackTrace);
+                var message =
+                    $"Unable to connect to Queue Manager: {mexc.Message} ReasonCode: {mexc.ReasonCode}{mexc.StackTrace}";
                 if (DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
                     Logger.Error(message, mexc);
                 throw new Exception(message, mexc);
@@ -193,7 +196,7 @@ namespace HM.Operations.Secure.Middleware.Queues
                     if (mqe.ReasonCode == 2033)
                         break;
 
-                    var msg = string.Format("MQException caught: {0} {1}", mqe.ReasonCode, mqe.Message);
+                    var msg = $"MQException caught: {mqe.ReasonCode} {mqe.Message}";
                     Logger.Error(msg, mqe);
                     if (mqLog != null)
                         UpdateMQMessageLog(mqLog, msg);
@@ -205,7 +208,7 @@ namespace HM.Operations.Secure.Middleware.Queues
                 }
                 catch (Exception ex)
                 {
-                    var msg = string.Format("Unhandled Exception when processing inbound : {0}", ex.Message);
+                    var msg = $"Unhandled Exception when processing inbound : {ex.Message}";
                     Logger.Error(msg, ex);
                     if (mqLog != null)
                         UpdateMQMessageLog(mqLog, msg);

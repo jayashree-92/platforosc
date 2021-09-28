@@ -7,24 +7,15 @@ namespace HM.Operations.Secure.Middleware
 {
     public class MailBoxConfigurations
     {
-        public static List<MailBoxConfig> AllMailBoxConfigs
-        {
-            get { return MailBoxSettings.MailBox.Cast<MailBoxConfig>().ToList(); }
-        }
+        public static List<MailBoxConfig> AllMailBoxConfigs => MailBoxSettings.MailBox.Cast<MailBoxConfig>().ToList();
 
-        public static MailBoxSection MailBoxSettings
-        {
-            get { return (MailBoxSection)ConfigurationManager.GetSection("mailBoxSettings"); }
-        }
+        public static MailBoxSection MailBoxSettings => (MailBoxSection)ConfigurationManager.GetSection("mailBoxSettings");
     }
 
     public class MailBoxSection : ConfigurationSection
     {
         [ConfigurationProperty("mailBoxes")]
-        public MailBoxCollection MailBox
-        {
-            get { return this["mailBoxes"] as MailBoxCollection; }
-        }
+        public MailBoxCollection MailBox => this["mailBoxes"] as MailBoxCollection;
     }
 
     [ConfigurationCollection(typeof(MailBoxConfig))]
@@ -32,10 +23,7 @@ namespace HM.Operations.Secure.Middleware
     {
         public MailBoxConfig this[int index]
         {
-            get
-            {
-                return BaseGet(index) as MailBoxConfig;
-            }
+            get => BaseGet(index) as MailBoxConfig;
             set
             {
                 if (BaseGet(index) != null)
@@ -60,33 +48,18 @@ namespace HM.Operations.Secure.Middleware
     public class MailBoxConfig : ConfigurationElement
     {
         [ConfigurationProperty("mailBoxName", DefaultValue = "", IsRequired = true)]
-        public string MailBoxName
-        {
-            get { return this["mailBoxName"] as string; }
-        }
+        public string MailBoxName => this["mailBoxName"] as string;
 
         [ConfigurationProperty("username", DefaultValue = "", IsRequired = true)]
-        public string UserName
-        {
-            get { return this["username"] as string; }
-        }
+        public string UserName => this["username"] as string;
 
         [ConfigurationProperty("password", DefaultValue = "", IsRequired = true)]
-        public string Password
-        {
-            get { return this["password"] as string; }
-        }
+        public string Password => this["password"] as string;
 
         [ConfigurationProperty("enableSsl", DefaultValue = true, IsRequired = false)]
-        public bool EnableSsl
-        {
-            get { return Convert.ToBoolean(this["enableSsl"] ?? "true"); }
-        }
+        public bool EnableSsl => Convert.ToBoolean(this["enableSsl"] ?? "true");
 
         [ConfigurationProperty("port", DefaultValue = 587, IsRequired = false)]
-        public int Port
-        {
-            get { return Convert.ToInt32(this["port"] ?? 587); }
-        }
+        public int Port => Convert.ToInt32(this["port"] ?? 587);
     }
 }

@@ -30,15 +30,9 @@ namespace HM.Operations.Secure.Middleware.Util
 
         }
 
-        public override string Name
-        {
-            get { return "Security"; }
-        }
+        public override string Name => "Security";
 
-        public override string Namespace
-        {
-            get { return "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"; }
-        }
+        public override string Namespace => "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
     }
 
     public static class Constants

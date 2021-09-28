@@ -39,7 +39,8 @@ namespace HM.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = ConfigurationManagerWrapper.StringSetting("SftpOutputFilesPath", string.Format(@"{0}\{1}\", OpsSecureRootDirectory, "SftpOutputFilesPath"));
+                var configPath = ConfigurationManagerWrapper.StringSetting("SftpOutputFilesPath",
+                    $@"{OpsSecureRootDirectory}\{"SftpOutputFilesPath"}\");
                 return GetValidatedConfigPath(configPath);
             }
 
@@ -51,7 +52,8 @@ namespace HM.Operations.Secure.Middleware
 
             get
             {
-                var configPath = ConfigurationManagerWrapper.StringSetting("OpsSecureWiresPath", string.Format(@"{0}\{1}\", OpsSecureRootDirectory, "Wires"));
+                var configPath = ConfigurationManagerWrapper.StringSetting("OpsSecureWiresPath",
+                    $@"{OpsSecureRootDirectory}\{"Wires"}\");
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -60,7 +62,7 @@ namespace HM.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = string.Format(@"{0}\SecureUploads\", OpsSecureRootDirectory);
+                var configPath = $@"{OpsSecureRootDirectory}\SecureUploads\";
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -69,7 +71,7 @@ namespace HM.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = string.Format(@"{0}\AccountsFileUploads\", OpsSecureRootDirectory);
+                var configPath = $@"{OpsSecureRootDirectory}\AccountsFileUploads\";
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -77,7 +79,7 @@ namespace HM.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = string.Format(@"{0}\InternalConfigFiles\", OpsSecureRootDirectory);
+                var configPath = $@"{OpsSecureRootDirectory}\InternalConfigFiles\";
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -86,7 +88,7 @@ namespace HM.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = string.Format(@"{0}\SSITemplateFileUploads\", OpsSecureRootDirectory);
+                var configPath = $@"{OpsSecureRootDirectory}\SSITemplateFileUploads\";
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -95,7 +97,7 @@ namespace HM.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = string.Format(@"{0}\BulkFileUploads\", OpsSecureRootDirectory);
+                var configPath = $@"{OpsSecureRootDirectory}\BulkFileUploads\";
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -104,7 +106,7 @@ namespace HM.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = string.Format(@"{0}\Invoices\FileAttachement\", ManagedAccountRootDirectory);
+                var configPath = $@"{ManagedAccountRootDirectory}\Invoices\FileAttachement\";
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -112,7 +114,7 @@ namespace HM.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = string.Format(@"{0}\InternalConfigFiles\", ManagedAccountRootDirectory);
+                var configPath = $@"{ManagedAccountRootDirectory}\InternalConfigFiles\";
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -120,7 +122,7 @@ namespace HM.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = string.Format(@"{0}\Overrides\", ManagedAccountRootDirectory);
+                var configPath = $@"{ManagedAccountRootDirectory}\Overrides\";
                 return GetValidatedConfigPath(configPath);
             }
         }
@@ -128,19 +130,14 @@ namespace HM.Operations.Secure.Middleware
         {
             get
             {
-                var configPath = ConfigurationManagerWrapper.StringSetting("SftpRawFilesOfHM", string.Format(@"{0}\{1}\{2}\", ManagedAccountRootDirectory, "SftpOutputFilesPath", "HM"));
+                var configPath = ConfigurationManagerWrapper.StringSetting("SftpRawFilesOfHM",
+                    $@"{ManagedAccountRootDirectory}\{"SftpOutputFilesPath"}\{"HM"}\");
                 return GetValidatedConfigPath(configPath);
             }
 
         }
 
-        public static string DefaultTimeZone
-        {
-            get
-            {
-                return ConfigurationManagerWrapper.StringSetting("DefaultTimeZone", "EST");
-            }
-        }
+        public static string DefaultTimeZone => ConfigurationManagerWrapper.StringSetting("DefaultTimeZone", "EST");
 
         private static readonly object InitialiseLock;
 
@@ -213,7 +210,7 @@ namespace HM.Operations.Secure.Middleware
         public static string GetValidatedConfigPath(string configPath)
         {
             if (configPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
-                throw new FileLoadException(string.Format("Invalid file path : {0}", configPath));
+                throw new FileLoadException($"Invalid file path : {configPath}");
 
             return configPath;
         }

@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Com.HedgeMark.Commons;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler;
 using HM.Operations.Secure.DataModel;
@@ -28,16 +29,7 @@ namespace HM.Operations.Secure.Middleware
         public bool IsSubAdvisorFund { get; set; }
         public long FundId { get; set; }
 
-        public string AccountNameAndNumber
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(FFCNumber))
-                    return string.Format("{0}-{1}", AccountNumber, AccountName);
-
-                return string.Format("{0}-{1}-{2}", FFCNumber, AccountNumber, AccountName);
-            }
-        }
+        public string AccountNameAndNumber => string.IsNullOrWhiteSpace(FFCNumber) ? $"{AccountNumber}-{AccountName}" : $"{FFCNumber}-{AccountNumber}-{AccountName}";
 
         public DateTimeOffset? ApprovedAt { get; set; }
     }
@@ -62,7 +54,7 @@ namespace HM.Operations.Secure.Middleware
         public string FileSource { get; set; }
         public Dictionary<string, string> Details { get; set; }
 
-        public bool IsSourceAvailable { get { return !string.IsNullOrWhiteSpace(SourceModuleName); } }
+        public bool IsSourceAvailable => !string.IsNullOrWhiteSpace(SourceModuleName);
     }
 
     public class CashBalances
@@ -74,11 +66,7 @@ namespace HM.Operations.Secure.Middleware
             public int PendingCount { get; set; }
             public decimal ApprovedWireAmount { get; set; }
             public decimal PendingWireAmount { get; set; }
-
-            public decimal TotalWireEntered
-            {
-                get { return ApprovedWireAmount + PendingWireAmount; }
-            }
+            public decimal TotalWireEntered => ApprovedWireAmount + PendingWireAmount;
         }
 
         public List<WiredDetails> WireDetails { get; set; }
@@ -87,26 +75,18 @@ namespace HM.Operations.Secure.Middleware
         public decimal TreasuryBalance { get; set; }
         public decimal TotalWireEntered { get; set; }
         public string Currency { get; set; }
-        public decimal AvailableBalance
-        {
-            get { return TreasuryBalance - TotalWireEntered; }
-        }
-
+        public decimal AvailableBalance => TreasuryBalance - TotalWireEntered;
         public decimal TotalPendingWireEntered { get; set; }
         public decimal TotalApprovedWireAfterDeadline { get; set; }
-
-        public decimal AvailableHoldBackBalance
-        {
-            get { return HoldBackAmount - TotalPendingWireEntered - TotalApprovedWireAfterDeadline; }
-        }
-
-
+        public decimal AvailableHoldBackBalance => HoldBackAmount - TotalPendingWireEntered - TotalApprovedWireAfterDeadline;
         public decimal MarginBuffer { get; set; }
         public decimal HoldBackAmount { get; set; }
     }
 
     public class WireTicketStatus
     {
+        public static List<string> SwiftBicToEnableField21 => Switches.SystemSwitches[SystemSwitches.SwitchKey.SwiftBicToEnableField21];
+
         public WireTicketStatus(WireTicket wireTicket, int userId, bool isWireApprover, bool isAdHocWire = false)
         {
             var wireStatusId = wireTicket.HMWire.WireStatusId;
@@ -145,12 +125,12 @@ namespace HM.Operations.Secure.Middleware
             IsDraftEnabled = (IsWireStatusInitiated || IsWireStatusFailed || IsWireStatusCancelled) && IsSwiftStatusNotInitiated;//!IsDeadlineCrossed && 
             IsWirePurposeAdhoc = isAdHocWire || wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocWireReport;
 
-            var isUserInvolvedInInitation = wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated || s.WireStatusId == (int)WireDataManager.WireStatus.Drafted).Any(s => s.CreatedBy == userId)
+            var isUserInvolvedInInitiation = wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated || s.WireStatusId == (int)WireDataManager.WireStatus.Drafted).Any(s => s.CreatedBy == userId)
                 || wireTicket.HMWire.CreatedBy == userId || wireTicket.HMWire.LastUpdatedBy == userId;
 
-            IsAuthorizedUserToApprove = IsWireStatusInitiated && !isUserInvolvedInInitation && !IsDeadlineCrossed && isWireApprover && !IsNoticePending;
+            IsAuthorizedUserToApprove = IsWireStatusInitiated && !isUserInvolvedInInitiation && !IsDeadlineCrossed && isWireApprover && !IsNoticePending;
 
-            ShouldEnableCollateralPurpose = wireTicket.Is3rdPartyTransfer && wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && wireTicket.SendingAccount.SwiftGroup.SwiftGroup.StartsWith("State Street");
+            ShouldEnableCollateralPurpose = wireTicket.Is3rdPartyTransfer && wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && SwiftBicToEnableField21.Contains(wireTicket.SendingAccount.SwiftGroup.SendersBIC);
 
             IsLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == userId;
         }
@@ -167,12 +147,9 @@ namespace HM.Operations.Secure.Middleware
         public bool IsSwiftStatusNegativeAcknowledged { get; private set; }
         public bool IsSwiftStatusCompleted { get; private set; }
         public bool IsSwiftStatusFailed { get; private set; }
-
-
         public bool IsDeadlineCrossed { get; private set; }
         public bool IsEditEnabled { get; private set; }
         public bool IsApprovedOrFailed { get; private set; }
-        //public bool IsSwiftCancelDisabled { get; private set; }
         public bool IsCancelEnabled { get; private set; }
         public bool IsWirePurposeAdhoc { get; private set; }
         public bool IsDraftEnabled { get; private set; }
@@ -225,7 +202,7 @@ namespace HM.Operations.Secure.Middleware
             var wireIdStr = wireId.ToString();
             wireIdStr = wireIdStr.Length < 6 ? wireIdStr.PadLeft(6, '0') : wireIdStr;
             var environmentStr = Utility.Environment.ToUpper() == "PROD" ? string.Empty : Utility.Environment.ToUpper()[0].ToString();
-            return string.Format("{0}DMO{1}", environmentStr, wireIdStr);
+            return $"{environmentStr}DMO{wireIdStr}";
         }
 
         public static string GetFundRegistedAddress(long hmFundId)
@@ -250,9 +227,7 @@ namespace HM.Operations.Secure.Middleware
                 context.Configuration.LazyLoadingEnabled = false;
 
                 hmWire = context.hmsWires.Include(s => s.hmsWireMessageType)
-                                         //.Include("hmsWireDocuments")
-                                         //.Include("hmsWireWorkflowLogs")
-                                         .Include(s => s.hmsWireStatusLkup)
+                    .Include(s => s.hmsWireStatusLkup)
                                          .Include(s => s.hmsWirePurposeLkup)
                                          .Include(s => s.hmsWireTransferTypeLKup)
                                          .Include(s => s.hmsWireSenderInformation)
@@ -260,10 +235,6 @@ namespace HM.Operations.Secure.Middleware
                                          .Include(s => s.hmsWireCollateralAssociations)
                                          .Include(s => s.hmsWireField)
                                          .Include(s => s.hmsWireField.hmsCollateralCashPurposeLkup)
-                                         //.Include(s => s.SendingAccount)
-                                         //.Include(s => s.ReceivingAccount)
-                                         //.Include(s => s.ReceivingSSITemplate)
-                                         //.Include("hmsWireLogs")
                                          .First(s => s.hmsWireId == wireId);
 
                 hmWire.hmsWireDocuments = context.hmsWireDocuments.Where(s => s.hmsWireId == wireId).ToList();
@@ -351,7 +322,6 @@ namespace HM.Operations.Secure.Middleware
             return new WireTicket()
             {
                 HMWire = hmWire,
-                //Agreement = wireAgreement,
                 FundRegisterAddress = hFund.RegisteredAddress,
                 SendingAccount = hmWire.SendingAccount,
                 ReceivingAccount = hmWire.WireTransferTypeId == 2 ? hmWire.ReceivingAccount : new onBoardingAccount(),
@@ -360,7 +330,7 @@ namespace HM.Operations.Secure.Middleware
                 WorkflowUsers = workflowUsers,
                 Counterparty = (counterparty ?? new dmaCounterPartyOnBoarding()).CounterpartyName,
                 SwiftMessages = GetFormattedSwiftMessages(hmWire.hmsWireId),
-                ShortFundName = hFund != null ? hFund.PreferredFundName : string.Empty
+                ShortFundName = hFund.PreferredFundName
             };
         }
 
@@ -481,7 +451,7 @@ namespace HM.Operations.Secure.Middleware
 
                 lastKey = !isMultiMessage
                     ? log.hmsWireLogTypeLkup.LogType
-                    : string.Format("{0}-{1}", log.hmsWireLogTypeLkup.LogType.Replace("Acknowledged", "Ack"), lastMessageType);
+                    : $"{log.hmsWireLogTypeLkup.LogType.Replace("Acknowledged", "Ack")}-{lastMessageType}";
 
                 lastMessageStatus = log.hmsWireLogTypeId;
 
@@ -634,7 +604,8 @@ namespace HM.Operations.Secure.Middleware
 
                 //if the wire is already approved, user can only cancel it, and cannot perform other options such as hold
                 else if (existingWireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus != WireStatus.Cancelled)
-                    throw new InvalidOperationException(string.Format("Wire already Approved and '{0}' action cannot be performed at this time", wireStatus));
+                    throw new InvalidOperationException(
+                        $"Wire already Approved and '{wireStatus}' action cannot be performed at this time");
 
                 else
                 {

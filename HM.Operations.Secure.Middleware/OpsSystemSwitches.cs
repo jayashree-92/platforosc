@@ -25,9 +25,9 @@ namespace HM.Operations.Secure.Middleware
         public enum SwitchKey
         {
             TreasuryReportAgreementTypesToUseMarginExcessOrDeficit,
-            SchedulerProcessId
+            SchedulerProcessId,
+            SwiftBicToEnableField21
         }
-
     }
 
     public class Switches
