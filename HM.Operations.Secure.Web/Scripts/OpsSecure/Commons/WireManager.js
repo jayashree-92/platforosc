@@ -223,8 +223,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.fnShowFormattedSwiftMsg(null,
                     "Outbound",
                     $scope.wireTicketObj.SwiftMessages["Outbound"]);
-            },
-                10);
+            }, 10);
             $scope.isSwiftMessagesCollapsed = false;
             return;
         }
@@ -246,13 +245,13 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $event.stopPropagation();
         }
 
-        if ($scope.SwiftFormatMessageActiveTag == key) {
-            return;
+        //if ($scope.SwiftFormatMessageActiveTag == key) {
+        //    return;
 
-            //$("#wireSwiftMessagesDiv").collapse("hide");
-            //$scope.SwiftFormatMessageActiveTag = "";
-            //$scope.isSwiftMessagesCollapsed = true;
-        }
+        //    //$("#wireSwiftMessagesDiv").collapse("hide");
+        //    //$scope.SwiftFormatMessageActiveTag = "";
+        //    //$scope.isSwiftMessagesCollapsed = true;
+        //}
 
         $("#wireSwiftMessagesDiv").collapse("show");
         $scope.SwiftFormatMessageActiveTag = key;
@@ -840,6 +839,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         angular.element("#liWireTransferType").select2("val", 1).trigger("change");
         $scope.fnResetAcknowledgementAllToggle();
         $scope.WireTicket = {};
+        $scope.wireTicketObj = {};
+        $scope.isSwiftMessagesCollapsed = true;
+        $scope.$apply();
     });
 
     $scope.fnUpdateWireWithStatus = function (statusId) {
