@@ -85,8 +85,6 @@ namespace HM.Operations.Secure.Middleware
 
     public class WireTicketStatus
     {
-        public static List<string> SwiftBicToEnableField21 => Switches.SystemSwitches[SystemSwitches.SwitchKey.SwiftBicToEnableField21];
-
         public WireTicketStatus(WireTicket wireTicket, int userId, bool isWireApprover, bool isAdHocWire = false)
         {
             var wireStatusId = wireTicket.HMWire.WireStatusId;
@@ -130,7 +128,7 @@ namespace HM.Operations.Secure.Middleware
 
             IsAuthorizedUserToApprove = IsWireStatusInitiated && !isUserInvolvedInInitiation && !IsDeadlineCrossed && isWireApprover && !IsNoticePending;
 
-            ShouldEnableCollateralPurpose = wireTicket.Is3rdPartyTransfer && wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && SwiftBicToEnableField21.Contains(wireTicket.SendingAccount.SwiftGroup.SendersBIC);
+            ShouldEnableCollateralPurpose = wireTicket.Is3rdPartyTransfer && wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && SystemSwitches.SwiftBicToEnableField21.Contains(wireTicket.SendingAccount.SwiftGroup.SendersBIC);
 
             IsLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == userId;
         }

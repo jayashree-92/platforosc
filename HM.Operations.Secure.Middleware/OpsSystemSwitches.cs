@@ -8,6 +8,7 @@ namespace HM.Operations.Secure.Middleware
     public class SystemSwitches : Switches
     {
         public static List<string> TreasuryReportAgreementTypesToUseMarginExcessOrDeficit => ((string)SystemSwitches[SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit]).ToStringList();
+        public static List<string> SwiftBicToEnableField21 => ((string)SystemSwitches[SystemSwitches.SwitchKey.SwiftBicToEnableField21]).ToStringList();
         public static int SchedulerProcessId => (int)SystemSwitches[SwitchKey.SchedulerProcessId];
 
         public dynamic this[SwitchKey key] => GetSwitch(key);
