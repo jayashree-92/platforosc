@@ -669,7 +669,8 @@ namespace HM.Operations.Secure.Web.Controllers
                 text = s.AccountNameAndNumber + (s.IsSubAdvisorFund ? " (Sub-advisor)" : ""),
                 Currency = s.Currency,
                 isParentFund = s.IsParentFund,
-                isSubAdvisorFund = s.IsSubAdvisorFund
+                isSubAdvisorFund = s.IsSubAdvisorFund,
+                fundId = s.FundId
             }).ToList();
 
             var receivingAccountsList = fundAccounts.Select(s => new
@@ -678,7 +679,8 @@ namespace HM.Operations.Secure.Web.Controllers
                 text = s.AccountNameAndNumber + (s.IsSubAdvisorFund ? " (Sub-advisor)" : ""),
                 Currency = s.Currency,
                 isParentFund = s.IsParentFund,
-                isSubAdvisorFund = s.IsSubAdvisorFund
+                isSubAdvisorFund = s.IsSubAdvisorFund,
+                fundId = s.FundId
             }).ToList();
 
             var currencies = sendingAccountsList.Select(s => new { id = s.Currency, text = s.Currency }).Distinct().OrderBy(s => s.text).ToList();

@@ -1507,9 +1507,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     else {
 
                         $("#liReceivingBookAccountLoading").show();
-                        $scope.receivingBookAccountList = $filter("filter")(angular.copy($scope.receivingAccountsListOfFund), function (acc) {
+                        $scope.receivingBookAccountList = $filter("filter")(angular.copy($scope.receivingAccountsListOfFund), function (recAcc) {
                             var selectedAccount = $("#liSendingAccount").select2("data");
-                            return acc.id != $scope.WireTicket.OnBoardAccountId && acc.Currency == $("#liCurrency").select2("val") && (!selectedAccount.isSubAdvisorFund || acc.isParentFund);
+                            return recAcc.id != $scope.WireTicket.OnBoardAccountId
+                                && recAcc.Currency == $("#liCurrency").select2("val")
+                                && (recAcc.fundId == selectedAccount.fundId || (!selectedAccount.isSubAdvisorFund || recAcc.isParentFund));
                         }, true);
 
                         angular.element("#liReceivingBookAccount").select2("destroy");
