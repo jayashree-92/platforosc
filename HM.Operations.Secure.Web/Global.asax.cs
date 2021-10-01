@@ -179,7 +179,16 @@ namespace HM.Operations.Secure.Web
             if (authCookie == null)
                 return false;
 
-            var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+            FormsAuthenticationTicket authTicket;
+            try
+            {
+                authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+            }
+            catch (Exception)
+            {
+                Logger.Error($"Form Auth decryption failed for : {FormsAuthentication.FormsCookieName}");
+                return false;
+            }
 
             if (authTicket == null || authTicket.Expired)
                 return false;
