@@ -231,6 +231,7 @@ namespace HM.Operations.Secure.Middleware
                                          .Include(s => s.hmsWireSenderInformation)
                                          .Include(s => s.hmsWireInvoiceAssociations)
                                          .Include(s => s.hmsWireCollateralAssociations)
+                                         .Include(s => s.hmsWireInterestAssociations)
                                          .Include(s => s.hmsWireField)
                                          .Include(s => s.hmsWireField.hmsCollateralCashPurposeLkup)
                                          .First(s => s.hmsWireId == wireId);

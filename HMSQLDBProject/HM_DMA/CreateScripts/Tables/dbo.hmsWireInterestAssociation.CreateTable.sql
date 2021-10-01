@@ -22,3 +22,14 @@ BEGIN
 	ALTER TABLE hmsWireInterestAssociation ADD CallType varchar(15)
 END
 GO
+
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'StartDate' AND TABLE_NAME = 'hmsWireInterestAssociation')
+BEGIN
+	ALTER TABLE hmsWireInterestAssociation ADD StartDate DATE NOT NULL
+END
+GO
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'EndDate' AND TABLE_NAME = 'hmsWireInterestAssociation')
+BEGIN
+	ALTER TABLE hmsWireInterestAssociation ADD EndDate DATE NOT NULL
+END
+GO

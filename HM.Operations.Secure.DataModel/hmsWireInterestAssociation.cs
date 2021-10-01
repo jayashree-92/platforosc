@@ -18,6 +18,8 @@ namespace HM.Operations.Secure.DataModel
         public long hmsWireId { get; set; }
         public long dmaInterestReportEodDataId { get; set; }
         public string CallType { get; set; }
+        public System.DateTime StartDate { get; set; }
+        public System.DateTime EndDate { get; set; }
     
         public virtual hmsWire hmsWire { get; set; }
     }
