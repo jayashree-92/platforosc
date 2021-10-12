@@ -167,7 +167,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 messages = string.Empty;
 
             var ssiTemplates = FundAccountManager.GetAllApprovedSsiTemplates(counterpartyIds, messages.Split(',').ToList(), string.IsNullOrWhiteSpace(messages), currency);
-            var availableSSITemplates = ssiTemplates
+            var availableSsiTemplates = ssiTemplates
                 .Where(s => !ssiTemplateMaps.Select(p => p.onBoardingSSITemplateId)
                 .Contains(s.onBoardingSSITemplateId)).ToList();
 
@@ -195,7 +195,7 @@ namespace HM.Operations.Secure.Web.Controllers
                         AccountNumber = ssiTemplate.UltimateBeneficiaryAccountNumber ?? ""
                     } : null;
                 }).Where(temp => temp != null).OrderBy(y => y.TemplateName).ToList(),
-                ssiTemplates = availableSSITemplates,
+                ssiTemplates = availableSsiTemplates,
             }, JsonContentType, JsonContentEncoding);
         }
 

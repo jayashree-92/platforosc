@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Com.HedgeMark.Commons.Extensions;
+using HM.Operations.Secure.DataModel;
+using HM.Operations.Secure.Middleware.Util;
+using log4net;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
-using Com.HedgeMark.Commons.Extensions;
-using HM.Operations.Secure.DataModel;
-using HM.Operations.Secure.Middleware.Util;
-using log4net;
 
 namespace HM.Operations.Secure.Middleware
 {
@@ -427,7 +427,7 @@ namespace HM.Operations.Secure.Middleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingAccounts.Where(account => !account.IsDeleted && account.onBoardingAccountStatus == "Approved").Select(s => s.hmFundId).Distinct().ToList();
+                return context.onBoardingAccounts.Where(account => !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && account.AccountStatus != "Closed").Select(s => s.hmFundId).Distinct().ToList();
             }
         }
 
@@ -452,7 +452,7 @@ namespace HM.Operations.Secure.Middleware
 
                 return (from account in context.onBoardingAccounts
                         join swift in context.hmsSwiftGroups on account.SwiftGroupId equals swift.hmsSwiftGroupId
-                        where !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && (isServiceType || hmFundIds.Contains(account.hmFundId)) && (currency == null || account.Currency == currency) && swift.AcceptedMessages.Contains(messageType)
+                        where !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && account.AccountStatus != "Closed" && (isServiceType || hmFundIds.Contains(account.hmFundId)) && (currency == null || account.Currency == currency) && swift.AcceptedMessages.Contains(messageType)
                         select account).ToList();
 
                 //return context.onBoardingAccounts.Include(s => s.SwiftGroup).Where(account => !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && (hmFundIds.Contains(account.hmFundId) || isServiceType) && (currency == null || account.Currency == currency) && ((account.SwiftGroup ?? new hmsSwiftGroup()).AcceptedMessages.Contains(messageType))).ToList();
