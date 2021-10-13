@@ -14,7 +14,7 @@ namespace HM.Operations.Secure.Web.Controllers
     {
         public JsonResult GetAllTemplates()
         {
-            var favoriteId = GetPreferenceInSession(PreferencesManager.FavoriteDashboardTemplateForReportId).ToLong();
+            var favoriteId = GetPreferenceInSession(PreferencesManager.FavoriteDashboardTemplateForWires).ToLong();
             using (var context = new OperationsSecureContext())
             {
                 var templates = context.hmsDashboardTemplates.Where(s => !s.IsDeleted)
@@ -26,7 +26,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public void SaveFavoriteTemplate(long templateId)
         {
-            SavePreferenceInSession(PreferencesManager.FavoriteDashboardTemplateForReportId, templateId.ToString());
+            SavePreferenceInSession(PreferencesManager.FavoriteDashboardTemplateForWires, templateId.ToString());
         }
 
         public JsonResult GetAllReportPreferences()

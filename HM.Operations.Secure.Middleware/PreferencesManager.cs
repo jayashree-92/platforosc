@@ -15,12 +15,13 @@ namespace HM.Operations.Secure.Middleware
         }
 
         public static readonly string ShowRiskOrShortFundNames = "CONFIG:ShowRiskOrShortFundNames";
-        public static readonly string FavoriteDashboardTemplateForReportId = "FavoriteDashboardTemplateForReportId";
+        public static readonly string FavoriteDashboardTemplateForWires = "FavoriteDashboardTemplateForWires";
         public static readonly string LocalQaMailListKey = "CONFIG:LocalOrQa:USERS";
 
-        public static List<string> AllPreferrenceKeys = new List<string>()
+        private static readonly List<string> AllPreferenceKeys = new List<string>()
         {
-            ShowRiskOrShortFundNames
+            ShowRiskOrShortFundNames,
+            FavoriteDashboardTemplateForWires
         };
 
         public enum FundNameInDropDown
@@ -32,7 +33,7 @@ namespace HM.Operations.Secure.Middleware
         {
             using (var context = new OperationsContext())
             {
-                return context.dmaUserPreferences.Where(s => s.hmUserId == hmUserId && AllPreferrenceKeys.Contains(s.Key)).ToList();
+                return context.dmaUserPreferences.Where(s => s.hmUserId == hmUserId && AllPreferenceKeys.Contains(s.Key)).ToList();
             }
         }
 
@@ -49,6 +50,7 @@ namespace HM.Operations.Secure.Middleware
             using (var context = new OperationsContext())
             {
                 context.dmaUserPreferences.AddOrUpdate(s => new { s.Key, s.hmUserId }, userPreference);
+                context.SaveChanges();
             }
         }
 
