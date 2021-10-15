@@ -469,7 +469,9 @@ namespace HM.Operations.Secure.Web.Controllers
 
                 if (System.IO.File.Exists(fileInfo.FullName))
                 {
-                    WireDataManager.RemoveWireDocument(wireId, file.FileName);
+                    if (wireId > 0)
+                        WireDataManager.RemoveWireDocument(wireId, file.FileName);
+
                     System.IO.File.Delete(fileInfo.FullName);
                 }
 

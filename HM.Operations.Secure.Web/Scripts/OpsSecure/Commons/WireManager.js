@@ -1193,7 +1193,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             angular.element(".dzFileProgress").html("Upload Successful");
 
             angular.forEach(result.Documents, function (value, index) {
-                //value.CreatedAt = getFormattedUIDate(moment(value.CreatedAt)._d);
+                value.CreatedAt = moment(value.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
                 $scope.WireTicket.hmsWireDocuments.push(value);
             });
 
