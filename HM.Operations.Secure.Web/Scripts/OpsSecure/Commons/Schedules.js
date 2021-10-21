@@ -452,7 +452,7 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.fnApproveOrRejectExternalTo = function (code) {
-        $http.get("/Schedules/SetWorkflowCodeForExternalTo?scheduleId=" + $scope.Job.Schedule.dmaScheduleId + "&workflowCode=" + code + "&isDashboard=" + $scope.IsDashboardSchedule).then(function (response) {
+        $http.get("/Schedules/SetWorkflowCodeForExternalTo?scheduleId=" + $scope.Job.Schedule.hmsScheduleId + "&workflowCode=" + code + "&isDashboard=" + $scope.IsDashboardSchedule).then(function (response) {
             $scope.Job.Schedule.ExternalToWorkflowCode = response.data.Schedule.ExternalToWorkflowCode;
             $scope.Job.Schedule.ExternalToModifiedBy = response.data.Schedule.ExternalToModifiedBy;
             $scope.Job.Schedule.ExternalToModifiedAt = moment(response.data.Schedule.ExternalToModifiedAt).format("lll");
@@ -471,7 +471,7 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.fnApproveOrRejectSFTPFolder = function (code) {
-        $http.get("/Schedules/SetWorkflowCodeForSFTPFolder?scheduleId=" + $scope.Job.Schedule.dmaScheduleId + "&workflowCode=" + code + "&isDashboard=" + $scope.IsDashboardSchedule).then(function (response) {
+        $http.get("/Schedules/SetWorkflowCodeForSFTPFolder?scheduleId=" + $scope.Job.Schedule.hmsScheduleId + "&workflowCode=" + code + "&isDashboard=" + $scope.IsDashboardSchedule).then(function (response) {
             $scope.Job.Schedule.SFTPFolderWorkflowCode = response.data.Schedule.SFTPFolderWorkflowCode;
             $scope.Job.Schedule.SFTPFolderModifiedBy = response.data.Schedule.SFTPFolderModifiedBy;
             $scope.Job.Schedule.SFTPFolderModifiedAt = moment(response.data.Schedule.SFTPFolderModifiedAt).format("lll");
@@ -720,7 +720,7 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
 
         notifySuccess("changes saved successfully");
         $toggleBtn.bootstrapToggle("toggle");
-        $scope.fnSetScheduleStatus(job.Id, job.Schedule.dmaScheduleId, !isActive);
+        $scope.fnSetScheduleStatus(job.Id, job.Schedule.hmsScheduleId, !isActive);
 
     });
 
