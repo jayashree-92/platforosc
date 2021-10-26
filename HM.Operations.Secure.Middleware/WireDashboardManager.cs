@@ -66,7 +66,13 @@ namespace HM.Operations.Secure.Middleware
                     .Include(s => s.SendingAccount)
                     .Include(s => s.SendingAccount.WirePortalCutoff)
                     .Include(s => s.ReceivingAccount)
-                    .Include(s => s.ReceivingSSITemplate);
+                    .Include(s => s.ReceivingAccount.Beneficiary)
+                    .Include(s => s.ReceivingAccount.Intermediary)
+                    .Include(s => s.ReceivingAccount.UltimateBeneficiary)
+                    .Include(s => s.ReceivingSSITemplate)
+                    .Include(s => s.ReceivingSSITemplate.Beneficiary)
+                    .Include(s => s.ReceivingSSITemplate.Intermediary)
+                    .Include(s => s.ReceivingSSITemplate.UltimateBeneficiary);
 
                 if (shouldBringAllPendingWires)
                     wireTicketQuery = wireTicketQuery.Where(s => ((allStatusIds.Contains(0) || allStatusIds.Contains(2)) && s.WireStatusId == 2)
