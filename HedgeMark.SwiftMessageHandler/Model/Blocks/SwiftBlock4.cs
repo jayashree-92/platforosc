@@ -27,7 +27,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
                   thisBlock.Append(fld.GetFieldAndValue);
               });
 
-            return string.Format("{{{0}:{1}{2}-}}", Name, thisBlock, Environment.NewLine);
+            return $"{{{Name}:{thisBlock}{Environment.NewLine}-}}";
         }
     }
 }

@@ -19,15 +19,10 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             return setQualifier(this, qualifier);
         }
 
-        public override List<string> Components
-        {
-            get
+        public override List<string> Components =>
+            new List<string>()
             {
-                return new List<string>()
-                {
-                    FieldConstants.QUALIFIER,FieldConstants.REFERENCE
-                };
-            }
-        }
+                FieldConstants.QUALIFIER,FieldConstants.REFERENCE
+            };
     }
 }

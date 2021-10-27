@@ -12,13 +12,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         {
         }
 
-        public override List<string> Components
-        {
-            get
-            {
-                return new List<string>() { FieldConstants.CODE, FieldConstants.TIME_INDICATION, FieldConstants.SIGN, FieldConstants.TIME_OFFSET };
-            }
-        }
+        public override List<string> Components => new List<string>() { FieldConstants.CODE, FieldConstants.TIME_INDICATION, FieldConstants.SIGN, FieldConstants.TIME_OFFSET };
 
 
         public string Code { get; set; }
@@ -29,7 +23,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public override string GetValue()
         {
-            return string.Format("/{0}/{1}{2}{3}", Code, Time, Sign ?? "+", OffSet ?? "0000");
+            return $"/{Code}/{Time}{Sign ?? "+"}{OffSet ?? "0000"}";
         }
 
         public override string GetComponentValue(string component)
@@ -44,7 +38,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
                     break;
                 case FieldConstants.TIME_INDICATION:
                     componentValue = !string.IsNullOrWhiteSpace(Time) ? Time : editedVal.Length >= 11 ? editedVal.Substring(7, 4) : string.Empty;
-                    componentValue = componentValue.Length == 4 ? string.Format("{0}{1}:{2}{3}", componentValue[0], componentValue[1], componentValue[2], componentValue[3]) : string.Empty;
+                    componentValue = componentValue.Length == 4 ? $"{componentValue[0]}{componentValue[1]}:{componentValue[2]}{componentValue[3]}"
+                        : string.Empty;
                     break;
                 case FieldConstants.SIGN:
                     componentValue = !string.IsNullOrWhiteSpace(Sign) ? Sign : editedVal.Length >= 12 ? editedVal.Substring(11, 1) : string.Empty;

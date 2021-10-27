@@ -16,16 +16,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public string ABA { get; set; }
 
 
-        public override List<string> Components
-        {
-            get
-            {
-                return new List<string>()
-                {
-                    FieldConstants.ACCOUNT,FieldConstants.BIC
-                };
-            }
-        }
+        public override List<string> Components => new List<string>() { FieldConstants.ACCOUNT, FieldConstants.BIC };
 
         public override string GetComponentValue(string component)
         {

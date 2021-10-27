@@ -49,33 +49,28 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public override string GetValue()
         {
             var amountStr = Amount.ToString(CultureInfo.InvariantCulture);
-            amountStr = amountStr.Contains(".") ? amountStr.ToString(CultureInfo.InvariantCulture).Replace(".", ",") : string.Format("{0},", amountStr);
+            amountStr = amountStr.Contains(".") ? amountStr.ToString(CultureInfo.InvariantCulture).Replace(".", ",") : $"{amountStr},";
 
             if (string.IsNullOrWhiteSpace(amountStr))
                 amountStr = "0,";
 
             // we need to add or remove decimal places according to Currency List - if its not in currency list the default currency decimal units = 2
             if (!CurrencyToDecimalPoints.ContainsKey(Currency))
-                return string.Format("{0}{1}", Currency ?? FieldConstants.USD, amountStr);
+                return $"{Currency ?? FieldConstants.USD}{amountStr}";
 
             var amountStrSplits = amountStr.Split(',');
             var allowedDecimalPlaces = CurrencyToDecimalPoints[Currency];
             var amountDecimalUnits = allowedDecimalPlaces > 2 ? amountStrSplits[1].PadRight(allowedDecimalPlaces, '0') : amountStrSplits[1].Substring(0, allowedDecimalPlaces);
-            amountStr = string.Format("{0},{1}", amountStrSplits[0], amountDecimalUnits);
-            return string.Format("{0}{1}", Currency ?? FieldConstants.USD, amountStr);
+            amountStr = $"{amountStrSplits[0]},{amountDecimalUnits}";
+            return $"{Currency ?? FieldConstants.USD}{amountStr}";
         }
 
-        public override List<string> Components
-        {
-            get
+        public override List<string> Components =>
+            new List<string>()
             {
-                return new List<string>()
-                {
-                    FieldConstants.CURRENCY,
-                    FieldConstants.AMOUNT,
-                };
-            }
-        }
+                FieldConstants.CURRENCY,
+                FieldConstants.AMOUNT,
+            };
 
         public override string GetComponentValue(string component)
         {

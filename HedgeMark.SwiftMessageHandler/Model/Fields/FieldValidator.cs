@@ -14,12 +14,12 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             {
                 var validLength = pattern.Split('!')[0].ToInt();
                 if (value.Length != validLength)
-                    throw new InvalidDataException(value + " should have a lenght of " + validLength);
+                    throw new InvalidDataException($"{value} should have a length of {validLength}");
             }
             if (pattern.Contains("!c") && validCodes != null)
             {
                 if (!validCodes.Contains(value))
-                    throw new InvalidDataException(value + " should be one among " + string.Join(",", validCodes));
+                    throw new InvalidDataException($"{value} should be one among {string.Join(",", validCodes)}");
             }
         }
     }

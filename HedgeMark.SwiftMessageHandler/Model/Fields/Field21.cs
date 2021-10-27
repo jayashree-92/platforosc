@@ -13,12 +13,6 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             this.Value = value;
             return this;
         }
-        public override List<string> Components
-        {
-            get
-            {
-                return new List<string>() { FieldConstants.REFERENCE };
-            }
-        }
+        public override List<string> Components => new List<string>() { FieldConstants.REFERENCE };
     }
 }

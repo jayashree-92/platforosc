@@ -19,7 +19,7 @@ namespace HedgeMark.SwiftMessageHandler
             var builder = new StringBuilder();
             foreach (var field in swiftMessage.Block4.GetFields())
             {
-                var parentFieldName = string.Format("{0}: ", field.Name);
+                var parentFieldName = $"{field.Name}: ";
                 parentFieldName = parentFieldName.PadRight(parentFieldName.Length + (5 - parentFieldName.Length), ' ');
                 builder.AppendFormat(parentFieldName);
 
@@ -28,7 +28,7 @@ namespace HedgeMark.SwiftMessageHandler
 
                 if (field.Components.Count == 0)
                 {
-                    builder.AppendLine(string.Format(":{0}", field.GetComponentValue(field.Label)));
+                    builder.AppendLine($":{field.GetComponentValue(field.Label)}");
                     continue;
                 }
 
@@ -41,7 +41,7 @@ namespace HedgeMark.SwiftMessageHandler
                     if (string.IsNullOrWhiteSpace(componentValue))
                         continue;
 
-                    var fieldInfo = string.Format("{0}: {1}", component, componentValue);
+                    var fieldInfo = $"{component}: {componentValue}";
                     fieldInfo = fieldInfo.PadLeft(fieldInfo.Length + fieldLength, ' ');
                     builder.AppendLine(fieldInfo);
                 }
@@ -64,7 +64,7 @@ namespace HedgeMark.SwiftMessageHandler
             builder.AppendLine("------------------------------ Original FIN Message ------------------------------");
             builder.AppendLine(swiftMessage);
 
-            return string.Format("{0}{1}", builder, formattedMessage);
+            return $"{builder}{formattedMessage}";
         }
 
 
@@ -111,13 +111,14 @@ namespace HedgeMark.SwiftMessageHandler
             }
 
             builder.AppendLine("------------------------- Message Header -----------------------------------------");
-            builder.AppendLine(string.Format("Swift    : MT {0}", swiftMsg.MessageType));
-            builder.AppendLine(string.Format("Sender   : {0}", swiftMsg.GetSender()));
-            builder.AppendLine(string.Format("Receiver : {0}", swiftMsg.IsServiceMessage21() ? swiftMsg.UnderlyingOriginalSwiftMessage.GetReceiver() : swiftMsg.GetReceiver()));
+            builder.AppendLine($"Swift    : MT {swiftMsg.MessageType}");
+            builder.AppendLine($"Sender   : {swiftMsg.GetSender()}");
+            builder.AppendLine(
+                $"Receiver : {(swiftMsg.IsServiceMessage21() ? swiftMsg.UnderlyingOriginalSwiftMessage.GetReceiver() : swiftMsg.GetReceiver())}");
 
             if (!string.IsNullOrWhiteSpace(swiftMsg.GetMUR()))
             {
-                builder.AppendLine(string.Format("MUR      : {0}", swiftMsg.GetMUR()));
+                builder.AppendLine($"MUR      : {swiftMsg.GetMUR()}");
             }
 
             builder.AppendLine("------------------------- Message Text -------------------------------------------");
@@ -129,7 +130,7 @@ namespace HedgeMark.SwiftMessageHandler
                 builder.AppendLine("---------------------------- Message Trailer -------------------------------------");
                 foreach (Field field in swiftMsg.Block5.GetFields())
                 {
-                    builder.AppendLine(string.Format("{0}: {1}", field.Name, field.Value.Trim()));
+                    builder.AppendLine($"{field.Name}: {field.Value.Trim()}");
                 }
             }
 

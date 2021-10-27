@@ -6,19 +6,14 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 {
     public class Field11S : FieldWithDate
     {
-        public override List<string> Components
-        {
-            get
+        public override List<string> Components =>
+            new List<string>()
             {
-                return new List<string>()
-                {
-                    {FieldConstants.MT},
-                    {FieldConstants.DATE},
-                    {FieldConstants.SESSION},
-                    {FieldConstants.ISN},
-                };
-            }
-        }
+                {FieldConstants.MT},
+                {FieldConstants.DATE},
+                {FieldConstants.SESSION},
+                {FieldConstants.ISN},
+            };
 
         public override string GetComponentValue(string component)
         {
@@ -84,7 +79,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             if (_isn == 999999)
                 _isn = 100000;
 
-            return string.Format("{0}\r\n{1}\r\n{2}{3}", MT ?? string.Empty, DateString ?? string.Empty, _sessionNumber, _isn);
+            return $"{MT ?? string.Empty}\r\n{DateString ?? string.Empty}\r\n{_sessionNumber}{_isn}";
         }
     }
 }

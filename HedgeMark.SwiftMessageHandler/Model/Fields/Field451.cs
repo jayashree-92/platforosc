@@ -13,16 +13,6 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             return Value == "0" ? "Accepted by the SWIFT Network" : "Rejected by the SWIFT Network";
         }
 
-        public override List<string> Components
-        {
-            get
-            {
-                return new List<string>()
-                {
-                    {FieldConstants.STATUS}
-                };
-            }
-        }
-
+        public override List<string> Components => new List<string>() { { FieldConstants.STATUS } };
     }
 }

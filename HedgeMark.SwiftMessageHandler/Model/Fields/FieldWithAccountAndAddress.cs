@@ -110,16 +110,11 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         }
 
 
-        public override List<string> Components
-        {
-            get
+        public override List<string> Components =>
+            new List<string>()
             {
-                return new List<string>()
-                {
-                     FieldConstants.ACCOUNT,FieldConstants.NAME_AND_ADDRESS,FieldConstants.NAME_AND_ADDRESS_LINE_2,FieldConstants.NAME_AND_ADDRESS_LINE_3,FieldConstants.NAME_AND_ADDRESS_LINE_4
-                };
-            }
-        }
+                FieldConstants.ACCOUNT,FieldConstants.NAME_AND_ADDRESS,FieldConstants.NAME_AND_ADDRESS_LINE_2,FieldConstants.NAME_AND_ADDRESS_LINE_3,FieldConstants.NAME_AND_ADDRESS_LINE_4
+            };
 
         public override string GetComponentValue(string component)
         {

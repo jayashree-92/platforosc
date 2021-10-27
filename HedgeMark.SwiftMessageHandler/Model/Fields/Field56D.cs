@@ -38,7 +38,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             var builder = new StringBuilder();
 
             if (!string.IsNullOrWhiteSpace(DCMark))
-                builder.Append(string.Format("{0}/", DCMark));
+                builder.Append($"{DCMark}/");
             if (!string.IsNullOrWhiteSpace(Account))
                 builder.AppendFormat("/{0}", Account);
             if (!string.IsNullOrWhiteSpace(NameAndFullAddress))

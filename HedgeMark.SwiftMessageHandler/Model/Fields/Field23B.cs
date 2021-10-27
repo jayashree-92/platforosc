@@ -19,12 +19,6 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             return this;
         }
 
-        public override List<string> Components
-        {
-            get
-            {
-                return new List<string>() { FieldConstants.TYPE };
-            }
-        }
+        public override List<string> Components => new List<string>() { FieldConstants.TYPE };
     }
 }

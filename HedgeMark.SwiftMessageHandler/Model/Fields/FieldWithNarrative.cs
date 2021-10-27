@@ -14,16 +14,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         {
         }
 
-        public override List<string> Components
-        {
-            get
-            {
-                return new List<string>()
-                {
-                    FieldConstants.NARRATIVE
-                };
-            }
-        }
+        public override List<string> Components => new List<string>() { FieldConstants.NARRATIVE };
 
         public override string GetComponentValue(string component)
         {

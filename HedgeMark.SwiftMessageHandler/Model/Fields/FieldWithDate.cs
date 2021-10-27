@@ -23,16 +23,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             return DateString;
         }
 
-        public override List<string> Components
-        {
-            get
-            {
-                return new List<string>()
-                {
-                    FieldConstants.VALUE_DATE
-                };
-            }
-        }
+        public override List<string> Components => new List<string>() { FieldConstants.VALUE_DATE };
 
         public override string GetComponentValue(string component)
         {

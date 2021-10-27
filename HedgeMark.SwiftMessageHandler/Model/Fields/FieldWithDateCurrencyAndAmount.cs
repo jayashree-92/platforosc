@@ -19,13 +19,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             return callingClass;
         }
 
-        public override List<string> Components
-        {
-            get
-            {
-                return new List<string> { FieldConstants.DATE, FieldConstants.CURRENCY, FieldConstants.AMOUNT };
-            }
-        }
+        public override List<string> Components => new List<string> { FieldConstants.DATE, FieldConstants.CURRENCY, FieldConstants.AMOUNT };
 
         public override string GetComponentValue(string component)
         {
@@ -48,7 +42,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         }
         public override string GetValue()
         {
-            return string.Format("{0}{1}", DateString ?? string.Empty, base.GetValue());
+            return $"{DateString ?? string.Empty}{base.GetValue()}";
         }
     }
 }

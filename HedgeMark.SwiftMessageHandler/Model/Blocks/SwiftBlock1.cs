@@ -8,13 +8,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
         public string TerminalCode { get; set; }
         public string BICBranchCode { get; set; }
 
-        public string GetLTAddress
-        {
-            get
-            {
-                return string.Format("{0}{1}{2}", BIC, TerminalCode.Substring(0, 1).ToUpper(), BICBranchCode);
-            }
-        }
+        public string GetLTAddress => $"{BIC}{TerminalCode.Substring(0, 1).ToUpper()}{BICBranchCode}";
     }
 
     public class SwiftBlock1 : SwiftBlock
@@ -101,7 +95,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
 
         public override string GetBlock()
         {
-            return string.Format("{{{0}:{1}{2}{3}{4}{5}}}", Name, AppId, ServiceId, LTAddress.GetLTAddress, SessionNo ?? _sessionNumber.ToString(), SequenceNo ?? _sequenceNumber.ToString());
+            return
+                $"{{{Name}:{AppId}{ServiceId}{LTAddress.GetLTAddress}{SessionNo ?? _sessionNumber.ToString()}{SequenceNo ?? _sequenceNumber.ToString()}}}";
         }
 
         public void SetBlock(SwiftBlock1 block1)

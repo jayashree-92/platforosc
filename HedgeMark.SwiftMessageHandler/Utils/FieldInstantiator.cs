@@ -18,7 +18,7 @@ namespace HedgeMark.SwiftMessageHandler.Utils
                 if (string.IsNullOrWhiteSpace(fldMap.Key))
                     continue;
 
-                var type = assembly.GetTypes().FirstOrDefault(t => t.Name == string.Format("Field{0}", fldMap.Key));
+                var type = assembly.GetTypes().FirstOrDefault(t => t.Name == $"Field{fldMap.Key}");
 
                 Field field;
                 if (type != null)

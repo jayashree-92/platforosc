@@ -32,19 +32,14 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public override string GetValue()
         {
-            return string.Format(":{0}//{1}{2}", Qualifier, DateString, TimeString);
+            return $":{Qualifier}//{DateString}{TimeString}";
         }
 
-        public override List<string> Components
-        {
-            get
+        public override List<string> Components =>
+            new List<string>()
             {
-                return new List<string>()
-                {
-                    FieldConstants.QUALIFIER,FieldConstants.DATE
-                };
-            }
-        }
+                FieldConstants.QUALIFIER,FieldConstants.DATE
+            };
 
         public override string GetComponentValue(string component)
         {

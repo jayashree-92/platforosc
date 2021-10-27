@@ -132,7 +132,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
             if (modifiedReceiver.Length == 12)
                 Receiver = modifiedReceiver;
             else if (modifiedReceiver.Length == 11)
-                Receiver = string.Format("{0}X{1}", modifiedReceiver.Substring(0, 8), receiver.Substring(8, 3));
+                Receiver = $"{modifiedReceiver.Substring(0, 8)}X{receiver.Substring(8, 3)}";
             else
                 Receiver = modifiedReceiver.PadRight(12, 'X');
         }
@@ -158,18 +158,19 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
 
         public string GetMessageInputReference()
         {
-            return string.Format("{0}{1}{2}", Receiver, SenderSessionNo, SenderSequenceNo);
+            return $"{Receiver}{SenderSessionNo}{SenderSequenceNo}";
         }
 
         public string GetBlockValue()
         {
             MessageType = MessageType.Replace("MT", string.Empty).Trim().Substring(0, 3);
-            return string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}", InputOrOutputId, MessageType, SenderInputTime, SenderInputDate, Receiver, SenderSessionNo, SenderSequenceNo, SenderOutputDate, SenderOutputTime, Priority, DeliveryMonitoring, ObsolescencePeriod);
+            return
+                $"{InputOrOutputId}{MessageType}{SenderInputTime}{SenderInputDate}{Receiver}{SenderSessionNo}{SenderSequenceNo}{SenderOutputDate}{SenderOutputTime}{Priority}{DeliveryMonitoring}{ObsolescencePeriod}";
         }
 
         public override string GetBlock()
         {
-            return string.Format("{{{0}:{1}}}", Name, GetBlockValue());
+            return $"{{{Name}:{GetBlockValue()}}}";
         }
 
         public void SetBlock(SwiftBlock2 block2)

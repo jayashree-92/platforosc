@@ -15,7 +15,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
 
         public override string GetValue()
         {
-            return string.Format("{0}{1}", DateString, TimeString);
+            return $"{DateString}{TimeString}";
         }
 
         public T setDateAndTime<T>(T callingClass, DateTime date)

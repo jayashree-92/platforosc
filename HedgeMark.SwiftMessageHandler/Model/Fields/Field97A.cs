@@ -23,15 +23,10 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         }
 
         
-        public override List<string> Components
-        {
-            get
+        public override List<string> Components =>
+            new List<string>()
             {
-                return new List<string>()
-                {
-                    FieldConstants.QUALIFIER,FieldConstants.ACCOUNT
-                };
-            }
-        }
+                FieldConstants.QUALIFIER,FieldConstants.ACCOUNT
+            };
     }
 }

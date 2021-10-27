@@ -98,7 +98,9 @@ namespace HedgeMark.SwiftMessageHandler.Model
 
         public string GetFullMessageType()
         {
-            return string.Format("MT{0}{1}", Block2.MessageType, Block3.Fields.Any(s => s.Name == FieldDirectory.FIELD_119) ? string.Format(" {0}", Block3.GetFieldValue(FieldDirectory.FIELD_119)) : string.Empty).Trim();
+            return
+                $"MT{Block2.MessageType}{(Block3.Fields.Any(s => s.Name == FieldDirectory.FIELD_119) ? $" {Block3.GetFieldValue(FieldDirectory.FIELD_119)}" : string.Empty)}"
+                    .Trim();
         }
 
         public bool IsServiceMessage21()

@@ -27,19 +27,14 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         }
         public override string GetValue()
         {
-            return string.Format(":{0}//{1}", Qualifier, Code);
+            return $":{Qualifier}//{Code}";
         }
 
-        public override List<string> Components
-        {
-            get
+        public override List<string> Components =>
+            new List<string>()
             {
-                return new List<string>()
-                {
-                    FieldConstants.QUALIFIER,FieldConstants.CODE
-                };
-            }
-        }
+                FieldConstants.QUALIFIER,FieldConstants.CODE
+            };
 
         public override string GetComponentValue(string component)
         {

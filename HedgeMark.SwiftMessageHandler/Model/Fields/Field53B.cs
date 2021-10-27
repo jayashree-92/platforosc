@@ -16,16 +16,11 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public string Location { get; set; }
 
 
-        public override List<string> Components
-        {
-            get
+        public override List<string> Components =>
+            new List<string>()
             {
-                return new List<string>()
-                {
-                    FieldConstants.DC_MARK,FieldConstants.ACCOUNT,FieldConstants.LOCATION
-                };
-            }
-        }
+                FieldConstants.DC_MARK,FieldConstants.ACCOUNT,FieldConstants.LOCATION
+            };
 
 
         public override string GetComponentValue(string component)
@@ -41,7 +36,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
                     var derivedVal = !string.IsNullOrWhiteSpace(Account) ? Account : Value;
 
                     if (DCMark != null)
-                        derivedVal = string.Format("/{0}", derivedVal.Replace(string.Format("/{0}/", DCMark ?? string.Empty), string.Empty));
+                        derivedVal =
+                            $"/{derivedVal.Replace($"/{DCMark ?? string.Empty}/", string.Empty)}";
 
                     return Account = component.GetComponentValue(derivedVal);
                 case FieldConstants.LOCATION:
@@ -52,10 +48,11 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
                     var derivedValue = bicStartIndex == -1 ? Value : Value.Length >= bicStartIndex + 6 ? Value.Substring(bicStartIndex, Value.Length - bicStartIndex) : string.Empty;
 
                     if (DCMark != null)
-                        derivedValue = string.Format("/{0}", derivedValue.Replace(string.Format("/{0}/", DCMark ?? string.Empty), string.Empty));
+                        derivedValue =
+                            $"/{derivedValue.Replace($"/{DCMark ?? string.Empty}/", string.Empty)}";
 
                     if (Account != null)
-                        derivedValue = derivedValue.Replace(string.Format("/{0}", Account ?? string.Empty), string.Empty);
+                        derivedValue = derivedValue.Replace($"/{Account ?? string.Empty}", string.Empty);
 
                     return component.GetComponentValue(derivedValue);
             }
@@ -90,7 +87,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             var isAccAvailable = !string.IsNullOrWhiteSpace(Account);
 
             if (!string.IsNullOrWhiteSpace(DCMark))
-                builder.Append(string.Format("{0}/", DCMark));
+                builder.Append($"{DCMark}/");
 
             else
             {

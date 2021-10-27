@@ -72,7 +72,7 @@ namespace HedgeMark.SwiftMessageHandler
                     if (!mandatoryFields.Any() && !mandatoryFields.Any(s => s.Equals(fieldElement.Name)))
                         continue;
 
-                    thisFieldDetails += string.Format("{0}:{1}\n", breakDown.Key, breakDown.Value);
+                    thisFieldDetails += $"{breakDown.Key}:{breakDown.Value}\n";
                 }
 
                 if (string.IsNullOrWhiteSpace(thisFieldDetails))
@@ -85,7 +85,7 @@ namespace HedgeMark.SwiftMessageHandler
             var exceptionDetails = builder.ToString();
 
             if (!string.IsNullOrWhiteSpace(exceptionDetails))
-                throw new InvalidDataException(string.Format("Missing Mandatory field details: {0}", exceptionDetails));
+                throw new InvalidDataException($"Missing Mandatory field details: {exceptionDetails}");
         }
 
         private static IEnumerable<FieldElements> GetFieldElements(string message, out string messageType)

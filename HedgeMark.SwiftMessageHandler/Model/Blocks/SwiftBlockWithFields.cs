@@ -86,7 +86,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
                   thisBlock.AppendFormat("{{{0}}}", fld.GetFieldAndValue);
               });
 
-            return string.Format("{{{0}:{1}}}", Name, thisBlock);
+            return $"{{{Name}:{thisBlock}}}";
         }
 
         public void SetBlock(SwiftBlockWithFields block)

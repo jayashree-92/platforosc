@@ -233,7 +233,7 @@ namespace HedgeMark.SwiftMessageHandler
             if (blocks.ContainsKey("3"))
                 validationType = GetFieldValueFromBlock3(blocks["3"], FieldDirectory.FIELD_119);
 
-            return string.Format("{0}{1}", messageType, validationType);
+            return $"{messageType}{validationType}";
         }
 
         private static string GetFieldValueFromBlock3(string message, string field)
@@ -343,7 +343,7 @@ namespace HedgeMark.SwiftMessageHandler
                 else
                 {
                     var blockName = block.Split(':')[0].Replace("{", string.Empty).Trim();
-                    qualifiedBlocks.Add(blockName, block.Replace(string.Format("{{{0}:", blockName), string.Empty));
+                    qualifiedBlocks.Add(blockName, block.Replace($"{{{blockName}:", string.Empty));
                 }
             }
 

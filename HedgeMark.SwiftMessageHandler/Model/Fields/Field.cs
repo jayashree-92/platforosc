@@ -26,15 +26,16 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         }
 
         public string Name { get; set; }
-        public string Label { get { return FieldDirectory.Labels.ContainsKey(Name) ? FieldDirectory.Labels[Name] : string.Format("Field {0}", Name); } }
+        public string Label => FieldDirectory.Labels.ContainsKey(Name) ? FieldDirectory.Labels[Name] : $"Field {Name}";
 
         public string Value
         {
-            get { return value; }
+            get => value;
             protected set
             {
                 if (value.Any(s => InvalidFieldValues.Contains(s)))
-                    throw new InvalidDataException(string.Format("{0}: The field value cannot contain characters like '{{','}}' or ':' in {1}", Name, value));
+                    throw new InvalidDataException(
+                        $"{Name}: The field value cannot contain characters like '{{','}}' or ':' in {value}");
 
                 this.value = value;
             }
@@ -45,7 +46,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             get
             {
                 var val = GetValue();
-                return string.IsNullOrWhiteSpace(val) ? string.Empty : string.Format("{0}:{1}", Name, val);
+                return string.IsNullOrWhiteSpace(val) ? string.Empty : $"{Name}:{val}";
             }
         }
 

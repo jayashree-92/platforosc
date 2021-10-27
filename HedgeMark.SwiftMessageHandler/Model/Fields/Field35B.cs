@@ -27,7 +27,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             get
             {
                 if (!string.IsNullOrWhiteSpace(Description))
-                    return string.Format("{0}{1}", Environment.NewLine, Description);
+                    return $"{Environment.NewLine}{Description}";
 
                 var builder = new StringBuilder();
                 if (!string.IsNullOrWhiteSpace(DescriptionLine1))
@@ -80,16 +80,11 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             return this;
         }
 
-        public override List<string> Components
-        {
-            get
+        public override List<string> Components =>
+            new List<string>()
             {
-                return new List<string>()
-                {
-                    FieldConstants.ISIN,FieldConstants.DESCRIPTION,FieldConstants.DESCRIPTION_LINE_2,FieldConstants.DESCRIPTION_LINE_3
-                };
-            }
-        }
+                FieldConstants.ISIN,FieldConstants.DESCRIPTION,FieldConstants.DESCRIPTION_LINE_2,FieldConstants.DESCRIPTION_LINE_3
+            };
 
         public override string GetComponentValue(string component)
         {
