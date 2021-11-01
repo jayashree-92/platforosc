@@ -9,6 +9,7 @@ using HM.Operations.Secure.Middleware.Jobs;
 using HM.Operations.Secure.Middleware.Models;
 using HM.Operations.Secure.Middleware.Util;
 using Com.HedgeMark.Commons.Extensions;
+using HM.Operations.Secure.Middleware.SwiftMessageManager;
 
 namespace HM.Operations.Secure.Middleware
 {
@@ -144,12 +145,12 @@ namespace HM.Operations.Secure.Middleware
             var authorizedFundMap = authorizedDMAFundData == null ? AdminFundManager.GetHFundsCreatedForDMAOnly(PreferencesManager.FundNameInDropDown.OpsShortName).ToDictionary(s => s.HmFundId, v => v) : authorizedDMAFundData.ToDictionary(s => s.HmFundId, v => v);
             var timeZones = FileSystemManager.GetAllTimeZones();
             var authFundIds = authorizedFundMap.Select(s => s.Key).ToList();
-            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, isPrivilegedUser).Where(s => clientIds.Contains(-1) || clientIds.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
+            var fundDetails = FundAccountManager.GetFundAccountDetails(authFundIds, isPrivilegedUser).Where(s => clientIds.Contains(-1) || clientIds.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
 
             foreach (var wire in wireStatusDetails)
             {
                 var fund = authorizedFundMap.ContainsKey(wire.hmFundId) ? authorizedFundMap[wire.hmFundId] : new HFundBasic();
-                var admin = fundDetails.FirstOrDefault(s => s.hmFundId == wire.hmFundId);
+                var fndAcct = fundDetails.FirstOrDefault(s => s.hmFundId == wire.hmFundId);
                 var thisWire = new WireTicket
                 {
                     HMWire = wire,
@@ -159,7 +160,8 @@ namespace HM.Operations.Secure.Middleware
                     PreferredFundName = fund.PreferredFundName ?? string.Empty,
                     ShortFundName = fund.PreferredFundName ?? string.Empty,
                     ClientLegalName = fund.ClientLegalName ?? string.Empty,
-                    AdminName = admin == null ? string.Empty : admin.AdminChoice
+                    AdminName = fndAcct == null ? string.Empty : fndAcct.AdminChoice,
+                    CustodianName = fndAcct == null ? string.Empty : fndAcct.CustodianCompanyName
                 };
 
                 thisWire.Deadline = wire.WireStatusId == 2
@@ -411,6 +413,8 @@ namespace HM.Operations.Secure.Middleware
 
             foreach (var ticket in wireData)
             {
+                var messageType = ticket.HMWire.hmsWireMessageType.MessageType;
+
                 var thisRow = new Row
                 {
                     ["WireId"] = ticket.WireId.ToString(),
@@ -419,6 +423,7 @@ namespace HM.Operations.Secure.Middleware
                     ["Client"] = ticket.ClientLegalName,
                     ["Fund"] = ticket.PreferredFundName,
                     ["Admin"] = ticket.AdminName,
+                    ["Custodian"] = ticket.CustodianName,
                     ["Sending Account Name"] = ticket.SendingAccount.AccountName,
                     ["Sending Account Number"] = ticket.SendingAccountNumber,
                     ["Transfer Type"] = ticket.TransferType,
@@ -432,6 +437,7 @@ namespace HM.Operations.Secure.Middleware
                     ["Beneficiary"] = ticket.Beneficiary,
                     ["Beneficiary A/C Number"] = ticket.BeneficiaryAccountNumber,
                     ["Wire Message Type"] = ticket.HMWire.hmsWireMessageType.MessageType,
+                    ["Comments"] = messageType == "MT103" || messageType == "MT202" ? OutboundSwiftMsgCreator.GetField72(ticket, messageType).GetValue() : string.Empty,
                     ["Initiated By"] = ticket.WireCreatedBy,
                     ["Initiated At"] = ticket.HMWire.CreatedAt.ToString("MMM dd, yyyy hh:mm tt"),
                     ["Approved By"] = ticket.WireApprovedBy,

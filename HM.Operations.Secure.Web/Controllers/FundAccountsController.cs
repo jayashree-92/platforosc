@@ -250,7 +250,7 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var hmFundIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
             var onBoardingAccounts = FundAccountManager.GetAllOnBoardingAccounts(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
-            var fundAccounts = FundAccountManager.GetOnBoardingAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
+            var fundAccounts = FundAccountManager.GetFundAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
             var fundAccountmap = fundAccounts.ToDictionary(s => s.onBoardingAccountId, v => v);
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
             var receivingAccountTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.ReceivingAgreementTypesForAccount).Split(',').ToList();
@@ -589,7 +589,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
             var hmFundIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 0).Select(s => s.Id).ToList();
             var onBoardingAccounts = FundAccountManager.GetAllOnBoardingAccounts(hmFundIds, AuthorizedSessionData.IsPrivilegedUser).OrderByDescending(x => x.UpdatedAt).ToList();
-            var fundAccounts = FundAccountManager.GetOnBoardingAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
+            var fundAccounts = FundAccountManager.GetFundAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
 
 
             var accountListRows = BuildAccountRows(onBoardingAccounts, fundAccounts);

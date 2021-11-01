@@ -26,7 +26,7 @@ namespace HM.Operations.Secure.Web.Controllers
             //Clients, Funds, AgreementTypes, MessageTypes, Status
 
             var authFundIds = authorizedFunds.Select(s => s.HmFundId).ToList();
-            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, isPrivilegedUser);
+            var fundDetails = FundAccountManager.GetFundAccountDetails(authFundIds, isPrivilegedUser);
 
             var clientMaps = new Dictionary<long, string>();
             foreach (var fund in fundDetails.Where(fund => !string.IsNullOrWhiteSpace(fund.ClientName) && fund.dmaClientOnBoardId != null && fund.dmaClientOnBoardId != 0 && !clientMaps.ContainsKey(fund.dmaClientOnBoardId ?? 0)))
@@ -71,7 +71,7 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var clientIdsList = Array.ConvertAll(clientIds.Split(','), long.Parse).ToList();
             var authFundIds = AuthorizedDMAFundData.Select(s => s.HmFundId).ToList();
-            var fundDetails = FundAccountManager.GetOnBoardingAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => clientIdsList.Contains(-1) || clientIdsList.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
+            var fundDetails = FundAccountManager.GetFundAccountDetails(authFundIds, AuthorizedSessionData.IsPrivilegedUser).Where(s => clientIdsList.Contains(-1) || clientIdsList.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
             var funds = (from fnd in fundDetails where fnd.hmFundId > 0 select new Select2Type() { id = fnd.hmFundId.ToString(), text = fnd.ShortFundName }).Distinct(new Select2HeaderComparer()).OrderBy(s => s.text).ToList();
             //            var agreementTypes = fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AgreementType)).Select(s => s.AgreementType).Distinct().Union(fundDetails.Where(s => !string.IsNullOrWhiteSpace(s.AccountType) && s.AccountType != "Agreement").Select(s => s.AccountType).Distinct()).OrderBy(s => s).Select(s => new Select2Type() { id = s, text = s }).ToList();
             var adminMaps = new Dictionary<long, string>();

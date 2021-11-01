@@ -718,6 +718,7 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="AdminChoice" Type="varchar" MaxLength="1000" />
           <Property Name="IsUmberllaFund" Type="bit" Nullable="false" />
           <Property Name="IsExcludedFromTreasuryMarginCheck" Type="bit" Nullable="false" />
+          <Property Name="CustodianCompanyName" Type="varchar" MaxLength="500" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
@@ -1381,7 +1382,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
     [vw_FundAccounts].[dmaOnBoardingAdminChoiceId] AS [dmaOnBoardingAdminChoiceId], 
     [vw_FundAccounts].[AdminChoice] AS [AdminChoice], 
     [vw_FundAccounts].[IsUmberllaFund] AS [IsUmberllaFund], 
-    [vw_FundAccounts].[IsExcludedFromTreasuryMarginCheck] AS [IsExcludedFromTreasuryMarginCheck]
+    [vw_FundAccounts].[IsExcludedFromTreasuryMarginCheck] AS [IsExcludedFromTreasuryMarginCheck], 
+    [vw_FundAccounts].[CustodianCompanyName] AS [CustodianCompanyName]
     FROM [dbo].[vw_FundAccounts] AS [vw_FundAccounts]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_hmsAccountCallback_onBoardingAccountId" Association="Self.FK_hmsAccountCallback_onBoardingAccountId">
@@ -2382,6 +2384,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="dmaOnBoardingAdminChoiceId" Type="Int64" />
           <Property Name="IsUmberllaFund" Type="Boolean" Nullable="false" />
           <Property Name="IsExcludedFromTreasuryMarginCheck" Type="Boolean" Nullable="false" />
+          <Property Name="CustodianCompanyName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="hmsSSICallback">
           <Key>
@@ -3596,6 +3599,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="vw_FundAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.vw_FundAccounts">
               <MappingFragment StoreEntitySet="vw_FundAccounts">
+                <ScalarProperty Name="CustodianCompanyName" ColumnName="CustodianCompanyName" />
                 <ScalarProperty Name="IsExcludedFromTreasuryMarginCheck" ColumnName="IsExcludedFromTreasuryMarginCheck" />
                 <ScalarProperty Name="IsUmberllaFund" ColumnName="IsUmberllaFund" />
                 <ScalarProperty Name="dmaOnBoardingAdminChoiceId" ColumnName="dmaOnBoardingAdminChoiceId" />

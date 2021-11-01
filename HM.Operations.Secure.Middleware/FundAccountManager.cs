@@ -18,15 +18,14 @@ namespace HM.Operations.Secure.Middleware
         public const int FundTemplateTypeId = 1;
         public const string AgreementAccountType = "Agreement";
 
-        public static List<vw_FundAccounts> GetOnBoardingAccountDetails(List<long> hmFundIds, bool isPreviledgedUser)
+        public static List<vw_FundAccounts> GetFundAccountDetails(List<long> hmFundIds, bool isPrivilegedUser)
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.vw_FundAccounts.Where(s => isPreviledgedUser || hmFundIds.Contains(s.hmFundId)).ToList();
+                return context.vw_FundAccounts.Where(s => isPrivilegedUser || hmFundIds.Contains(s.hmFundId)).ToList();
             }
-
         }
 
         public static List<onBoardingAccount> GetAllOnBoardingAccounts(List<long> hmFundIds, bool isPreviledgedUser)

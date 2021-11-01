@@ -87,14 +87,11 @@ namespace HM.Operations.Secure.Middleware.Models
                     return string.Empty;
 
                 if (IsFundTransfer)
-                {
                     return ReceivingAccount.UltimateBeneficiaryType == "Account Name" ? ReceivingAccount.UltimateBeneficiaryAccountName : ReceivingAccount.UltimateBeneficiary.BICorABA;
-                }
 
                 if (!IsNotice)
-                {
                     return SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.UltimateBeneficiaryAccountName : SSITemplate.UltimateBeneficiary.BICorABA;
-                }
+
                 return "N/A";
             }
         }
@@ -108,14 +105,11 @@ namespace HM.Operations.Secure.Middleware.Models
                     return string.Empty;
 
                 if (IsFundTransfer)
-                {
                     return !string.IsNullOrEmpty(ReceivingAccount.FFCNumber) ? ReceivingAccount.FFCNumber : ReceivingAccount.UltimateBeneficiaryAccountNumber;
-                }
 
                 if (!IsNotice)
-                {
                     return !string.IsNullOrEmpty(SSITemplate.FFCNumber) ? SSITemplate.FFCNumber : SSITemplate.UltimateBeneficiaryAccountNumber;
-                }
+
                 return "N/A";
             }
         }
@@ -155,6 +149,7 @@ namespace HM.Operations.Secure.Middleware.Models
         public string ShortFundName { get; set; }
         public string ClientLegalName { get; set; }
         public string AdminName { get; set; }
+        public string CustodianName { get; set; }
         public string FundRegisterAddress { get; set; }
 
         //Populated from  hmsBankAccountAddress

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using ExcelUtility.Operations.ManagedAccounts;
@@ -28,7 +29,7 @@ namespace HM.Operations.Secure.Middleware.Jobs
             var scheduleName = GetScheduleName(job.hmsDashboardScheduleId, true);
 
             //Schedule the given job
-            RecurringJob.AddOrUpdate(scheduleName, () => ExecuteDashboardSchedule(job.hmsDashboardScheduleId, job.hmsDashboardTemplate.TemplateName),
+            RecurringJob.AddOrUpdate(scheduleName, () => ExecuteDashboardSchedule(job.hmsDashboardScheduleId, job.hmsDashboardTemplate.TemplateName, false),
                 job.hmsSchedule.ScheduleExpression, TimeZones[job.hmsSchedule.TimeZone]);
         }
 
@@ -43,10 +44,10 @@ namespace HM.Operations.Secure.Middleware.Jobs
         }
 
         [DisplayName("Dashboard Schedule of {0} > {1}")]
-        public static void ExecuteDashboardSchedule(long dashboarScheduleId, string templateName)
+        public static void ExecuteDashboardSchedule(long dashboardScheduleId, string templateName, bool isManuallyTriggered)
         {
             //get schedule details
-            var job = GetDashboardSchedule(dashboarScheduleId) ?? new hmsDashboardSchedule() { IsDeleted = true }; ;
+            var job = GetDashboardSchedule(dashboardScheduleId) ?? new hmsDashboardSchedule() { IsDeleted = true }; ;
 
             if (job.hmsDashboardTemplate.IsDeleted || !job.hmsSchedule.IsActive)
             {
@@ -54,6 +55,8 @@ namespace HM.Operations.Secure.Middleware.Jobs
                 ScheduleManager.SetScheduleActiveOrInactive(job.hmsDashboardScheduleId, job.hmsScheduleId, false, true, schedulerProcessId);
                 return;
             }
+
+            var scheduleLogId = LogScheduleStart(job.hmsSchedule, DateTime.UtcNow, isManuallyTriggered);
 
             TryGetStartAndEndDate((DashboardScheduleRange)job.DashboardScheduleRangeLkupId, out var startDate, out var endDate);
 
@@ -70,7 +73,54 @@ namespace HM.Operations.Secure.Middleware.Jobs
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
 
             SendOutReport(exportFileInfo, job.hmsSchedule, subject, mailBody, false);
+
+            //Log Schedule Execution
+            LogScheduleEnd(scheduleLogId);
+
         }
+
+
+        private static int LogScheduleStart(hmsSchedule job, DateTimeOffset executionStartTime, bool isManuallyTriggered)
+        {
+            var executionTime = isManuallyTriggered ? executionStartTime : GetNextExecutionTime(job.ScheduleExpression, job.TimeZone, DateTime.UtcNow.AddHours(-1));
+            using (var context = new OperationsSecureContext())
+            {
+                //Set Schedule End time
+                var scheduleLog = context.hmsScheduleLogs.FirstOrDefault(s => s.hmsScheduleId == job.hmsScheduleId && s.ExpectedScheduleStartAt == executionTime
+                                                                                                                   && s.IsManualTrigger == isManuallyTriggered)
+                                  ?? new hmsScheduleLog()
+                                  {
+                                      hmsScheduleId = job.hmsScheduleId,
+                                      RecCreatedAt = DateTime.Now,
+                                      ContextDate = DateTime.Today,
+                                      ScheduleStartTime = executionStartTime,
+                                      ScheduleEndTime = null,
+                                      TimeOutJobId = null,
+                                      IsManualTrigger = isManuallyTriggered,
+                                      ExpectedScheduleStartAt = executionTime,
+                                      ExpectedScheduleEndAt = executionTime.Add(new TimeSpan(0, 0, 60))
+                                  };
+
+                context.hmsScheduleLogs.AddOrUpdate(scheduleLog);
+                context.SaveChanges();
+                return scheduleLog.hmsScheduleLogId;
+            }
+        }
+
+
+        private static void LogScheduleEnd(int scheduleLogId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                //Set Schedule End time
+                var scheduleLog = context.hmsScheduleLogs.First(s => s.hmsScheduleLogId == scheduleLogId);
+                scheduleLog.ScheduleEndTime = DateTime.UtcNow;
+
+                context.hmsScheduleLogs.AddOrUpdate(scheduleLog);
+                context.SaveChanges();
+            }
+        }
+
 
         private static ExportContent GetDashboardFileToSend(hmsDashboardSchedule schedule, DateTime startDate, DateTime endDate)
         {

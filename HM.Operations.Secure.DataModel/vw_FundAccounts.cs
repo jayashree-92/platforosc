@@ -52,5 +52,6 @@ namespace HM.Operations.Secure.DataModel
         public Nullable<long> dmaOnBoardingAdminChoiceId { get; set; }
         public bool IsUmberllaFund { get; set; }
         public bool IsExcludedFromTreasuryMarginCheck { get; set; }
+        public string CustodianCompanyName { get; set; }
     }
 }

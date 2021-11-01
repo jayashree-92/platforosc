@@ -374,7 +374,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             return new Field71A("OUR");
         }
 
-        private static Field72 GetField72(WireTicket wire, string messageType)
+        public static Field72 GetField72(WireTicket wire, string messageType)
         {
             var f72 = new Field72();
 
@@ -386,90 +386,58 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                         ? wire.SSITemplate.FFCNumber
                         : string.Empty;
 
-            //if (string.IsNullOrWhiteSpace(ffcNumber))
-            //    return f72;
-
-            //if (messageType == "MT103")
-            //    f72.setNarrativeLine1("/ACC/" + ffcNumber);
-            //else
-            //    f72.setNarrativeLine1("/BNF/" + ffcNumber);
 
             var ffcName = wire.IsFundTransfer ? wire.ReceivingAccount.FFCName : wire.SSITemplate.FFCName;
-            //if (!string.IsNullOrWhiteSpace(fccName))
-            //  f72.setNarrativeLine2("//" + fccName);
-
             var reference = wire.IsFundTransfer ? wire.ReceivingAccount.Reference : wire.SSITemplate.Reference;
-            //if (!string.IsNullOrWhiteSpace(reference))
-            //  f72.setNarrativeLine3("//" + reference);
 
             if (string.IsNullOrWhiteSpace(ffcNumber) && string.IsNullOrWhiteSpace(wire.HMWire.SenderDescription) && (messageType == "MT103" || !wire.ShouldIncludeWirePurpose))
                 return f72;
 
             var senderDescriptionInfo = (wire.HMWire.SenderDescription ?? string.Empty).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
-            var narrativeLine = string.Empty;
             var descIndex = 0;
             senderDescriptionInfo.Where(s => s.Length > 33).ForEach(s => s = s.Substring(0, 33));
             var descriptionCount = senderDescriptionInfo.Count;
-            for (int i = 0; i < 6; i++)
-            {
-                switch (i)
-                {
-                    case 0:
-                        narrativeLine = wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral
-                            ? $"/{wire.DefaultSenderInformation}/{(wire.ShouldIncludeWirePurpose ? wire.CollateralPaymentReason : wire.ShortFundName)}"
-                            : $"/{wire.DefaultSenderInformation}/{(wire.ShouldIncludeWirePurpose ? wire.HMWire.hmsWirePurposeLkup.Purpose : ffcNumber)}";
 
-                        f72.setNarrativeLine1(narrativeLine.Length > 30 ? narrativeLine.Substring(0, 30) : narrativeLine);
-                        break;
-                    case 1:
-                        {
-                            if (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral)
-                                narrativeLine = $"{(wire.ShouldIncludeWirePurpose ? wire.ShortFundName : ffcNumber)}";
-                            else if (wire.ShouldIncludeWirePurpose)
-                                narrativeLine =
-                                    $"{(!string.IsNullOrEmpty(ffcNumber) ? ffcNumber : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
-                            else
-                                narrativeLine =
-                                    $"{(!string.IsNullOrEmpty(ffcName) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
+            var narrativeLine1 = wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral
+                   ? $"/{wire.DefaultSenderInformation}/{(wire.ShouldIncludeWirePurpose ? wire.CollateralPaymentReason : wire.ShortFundName)}"
+                   : $"/{wire.DefaultSenderInformation}/{(wire.ShouldIncludeWirePurpose ? wire.HMWire.hmsWirePurposeLkup.Purpose : ffcNumber)}";
 
-                            if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
-                                f72.setNarrativeLine2(
-                                    $"//{(narrativeLine.Length > 33 ? narrativeLine.Substring(0, 33) : narrativeLine)}");
-                            break;
-                        }
-                    case 2:
-                        narrativeLine = wire.ShouldIncludeWirePurpose
-                            ? $"{(!string.IsNullOrEmpty(ffcName) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}"
-                            : $"{(!string.IsNullOrEmpty(reference) ? reference : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
+            f72.setNarrativeLine1(narrativeLine1.Length > 30 ? narrativeLine1.Substring(0, 30) : narrativeLine1);
 
-                        if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
-                            f72.setNarrativeLine3($"//{narrativeLine}");
-                        break;
-                    case 3:
-                        narrativeLine = wire.ShouldIncludeWirePurpose
-                            ? $"{(!string.IsNullOrEmpty(reference) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}"
-                            : $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
+            string narrativeLine2;
+            if (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral)
+                narrativeLine2 = $"{(wire.ShouldIncludeWirePurpose ? wire.ShortFundName : ffcNumber)}";
+            else if (wire.ShouldIncludeWirePurpose)
+                narrativeLine2 = $"{(!string.IsNullOrEmpty(ffcNumber) ? ffcNumber : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
+            else
+                narrativeLine2 = $"{(!string.IsNullOrEmpty(ffcName) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
-                        if (!string.IsNullOrWhiteSpace(narrativeLine))
-                            f72.setNarrativeLine4($"//{narrativeLine}");
-                        break;
-                    case 4:
-                        narrativeLine =
-                            $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
+            if (!string.IsNullOrWhiteSpace(narrativeLine2.Trim()))
+                f72.setNarrativeLine2($"//{(narrativeLine2.Length > 33 ? narrativeLine2.Substring(0, 33) : narrativeLine2)}");
 
-                        if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
-                            f72.setNarrativeLine5($"//{narrativeLine}");
-                        break;
-                    case 5:
-                        narrativeLine =
-                            $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
+            var narrativeLine3 = wire.ShouldIncludeWirePurpose
+                 ? $"{(!string.IsNullOrEmpty(ffcName) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}"
+                 : $"{(!string.IsNullOrEmpty(reference) ? reference : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
-                        if (!string.IsNullOrWhiteSpace(narrativeLine.Trim()))
-                            f72.setNarrativeLine6($"//{narrativeLine}");
-                        break;
-                    default: break;
-                }
-            }
+            if (!string.IsNullOrWhiteSpace(narrativeLine3.Trim()))
+                f72.setNarrativeLine3($"//{narrativeLine3}");
+
+            var narrativeLine4 = wire.ShouldIncludeWirePurpose
+                ? $"{(!string.IsNullOrEmpty(reference) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}"
+                : $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
+
+            if (!string.IsNullOrWhiteSpace(narrativeLine4))
+                f72.setNarrativeLine4($"//{narrativeLine4}");
+
+            var narrativeLine5 = $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
+
+            if (!string.IsNullOrWhiteSpace(narrativeLine5.Trim()))
+                f72.setNarrativeLine5($"//{narrativeLine5}");
+
+            var narrativeLine6 = $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
+
+            if (!string.IsNullOrWhiteSpace(narrativeLine6.Trim()))
+                f72.setNarrativeLine6($"//{narrativeLine6}");
 
             return f72;
         }
