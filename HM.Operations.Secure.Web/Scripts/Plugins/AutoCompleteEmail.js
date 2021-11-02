@@ -13,6 +13,7 @@
 (function ($) {
 
     var aDefaultDomains = ["bnymellon.com"];
+    var aExcludedEmails = ["noreply", "no-reply"];
 
     var spanClassName = "spn_temp_span_auto_sugst_email";
     var shiftKeyDown = false;
@@ -38,6 +39,10 @@
         if (functionCall) {
             if (functionCall == "getEmails")
                 return getEmails();
+
+            if (functionCall == "getFormattedEmails")
+                return getFormattedEmails();
+
             if (functionCall == "formatEmails")
                 return formatEmails(params[0], params.length > 1 ? params[1] : "");
 
@@ -48,6 +53,7 @@
             sClassOnChange: "spn-auto-email-warning",
             sClassOnError: "spn-auto-email-error",
             domains: aDefaultDomains,
+            excludedEmails: aExcludedEmails,
             bAllowListedDomainsOnly: false,
             sHighlightList: "",
             asHighlightList: [],
@@ -160,7 +166,18 @@
         });
 
         function getEmails() {
-            var tempAttachElement = "<span class=\"spn-auto-email-chioce-temp\">" + oElement.html().replaceAll("<span class=\"spn-auto-email-choice-close\"></span>", "; ") + "<span>";
+            var tempAttachElement = "<span class=\"spn-auto-email-chioce-temp\">" + oElement.html().replaceAll("<span class=\"spn-auto-email-choice-close\"></span>", "; ") + "</span>";
+            var emails = $(tempAttachElement).text();
+            return emails;
+        }
+
+        function getFormattedEmails() {
+
+            var replacedString = oElement.html().replaceAll("<span class=\"spn-auto-email-choice\">", "");
+            replacedString = replacedString.replaceAll("<span class=\"spn-auto-email-choice-highlight\">", "");
+            replacedString = replacedString.replaceAll("</span>", "; ");
+
+            var tempAttachElement = "<span class=\"spn-auto-email-chioce-temp\">" + replacedString + "</span>";
             var emails = $(tempAttachElement).text();
             return emails;
         }
@@ -213,6 +230,7 @@
                 if (v === "")
                     return;
 
+
                 if (!emailAddressRegEx.test(v)) {
                     v = "<span style=\"color:red\">" + v + ";</span>";
                     isInValidEmailsInPlace = true;
@@ -231,8 +249,9 @@
 
                     validDistinctEmails.push(v);
 
+                    var emailName = v.split("@")[0].trim().toLowerCase();
                     var emailDomain = v.split("@")[1].trim().toLowerCase();
-                    if (oSettings.bAllowListedDomainsOnly && oSettings.domains.indexOf(emailDomain) < 0) {
+                    if (oSettings.excludedEmails.indexOf(emailName) >= 0 || oSettings.bAllowListedDomainsOnly && oSettings.domains.indexOf(emailDomain) < 0) {
                         v = "<span style=\"color:red\">" + v + ";</span>";
                         isInValidEmailsInPlace = true;
                     } else {

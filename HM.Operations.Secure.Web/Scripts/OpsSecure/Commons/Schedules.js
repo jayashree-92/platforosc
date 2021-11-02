@@ -296,6 +296,7 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
 
         $("#dvInptScheduleInternalTo").AutoCompleteEmail({
             domains: ["bnymellon.com"],
+            excludedEmails: ["reconfiles"],
             bAllowListedDomainsOnly: true,
             onFocusOutCallback: function () {
                 $scope.IsInternalToHasValidIds = !$("#dvInptScheduleInternalTo").hasClass("spn-auto-email-error");
@@ -308,6 +309,7 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
 
         $("#dvInptScheduleInternalCC").AutoCompleteEmail({
             domains: ["bnymellon.com"],
+            excludedEmails: ["reconfiles"],
             bAllowListedDomainsOnly: true,
             onFocusOutCallback: function () {
                 $scope.IsInternalCCHasValidIds = $("#dvInptScheduleInternalCC").text().trim() === "" || !$("#dvInptScheduleInternalCC").hasClass("spn-auto-email-error");
