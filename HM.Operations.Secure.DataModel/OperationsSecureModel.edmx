@@ -144,10 +144,13 @@
           <Property Name="hmsScheduleLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hmsScheduleId" Type="int" Nullable="false" />
           <Property Name="ContextDate" Type="date" Nullable="false" />
-          <Property Name="ScheduleStartTime" Type="datetime" Nullable="false" />
-          <Property Name="ScheduleEndTime" Type="datetime" />
+          <Property Name="ScheduleStartTime" Type="datetimeoffset" Precision="7" Nullable="false" />
+          <Property Name="ScheduleEndTime" Type="datetimeoffset" Precision="7" />
           <Property Name="TimeOutJobId" Type="varchar" MaxLength="50" />
           <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="IsManualTrigger" Type="bit" Nullable="false" />
+          <Property Name="ExpectedScheduleStartAt" Type="datetimeoffset" Precision="7" Nullable="false" />
+          <Property Name="ExpectedScheduleEndAt" Type="datetimeoffset" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsSchedules">
           <Key>
@@ -1704,7 +1707,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySet Name="hmsDashboardScheduleRangeLkups" EntityType="OperationsSecureModel.hmsDashboardScheduleRangeLkup" />
           <EntitySet Name="hmsDashboardSchedules" EntityType="OperationsSecureModel.hmsDashboardSchedule" />
           <EntitySet Name="hmsDashboardTemplates" EntityType="OperationsSecureModel.hmsDashboardTemplate" />
-          <EntitySet Name="hmsScheduleLogs" EntityType="OperationsSecureModel.hmsScheduleLog" />
           <EntitySet Name="hmsSchedules" EntityType="OperationsSecureModel.hmsSchedule" />
           <EntitySet Name="hmsScheduleWorkflowLkups" EntityType="OperationsSecureModel.hmsScheduleWorkflowLkup" />
           <AssociationSet Name="FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode" Association="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardPreferenceCodeLkup_PreferenceCode">
@@ -1726,10 +1728,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <AssociationSet Name="FK_hmsDashboardSchedules_hmsScheduleId" Association="OperationsSecureModel.FK_hmsDashboardSchedules_hmsScheduleId">
             <End Role="hmsSchedule" EntitySet="hmsSchedules" />
             <End Role="hmsDashboardSchedule" EntitySet="hmsDashboardSchedules" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsScheduleLogs_hmsScheduleId" Association="OperationsSecureModel.FK_hmsScheduleLogs_hmsScheduleId">
-            <End Role="hmsSchedule" EntitySet="hmsSchedules" />
-            <End Role="hmsScheduleLog" EntitySet="hmsScheduleLogs" />
           </AssociationSet>
           <EntitySet Name="hmsUsers" EntityType="OperationsSecureModel.hmsUser" />
           <EntitySet Name="hmsWires" EntityType="OperationsSecureModel.hmsWire" />
@@ -1820,6 +1818,11 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <AssociationSet Name="FK_hmsWireInterestAssociation_hmsWires_hmsWireId" Association="OperationsSecureModel.FK_hmsWireInterestAssociation_hmsWires_hmsWireId">
             <End Role="hmsWire" EntitySet="hmsWires" />
             <End Role="hmsWireInterestAssociation" EntitySet="hmsWireInterestAssociations" />
+          </AssociationSet>
+          <EntitySet Name="hmsScheduleLogs" EntityType="OperationsSecureModel.hmsScheduleLog" />
+          <AssociationSet Name="FK_hmsScheduleLogs_hmsScheduleId" Association="OperationsSecureModel.FK_hmsScheduleLogs_hmsScheduleId">
+            <End Role="hmsSchedule" EntitySet="hmsSchedules" />
+            <End Role="hmsScheduleLog" EntitySet="hmsScheduleLogs" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
@@ -2698,19 +2701,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <NavigationProperty Name="hmsDashboardPreferences" Relationship="OperationsSecureModel.FK_hmsDashboardPreferences_hmsDashboardTemplates_hmsDashboardTemplateId" FromRole="hmsDashboardTemplate" ToRole="hmsDashboardPreference" />
           <NavigationProperty Name="hmsDashboardSchedules" Relationship="OperationsSecureModel.FK_hmsDashboardSchedules_hmsDashboardTemplateId" FromRole="hmsDashboardTemplate" ToRole="hmsDashboardSchedule" />
         </EntityType>
-        <EntityType Name="hmsScheduleLog">
-          <Key>
-            <PropertyRef Name="hmsScheduleLogId" />
-          </Key>
-          <Property Name="hmsScheduleLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="hmsScheduleId" Type="Int32" Nullable="false" />
-          <Property Name="ContextDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="ScheduleStartTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ScheduleEndTime" Type="DateTime" Precision="3" />
-          <Property Name="TimeOutJobId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="hmsSchedule" Relationship="OperationsSecureModel.FK_hmsScheduleLogs_hmsScheduleId" FromRole="hmsScheduleLog" ToRole="hmsSchedule" />
-        </EntityType>
         <EntityType Name="hmsSchedule">
           <Key>
             <PropertyRef Name="hmsScheduleId" />
@@ -2808,18 +2798,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
               <PropertyRef Name="hmsScheduleId" />
             </Principal>
             <Dependent Role="hmsDashboardSchedule">
-              <PropertyRef Name="hmsScheduleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsScheduleLogs_hmsScheduleId">
-          <End Type="OperationsSecureModel.hmsSchedule" Role="hmsSchedule" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsScheduleLog" Role="hmsScheduleLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="hmsSchedule">
-              <PropertyRef Name="hmsScheduleId" />
-            </Principal>
-            <Dependent Role="hmsScheduleLog">
               <PropertyRef Name="hmsScheduleId" />
             </Dependent>
           </ReferentialConstraint>
@@ -3189,6 +3167,34 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Principal>
             <Dependent Role="hmsWireInterestAssociation">
               <PropertyRef Name="hmsWireId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsScheduleLog">
+          <Key>
+            <PropertyRef Name="hmsScheduleLogId" />
+          </Key>
+          <Property Name="hmsScheduleLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsScheduleId" Type="Int32" Nullable="false" />
+          <Property Name="ContextDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ScheduleStartTime" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="ScheduleEndTime" Type="DateTimeOffset" Precision="7" />
+          <Property Name="TimeOutJobId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsManualTrigger" Type="Boolean" Nullable="false" />
+          <Property Name="ExpectedScheduleStartAt" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="ExpectedScheduleEndAt" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <NavigationProperty Name="hmsSchedule" Relationship="OperationsSecureModel.FK_hmsScheduleLogs_hmsScheduleId" FromRole="hmsScheduleLog" ToRole="hmsSchedule" />
+        </EntityType>
+        <Association Name="FK_hmsScheduleLogs_hmsScheduleId">
+          <End Type="OperationsSecureModel.hmsSchedule" Role="hmsSchedule" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsScheduleLog" Role="hmsScheduleLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSchedule">
+              <PropertyRef Name="hmsScheduleId" />
+            </Principal>
+            <Dependent Role="hmsScheduleLog">
+              <PropertyRef Name="hmsScheduleId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3806,19 +3812,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="hmsScheduleLogs">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsScheduleLog">
-              <MappingFragment StoreEntitySet="hmsScheduleLogs">
-                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
-                <ScalarProperty Name="TimeOutJobId" ColumnName="TimeOutJobId" />
-                <ScalarProperty Name="ScheduleEndTime" ColumnName="ScheduleEndTime" />
-                <ScalarProperty Name="ScheduleStartTime" ColumnName="ScheduleStartTime" />
-                <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
-                <ScalarProperty Name="hmsScheduleId" ColumnName="hmsScheduleId" />
-                <ScalarProperty Name="hmsScheduleLogId" ColumnName="hmsScheduleLogId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="hmsSchedules">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsSchedule">
               <MappingFragment StoreEntitySet="hmsSchedules">
@@ -3955,6 +3948,22 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
                 <ScalarProperty Name="dmaInterestReportEodDataId" ColumnName="dmaInterestReportEodDataId" />
                 <ScalarProperty Name="hmsWireId" ColumnName="hmsWireId" />
                 <ScalarProperty Name="hmsWireInterestAssociationId" ColumnName="hmsWireInterestAssociationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsScheduleLogs">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsScheduleLog">
+              <MappingFragment StoreEntitySet="hmsScheduleLogs">
+                <ScalarProperty Name="ExpectedScheduleEndAt" ColumnName="ExpectedScheduleEndAt" />
+                <ScalarProperty Name="ExpectedScheduleStartAt" ColumnName="ExpectedScheduleStartAt" />
+                <ScalarProperty Name="IsManualTrigger" ColumnName="IsManualTrigger" />
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="TimeOutJobId" ColumnName="TimeOutJobId" />
+                <ScalarProperty Name="ScheduleEndTime" ColumnName="ScheduleEndTime" />
+                <ScalarProperty Name="ScheduleStartTime" ColumnName="ScheduleStartTime" />
+                <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
+                <ScalarProperty Name="hmsScheduleId" ColumnName="hmsScheduleId" />
+                <ScalarProperty Name="hmsScheduleLogId" ColumnName="hmsScheduleLogId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

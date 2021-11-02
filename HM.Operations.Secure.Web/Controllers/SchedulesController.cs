@@ -47,6 +47,33 @@ namespace HM.Operations.Secure.Web.Controllers
             return Json(jobSchedules);
         }
 
+        public JsonResult GetScheduleLogs(long scheduleId, string timeZone, int totalItems = 10)
+        {
+            List<hmsScheduleLog> logs;
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.ProxyCreationEnabled = false;
+                context.Configuration.LazyLoadingEnabled = false;
+                logs = context.hmsScheduleLogs.Where(s => s.hmsScheduleId == scheduleId && s.ContextDate <= DateTime.Today).Select(s => s).OrderByDescending(s => s.RecCreatedAt).Take(totalItems).ToList();
+            }
+
+            var timeZoneInfo = ScheduleManager.TimeZones.ContainsKey(timeZone) ? ScheduleManager.TimeZones[timeZone] : Middleware.Util.Utility.DefaultSystemTimeZone;
+
+            foreach (var s in logs)
+            {
+                if (s.IsManualTrigger)
+                    s.ExpectedScheduleStartAt = TimeZoneInfo.ConvertTime(s.ExpectedScheduleStartAt, timeZoneInfo);
+
+                s.ScheduleStartTime = TimeZoneInfo.ConvertTime(s.ScheduleStartTime, timeZoneInfo);
+
+                if (s.ScheduleEndTime != null)
+                    s.ScheduleEndTime = TimeZoneInfo.ConvertTime((s.ScheduleEndTime ?? new DateTime()), timeZoneInfo);
+
+            }
+
+            return Json(logs.Select(s => new { s.ContextDate, s.ExpectedScheduleStartAt, s.ExpectedScheduleEndAt, s.ScheduleStartTime, s.ScheduleEndTime, s.IsManualTrigger }));
+        }
+
         public void SaveSchedule(JobSchedule job, long primaryId, bool isDashboard)
         {
             SaveDashboardSchedule(job, primaryId, out var jobId);
@@ -60,7 +87,7 @@ namespace HM.Operations.Secure.Web.Controllers
             if (contextDate == null) contextDate = DateTime.Today.GetContextDate();
 
             var job = DashboardScheduleHandler.GetDashboardSchedule(jobId);
-            BackgroundJob.Enqueue(() => DashboardScheduleHandler.ExecuteDashboardSchedule(job.hmsDashboardScheduleId, job.hmsDashboardTemplate.TemplateName));
+            BackgroundJob.Enqueue(() => DashboardScheduleHandler.ExecuteDashboardSchedule(job.hmsDashboardScheduleId, job.hmsDashboardTemplate.TemplateName, true));
 
         }
 

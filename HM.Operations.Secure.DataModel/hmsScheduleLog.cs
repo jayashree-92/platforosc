@@ -17,10 +17,13 @@ namespace HM.Operations.Secure.DataModel
         public int hmsScheduleLogId { get; set; }
         public int hmsScheduleId { get; set; }
         public System.DateTime ContextDate { get; set; }
-        public System.DateTime ScheduleStartTime { get; set; }
-        public Nullable<System.DateTime> ScheduleEndTime { get; set; }
+        public System.DateTimeOffset ScheduleStartTime { get; set; }
+        public Nullable<System.DateTimeOffset> ScheduleEndTime { get; set; }
         public string TimeOutJobId { get; set; }
         public System.DateTime RecCreatedAt { get; set; }
+        public bool IsManualTrigger { get; set; }
+        public System.DateTimeOffset ExpectedScheduleStartAt { get; set; }
+        public System.DateTimeOffset ExpectedScheduleEndAt { get; set; }
     
         public virtual hmsSchedule hmsSchedule { get; set; }
     }

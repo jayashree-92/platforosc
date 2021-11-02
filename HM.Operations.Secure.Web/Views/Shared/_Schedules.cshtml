@@ -1,4 +1,4 @@
-﻿<span ng-controller="ReportScheduleCtrl">
+﻿<div ng-controller="ReportScheduleCtrl">
     <div id="panelReportSchedules" class="collapse container" style="margin: 0px;padding: 0px 15px;/* border-color: rgb(107 103 103); */border-top: 1px solid #cfcfcf;border-bottom: 1px solid #cfcfcf;background-color: #f5f5f5;">
         <span class="panel-body" style="padding-top: 5px;">
             <table id="tblReportSchedules" class="table table-responsive table-striped table-bordered table-hover table-condensed animateLastColumn"></table>
@@ -268,4 +268,24 @@
             </div>
         </div>
     </div>
-</span>
+
+    <div class="modal fade" id="mdlToShowSchedulesLogs">
+        <div class="modal-dialog modal-xlg" role="document">
+            <div class="modal-content">
+                <div class="container" style="position: sticky; top: 0; z-index: 3;">
+                    <p class="panel panel-heading row" style="margin-bottom: 10px; background: #F5F5F5; border-bottom: 1px solid lightgray;">
+                        <span class="panel-title">Most Recent Schedule Logs<i class="glyphicon glyphicon-menu-right"></i> {{ReportName}} {{IsDashboardSchedule?'Dashboard':''}} <i class="glyphicon glyphicon-menu-right"></i><span class="small"> {{TemplateName}} </span></span>
+                    </p>
+                    <span class="pull-right" style="margin: -43px 0px 0px 0px;">
+                        <button title="close this log" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </span>
+                </div>
+                <div class="modal-body row" style="padding: 0px 20px 0px 20px; margin: inherit;">
+                    <span class="panel-body" style="padding-bottom: 5px;">
+                        <table id="tblScheduleLogs" class="table table-responsive table-striped table-bordered table-hover table-condensed"></table>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

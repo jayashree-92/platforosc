@@ -69,7 +69,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual DbSet<hmsDashboardScheduleRangeLkup> hmsDashboardScheduleRangeLkups { get; set; }
         public virtual DbSet<hmsDashboardSchedule> hmsDashboardSchedules { get; set; }
         public virtual DbSet<hmsDashboardTemplate> hmsDashboardTemplates { get; set; }
-        public virtual DbSet<hmsScheduleLog> hmsScheduleLogs { get; set; }
         public virtual DbSet<hmsSchedule> hmsSchedules { get; set; }
         public virtual DbSet<hmsScheduleWorkflowLkup> hmsScheduleWorkflowLkups { get; set; }
         public virtual DbSet<hmsUser> hmsUsers { get; set; }
@@ -78,5 +77,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual DbSet<hmsWireAutoCancellationJob> hmsWireAutoCancellationJobs { get; set; }
         public virtual DbSet<hmsBankAccountAddress> hmsBankAccountAddresses { get; set; }
         public virtual DbSet<hmsWireInterestAssociation> hmsWireInterestAssociations { get; set; }
+        public virtual DbSet<hmsScheduleLog> hmsScheduleLogs { get; set; }
     }
 }

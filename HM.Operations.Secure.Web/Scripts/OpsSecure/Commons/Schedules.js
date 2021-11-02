@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../data.js" />
 
-var tblReportSchedules;
+var tblReportSchedules, tblScheduleLogs;
 HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q, $interval, $opsSharedScopes, $filter) {
     $opsSharedScopes.store("ReportScheduleCtrl", $scope);
 
@@ -626,7 +626,11 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
                             },
                             {
                                 "mData": "Id", "sTitle": "", "mRender": function (tdata, type, row) {
-                                    return "<span class='icon-lg'><i class='glyphicon glyphicon-pencil' title='Edit Task'></i>&nbsp;&nbsp;<i class='glyphicon glyphicon-trash' title='Delete Task'></i></span>";
+                                    return "<span class='icon-lg'>" +
+                                        "<i class='glyphicon glyphicon-pencil' title='Edit Task'></i>&nbsp;&nbsp;" +
+                                        "<i class='glyphicon glyphicon-trash' title='Delete Task'></i>&nbsp;&nbsp;" +
+                                        "<i class='glyphicon glyphicon-list-alt' title='Show Logs'></i>&nbsp;&nbsp;" +
+                                        "</span>";
                                 }
                             }
                         ],
@@ -707,6 +711,20 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
         });
     });
 
+    $scope.SelectedScheduleId = 0;
+    $("body").on("click", "#tblReportSchedules tbody td:last-child i.glyphicon-list-alt", function (event) {
+        event.preventDefault();
+
+        $scope.TemplateName = $scope.IsDashboardSchedule ? $("#liDashboardTemplates").select2("data").text : $("#fundOrGroup").select2("data").text;;
+        $scope.ReportName = $("#hdnReportName").val();
+
+        var job = tblReportSchedules.row($(this).parentsUntil("tr")).data();
+        $scope.SelectedScheduleId = job.Schedule.hmsScheduleId;
+
+        $("#mdlToShowSchedulesLogs").modal("show");
+
+    });
+
 
     $("#tblReportSchedules").on("click", ".activeToggleWrapper", function (event) {
 
@@ -723,6 +741,100 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
         $scope.fnSetScheduleStatus(job.Id, job.Schedule.hmsScheduleId, !isActive);
 
     });
+
+
+    $("#mdlToShowSchedulesLogs").on("shown.bs.modal", function () {
+
+        $http.get("/Schedules/GetScheduleLogs?scheduleId=" + $scope.SelectedScheduleId + "&timeZone=" + getTimeZoneAbbr() + "&contextDate=" + $("#contextDate").text() + "&totalItems=20").then(function (response) {
+
+            if ($("#tblScheduleLogs").hasClass("initialized")) {
+                tblScheduleLogs.clear();
+                tblScheduleLogs.rows.add(response.data);
+                tblScheduleLogs.draw();
+            } else {
+                tblScheduleLogs = $("#tblScheduleLogs").not(".initialized").addClass("initialized").DataTable(
+                    {
+                        aaData: response.data,
+                        rowId: "hmsScheduleId",
+                        //"dom": "iftrI",
+                        "bDestroy": true,
+                        "columns": [
+                            {
+                                "mData": "ScheduleEndTime", "sTitle": "Status", "mRender": function (tdata, type, row) {
+                                    return tdata == null ? "<label class='label label-warning'>In progress</label>" : "<label class='label label-success'>Completed</label>";
+                                }
+                            },
+                            //{
+                            //    "mData": "ContextDate", "sTitle": "Context Date", "mRender": function (tdata, type, row) {
+                            //        return moment(tdata).format("YYYY-MM-DD");
+                            //    }
+                            //},
+                            {
+                                "mData": "ExpectedScheduleStartAt", "sTitle": "Expected Schedule Start Time (" + getTimeZoneAbbr() + ")", "mRender": function (tdata, type, row) {
+                                    if (moment(tdata).format("YYYY") === "2020")
+                                        return "N/A";
+
+                                    return "<i class='glyphicon glyphicon-time'></i>&nbsp;</i>" + moment(tdata).format("lll") + "</i>";
+                                }
+                            },
+                            {
+                                "mData": "ScheduleStartTime", "sTitle": "Actual Schedule Start Time (" + getTimeZoneAbbr() + ")", "mRender": function (tdata, type, row) {
+                                    return "<i class='glyphicon glyphicon-flash'></i>&nbsp;" + moment(tdata).format("lll");
+                                }
+                            },
+                            {
+                                "mData": "ExpectedScheduleEndAt", "sTitle": "Expected Schedule End Time (" + getTimeZoneAbbr() + ")", "mRender": function (tdata, type, row) {
+                                    if (moment(tdata).format("YYYY") === "2020")
+                                        return "N/A";
+
+                                    return "<i class='glyphicon glyphicon-time'></i>&nbsp;</i>" + moment(tdata).format("lll") + "</i>";
+                                }
+                            },
+                            {
+                                "mData": "ScheduleEndTime", "sTitle": "Actual Schedule End Time (" + getTimeZoneAbbr() + ")", "mRender": function (tdata, type, row) {
+                                    return tdata == null ? "-" : "<i class='glyphicon glyphicon-flash'></i>&nbsp;" + moment(tdata).format("lll");
+                                }
+                            },
+                            {
+                                "mData": "IsManualTrigger", "sTitle": "Is Manually Triggered", "mRender": function (tdata, type, row) {
+                                    return tdata ? "Yes" : "No";
+                                }
+                            },
+                        ],
+                        "oLanguage": {
+                            "sSearch": "",
+                            "sInfo": "Showing _START_ to _END_ of _TOTAL_ schedule logs",
+                            "sInfoFiltered": " - filtering from _MAX_ schedule logs",
+                            "sEmptyTable": "No logs available"
+                        },
+                        "scrollX": true,
+                        "scrollXInner": "100%",
+                        "responsive": true,
+                        "scrollY": "200px",
+                        "order": [[1, "desc"]],
+                        scrollCollapse: true,
+                        scroller: response.data.length > 3,
+
+                        // "sDom": "<'row header'<'col-md-4 header-left'i><'col-md-5 header-center'<'#toolbar_Notification'>><'col-md-3 header-right'f>>t",
+                        "preDrawCallback": function (settings) {
+                            $scope.tblReportSchedulesPageScrollPos = $(this).closest("div.dataTables_scrollBody").scrollTop();
+                        },
+                        "drawCallback": function (settings) {
+                            $(this).closest("div.dataTables_scrollBody").scrollTop($scope.tblReportSchedulesPageScrollPos);
+                            $(".activeToggleWrapper > input").bootstrapToggle();
+                            $(".spnScheculeEmailPopOver").popover();
+                        },
+                        "bPaginate": true,
+                        iDisplayLength: -1,
+                        sRowSelect: false
+                    });
+            }
+
+        });
+
+    });
+
+
 
     $("#tblReportSchedules").on("click", ".btnTriggerScheduleNow", function (event) {
 

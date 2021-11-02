@@ -2193,3 +2193,13 @@ div[class^="dtsp-subRow"] {
     content: "*";
     color: #d53f1e;
 }
+
+.animateLastColumn tr td:last-child span {
+    color: #D7D7D7;
+}
+
+.animateLastColumn tr:hover td:last-child span {
+    color: black;
+    -webkit-animation: 0.3s show;
+    animation: 0.3s show;
+}
