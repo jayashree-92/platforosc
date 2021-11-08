@@ -15,9 +15,6 @@ namespace HM.Operations.Secure.Middleware
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(FundAccountManager));
 
-        public const int FundTemplateTypeId = 1;
-        public const string AgreementAccountType = "Agreement";
-
         public static List<vw_FundAccounts> GetFundAccountDetails(List<long> hmFundIds, bool isPrivilegedUser)
         {
             using (var context = new OperationsSecureContext())

@@ -73,7 +73,8 @@ namespace HM.Operations.Secure.Middleware
                     .Include(s => s.ReceivingSSITemplate)
                     .Include(s => s.ReceivingSSITemplate.Beneficiary)
                     .Include(s => s.ReceivingSSITemplate.Intermediary)
-                    .Include(s => s.ReceivingSSITemplate.UltimateBeneficiary);
+                    .Include(s => s.ReceivingSSITemplate.UltimateBeneficiary)
+                    .Include(s => s.hmsWireSenderInformation);
 
                 if (shouldBringAllPendingWires)
                     wireTicketQuery = wireTicketQuery.Where(s => ((allStatusIds.Contains(0) || allStatusIds.Contains(2)) && s.WireStatusId == 2)
@@ -436,7 +437,7 @@ namespace HM.Operations.Secure.Middleware
                     ["Beneficiary Bank"] = ticket.BeneficiaryBank,
                     ["Beneficiary"] = ticket.Beneficiary,
                     ["Beneficiary A/C Number"] = ticket.BeneficiaryAccountNumber,
-                    ["Wire Message Type"] = ticket.HMWire.hmsWireMessageType.MessageType,
+                    ["Wire Message Type"] = messageType,
                     ["Comments"] = messageType == "MT103" || messageType == "MT202" ? OutboundSwiftMsgCreator.GetField72(ticket, messageType).GetValue() : string.Empty,
                     ["Initiated By"] = ticket.WireCreatedBy,
                     ["Initiated At"] = ticket.HMWire.CreatedAt.ToString("MMM dd, yyyy hh:mm tt"),

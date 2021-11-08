@@ -67,7 +67,7 @@ namespace HM.Operations.Secure.Middleware.Jobs
             //Mail this report
             var subject = $"Wires Dashboard Report of '{templateName}' for {((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).ToString()}";
 
-            var mailBody = $"Hi, <br/><br/> Please find the attached the wires dasboard report of '{templateName}' for {((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).Humanize()}.<br/><br/> Thanks, <br/> HM-Operations Team.";
+            var mailBody = $"Hi, <br/><br/> Please find the attached the wires dashboard report of '{templateName}' for {((DashboardScheduleRange)job.DashboardScheduleRangeLkupId).Humanize()}.<br/><br/> Thanks, <br/> HM-Operations Team.";
 
             var contentToExport = GetDashboardFileToSend(job, startDate, endDate);
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
