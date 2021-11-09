@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="Application" default="executeSQLScripts" basedir=".">
-
+  <property name="DoubleQuote" value='"'/>
   <property name="root.dir.sql" value="..\HMSQLDBProject\HM_DMA"/>
   <property name="dir.sql" value="${root.dir.sql}\CreateScripts\"/>
   <property name="Change.sql" value="${root.dir.sql}\ChangeScripts\"/>
@@ -22,14 +22,7 @@
       </in>
       <do>
         <echo message="* Executing ${path::get-file-name(sql.script)}"/>
-        <sql
-        connstring="Provider=SQLNCLI11.1;Data Source=${sql.svr}; Initial Catalog=${sql.DB};Integrated Security=SSPI;"
-        transaction="true"
-        delimiter="GO"
-        delimstyle="Line"
-        print="true"
-        source="${sql.script}"
-        failonerror="true"/>
+        <exec program="sqlcmd" commandline="-I -S ${sql.svr} -E -M -d ${sql.DB} -i 		${DoubleQuote}${sql.script}${DoubleQuote}" 		failonerror="true"/> 
       </do>
     </foreach>
 	<foreach item="File" property="SP.script">
@@ -41,14 +34,7 @@
       </in>
       <do>
         <echo message="* Executing ${path::get-file-name(SP.script)}"/>        
-		<sql
-        connstring="Provider=SQLNCLI11.1;Data Source=${sql.svr}; Initial Catalog=${sql.DB};Integrated Security=SSPI;"
-        transaction="true"
-        delimiter="GO"
-        delimstyle="Line"
-        print="true"
-        source="${SP.script}"
-        failonerror="true"/>
+		<exec program="sqlcmd" commandline="-I -S ${sql.svr} -E -M -d ${sql.DB} -i ${DoubleQuote}${SP.script}${DoubleQuote}" 		failonerror="true"/> 
 		<!-- <exec program="sqlcmd" commandline="-S ${sql.svr} -U ${sql.user} -P ${sql.pwd} -d ${sql.DB} -i ${SP.script}" failonerror="true"/> -->
       </do>
     </foreach> 

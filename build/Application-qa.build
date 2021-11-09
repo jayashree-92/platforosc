@@ -19,9 +19,7 @@
    
    <!--SQL Properties-->
    <property name="sql.DB" value="HM_WIRES"/>
-   <property name="sql.user" value="HMWIRESUAT"/> 
-   <property name="sql.pwd" value="t8#24@B8"/> 
-   <property name="sql.svr" value="WSOMQCLDMUSQL02\MSDMUQ07"/> 
+   <property name="sql.svr" value="dmu-ms-agl02.db.qa.bnymellon.net,14331"/>
 
   <target name="cleanAndDeployPackage" >	
 	<!--<nant buildfile="TestBuildAndPublish.build" /> --> 
