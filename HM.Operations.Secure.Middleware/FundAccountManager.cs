@@ -53,7 +53,6 @@ namespace HM.Operations.Secure.Middleware
                     .Include(s => s.hmsAccountCallbacks)
                     .Include(x => x.onBoardingAccountSSITemplateMaps).Where(x => !x.IsDeleted).Where(s => isPreviledgedUser || hmFundIds.Contains(s.hmFundId)).ToList();
             }
-
         }
 
         public static onBoardingAccount GetOnBoardingAccount(long accountId)

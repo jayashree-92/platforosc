@@ -241,12 +241,13 @@ namespace HM.Operations.Secure.Middleware
             thisWire.HMWire.hmsWirePurposeLkup.hmsWires = null;
             thisWire.HMWire.hmsWireStatusLkup.hmsWires = null;
             thisWire.HMWire.hmsWireTransferTypeLKup.hmsWires = null;
+            thisWire.HMWire.hmsWireSenderInformation.hmsWires = null;
+
             thisWire.HMWire.SendingAccount.hmsWires = null;
             if (thisWire.HMWire.ReceivingAccount != null)
                 thisWire.HMWire.ReceivingAccount.hmsWires1 = null;
             if (thisWire.HMWire.ReceivingSSITemplate != null)
                 thisWire.HMWire.ReceivingSSITemplate.hmsWires = null;
-
 
             thisWire.SendingAccount.onBoardingAccountSSITemplateMaps = null;
             thisWire.ReceivingAccount.onBoardingAccountSSITemplateMaps = null;
