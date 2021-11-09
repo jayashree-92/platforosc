@@ -17,11 +17,23 @@ namespace HM.Operations.Secure.Middleware
 
         public static List<vw_FundAccounts> GetFundAccountDetails(List<long> hmFundIds, bool isPrivilegedUser)
         {
-            using (var context = new OperationsSecureContext())
+            try
             {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.vw_FundAccounts.Where(s => isPrivilegedUser || hmFundIds.Contains(s.hmFundId)).ToList();
+                using (var context = new OperationsSecureContext())
+                {
+                    context.Configuration.LazyLoadingEnabled = false;
+                    context.Configuration.ProxyCreationEnabled = false;
+                    return context.vw_FundAccounts.Where(s => isPrivilegedUser || hmFundIds.Contains(s.hmFundId)).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                if (ex.InnerException != null)
+                    Logger.Error(ex.InnerException.Message, ex.InnerException);
+                if (ex.InnerException != null && ex.InnerException.InnerException != null)
+                    Logger.Error(ex.InnerException.InnerException.Message, ex.InnerException.InnerException);
+                throw;
             }
         }
 
