@@ -241,7 +241,8 @@ namespace HM.Operations.Secure.Middleware
             thisWire.HMWire.hmsWirePurposeLkup.hmsWires = null;
             thisWire.HMWire.hmsWireStatusLkup.hmsWires = null;
             thisWire.HMWire.hmsWireTransferTypeLKup.hmsWires = null;
-            thisWire.HMWire.hmsWireSenderInformation.hmsWires = null;
+            if (thisWire.HMWire.hmsWireSenderInformation != null)
+                thisWire.HMWire.hmsWireSenderInformation.hmsWires = null;
 
             thisWire.HMWire.SendingAccount.hmsWires = null;
             if (thisWire.HMWire.ReceivingAccount != null)
