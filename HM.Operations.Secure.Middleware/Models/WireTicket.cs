@@ -59,7 +59,24 @@ namespace HM.Operations.Secure.Middleware.Models
             }
         }
 
-        public string BeneficiaryBank
+        //public string BeneficiaryBank
+        //{
+        //    get
+        //    {
+        //        if (WireId == 0)
+        //            return string.Empty;
+
+        //        if (IsFundTransfer)
+        //            return ReceivingAccount.UltimateBeneficiaryType == "Account Name" ? ReceivingAccount.Beneficiary.BankName : ReceivingAccount.UltimateBeneficiary.BankName;
+
+        //        if (!IsNotice)
+        //            return SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.Beneficiary.BankName : SSITemplate.UltimateBeneficiary.BankName;
+
+        //        return "N/A";
+        //    }
+        //}
+
+        public string UltimateBeneficiary
         {
             get
             {
@@ -67,37 +84,20 @@ namespace HM.Operations.Secure.Middleware.Models
                     return string.Empty;
 
                 if (IsFundTransfer)
-                {
-                    return ReceivingAccount.UltimateBeneficiaryType == "Account Name" ? ReceivingAccount.Beneficiary.BankName : ReceivingAccount.UltimateBeneficiary.BankName;
-                }
+                    return ReceivingAccount.AccountName;
+
+                //if (!IsNotice)
+                //    return SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.UltimateBeneficiaryAccountName : SSITemplate.UltimateBeneficiary.BICorABA;
 
                 if (!IsNotice)
-                {
-                    return SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.Beneficiary.BankName : SSITemplate.UltimateBeneficiary.BankName;
-                }
-                return "N/A";
-            }
-        }
-
-        public string Beneficiary
-        {
-            get
-            {
-                if (WireId == 0)
-                    return string.Empty;
-
-                if (IsFundTransfer)
-                    return ReceivingAccount.UltimateBeneficiaryType == "Account Name" ? ReceivingAccount.UltimateBeneficiaryAccountName : ReceivingAccount.UltimateBeneficiary.BICorABA;
-
-                if (!IsNotice)
-                    return SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.UltimateBeneficiaryAccountName : SSITemplate.UltimateBeneficiary.BICorABA;
+                    return !string.IsNullOrEmpty(SSITemplate.FFCName) ? SSITemplate.FFCName : SSITemplate.UltimateBeneficiaryAccountNumber;
 
                 return "N/A";
             }
         }
 
 
-        public string BeneficiaryAccountNumber
+        public string UltimateBeneficiaryAccountNumber
         {
             get
             {

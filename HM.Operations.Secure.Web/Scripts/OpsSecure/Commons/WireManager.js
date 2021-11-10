@@ -907,10 +907,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.getCancelButtonText = function (isLoading) {
-        if (isLoading)
-            return $scope.WireTicket.SwiftStatusId == 1 ? "Rejecting" : "Cancelling";
-        else
-            return $scope.WireTicket.SwiftStatusId == 1 ? "Reject" : "Cancel";
+        return isLoading ? ($scope.WireTicket.SwiftStatusId == 1 ? "Rejecting" : "Cancelling") : ($scope.WireTicket.SwiftStatusId == 1 ? "Reject" : "Cancel");
     }
 
     $scope.confirmCancellation = function () {
