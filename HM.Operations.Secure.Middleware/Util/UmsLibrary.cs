@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
-using Com.HedgeMark.Commons.CustomConfigs;
+using HedgeMark.Secrets.Management.Services;
 using HM.Operations.Secure.Middleware.UserManagementService;
 using log4net;
 
@@ -51,10 +51,11 @@ namespace HM.Operations.Secure.Middleware.Util
         public static void SetSecurityHeader()
         {
             var messageHeadersElement = OperationContext.Current.OutgoingMessageHeaders;
+            var UMSCredentials = SecretManagementService.GetUserPassSecret("UMSCredentials");
             var securityHeader = new SecurityHeader
             {
-                userName = SecretsConfiguration.GetSecret("UMS_username"),
-                password = SecretsConfiguration.GetSecret("UMS_password")
+                userName = UMSCredentials.Username,
+                password = UMSCredentials.Password
             };
 
             messageHeadersElement.Add(securityHeader);

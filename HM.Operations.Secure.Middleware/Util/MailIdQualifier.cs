@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
+using Com.HedgeMark.Commons;
 using Com.HedgeMark.Commons.Extensions;
 using Com.HedgeMark.Commons.Mail;
+using HedgeMark.Secrets.Management.Services;
 
 namespace HM.Operations.Secure.Middleware.Util
 {
@@ -97,15 +99,16 @@ namespace HM.Operations.Secure.Middleware.Util
                 mailInfo.Subject = $"{Utility.Environment.ToUpper()} | {mailInfo.Subject}";
 
             //Get MailBox Information from Config.
-            var configuredMailBox = MailBoxConfigurations.AllMailBoxConfigs.FirstOrDefault(s => s.MailBoxName.ToLower() == mailInfo.FromAddress.GetMailBoxName().ToLower());
+            var configuredMailBox = ConfigurationManagerWrapper.StringSetting("MailBoxName", "hm-ops-qa");
 
             using (var client = new SmtpClient(mailInfo.Server))
             {
-                if (configuredMailBox != null)
+                if (!string.IsNullOrEmpty(configuredMailBox))
                 {
-                    client.Credentials = new NetworkCredential(configuredMailBox.UserName, configuredMailBox.Password);
-                    client.EnableSsl = configuredMailBox.EnableSsl;
-                    client.Port = configuredMailBox.Port;
+                    var mailBoxCredentials = SecretManagementService.GetUserPassSecret($"MailBox-{configuredMailBox}");
+                    client.Credentials = new NetworkCredential(mailBoxCredentials.Username, mailBoxCredentials.Password);
+                    client.EnableSsl = true; 
+                    client.Port = 587; 
                 }
                 MailSender.Send(mailInfo, client);
             }

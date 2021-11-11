@@ -4,8 +4,9 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using Com.HedgeMark.Commons.CustomConfigs;
+using Com.HedgeMark.Commons;
 using Com.HedgeMark.Commons.Extensions;
+using HedgeMark.Secrets.Management.Services;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
 using HM.Operations.Secure.Middleware.Models;
@@ -96,8 +97,8 @@ namespace HM.Operations.Secure.Web.Controllers
 
             var digiSignInfo = new DigitalSignatureInfo()
             {
-                PfxFile = new FileInfo(FileSystemManager.OpsSecureInternalConfigFiles + "\\" + SecretsConfiguration.GetSecret("DigiSignatureFileName")),
-                Password = SecretsConfiguration.GetSecret("DigiSignaturePassword")
+                PfxFile = new FileInfo(FileSystemManager.OpsSecureInternalConfigFiles + "\\" + ConfigurationManagerWrapper.StringSetting("DigiSignatureFileName", "HedgeMarkOperationsQA.pfx")),
+                Password = SecretManagementService.GetGenericSecret("DigiSignaturePassword").Value
             };
 
             exportFileInfo = SecureExporter.ExportSignedReport(userRows, groupOption, exportFileInfo, digiSignInfo.PfxFile.Exists ? digiSignInfo : null);

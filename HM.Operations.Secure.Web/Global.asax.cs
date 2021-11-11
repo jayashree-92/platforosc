@@ -50,6 +50,9 @@ namespace HM.Operations.Secure.Web
 
             System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls12;
 
+            //Secret Management Services
+            Secrets.InitializeSecrets();
+
             AppHeartBeat.Start("HM-Operations-Secure", AppMnemonic.DMO, AppType.WebApp, "HMOpsSecureConnectionString");
         }
 
