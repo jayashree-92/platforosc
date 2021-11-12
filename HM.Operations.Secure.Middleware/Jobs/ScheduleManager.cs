@@ -74,7 +74,7 @@ namespace HM.Operations.Secure.Middleware.Jobs
             }
         }
 
-        public static List<string> GetExtenalDomails()
+        public static List<string> GetExternalDomains()
         {
             using (var context = new AdminContext())
             {
@@ -97,7 +97,7 @@ namespace HM.Operations.Secure.Middleware.Jobs
         {
             var expression = CronExpression.Parse(cronExpression);
             var nextUtcOccurence = expression.GetNextOccurrence(utcNow, TimeZones[timeZone], true);
-            return nextUtcOccurence != null ? nextUtcOccurence.Value : new DateTime();
+            return nextUtcOccurence ?? new DateTime();
         }
 
 

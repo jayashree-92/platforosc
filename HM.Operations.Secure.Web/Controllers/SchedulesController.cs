@@ -25,13 +25,13 @@ namespace HM.Operations.Secure.Web.Controllers
             counter = 1;
             var reportContextRun = Enum.GetNames(typeof(ReportScheduleContextRun)).Select(s => new { id = counter++, text = s.Humanize() }).ToArray();
             counter = 0;
-            var fundPrefernces = Enum.GetNames(typeof(PreferencesManager.FundNameInDropDown)).Select(s => new { id = counter++, text = s.Humanize() }).ToArray();
+            var fundPreferences = Enum.GetNames(typeof(PreferencesManager.FundNameInDropDown)).Select(s => new { id = counter++, text = s.Humanize() }).ToArray();
 
             var sftpFolders = NdmSftpTransfer.GetClientsForSftp();
             var internalFolders = FileSystemManager.FetchFolderData(FileSystemManager.InternalOutputFilesDropPath, false);
             var timeZones = ScheduleManager.TimeZones.Keys.ToArray();
-            var externalDomains = ScheduleManager.GetExtenalDomails();
-            return Json(new { dashboardRange, reportContextRun, fundPrefernces, sftpFolders, internalFolders, timeZones, externalDomains, UserId });
+            var externalDomains = ScheduleManager.GetExternalDomains();
+            return Json(new { dashboardRange, reportContextRun, fundPrefernces = fundPreferences, sftpFolders, internalFolders, timeZones, externalDomains, UserId });
         }
 
         public JsonResult GetSchedules(long primaryId, bool isDashboard)
@@ -88,7 +88,6 @@ namespace HM.Operations.Secure.Web.Controllers
 
             var job = DashboardScheduleHandler.GetDashboardSchedule(jobId);
             BackgroundJob.Enqueue(() => DashboardScheduleHandler.ExecuteDashboardSchedule(job.hmsDashboardScheduleId, job.hmsDashboardTemplate.TemplateName, true));
-
         }
 
         public void DeleteSchedule(long jobId, bool isDashboard)

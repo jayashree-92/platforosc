@@ -6,6 +6,7 @@ using System.Web.Hosting;
 using Com.HedgeMark.Commons;
 using Hangfire;
 using Hangfire.Annotations;
+using HM.Operations.Secure.Middleware.Jobs;
 using HM.Operations.Secure.Middleware.Queues;
 using log4net;
 
@@ -38,6 +39,7 @@ namespace HM.Operations.Secure.Web.Jobs
         {
             log.Debug("Starting all background jobs schedulers...");
             OperationsSecureRecurringJob.Initialise();
+            ScheduleManager.Initialise();
             BackgroundJobScheduler.Start();
         }
 
