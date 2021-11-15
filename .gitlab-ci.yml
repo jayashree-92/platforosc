@@ -7,6 +7,7 @@ VM Deployment:
   extends: .ansible_deploy_core
   rules:
     - if: '$CI_ENVIRONMENT_NAME == "test" && $CI_BUILD_REF_NAME == "develop"'
+      when: manual
   before_script:
     - |
       export JDK_ANSIBLE_JOB_TEMPLATE=$JDK_ANSIBLE_JOB_TEMPLATE_TEST
@@ -15,11 +16,13 @@ VM Deployment:
       echo $JDK_ANSIBLE_OPERATOR_ID
       trap "EDP_ANSIBLE_ENV=ansibletower-nonprod" DEBUG
   stage: deploy
-
+  
 VM Deployment QA:
   extends: .ansible_deploy_core
   rules:
     - if: '$CI_ENVIRONMENT_NAME == "test" && $CI_BUILD_REF_NAME == "release"'
+      when: always
+    - when: manual
   before_script:
     - |
       export JDK_ANSIBLE_JOB_TEMPLATE=$JDK_ANSIBLE_JOB_TEMPLATE_QA
@@ -28,17 +31,18 @@ VM Deployment QA:
       echo $JDK_ANSIBLE_OPERATOR_ID
       trap "EDP_ANSIBLE_ENV=ansibletower-nonprod" DEBUG
   stage: deploy  
+  
 
 Build: 
   extends: .dotnetfw4x_build_core
   rules:
-    - if: '$CI_ENVIRONMENT_NAME == "test" && $CI_BUILD_REF_NAME == "release"'
+    - if: $CI_ENVIRONMENT_NAME == "test"
       variables:
         configuration: "QA"
-    - if: $CI_BUILD_REF_NAME == "release" 
+    - if: $CI_BUILD_REF_NAME == "release"
       when: never
     - when: always
-  stage: build   
+  stage: build    
 
 Upload_artifact:
   extends: .Dotnetfw_upload_artifact
