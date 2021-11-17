@@ -86,11 +86,8 @@ namespace HM.Operations.Secure.Middleware.Models
                 if (IsFundTransfer)
                     return ReceivingAccount.AccountName;
 
-                //if (!IsNotice)
-                //    return SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.UltimateBeneficiaryAccountName : SSITemplate.UltimateBeneficiary.BICorABA;
-
                 if (!IsNotice)
-                    return !string.IsNullOrEmpty(SSITemplate.FFCName) ? SSITemplate.FFCName : SSITemplate.UltimateBeneficiaryAccountNumber;
+                    return !string.IsNullOrEmpty(SSITemplate.FFCName) ? SSITemplate.FFCName : SSITemplate.UltimateBeneficiaryAccountName;
 
                 return "N/A";
             }
@@ -105,7 +102,7 @@ namespace HM.Operations.Secure.Middleware.Models
                     return string.Empty;
 
                 if (IsFundTransfer)
-                    return !string.IsNullOrEmpty(ReceivingAccount.FFCNumber) ? ReceivingAccount.FFCNumber : ReceivingAccount.UltimateBeneficiaryAccountNumber;
+                    return ReceivingAccount.UltimateBeneficiaryAccountNumber;
 
                 if (!IsNotice)
                     return !string.IsNullOrEmpty(SSITemplate.FFCNumber) ? SSITemplate.FFCNumber : SSITemplate.UltimateBeneficiaryAccountNumber;
