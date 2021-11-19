@@ -127,9 +127,6 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         { "mData": "SSITemplate.StatusComments", "sTitle": "Comments" },
                         {
                             "mData": "SSITemplate.CreatedBy", "sTitle": "Created By",
-                            //"mRender": function (data) {
-                            //    return humanizeEmail(data);
-                            //}
                         },
                         {
                             "mData": "SSITemplate.CreatedAt",
@@ -138,9 +135,6 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         },
                         {
                             "mData": "SSITemplate.UpdatedBy", "sTitle": "Last Modified By",
-                            //"mRender": function (data) {
-                            //    return humanizeEmail(data);
-                            //}
                         },
                         {
                             "mData": "SSITemplate.UpdatedAt",
@@ -151,7 +145,13 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                             "mData": "SSITemplate.ApprovedBy", "sTitle": "Approved By", "mRender": function (data) {
                                 return humanizeEmail(data == null ? "" : data);
                             }
-                        }
+                        },
+                        {
+                            "mData": "SSITemplate.LastUsedAt",
+                            "sTitle": "Last Used On",
+                            "mRender": renderDotNetDateAndTime
+                        },
+
                     ],
                     "createdRow": function (row, data) {
                         switch (data.SSITemplate.SSITemplateStatus) {
@@ -181,7 +181,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                     //"bPaginate": false,
                     iDisplayLength: -1
                 });
-            
+
             $("#btnAddNewSSITemplate").button("reset");
             var searchText = decodeURI(getUrlParameter("searchText"));
 

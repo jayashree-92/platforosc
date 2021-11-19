@@ -700,7 +700,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                receivingAccounts = context.onBoardingSSITemplates.Include(s => s.Beneficiary)
+                receivingAccounts = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Approved" && !s.IsDeleted).Include(s => s.Beneficiary)
                     .Include(s => s.Intermediary)
                     .Include(s => s.UltimateBeneficiary)
                     .Include(x => x.onBoardingSSITemplateDocuments)

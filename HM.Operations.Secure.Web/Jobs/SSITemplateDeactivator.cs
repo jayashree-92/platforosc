@@ -12,12 +12,10 @@ namespace HM.Operations.Secure.Web.Jobs
     {
         public new const string JobName = "SSITemplate-Deactivator";
 
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(SSITemplateDeactivator));
-
         private static int DeactivationPeriodInMonths => ConfigurationManagerWrapper.IntegerSetting("DeactivationPeriodInMonths", 12);
 
         [DisplayName("SSITemplate-Deactivator")]
-        public static void DeacitvateStaleSSITemplates()
+        public static void DeActivateStaleSSITemplates()
         {
             var deactivationDeadline = DateTime.Today.AddMonths(-DeactivationPeriodInMonths);
             using (var context = new OperationsSecureContext())
@@ -26,7 +24,7 @@ namespace HM.Operations.Secure.Web.Jobs
                 var lastUsedToDeactivateMap = allSsIDateMap.Where(s => s.Value < deactivationDeadline).ToDictionary(s => s.Key, v => v.Value);
 
                 var staleSSIIds = lastUsedToDeactivateMap.Keys.ToList();
-                var allStaleSSITemplatesToDeactivate = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Active" && staleSSIIds.Contains(s.onBoardingSSITemplateId)).ToList();
+                var allStaleSSITemplatesToDeactivate = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Approved" && staleSSIIds.Contains(s.onBoardingSSITemplateId)).ToList();
 
 
                 if (allStaleSSITemplatesToDeactivate.Count == 0)
