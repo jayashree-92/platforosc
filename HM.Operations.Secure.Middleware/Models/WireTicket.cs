@@ -87,7 +87,11 @@ namespace HM.Operations.Secure.Middleware.Models
                     return ReceivingAccount.AccountName;
 
                 if (!IsNotice)
-                    return !string.IsNullOrEmpty(SSITemplate.FFCName) ? SSITemplate.FFCName : SSITemplate.UltimateBeneficiaryAccountName;
+                    return !string.IsNullOrEmpty(SSITemplate.FFCName)
+                        ? SSITemplate.FFCName
+                        : SSITemplate.UltimateBeneficiaryType == "Account Name"
+                            ? SSITemplate.UltimateBeneficiaryAccountName
+                            : SSITemplate.UltimateBeneficiary.BankName;
 
                 return "N/A";
             }
