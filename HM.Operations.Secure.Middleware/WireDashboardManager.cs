@@ -427,6 +427,7 @@ namespace HM.Operations.Secure.Middleware
                     ["Fund"] = ticket.PreferredFundName,
                     ["Admin"] = ticket.AdminName,
                     ["Custodian"] = ticket.CustodianName,
+                    ["Counterparty"] = ticket.Counterparty,
                     ["Sending Account Name"] = ticket.SendingAccount.AccountName,
                     ["Sending Account Number"] = ticket.SendingAccountNumber,
                     ["Transfer Type"] = ticket.TransferType,
