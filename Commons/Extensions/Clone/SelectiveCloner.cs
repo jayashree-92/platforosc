@@ -14,10 +14,9 @@ namespace Com.HedgeMark.Commons.Extensions.Clone
 
         public static void CopyFrom<T>(this T target, T source, IEnumerable<string> propertiesToIgnore = null)
         {
-            object customCopyExpression;
             var typeName = typeof (T).Name;
             Action<T, T> copyExpression;
-            if (!cachedExpressions.TryGetValue(typeName, out customCopyExpression))
+            if (!cachedExpressions.TryGetValue(typeName, out var customCopyExpression))
             {
                 copyExpression = CopyFromInternal<T>(propertiesToIgnore);
                 cachedExpressions.AddOrUpdate(typeName, copyExpression, (s, o) => copyExpression);

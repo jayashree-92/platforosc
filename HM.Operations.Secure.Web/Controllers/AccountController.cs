@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Com.HedgeMark.Commons;
+using Com.HedgeMark.Commons.Extensions;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.DataModel.Models;
 using HM.Operations.Secure.Middleware;
@@ -17,9 +18,7 @@ namespace HM.Operations.Secure.Web.Controllers
     public class AccountController : BaseController
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(AccountController));
-        public static readonly List<string> AllowedDomains = ConfigurationManagerWrapper.StringListSetting("AllowedDomains", "@hedgemark.com,@payoda.com,@bnymellon.com,@inautix.co.in");
-        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles",
-            $"{OpsSecureUserRoles.WireInitiator},{OpsSecureUserRoles.WireApprover},{OpsSecureUserRoles.WireAdmin}");
+        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", $"{OpsSecureUserRoles.WireInitiator},{OpsSecureUserRoles.WireApprover},{OpsSecureUserRoles.WireAdmin}");
 
         public static hLoginRegistration GetUserDetail(string userName)
         {
@@ -115,13 +114,63 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             using (var context = new AdminContext())
             {
-                return context.USP_NEXEN_GetUserDetails(commitId, "SITEMINDER").Select(s => new HMUser()
+                var userDetail = context.USP_NEXEN_GetUserDetails(commitId, "SITEMINDER").Select(s => new HMUser()
                 {
                     LoginId = s.intLoginID,
                     Name = s.varLoginID,
                     CommitId = s.LDAPUserID
-                }).FirstOrDefault();
+                }).First();
+
+                SetAllowedWireAmountLimit(userDetail);
+                return userDetail;
+
             }
+        }
+
+        public static double GetTotalYearsOfExperience(string commitId)
+        {
+            var userDetails = GetUserCoverageDetails(commitId);
+
+            var totalExperienceInHM = (DateTime.Today - userDetails.JoinedHedgemarkOn).TotalDays / 365;
+            return Math.Round(userDetails.TotalYearsofExperiencePriortoHedgemark + totalExperienceInHM, 1);
+        }
+
+        private static vw_hmUserCoverageDetails GetUserCoverageDetails(string commitId)
+        {
+            vw_hmUserCoverageDetails userDetails;
+            using (var context = new AdminContext())
+            {
+                userDetails = context.vw_hmUserCoverageDetails.FirstOrDefault(s => s.UserID == commitId) ?? new vw_hmUserCoverageDetails()
+                {
+                    UserID = commitId,
+                    JoinedHedgemarkOn = DateTime.Today,
+                    TotalYearsofExperiencePriortoHedgemark = 0
+                };
+            }
+
+            return userDetails;
+        }
+
+        public static void SetAllowedWireAmountLimit(HMUser user)
+        {
+            var userDetails = GetUserCoverageDetails(user.CommitId);
+
+            var totalExperienceInHM = (DateTime.Today - userDetails.JoinedHedgemarkOn).TotalDays / 365;
+            user.TotalYearsOfExperienceInHM = Math.Round(userDetails.TotalYearsofExperiencePriortoHedgemark, 1);
+            user.TotalYearsOfExperience = Math.Round(userDetails.TotalYearsofExperiencePriortoHedgemark + totalExperienceInHM, 1);
+
+            //---->>>>
+            user.IsUserVp = true;
+
+            if (user.TotalYearsOfExperience < 1)
+                user.AllowedWireAmountLimit = 10000000;
+            else if (totalExperienceInHM <= 0.5)
+                user.AllowedWireAmountLimit = user.IsUserVp ? 100000000 : 10000000;
+            else if (totalExperienceInHM <= 1)
+                user.AllowedWireAmountLimit = user.IsUserVp ? 500000000 : 100000000;
+            else if (totalExperienceInHM > 1)
+                user.AllowedWireAmountLimit = 500000000;
+
         }
     }
 }

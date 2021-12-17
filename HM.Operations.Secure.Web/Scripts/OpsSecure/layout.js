@@ -139,3 +139,35 @@ $(document).ready(function () {
         window.location.href = "/Account/LogOff";
     });
 });
+
+HmOpsApp.controller("layoutSettingsCtrl", function ($scope, $http, $timeout) {
+
+    $scope.fnGetAllowedWireAmount =function() {
+         $http.get("/Home/GetUserDetails").then(
+            function (response) {
+                 $scope.AllowedWireAmountLimit = $.convertToCurrency(response.data.AllowedWireAmountLimit, true);;
+                 $scope.UserDetail = response.data;
+            });
+    }
+    $scope.fnGetAllowedWireAmount();
+
+    $scope.fnHideUserSettings = function() {
+        $("#userSettings").collapse("hide");
+    }
+
+    $scope.fnShowUserSettings = function () {
+
+        //$scope.fnGetAllowedWireAmount();
+        if ($("#liMainNavUserSettings").hasClass("active"))
+            $("#userSettings").collapse("toggle");
+        else
+            $("#userSettings").collapse("show");
+
+        $("#liMainNavUserSettings").parent().find("li").removeClass("active");
+        $("#liMainNavUserSettings").addClass("active");
+
+        $("#userSettings .nav-tabs li:eq(2) a").tab("show");
+    }
+
+});
+

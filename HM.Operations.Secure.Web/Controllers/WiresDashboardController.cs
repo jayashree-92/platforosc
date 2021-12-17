@@ -63,7 +63,6 @@ namespace HM.Operations.Secure.Web.Controllers
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.MessageTypes.ToString(),Options = wireMessageTypes},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Modules.ToString(),Options = wireReports},
                 new DashboardReport.Preferences(){Preference = DashboardReport.PreferenceCode.Status.ToString(),Options = wireStatus}
-
             };
         }
 

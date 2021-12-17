@@ -256,7 +256,7 @@ namespace HM.Operations.Secure.DataModel
         public string After1stMonthSetUpTheCashRecInTheCashRecModule { get; set; }
         public string HasTheCashRecBeenSetUpOnCashRecModule { get; set; }
         public string ConfirmWithOpsAnalystThatPositionReconciliationHasBeenSetUpOnHM { get; set; }
-        public string FundCustodian { get; set; }
+        public Nullable<long> FundCustodian { get; set; }
         public string SetUpClientAndManagerWithReportingAccess { get; set; }
         public string OpenBankAccount { get; set; }
         public string HasInitialFilingBeenCompleted { get; set; }

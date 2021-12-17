@@ -702,14 +702,14 @@ namespace HM.Operations.Secure.Middleware
 
             var deadline = WireDataManager.GetCashSweepDeadline(valueDate, fndAccount.CashSweepTime, fndAccount.CashSweepTimeZone);
 
-            var cashbalances = fndAccount.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(fndAccount.AgreementType)
+            var cashBalance = fndAccount.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(fndAccount.AgreementType)
                 ? ComputePBCashBalances(valueDate, contextDate, fndAccount, deadline)
                 : ComputeNonPBCashBalances(sendingFundAccountId, valueDate, contextDate, deadline);
 
-            if (cashbalances != null)
-                cashbalances.HoldBackAmount = (decimal)(fndAccount.HoldbackAmount ?? 0);
+            if (cashBalance != null)
+                cashBalance.HoldBackAmount = (decimal)(fndAccount.HoldbackAmount ?? 0);
 
-            return cashbalances;
+            return cashBalance;
         }
 
         private static CashBalances ComputePBCashBalances(DateTime valueDate, DateTime contextDate, vw_FundAccounts fndAccount, DateTime deadline)

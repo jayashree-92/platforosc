@@ -13,33 +13,15 @@ namespace Com.HedgeMark.Commons
     {
         private static List<NdmSftpClient> Clients;
 
-        private static string CustomClientSftpConfigFile
-        {
-            get
-            {
-                return ConfigurationManagerWrapper.StringSetting("SFTPClientsConfig", AppDomain.CurrentDomain.BaseDirectory + "\\Config\\CustomClientSFTP.csv");
-            }
-        }
+        private static string CustomClientSftpConfigFile => ConfigurationManagerWrapper.StringSetting("SFTPClientsConfig", AppDomain.CurrentDomain.BaseDirectory + "\\Config\\CustomClientSFTP.csv");
 
-        private static string BatchName
-        {
-            get { return ConfigurationManagerWrapper.StringSetting("NDMBatchFile", @"D:\Apps\NDM\batch\NDMAUTO.bat"); }
-        }
+        private static string BatchName => ConfigurationManagerWrapper.StringSetting("NDMBatchFile", @"D:\Apps\NDM\batch\NDMAUTO.bat");
 
-        private static string BatchPath
-        {
-            get { return ConfigurationManagerWrapper.StringSetting("NDMBatchFolder", @"D:\Apps\NDM\batch\"); }
-        }
+        private static string BatchPath => ConfigurationManagerWrapper.StringSetting("NDMBatchFolder", @"D:\Apps\NDM\batch\");
 
-        private static string ScriptPath
-        {
-            get { return ConfigurationManagerWrapper.StringSetting("NDMScriptFolder", @"D:\Apps\NDM\Process_Lib\"); }
-        }
+        private static string ScriptPath => ConfigurationManagerWrapper.StringSetting("NDMScriptFolder", @"D:\Apps\NDM\Process_Lib\");
 
-        private static int ArchivalDelayDuration
-        {
-            get { return ConfigurationManagerWrapper.IntegerSetting("ArchivalDelayDuration", 1000 * 10); }
-        }
+        private static int ArchivalDelayDuration => ConfigurationManagerWrapper.IntegerSetting("ArchivalDelayDuration", 1000 * 10);
 
         static NdmSftpTransfer()
         {
@@ -115,15 +97,15 @@ namespace Com.HedgeMark.Commons
             return client == null ? string.Empty : client.ArchiveFolder;
         }
 
-        public static Boolean SendFilesToSftp(FileInfo[] files, string client, ref StringBuilder logs, bool shouldClearSourceFolder = false)
+        public static bool SendFilesToSftp(FileInfo[] files, string client, ref StringBuilder logs, bool shouldClearSourceFolder = false)
         {
             var status = false;
             var selectedClient = GetClientDetails(client);
 
             try
             {
-                logs.AppendLine("SFTP Process Started for " + client + " - " + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"));
-                logs.AppendLine("Checking for the availability of " + client + " client details");
+                logs.AppendLine($"SFTP Process Started for {client} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
+                logs.AppendLine($"Checking for the availability of {client} client details");
                 if (selectedClient == null)
                 {
                     logs.AppendLine("Client Details not available");
@@ -134,7 +116,7 @@ namespace Com.HedgeMark.Commons
 
                     //var folders = new[] { selectedClient.SourceFolder, BatchPath, ScriptPath, selectedClient.ArchiveFolder };
                     var folders = new[] { selectedClient.SourceFolder, BatchPath, ScriptPath };
-                    var scriptFullName = string.Format("{0}{1}.proc", ScriptPath, selectedClient.ScriptName);
+                    var scriptFullName = $"{ScriptPath}{selectedClient.ScriptName}.proc";
 
                     logs.AppendLine("Checking for the existency of folders and proc file");
                     if (CheckFoldersExist(folders) && File.Exists(scriptFullName))
@@ -152,7 +134,7 @@ namespace Com.HedgeMark.Commons
                         }
 
                         logs.AppendLine("Copying files to source folder from where files will be pushed to SFTP");
-                        logs.AppendLine("Source Folder: " + selectedClient.SourceFolder);
+                        logs.AppendLine($"Source Folder: {selectedClient.SourceFolder}");
                         // Save files to a location before sending to SFTP
                         files.ToList()
                             .ForEach(file => File.Copy(file.FullName,
@@ -162,18 +144,16 @@ namespace Com.HedgeMark.Commons
                         if (!string.IsNullOrEmpty(selectedClient.ArchiveFolder))
                         {
                             logs.AppendLine("Copying files to archive folder");
-                            logs.AppendLine("Archive Folder: " + selectedClient.ArchiveFolder);
+                            logs.AppendLine($"Archive Folder: {selectedClient.ArchiveFolder}");
                             files.ToList()
                                 .ForEach(file => File.Copy(file.FullName,
                                     Path.Combine(selectedClient.ArchiveFolder, file.Name), true));
                         }
 
-                        logs.AppendLine("Executing NDM script " + selectedClient.ScriptName +
-                                        " to push the files to SFTP");
+                        logs.AppendLine($"Executing NDM script {selectedClient.ScriptName} to push the files to SFTP");
                         ExecuteProcFile(selectedClient.ScriptName);
 
-                        logs.AppendLine("SFTP Transfer Completed successfully - " +
-                                        DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"));
+                        logs.AppendLine($"SFTP Transfer Completed successfully - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
 
                         status = true;
                     }
@@ -217,7 +197,7 @@ namespace Com.HedgeMark.Commons
                       });
                 }
             }
-            logs.AppendLine("SFTP Process Completed for " + client + " - " + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"));
+            logs.AppendLine($"SFTP Process Completed for {client} - {DateTime.Now:yyyy-MM-dd hh:mm:ss}");
             return status;
         }
 

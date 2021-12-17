@@ -139,8 +139,6 @@
     <Compile Include="PageSecuritySection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecretsConfigurations.cs" />
-    <Compile Include="Status.cs" />
-    <Compile Include="Synchroniser.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>

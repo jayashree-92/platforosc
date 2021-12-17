@@ -13,6 +13,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using Com.HedgeMark.Commons;
+using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Monitoring;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
@@ -94,6 +95,8 @@ namespace HM.Operations.Secure.Web
             if (HttpContext.Current.Request.IsLocal)
             {
                 smUserId = ConfigurationManager.AppSettings["LocalSiteMinderCommitId"];
+                // var totalExperience = AccountController.GetTotalYearsOfExperience(smUserId);
+                //roles.Add(totalExperience > 1 ? OpsSecureUserRoles.WireApprover : OpsSecureUserRoles.WireInitiator);
                 roles.Add(OpsSecureUserRoles.WireApprover);
             }
             var userSso = AccountController.GetUserDetailByCommitId(smUserId);
@@ -107,22 +110,16 @@ namespace HM.Operations.Secure.Web
 
             var email = userSso.Name;
 
-            if (AccountController.AllowedDomains.All(domain => !email.EndsWith(domain, StringComparison.InvariantCultureIgnoreCase)))
-            {
-                Logger.Warn($"access denied to user '{email}', invalid user domain");
-                SiteMinderLogOff("User domain is invalid/not authorized");
-                return;
-            }
-
             if (!(roles.Contains(OpsSecureUserRoles.WireApprover) || roles.Contains(OpsSecureUserRoles.WireInitiator) || roles.Contains(OpsSecureUserRoles.WireAdmin)))
             {
-                //Logger.InfoFormat(string.Format("LDAP ID: {0}", userSso.CommitId));
-
                 if (!string.IsNullOrWhiteSpace(userSso.CommitId))
                 {
                     var ldapGroups = UmsLibrary.GetLdapGroupsOfLdapUser(userSso.CommitId);
                     if (ldapGroups.Contains(OpsSecureUserRoles.WireApprover))
-                        roles.Add(OpsSecureUserRoles.WireApprover);
+                    {
+                        var totalExperience = AccountController.GetTotalYearsOfExperience(userSso.CommitId);
+                        roles.Add(totalExperience > 1 ? OpsSecureUserRoles.WireApprover : OpsSecureUserRoles.WireInitiator);
+                    }
                     else if (ldapGroups.Contains(OpsSecureUserRoles.WireInitiator))
                         roles.Add(OpsSecureUserRoles.WireInitiator);
                     else if (ldapGroups.Contains(OpsSecureUserRoles.WireAdmin))

@@ -28,8 +28,7 @@ namespace Com.HedgeMark.Commons.Extensions
         {
             get
             {
-                TV value;
-                if(!dictionary.TryGetValue(key, out value))
+                if(!dictionary.TryGetValue(key, out var value))
                     logger.ErrorFormat("Key {0} not found in dictionary",key);
                 return value;
             }
@@ -49,12 +48,9 @@ namespace Com.HedgeMark.Commons.Extensions
 
         public TV GetNullOrValue(TK key)
         {
-            TV value;
-
-            if (!TryGetValue(key, out value))
+            if (!TryGetValue(key, out var value))
             {
-                TV keyColumnValue;
-                TryGetValue(keyColumn, out keyColumnValue);
+                TryGetValue(keyColumn, out var keyColumnValue);
                 logger.ErrorFormat("Key '{0}' not found in dictionary for '{1}'", key, keyColumnValue);
             }
             return value;

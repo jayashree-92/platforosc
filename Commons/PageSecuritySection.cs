@@ -6,17 +6,17 @@ namespace Com.HedgeMark.Commons
     public class PageSecuritySection : ConfigurationSection
     {
         [ConfigurationProperty("enableSecuredConnection", DefaultValue = "false", IsRequired = true)]
-        public Boolean EnableSecuredConnection
+        public bool EnableSecuredConnection
         {
-            get { return (Boolean) this["enableSecuredConnection"]; }
-            set { this["enableSecuredConnection"] = value; }
+            get => (bool) this["enableSecuredConnection"];
+            set => this["enableSecuredConnection"] = value;
         }
 
         [ConfigurationProperty("excludedPages")]
         public ExcludedPagesCollection ExcludedPages
         {
-            get { return ((ExcludedPagesCollection)(base["excludedPages"])); }
-            set { base["excludedPages"] = value; }
+            get => ((ExcludedPagesCollection)(base["excludedPages"]));
+            set => base["excludedPages"] = value;
         }
     }
 
@@ -25,13 +25,7 @@ namespace Com.HedgeMark.Commons
     {
         private const string PropertyName = "ExcludePage";
 
-        public override ConfigurationElementCollectionType CollectionType
-        {
-            get
-            {
-                return ConfigurationElementCollectionType.BasicMapAlternate;
-            }
-        }
+        public override ConfigurationElementCollectionType CollectionType => ConfigurationElementCollectionType.BasicMapAlternate;
 
         protected override bool IsElementName(string elementName)
         {
@@ -52,12 +46,6 @@ namespace Com.HedgeMark.Commons
     public class ExcludePageElement : ConfigurationElement
     {
         [ConfigurationProperty("path", IsRequired = true)]
-        public String Path
-        {
-            get
-            {
-                return (String)this["path"];
-            }
-        }
+        public string Path => (string)this["path"];
     }
 }

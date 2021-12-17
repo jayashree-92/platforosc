@@ -11,9 +11,8 @@ namespace Com.HedgeMark.Commons.Extensions
 
         public static T DeepCopy<T>(T obj)
         {
-            object cloneExpression;
             var typeName = typeof(T).FullName;
-            if (!cachedExpressions.TryGetValue(typeName, out cloneExpression))
+            if (!cachedExpressions.TryGetValue(typeName, out var cloneExpression))
             {
                 var deepCopy = DeepCopy<T>();
                 cachedExpressions.AddOrUpdate(typeName, deepCopy, (s, o) => deepCopy);

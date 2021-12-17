@@ -50,9 +50,7 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             get
             {
-                var userDetails = GetSessionValue("UserDetails") as UserAccountDetails;
-
-                if (userDetails != null)
+                if (GetSessionValue("UserDetails") is UserAccountDetails userDetails)
                     return userDetails;
 
                 userDetails = AccountController.GetUserDetails(Session[OpsSecureSessionVars.UserCommitId.ToString()].ToString(), User);
@@ -100,7 +98,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public FileContentResult DownloadAndDeleteFile(FileInfo fileInfo, string downloadName = "")
         {
-            var validFileFullName = FileSystemManager.GetValidatedConfigPath(fileInfo.FullName);
+            var validFileFullName = fileInfo.FullName.GetValidatedConfigPath();
 
             if (!System.IO.File.Exists(validFileFullName))
                 return null;
@@ -122,7 +120,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         protected FileResult DownloadFile(FileInfo fileInfo, string downloadName)
         {
-            var validFileFullName = FileSystemManager.GetValidatedConfigPath(fileInfo.FullName);
+            var validFileFullName = fileInfo.FullName.GetValidatedConfigPath();
 
             if (!System.IO.File.Exists(validFileFullName))
                 return null;

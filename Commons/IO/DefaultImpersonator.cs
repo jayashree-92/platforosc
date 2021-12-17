@@ -6,20 +6,11 @@ namespace Com.HedgeMark.Commons.IO
     {
         private readonly Impersonator impersonator;
 
-        private string UserName
-        {
-            get { return ConfigurationManagerWrapper.StringSetting(Config.UserName); }
-        }
+        private string UserName => ConfigurationManagerWrapper.StringSetting(Config.UserName);
 
-        private string Domain
-        {
-            get { return ConfigurationManagerWrapper.StringSetting(Config.Domain); }
-        }
+        private string Domain => ConfigurationManagerWrapper.StringSetting(Config.Domain);
 
-        private string Password
-        {
-            get { return ConfigurationManagerWrapper.StringSetting(Config.Password); }
-        }
+        private string Password => ConfigurationManagerWrapper.StringSetting(Config.Password);
 
         public DefaultImpersonator()
         {

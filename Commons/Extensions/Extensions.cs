@@ -32,7 +32,7 @@ namespace Com.HedgeMark.Commons.Extensions
             catch (Exception ex)
             {
                 Console.WriteLine(memberName);
-                logger.Error(string.Format("Executing action failed from {0}", memberName), ex);
+                logger.Error($"Executing action failed from {memberName}", ex);
             }
         }
 
@@ -63,8 +63,7 @@ namespace Com.HedgeMark.Commons.Extensions
         {
             try
             {
-                DateTime dateTime;
-                DateTime.TryParseExact(value.ToString(), new[] { DefaultDateFormat, parseFormat }, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
+                DateTime.TryParseExact(value.ToString(), new[] { DefaultDateFormat, parseFormat }, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime);
                 return dateTime;
                 //return (int)Convert.ChangeType(value, typeof(int));
             }
@@ -124,8 +123,7 @@ namespace Com.HedgeMark.Commons.Extensions
 
             if (string.IsNullOrWhiteSpace(value.ToString())) return 0.ToString("C", nfi);
 
-            decimal decimalNo;
-            decimal.TryParse(value.ToString(), NumberStyles.Currency | NumberStyles.Any, null, out decimalNo);
+            decimal.TryParse(value.ToString(), NumberStyles.Currency | NumberStyles.Any, null, out var decimalNo);
 
             return decimalNo.ToString("C", nfi);
         }
@@ -165,7 +163,7 @@ namespace Com.HedgeMark.Commons.Extensions
 
         public static double Default(this double? source)
         {
-            return source.HasValue ? source.Value : 0.0;
+            return source ?? 0.0;
         }
 
         public static bool IsTrue(this bool? source)
@@ -274,9 +272,8 @@ namespace Com.HedgeMark.Commons.Extensions
 
         public static TV GetValue<TK, TV>(this Dictionary<TK, TV> dictionary, TK key)
         {
-            TV value;
-            if (!dictionary.TryGetValue(key, out value))
-                throw new KeyNotFoundException(string.Format("Key '{0}' not found in dictionary", key));
+            if (!dictionary.TryGetValue(key, out var value))
+                throw new KeyNotFoundException($"Key '{key}' not found in dictionary");
             return value;
         }
 
@@ -395,7 +392,7 @@ namespace Com.HedgeMark.Commons.Extensions
         {
             if (!value1.HasValue && !value2.HasValue)
                 return null;
-            return (value1.HasValue ? value1.Value : 0) + (value2.HasValue ? value2.Value : 0);
+            return (value1 ?? 0) + (value2 ?? 0);
         }
 
         public static string StripCommas(this string untrimmedString)
@@ -425,7 +422,7 @@ namespace Com.HedgeMark.Commons.Extensions
         //Trims the value after checking if the value is null 
         public static string TrimEndTrial(this string value)
         {
-            return value != null ? value.TrimEnd() : null;
+            return value?.TrimEnd();
         }
 
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
@@ -446,7 +443,7 @@ namespace Com.HedgeMark.Commons.Extensions
         public static string GetValidatedConfigPath(this string configPath)
         {
             if (configPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
-                throw new FileLoadException(string.Format("Invalid file path : {0}", configPath));
+                throw new FileLoadException($"Invalid file path : {configPath}");
 
             return configPath;
         }

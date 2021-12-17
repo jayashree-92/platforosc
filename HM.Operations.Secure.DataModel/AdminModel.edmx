@@ -204,6 +204,7 @@
           <Property Name="Trading" Type="bit" Nullable="false" />
           <Property Name="ClientSubCategory" Type="varchar" MaxLength="20" />
           <Property Name="ComplainceCert" Type="bit" Nullable="false" />
+          <Property Name="FundIds" Type="varchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="onBoardingAssignmentUserGroup">
           <Key>
@@ -477,7 +478,7 @@
           <Property Name="After1stMonthSetUpTheCashRecInTheCashRecModule" Type="varchar" MaxLength="100" />
           <Property Name="HasTheCashRecBeenSetUpOnCashRecModule" Type="varchar" MaxLength="100" />
           <Property Name="ConfirmWithOpsAnalystThatPositionReconciliationHasBeenSetUpOnHM" Type="varchar" MaxLength="100" />
-          <Property Name="FundCustodian" Type="varchar" MaxLength="100" />
+          <Property Name="FundCustodian" Type="bigint" />
           <Property Name="SetUpClientAndManagerWithReportingAccess" Type="varchar" MaxLength="100" />
           <Property Name="OpenBankAccount" Type="varchar" MaxLength="100" />
           <Property Name="HasInitialFilingBeenCompleted" Type="varchar" MaxLength="100" />
@@ -660,6 +661,24 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <Property Name="RowId" Type="int" Nullable="false" />
           <Property Name="hmFundId" Type="bigint" />
           <Property Name="Domain" Type="nvarchar" MaxLength="1000" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_hmUserCoverageDetails">
+          <Key>
+            <PropertyRef Name="intLoginId" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="Email" />
+            <PropertyRef Name="JoinedHedgemarkOn" />
+            <PropertyRef Name="TotalYearsofExperiencePriortoHedgemark" />
+          </Key>
+          <Property Name="intLoginId" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" />
+          <Property Name="JoinedHedgemarkOn" Type="date" Nullable="false" />
+          <Property Name="TotalYearsofExperiencePriortoHedgemark" Type="float" Nullable="false" />
         </EntityType>
         <Association Name="FK__aspnet_Us__RoleI__2DB1C7EE">
           <End Role="aspnet_Roles" Type="Self.aspnet_Roles" Multiplicity="1" />
@@ -911,6 +930,17 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
     [vw_EmailDomailForFunds].[Domain] AS [Domain]
     FROM [HMADMIN].[vw_EmailDomailForFunds] AS [vw_EmailDomailForFunds]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="vw_hmUserCoverageDetails" EntityType="Self.vw_hmUserCoverageDetails" store:Type="Views" store:Schema="HMADMIN">
+            <DefiningQuery>SELECT 
+    [vw_hmUserCoverageDetails].[intLoginId] AS [intLoginId], 
+    [vw_hmUserCoverageDetails].[UserID] AS [UserID], 
+    [vw_hmUserCoverageDetails].[Email] AS [Email], 
+    [vw_hmUserCoverageDetails].[FirstName] AS [FirstName], 
+    [vw_hmUserCoverageDetails].[LastName] AS [LastName], 
+    [vw_hmUserCoverageDetails].[JoinedHedgemarkOn] AS [JoinedHedgemarkOn], 
+    [vw_hmUserCoverageDetails].[TotalYearsofExperiencePriortoHedgemark] AS [TotalYearsofExperiencePriortoHedgemark]
+    FROM [HMADMIN].[vw_hmUserCoverageDetails] AS [vw_hmUserCoverageDetails]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK__aspnet_Us__RoleI__2DB1C7EE" Association="Self.FK__aspnet_Us__RoleI__2DB1C7EE">
             <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
             <End Role="aspnet_UsersInRoles" EntitySet="aspnet_UsersInRoles" />
@@ -1078,6 +1108,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
             <End Role="onBoardingAssignmentUserGroupMap" EntitySet="onBoardingAssignmentUserGroupMaps" />
           </AssociationSet>
           <EntitySet Name="onboardingSubAdvisorFundMaps" EntityType="AdminModel.onboardingSubAdvisorFundMap" />
+          <EntitySet Name="vw_hmUserCoverageDetails" EntityType="AdminModel.vw_hmUserCoverageDetails" />
           <EntitySet Name="onboardingFunds" EntityType="AdminModel.onboardingFund" />
           <AssociationSet Name="FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId" Association="AdminModel.FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId">
             <End Role="onboardingFund" EntitySet="onboardingFunds" />
@@ -1277,6 +1308,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <Property Name="ClientSubCategory" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ComplainceCert" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="onboardingContactFundMaps" Relationship="AdminModel.FK_onboardingContactFundMap_dmaOnBoardingContactDetailId" FromRole="dmaOnBoardingContactDetail" ToRole="onboardingContactFundMap" />
+          <Property Name="FundIds" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="OnBoardingServiceProvider">
           <Key>
@@ -1508,6 +1540,22 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="parentFund" Relationship="AdminModel.FK_onboardingSubAdvisorFundMap_dmaFundOnBoardId" FromRole="onboardingSubAdvisorFundMap" ToRole="onboardingFund" />
           <NavigationProperty Name="umberllaFund" Relationship="AdminModel.FK_onboardingSubAdvisorFundMap_UmbrellaFundId" FromRole="onboardingSubAdvisorFundMap" ToRole="onboardingFund" />
+          </EntityType>
+        <EntityType Name="vw_hmUserCoverageDetails">
+          <Key>
+            <PropertyRef Name="intLoginId" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="Email" />
+            <PropertyRef Name="JoinedHedgemarkOn" />
+            <PropertyRef Name="TotalYearsofExperiencePriortoHedgemark" />
+          </Key>
+          <Property Name="intLoginId" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="JoinedHedgemarkOn" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="TotalYearsofExperiencePriortoHedgemark" Type="Double" Nullable="false" />
         </EntityType>
         <EntityType Name="onboardingFund">
           <Key>
@@ -1746,7 +1794,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <Property Name="After1stMonthSetUpTheCashRecInTheCashRecModule" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="HasTheCashRecBeenSetUpOnCashRecModule" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ConfirmWithOpsAnalystThatPositionReconciliationHasBeenSetUpOnHM" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FundCustodian" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FundCustodian" Type="Int64" />
           <Property Name="SetUpClientAndManagerWithReportingAccess" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="OpenBankAccount" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="HasInitialFilingBeenCompleted" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -2043,6 +2091,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <EntitySetMapping Name="dmaOnBoardingContactDetails">
             <EntityTypeMapping TypeName="AdminModel.dmaOnBoardingContactDetail">
               <MappingFragment StoreEntitySet="dmaOnBoardingContactDetail">
+                <ScalarProperty Name="FundIds" ColumnName="FundIds" />
                 <ScalarProperty Name="ComplainceCert" ColumnName="ComplainceCert" />
                 <ScalarProperty Name="ClientSubCategory" ColumnName="ClientSubCategory" />
                 <ScalarProperty Name="Onboarding" ColumnName="Onboarding" />
@@ -2290,6 +2339,19 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
                 <ScalarProperty Name="UmbrellaFundId" ColumnName="UmbrellaFundId" />
                 <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
                 <ScalarProperty Name="onboardingSubAdvisorFundMapId" ColumnName="onboardingSubAdvisorFundMapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_hmUserCoverageDetails">
+            <EntityTypeMapping TypeName="AdminModel.vw_hmUserCoverageDetails">
+              <MappingFragment StoreEntitySet="vw_hmUserCoverageDetails">
+                <ScalarProperty Name="TotalYearsofExperiencePriortoHedgemark" ColumnName="TotalYearsofExperiencePriortoHedgemark" />
+                <ScalarProperty Name="JoinedHedgemarkOn" ColumnName="JoinedHedgemarkOn" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="intLoginId" ColumnName="intLoginId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

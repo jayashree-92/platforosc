@@ -169,8 +169,7 @@
                         <div class="col-md-3">
                             <span type="text" id="wireAmount" class="form-control primary-info" ng-keyup="fnCalculateCashBalance()" ng-disabled="!(WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled)" />
                         </div>
-                        <div class="col-md-1" style="width:5px !important;margin-left:-15px;margin-top:5px;">-</div>
-                        <div class="col-md-1">
+                        <div class="col-md-1" style="padding:0px">
                             <input type="text" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountCurrency" readonly style="width:60px;height:30px;" />
                         </div>
                     </div>
@@ -1041,7 +1040,7 @@
                 <button id="unHoldWire" type="button" class="btn btn-sm btn-info ng-show-only" title="Save" ng-if="WireTicketStatus.IsWireStatusOnHold" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Un holding...</span>">
                     <i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Un-Hold and {{getInitiateButtonText()}}
                 </button>
-                <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-if="WireTicketStatus.IsAuthorizedUserToApprove" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
+                <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-if="WireTicketStatus.IsAuthorizedUserToApprove" ng-disabled="!IsWireAmountWithInAllowedLimit" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
                     <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
                 </button>
                 <button id="cancelWire" type="button" class="btn btn-sm btn-danger ng-show-only" ng-if="WireTicketStatus.IsCancelEnabled" ng-click="confirmCancellation()" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ getCancelButtonText(true) }}...</span>">

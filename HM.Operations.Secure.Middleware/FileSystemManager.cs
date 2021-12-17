@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Com.HedgeMark.Commons;
+using Com.HedgeMark.Commons.Extensions;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware.Models;
 
@@ -9,133 +10,33 @@ namespace HM.Operations.Secure.Middleware
 {
     public class FileSystemManager
     {
-        public static string OpsSecureRootDirectory
-        {
-            get
-            {
-                var configPath = ConfigurationManagerWrapper.StringSetting("OpsSecureRootDirectory", @"D:\HM-Operations-Secure\");
-                return GetValidatedConfigPath(configPath);
-            }
-        }
+        public static string OpsSecureRootDirectory => ConfigurationManagerWrapper.StringSetting("OpsSecureRootDirectory", @"D:\HM-Operations-Secure\").GetValidatedConfigPath();
 
-        public static string ManagedAccountRootDirectory
-        {
-            get
-            {
-                var configPath = ConfigurationManagerWrapper.StringSetting("ManagedAccountRootDirectory", @"D:\HM-Operations\ManagedAccountFiles\");
-                return GetValidatedConfigPath(configPath);
-            }
-        }
-        public static string InternalOutputFilesDropPath
-        {
-            get
-            {
-                var configPath = ConfigurationManagerWrapper.StringSetting("InternalOutputFilesDropPath", @"D:\InternalOutputFilesDropPath\");
-                return GetValidatedConfigPath(configPath);
-            }
-        }
+        public static string ManagedAccountRootDirectory => ConfigurationManagerWrapper.StringSetting("ManagedAccountRootDirectory", @"D:\HM-Operations\ManagedAccountFiles\").GetValidatedConfigPath();
 
-        public static string SftpOutputFilesPath
-        {
-            get
-            {
-                var configPath = ConfigurationManagerWrapper.StringSetting("SftpOutputFilesPath",
-                    $@"{OpsSecureRootDirectory}\{"SftpOutputFilesPath"}\");
-                return GetValidatedConfigPath(configPath);
-            }
+        public static string InternalOutputFilesDropPath => ConfigurationManagerWrapper.StringSetting("InternalOutputFilesDropPath", @"D:\InternalOutputFilesDropPath\").GetValidatedConfigPath();
 
-        }
+        public static string SftpOutputFilesPath => ConfigurationManagerWrapper.StringSetting("SftpOutputFilesPath", $@"{OpsSecureRootDirectory}\{"SftpOutputFilesPath"}\").GetValidatedConfigPath();
 
+        public static string OpsSecureWiresFilesPath => ConfigurationManagerWrapper.StringSetting("OpsSecureWiresPath", $@"{OpsSecureRootDirectory}\{"Wires"}\").GetValidatedConfigPath();
 
-        public static string OpsSecureWiresFilesPath
-        {
+        public static string UploadTemporaryFilesPath => $@"{OpsSecureRootDirectory}\SecureUploads\".GetValidatedConfigPath();
 
-            get
-            {
-                var configPath = ConfigurationManagerWrapper.StringSetting("OpsSecureWiresPath",
-                    $@"{OpsSecureRootDirectory}\{"Wires"}\");
-                return GetValidatedConfigPath(configPath);
-            }
-        }
+        public static string OpsSecureAccountsFileUploads => $@"{OpsSecureRootDirectory}\AccountsFileUploads\".GetValidatedConfigPath();
 
-        public static string UploadTemporaryFilesPath
-        {
-            get
-            {
-                var configPath = $@"{OpsSecureRootDirectory}\SecureUploads\";
-                return GetValidatedConfigPath(configPath);
-            }
-        }
+        public static string OpsSecureInternalConfigFiles => $@"{OpsSecureRootDirectory}\InternalConfigFiles\".GetValidatedConfigPath();
 
-        public static string OpsSecureAccountsFileUploads
-        {
-            get
-            {
-                var configPath = $@"{OpsSecureRootDirectory}\AccountsFileUploads\";
-                return GetValidatedConfigPath(configPath);
-            }
-        }
-        public static string OpsSecureInternalConfigFiles
-        {
-            get
-            {
-                var configPath = $@"{OpsSecureRootDirectory}\InternalConfigFiles\";
-                return GetValidatedConfigPath(configPath);
-            }
-        }
+        public static string OpsSecureSSITemplateFileUploads => $@"{OpsSecureRootDirectory}\SSITemplateFileUploads\".GetValidatedConfigPath();
 
-        public static string OpsSecureSSITemplateFileUploads
-        {
-            get
-            {
-                var configPath = $@"{OpsSecureRootDirectory}\SSITemplateFileUploads\";
-                return GetValidatedConfigPath(configPath);
-            }
-        }
+        public static string OpsSecureBulkFileUploads => $@"{OpsSecureRootDirectory}\BulkFileUploads\".GetValidatedConfigPath();
 
-        public static string OpsSecureBulkFileUploads
-        {
-            get
-            {
-                var configPath = $@"{OpsSecureRootDirectory}\BulkFileUploads\";
-                return GetValidatedConfigPath(configPath);
-            }
-        }
+        public static string InvoicesFileAttachement => $@"{ManagedAccountRootDirectory}\Invoices\FileAttachement\".GetValidatedConfigPath();
 
-        public static string InvoicesFileAttachement
-        {
-            get
-            {
-                var configPath = $@"{ManagedAccountRootDirectory}\Invoices\FileAttachement\";
-                return GetValidatedConfigPath(configPath);
-            }
-        }
-        public static string InternalConfigFiles
-        {
-            get
-            {
-                var configPath = $@"{ManagedAccountRootDirectory}\InternalConfigFiles\";
-                return GetValidatedConfigPath(configPath);
-            }
-        }
-        public static string RawFilesOverridesPath
-        {
-            get
-            {
-                var configPath = $@"{ManagedAccountRootDirectory}\Overrides\";
-                return GetValidatedConfigPath(configPath);
-            }
-        }
-        public static string SftpRawFilesOfHM
-        {
-            get
-            {
-                var configPath = ConfigurationManagerWrapper.StringSetting("SftpRawFilesOfHM",
-                    $@"{ManagedAccountRootDirectory}\{"SftpOutputFilesPath"}\{"HM"}\");
-                return GetValidatedConfigPath(configPath);
-            }
+        public static string InternalConfigFiles => $@"{ManagedAccountRootDirectory}\InternalConfigFiles\".GetValidatedConfigPath();
 
-        }
+        public static string RawFilesOverridesPath => $@"{ManagedAccountRootDirectory}\Overrides\".GetValidatedConfigPath();
+
+        public static string SftpRawFilesOfHM => ConfigurationManagerWrapper.StringSetting("SftpRawFilesOfHM", $@"{ManagedAccountRootDirectory}\{"SftpOutputFilesPath"}\{"HM"}\").GetValidatedConfigPath();
 
         public static string DefaultTimeZone => ConfigurationManagerWrapper.StringSetting("DefaultTimeZone", "EST");
 
@@ -167,7 +68,6 @@ namespace HM.Operations.Secure.Middleware
             lock (InitialiseLock)
             {
                 DmaReports = GetAllReports();
-                //InitializeManagedAccounts();
             }
         }
 
@@ -206,22 +106,13 @@ namespace HM.Operations.Secure.Middleware
             return AllReports.FirstOrDefault(v => v.Value == reportName).Key;
         }
 
-
-        public static string GetValidatedConfigPath(string configPath)
-        {
-            if (configPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
-                throw new FileLoadException($"Invalid file path : {configPath}");
-
-            return configPath;
-        }
-
-        public static List<Select2Type> FetchFolderData(string path, bool shouldshowRootFiles = true)
+        public static List<Select2Type> FetchFolderData(string path, bool shoulShowRootFiles = true)
         {
             var dirInfo = new DirectoryInfo(path);
             var index = 0;
             var folders = new List<Select2Type>();
 
-            if (shouldshowRootFiles)
+            if (shoulShowRootFiles)
                 folders.Add(new Select2Type { id = "-Root-", text = "-Root-" });
 
             var rootDirectories = dirInfo.GetDirectories().ToList();

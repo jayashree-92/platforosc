@@ -57,7 +57,7 @@ namespace Com.HedgeMark.Commons.Mail
                 if (!ConfigurationManagerWrapper.BooleanSetting(Config.ShouldAppendMachineInfoInMails))
                     return _body;
 
-                var machineInfo = string.Format("Machine Name: {0}, System User Name: {1}", Environment.MachineName, Environment.UserName);
+                var machineInfo = $"Machine Name: {Environment.MachineName}, System User Name: {Environment.UserName}";
                 var lineTerminator = IsHtml ? "<br /><br />" : Environment.NewLine;
                 var newBody = _body + lineTerminator + machineInfo;
                 return newBody;

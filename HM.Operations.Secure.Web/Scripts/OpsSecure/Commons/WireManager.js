@@ -490,7 +490,21 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.fnIsWireAmountValid = function () {
 
-        if ($scope.WireTicket.Amount == 0) {
+        $scope.validationMsg = "";
+        var currency = $scope.wireTicketObj.ReceivingAccountCurrency == null ? "USD" : $scope.wireTicketObj.ReceivingAccountCurrency;
+        var wireAmount = $.convertToNumber($("#wireAmount").text(), true);
+
+        if (wireAmount == NaN)
+            wireAmount = 0;
+        //Check if the wire-amount is within the limit 
+        $http.get("/Home/IsWireAmountValid?wireAmount=" + wireAmount + "&valueDate=" + $("#wireValueDate").text() + "&currency=" + currency).then(
+            function (response) {
+                $scope.IsWireAmountWithInAllowedLimit = response.data == "true";
+                if (!$scope.IsWireAmountWithInAllowedLimit)
+                    $scope.fnShowErrorMessage(response.data);
+            });
+
+        if (wireAmount == 0) {
             $scope.fnShowErrorMessage("Please enter a non-zero amount to initiate the wire");
             return false;
         }
@@ -506,11 +520,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 }
                 else return true;
         }
+
         return true;
     }
 
 
     $scope.fnIsWireRequirementsFilled = function () {
+        if (!$scope.IsWireAmountWithInAllowedLimit)
+            return false;
+
         var isSendingAccountValid = $("#liSendingAccount").select2("val") != "";
         var isFundTransferValuesValid = $("#liReceivingBookAccount").select2("val") != "" && $("#liMessageType").select2("val") != "";
         if ($scope.WireTicket.WireStatusId < 1) {
@@ -1608,7 +1626,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             });
     }
 
+    $scope.IsWireAmountWithInAllowedLimit = false;
+
     $scope.fnCalculateCashBalance = function (isRetry) {
+
+        $scope.fnIsWireAmountValid();
 
         $scope.CashBalance.IsNewBalanceOffLimit = false;
         if ($("#chkCashBalOff").prop("checked"))

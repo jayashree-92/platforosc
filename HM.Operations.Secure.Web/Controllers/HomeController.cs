@@ -13,6 +13,7 @@ using HM.Operations.Secure.Middleware.Util;
 using HM.Operations.Secure.Web.Jobs;
 using HM.Operations.Secure.Web.Utility;
 using log4net;
+using ReturnNode = Microsoft.Ajax.Utilities.ReturnNode;
 
 namespace HM.Operations.Secure.Web.Controllers
 {
@@ -104,7 +105,6 @@ namespace HM.Operations.Secure.Web.Controllers
             };
 
             var wireData = WireDashboardManager.GetWireTickets(startContextDate, endContextDate, AuthorizedSessionData.IsPrivilegedUser, searchPreference, true, timeZone, AuthorizedDMAFundData);
-
             return Json(new { wireData, AuthorizedSessionData.IsPrivilegedUser, isAdmin = User.IsInRole(OpsSecureUserRoles.DMAAdmin) });
         }
 
@@ -124,15 +124,13 @@ namespace HM.Operations.Secure.Web.Controllers
                     wireSenderInformation = wireSenderInformation.Select(s => new
                     {
                         id = s.hmsWireSenderInformationId,
-                        text =
-                        $"{s.SenderInformation}-{s.Description}",
+                        text = $"{s.SenderInformation}-{s.Description}",
                         value = s.SenderInformation
                     }).ToList(),
                     wireCollateralCashPurpose = collateralCashPurpose.Select(s => new
                     {
                         id = s.hmsCollateralCashPurposeLkupId,
-                        text =
-                        $"{s.PurposeCode}-{s.Description}",
+                        text = $"{s.PurposeCode}-{s.Description}",
                         value = s.PurposeCode
                     }).ToList()
                 });
@@ -276,14 +274,6 @@ namespace HM.Operations.Secure.Web.Controllers
                 }
 
             }
-
-            //else
-            //{
-            //    wireSourceModule.SourceModuleName = "Sample Header";
-            //    wireSourceModule.AttachmentName = "SampleFile.xls";
-            //    wireSourceModule.Details.Add("Service Provider", "CastorOil");
-            //    wireSourceModule.Details.Add("Pay Date", "2332333"); 
-            //}
 
             return wireSourceModule;
         }
@@ -766,6 +756,39 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var cashBalance = FundAccountManager.GetAccountCashBalances(sendingAccountId, valueDate);
             return Json(cashBalance);
+        }
+
+
+        public JsonResult IsWireAmountValid(double wireAmount, DateTime valueDate, string currency)
+        {
+            //Get the user details from the view hmUserCoverageDetails
+            var usdWireAmount = wireAmount;
+            var contextDate = DateTime.Today.GetContextDate();
+
+            if (valueDate < contextDate)
+                contextDate = valueDate;
+
+            if (currency != "USD")
+            {
+                //convert currency to USD
+                double conversionRate;
+                using (var context = new OperationsContext())
+                {
+                    conversionRate = context.vw_ProxyCurrencyConversionData.Where(s => s.HM_CONTEXT_DT == contextDate && s.TO_CRNCY == "USD" && s.FROM_CRNCY == currency).Select(s => s.FX_RATE).FirstOrDefault().ToDouble(1);
+                }
+
+                usdWireAmount = wireAmount * conversionRate;
+            }
+
+            if (usdWireAmount > UserDetails.User.AllowedWireAmountLimit)
+                return Json($"Wire Amount cannot exceed your allowed transaction limit of {UserDetails.User.AllowedWireAmountLimit.ToCurrency()} USD.");
+
+            return Json("true");
+        }
+
+        public JsonResult GetUserDetails()
+        {
+            return Json(UserDetails.User);
         }
 
         #endregion
