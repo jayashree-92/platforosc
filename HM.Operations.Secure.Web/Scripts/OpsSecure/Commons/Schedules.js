@@ -290,6 +290,9 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
 
         $scope.IsInternalToNotBlank = $("#dvInptScheduleInternalTo").text().trim().length > 0;
         $scope.IsExternalToNotBlank = $("#dvInptScheduleExternalTo").text().trim().length > 0;
+        
+        $scope.IsInternalFolderIsNotBlank = $scope.Job.Schedule.InternalFolder != null;
+        $scope.IsSFTPFolderIsNotBlank = $scope.Job.Schedule.SFTPFolder != null;
 
         //Check if there is a delta difference  
         $scope.fnIsNewExternalToApprovalsAvailable();

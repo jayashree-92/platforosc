@@ -59,23 +59,6 @@ namespace HM.Operations.Secure.Middleware.Models
             }
         }
 
-        //public string BeneficiaryBank
-        //{
-        //    get
-        //    {
-        //        if (WireId == 0)
-        //            return string.Empty;
-
-        //        if (IsFundTransfer)
-        //            return ReceivingAccount.UltimateBeneficiaryType == "Account Name" ? ReceivingAccount.Beneficiary.BankName : ReceivingAccount.UltimateBeneficiary.BankName;
-
-        //        if (!IsNotice)
-        //            return SSITemplate.UltimateBeneficiaryType == "Account Name" ? SSITemplate.Beneficiary.BankName : SSITemplate.UltimateBeneficiary.BankName;
-
-        //        return "N/A";
-        //    }
-        //}
-
         public string UltimateBeneficiary
         {
             get
@@ -106,7 +89,7 @@ namespace HM.Operations.Secure.Middleware.Models
                     return string.Empty;
 
                 if (IsFundTransfer)
-                    return ReceivingAccount.UltimateBeneficiaryAccountNumber;
+                    return !string.IsNullOrEmpty(ReceivingAccount.FFCNumber) ? ReceivingAccount.FFCNumber : ReceivingAccount.UltimateBeneficiaryAccountNumber;
 
                 if (!IsNotice)
                     return !string.IsNullOrEmpty(SSITemplate.FFCNumber) ? SSITemplate.FFCNumber : SSITemplate.UltimateBeneficiaryAccountNumber;
