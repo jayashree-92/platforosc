@@ -1,4 +1,6 @@
-﻿@using HM.Operations.Secure.Web.Controllers
+﻿@using Com.HedgeMark.Commons.Extensions
+@using HM.Operations.Secure.DataModel.Models
+@using HM.Operations.Secure.Web.Controllers
 @using HM.Operations.Secure.Web.Utility
 @using Web.Util
 <!DOCTYPE html>
@@ -19,73 +21,83 @@
 
     @foreach (var bundle in BundleTable.Bundles.Where(bundle => bundle is StyleBundle))
     {
-    @Styles.Render(bundle.Path)
+        @Styles.Render(bundle.Path)
     }
     <meta http-equiv="X-UA-Compatible" content="IE=9">
     <meta charset="utf-8">
     <title>HM OPs Secure-@ViewBag.Title</title>
-
-    <div class="navbar navbar-ops navbar-ops-brand">
-        <span class="navbar-ops-title-divider"></span><span>
-            <a class="navbar-ops-title" href=@indexURL>
-                HM-OPS-SECURE
-                @if (@Util.IsLowerEnvironment)
-                {
-                @(Util.Environment.ToUpper());
-                }
-            </a>
-        </span>
-        <div class="navbar-brand">
-            <a href=@indexURL> <img src="~/images/bnymellon_logo.png"></a>
+    <div ng-controller="layoutSettingsCtrl">
+        <div class="navbar navbar-ops navbar-ops-brand">
+            <span class="navbar-ops-title-divider"></span><span>
+                <a class="navbar-ops-title" href=@indexURL>
+                    HM-OPS-SECURE
+                    @if (@Util.IsLowerEnvironment)
+                    {
+                        @(Util.Environment.ToUpper());
+                    }
+                </a>
+            </span>
+            <div class="navbar-brand">
+                <a href=@indexURL> <img src="~/images/bnymellon_logo.png"></a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top: 13px;" title="@User.Identity.Name"><label style="font-size: 13px;" class="label label-default" href="#"><i class="glyphicon glyphicon-user"></i> @userRole</label></li>
+                <li id="liMainNavUserSettings" title="@User.Identity.Name" style="padding-top: 1px;padding-left: 7px;" ng-click="fnShowUserSettings()">
+                    <img src="https://mysourcesocial.bnymellon.net/people/@commitId/avatar/45.png" alt="" onerror="this.onerror=null;this.src='../Images/45.png';" class="profileImage" />
+                </li>
+            </ul>
         </div>
-        <ul class="nav navbar-nav navbar-right">
-            @*<li title="notifications" id="liMainNavNotifications" style="cursor: pointer;"><a><i class="glyphicon glyphicon-bell icon-lg"></i>&nbsp;<span class="badge user-notification un-success ng-show-hide shadowBox" ng-hide="unReadNotifications==0">{{unReadNotifications}}</span></a></li>*@
-            @*   <li title="notifications" id="liMainWireCountNotifications" ng-click="fnRetriveWireCounts()" style="cursor: pointer;"><a class="ng-show-hide"><i class="glyphicon glyphicon-usd icon-lg"></i><span class="badge user-notification ng-show-hide shadowBox" ng-class="WireStatusCounts.Failed>0 ? WireStatusCounts.Pending>9?  'un-pendingAndFailed-10':'un-pendingAndFailed-0': WireStatusCounts.Pending>9?'un-pending-10':WireStatusCounts.Pending>0?'un-pending-0':'un-no-pending'">{{WireStatusCounts.Pending}}</span><span style="margin: -11px 0px 0px -12px;" class="badge badge-danger user-notification ng-show-hide shadowBox" ng-show="WireStatusCounts.Failed>0">{{WireStatusCounts.Failed}}</span></a></li>*@
-            <li style="padding-top: 13px;" title="@User.Identity.Name"><label style="font-size: 13px;" class="label label-default" href="#"><i class="glyphicon glyphicon-user"></i> @userRole</label></li>
-            <li id="liMainNavUserSettings" title="@User.Identity.Name" style="padding-top: 1px;padding-left: 7px;">
-                <img src="https://mysourcesocial.bnymellon.net/people/@commitId/avatar/45.png" alt="" onerror="this.onerror=null;this.src='../Images/45.png';" class="profileImage" />
-            </li>
-        </ul>
-    </div>
-    <input type="hidden" id="environment" value="@Util.Environment.ToLower()" />
-    <input type="hidden" id="userName" value="@User.Identity.Name" />
-    <input type="hidden" id="IsWireApprover" value="@isWireApproverStr" />
-    <input type="hidden" id="IsWireAdmin" value="@isWireAdminStr" />
+        <input type="hidden" id="environment" value="@Util.Environment.ToLower()" />
+        <input type="hidden" id="userName" value="@User.Identity.Name" />
+        <input type="hidden" id="IsWireApprover" value="@isWireApproverStr" />
+        <input type="hidden" id="IsWireAdmin" value="@isWireAdminStr" />
 
-    <div class="navbar-ops-menu">
+        <div class="navbar-ops-menu">
 
-        @if (isWireAdmin)
-        {
-        <ul class="nav navbar-nav">
-            <li title="home" id="liUserOperations"><a href=@Url.Action("Index", "User")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;User Management</a></li>
-        </ul>
-        }
-        else
-        {
-        <ul class="nav navbar-nav">
-            <li title="home" id="liMainDashboardHome"><a href=@Url.Action("Index", "Home")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;Home</a></li>
-            <li id="liWiresDashboard">@Html.ActionLink("Dashboard", "Index", "WiresDashboard")</li>
-            <li id="liAccounts">@Html.ActionLink("Fund Accounts", "Index", "FundAccounts")</li>
-            <li id="liSSITemplates">@Html.ActionLink("SSI Templates", "Index", "SSITemplate")</li>
-            <li id="liWirePurpose">@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
-            <li id="liWireCutOffs">@Html.ActionLink("Wire Cutoffs", "Index", "WirePortalCutoff")</li>
-            <li id="liSwiftGroups">@Html.ActionLink("Swift Groups", "Index", "SwiftGroup")</li>
-            <li id="liABAOrBIC">@Html.ActionLink("Bank Address", "BankAddress", "FundAccounts")</li>
-            <li id="liWireLogs">@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
-            <li id="liUserLogs">@Html.ActionLink("User Audits", "Index", "Audit")</li>
-            <li id="liMQLogs">@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</li>
-        </ul>
-        }
-        <ul class="nav navbar-nav navbar-right">
-
-            @if (!isWireAdmin)
+            @if (isWireAdmin)
             {
-            <li title="Hangfire Jobs"><a href="/jobs" target="_blank"><i class="glyphicon glyphicon-stats"></i></a></li>
+                <ul class="nav navbar-nav">
+                    <li title="home" id="liUserOperations"><a href=@Url.Action("Index", "User")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;User Management</a></li>
+                </ul>
             }
-            <li title="Logout"><a id="btnLogOff"><i class="glyphicon glyphicon-log-out"></i></a></li>
-        </ul>
+            else
+            {
+                <ul class="nav navbar-nav">
+                    <li title="home" id="liMainDashboardHome"><a href=@Url.Action("Index", "Home")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;Home</a></li>
+                    <li id="liWiresDashboard">@Html.ActionLink("Dashboard", "Index", "WiresDashboard")</li>
+                    <li id="liAccounts">@Html.ActionLink("Fund Accounts", "Index", "FundAccounts")</li>
+                    <li id="liSSITemplates">@Html.ActionLink("SSI Templates", "Index", "SSITemplate")</li>
+                    <li id="liWirePurpose">@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
+                    <li id="liWireCutOffs">@Html.ActionLink("Wire Cutoffs", "Index", "WirePortalCutoff")</li>
+                    <li id="liSwiftGroups">@Html.ActionLink("Swift Groups", "Index", "SwiftGroup")</li>
+                    <li id="liABAOrBIC">@Html.ActionLink("Bank Address", "BankAddress", "FundAccounts")</li>
+                    <li id="liWireLogs">@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
+                    <li id="liUserLogs">@Html.ActionLink("User Audits", "Index", "Audit")</li>
+                    <li id="liMQLogs">@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</li>
+                </ul>
+            }
+            <ul class="nav navbar-nav navbar-right">
+
+                @if (!isWireAdmin)
+                {
+                    <li title="Hangfire Jobs"><a href="/jobs" target="_blank"><i class="glyphicon glyphicon-stats"></i></a></li>
+                }
+                <li title="Logout"><a id="btnLogOff"><i class="glyphicon glyphicon-log-out"></i></a></li>
+            </ul>
+        </div>
+        <div class="collapse container-fluid" id="userSettings" style="padding-top: 10px;">
+            <div class="panel panel-default">
+                <div class="panel-heading row">
+                    Total Experience: <b>{{UserDetail.TotalYearsOfExperience}} years</b><br />
+                    Total Experience in HM: <b>{{UserDetail.TotalYearsOfExperience}} years</b><br />
+                    Authorized Wire limit per transaction: <b>{{AllowedWireAmountLimit}} USD</b>
+                    <button type="button" class="close" ng-click="fnHideUserSettings()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+            </div>
+        </div>
     </div>
-    
+
+
     <div class="container-fluid" style="margin-top: 20px; ">
         @RenderSection("featured", required: false)
         @RenderBody()
@@ -107,12 +119,9 @@
 
     @foreach (var bundle in BundleTable.Bundles.Where(bundle => bundle is ScriptBundle))
     {
-    @Scripts.Render(bundle.Path)
+        @Scripts.Render(bundle.Path)
     }
-
-    @section Javascript{
-        <script type="text/javascript" src=@("~/Scripts/OpsSecure/layout.js".GetModifiedStaticFileUrl())></script>
-    }
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/layout.js".GetModifiedStaticFileUrl())></script>
     @RenderSection("JavaScript", required: false)
     @this.InjectAdditionalScripts()
 
