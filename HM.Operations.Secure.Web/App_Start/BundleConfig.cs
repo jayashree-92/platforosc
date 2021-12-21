@@ -92,8 +92,7 @@ namespace HM.Operations.Secure.Web
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(
-                "~/Scripts/OpsSecure/OpsSecureAngularFactory.js",
-                "~/Scripts/OpsSecure/layout.js"
+                "~/Scripts/OpsSecure/OpsSecureAngularFactory.js"
             ));
 
 
@@ -136,7 +135,7 @@ namespace HM.Operations.Secure.Web
                 .Include("~/Content/site.css", new CssRewriteUrlTransform())
                 );
 #if DEBUG
-            BundleTable.EnableOptimizations = false;
+            BundleTable.EnableOptimizations = true;
 #else
             BundleTable.EnableOptimizations = true;
 #endif
