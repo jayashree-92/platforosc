@@ -53,18 +53,14 @@
         <input type="hidden" id="IsWireAdmin" value="@isWireAdminStr" />
 
         <div class="navbar-ops-menu">
-
-            @if (isWireAdmin)
-            {
-                <ul class="nav navbar-nav">
-                    <li title="home" id="liUserOperations"><a href=@Url.Action("Index", "User")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;User Management</a></li>
-                </ul>
-            }
-            else
-            {
+        
                 <ul class="nav navbar-nav">
                     <li title="home" id="liMainDashboardHome"><a href=@Url.Action("Index", "Home")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;Home</a></li>
                     <li id="liWiresDashboard">@Html.ActionLink("Dashboard", "Index", "WiresDashboard")</li>
+                    @if (isWireAdmin)
+                    {
+                        <li id="liUserOperations"><a href=@Url.Action("Index", "User")>&nbsp;User Management</a></li>
+                    }
                     <li id="liAccounts">@Html.ActionLink("Fund Accounts", "Index", "FundAccounts")</li>
                     <li id="liSSITemplates">@Html.ActionLink("SSI Templates", "Index", "SSITemplate")</li>
                     <li id="liWirePurpose">@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
@@ -75,7 +71,7 @@
                     <li id="liUserLogs">@Html.ActionLink("User Audits", "Index", "Audit")</li>
                     <li id="liMQLogs">@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</li>
                 </ul>
-            }
+            
             <ul class="nav navbar-nav navbar-right">
 
                 @if (!isWireAdmin)

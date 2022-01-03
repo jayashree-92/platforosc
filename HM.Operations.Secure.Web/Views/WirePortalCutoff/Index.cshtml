@@ -10,24 +10,25 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <button ng-click="fnAddOrUpdateWirePortalCutoff(true)" id="btnAddWireCutoff" class="btn btn-success btn-sm" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Wire Cutoff</button>
+            @if (User.IsWireUser())
+            {<button ng-click="fnAddOrUpdateWirePortalCutoff(true)" id="btnAddWireCutoff" class="btn btn-success btn-sm" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Wire Cutoff</button>
 
-            <button class="btn btn-sm btn-default" ng-click="fnAddCashInstructionModal($index)" title="Add Cash Instruction"><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Cash Instruction</button>
+                <button class="btn btn-sm btn-default" ng-click="fnAddCashInstructionModal($index)" title="Add Cash Instruction"><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Cash Instruction</button>
 
-            <div class="pull-right btn-group">
-                &nbsp;&nbsp; <button class=" btn btn-primary btn-sm" id="btnEdit" ng-disabled="!enableWireActions" ng-click="fnAddOrUpdateWirePortalCutoff(false)">
-                    <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
-                </button>
-                @if (User.IsWireApprover())
-                {
+                <div class="pull-right btn-group">
+                    &nbsp;&nbsp;
+
+                    <button class=" btn btn-primary btn-sm" id="btnEdit" ng-disabled="!enableWireActions" ng-click="fnAddOrUpdateWirePortalCutoff(false)">
+                        <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
+                    </button>
+                    if (User.IsWireApprover())
+                    {
                     <button class="btn btn-danger btn-sm" id="btnDel" ng-disabled="!enableWireActions" ng-click="fnDeleteWireCutoff()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>
-                }
-                @*<button class="btn btn-danger btn-success" id="btnApprove" ng-disabled="!enableWireActions && (IsChangeMade || wirePortalCutoff.WirePortalCutoff.IsApproved || IsSameUserRequested)" ng-click="fnDeleteWireCutoff()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>*@
+                    }
+                </div>
+            }
+            <a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportData()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
 
-            </div>
-            <div class="pull-right btn-group" style="padding-right: 2px;">
-                &nbsp;&nbsp;<a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportData()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
-            </div>
         </div>
         <div class="panel-body">
             <table id="tblWirePortalCutoffData" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>

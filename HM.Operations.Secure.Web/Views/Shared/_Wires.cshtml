@@ -1,4 +1,5 @@
-﻿
+﻿@using HM.Operations.Secure.Web.Utility
+
 <div class="modal fade" id="modalToRetrieveWires" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-mlg2" role="document">
         <div class="modal-content">
@@ -6,7 +7,6 @@
                 <span class="col-md-12" style="margin-bottom: 10px;padding: 0px">
                     <p class="panel panel-heading" style="background: #F5F5F5;border-bottom: 1px solid lightgray;">
                         <img src="..\Images\spinner.gif" alt="Loading..." ng-style="{ 'display': isWireLoadingInProgress ? 'inline' : 'none' }" />
-                        @*<i class="glyphicon glyphicon-usd"></i>*@
                         <span style="font-size: 15px;font-weight: bold">Wire Ticket Details  </span>
                         <span ng-if="!WireTicketStatus.IsApprovedOrFailed && !wireTicketObj.IsNotice" class="ng-show-hide">
                             <span style="padding-top: 5px;font-size: 12px;">
@@ -1008,44 +1008,49 @@
             </div>
 
             <div class="modal-footer form-inline">
-                <div class="panel panel-heading collapse wireError" id="wireErrorStatus" data-toggle="collapse" style="background: #F5F5F5;text-transform: inherit; font-size:13px;padding: 0px;">
-                    <p style="color: darkred; font-weight:bold;"> {{ validationMsg }}</p>
-                    <div id="wireCreationDiv" ng-show="IsDuplicateWireCreated">
-                        <input id="chkDuplicateWireCreation" type="checkbox" data-size="small" data-width="60" data-height="30" data-onstyle="btn btn-sm btn-success" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on="Yes" data-off="No" />
-                        &nbsp;<span><b>I understand that this is a duplicate wire and still wish to initiate this wire.</b></span>
+
+                @if (User.IsWireUser())
+                {
+                    <div class="panel panel-heading collapse wireError" id="wireErrorStatus" data-toggle="collapse" style="background: #F5F5F5; text-transform: inherit; font-size: 13px; padding: 0px;">
+                        <p style="color: darkred; font-weight: bold;"> {{ validationMsg }}</p>
+                        <div id="wireCreationDiv" ng-show="IsDuplicateWireCreated">
+                            <input id="chkDuplicateWireCreation" type="checkbox" data-size="small" data-width="60" data-height="30" data-onstyle="btn btn-sm btn-success" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on="Yes" data-off="No" />
+                            &nbsp;<span><b>I understand that this is a duplicate wire and still wish to initiate this wire.</b></span>
+                        </div>
+                        <div id="wireDeadlineCrossedDiv" ng-show="IsDeadlineCrossed">
+                            <input id="chkDeadlineCrossed" type="checkbox" data-size="small" data-width="60" data-height="30" data-onstyle="btn btn-sm btn-success" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on="Yes" data-off="No" />
+                            &nbsp;<span><b>I understand that the deadline has crossed and still wish to initiate this wire.</b></span>
+                        </div>
+                        <p></p>
+                        <span id="cashBalOffDiv" ng-if="!wireTicketObj.IsNotice" ng-show="CashBalance.IsNewBalanceOffLimit || !CashBalance.IsCashBalanceAvailable">
+                            <input id="chkCashBalOff" type="checkbox" data-size="small" data-width="60" data-height="30" data-onstyle="btn btn-sm btn-success" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on="Yes" data-off="No" />
+                            &nbsp;<span ng-if="CashBalance.IsNewBalanceOffLimit"><b>I understand that the amount entered exceeds cash balances and still wish to initiate this wire.</b></span>
+                            &nbsp;<span ng-if="!CashBalance.IsCashBalanceAvailable"><b>I understand that Cash balance calculation is not available and still wish to initiate this wire.</b></span>
+                        </span>
                     </div>
-                    <div id="wireDeadlineCrossedDiv" ng-show="IsDeadlineCrossed">
-                        <input id="chkDeadlineCrossed" type="checkbox" data-size="small" data-width="60" data-height="30" data-onstyle="btn btn-sm btn-success" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on="Yes" data-off="No" />
-                        &nbsp;<span><b>I understand that the deadline has crossed and still wish to initiate this wire.</b></span>
-                    </div>
-                    <p></p>
-                    <span id="cashBalOffDiv" ng-if="!wireTicketObj.IsNotice" ng-show="CashBalance.IsNewBalanceOffLimit || !CashBalance.IsCashBalanceAvailable">
-                        <input id="chkCashBalOff" type="checkbox" data-size="small" data-width="60" data-height="30" data-onstyle="btn btn-sm btn-success" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on="Yes" data-off="No" />
-                        &nbsp;<span ng-if="CashBalance.IsNewBalanceOffLimit"><b>I understand that the amount entered exceeds cash balances and still wish to initiate this wire.</b></span>
-                        &nbsp;<span ng-if="!CashBalance.IsCashBalanceAvailable"><b>I understand that Cash balance calculation is not available and still wish to initiate this wire.</b></span>
-                    </span>
-                </div>
-                <textarea type="text" placeholder="Enter Comments" id="wireComment" ng-model="wireComments" class="form-control" rows="2" style="width:50%;float:left;"></textarea>
-                <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save"
-                        ng-if="WireTicketStatus.IsDraftEnabled" ng-click="fnUpdateWireWithStatus(1)"
-                        style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ WireTicketStatus.IsLastModifiedUser ?  'Modifying' : 'Reverting to Draft' }}...</span>">
-                    <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;{{ WireTicketStatus.IsLastModifiedUser ? "Modify" : "Save as Draft" }}
-                </button>
-                <button id="initiateWire" type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="!fnIsWireRequirementsFilled()" ng-if="WireTicketStatus.IsEditEnabled" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Initiating...</span>">
-                    <i class="glyphicon glyphicon-open"></i>&nbsp;{{ getInitiateButtonText() }}
-                </button>
-                <button id="holdWire" type="button" class="btn btn-sm btn-info ng-show-only" title="Save" ng-if="WireTicketStatus.IsWireStatusInitiated" ng-click="fnUpdateWireWithStatus(6)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Holding...</span>">
-                    <i class="glyphicon glyphicon-ban-circle"></i>&nbsp;Hold
-                </button>
-                <button id="unHoldWire" type="button" class="btn btn-sm btn-info ng-show-only" title="Save" ng-if="WireTicketStatus.IsWireStatusOnHold" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Un holding...</span>">
-                    <i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Un-Hold and {{getInitiateButtonText()}}
-                </button>
-                <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-if="WireTicketStatus.IsAuthorizedUserToApprove" ng-disabled="!IsWireAmountWithInAllowedLimit" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
-                    <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
-                </button>
-                <button id="cancelWire" type="button" class="btn btn-sm btn-danger ng-show-only" ng-if="WireTicketStatus.IsCancelEnabled" ng-click="confirmCancellation()" style="vertical-align:-webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ getCancelButtonText(true) }}...</span>">
-                    <i class="glyphicon glyphicon-remove"></i>&nbsp;{{ getCancelButtonText(false) }}
-                </button>
+                    <textarea type="text" placeholder="Enter Comments" id="wireComment" ng-model="wireComments" class="form-control" rows="2" style="width: 50%; float: left;"></textarea>
+                    <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save"
+                            ng-if="WireTicketStatus.IsDraftEnabled" ng-click="fnUpdateWireWithStatus(1)"
+                            style="vertical-align: -webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ WireTicketStatus.IsLastModifiedUser ?  'Modifying' : 'Reverting to Draft' }}...</span>">
+                        <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;{{ WireTicketStatus.IsLastModifiedUser ? "Modify" : "Save as Draft" }}
+                    </button>
+                    <button id="initiateWire" type="button" class="btn btn-sm btn-primary ng-show-only" title="Save" ng-disabled="!fnIsWireRequirementsFilled()" ng-if="WireTicketStatus.IsEditEnabled" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align: -webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Initiating...</span>">
+                        <i class="glyphicon glyphicon-open"></i>&nbsp;{{ getInitiateButtonText() }}
+                    </button>
+                    <button id="holdWire" type="button" class="btn btn-sm btn-info ng-show-only" title="Save" ng-if="WireTicketStatus.IsWireStatusInitiated" ng-click="fnUpdateWireWithStatus(6)" style="vertical-align: -webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Holding...</span>">
+                        <i class="glyphicon glyphicon-ban-circle"></i>&nbsp;Hold
+                    </button>
+                    <button id="unHoldWire" type="button" class="btn btn-sm btn-info ng-show-only" title="Save" ng-if="WireTicketStatus.IsWireStatusOnHold" ng-click="fnUpdateWireWithStatus(2)" style="vertical-align: -webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Un holding...</span>">
+                        <i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Un-Hold and {{getInitiateButtonText()}}
+                    </button>
+                    <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-if="WireTicketStatus.IsAuthorizedUserToApprove" ng-disabled="!IsWireAmountWithInAllowedLimit" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align: -webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
+                        <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
+                    </button>
+                    <button id="cancelWire" type="button" class="btn btn-sm btn-danger ng-show-only" ng-if="WireTicketStatus.IsCancelEnabled" ng-click="confirmCancellation()" style="vertical-align: -webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ getCancelButtonText(true) }}...</span>">
+                        <i class="glyphicon glyphicon-remove"></i>&nbsp;{{ getCancelButtonText(false) }}
+                    </button>
+                }
+
                 <a href="#" class="btn btn-sm btn-default" style="vertical-align:-webkit-baseline-middle;" data-dismiss="modal">Dismiss</a>
                 <br />
             </div>

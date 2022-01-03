@@ -97,7 +97,7 @@ namespace HM.Operations.Secure.Web
                 smUserId = ConfigurationManager.AppSettings["LocalSiteMinderCommitId"];
                 // var totalExperience = AccountController.GetTotalYearsOfExperience(smUserId);
                 //roles.Add(totalExperience > 1 ? OpsSecureUserRoles.WireApprover : OpsSecureUserRoles.WireInitiator);
-                roles.Add(OpsSecureUserRoles.WireApprover);
+                roles.Add(OpsSecureUserRoles.WireAdmin);
             }
             var userSso = AccountController.GetUserDetailByCommitId(smUserId);
 
@@ -110,7 +110,7 @@ namespace HM.Operations.Secure.Web
 
             var email = userSso.Name;
 
-            if (!(roles.Contains(OpsSecureUserRoles.WireApprover) || roles.Contains(OpsSecureUserRoles.WireInitiator) || roles.Contains(OpsSecureUserRoles.WireAdmin)))
+            if (!(roles.Contains(OpsSecureUserRoles.WireReadOnly) || roles.Contains(OpsSecureUserRoles.WireApprover) || roles.Contains(OpsSecureUserRoles.WireInitiator) || roles.Contains(OpsSecureUserRoles.WireAdmin)))
             {
                 if (!string.IsNullOrWhiteSpace(userSso.CommitId))
                 {
@@ -124,6 +124,8 @@ namespace HM.Operations.Secure.Web
                         roles.Add(OpsSecureUserRoles.WireInitiator);
                     else if (ldapGroups.Contains(OpsSecureUserRoles.WireAdmin))
                         roles.Add(OpsSecureUserRoles.WireAdmin);
+                    else if (ldapGroups.Contains(OpsSecureUserRoles.WireReadOnly))
+                        roles.Add(OpsSecureUserRoles.WireReadOnly);
                 }
             }
 

@@ -9,18 +9,23 @@
 <div id="swiftGroupsDiv" ng-controller="SwiftGroupCtrl">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <button ng-click="fnAddOrUpdateSwiftGroup(true)" id="btnAddSwiftGroup" class="btn btn-success btn-sm" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Swift Group</button>
-            <div class="pull-right btn-group">
-                &nbsp;&nbsp; <button class=" btn btn-primary btn-sm" id="btnEdit" ng-disabled="!enableSwiftGroupActions" ng-click="fnAddOrUpdateSwiftGroup(false)">
-                    <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
-                </button>
-                @if (User.IsWireApprover())
+            @if (User.IsWireUser())
+            {
+                <button ng-click="fnAddOrUpdateSwiftGroup(true)" id="btnAddSwiftGroup" class="btn btn-success btn-sm" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Swift Group</button>
+            }
+            <div class="btn-group">
+                &nbsp;&nbsp;
+                @if (User.IsWireUser())
                 {
-                    <button class="btn btn-danger btn-sm" id="btnDel" ng-disabled="!enableSwiftGroupActions" ng-click="fnDeleteSwiftGroup()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>
+                    <button class=" btn btn-primary btn-sm" id="btnEdit" ng-disabled="!enableSwiftGroupActions" ng-click="fnAddOrUpdateSwiftGroup(false)">
+                        <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
+                    </button>
+                    if (User.IsWireApprover())
+                    {
+                        <button class="btn btn-danger btn-sm" id="btnDel" ng-disabled="!enableSwiftGroupActions" ng-click="fnDeleteSwiftGroup()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>
+                    }
                 }
-                <div class="pull-right btn-group" style="padding-right: 2px;">
-                    &nbsp;&nbsp;<a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportData()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
-                </div>
+                <a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportData()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
             </div>
 
         </div>
@@ -92,9 +97,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" ng-click="fnSaveSwiftGroup()" class="btn btn-sm btn-primary" ng-disabled="swiftGroupForm.$invalid">
-                        <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Swift Group
-                    </button>
+                    @if (User.IsWireUser())
+                    {
+                        <button type="button" ng-click="fnSaveSwiftGroup()" class="btn btn-sm btn-primary" ng-disabled="swiftGroupForm.$invalid">
+                            <i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Swift Group
+                        </button>
+                    }
                     <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                 </div>
             </form>

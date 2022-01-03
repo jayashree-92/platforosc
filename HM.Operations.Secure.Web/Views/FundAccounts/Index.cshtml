@@ -19,6 +19,7 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading" style="min-height: 50px;">
+
                     @if (User.IsWireUser())
                     {
                         <button ng-click="fnAddAccountDetail()" id="btnAddNewAccount" class="btn btn-info btn-sm" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i> Loading..."><i class="glyphicon glyphicon-plus"></i>&nbsp; Add Account</button>
@@ -30,26 +31,19 @@
                                 <li><a href="#" data-toggle="collapse" data-target="#divUploadSource" aria-expanded="false" aria-controls="divUploadSource">Upload</a></li>
                             </ul>
                         </div>
-
-                        @*<div class="pull-right btn-group" id="btnAccountStatusButtons" style="display: none;">
-                                &nbsp;&nbsp;<button id="requestForApproval" title="Request for Approval" class="btn btn-warning btn-sm disabled" ng-click="fnUpdateAccountStatus('Pending Approval','Request for Approval')"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
-                                @if (User.IsWireApprover())
-                                {
-                                    <button id="approve" title="Approve" class="btn btn-success btn-sm disabled" ng-click="fnUpdateAccountStatus('Approved','Approve')"><i class="glyphicon glyphicon-ok"></i> Approve</button>
-                                }
-
-                                <button id="revert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="fnUpdateAccountStatus('Created','Revert')"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Save and Update</button>
-                            </div>*@
+                        
+                        <div class="pull-right btn-group">
+                            &nbsp;&nbsp;
+                            <button class=" btn btn-primary btn-sm" id="btnEdit" disabled ng-click="fnEditAccount()">
+                                <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
+                            </button>
+                            @if (User.IsWireApprover())
+                            {
+                                <button class="btn btn-danger btn-sm" id="btnDel" disabled ng-click="fnDeleteAccount()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>
+                            }
+                        </div>
                     }
-                    <div class="pull-right btn-group">
-                        &nbsp;&nbsp; <button class=" btn btn-primary btn-sm" id="btnEdit" disabled ng-click="fnEditAccount()">
-                            <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
-                        </button>
-                        @if (User.IsWireApprover())
-                        {
-                            <button class="btn btn-danger btn-sm" id="btnDel" disabled ng-click="fnDeleteAccount()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>
-                        }
-                    </div>
+
                     <div class="pull-right btn-group" style="padding-right: 2px;">
                         &nbsp;&nbsp;<a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportAllAccountlist()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
                     </div>
@@ -547,7 +541,7 @@
                                     </div>
                                     <p></p>
                                     <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft" >
+                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
                                             <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
@@ -693,6 +687,7 @@
                         </div>
                     </div>
                     <div class="accntActions modal-footer">
+
                         @if (User.IsWireUser())
                         {
                             <button type="submit" id="btnSave" ng-click="fnSaveAccount('Created')" ng-disabled="!isAccountChanged || isApproved" title="Save the account" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Account</button>
@@ -702,8 +697,8 @@
                             {
                                 <button id="btnApprove" ng-click="fnUpdateAccountStatus('Approved','Approve')" title="Approve the account" ng-if="isAuthorizedUserToApprove" ng-disabled="isAccountChanged" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
                             }
-
                         }
+
                         <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Dismiss</a>
                     </div>
 
@@ -781,13 +776,6 @@
                             <input type="text" id="txtDetail" class="modalInputWidth form-control" placeholder="{{ detail }}" />
                         </div>
                     </div>
-                    @*<div class="row" style="margin-top: 10px;">
-                            <div class="col-sm-4 col-md-4 col-lg-4">
-                            </div>
-                            <div class="col-sm-8 col-md-8 col-lg-8">
-                                <label class="control-label">&nbsp;&nbsp;Example: US – New York</label>
-                            </div>
-                        </div>*@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-primary" ng-click="addAccountDetail()">

@@ -33,6 +33,7 @@ namespace HM.Operations.Secure.Web.Utility
                 return "Unknown";
 
             if (principal.IsInRole(OpsSecureUserRoles.WireAdmin)) return OpsSecureUserRoles.WireAdmin.Titleize();
+            if (principal.IsInRole(OpsSecureUserRoles.WireReadOnly)) return OpsSecureUserRoles.WireReadOnly.Titleize();
             if (principal.IsInRole(OpsSecureUserRoles.WireInitiator)) return OpsSecureUserRoles.WireInitiator.Titleize();
             if (principal.IsInRole(OpsSecureUserRoles.WireApprover)) return OpsSecureUserRoles.WireApprover.Titleize();
 
@@ -52,6 +53,11 @@ namespace HM.Operations.Secure.Web.Utility
         public static bool IsWireInitiator(this IPrincipal principal)
         {
             return principal != null && principal.IsInRole(OpsSecureUserRoles.WireInitiator);
+        }
+
+        public static bool IsWireReadOnly(this IPrincipal principal)
+        {
+            return principal != null && principal.IsInRole(OpsSecureUserRoles.WireReadOnly);
         }
 
         public static bool IsWireUser(this IPrincipal principal)

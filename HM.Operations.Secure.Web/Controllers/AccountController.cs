@@ -18,7 +18,7 @@ namespace HM.Operations.Secure.Web.Controllers
     public class AccountController : BaseController
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(AccountController));
-        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", $"{OpsSecureUserRoles.WireInitiator},{OpsSecureUserRoles.WireApprover},{OpsSecureUserRoles.WireAdmin}");
+        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", $"{OpsSecureUserRoles.WireInitiator},{OpsSecureUserRoles.WireApprover},{OpsSecureUserRoles.WireAdmin},{OpsSecureUserRoles.WireReadOnly}");
 
         public static hLoginRegistration GetUserDetail(string userName)
         {
@@ -41,7 +41,9 @@ namespace HM.Operations.Secure.Web.Controllers
             {
                 User = userDetail,
                 Name = userDetail.Name,
-                Role = user.IsInRole(OpsSecureUserRoles.WireApprover)
+                Role = user.IsInRole(OpsSecureUserRoles.WireReadOnly)
+                    ? OpsSecureUserRoles.WireReadOnly
+                : user.IsInRole(OpsSecureUserRoles.WireApprover)
                     ? OpsSecureUserRoles.WireApprover
                     : user.IsInRole(OpsSecureUserRoles.WireInitiator)
                         ? OpsSecureUserRoles.WireInitiator

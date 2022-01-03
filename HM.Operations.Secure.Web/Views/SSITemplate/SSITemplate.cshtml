@@ -350,9 +350,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnSaveCallback()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Save Callback
-                        </button>
+                        @if (User.IsWireUser())
+                        {
+                            <button type="button" class="btn btn-sm btn-primary" ng-click="fnSaveCallback()">
+                                <i class="glyphicon glyphicon-copy"></i>&nbsp;Save Callback
+                            </button>
+                        }
                         <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                     </div>
                 </div>
@@ -371,8 +374,11 @@
                         <textarea placeholder="Enter Comments" id="ssiTemplateCommentTextArea" style="width: 90%; max-width: none;" class="form-control"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnSaveCommentAgreements" class="btn btn-sm" ng-class="{'btn-warning': ssiTemplate.SSITemplateStatus == 'Saved As Draft','btn-success': ssiTemplate.SSITemplateStatus == 'Pending Approval','btn-primary': ssiTemplate.SSITemplateStatus == 'Approved' }" ng-click="fnSaveSSITemplateStatus()"><i class="glyphicon glyphicon-flag"></i>&nbsp;Proceed</button>
-                        <button id="btnSendApproval" class="btn btn-sm btn-warning" ng-click="fnSendApprovalSSITemplateStatus()" style="display: none;"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
+                        @if (User.IsWireUser())
+                        {
+                            <button id="btnSaveCommentAgreements" class="btn btn-sm" ng-class="{'btn-warning': ssiTemplate.SSITemplateStatus == 'Saved As Draft','btn-success': ssiTemplate.SSITemplateStatus == 'Pending Approval','btn-primary': ssiTemplate.SSITemplateStatus == 'Approved' }" ng-click="fnSaveSSITemplateStatus()"><i class="glyphicon glyphicon-flag"></i>&nbsp;Proceed</button>
+                            <button id="btnSendApproval" class="btn btn-sm btn-warning" ng-click="fnSendApprovalSSITemplateStatus()" style="display: none;"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
+                        }
                         <a href="#" class="btn btn-default btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> Cancel</a>
                     </div>
                 </div>
@@ -397,9 +403,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddCurrency()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Currency
-                        </button>
+                        @if (User.IsWireUser())
+                        {
+                            <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddCurrency()">
+                                <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Currency
+                            </button>
+                        }
                         <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                     </div>
                 </div>
@@ -451,9 +460,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddBICorABA()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add BIC / ABA
-                        </button>
+                        @if (User.IsWireUser())
+                        {
+                            <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddBICorABA()">
+                                <i class="glyphicon glyphicon-copy"></i>&nbsp;Add BIC / ABA
+                            </button>
+                        }
                         <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                     </div>
                 </div>
@@ -476,18 +488,14 @@
                                 <input type="text" id="txtDescription" class="modalInputWidth form-control" placeholder="{{ detail }}" />
                             </div>
                         </div>
-                        @*<div class="row" style="margin-top: 10px;">
-                                <div class="col-sm-4 col-md-4 col-lg-4">
-                                </div>
-                                <div class="col-sm-8 col-md-8 col-lg-8">
-                                    <label class="control-label">&nbsp;&nbsp;Example: US – New York</label>
-                                </div>
-                            </div>*@
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddSSITemplateDetail($index)">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add {{ detail }}
-                        </button>
+                        @if (User.IsWireUser())
+                        {
+                            <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddSSITemplateDetail($index)">
+                                <i class="glyphicon glyphicon-copy"></i>&nbsp;Add {{ detail }}
+                            </button>
+                        }
                         <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                     </div>
                 </div>
@@ -509,9 +517,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary" ng-disabled="!isAssociationVisible" ng-click="fnAddAccountSSITemplateMap()">
-                            <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Associations
-                        </button>
+                        @if (User.IsWireUser())
+                        {
+                            <button type="button" class="btn btn-sm btn-primary" ng-disabled="!isAssociationVisible" ng-click="fnAddAccountSSITemplateMap()">
+                                <i class="glyphicon glyphicon-copy"></i>&nbsp;Add Associations
+                            </button>
+                        }
                         <a href="#" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</a>
                     </div>
                 </div>
@@ -530,7 +541,10 @@
                         <textarea placeholder="Enter Comments" id="statusMapComments" style="width: 90%; max-width: none;" class="form-control"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnMapSaveComment" class="btn btn-warning btn-sm" ng-click="fnSaveAccountMapStatus()"><i class="glyphicon glyphicon-flag"></i>&nbsp;Proceed</button>
+                        @if (User.IsWireUser())
+                        {
+                            <button id="btnMapSaveComment" class="btn btn-warning btn-sm" ng-click="fnSaveAccountMapStatus()"><i class="glyphicon glyphicon-flag"></i>&nbsp;Proceed</button>
+                        }
                         <a href="#" class="btn btn-default btn-sm" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> Cancel</a>
                     </div>
                 </div>

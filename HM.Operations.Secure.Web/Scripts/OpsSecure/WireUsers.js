@@ -1,6 +1,6 @@
 ﻿/// <reference path="../data.js" />
-
-var tblUserDetails
+$("#liUserOperations").addClass("active");
+var tblUserDetails;
 HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, $q, $filter, $timeout) {
 
     $scope.fnRefreshUserList = function () {

@@ -33,7 +33,9 @@ namespace HM.Operations.Secure.Web.Jobs
 
                 var ldapRole = string.Empty;
 
-                if (ldapGroups.Contains(OpsSecureUserRoles.WireApprover))
+                if (ldapGroups.Contains(OpsSecureUserRoles.WireReadOnly))
+                    ldapRole = OpsSecureUserRoles.WireReadOnly;
+                else if (ldapGroups.Contains(OpsSecureUserRoles.WireApprover))
                     ldapRole = OpsSecureUserRoles.WireApprover;
                 else if (ldapGroups.Contains(OpsSecureUserRoles.WireInitiator))
                     ldapRole = OpsSecureUserRoles.WireInitiator;

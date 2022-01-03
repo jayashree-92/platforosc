@@ -68,6 +68,7 @@ namespace HM.Operations.Secure.Web.Controllers
             Session[key] = value;
         }
         public bool IsWireApprover => User.IsInRole(OpsSecureUserRoles.WireApprover);
+        public bool IsWireReadOnly => User.IsInRole(OpsSecureUserRoles.WireReadOnly);
 
         public bool IsWireAdmin => User.IsInRole(OpsSecureUserRoles.WireAdmin);
 
@@ -140,7 +141,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
     }
 
-    [AuthorizedRoles(OpsSecureUserRoles.WireInitiator, OpsSecureUserRoles.WireApprover)]
+    [AuthorizedRoles(OpsSecureUserRoles.WireInitiator, OpsSecureUserRoles.WireApprover, OpsSecureUserRoles.WireReadOnly, OpsSecureUserRoles.WireAdmin)]
     public abstract class WireUserBaseController : BaseController
     {
         public List<dmaUserPreference> UserPreferencesInSession

@@ -59,6 +59,7 @@ namespace HM.Operations.Secure.Middleware
     {
         public const string WireInitiator = "hm-wire-initiator";
         public const string WireApprover = "hm-wire-approver";
+        public const string WireReadOnly = "hm-wire-readonly";
         public const string WireAdmin = "hm-wire-admin";
         public const string DMAUser = "DMAUser";
         public const string DMAAdmin = "DMAAdmin";
