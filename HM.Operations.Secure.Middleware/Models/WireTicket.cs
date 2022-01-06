@@ -224,8 +224,7 @@ namespace HM.Operations.Secure.Middleware.Models
                         WireId = wire.hmsWireId;
                 }
             }
-
-
+            
             ReferenceTag = referenceTag;
 
             return this;
