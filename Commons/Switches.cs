@@ -110,6 +110,7 @@ namespace Com.HedgeMark.Commons
             HedgeMarkMailOpsSignatureLines,
             /* System Allowed File Types */
             SupportingFileTypesToUploadViaUi,
+            AgreementTypesEligibleForSendingWires,
             TreasuryReportAgreementTypesToUseMarginExcessOrDeficit,
             SchedulerProcessId,
             /*HM-Ops-Secure settings*/
@@ -120,6 +121,7 @@ namespace Com.HedgeMark.Commons
         {
             AllSwitches = new List<Switch>
             {
+                /*General Setting*/
                 CreateSwitch(SwitchKey.SchedulerProcessId, SwitchType.Integer, Modules.General, 35997),
                 CreateSwitch(SwitchKey.HedgeMarkMailOpsSignatureLines, SwitchType.MultiLines, Modules.General, @"HedgeMark Advisors, LLC - A BNY Mellon Company
 240 Greenwich Street, 6th Floor
@@ -129,18 +131,15 @@ Main: (212) 888-1300
 Disclaimer: This message is Confidential until classified otherwise.
 "),
                 CreateSwitch(SwitchKey.SupportingFileTypesToUploadViaUi, SwitchType.String, Modules.General, ".msg,.csv,.txt,.pdf,.xls,.xlsx,.xlsm,.xlsb,.zip,.rar,.json,.doc,.docx"),
-                CreateSwitch(SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit, SwitchType.String, Modules.OpsSecure, "PB,FXPB,FCM,CDA,Synthetic Prime Brokerage"),
+                /*HM-Ops-Secure settings*/
+                CreateSwitch(SwitchKey.AgreementTypesEligibleForSendingWires, SwitchType.StringList, Modules.OpsSecure, "Custody,DDA,PB,Synthetic Prime Brokerage"),
+                CreateSwitch(SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit, SwitchType.StringList, Modules.OpsSecure, "PB,FXPB,FCM,CDA,Synthetic Prime Brokerage"),
                 CreateSwitch(SwitchKey.SwiftBicToEnableField21, SwitchType.StringList, Modules.OpsSecure, "SBOSUS30,SBOSUS3U,CNORLULX,SBOSUS3UIMS")
             };
 
-            /*General Setting*/
-
-            /*File Format Settings*/
-
-
-            /*HM-Ops-Secure settings*/
-
-
+            
+            
+            
         }
     }
 }

@@ -416,7 +416,7 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-        public static readonly List<string> AgreementTypesEligibleForSendingWires = new List<string>() { "Custody", "DDA", "PB", "Synthetic Prime Brokerage" };
+        public static readonly List<string> AgreementTypesEligibleForSendingWires = OpsSecureSwitches.GetSwitchValue(Switches.SwitchKey.AgreementTypesEligibleForSendingWires);
 
         private static List<long> AllEligibleAgreementIds()
         {

@@ -15,8 +15,8 @@ namespace HM.Operations.Secure.Middleware
             ResetSwitches();
         }
 
-        public static List<string> TreasuryReportAgreementTypesToUseMarginExcessOrDeficit => ((string)GetSwitchValue(SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit)).ToStringList();
-        public static List<string> SwiftBicToEnableField21 => ((string)GetSwitchValue(SystemSwitches.SwitchKey.SwiftBicToEnableField21)).ToStringList();
+        public static List<string> TreasuryReportAgreementTypesToUseMarginExcessOrDeficit => GetSwitchValue(SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit);
+        public static List<string> SwiftBicToEnableField21 => GetSwitchValue(SystemSwitches.SwitchKey.SwiftBicToEnableField21);
         public static int SchedulerProcessId => (int)GetSwitchValue(SwitchKey.SchedulerProcessId);
 
         public static void ResetSwitches()
