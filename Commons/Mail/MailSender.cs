@@ -69,21 +69,9 @@ namespace Com.HedgeMark.Commons.Mail
         {
             contentMemoryStream = new List<MemoryStream>();
 
-            if (mailInfo.Attachments == null && mailInfo.Attachment == null)
-            {
-                Logger.DebugFormat("No Attaching file available");
+            if (mailInfo.Attachments == null || mailInfo.Attachments.Count == 0)
                 return;
-            }
-
-            if (mailInfo.Attachments == null)
-                mailInfo.Attachments = new List<FileInfo>();
-
-            if (mailInfo.Attachment != null)
-                mailInfo.Attachments.Add(mailInfo.Attachment);
-
-            if (mailInfo.Attachments.Count == 0)
-                return;
-
+          
             foreach (var fileAttachment in mailInfo.Attachments.Where(fileAttachment => fileAttachment.Exists))
             {
                 using (var attachmentFileStream = new FileStream(fileAttachment.FullName, FileMode.Open, FileAccess.Read))

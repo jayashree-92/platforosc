@@ -1,0 +1,204 @@
+﻿@using Web.Util
+@model dynamic
+
+@{
+    ViewBag.Title = "System Configurations";
+}
+
+<legend>System Configurations</legend>
+
+<div class="row" ng-controller="systemConfiguationCtrl">
+    <div class="col-sm-2 col-md-2 col-lg-2" id="leftCol">
+        <ul class="nav" data-spy="affix" data-offset-top="250" id="navListSideBarHelp" style="padding-left: 10px; width: 250px; border-right: 2px solid #eeeeee;">
+            <div class="form-horizontal">
+                <div style="padding-left: 10px;">
+                    <a id="btnExpandAllPanel" class="btn btn-xs btn-default"><i class="glyphicon glyphicon-chevron-down"></i>&nbsp;Expand All</a>
+                    &nbsp;&nbsp;<a id="btnCollapseAllPanel" class="btn btn-xs btn-default"><i class="glyphicon glyphicon-chevron-up"></i>&nbsp;Collapse All</a>
+                </div><br />
+                <div class="form-group has-feedback">
+                    <div class="col-sm-11" style="padding-left: 25px;">
+                        <input type="text" class="live-search-box form-control input-sm" placeholder="search here" aria-describedby="inputSuccess3Status" />
+                        <span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                </div>
+            </div>
+            <li ng-class="{active:$first}" ng-repeat="module in switchModules" on-last-repeat>
+                <a ng-href="#dv{{module}}" data-toggle="tab">
+                    {{module}}
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-9 col-md-9 col-lg-9" id="dvDetails">
+        <dl style="margin-left: 25px;">
+
+            <div class="panel panel-default" id="dvSystemSwitches">
+                <div class="panel-heading">
+                    <h4 class="panel-title row">
+                        <a class="accordion-toggle col-sm-12" data-toggle="collapse" data-parent="#accordion" href="#systemSwitchesConfiguration">
+                            System Switches
+                        </a>
+                    </h4>
+                </div>
+                <div id="systemSwitchesConfiguration" class="panel-collapse collapse in">
+
+                    <div class="panel-body">
+                        <span ng-repeat="switches in switchList" on-last-repeat>
+                            <div ng-href="#dv{{switches.module}}" data-toggle="tab">
+                                <legend class="sm">{{switches.module}}</legend>
+                                <span ng-repeat="switch in switches.switches">
+                                    <p class="row col-md-offset-1">
+                                        <span class="col-md-4"> {{switch.label}}:&nbsp;&nbsp;&nbsp; </span>
+                                        <span class="col-md-6" ng-if="switch.type==0" ng-show="switch.type==0">
+                                            <input type="checkbox" id="chkSysSwitch-{{switch.key}}" ng-checked="{{switch.value}}" data-key="{{switch.key}}" data-onstyle="btn btn-sm btn-success" data-style="" data-width="80" data-height="28" style="line-height: 21px; margin-right: 0px !important" data-size="small" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on='YES' data-off='NO' />
+                                        </span>
+                                        <span class="col-md-6" ng-if="switch.type==1" ng-show="switch.type==1">
+                                            <input type="number" id="numSwitch-{{switch.key}}" value="{{switch.value}}" class="form-control" data-key="{{switch.key}}" data-style="" data-width="80" data-height="28" style="line-height: 21px; width: 100px; margin-right: 0px !important" />
+                                        </span>
+                                        <span class="col-md-6" ng-if="switch.type==2 || switch.type==3" ng-show="switch.type==2 || switch.type==3">
+                                            <input type="hidden" ng-if="switch.key.indexOf('Reports')>=0" id="selSysSwitch-{{switch.key}}" data-key="{{switch.key}}" data-val="{{switch.value}}" />
+                                            <input type="text" ng-if="switch.key.indexOf('Reports')!=0" id="txtSwitch-{{switch.key}}" value="{{switch.value}}" class="form-control col-md-12" data-key="{{switch.key}}" style="line-height: 21px; margin-right: 0px !important" rows="3" />
+                                        </span>
+                                        <span class="col-md-6" ng-if="switch.type==4" ng-show="switch.type==4">
+                                            <span class="input-group clockpicker" data-placement="right" data-align="top" data-autoclose="true" style="width: 100px;">
+                                                <input type="text" class="form-control" id="timeSwitch-{{switch.key}}" data-key="{{switch.key}}" value="{{switch.value}}">
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-time"></span>
+                                                </span>
+                                            </span>
+                                        </span>
+                                        <span class="col-md-6" ng-if="switch.type==5">
+                                            <textarea ng-if="switch.key.indexOf('Reports')!=0" id="tareSwitch-{{switch.key}}" class="form-control col-md-12" data-key="{{switch.key}}" style="line-height: 21px; margin-right: 0px !important" rows="6">{{switch.value}}</textarea>
+                                        </span>
+                                        <br /><br />
+                                    </p>
+                                </span>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </dl>
+    </div>
+</div>
+
+
+@section Javascript{
+    <script src=@("~/Scripts/OpsSecure/SystemConfig.js".GetModifiedStaticFileUrl())></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //*Starting of live filter functions*//
+            $('#navListSideBarHelp li').each(function () {
+                $(this).attr('data-search-term', $(this).text().toLowerCase());
+            });
+
+            $(".live-search-box").on('keyup', function (event) {
+                var searchTerm = $(this).val().toLowerCase();
+                if (searchTerm == "" && event.keyCode == 8) {
+
+                    if (searchTerm == "") {
+                        $(".live-search-highlight-rules").removeClass("active");
+                    }
+
+                    $('#navListSideBarHelp li ul').hide(200);
+                    $('#navListSideBarHelp li').show(200);
+                    return;
+                }
+
+                var regexOfSystemConfig = RegExp("\(" + searchTerm.replace(/[^a-zA-Z0-9()]/g, "\\$&") + "\)", "ig");
+                $('#navListSideBarHelp li').each(function (index, li) {
+                    if ($(li).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                        $(li).show(200);
+                        $(li).find("ul").show(200);
+                        $($(li).find("a")).each(function (i, v) {
+                            $(v).html($(v).text().replace(regexOfSystemConfig, "<font class='live-search-highlight-rules active'>$&</font>"));
+                        });
+                    } else {
+                        $(li).hide(200);
+                        $(li).find("ul").hide(200);
+                    }
+                });
+            });
+            //*Ending of live filter functions*//
+        });
+
+        /* activate sidebar */
+        $('#navListSideBarHelp').affix({
+            offset: {
+                top: 235
+            }
+        });
+
+        /* activate scrollspy menu */
+        var $body = $(document.body);
+        var navHeight = $('.navbar').outerHeight(true) + 10;
+
+        $body.scrollspy({
+            target: '#leftCol',
+            offset: navHeight
+        });
+
+
+        function initializeScrollSpyInner() {
+
+            $("#leftCol").on('activate.bs.scrollspy', function () {
+
+                var ele = $(this).find('.active');
+                var isChildAlreadyShown = ele.find('.navSubChild').length != 0 && ele.find('.navSubChild').css("display") != "none";
+
+                if (!isChildAlreadyShown) {
+                    $('#navListSideBarHelp li ul').hide(200);
+                    ele.find('.navSubChild').show(200);
+                }
+            });
+        }
+
+        initializeScrollSpyInner();
+
+        /* smooth scrolling sections */
+        $('#navListSideBarHelp a[href*=#]:not([href=#])').click(function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+            $("#leftCol").unbind('activate.bs.scrollspy');
+
+            $($($(this).attr("href")).find("a:eq(0)").attr("href")).collapse("show");
+
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: target.offset().top
+
+                    }, 500, function () {
+                        initializeScrollSpyInner();
+                        target.addClass('showSelected');
+                        window.setTimeout(function () { target.removeClass('showSelected'); }, 1000);
+                        //target.removeClass("animateIcon").addClass("animateIcon");
+                        //target.pulse({
+                        //    times: 1,
+                        //    duration: 150
+                        //});
+                    });
+
+                    var isParentClicked = $(this).parent().parent().attr("id") == "navListSideBarHelp";
+                    var isChildAlreadyShown = $(this).next().length != 0 && $(this).next().css("display") != "none";
+                    if (isParentClicked && !isChildAlreadyShown) {
+                        $('#navListSideBarHelp li ul').hide(200);
+                        $(this).parent().find("ul").show(200);
+                    }
+                    //  childNav.removeClass("hide");
+
+                    return false;
+                }
+            }
+
+        });
+    </script>
+}
+
+

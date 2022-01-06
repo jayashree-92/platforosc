@@ -12,6 +12,7 @@
     var userRole = @Util.GetRole(User).Replace("-", " ").Replace("Hm ", string.Empty);
     var commitId = @HttpContext.Current.Session[OpsSecureSessionVars.UserCommitId.ToString()].ToString();
     var isWireApprover = User.IsWireApprover();
+    var isWireInitiator = User.IsWireInitiator();
     var isWireApproverStr = isWireApprover ? "true" : "false";
     var isWireAdmin = User.IsWireAdmin();
     var isWireAdminStr = isWireAdmin ? "true" : "false";
@@ -53,29 +54,33 @@
         <input type="hidden" id="IsWireAdmin" value="@isWireAdminStr" />
 
         <div class="navbar-ops-menu">
-        
-                <ul class="nav navbar-nav">
-                    <li title="home" id="liMainDashboardHome"><a href=@Url.Action("Index", "Home")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;Home</a></li>
-                    <li id="liWiresDashboard">@Html.ActionLink("Dashboard", "Index", "WiresDashboard")</li>
-                    @if (isWireAdmin)
-                    {
-                        <li id="liUserOperations"><a href=@Url.Action("Index", "User")>&nbsp;User Management</a></li>
-                    }
-                    <li id="liAccounts">@Html.ActionLink("Fund Accounts", "Index", "FundAccounts")</li>
-                    <li id="liSSITemplates">@Html.ActionLink("SSI Templates", "Index", "SSITemplate")</li>
-                    <li id="liWirePurpose">@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
-                    <li id="liWireCutOffs">@Html.ActionLink("Wire Cutoffs", "Index", "WirePortalCutoff")</li>
-                    <li id="liSwiftGroups">@Html.ActionLink("Swift Groups", "Index", "SwiftGroup")</li>
-                    <li id="liABAOrBIC">@Html.ActionLink("Bank Address", "BankAddress", "FundAccounts")</li>
-                    <li id="liWireLogs">@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
-                    <li id="liUserLogs">@Html.ActionLink("User Audits", "Index", "Audit")</li>
-                    <li id="liMQLogs">@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</li>
-                </ul>
-            
+
+            <ul class="nav navbar-nav">
+                <li title="home" id="liMainDashboardHome"><a href=@Url.Action("Index", "Home")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;Home</a></li>
+                <li id="liWiresDashboard">@Html.ActionLink("Dashboard", "Index", "WiresDashboard")</li>
+                @if (isWireAdmin)
+                {
+                    <li id="liUserOperations"><a href=@Url.Action("Index", "User")>&nbsp;User Management</a></li>
+                }
+                <li id="liAccounts">@Html.ActionLink("Fund Accounts", "Index", "FundAccounts")</li>
+                <li id="liSSITemplates">@Html.ActionLink("SSI Templates", "Index", "SSITemplate")</li>
+                <li id="liWirePurpose">@Html.ActionLink("Wire Purposes", "WirePurpose", "Home")</li>
+                <li id="liWireCutOffs">@Html.ActionLink("Wire Cutoffs", "Index", "WirePortalCutoff")</li>
+                <li id="liSwiftGroups">@Html.ActionLink("Swift Groups", "Index", "SwiftGroup")</li>
+                <li id="liABAOrBIC">@Html.ActionLink("Bank Address", "BankAddress", "FundAccounts")</li>
+                <li id="liWireLogs">@Html.ActionLink("Wire Logs", "Index", "WireLog")</li>
+                <li id="liUserLogs">@Html.ActionLink("User Audits", "Index", "Audit")</li>
+                <li id="liMQLogs">@Html.ActionLink("MQ Logs", "MqLogs", "Audit")</li>
+            </ul>
+
             <ul class="nav navbar-nav navbar-right">
 
                 @if (!isWireAdmin)
                 {
+                    if (!isWireInitiator)
+                    {
+                        <li><a href="@Url.Action("Index", "Configuration")"><i class="glyphicon glyphicon-cog"></i></a></li>
+                    }
                     <li title="Hangfire Jobs"><a href="/jobs" target="_blank"><i class="glyphicon glyphicon-stats"></i></a></li>
                 }
                 <li title="Logout"><a id="btnLogOff"><i class="glyphicon glyphicon-log-out"></i></a></li>

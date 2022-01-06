@@ -147,17 +147,6 @@
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
           <Property Name="IsFundPrimaryReport" Type="bit" Nullable="false" />
         </EntityType>
-        <EntityType Name="dmaSystemSwitches">
-          <Key>
-            <PropertyRef Name="dmaSystemSwitchId" />
-          </Key>
-          <Property Name="dmaSystemSwitchId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Module" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Key" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Value" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="LastModifiedBy" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="LastModifiedDt" Type="datetime" Nullable="false" />
-        </EntityType>
         <EntityType Name="dmaTreasuryCashBalances">
           <Key>
             <PropertyRef Name="dmaTreasuryCashBalanceId" />
@@ -284,7 +273,6 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
           <EntitySet Name="dmaInterestReportEodData" EntityType="Self.dmaInterestReportEodData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaOpsCashCollateral" EntityType="Self.dmaOpsCashCollateral" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaReports" EntityType="Self.dmaReports" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="dmaSystemSwitches" EntityType="Self.dmaSystemSwitches" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaTreasuryCashBalances" EntityType="Self.dmaTreasuryCashBalances" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dmaUserPreference" EntityType="Self.dmaUserPreference" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="vw_dmaInvoiceReport" EntityType="Self.vw_dmaInvoiceReport" store:Type="Views" store:Schema="dbo">
@@ -371,7 +359,6 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
             <End Role="dmaCollateralData" EntitySet="dmaCollateralDatas" />
             <End Role="dmaOpsCashCollateral" EntitySet="dmaOpsCashCollaterals" />
           </AssociationSet>
-          <EntitySet Name="dmaSystemSwitches" EntityType="OperationsModel.dmaSystemSwitch" />
           <EntitySet Name="vw_HFundOps" EntityType="OperationsModel.vw_HFundOps" />
           <EntitySet Name="dmaInterestReportEodDatas" EntityType="OperationsModel.dmaInterestReportEodData" />
         </EntityContainer>
@@ -578,17 +565,6 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="dmaSystemSwitch">
-          <Key>
-            <PropertyRef Name="dmaSystemSwitchId" />
-          </Key>
-          <Property Name="dmaSystemSwitchId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Module" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Key" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Value" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="LastModifiedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="LastModifiedDt" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         <EntityType Name="vw_HFundOps">
           <Key>
             <PropertyRef Name="hmFundId" />
@@ -834,18 +810,6 @@ warning 6002: The table/view 'DMA_HM.dbo.vw_ProxyCurrencyConversionData' does no
                 <ScalarProperty Name="BrokerName" ColumnName="BrokerName" />
                 <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
                 <ScalarProperty Name="dmaCollateralDataId" ColumnName="dmaCollateralDataId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="dmaSystemSwitches">
-            <EntityTypeMapping TypeName="OperationsModel.dmaSystemSwitch">
-              <MappingFragment StoreEntitySet="dmaSystemSwitches">
-                <ScalarProperty Name="LastModifiedDt" ColumnName="LastModifiedDt" />
-                <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
-                <ScalarProperty Name="Key" ColumnName="Key" />
-                <ScalarProperty Name="Module" ColumnName="Module" />
-                <ScalarProperty Name="dmaSystemSwitchId" ColumnName="dmaSystemSwitchId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

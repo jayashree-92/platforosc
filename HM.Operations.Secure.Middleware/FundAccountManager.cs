@@ -686,7 +686,7 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-        private static List<string> TreasuryAgreementTypesToUseMarginExcessOrDeficit => SystemSwitches.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit;
+        private static List<string> TreasuryAgreementTypesToUseMarginExcessOrDeficit => OpsSecureSwitches.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit;
 
         public static CashBalances GetAccountCashBalances(long sendingFundAccountId, DateTime valueDate)
         {

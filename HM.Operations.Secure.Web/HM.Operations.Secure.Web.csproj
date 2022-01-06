@@ -218,6 +218,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ConfigurationController.cs" />
     <Compile Include="Controllers\DashboardReportController.cs" />
     <Compile Include="Controllers\FundAccountsController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
@@ -480,7 +481,6 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="ExternalLibraries\Disclosure.txt" />
-    <Content Include="ExternalLibraries\HedgeMarkAddress.txt" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -843,6 +843,7 @@
     <Content Include="Scripts\OpsSecure\layout.js" />
     <Content Include="Scripts\OpsSecure\OpsSecureAngularFactory.js" />
     <Content Include="Scripts\OpsSecure\SwiftGroup.js" />
+    <Content Include="Scripts\OpsSecure\SystemConfig.js" />
     <Content Include="Scripts\OpsSecure\UserAuditLog.js" />
     <Content Include="Scripts\OpsSecure\WireLog.js" />
     <Content Include="Scripts\OpsSecure\WirePortalCutoff.js" />
@@ -928,6 +929,7 @@
     <Content Include="Views\Shared\_Schedules.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\FundAccounts\BankAddress.cshtml" />
+    <Content Include="Views\Configuration\Index.cshtml" />
     <None Include="Web.QA.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

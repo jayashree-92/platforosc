@@ -6,88 +6,69 @@ namespace Com.HedgeMark.Commons.Mail
 {
     public class MailInfo
     {
-        public string Server
-        {
-            get { return ConfigurationManagerWrapper.StringSetting(Config.MailServer); }
-        }
-        public static string DefaultFromAddress
-        {
-            get { return ConfigurationManagerWrapper.StringSetting(Config.FromMailAddress, "no-reply-local@bnymellon.com"); }
-        }
+        public string Server => ConfigurationManagerWrapper.StringSetting(Config.MailServer);
+        public static string DefaultFromAddress => ConfigurationManagerWrapper.StringSetting(Config.FromMailAddress, "no-reply-local@bnymellon.com");
 
         private string fromAddress;
         public string FromAddress
         {
-            get { return (fromAddress ?? DefaultFromAddress); }
-            set { fromAddress = value; }
-        }
-
-        public static string HedgeMarkAddress
-        {
-            get
-            {
-                var hedgeMarkAddressFilepath = AppDomain.CurrentDomain.BaseDirectory + @"\\ExternalLibraries\\HedgeMarkAddress.txt";
-                return File.ReadAllText(hedgeMarkAddressFilepath);
-            }
+            get => fromAddress ?? DefaultFromAddress;
+            set => fromAddress = value;
         }
 
         private string toAddress;
         public string ToAddress
         {
-            get { return (toAddress ?? ConfigurationManagerWrapper.StringSetting(Config.ToMailAddress)).Replace(";", ","); }
-            set { toAddress = value; }
+            get => (toAddress ?? ConfigurationManagerWrapper.StringSetting(Config.ToMailAddress)).Replace(";", ",");
+            set => toAddress = value;
         }
 
         public string BccAddress { get; set; }
 
         public string CcAddress { get; set; }
 
-        public FileInfo Attachment { get; set; }
-
         public List<FileInfo> Attachments { get; set; }
 
         public string Subject { get; set; }
 
-        private string _body;
+        private string body;
 
         public string Body
         {
             get
             {
                 if (!ConfigurationManagerWrapper.BooleanSetting(Config.ShouldAppendMachineInfoInMails))
-                    return _body;
+                    return body;
 
                 var machineInfo = $"Machine Name: {Environment.MachineName}, System User Name: {Environment.UserName}";
                 var lineTerminator = IsHtml ? "<br /><br />" : Environment.NewLine;
-                var newBody = _body + lineTerminator + machineInfo;
+                var newBody = body + lineTerminator + machineInfo;
                 return newBody;
             }
-            set
-            {
-                _body = value;
-            }
+            set => body = value;
         }
 
         public bool IsHtml { get; set; }
 
-        public MailInfo(string subject, string body, string toAddress, List<FileInfo> attachments = null, bool isHtml = true, string ccAddress = null)
+        public MailInfo(string subject, string body, string toAddress, List<FileInfo> attachments = null, bool isHtml = true, string ccAddress = null, string fromAddress = null, string mailSignature = null)
         {
-            Subject = subject;
-            Body = (body ?? "<br/><br/><br/>Regards,<br/>HedgeMark Operations Team ") + HedgeMarkAddress;
-            Attachments = attachments;
-            this.toAddress = toAddress;
-            if (!string.IsNullOrWhiteSpace(ccAddress)) this.CcAddress = ccAddress;
-            this.IsHtml = isHtml;
+            SetMailInfo(subject, body, toAddress, attachments, isHtml, ccAddress, mailSignature);
         }
 
-        public MailInfo(string subject, string body, string toAddress, FileInfo attachment = null, bool isHtml = true, string ccAddress = null)
+        public MailInfo(string subject, string body, string toAddress, FileInfo attachment = null, bool isHtml = true, string ccAddress = null, string fromAddress = null, string mailSignature = null)
+        {
+            SetMailInfo(subject, body, toAddress, attachment != null ? new List<FileInfo>() { attachment } : null, isHtml, ccAddress, mailSignature);
+        }
+
+        private void SetMailInfo(string subject, string body, string toAddress, List<FileInfo> attachments, bool isHtml, string ccAddress, string mailSignature)
         {
             Subject = subject;
-            Body = (body ?? "<br/><br/><br/>Regards,<br/>HedgeMark Operations Team ") + HedgeMarkAddress;
-            Attachment = attachment;
+            Body = Uri.UnescapeDataString(string.IsNullOrWhiteSpace(mailSignature) ? body : $"{body}{mailSignature}");
+            Attachments = attachments ?? new List<FileInfo>();
             this.toAddress = toAddress;
-            if (!string.IsNullOrWhiteSpace(ccAddress)) this.CcAddress = ccAddress;
-            this.IsHtml = isHtml;
+            if (!string.IsNullOrWhiteSpace(ccAddress)) CcAddress = ccAddress;
+            if (!string.IsNullOrWhiteSpace(this.fromAddress)) FromAddress = fromAddress;
+            IsHtml = isHtml;
         }
     }
 }

@@ -2203,3 +2203,9 @@ div[class^="dtsp-subRow"] {
     -webkit-animation: 0.3s show;
     animation: 0.3s show;
 }
+
+.navSubChild {
+    font-size: 11px;
+    padding-left: 25px;
+    display: none;
+}

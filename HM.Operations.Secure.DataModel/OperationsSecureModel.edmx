@@ -247,6 +247,17 @@
           <Property Name="SystemKey" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="SystemValue" Type="varchar" MaxLength="3000" Nullable="false" />
         </EntityType>
+        <EntityType Name="hmsSystemSwitches">
+          <Key>
+            <PropertyRef Name="hmsSystemSwitchId" />
+          </Key>
+          <Property Name="hmsSystemSwitchId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Module" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Key" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Value" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="LastModifiedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="LastModifiedDt" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsUserAuditLog">
           <Key>
             <PropertyRef Name="hmsUserAuditLogId" />
@@ -1315,6 +1326,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySet Name="hmsSwiftGroupStatusLkp" EntityType="Self.hmsSwiftGroupStatusLkp" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSystemPreferences" EntityType="Self.hmsSystemPreferences" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsSystemSwitches" EntityType="Self.hmsSystemSwitches" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUserAuditLog" EntityType="Self.hmsUserAuditLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUsers" EntityType="Self.hmsUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireAutoCancellationJobs" EntityType="Self.hmsWireAutoCancellationJobs" Schema="dbo" store:Type="Tables" />
@@ -1824,6 +1836,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="hmsSchedule" EntitySet="hmsSchedules" />
             <End Role="hmsScheduleLog" EntitySet="hmsScheduleLogs" />
           </AssociationSet>
+          <EntitySet Name="hmsSystemSwitches" EntityType="OperationsSecureModel.hmsSystemSwitch" />
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -3198,6 +3211,17 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="hmsSystemSwitch">
+          <Key>
+            <PropertyRef Name="hmsSystemSwitchId" />
+          </Key>
+          <Property Name="hmsSystemSwitchId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Module" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Key" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="LastModifiedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LastModifiedDt" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3964,6 +3988,18 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
                 <ScalarProperty Name="ContextDate" ColumnName="ContextDate" />
                 <ScalarProperty Name="hmsScheduleId" ColumnName="hmsScheduleId" />
                 <ScalarProperty Name="hmsScheduleLogId" ColumnName="hmsScheduleLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsSystemSwitches">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsSystemSwitch">
+              <MappingFragment StoreEntitySet="hmsSystemSwitches">
+                <ScalarProperty Name="LastModifiedDt" ColumnName="LastModifiedDt" />
+                <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Module" ColumnName="Module" />
+                <ScalarProperty Name="hmsSystemSwitchId" ColumnName="hmsSystemSwitchId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

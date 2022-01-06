@@ -700,7 +700,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     .ToList();
 
                 shouldEnableCollateralPurpose = isNormalTransfer && context.onBoardingAccounts.Include(s => s.SwiftGroup)
-                    .Any(s => s.onBoardingAccountId == accountId && s.AuthorizedParty == "Hedgemark" && SystemSwitches.SwiftBicToEnableField21.Contains(s.SwiftGroup.SendersBIC));
+                    .Any(s => s.onBoardingAccountId == accountId && s.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(s.SwiftGroup.SendersBIC));
             }
 
             //remove proxies to avoid circular dependency issue

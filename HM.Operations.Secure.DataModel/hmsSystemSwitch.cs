@@ -12,9 +12,9 @@ namespace HM.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class dmaSystemSwitch
+    public partial class hmsSystemSwitch
     {
-        public long dmaSystemSwitchId { get; set; }
+        public long hmsSystemSwitchId { get; set; }
         public string Module { get; set; }
         public string Key { get; set; }
         public string Value { get; set; }

@@ -32,7 +32,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual DbSet<dmaTreasuryCashBalance> dmaTreasuryCashBalances { get; set; }
         public virtual DbSet<vw_ProxyCurrencyConversionData> vw_ProxyCurrencyConversionData { get; set; }
         public virtual DbSet<dmaCollateralData> dmaCollateralDatas { get; set; }
-        public virtual DbSet<dmaSystemSwitch> dmaSystemSwitches { get; set; }
         public virtual DbSet<vw_HFundOps> vw_HFundOps { get; set; }
         public virtual DbSet<dmaInterestReportEodData> dmaInterestReportEodDatas { get; set; }
     }

@@ -79,6 +79,17 @@ namespace HM.Operations.Secure.Middleware.Util
         {
             return Regex.Replace(input, HtmlRegexPatten, string.Empty);
         }
+
+        public static readonly string MailSignatureOps = $"<br/><br/><br/>Regards,<br/>HedgeMark Operations Team. {HedgeMarkOpsAddressOnly}";
+
+        public static string HedgeMarkOpsAddressOnly
+        {
+            get
+            {
+                var mailSignatureLine =  OpsSecureSwitches.GetSwitchValue(Switches.SwitchKey.HedgeMarkMailOpsSignatureLines).Replace("\n", "<br />");
+                return @"<br /><br /><div style = 'font-size:11px' >" + mailSignatureLine + "</div>";
+            }
+        }
     }
 
     public static class ReportName

@@ -51,7 +51,7 @@ namespace HM.Operations.Secure.Middleware.Jobs
 
             if (job.hmsDashboardTemplate.IsDeleted || !job.hmsSchedule.IsActive)
             {
-                var schedulerProcessId = SystemSwitches.SchedulerProcessId;
+                var schedulerProcessId = OpsSecureSwitches.SchedulerProcessId;
                 ScheduleManager.SetScheduleActiveOrInactive(job.hmsDashboardScheduleId, job.hmsScheduleId, false, true, schedulerProcessId);
                 return;
             }

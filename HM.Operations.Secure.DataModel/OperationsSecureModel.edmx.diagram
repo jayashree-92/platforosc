@@ -105,6 +105,7 @@
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireInterestAssociation_hmsWires_hmsWireId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsScheduleLog" Width="1.5" PointX="23.625" PointY="28.75" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsScheduleLogs_hmsScheduleId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsSystemSwitch" Width="1.5" PointX="6.375" PointY="3.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

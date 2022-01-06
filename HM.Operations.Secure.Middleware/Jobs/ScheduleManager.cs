@@ -148,7 +148,7 @@ namespace HM.Operations.Secure.Middleware.Jobs
             if (!string.IsNullOrWhiteSpace(job.ExternalToApproved))
                 allToEmails = $"{allToEmails},{job.ExternalToApproved}";
 
-            var newMail = new MailInfo(subject, mailBody, allToEmails, isNoFilesReceived ? null : exportFileInfo, ccAddress: job.CC);
+            var newMail = new MailInfo(subject, mailBody, allToEmails, isNoFilesReceived ? null : exportFileInfo, ccAddress: job.CC, mailSignature: Utility.MailSignatureOps);
             var mailSentResult = MailIdQualifier.SendMailToQualifiedIds(newMail);
 
             if (!isNoFilesReceived)
