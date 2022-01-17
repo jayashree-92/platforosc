@@ -44,8 +44,8 @@ namespace HM.Operations.Secure.DataModel
         public virtual DbSet<onBoardingAssignmentUserGroup> onBoardingAssignmentUserGroups { get; set; }
         public virtual DbSet<onBoardingAssignmentUserGroupMap> onBoardingAssignmentUserGroupMaps { get; set; }
         public virtual DbSet<onboardingSubAdvisorFundMap> onboardingSubAdvisorFundMaps { get; set; }
-        public virtual DbSet<vw_hmUserCoverageDetails> vw_hmUserCoverageDetails { get; set; }
         public virtual DbSet<onboardingFund> onboardingFunds { get; set; }
+        public virtual DbSet<vw_hmUserCoverageDetails> vw_hmUserCoverageDetails { get; set; }
     
         public virtual ObjectResult<USP_NEXEN_GetUserDetails_Result> USP_NEXEN_GetUserDetails(string userID, string userType)
         {

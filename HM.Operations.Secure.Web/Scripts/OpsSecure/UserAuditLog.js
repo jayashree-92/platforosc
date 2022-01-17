@@ -99,7 +99,7 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
 
                 "fnRowCallback": function (nRow, aData) {
                     if (aData.FileName != "") {
-                        $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/Audit/DownloadLogFile?fileName=" + aData.FileName + "&isFundAccountLog=" + aData.IsFundAccountLog + "&createdDate=" + moment(aData.CreatedAt).format('YYYY-MM-DD') + "'>" + aData.FileName + "</a>");
+                        $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/Audit/DownloadLogFile?fileName=" + aData.FileName + "&isFundAccountLog=" + aData.IsFundAccountLog + "&createdDate=" + moment(aData.CreatedAt).format("YYYY-MM-DD") + "'>" + aData.FileName + "</a>");
                     }
                 },
                 "oLanguage": {
@@ -290,8 +290,8 @@ HmOpsApp.controller("UserAuditsLogsCtrl", function ($scope, $http, $timeout, $fi
         switch (field) {
             case "Value Date": return value;
             case "Amount": return "<b>" + $.convertToCurrency(value, 2) + "</b>";
-            case "Wire Message Type": return "<b>" + $filter('filter')($scope.MessageTypes, { id: parseInt(value) }, true)[0].text + "</b>";
-            case "Delivery Charges": return "<b>" + $filter('filter')($scope.DeliveryCharges, { id: value }, true)[0].text + "</b>";
+            case "Wire Message Type": return "<b>" + $filter("filter")($scope.MessageTypes, { id: parseInt(value) }, true)[0].text + "</b>";
+            case "Delivery Charges": return "<b>" + $filter("filter")($scope.DeliveryCharges, { id: value }, true)[0].text + "</b>";
         }
         return value;
     }

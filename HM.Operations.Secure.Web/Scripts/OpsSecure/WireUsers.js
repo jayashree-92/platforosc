@@ -88,7 +88,7 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
                                 ;
                         }
 
-                        return groupRoleInfo + "" + group + ' (' + rows.count() + ' users)        ' + message;
+                        return groupRoleInfo + "" + group + " (" + rows.count() + " users)        " + message;
                     },
                     dataSrc: ["UserGroup"]
                 },
@@ -101,7 +101,7 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
                 "sScrollXInner": "100%",
                 "bScrollCollapse": true,
                 //order: [[3, "asc"]],
-                orderFixed: [[3, 'asc']],
+                orderFixed: [[3, "asc"]],
                 //"columnDefs": [{ "targets": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "orderable": false }],
                 iDisplayLength: -1,
                 "oLanguage": {
@@ -112,7 +112,7 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
             });
 
 
-            $scope.tblUserDetails.on('rowgroup-datasrc', function (e, dt, val) {
+            $scope.tblUserDetails.on("rowgroup-datasrc", function (e, dt, val) {
 
                 var orderIndex = 3;
                 $scope.IsGroupedByRole = false;
@@ -121,7 +121,7 @@ HmOpsApp.controller("wireUsersCtrl", function ($scope, $http, $opsSharedScopes, 
                     $scope.IsGroupedByRole = true;
                 }
 
-                $scope.tblUserDetails.order.fixed({ pre: [[orderIndex, 'asc']] }).draw();
+                $scope.tblUserDetails.order.fixed({ pre: [[orderIndex, "asc"]] }).draw();
             });
 
         });

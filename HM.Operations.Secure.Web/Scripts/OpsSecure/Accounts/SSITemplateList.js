@@ -46,7 +46,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         viewTotal: true,
                         dataLength: false,
                         //controls: false,
-                        layout: 'columns-5',
+                        layout: "columns-5",
                         columns: [2, 3, 4, 5, 28],
                         orderable: false,
                         //clear: false
@@ -78,7 +78,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                             },
 
                             searchPanes: {
-                                orthogonal: 'sp'
+                                orthogonal: "sp"
                             }
                         },
                         { "mData": "Broker", "sTitle": "Legal Entity" },
@@ -185,7 +185,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
             $("#btnAddNewSSITemplate").button("reset");
             var searchText = decodeURI(getUrlParameter("searchText"));
 
-            if (searchText != "" && searchText != undefined && searchText != 'undefined') {
+            if (searchText != "" && searchText != undefined && searchText != "undefined") {
                 $timeout(function () {
                     ssiTemplateTable.search(searchText).draw(false);
                 }, 50);
@@ -211,17 +211,17 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
     $scope.isServiceType = false;
     $scope.toggleTemplateType = function () {
         $timeout(function () {
-            $scope.isServiceType = $("#chkTemplateType").prop('checked');
+            $scope.isServiceType = $("#chkTemplateType").prop("checked");
         }, 50);
 
     }
     $scope.isAssociationVisible = false;
     $(".templateType").change(function () {
-        var entityId = $(this).select2('val');
-        var entityText = $(this).select2('data').text;
+        var entityId = $(this).select2("val");
+        var entityText = $(this).select2("data").text;
         $timeout(function () {
             if (entityId != undefined && entityId != "") {
-                var ssiTemplates = $filter('filter')(angular.copy($scope.ssiTemplateList),
+                var ssiTemplates = $filter("filter")(angular.copy($scope.ssiTemplateList),
                     function (ssi) {
                         return !$scope.isServiceType ? ssi.SSITemplate.TemplateEntityId == entityId : ssi.SSITemplate.ServiceProvider == entityText;
                     }, true);

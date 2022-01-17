@@ -397,19 +397,19 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $("#liUltimateBeneficiaryType").on("change", function (e) {
-        $("#liUltimateBeneficiaryBICorABA").select2("val", '').trigger("change");
+        $("#liUltimateBeneficiaryBICorABA").select2("val", "").trigger("change");
         $("#ultimateBankName").val("");
         $("#ultimateBankAddress").val("");
     });
 
     $("#liBeneficiaryType").on("change", function (e) {
-        $("#liBeneficiaryBICorABA").select2("val", '').trigger("change");
+        $("#liBeneficiaryBICorABA").select2("val", "").trigger("change");
         $("#beneficiaryBankName").val("");
         $("#beneficiaryBankAddress").val("");
     });
 
     $("#liIntermediaryType").on("change", function (e) {
-        $("#liIntermediaryBICorABA").select2("val", '').trigger("change");
+        $("#liIntermediaryBICorABA").select2("val", "").trigger("change");
         $("#intermediaryBankName").val("");
         $("#intermediaryBankAddress").val("");
     });
@@ -1009,10 +1009,10 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $(document).on("click", "#ssiTemplateTableMap tbody tr", function () {
-        if ($(this).hasClass('info'))
-            $(this).removeClass('info');
+        if ($(this).hasClass("info"))
+            $(this).removeClass("info");
         else
-            $(this).addClass('info');
+            $(this).addClass("info");
         $timeout(function () {
             $scope.isAssociationVisible = $("#ssiTemplateTableMap tr.info").length > 0;
         }, 50);
@@ -1535,14 +1535,14 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             event.stopImmediatePropagation();
             var selectedRow = $(this).parents("tr");
             $scope.rowElement = $scope.ssiCallbackTable.row(selectedRow).data();
-            $scope.tdEle = $(this).closest('td');
-            $scope.tdEle.popover('destroy');
+            $scope.tdEle = $(this).closest("td");
+            $scope.tdEle.popover("destroy");
             $timeout(function () {
-                angular.element($scope.tdEle).attr('title', 'Are you sure to confirm the call back?').popover('destroy').popover({
-                    trigger: 'click',
+                angular.element($scope.tdEle).attr("title", "Are you sure to confirm the call back?").popover("destroy").popover({
+                    trigger: "click",
                     title: "Are you sure to confirm the call back?",
-                    placement: 'top',
-                    container: 'body',
+                    placement: "top",
+                    container: "body",
                     content: function () {
                         return "<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
                             + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i>&nbsp;Yes</button>"
@@ -1550,7 +1550,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                             + "</div>";
                     },
                     html: true
-                }).popover('show');
+                }).popover("show");
                 $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
                     + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
                     + "<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
@@ -1660,7 +1660,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         }, 100);
     }
 
-    $(document).on('click', ".confirmCallback", function () {
+    $(document).on("click", ".confirmCallback", function () {
         angular.element($scope.tdEle).popover("destroy");
         $scope.IsCallBackChanged = true;
         $scope.rowElement.IsCallbackConfirmed = true;
@@ -1678,7 +1678,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         });
     });
 
-    $(document).on('click', ".dismissCallback", function () {
+    $(document).on("click", ".dismissCallback", function () {
         angular.element($scope.tdEle).popover("destroy");
     });
 

@@ -54,8 +54,8 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                 rowId: "hmsWireId",
                 buttons: [
                     {
-                        extend: 'csv',
-                        text: 'Export as .csv',
+                        extend: "csv",
+                        text: "Export as .csv",
                         className: "btn-sm",
                         customize: function (csv) {
                             return constructCSVstring(tblWireStatusDetails);
@@ -187,7 +187,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
             }, 1000);
 
 
-            tblWireStatusDetails.buttons().container().appendTo('#spnCustomButtons');
+            tblWireStatusDetails.buttons().container().appendTo("#spnCustomButtons");
 
 
             //$("#tblWireStatusDetails").off("dblclick", "tbody tr").on("dblclick", "tbody tr", function (event) {
@@ -216,7 +216,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     ReportMapId: 0,
                     IsAdhocPage: true
                 };
-                angular.element("#modalToRetrieveWires").modal({ backdrop: 'static', keyboard: true, show: true });
+                angular.element("#modalToRetrieveWires").modal({ backdrop: "static", keyboard: true, show: true });
             });
 
 
@@ -236,7 +236,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
             AgreementName: "",
             IsAdhocPage: true
         };
-        angular.element("#modalToRetrieveWires").modal({ backdrop: 'static', keyboard: true, show: true });
+        angular.element("#modalToRetrieveWires").modal({ backdrop: "static", keyboard: true, show: true });
     }
 
     //$("#modalToRetrieveWires").on("scroll", function () {

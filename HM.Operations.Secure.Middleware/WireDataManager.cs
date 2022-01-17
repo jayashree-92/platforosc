@@ -186,7 +186,8 @@ namespace HM.Operations.Secure.Middleware
             ThirdPartyTransfer = 1,
             FundTransfer,
             FeeOrExpensesPayment,
-            Notice
+            Notice,
+            BankLoanOrPrivateOrIPO
         }
 
         public class WireTicketStatus

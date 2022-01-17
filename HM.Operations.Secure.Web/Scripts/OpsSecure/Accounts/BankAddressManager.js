@@ -431,7 +431,7 @@ HmOpsApp.controller("BankAddressController", function ($scope, $http, $timeout, 
     angular.element("#txtAccountBankAddress").on("focusin", function () { angular.element("#txtAccountBankAddress").popover("hide"); });
        
 
-    $("#btnBICorABA").on('change', function () {
+    $("#btnBICorABA").on("change", function () {
         $timeout(function () {
             $scope.BICorABAText = $("#btnBICorABA").prop("checked") ? "ABA" : "BIC";
         }, 50);

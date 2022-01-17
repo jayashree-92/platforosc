@@ -140,7 +140,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
             $scope.wirePortalCutoff = angular.copy($scope.selectedRowData);
         }
 
-        angular.element("#wirePortalCutoffModal").modal({ backdrop: 'static', keyboard: true }).on("shown.bs.modal", function () {
+        angular.element("#wirePortalCutoffModal").modal({ backdrop: "static", keyboard: true }).on("shown.bs.modal", function () {
             $scope.IsWireCutOffLoading = true;
             $("#liCashInstruction").select2("val", $scope.wirePortalCutoff.WirePortalCutoff.CashInstruction);
             $("#liCurrency").select2("val", $scope.wirePortalCutoff.WirePortalCutoff.Currency);
@@ -215,11 +215,11 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
     }
 
     $scope.$watch("isWireCutoffRequirementsFilled", function (newValue, oldValue) {
-        $scope.isWireCutoffRequirementsFilled = $("#liCashInstruction").select2('val') != "" && $("#liCurrency").select2('val') != "" && $("#liTimeZone").select2('val') != "";
+        $scope.isWireCutoffRequirementsFilled = $("#liCashInstruction").select2("val") != "" && $("#liCurrency").select2("val") != "" && $("#liTimeZone").select2("val") != "";
     });
 
     $scope.fnSaveWirePortalCutoff = function () {
-        var existingCutOff = $filter('filter')($scope.wireportalCutOffData, function (cutOff) {
+        var existingCutOff = $filter("filter")($scope.wireportalCutOffData, function (cutOff) {
             return cutOff.CashInstruction == $scope.wirePortalCutoff.WirePortalCutoff.CashInstruction && cutOff.Currency == $scope.wirePortalCutoff.WirePortalCutoff.Currency;
         }, true)[0];
         if (existingCutOff != undefined && $scope.isAdd) {
@@ -239,7 +239,7 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
         }).then(function (response) {
             notifySuccess("Wire Portal Cutoff " + ($scope.isAdd ? "added" : "updated") + " successfully");
             $scope.fnGetWirePortalCutoffs();
-            angular.element("#wirePortalCutoffModal").modal('hide');
+            angular.element("#wirePortalCutoffModal").modal("hide");
         },
             function (error) {
                 notifyError("Changes failed to save with error :" + error.data);

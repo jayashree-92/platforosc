@@ -12,12 +12,12 @@ HmOpsApp.directive("onLastRepeat", function () {
 
 HmOpsApp.directive("multipleEmails", function () {
     return {
-        restrict: 'A',
-        require: 'ngModel',
+        restrict: "A",
+        require: "ngModel",
         link: function (scope, element, attrs, ctrl) {
             function validateMultipleEmails(value) {
                 var emailRgx = /^((\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)\s*[,]{0,1}\s*)+$/;
-                var validity = ctrl.$isEmpty(value) || value.split(',').every(
+                var validity = ctrl.$isEmpty(value) || value.split(",").every(
                     function (email) {
                         return emailRgx.test(email.trim());
                     });

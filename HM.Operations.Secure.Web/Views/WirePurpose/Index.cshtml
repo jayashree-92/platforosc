@@ -1,0 +1,99 @@
+﻿@using HM.Operations.Secure.Web.Utility
+@using Web.Util
+@model dynamic
+
+@{
+    ViewBag.Title = "Wire Purpose";
+}
+
+<legend>Wire Purpose Management</legend>
+<div ng-controller="WirePurposeMgmtCtrl">
+    <ul class="nav nav-tabs" data-tabs="tabs" id="ulAuditTab">
+        <li class="active"><a href="#adhocReportPurposes" data-toggle="tab" ng-click="fnGetWirePurpose(true)">Ad-hoc Reports</a></li>
+        <li><a href="#otherReportPurposes" data-toggle="tab" ng-click="fnGetWirePurposesForOtherReports()">Other Reports</a></li>
+    </ul>
+
+    <div class="tab-content" id="contentTabs">
+        <div class="tab-pane active" id="adhocReportPurposes">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @if (User.IsWireUser())
+                    {
+                        <button ng-disabled="!IsWirePurposeRowSelected" class="btn btn-sm btn-primary" ng-click="fnModifyWirePurpose(true)"><i class="glyphicon glyphicon-th-list"></i>&nbsp; Manage Purpose</button>
+                        <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#mdlAddNewPurpose"><i class="glyphicon glyphicon-plus"></i>&nbsp; Add new Purpose</button>
+                    }
+                </div>
+                <div class="panel-body">
+                    <table id="tblWirePurpose" class="table table-striped table-bordered table-condensed table-hover"></table>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane" id="otherReportPurposes">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table id="tblWirePurposeForOtherReports" class="table table-bordered table-striped table-condensed table-hover"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mdlManageControls" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Manage Wire Purpose Controls</h4>
+                </div>
+                <div class="modal-body">
+                    <table id="tblWireControls" class="table table-bordered table-striped table-condensed table-hover"></table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Dismiss</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="mdlAddNewPurpose" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add new Purpose</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="selReportName" class="control-label">Report Name:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select id="selReportName">
+                                <option value="Adhoc Report">Adhoc Report</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="txtPurpose" class="control-label">Purpose</label>
+                        </div>
+                        <div class="col-md-8 form-inline">
+                            <input type="text" ng-model="NewPurpose" class="form-control" style="width: 200px;" id="txtPurpose" />&nbsp;&nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddNewPurpose()">Add Purpose</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Javascript{
+    <script type="text/javascript" src=@("~/Scripts/OpsSecure/WirePurpose.js".GetModifiedStaticFileUrl())></script>
+}

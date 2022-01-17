@@ -162,7 +162,7 @@ namespace HM.Operations.Secure.Web.Controllers
             user.TotalYearsOfExperience = Math.Round(userDetails.TotalYearsofExperiencePriortoHedgemark + totalExperienceInHM, 1);
 
             //---->>>>
-            user.IsUserVp = true;
+            user.IsUserVp = userDetails.IsVPAndAbove;
 
             if (user.TotalYearsOfExperience < 1)
                 user.AllowedWireAmountLimit = 10000000;

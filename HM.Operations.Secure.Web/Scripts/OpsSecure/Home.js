@@ -71,8 +71,8 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
 
         $scope.ContextDate.Date = moment(dateTime).format("YYYY-MM-DD");
         $scope.ContextDate.Day = moment(dateTime).format("MMM Do");
-        $scope.ContextDate.DayOfWeek = moment(dateTime).format('dddd');
-        $scope.ContextDate.Year = moment(dateTime).format('YYYY');
+        $scope.ContextDate.DayOfWeek = moment(dateTime).format("dddd");
+        $scope.ContextDate.Year = moment(dateTime).format("YYYY");
 
         if ($scope.ShouldApplyDatepickerScope)
             $scope.$apply();
@@ -88,7 +88,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
     $scope.fnSetNextContextDate = function (addDays) {
 
         var currentContextDate = moment($scope.ContextDate.Date);
-        var nextContextDate = currentContextDate.add('days', addDays);
+        var nextContextDate = currentContextDate.add("days", addDays);
 
         //Previous Day
         if (addDays < 0) {
@@ -105,7 +105,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
         }
 
         $scope.IsNextDateNotAvailable = false;
-        if (nextContextDate.diff(moment(), 'days') == 7) {
+        if (nextContextDate.diff(moment(), "days") == 7) {
             $scope.IsNextDateNotAvailable = true;
             return;
         }

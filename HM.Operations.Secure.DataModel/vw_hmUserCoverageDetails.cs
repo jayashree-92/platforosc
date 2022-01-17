@@ -21,5 +21,6 @@ namespace HM.Operations.Secure.DataModel
         public string LastName { get; set; }
         public System.DateTime JoinedHedgemarkOn { get; set; }
         public double TotalYearsofExperiencePriortoHedgemark { get; set; }
+        public bool IsVPAndAbove { get; set; }
     }
 }

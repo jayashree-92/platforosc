@@ -395,6 +395,20 @@
           <Property Name="ApprovedBy" Type="int" />
           <Property Name="ApprovedAt" Type="datetime" />
         </EntityType>
+        <EntityType Name="hmsWirePurposeControls">
+          <Key>
+            <PropertyRef Name="hmsWirePurposeControlId" />
+          </Key>
+          <Property Name="hmsWirePurposeControlId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="hmsWirePurposeId" Type="int" Nullable="false" />
+          <Property Name="WireTransferTypeId" Type="int" Nullable="false" />
+          <Property Name="IsApproved" Type="bit" Nullable="false" />
+          <Property Name="IsApprovalRequested" Type="bit" Nullable="false" />
+          <Property Name="RecCreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="RecCreatedById" Type="int" Nullable="false" />
+          <Property Name="LastModifiedAt" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedById" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsWirePurposeLkup">
           <Key>
             <PropertyRef Name="hmsWirePurposeId" />
@@ -980,6 +994,30 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_hmsWirePurposeControls_hmsWirePurposeId">
+          <End Role="hmsWirePurposeLkup" Type="Self.hmsWirePurposeLkup" Multiplicity="1" />
+          <End Role="hmsWirePurposeControls" Type="Self.hmsWirePurposeControls" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWirePurposeLkup">
+              <PropertyRef Name="hmsWirePurposeId" />
+            </Principal>
+            <Dependent Role="hmsWirePurposeControls">
+              <PropertyRef Name="hmsWirePurposeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWirePurposeControls_WireTransferTypeId">
+          <End Role="hmsWireTransferTypeLKup" Type="Self.hmsWireTransferTypeLKup" Multiplicity="1" />
+          <End Role="hmsWirePurposeControls" Type="Self.hmsWirePurposeControls" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireTransferTypeLKup">
+              <PropertyRef Name="WireTransferTypeId" />
+            </Principal>
+            <Dependent Role="hmsWirePurposeControls">
+              <PropertyRef Name="WireTransferTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
           <End Role="hmsSwiftStatusLkup" Type="Self.hmsSwiftStatusLkup" Multiplicity="1" />
           <End Role="hmsWires" Type="Self.hmsWires" Multiplicity="*" />
@@ -1340,6 +1378,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySet Name="hmsWireLogTypeLkup" EntityType="Self.hmsWireLogTypeLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireMessageType" EntityType="Self.hmsWireMessageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWirePortalCutoff" EntityType="Self.hmsWirePortalCutoff" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsWirePurposeControls" EntityType="Self.hmsWirePurposeControls" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWirePurposeLkup" EntityType="Self.hmsWirePurposeLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWires" EntityType="Self.hmsWires" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsWireSenderInformation" EntityType="Self.hmsWireSenderInformation" Schema="dbo" store:Type="Tables" />
@@ -1480,6 +1519,14 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <AssociationSet Name="FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId" Association="Self.FK_hmsWireLogs_hmsWireWorkflowLog_hmsWireWorkflowLogId">
             <End Role="hmsWireWorkflowLog" EntitySet="hmsWireWorkflowLog" />
             <End Role="hmsWireLogs" EntitySet="hmsWireLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWirePurposeControls_hmsWirePurposeId" Association="Self.FK_hmsWirePurposeControls_hmsWirePurposeId">
+            <End Role="hmsWirePurposeLkup" EntitySet="hmsWirePurposeLkup" />
+            <End Role="hmsWirePurposeControls" EntitySet="hmsWirePurposeControls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWirePurposeControls_WireTransferTypeId" Association="Self.FK_hmsWirePurposeControls_WireTransferTypeId">
+            <End Role="hmsWireTransferTypeLKup" EntitySet="hmsWireTransferTypeLKup" />
+            <End Role="hmsWirePurposeControls" EntitySet="hmsWirePurposeControls" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsWires_hmsSwiftStatusLkup_WireStatusId" Association="Self.FK_hmsWires_hmsSwiftStatusLkup_WireStatusId">
             <End Role="hmsSwiftStatusLkup" EntitySet="hmsSwiftStatusLkup" />
@@ -1837,6 +1884,15 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="hmsScheduleLog" EntitySet="hmsScheduleLogs" />
           </AssociationSet>
           <EntitySet Name="hmsSystemSwitches" EntityType="OperationsSecureModel.hmsSystemSwitch" />
+          <EntitySet Name="hmsWirePurposeControls" EntityType="OperationsSecureModel.hmsWirePurposeControl" />
+          <AssociationSet Name="FK_hmsWirePurposeControls_hmsWirePurposeId" Association="OperationsSecureModel.FK_hmsWirePurposeControls_hmsWirePurposeId">
+            <End Role="hmsWirePurposeLkup" EntitySet="hmsWirePurposeLkups" />
+            <End Role="hmsWirePurposeControl" EntitySet="hmsWirePurposeControls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWirePurposeControls_WireTransferTypeId" Association="OperationsSecureModel.FK_hmsWirePurposeControls_WireTransferTypeId">
+            <End Role="hmsWireTransferTypeLKup" EntitySet="hmsWireTransferTypeLKups" />
+            <End Role="hmsWirePurposeControl" EntitySet="hmsWirePurposeControls" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -1903,6 +1959,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="ModifiedAt" Type="DateTime" Precision="3" />
           <Property Name="IsApproved" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsWirePurposeLkup_WirePurposeID" FromRole="hmsWirePurposeLkup" ToRole="hmsWire" />
+          <NavigationProperty Name="hmsWirePurposeControls" Relationship="OperationsSecureModel.FK_hmsWirePurposeControls_hmsWirePurposeId" FromRole="hmsWirePurposeLkup" ToRole="hmsWirePurposeControl" />
         </EntityType>
         <EntityType Name="hmsWireTransferTypeLKup">
           <Key>
@@ -1911,6 +1968,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="WireTransferTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TransferType" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" FromRole="hmsWireTransferTypeLKup" ToRole="hmsWire" />
+          <NavigationProperty Name="hmsWirePurposeControls" Relationship="OperationsSecureModel.FK_hmsWirePurposeControls_WireTransferTypeId" FromRole="hmsWireTransferTypeLKup" ToRole="hmsWirePurposeControl" />
         </EntityType>
         <EntityType Name="hmsMQLog">
           <Key>
@@ -3222,6 +3280,46 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="LastModifiedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="LastModifiedDt" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="hmsWirePurposeControl">
+          <Key>
+            <PropertyRef Name="hmsWirePurposeControlId" />
+          </Key>
+          <Property Name="hmsWirePurposeControlId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsWirePurposeId" Type="Int32" Nullable="false" />
+          <Property Name="WireTransferTypeId" Type="Int32" Nullable="false" />
+          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+          <Property Name="IsApprovalRequested" Type="Boolean" Nullable="false" />
+          <Property Name="RecCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RecCreatedById" Type="Int32" Nullable="false" />
+          <Property Name="LastModifiedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedById" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="hmsWirePurposeLkup" Relationship="OperationsSecureModel.FK_hmsWirePurposeControls_hmsWirePurposeId" FromRole="hmsWirePurposeControl" ToRole="hmsWirePurposeLkup" />
+          <NavigationProperty Name="hmsWireTransferTypeLKup" Relationship="OperationsSecureModel.FK_hmsWirePurposeControls_WireTransferTypeId" FromRole="hmsWirePurposeControl" ToRole="hmsWireTransferTypeLKup" />
+        </EntityType>
+        <Association Name="FK_hmsWirePurposeControls_hmsWirePurposeId">
+          <End Type="OperationsSecureModel.hmsWirePurposeLkup" Role="hmsWirePurposeLkup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWirePurposeControl" Role="hmsWirePurposeControl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWirePurposeLkup">
+              <PropertyRef Name="hmsWirePurposeId" />
+            </Principal>
+            <Dependent Role="hmsWirePurposeControl">
+              <PropertyRef Name="hmsWirePurposeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWirePurposeControls_WireTransferTypeId">
+          <End Type="OperationsSecureModel.hmsWireTransferTypeLKup" Role="hmsWireTransferTypeLKup" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsWirePurposeControl" Role="hmsWirePurposeControl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsWireTransferTypeLKup">
+              <PropertyRef Name="WireTransferTypeId" />
+            </Principal>
+            <Dependent Role="hmsWirePurposeControl">
+              <PropertyRef Name="WireTransferTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4000,6 +4098,21 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
                 <ScalarProperty Name="Key" ColumnName="Key" />
                 <ScalarProperty Name="Module" ColumnName="Module" />
                 <ScalarProperty Name="hmsSystemSwitchId" ColumnName="hmsSystemSwitchId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsWirePurposeControls">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsWirePurposeControl">
+              <MappingFragment StoreEntitySet="hmsWirePurposeControls">
+                <ScalarProperty Name="LastModifiedById" ColumnName="LastModifiedById" />
+                <ScalarProperty Name="LastModifiedAt" ColumnName="LastModifiedAt" />
+                <ScalarProperty Name="RecCreatedById" ColumnName="RecCreatedById" />
+                <ScalarProperty Name="RecCreatedAt" ColumnName="RecCreatedAt" />
+                <ScalarProperty Name="IsApprovalRequested" ColumnName="IsApprovalRequested" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="WireTransferTypeId" ColumnName="WireTransferTypeId" />
+                <ScalarProperty Name="hmsWirePurposeId" ColumnName="hmsWirePurposeId" />
+                <ScalarProperty Name="hmsWirePurposeControlId" ColumnName="hmsWirePurposeControlId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

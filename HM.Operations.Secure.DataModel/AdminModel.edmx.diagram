@@ -26,12 +26,12 @@
         <EntityTypeShape EntityType="AdminModel.onBoardingAssignmentUserGroupMap" Width="1.5" PointX="3" PointY="14.875" />
         <AssociationConnector Association="AdminModel.FK__onBoardin__onBoa__461F9D31" />
         <EntityTypeShape EntityType="AdminModel.onboardingSubAdvisorFundMap" Width="1.5" PointX="5.375" PointY="14.75" />
-        <EntityTypeShape EntityType="AdminModel.vw_hmUserCoverageDetails" Width="1.5" PointX="12.375" PointY="14.75" />
         <EntityTypeShape EntityType="AdminModel.onboardingFund" Width="1.5" PointX="0.75" PointY="0.75" />
         <AssociationConnector Association="AdminModel.FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId" />
         <AssociationConnector Association="AdminModel.FK_onboardingContactFundMap_dmaFundOnBoardId" />
         <AssociationConnector Association="AdminModel.FK_onboardingSubAdvisorFundMap_dmaFundOnBoardId" />
         <AssociationConnector Association="AdminModel.FK_onboardingSubAdvisorFundMap_UmbrellaFundId" />
+        <EntityTypeShape EntityType="AdminModel.vw_hmUserCoverageDetails" Width="1.5" PointX="12.375" PointY="14.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

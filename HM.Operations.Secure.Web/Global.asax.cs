@@ -97,7 +97,7 @@ namespace HM.Operations.Secure.Web
                 smUserId = ConfigurationManager.AppSettings["LocalSiteMinderCommitId"];
                 // var totalExperience = AccountController.GetTotalYearsOfExperience(smUserId);
                 //roles.Add(totalExperience > 1 ? OpsSecureUserRoles.WireApprover : OpsSecureUserRoles.WireInitiator);
-                roles.Add(OpsSecureUserRoles.WireAdmin);
+                roles.Add(OpsSecureUserRoles.WireApprover);
             }
             var userSso = AccountController.GetUserDetailByCommitId(smUserId);
 

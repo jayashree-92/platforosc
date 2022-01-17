@@ -238,6 +238,9 @@
     <Compile Include="hmsWirePortalCutoff.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsWirePurposeControl.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsWirePurposeLkup.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

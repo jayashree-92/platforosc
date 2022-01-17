@@ -18,6 +18,7 @@ namespace HM.Operations.Secure.DataModel
         public hmsWireTransferTypeLKup()
         {
             this.hmsWires = new HashSet<hmsWire>();
+            this.hmsWirePurposeControls = new HashSet<hmsWirePurposeControl>();
         }
     
         public int WireTransferTypeId { get; set; }
@@ -25,5 +26,7 @@ namespace HM.Operations.Secure.DataModel
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWire> hmsWires { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsWirePurposeControl> hmsWirePurposeControls { get; set; }
     }
 }

@@ -146,7 +146,7 @@ HmOpsApp.controller("wiresDashboardCtrl", function ($scope, $http, $opsSharedSco
             //IsAdhocPage: true
         };
 
-        $("#modalToRetrieveWires").modal({ backdrop: 'static', keyboard: true, show: true });
+        $("#modalToRetrieveWires").modal({ backdrop: "static", keyboard: true, show: true });
     });
 
     $("#modalToRetrieveWires").on("show.bs.modal", function () {

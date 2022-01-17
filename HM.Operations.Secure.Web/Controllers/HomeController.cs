@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
 using Hangfire;
+using HedgeMark.Operations.FileParseEngine.Models;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
 using HM.Operations.Secure.Middleware.Models;
@@ -23,11 +25,6 @@ namespace HM.Operations.Secure.Web.Controllers
         public ActionResult Index()
         {
             return View(DateTime.Today);
-        }
-
-        public ActionResult WirePurpose()
-        {
-            return View();
         }
 
         private class WireStatusCount
@@ -448,10 +445,9 @@ namespace HM.Operations.Secure.Web.Controllers
                 var file = Request.Files[i];
 
                 if (file == null)
-                    throw new Exception("unable to retrive file information");
+                    throw new Exception("unable to retrieve file information");
 
-                var fileName =
-                    $"{FileSystemManager.OpsSecureWiresFilesPath}\\{(wireId > 0 ? wireId.ToString() : tempFilePath)}\\{file.FileName}";
+                var fileName = $"{FileSystemManager.OpsSecureWiresFilesPath}\\{(wireId > 0 ? wireId.ToString() : tempFilePath)}\\{file.FileName}";
                 var fileInfo = new FileInfo(fileName);
 
                 if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
@@ -494,8 +490,7 @@ namespace HM.Operations.Secure.Web.Controllers
         public FileResult DownloadWireFile(string fileName, long wireId)
         {
             var tempFilePath = $"Temp\\{UserName}";
-            var file = new FileInfo(
-                $"{FileSystemManager.OpsSecureWiresFilesPath}{(wireId > 0 ? wireId.ToString() : tempFilePath)}\\{fileName}");
+            var file = new FileInfo($"{FileSystemManager.OpsSecureWiresFilesPath}{(wireId > 0 ? wireId.ToString() : tempFilePath)}\\{fileName}");
             return DownloadFile(file, fileName);
         }
 
@@ -514,16 +509,13 @@ namespace HM.Operations.Secure.Web.Controllers
             switch (invoice.FileSource)
             {
                 case "Manual":
-                    return new FileInfo(
-                        $"{FileSystemManager.InvoicesFileAttachement}/{invoice.dmaInvoiceReportId}/{invoice.FileName}");
+                    return new FileInfo($"{FileSystemManager.InvoicesFileAttachement}/{invoice.dmaInvoiceReportId}/{invoice.FileName}");
                 case "Overriden":
-                    return new FileInfo(
-                        $"{FileSystemManager.RawFilesOverridesPath}/{invoice.OriginalContextMonth:yyyy-MM-dd}/{invoice.FileName}");
+                    return new FileInfo($"{FileSystemManager.RawFilesOverridesPath}/{invoice.OriginalContextMonth:yyyy-MM-dd}/{invoice.FileName}");
                 default:
                     return invoice.FileSource == "Config"
                 ? new FileInfo($"{FileSystemManager.InternalConfigFiles}{invoice.FileName}")
-                : new FileInfo(
-                    $"{((invoice.FileSource == "Overriden") && (!invoice.FileName.StartsWith("Overrides\\") || !invoice.FileName.StartsWith("Overrides/")) ? FileSystemManager.RawFilesOverridesPath : FileSystemManager.SftpRawFilesOfHM)}{invoice.FilePath}");  // FileOriginManager.GetRawFileDirectoryIncludingSubSir(fileOrigin, contextDate)
+                : new FileInfo($"{((invoice.FileSource == "Overriden") && (!invoice.FileName.StartsWith("Overrides\\") || !invoice.FileName.StartsWith("Overrides/")) ? FileSystemManager.RawFilesOverridesPath : FileSystemManager.SftpRawFilesOfHM)}{invoice.FilePath}");  // FileOriginManager.GetRawFileDirectoryIncludingSubSir(fileOrigin, contextDate)
             }
         }
 
@@ -534,82 +526,19 @@ namespace HM.Operations.Secure.Web.Controllers
             return Json(new { timeToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.hmsWirePortalCutoffId == 0 || onboardAccount.WirePortalCutoff.IsApproved });
         }
 
-        public JsonResult GetWirePurposes()
-        {
-            List<hmsWirePurposeLkup> wirePurposes;
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                wirePurposes = context.hmsWirePurposeLkups.ToList();
-            }
-
-            var userIds = wirePurposes.Select(s => s.CreatedBy).Union(wirePurposes.Where(s => s.ModifiedBy != null).Select(s => (int)s.ModifiedBy)).ToList();
-            Dictionary<int, string> users;
-            using (var context = new AdminContext())
-            {
-                users = context.hLoginRegistrations.Where(s => UserDetails.Id == s.intLoginID || userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
-            }
-
-            var allPurposes = wirePurposes.Select(wirePurpose =>
-                new
-                {
-                    hmsWirePurposeId = wirePurpose.hmsWirePurposeId,
-                    ReportName = wirePurpose.ReportName,
-                    Purpose = wirePurpose.Purpose,
-                    CreatedBy = wirePurpose.CreatedBy > 0 ? users.ContainsKey(wirePurpose.CreatedBy) ? users[wirePurpose.CreatedBy] : "Unknown User" : "System",
-                    CreatedAt = wirePurpose.CreatedAt,
-                    ModifiedBy = wirePurpose.ModifiedBy == null ? "-" : wirePurpose.ModifiedBy > 0 ? users.ContainsKey((int)wirePurpose.ModifiedBy) ? users[(int)wirePurpose.ModifiedBy] : "Unknown User" : "System",
-                    ModifiedAt = wirePurpose.ModifiedAt,
-                    IsApproved = wirePurpose.IsApproved,
-                    IsRejected = !wirePurpose.IsApproved && wirePurpose.ModifiedBy != null,
-                    IsAuthorizedToApprove = wirePurpose.CreatedBy != UserDetails.Id
-                });
-
-            return Json(allPurposes);
-
-        }
-
-        public void AddWirePurpose(string reportName, string purpose)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                var wirePurpose = new hmsWirePurposeLkup()
-                {
-                    ReportName = reportName,
-                    Purpose = purpose,
-                    CreatedBy = UserDetails.Id,
-                    CreatedAt = DateTime.Now
-                };
-
-                context.hmsWirePurposeLkups.Add(wirePurpose);
-                context.SaveChanges();
-            }
-        }
-
-        public void ApproveOrRejectWirePurpose(int wirePurposeId, bool isApproved)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                var wirePurpose = context.hmsWirePurposeLkups.First(s => s.hmsWirePurposeId == wirePurposeId);
-                wirePurpose.ModifiedAt = DateTime.Now;
-                wirePurpose.ModifiedBy = UserDetails.Id;
-                wirePurpose.IsApproved = isApproved;
-                context.SaveChanges();
-            }
-        }
 
         #region Adhoc Wires
 
-        public JsonResult GetAdhocWireAssociations()
+        public JsonResult GetAllCurrencies()
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                var adhocWirePurposes = context.hmsWirePurposeLkups.Where(s => s.ReportName == ReportName.AdhocWireReport && s.IsApproved).ToList();
-                var wirePurposes = adhocWirePurposes.Select(s => new { id = s.hmsWirePurposeId, text = s.Purpose }).ToList();
+                //var adhocWirePurposes = context.hmsWirePurposeLkups.Where(s => s.ReportName == ReportName.AdhocWireReport && s.IsApproved).ToList();
+                //var wirePurposes = adhocWirePurposes.Select(s => new { id = s.hmsWirePurposeId, text = s.Purpose }).ToList();
                 var currencies = context.hmsCurrencies.AsNoTracking().Select(s => new { id = s.Currency, text = s.Currency }).ToList();
-                return Json(new { wirePurposes, currencies });
+                return Json(new { currencies });
             }
         }
         private class AgreementBaseDetails
@@ -781,7 +710,7 @@ namespace HM.Operations.Secure.Web.Controllers
             }
 
             if (usdWireAmount > UserDetails.User.AllowedWireAmountLimit)
-                return Json($"Wire Amount cannot exceed your allowed transaction limit of {UserDetails.User.AllowedWireAmountLimit.ToCurrency()} USD.");
+                return Json($"Wire Amount is not within your allowed initiation or approval limits of {UserDetails.User.AllowedWireAmountLimit.ToCurrency()} USD.");
 
             return Json("true");
         }

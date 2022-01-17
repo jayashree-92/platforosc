@@ -571,9 +571,9 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
                                             customString += filteredExternals[1] + ";";
                                     }
 
-                                    var filteredExternalStr = "<b><i>" + filteredExternals.join('</i></b>,<br/><b><i>') + "</i></b>";
+                                    var filteredExternalStr = "<b><i>" + filteredExternals.join("</i></b>,<br/><b><i>") + "</i></b>";
 
-                                    var moreStr = (totalEmails > 2 ? " and <span class=\"spnScheculeEmailPopOver\"  style=\"text-decoration:underline;\" data-container=\"body\" data-toggle=\"popover\" data-html=\"true\" data-trigger=\"hover\" data-placement=\"left\" data-content=\"" + filteredInternal.join(',<br/>') + ",<br/>" + filteredExternalStr + "\"><b>" + (totalEmails - 2) + " more</b></span>" : "");
+                                    var moreStr = (totalEmails > 2 ? " and <span class=\"spnScheculeEmailPopOver\"  style=\"text-decoration:underline;\" data-container=\"body\" data-toggle=\"popover\" data-html=\"true\" data-trigger=\"hover\" data-placement=\"left\" data-content=\"" + filteredInternal.join(",<br/>") + ",<br/>" + filteredExternalStr + "\"><b>" + (totalEmails - 2) + " more</b></span>" : "");
 
                                     var finalString = $(this).AutoCompleteEmail("formatEmails", [customString, row.Schedule.ExternalToApproved]) + moreStr;
 

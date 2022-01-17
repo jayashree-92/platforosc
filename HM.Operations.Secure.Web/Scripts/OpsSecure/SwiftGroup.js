@@ -133,7 +133,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
     $scope.fnGetSwiftGroupData();
     $scope.enableSwiftGroupActions = false;
     function formatSelection(selectData) {
-        var stat = $filter('filter')(angular.copy($scope.wireMessageTypes), { 'id': selectData.id }, true)[0];
+        var stat = $filter("filter")(angular.copy($scope.wireMessageTypes), { 'id': selectData.id }, true)[0];
         return stat.text + "<label class='pull-right label " + (selectData.isOutBound ? "label-info" : "label-default") + " shadowBox'>" + (selectData.isOutBound ? "OutBound" : "InBound") + "</label>";
     }
 
@@ -162,7 +162,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
         else {
             $scope.swiftGroup = angular.copy($scope.selectedRowData);
         }
-        angular.element("#swiftGroupModal").modal({ backdrop: 'static', keyboard: true }).on("shown.bs.modal", function () {
+        angular.element("#swiftGroupModal").modal({ backdrop: "static", keyboard: true }).on("shown.bs.modal", function () {
 
             $("#liBrokerEntity").select2("val", $scope.swiftGroup.SwiftGroup.BrokerLegalEntityId);
             $("#liSwiftGroupStatus").select2("val", $scope.swiftGroup.SwiftGroup.SwiftGroupStatusId);
@@ -263,7 +263,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
     //});
 
     $scope.fnSaveSwiftGroup = function () {
-        var existingSwiftGroup = $filter('filter')($scope.swiftGroupData, function (swift) {
+        var existingSwiftGroup = $filter("filter")($scope.swiftGroupData, function (swift) {
             return swift.SwiftGroup.hmsSwiftGroupId != $scope.swiftGroup.SwiftGroup.hmsSwiftGroupId && (swift.SwiftGroup.SwiftGroup == $scope.swiftGroup.SwiftGroup.SwiftGroup || swift.SwiftGroup.SendersBIC == $scope.swiftGroup.SwiftGroup.SendersBIC);
         }, true)[0];
         if (existingSwiftGroup != undefined) {
@@ -282,7 +282,7 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
         }).then(function (response) {
             notifySuccess("Swift Group Details " + ($scope.isAdd ? "added" : "updated") + " successfully");
             $scope.fnGetSwiftGroupData();
-            angular.element("#swiftGroupModal").modal('hide');
+            angular.element("#swiftGroupModal").modal("hide");
         }, function (error) {
             notifyError("Changes failed to save with error :" + error.data);
         });
