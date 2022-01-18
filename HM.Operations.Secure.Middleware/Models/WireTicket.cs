@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Com.HedgeMark.Commons;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler.Model;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
@@ -112,7 +113,7 @@ namespace HM.Operations.Secure.Middleware.Models
 
         public string ReceivingAccountCurrency => IsNotice ? SendingAccount.Currency : IsFundTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
 
-        public bool ShouldIncludeWirePurpose => (SendingAccount.SwiftGroup ?? new hmsSwiftGroup()).SwiftGroup == "Credit Suisse";
+        public bool ShouldIncludeWirePurpose => OpsSecureSwitches.SwiftGroupToIncludeWirePurposeInWireMessage.Contains((SendingAccount.SwiftGroup ?? new hmsSwiftGroup()).SwiftGroup);
 
         private hmsWire _hmWire;
         public hmsWire HMWire
@@ -224,7 +225,7 @@ namespace HM.Operations.Secure.Middleware.Models
                         WireId = wire.hmsWireId;
                 }
             }
-            
+
             ReferenceTag = referenceTag;
 
             return this;

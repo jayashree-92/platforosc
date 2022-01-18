@@ -817,7 +817,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     throw new Exception("unable to retrieve file information");
 
                 var fileInfo = new FileInfo(
-                    $"{FileSystemManager.OpsSecureBulkFileUploads}\\{"FundAccount"}\\{DateTime.Now:yyyy-MM-dd}\\{file.FileName}");
+                    $"{FileSystemManager.OpsSecureBulkFileUploads}\\FundAccount\\{DateTime.Now:yyyy-MM-dd}\\{file.FileName}");
 
                 if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
                     Directory.CreateDirectory(fileInfo.Directory.FullName);
@@ -829,7 +829,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 {
                     newFileName = $"{splitFileNames[0]}_{ind++}.{splitFileNames[1]}";
                     fileInfo = new FileInfo(
-                        $"{FileSystemManager.OpsSecureBulkFileUploads}\\{"FundAccount"}\\{DateTime.Now:yyyy-MM-dd}\\{newFileName}");
+                        $"{FileSystemManager.OpsSecureBulkFileUploads}\\FundAccount\\{DateTime.Now:yyyy-MM-dd}\\{newFileName}");
                 }
 
                 file.SaveAs(fileInfo.FullName);

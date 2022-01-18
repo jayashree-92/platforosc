@@ -115,6 +115,7 @@ namespace Com.HedgeMark.Commons
             SchedulerProcessId,
             /*HM-Ops-Secure settings*/
             SwiftBicToEnableField21,
+            SwiftGroupToIncludeWirePurposeInWireMessage,
         }
 
         public static void InitializeAllSwitches()
@@ -134,7 +135,8 @@ Disclaimer: This message is Confidential until classified otherwise.
                 /*HM-Ops-Secure settings*/
                 CreateSwitch(SwitchKey.AgreementTypesEligibleForSendingWires, SwitchType.StringList, Modules.OpsSecure, "Custody,DDA,PB,Synthetic Prime Brokerage"),
                 CreateSwitch(SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit, SwitchType.StringList, Modules.OpsSecure, "PB,FXPB,FCM,CDA,Synthetic Prime Brokerage"),
-                CreateSwitch(SwitchKey.SwiftBicToEnableField21, SwitchType.StringList, Modules.OpsSecure, "SBOSUS30,SBOSUS3U,CNORLULX,SBOSUS3UIMS")
+                CreateSwitch(SwitchKey.SwiftBicToEnableField21, SwitchType.StringList, Modules.OpsSecure, "SBOSUS30,SBOSUS3U,CNORLULX,SBOSUS3UIMS"),
+                CreateSwitch(SwitchKey.SwiftGroupToIncludeWirePurposeInWireMessage, SwitchType.StringList, Modules.OpsSecure, "Credit Suisse")
             };
 
             

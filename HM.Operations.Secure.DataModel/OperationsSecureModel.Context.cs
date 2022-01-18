@@ -56,7 +56,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual DbSet<hmsSwiftGroupStatusLkp> hmsSwiftGroupStatusLkps { get; set; }
         public virtual DbSet<onBoardingSSITemplate> onBoardingSSITemplates { get; set; }
         public virtual DbSet<hmsAccountCallback> hmsAccountCallbacks { get; set; }
-        public virtual DbSet<hmsSwiftGroup> hmsSwiftGroups { get; set; }
         public virtual DbSet<hmsCurrency> hmsCurrencies { get; set; }
         public virtual DbSet<vw_FundAccounts> vw_FundAccounts { get; set; }
         public virtual DbSet<hmsSSICallback> hmsSSICallbacks { get; set; }
@@ -80,5 +79,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual DbSet<hmsScheduleLog> hmsScheduleLogs { get; set; }
         public virtual DbSet<hmsSystemSwitch> hmsSystemSwitches { get; set; }
         public virtual DbSet<hmsWirePurposeControl> hmsWirePurposeControls { get; set; }
+        public virtual DbSet<hmsSwiftGroup> hmsSwiftGroups { get; set; }
     }
 }

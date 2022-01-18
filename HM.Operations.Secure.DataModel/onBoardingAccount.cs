@@ -84,7 +84,6 @@ namespace HM.Operations.Secure.DataModel
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsAccountCallback> hmsAccountCallbacks { get; set; }
-        public virtual hmsSwiftGroup SwiftGroup { get; set; }
         public virtual onBoardingAccountBICorABA Beneficiary { get; set; }
         public virtual onBoardingAccountBICorABA Intermediary { get; set; }
         public virtual onBoardingAccountBICorABA UltimateBeneficiary { get; set; }
@@ -99,5 +98,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual ICollection<hmsWire> hmsWires { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWire> hmsWires1 { get; set; }
+        public virtual hmsSwiftGroup SwiftGroup { get; set; }
     }
 }

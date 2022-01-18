@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="21922e52691542eda2a5b6d3ddb68a43" Name="Diagram1" ZoomLevel="13">
+      <Diagram DiagramId="21922e52691542eda2a5b6d3ddb68a43" Name="Diagram1" ZoomLevel="82">
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireDocument" Width="1.5" PointX="11.875" PointY="6.375" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireMessageType" Width="1.5" PointX="8.25" PointY="7.5" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireStatusLkup" Width="1.5" PointX="5.625" PointY="1" />
@@ -44,15 +44,12 @@
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsAccountCallback" Width="1.5" PointX="24.125" PointY="14.75" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsSwiftGroup" Width="1.5" PointX="12.625" PointY="18.75" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsCurrency" Width="1.5" PointX="13.375" PointY="9.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.vw_FundAccounts" Width="1.5" PointX="0.75" PointY="17.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsSSICallback" Width="1.5" PointX="6.625" PointY="22.5" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" />
         <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAccount" Width="1.5" PointX="18.875" PointY="9.25" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsAccountCallback_onBoardingAccountId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_BeneficiaryBICorABAId" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_IntermediaryBICorABAId" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_UltimateBeneficiaryBICorABAId" />
@@ -109,6 +106,9 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWirePurposeControl" Width="1.5" PointX="15" PointY="2.125" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWirePurposeControls_hmsWirePurposeId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWirePurposeControls_WireTransferTypeId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsSwiftGroup" Width="1.5" PointX="12.625" PointY="18.375" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
