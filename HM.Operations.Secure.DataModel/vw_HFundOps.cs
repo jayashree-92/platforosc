@@ -33,5 +33,7 @@ namespace HM.Operations.Secure.DataModel
         public Nullable<long> AdminId { get; set; }
         public string AdminName { get; set; }
         public string RegisterAddress { get; set; }
+        public string LaunchStatus { get; set; }
+        public bool IsFundAllowedForBankLoanAndIPOs { get; set; }
     }
 }

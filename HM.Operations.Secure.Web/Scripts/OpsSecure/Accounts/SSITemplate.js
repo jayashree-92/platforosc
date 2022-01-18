@@ -12,7 +12,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.IsBNYMBroker = false;
     $scope.IsPendingApproval = false;
     $scope.IsApproved = false;
-    $scope.SSITemplateTypeData = [{ id: "Broker", text: "Broker" }, { id: "Fee/Expense Payment", text: "Fee/Expense Payment" }];
+    $scope.SSITemplateTypeData = [{ id: "Broker", text: "Broker" }, { id: "Fee/Expense Payment", text: "Fee/Expense Payment" }, { id: "Bank Loan/Private/IPO", text: "Bank Loan/Private/IPO" }];
     $scope.messageTypes = [{ id: "MT103", text: "MT103" }, { id: "MT202", text: "MT202" }, { id: "MT202 COV", text: "MT202 COV" }];
     // { id: "MT210", text: "MT210" }, { id: "MT540", text: "MT540" },{ id: "MT542", text: "MT542" }
     $scope.ssiTemplate.TemplateName = "";

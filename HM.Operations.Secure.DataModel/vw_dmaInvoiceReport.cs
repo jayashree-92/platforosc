@@ -41,5 +41,7 @@ namespace HM.Operations.Secure.DataModel
         public Nullable<System.DateTime> ClientStatusUpdatedAt { get; set; }
         public Nullable<int> Child { get; set; }
         public Nullable<int> ClientStatusUpdatedBy { get; set; }
+        public string InvestmentManagerName { get; set; }
+        public Nullable<int> InvestmentManagerId { get; set; }
     }
 }

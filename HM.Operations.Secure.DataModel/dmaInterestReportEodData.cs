@@ -38,5 +38,7 @@ namespace HM.Operations.Secure.DataModel
         public string Status { get; set; }
         public Nullable<long> dmaReportMapId { get; set; }
         public string Currency { get; set; }
+        public bool IsOverrideHmInterestRateCalc { get; set; }
+        public bool IsOverrideHmInterestRateCalcIA { get; set; }
     }
 }

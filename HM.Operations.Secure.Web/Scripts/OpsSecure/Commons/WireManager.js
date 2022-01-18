@@ -1067,7 +1067,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         });
 
         if ($scope.wireObj.IsAdhocWire) {
-            $scope.getHFunds();
+
             //$scope.purposes = $filter("orderBy")($scope.purposes, "text");
             angular.element("#liWiresPurpose").select2("destroy").val("");
             angular.element("#liWiresPurpose").select2({
@@ -1357,20 +1357,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.currencies = response.data.currencies;
         });
     };
-
-    $scope.getHFunds = function () {
-
-        $http.get("/Home/GetAuthorizedFunds").then(function (response) {
-            var allDmaFunds = response.data;
-            $("#liFund").select2("destroy");
-            $("#liFund").select2({
-                data: { results: allDmaFunds },
-                placeholder: "Select Fund/Group", allowClear: false
-            });
-        });
-    }
-
-
 
     angular.element(document).on("change", "#liWiresPurpose", function () {
         $timeout(function () {
@@ -1777,10 +1763,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if (!$scope.WireTicketStatus.IsEditEnabled || !$scope.WireTicketStatus.IsWirePurposeAdhoc)
             return;
 
+
         $("#liWiresPurpose").select2("val", "").trigger("change");
         $("#liWiresPurpose").select2("disable");
-
         $("#liWirePurposeLoading").show();
+
         $http.get("/WirePurpose/GetApprovedPurposes?transferTypeId=" + $("#liWireTransferType").select2("val")).
             then(function (response) {
                 angular.element("#liWiresPurpose").select2({
@@ -1795,6 +1782,21 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             });
 
 
+
+        $("#liFund").select2("val", "").trigger("change");
+        $("#liFund").select2("disable");
+        $("#liFundLoading").show();
+        $http.get("/Home/GetAuthorizedFunds?transferTypeId=" + $("#liWireTransferType").select2("val")).then(function (response) {
+            var allDmaFunds = response.data;
+            $("#liFund").select2("destroy");
+            $("#liFund").select2({
+                data: { results: allDmaFunds },
+                placeholder: "Select Fund/Group", allowClear: false
+            });
+            $("#liFund").select2("enable");
+            $("#liFundLoading").hide();
+        });
+
         $timeout(function () {
             $scope.WireTicket.WireTransferTypeId = angular.copy($("#liWireTransferType").select2("val"));
             $scope.wireTicketObj.IsFundTransfer = $scope.WireTicket.WireTransferTypeId == 2;
@@ -1806,8 +1808,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             else
                 $("#wireValueDate").datepicker("setStartDate", "+0d");
 
-            $("#liWiresPurpose").select2("val", "").trigger("change");
-            $("#liFund").select2("val", "").trigger("change");
             $("#liCurrency").select2("val", "").trigger("change");
             $("#liAgreement").select2("val", "").trigger("change");
             $("#liSendingAccount").select2("val", "").trigger("change");

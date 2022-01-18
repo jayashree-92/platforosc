@@ -14,26 +14,6 @@ namespace HM.Operations.Secure.Middleware
             //public List<int> CalendarIds { get; set; }
         }
 
-        public static List<HFund> GetHFundsCreatedForDMA(List<long> hFundIds, PreferencesManager.FundNameInDropDown preferredFundName)
-        {
-            using (var context = new OperationsContext())
-            {
-                return GetUniversalDMAFundListQuery(context, preferredFundName).Where(s => hFundIds.Contains(s.hmFundId)).Select(s => new HFund
-                {
-                    FundId = s.hmFundId,
-                    ShortFundName = s.HFund.ShortFundName,
-                    PerferredFundName = s.PreferredFundName,
-                    HMDataFundName = s.HFund.HMRAName,
-                    Currency = s.HFund.BaseCurrencyShareclass != null ? s.HFund.BaseCurrencyShareclass : string.Empty,
-                    LegalFundName = s.HFund.LegalFundName,
-                    ClientShortName = s.HFund.ClientShortName,
-                    ClientLegalName = s.HFund.ClientLegalEntityName,
-                    ClientId = s.HFund.dmaClientOnBoardId ?? 0
-
-                }).ToList();
-            }
-        }
-
         public static List<HFundBasic> GetHFundsCreatedForDMAOnly(PreferencesManager.FundNameInDropDown preferredFundName, List<long> hmFundIds = null)
         {
             var shouldBringAllFunds = hmFundIds == null;
@@ -52,7 +32,8 @@ namespace HM.Operations.Secure.Middleware
                             FundType = "DMA",
                             LegalFundName = fnd.HFund.LegalFundName,
                             ClientLegalName = fnd.HFund.ClientLegalEntityName,
-                            RegisteredAddress = fnd.HFund.RegisterAddress
+                            RegisteredAddress = fnd.HFund.RegisterAddress,
+                            IsFundAllowedForBankLoanAndIpOs = fnd.HFund.IsFundAllowedForBankLoanAndIPOs
 
                             //CalendarIds = fnd.CalendarIds,
                         }).ToList();
@@ -103,29 +84,7 @@ namespace HM.Operations.Secure.Middleware
         public string ClientLegalName { get; set; }
         public string AdminName { get; set; }
         public string RegisteredAddress { get; set; }
+        public bool IsFundAllowedForBankLoanAndIpOs { get; set; }
         //public List<int> CalendarIds { get; set; }
-    }
-
-
-    public class HFund
-    {
-        public HFund()
-        {
-            Children = new List<HFund>();
-        }
-        public bool IsGroupLine => !IsMasterFund && !IsFeederFund && !IsStandAloneFund;
-        public bool IsMasterFund { get; set; }
-        public bool IsFeederFund { get; set; }
-        public bool IsStandAloneFund { get; set; }
-        public string ShortFundName { get; set; }
-        public string HMDataFundName { get; set; }
-        public string PerferredFundName { get; set; }
-        public string LegalFundName { get; set; }
-        public string Currency { get; set; }
-        public List<HFund> Children { get; set; }
-        public string ClientLegalName { get; set; }
-        public string ClientShortName { get; set; }
-        public long ClientId { get; set; }
-        public int FundId { get; set; }
     }
 }

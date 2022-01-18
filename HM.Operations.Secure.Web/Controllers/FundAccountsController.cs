@@ -14,7 +14,6 @@ namespace HM.Operations.Secure.Web.Controllers
 {
     public class FundAccountsController : WireUserBaseController
     {
-
         public ActionResult Index()
         {
             return View();
@@ -66,7 +65,6 @@ namespace HM.Operations.Secure.Web.Controllers
                     custodyAgreementTypeId = accountTypes.First(s => s.Value == "Custody").Key,
                 });
             }
-
         }
 
         public JsonResult GetAccountAssociationPreloadData()
@@ -144,7 +142,6 @@ namespace HM.Operations.Secure.Web.Controllers
 
         }
 
-
         public JsonResult GetOnBoardingAccount(long accountId)
         {
             var onBoardingAccount = FundAccountManager.GetOnBoardingAccount(accountId);
@@ -160,16 +157,28 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult GetAccountSsiTemplateMap(long accountId, long fundId, string currency, string messages)
         {
             var ssiTemplateMaps = FundAccountManager.GetAccountSsiTemplateMap(accountId);
-
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
+            var fundData = AuthorizedDMAFundData.First(s => s.HmFundId == fundId);
 
             if (string.IsNullOrWhiteSpace(messages))
                 messages = string.Empty;
 
-            var ssiTemplates = FundAccountManager.GetAllApprovedSsiTemplates(counterpartyIds, messages.Split(',').ToList(), string.IsNullOrWhiteSpace(messages), currency);
-            var availableSsiTemplates = ssiTemplates
-                .Where(s => !ssiTemplateMaps.Select(p => p.onBoardingSSITemplateId)
-                .Contains(s.onBoardingSSITemplateId)).ToList();
+            var messageTypes = messages.Split(',').ToList();
+            var shouldBringAllMessageTypes = string.IsNullOrWhiteSpace(messages);
+            List<onBoardingSSITemplate> ssiTemplates;
+
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+
+                ssiTemplates = context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved"
+                   && (counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType == "Fee/Expense Payment" || (fundData.IsFundAllowedForBankLoanAndIpOs && template.SSITemplateType == "Bank Loan/Private/IPO"))
+                   && (currency == null || template.Currency == currency) && (shouldBringAllMessageTypes || messageTypes.Contains(template.MessageType))).ToList();
+            }
+
+            var alreadyAssociatedSsIs = ssiTemplateMaps.Select(s => s.onBoardingSSITemplateId).Distinct().ToList();
+            var availableSsiTemplates = ssiTemplates.Where(s => !alreadyAssociatedSsIs.Contains(s.onBoardingSSITemplateId)).ToList();
 
             return Json(new
             {
@@ -237,6 +246,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 fundAccounts = availableFundAccounts,
             }, JsonContentType, JsonContentEncoding);
         }
+
         public JsonResult GetAccountDocuments(long accountId)
         {
             var accountDocuments = FundAccountManager.GetAccountDocuments(accountId);
@@ -260,7 +270,6 @@ namespace HM.Operations.Secure.Web.Controllers
                 fndAcc.CreatedBy = fndAcc.CreatedBy.HumanizeEmail();
                 fndAcc.UpdatedBy = fndAcc.UpdatedBy.HumanizeEmail();
             });
-
 
             var allFundAccounts = onBoardingAccounts.AsParallel().Select(account => new
             {
@@ -338,7 +347,6 @@ namespace HM.Operations.Secure.Web.Controllers
                     AuditManager.Log(auditLogList);
                 }
             }
-
         }
 
         public JsonResult GetAllOnBoardingAccountContacts(long hmFundId)

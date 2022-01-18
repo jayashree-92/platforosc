@@ -1644,6 +1644,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                             return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
                         if (tdata === "Fee/Expense Payment")
                             return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
+                        if (tdata === "Bank Loan/Private/IPO")
+                            return "<label class=\"label ng-show-only label-success\" style=\"font-size: 12px;\">Bank Loan/Private/IPO</label>";
                         return "";
                     }
                 },
@@ -2121,6 +2123,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                             return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
                         if (tdata === "Fee/Expense Payment")
                             return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
+                        if (tdata === "Bank Loan/Private/IPO")
+                            return "<label class=\"label ng-show-only label-success\" style=\"font-size: 12px;\">Bank Loan/Private/IPO</label>";
                         return "";
                     }
                 },
@@ -3080,6 +3084,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                                             return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Broker</label>";
                                         if (tdata === "Fee/Expense Payment")
                                             return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">Fee/Expense Payment</label>";
+                                        if (tdata === "Bank Loan/Private/IPO")
+                                            return "<label class=\"label ng-show-only label-success\" style=\"font-size: 12px;\">Bank Loan/Private/IPO</label>";
                                         return "";
                                     }
                                 },

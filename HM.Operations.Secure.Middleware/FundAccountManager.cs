@@ -426,18 +426,7 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-        public static List<onBoardingSSITemplate> GetAllApprovedSsiTemplates(List<long> counterpartyIds, List<string> messageTypes = null, bool isAll = true, string currency = null)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                if (messageTypes == null)
-                    messageTypes = new List<string>();
-                return context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved" && (counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType == "Fee/Expense Payment") && (currency == null || template.Currency == currency) && (isAll || messageTypes.Contains(template.MessageType))).ToList();
-            }
-        }
-
+   
         public static List<onBoardingAccount> GetAllApprovedAccounts(List<long> hmFundIds, string messageType, string currency, bool isServiceType)
         {
             using (var context = new OperationsSecureContext())

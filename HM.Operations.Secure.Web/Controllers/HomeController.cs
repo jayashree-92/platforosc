@@ -547,20 +547,16 @@ namespace HM.Operations.Secure.Web.Controllers
             public string AgreementShortName { get; set; }
         }
 
-        public JsonResult GetAuthorizedFunds()
+        public JsonResult GetAuthorizedFunds(int transferTypeId)
         {
-            using (var context = new OperationsContext())
-            {
-                var authorizedFundIds = AuthorizedSessionData.HMFundIds.Select(s => s.Id).ToList();
                 var fundsWithApprovedAccounts = FundAccountManager.GetFundsOfApprovedAccounts();
-                authorizedFundIds = authorizedFundIds.Count == 0 ? fundsWithApprovedAccounts : authorizedFundIds.Intersect(fundsWithApprovedAccounts).ToList();
-                var hFunds = AdminFundManager.GetUniversalDMAFundListQuery(context, PreferredFundNameInSession)
-                    .Where(s => authorizedFundIds.Contains(s.hmFundId)).OrderBy(s => s.PreferredFundName)
-                    .Select(s => new { id = s.hmFundId, text = s.PreferredFundName }).ToList();
+                var hFunds = AuthorizedDMAFundData.Where(fund =>fundsWithApprovedAccounts.Contains(fund.HmFundId))
+                    .Where(s => transferTypeId != 5 || s.IsFundAllowedForBankLoanAndIpOs)
+                    .Select(s => new { id = s.HmFundId, text = s.PreferredFundName }).ToList();
 
                 return Json(hFunds, JsonRequestBehavior.AllowGet);
-            }
         }
+
         public JsonResult GetApprovedAgreementsForFund(long fundId)
         {
             List<AgreementBaseDetails> onBoardedAgreements;

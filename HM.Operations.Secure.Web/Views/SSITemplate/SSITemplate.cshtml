@@ -33,23 +33,23 @@
                                             <input name="Template Type" type="text" class="form-control" ng-model="ssiTemplate.SSITemplateType" id="liSSITemplateType" ng-change="fnSSITemplateType(ssiTemplate.SSITemplateType)" required />
                                         </div>
                                     </div>
-                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker'">
+                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker' || ssiTemplate.SSITemplateType == 'Bank Loan/Private/IPO'">
                                         <div class="col-md-2">
                                             <label class="control-label">Legal Entity <span style="color: red">  *</span></label>
                                         </div>
                                         <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                            <input type="text" class="form-control" ng-model="ssiTemplate.TemplateEntityId" id="liBroker" name="Legal Entity" ng-required="ssiTemplate.SSITemplateType == 'Broker'" />
+                                            <input type="text" class="form-control" ng-model="ssiTemplate.TemplateEntityId" id="liBroker" name="Legal Entity" ng-required="ssiTemplate.SSITemplateType == 'Broker' || ssiTemplate.SSITemplateType == 'Bank Loan/Private/IPO'" />
                                         </div>
                                     </div>
                                 </div>
                                 <p></p>
                                 <div class="row">
-                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker'">
+                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker' || ssiTemplate.SSITemplateType == 'Bank Loan/Private/IPO'">
                                         <div class="col-md-3">
                                             <label class="control-label">Account Type <span style="color: red">  *</span></label>
                                         </div>
                                         <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                            <input type="text" class="form-control" ng-model="ssiTemplate.dmaAgreementTypeId" id="liAccountType" name="Account Type" ng-required="ssiTemplate.SSITemplateType == 'Broker'" />
+                                            <input type="text" class="form-control" ng-model="ssiTemplate.dmaAgreementTypeId" id="liAccountType" name="Account Type" ng-required="ssiTemplate.SSITemplateType == 'Broker' || ssiTemplate.SSITemplateType == 'Bank Loan/Private/IPO'" />
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Fee/Expense Payment'">
