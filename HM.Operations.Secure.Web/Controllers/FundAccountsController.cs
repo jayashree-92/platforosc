@@ -686,7 +686,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 var row = new Row();
                 row["Account Id"] = account.onBoardingAccountId.ToString();
                 row["Entity Type"] = account.AccountType;
-                row["Client Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].LegalFundName : string.Empty;
+                row["Client Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].ClientName : string.Empty;
                 row["Fund Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].LegalFundName : string.Empty;
                 row["Fund Status"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].LaunchStatus : string.Empty;
                 row["Agreement Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].AgreementShortName : string.Empty;
