@@ -24,9 +24,8 @@ namespace HM.Operations.Secure.Web.Jobs
                 var lastUsedToDeactivateMap = allSsIDateMap.Where(s => s.Value < deactivationDeadline).ToDictionary(s => s.Key, v => v.Value);
 
                 var staleSSIIds = lastUsedToDeactivateMap.Keys.ToList();
-                var allStaleSSITemplatesToDeactivate = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Approved" && staleSSIIds.Contains(s.onBoardingSSITemplateId)).ToList();
-
-
+                var allStaleSSITemplatesToDeactivate = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Approved" && staleSSIIds.Contains(s.onBoardingSSITemplateId) && s.UpdatedAt < deactivationDeadline).ToList();
+                
                 if (allStaleSSITemplatesToDeactivate.Count == 0)
                     return;
 
