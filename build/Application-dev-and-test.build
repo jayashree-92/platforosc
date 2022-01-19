@@ -25,20 +25,16 @@
   <target name="cleanAndDeployPackage" >	
 	 <!--<nant buildfile="TestBuildAndPublish.build" />  -->
 	
-	<nant buildfile="SQL.Build">
-		<properties>
-		  <property name="sql.user" value="HMWIRESDEV"/>
-		  <property name="sql.pwd" value="5$#2wires@1"/>
-		  <property name="sql.svr" value="W00001N00\MSDMUT06"/>
+	<nant buildfile="SQL-GF.Build">
+		<properties>		 
+		  <property name="sql.svr" value="WT84B10091DV00\MSDMUD04"/>
 		</properties>
 	</nant>
 
 	
-	<nant buildfile="SQL.Build">
-    <properties>
-		<property name="sql.user" value="HMWIRESQA"/>
-		<property name="sql.pwd" value="Dh@wires123"/>
-		<property name="sql.svr" value="W0001ZN01\MSDMUQ04"/>
+	<nant buildfile="SQL-GF.Build">
+    <properties>		
+		<property name="sql.svr" value="WT84B10073TV00\MSDMUT11"/>
     </properties>
 	</nant>
 	

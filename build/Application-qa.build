@@ -23,7 +23,7 @@
 
   <target name="cleanAndDeployPackage" >	
 	<!--<nant buildfile="TestBuildAndPublish.build" /> --> 
-	<nant buildfile="SQL-UAT.Build" />  
+	<nant buildfile="SQL-GF.Build" />  
 	<nant buildfile="RestartIISAppPool.build" />
   </target>
   
