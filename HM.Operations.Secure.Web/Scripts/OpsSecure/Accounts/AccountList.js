@@ -16,7 +16,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.ContactType = [{ id: "Cash", text: "Cash" }, { id: "Custody", text: "Custody" }, { id: "PB Client Service", text: "PB Client Service" }, { id: "Margin", text: "Margin" }];
     $scope.accountPurpose = [];
     $scope.accountStatus = [{ id: "Requested", text: "Requested" }, { id: "Reserved", text: "Reserved" }, { id: "Open", text: "Open" }, { id: "Requested Closure", text: "Requested Closure" }, { id: "Closed", text: "Closed" }];
-    $scope.entityTypes = [{ id: "Agreement", text: "Agreement" }, { id: "DDA", text: "DDA" }, { id: "Custody", text: "Custody" }];
+    $scope.entityTypes = [{ id: "Agreement", text: "Agreement" }, { id: "Agreement (Reporting Only)", text: "Agreement (Reporting Only)" }, { id: "DDA", text: "DDA" }, { id: "Custody", text: "Custody" }];
     $scope.SwiftGroups = [];
     $scope.SwiftGroupData = [];
     var accountDocumentTable = [];
@@ -313,10 +313,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     angular.element(document).on("change", "#liAccountType", function (event) {
         event.stopPropagation();
         $scope.accountType = $(this).val();
+        $scope.IsReportingOnly = $scope.accountType == "Agreement (Reporting Only)";
         var thisFunds = [];
         $scope.AgreementTypeId = 0;
         if ($(this).val() != "" && $(this).val() != undefined) {
-            if ($(this).val() == "Agreement") {
+            if ($(this).val() == "Agreement" || $(this).val() == "Agreement (Reporting Only)") {
                 $("#spnBroker").hide();
                 $("#spnBrokerFamily").hide();
                 $("#spnAgreement").show();
@@ -442,9 +443,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $scope.copyAccount.onBoardingAccountId = 0;
         $scope.copyAccount.AccountType = $scope.accountType;
+        $scope.copyAccount.IsReportingOnly = $scope.accountType == "Agreement (Reporting Only)";
         $scope.copyAccount.AccountName = $scope.FundName;
 
-        if ($scope.accountType == "Agreement") {
+        if ($scope.accountType == "Agreement" || $scope.accountType == "Agreement (Reporting Only)") {
             $scope.copyAccount.dmaAgreementOnBoardingId = $scope.AgreementId;
         }
 
@@ -453,7 +455,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.copyAccount.dmaCounterpartyId = $scope.CounterpartyId;
         $scope.copyAccount.onBoardingAccountSSITemplateMaps = [];
         $scope.copyAccount.onBoardingAccountDocuments = [];
-        $scope.copyAccount.IsReceivingAccountType = $scope.accountType == "Agreement" && $.inArray($scope.AgreementType, $scope.receivingAccountTypes) > -1;
+        $scope.copyAccount.IsReceivingAccountType = ($scope.accountType == "Agreement" || $scope.accountType == "Agreement (Reporting Only)") && $.inArray($scope.AgreementType, $scope.receivingAccountTypes) > -1;
         if ($scope.copyAccount.IsReceivingAccountType || $scope.copyAccount.AuthorizedParty != "Hedgemark")
             $scope.copyAccount.IsReceivingAccount = true;
         else
@@ -531,18 +533,19 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         {
                             "mData": "Account.AccountType", "sTitle": "Entity Type",
                             render: {
-                                _: function (tdata) {
-                                    if (tdata != null && tdata != "undefinied") {
-                                        switch (tdata) {
-                                            case "Agreement": return "<label class='label label-success'>" + tdata + "</label>";
-                                            case "DDA": return "<label class='label label-warning'>" + tdata + "</label>";
-                                            case "Custody": return "<label class='label label-info'>" + tdata + "</label>";
+                                _: function (tData) {
+                                    if (tData != null && tData != "undefined") {
+                                        switch (tData) {
+                                            case "Agreement": return "<label class='label label-success'>" + tData + "</label>";
+                                            case "Agreement (Reporting Only)": return "<label class='label label-default'>" + tData + "</label>";
+                                            case "DDA": return "<label class='label label-warning'>" + tData + "</label>";
+                                            case "Custody": return "<label class='label label-info'>" + tData + "</label>";
                                         }
-                                        return "<label class='label label-default'>" + tdata + "</label>";
+                                        return "<label class='label label-default'>" + tData + "</label>";
                                     }
                                     return "";
                                 },
-                                sp: function (tdata) { return tdata; }
+                                sp: function (tData) { return tData; }
                             },
 
                             searchPanes: { orthogonal: "sp" }
@@ -740,6 +743,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.CounterpartyFamilyId = account.dmaCounterpartyFamilyId;
         $scope.CounterpartyId = account.dmaCounterpartyId;
         $scope.AccountType = account.AccountType;
+        $scope.IsReportingOnly = $scope.AccountType == "Agreement (Reporting Only)";
         $scope.CounterpartyName = rowElement.CounterpartyName;
         $scope.AgreementTypeId = rowElement.AgreementTypeId;
         $scope.AccountStatus = account.onBoardingAccountStatus;
@@ -810,6 +814,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.CounterpartyFamilyId = accDetails.dmaCounterpartyFamilyId;
         $scope.CounterpartyId = accDetails.dmaCounterpartyId;
         $scope.AccountType = accDetails.AccountType;
+        $scope.IsReportingOnly = $scope.AccountType == "Agreement (Reporting Only)";
         $scope.CounterpartyFamilyName = rowElement.CounterpartyFamilyName;
         $scope.CounterpartyName = rowElement.CounterpartyName;
         $scope.isEdit = true;
@@ -826,7 +831,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             //$(".accntActions button").hide();
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
-            $scope.FundRegistedAddress  = response.data.registedAddress;
+            $scope.FundRegistedAddress = response.data.registedAddress;
 
             if ($("#spnAgrCurrentStatus").html() == pendingStatus && val[0].UpdatedBy != $("#userName").val())
                 $("#btnApprove").show();
@@ -852,7 +857,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             } else {
                 $scope.accountPurpose = [{ id: "Pledge Account", text: "Pledge Account" }, { id: "Return Account", text: "Return Account" }, { id: "Both", text: "Both" }];
             }
-            account.IsReceivingAccountType = account.AccountType != undefined && account.AccountType == "Agreement" && $.inArray(agreementType.text, $scope.receivingAccountTypes) > -1;
+            account.IsReceivingAccountType = account.AccountType != undefined && (account.AccountType == "Agreement" || account.AccountType == "Agreement (Reporting Only)") && $.inArray(agreementType.text, $scope.receivingAccountTypes) > -1;
             if (account.IsReceivingAccountType || account.AuthorizedParty != "Hedgemark")
                 account.IsReceivingAccount = true;
             else
@@ -882,7 +887,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (!$scope.isStatusUpdate) {
                 angular.element("#basicDetailCP").collapse("hide");
             }
-         
+
 
             $timeout(function () {
                 $(window).scrollTop(0);
@@ -890,7 +895,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#txtHoldbackAmount").numericEditor({
                     bAllowNegative: false,
                     fnFocusInCallback: function () {
-                        if ($(this).text() == "0")  
+                        if ($(this).text() == "0")
                             $(this).html("");
                     },
                     fnFocusOutCallback: function () {
@@ -2915,14 +2920,15 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     },
                     {
                         "mData": "Account.AccountType", "sTitle": "Entity Type",
-                        "mRender": function (tdata) {
-                            if (tdata != null && tdata != "undefinied") {
-                                switch (tdata) {
-                                    case "Agreement": return "<label class='label label-success'>" + tdata + "</label>";
-                                    case "DDA": return "<label class='label label-warning'>" + tdata + "</label>";
-                                    case "Custody": return "<label class='label label-info'>" + tdata + "</label>";
+                        "mRender": function (tData) {
+                            if (tData != null && tData != "undefined") {
+                                switch (tData) {
+                                    case "Agreement": return "<label class='label label-success'>" + tData + "</label>";
+                                    case "Agreement (Reporting Only)": return "<label class='label label-default'>" + tData + "</label>";
+                                    case "DDA": return "<label class='label label-warning'>" + tData + "</label>";
+                                    case "Custody": return "<label class='label label-info'>" + tData + "</label>";
                                 }
-                                return "<label class='label label-default'>" + tdata + "</label>";
+                                return "<label class='label label-default'>" + tData + "</label>";
                             }
                             return "";
                         }

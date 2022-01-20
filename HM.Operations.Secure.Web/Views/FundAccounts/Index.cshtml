@@ -31,7 +31,7 @@
                                 <li><a href="#" data-toggle="collapse" data-target="#divUploadSource" aria-expanded="false" aria-controls="divUploadSource">Upload</a></li>
                             </ul>
                         </div>
-                        
+
                         <div class="pull-right btn-group">
                             &nbsp;&nbsp;
                             <button class=" btn btn-primary btn-sm" id="btnEdit" disabled ng-click="fnEditAccount()">
@@ -163,12 +163,12 @@
                                 </div>
 
                                 <li><a href="#accountBasicInfo_0">Basic Info</a></li>
-                                <li><a href="#accountSwiftInfo_0">Swift Info</a></li>
+                                <li ng-if="!IsReportingOnly"><a href="#accountSwiftInfo_0">Swift Info</a></li>
                                 <li><a href="#accountSSIInfo_0">Account SSI</a></li>
-                                <li ng-if="!IsBNYMBroker && ((isEdit && IsPendingApproval)|| (isEdit && IsApproved)|| (IsKeyFieldsChanged))"><a href="#accountCallback_0">Callback Check&nbsp;<span class="label label-info">{{ CallBackChecks.length }}</span>  </a></li>
-                                <li><a href="#accountContactInfo_0">Contacts&nbsp;<span class="label label-info">{{ onboardingContacts.length }}</span>   </a></li>
-                                <li ng-if="isEdit"><a href="#accountAttachment_0">Attachments&nbsp;<span class="label label-info">{{ accountDocuments.length }}</span></a></li>
-                                <li ng-if="!accountDetail.IsReceivingAccount"><a href="#accountSsiAssociation_0">Associated SSI&nbsp;<span class="label label-info">{{ ssiTemplateMaps.length }}</span></a></li>
+                                <li ng-if="!IsReportingOnly &&!IsBNYMBroker && ((isEdit && IsPendingApproval)|| (isEdit && IsApproved)|| (IsKeyFieldsChanged))"><a href="#accountCallback_0">Callback Check&nbsp;<span class="label label-info">{{ CallBackChecks.length }}</span>  </a></li>
+                                <li ng-if="!IsReportingOnly"><a href="#accountContactInfo_0">Contacts&nbsp;<span class="label label-info">{{ onboardingContacts.length }}</span>   </a></li>
+                                <li ng-if="!IsReportingOnly && isEdit"><a href="#accountAttachment_0">Attachments&nbsp;<span class="label label-info">{{ accountDocuments.length }}</span></a></li>
+                                <li ng-if="!IsReportingOnly && !accountDetail.IsReceivingAccount"><a href="#accountSsiAssociation_0">Associated SSI&nbsp;<span class="label label-info">{{ ssiTemplateMaps.length }}</span></a></li>
 
                             </ul>
                         </div>
@@ -265,7 +265,7 @@
                                     <p></p>
                                 </div>
                             </div>
-                            <div class="panel panel-default ng-show-hide" id="accountSwiftInfo_0" data-toggle='collapse'>
+                            <div ng-if="!IsReportingOnly" class="panel panel-default ng-show-hide" id="accountSwiftInfo_0" data-toggle='collapse'>
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountSwiftDetailDiv_0" aria-expanded="false" aria-controls="accountSwiftDetailDiv_0" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>SWIFT Info</b>
                                 </div>
@@ -451,7 +451,7 @@
                                     <b>Account SSI</b>
                                 </div>
                                 <div id="accountSSIDetailInfo_0" class="panel-body">
-                                    <div class="row">
+                                    <div class="row" ng-if="!IsReportingOnly">
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
                                                 <label class="control-label">FFC Name</label>
@@ -470,7 +470,7 @@
                                         </div>
                                     </div>
                                     <p></p>
-                                    <div class="row">
+                                    <div class="row" ng-if="!IsReportingOnly">
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
                                                 <label class="control-label">Reference </label>
@@ -525,71 +525,73 @@
                                         </div>
                                     </div>
                                     <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
-                                            <label for="liBeneficiaryType0" class="control-label" style="margin-left: 15px;">Type:</label>
+                                    <div ng-if="!IsReportingOnly" id="divSSIBICDetails">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
+                                                <label for="liBeneficiaryType0" class="control-label" style="margin-left: 15px;">Type:</label>
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
+                                                <input type="text" class="form-control" ng-model="accountDetail.IntermediaryType" id="liIntermediaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.IntermediaryType,'Intermediary')" />
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
+                                                <input name="Beneficiary Type" type="text" class="form-control" ng-model="accountDetail.BeneficiaryType" id="liBeneficiaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.BeneficiaryType,'Beneficiary')" required />
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
+                                                <input type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryType" id="liUltimateBeneficiaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.UltimateBeneficiaryType,'UltimateBeneficiary')" />
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input type="text" class="form-control" ng-model="accountDetail.IntermediaryType" id="liIntermediaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.IntermediaryType,'Intermediary')" />
+                                        <p></p>
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
+                                                <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
+                                                <input type="text" ng-model="accountDetail.Intermediary.BICorABA" class="form-control control-label" id="liIntermediaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.Intermediary.BICorABA,'Intermediary')" />
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
+                                                <input name="Beneficiary ABA/BIC" type="text" ng-model="accountDetail.Beneficiary.BICorABA" class="form-control control-label" id="liBeneficiaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.Beneficiary.BICorABA,'Beneficiary')" required />
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth" id="divUltimateBeneficiaryBICorABA0">
+                                                <input type="text" ng-model="accountDetail.UltimateBeneficiary.BICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.UltimateBeneficiary.BICorABA,'UltimateBeneficiary')" />
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input name="Beneficiary Type" type="text" class="form-control" ng-model="accountDetail.BeneficiaryType" id="liBeneficiaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.BeneficiaryType,'Beneficiary')" required />
+                                        <p></p>
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
+                                                <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                <input type="text" name='IntermediaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankName" class="form-control control-label" id="intermediaryBankName0" placeholder="Bank Name" readonly />
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName0" readonly />
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                <input type="text" name="BankName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankName" class="form-control control-label" placeholder="Bank/Bene Name" id="ultimateBankName0" readonly />
+                                                <input type="text" name="AccountName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control" ng-model="accountDetail.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName0" style="display: none;" />
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input type="text" class="form-control" ng-model="accountDetail.UltimateBeneficiaryType" id="liUltimateBeneficiaryType0" ng-change="fnToggleBeneficiaryBICorABA(accountDetail.UltimateBeneficiaryType,'UltimateBeneficiary')" />
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
-                                            <label class="control-label" style="margin-left: 15px;">ABA/BIC</label>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input type="text" ng-model="accountDetail.Intermediary.BICorABA" class="form-control control-label" id="liIntermediaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.Intermediary.BICorABA,'Intermediary')" />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth">
-                                            <input name="Beneficiary ABA/BIC" type="text" ng-model="accountDetail.Beneficiary.BICorABA" class="form-control control-label" id="liBeneficiaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.Beneficiary.BICorABA,'Beneficiary')" required />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft AdjustDropDownWidth" id="divUltimateBeneficiaryBICorABA0">
-                                            <input type="text" ng-model="accountDetail.UltimateBeneficiary.BICorABA" class="form-control control-label" id="liUltimateBeneficiaryBICorABA0" ng-change="fnGetBankDetails(accountDetail.UltimateBeneficiary.BICorABA,'UltimateBeneficiary')" />
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
-                                            <label class="control-label" style="margin-left: 15px;">Bank/Account Name </label>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input type="text" name='IntermediaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankName" class="form-control control-label" id="intermediaryBankName0" placeholder="Bank Name" readonly />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input type="text" name='BeneficiaryBankName' ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankName" class="form-control control-label" placeholder="Bank Name" id="beneficiaryBankName0" readonly />
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <input type="text" name="BankName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankName" class="form-control control-label" placeholder="Bank/Bene Name" id="ultimateBankName0" readonly />
-                                            <input type="text" name="AccountName" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" class="form-control" ng-model="accountDetail.UltimateBeneficiaryAccountName" placeholder="Account Name" id="accountName0" style="display: none;" />
-                                        </div>
-                                    </div>
-                                    <p></p>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
-                                            <label for="beneficiaryBankAddress0" class="control-label" style="margin-left: 15px;">Bank Address </label>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="IntermediaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankAddress" id="intermediaryBankAddress0" readonly></textarea>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="BeneficiaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankAddress" id="beneficiaryBankAddress0" readonly></textarea>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
-                                            <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank/Bene Address" name="BankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankAddress" id="ultimateBankAddress0" readonly></textarea>
+                                        <p></p>
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
+                                                <label for="beneficiaryBankAddress0" class="control-label" style="margin-left: 15px;">Bank Address </label>
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="IntermediaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Intermediary.BankAddress" id="intermediaryBankAddress0" readonly></textarea>
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank Address" name="BeneficiaryBankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.Beneficiary.BankAddress" id="beneficiaryBankAddress0" readonly></textarea>
+                                            </div>
+                                            <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                                <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank/Bene Address" name="BankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankAddress" id="ultimateBankAddress0" readonly></textarea>
 
+                                            </div>
                                         </div>
+                                        <p></p>
                                     </div>
-                                    <p></p>
                                 </div>
                             </div>
-                            <div class="panel panel-default ng-show-hide" id="accountCallback_0" plindex="0" data-toggle='collapse' ng-if="!IsBNYMBroker && ((isEdit && IsPendingApproval)|| (isEdit && IsApproved)|| (IsKeyFieldsChanged))">
+                            <div class="panel panel-default ng-show-hide" id="accountCallback_0" plindex="0" data-toggle='collapse' ng-if="!IsReportingOnly && !IsBNYMBroker && ((isEdit && IsPendingApproval)|| (isEdit && IsApproved)|| (IsKeyFieldsChanged))">
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountCallbackInfo_0" aria-expanded="false" aria-controls="accountCallbackInfo_0" ng-click="adjustContainer(true)" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Callback Check</b>&nbsp;<span style="color: red"> *</span>
                                     <span class="pull-right">
@@ -608,7 +610,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default ng-show-hide" id="accountContactInfo_0" data-toggle='collapse'>
+                            <div ng-if="!IsReportingOnly" class="panel panel-default ng-show-hide" id="accountContactInfo_0" data-toggle='collapse'>
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountContactDetailInfo_0" aria-expanded="false" aria-controls="accountContactDetailInfo_0" ng-click="adjustContainer(false)" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Contact</b>
                                     <span class="pull-right">
@@ -641,7 +643,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default ng-show-hide" id="accountAttachment_0" plindex="0" data-toggle='collapse' ng-if="isEdit">
+                            <div class="panel panel-default ng-show-hide" id="accountAttachment_0" plindex="0" data-toggle='collapse' ng-if="!IsReportingOnly && isEdit">
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountAttachmentDetailInfo_0" aria-expanded="false" aria-controls="accountAttachmentDetailInfo_0" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Attachments</b>&nbsp;<span style="color: red"> *</span><span class="pull-right"><i class="indicator glyphicon glyphicon-chevron-down"></i></span>
                                 </div>
@@ -656,7 +658,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default ng-show-hide" id="accountSsiAssociation_0" plindex="0" ng-if="!accountDetail.IsReceivingAccount" data-toggle='collapse'>
+                            <div class="panel panel-default ng-show-hide" id="accountSsiAssociation_0" plindex="0" ng-if="!IsReportingOnly && !accountDetail.IsReceivingAccount" data-toggle='collapse'>
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountSsiAssociationInfo_0" aria-expanded="false" aria-controls="accountSsiAssociationInfo_0" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Associated Settlement Instructions</b>
                                     <span class="pull-right">
