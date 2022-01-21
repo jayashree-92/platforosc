@@ -8,12 +8,6 @@ namespace HM.Operations.Secure.Middleware
 {
     public class PreferencesManager
     {
-        public enum SystemPreferences
-        {
-            AllowedAgreementTypesForAccounts,
-            ReceivingAgreementTypesForAccount
-        }
-
         public static readonly string ShowRiskOrShortFundNames = "CONFIG:ShowRiskOrShortFundNames";
         public static readonly string FavoriteDashboardTemplateForWires = "FavoriteDashboardTemplateForWires";
         public static readonly string LocalQaMailListKey = "CONFIG:LocalOrQa:USERS";
@@ -53,16 +47,7 @@ namespace HM.Operations.Secure.Middleware
                 context.SaveChanges();
             }
         }
-
-        public static string GetSystemPreference(SystemPreferences preference)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                var pref = context.hmsSystemPreferences.FirstOrDefault(s => s.SystemKey == preference.ToString()) ?? new hmsSystemPreference();
-                return pref.SystemValue;
-            }
-        }
-
+        
         //This setting is applicable only for Lower environment and not for PRODUCTION
         public static string GetLocalQaUsers()
         {

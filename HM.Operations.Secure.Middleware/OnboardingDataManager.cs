@@ -95,17 +95,17 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-        public static List<AgreementBaseData> GetAgreementsForOnboardingAccountPreloadData(List<long> hmFundIds, bool isPreviledgedUser)
+        public static List<AgreementBaseData> GetAgreementsForOnboardingAccountPreloadData(List<long> hmFundIds, bool isPriveledgedUser)
         {
-            var permittedAgreementTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.AllowedAgreementTypesForAccounts).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            var allowedAgreementTypes = OpsSecureSwitches.AllowedAgreementTypesForFundAccountCreation;
+            var allowedAgreementStatus = OpsSecureSwitches.AllowedAgreementStatusForFundAccountCreation;
             using (var context = new AdminContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-
-                //AgreementStatusId - 4 = "Terminated - Agreement"
+                
                 return context.vw_CounterpartyAgreements
-                    .Where(a => a.AgreementStatusId != 4 && permittedAgreementTypes.Contains(a.AgreementType) && (isPreviledgedUser || hmFundIds.Contains(a.FundMapId ?? 0)))
+                    .Where(a => allowedAgreementStatus.Contains(a.AgreementStatus) && allowedAgreementTypes.Contains(a.AgreementType) && (isPriveledgedUser || hmFundIds.Contains(a.FundMapId ?? 0)))
                     .AsNoTracking().Select(x => new AgreementBaseData()
                     {
                         AgreementOnboardingId = x.dmaAgreementOnBoardingId,

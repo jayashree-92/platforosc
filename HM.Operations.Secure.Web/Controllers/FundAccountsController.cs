@@ -263,7 +263,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var fundAccounts = FundAccountManager.GetFundAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
             var fundAccountmap = fundAccounts.ToDictionary(s => s.onBoardingAccountId, v => v);
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
-            var receivingAccountTypes = PreferencesManager.GetSystemPreference(PreferencesManager.SystemPreferences.ReceivingAgreementTypesForAccount).Split(',').ToList();
+            var receivingAccountTypes    = OpsSecureSwitches.AllowedAgreementTypesForReceivingFundAccounts;
 
             onBoardingAccounts.ForEach(fndAcc =>
             {

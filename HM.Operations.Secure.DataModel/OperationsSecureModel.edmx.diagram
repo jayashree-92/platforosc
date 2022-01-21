@@ -34,7 +34,6 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireCollateralAssociation" Width="1.5" PointX="16.25" PointY="11.125" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsBulkUploadLog" Width="1.5" PointX="13.375" PointY="12.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireCutoffTimeZone" Width="1.5" PointX="13.375" PointY="15.75" />
-        <EntityTypeShape EntityType="OperationsSecureModel.hmsSystemPreference" Width="1.5" PointX="15.375" PointY="14.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsActionInProgress" Width="1.5" PointX="16.25" PointY="18.25" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsSwiftGroupStatusLkp" Width="1.5" PointX="10.375" PointY="19.625" />
         <EntityTypeShape EntityType="OperationsSecureModel.onBoardingSSITemplate" Width="1.5" PointX="4.375" PointY="16.625" />

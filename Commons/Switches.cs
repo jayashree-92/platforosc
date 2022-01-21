@@ -102,18 +102,23 @@ namespace Com.HedgeMark.Commons
         {
             public const string General = "General Settings";
             public const string OpsSecure = "HM-Ops-Secure";
+            public const string WireSettings = "Wire Setting";
         }
 
         public enum SwitchKey
         {
             /*General Settings*/
             HedgeMarkMailOpsSignatureLines,
+            SchedulerProcessId,
             /* System Allowed File Types */
             SupportingFileTypesToUploadViaUi,
-            AgreementTypesEligibleForSendingWires,
-            TreasuryReportAgreementTypesToUseMarginExcessOrDeficit,
-            SchedulerProcessId,
             /*HM-Ops-Secure settings*/
+            TreasuryReportAgreementTypesToUseMarginExcessOrDeficit,
+            AllowedAgreementTypesForFundAccountCreation,
+            AllowedAgreementStatusForFundAccountCreation,
+            AllowedAgreementTypesForReceivingFundAccounts,
+            /*Wire settings*/
+            AgreementTypesEligibleForSendingWires,
             SwiftBicToEnableField21,
             SwiftGroupToIncludeWirePurposeInWireMessage,
         }
@@ -133,15 +138,15 @@ Disclaimer: This message is Confidential until classified otherwise.
 "),
                 CreateSwitch(SwitchKey.SupportingFileTypesToUploadViaUi, SwitchType.String, Modules.General, ".msg,.csv,.txt,.pdf,.xls,.xlsx,.xlsm,.xlsb,.zip,.rar,.json,.doc,.docx"),
                 /*HM-Ops-Secure settings*/
-                CreateSwitch(SwitchKey.AgreementTypesEligibleForSendingWires, SwitchType.StringList, Modules.OpsSecure, "Custody,DDA,PB,Synthetic Prime Brokerage"),
+        
                 CreateSwitch(SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit, SwitchType.StringList, Modules.OpsSecure, "PB,FXPB,FCM,CDA,Synthetic Prime Brokerage"),
-                CreateSwitch(SwitchKey.SwiftBicToEnableField21, SwitchType.StringList, Modules.OpsSecure, "SBOSUS30,SBOSUS3U,CNORLULX,SBOSUS3UIMS"),
-                CreateSwitch(SwitchKey.SwiftGroupToIncludeWirePurposeInWireMessage, SwitchType.StringList, Modules.OpsSecure, "Credit Suisse")
+                CreateSwitch(SwitchKey.AllowedAgreementTypesForFundAccountCreation, SwitchType.StringList, Modules.OpsSecure, "CDA,Custody,DDA,Deemed ISDA,Enhanced Custody,FCM,FXPB,GMRA,ISDA,Listed Options,MRA,MSFTA,Non-US Listed Options,PB,Synthetic Prime Brokerage,CDA Amnd"),
+                CreateSwitch(SwitchKey.AllowedAgreementStatusForFundAccountCreation, SwitchType.StringList, Modules.OpsSecure, "Fully Executed"),
+                CreateSwitch(SwitchKey.AllowedAgreementTypesForReceivingFundAccounts, SwitchType.StringList, Modules.OpsSecure, "FCM,CDA,ISDA,GMRA,MRA,MSFTA,FXPB,CDA Amnd"),
+                CreateSwitch(SwitchKey.AgreementTypesEligibleForSendingWires, SwitchType.StringList, Modules.WireSettings, "Custody,DDA,PB,Synthetic Prime Brokerage"),
+                CreateSwitch(SwitchKey.SwiftBicToEnableField21, SwitchType.StringList, Modules.WireSettings, "SBOSUS30,SBOSUS3U,CNORLULX,SBOSUS3UIMS"),
+                CreateSwitch(SwitchKey.SwiftGroupToIncludeWirePurposeInWireMessage, SwitchType.StringList, Modules.WireSettings, "Credit Suisse")
             };
-
-            
-            
-            
         }
     }
 }

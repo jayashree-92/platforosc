@@ -190,9 +190,6 @@
     <Compile Include="hmsSwiftStatusLkup.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="hmsSystemPreference.cs">
-      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="hmsSystemSwitch.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

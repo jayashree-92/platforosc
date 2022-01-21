@@ -239,14 +239,6 @@
           <Property Name="hmsSwiftStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Status" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
-        <EntityType Name="hmsSystemPreferences">
-          <Key>
-            <PropertyRef Name="hmsSystemPreferenceId" />
-          </Key>
-          <Property Name="hmsSystemPreferenceId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="SystemKey" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="SystemValue" Type="varchar" MaxLength="3000" Nullable="false" />
-        </EntityType>
         <EntityType Name="hmsSystemSwitches">
           <Key>
             <PropertyRef Name="hmsSystemSwitchId" />
@@ -1363,7 +1355,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySet Name="hmsSwiftGroup" EntityType="Self.hmsSwiftGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftGroupStatusLkp" EntityType="Self.hmsSwiftGroupStatusLkp" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="hmsSystemPreferences" EntityType="Self.hmsSystemPreferences" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSystemSwitches" EntityType="Self.hmsSystemSwitches" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUserAuditLog" EntityType="Self.hmsUserAuditLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsUsers" EntityType="Self.hmsUsers" Schema="dbo" store:Type="Tables" />
@@ -1680,7 +1671,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySet Name="hmsWireCollateralAssociations" EntityType="OperationsSecureModel.hmsWireCollateralAssociation" />
           <EntitySet Name="hmsBulkUploadLogs" EntityType="OperationsSecureModel.hmsBulkUploadLog" />
           <EntitySet Name="hmsWireCutoffTimeZones" EntityType="OperationsSecureModel.hmsWireCutoffTimeZone" />
-          <EntitySet Name="hmsSystemPreferences" EntityType="OperationsSecureModel.hmsSystemPreference" />
           <EntitySet Name="hmsActionInProgresses" EntityType="OperationsSecureModel.hmsActionInProgress" />
           <EntitySet Name="hmsSwiftGroupStatusLkps" EntityType="OperationsSecureModel.hmsSwiftGroupStatusLkp" />
           <EntitySet Name="onBoardingSSITemplates" EntityType="OperationsSecureModel.onBoardingSSITemplate" />
@@ -2222,14 +2212,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="hmsWireCutoffTimeZoneId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TimeZone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="TimeZoneStandardName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="hmsSystemPreference">
-          <Key>
-            <PropertyRef Name="hmsSystemPreferenceId" />
-          </Key>
-          <Property Name="hmsSystemPreferenceId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SystemKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SystemValue" Type="String" Nullable="false" MaxLength="3000" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="hmsActionInProgress">
           <Key>
@@ -3610,15 +3592,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
                 <ScalarProperty Name="TimeZoneStandardName" ColumnName="TimeZoneStandardName" />
                 <ScalarProperty Name="TimeZone" ColumnName="TimeZone" />
                 <ScalarProperty Name="hmsWireCutoffTimeZoneId" ColumnName="hmsWireCutoffTimeZoneId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="hmsSystemPreferences">
-            <EntityTypeMapping TypeName="OperationsSecureModel.hmsSystemPreference">
-              <MappingFragment StoreEntitySet="hmsSystemPreferences">
-                <ScalarProperty Name="SystemValue" ColumnName="SystemValue" />
-                <ScalarProperty Name="SystemKey" ColumnName="SystemKey" />
-                <ScalarProperty Name="hmsSystemPreferenceId" ColumnName="hmsSystemPreferenceId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
