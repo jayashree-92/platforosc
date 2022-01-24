@@ -60,7 +60,7 @@
                     <div id="loading" style="display: none; text-align: center;">
                         <img id="loading-image" src="/Images/spinner.gif" alt="Loading..." />
                     </div>
-                    <table id="accountTable" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+                    <table id="accountTable" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
                 </div>
             </div>
         </div>
@@ -169,6 +169,7 @@
                                 <li ng-if="!IsReportingOnly"><a href="#accountContactInfo_0">Contacts&nbsp;<span class="label label-info">{{ onboardingContacts.length }}</span>   </a></li>
                                 <li ng-if="!IsReportingOnly && isEdit"><a href="#accountAttachment_0">Attachments&nbsp;<span class="label label-info">{{ accountDocuments.length }}</span></a></li>
                                 <li ng-if="!IsReportingOnly && !accountDetail.IsReceivingAccount"><a href="#accountSsiAssociation_0">Associated SSI&nbsp;<span class="label label-info">{{ ssiTemplateMaps.length }}</span></a></li>
+                                <li><a href="#accountClearingBrokers_0">Clearing Brokers&nbsp;<span class="label label-info">{{ TotalClearingBrokers}}</span></a></li>
 
                             </ul>
                         </div>
@@ -245,7 +246,7 @@
                                     <div class="row">
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
                                             <div class="col-sm-8 col-md-4 col-lg-4">
-                                                <label class="control-label">Registed Address </label>
+                                                <label class="control-label">Registered Address </label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
                                                 <textarea cols="10" rows="3" ng-model="FundRegistedAddress" class="form-control control-label" disabled="disabled"></textarea>
@@ -584,15 +585,14 @@
                                             </div>
                                             <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
                                                 <textarea class="form-control modalInputWidth" rows="4" cols="10" placeholder="Bank/Bene Address" name="BankAddress" ng-pattern="/^[/?:().,'+-\w\s\n\r]*$/" ng-model="accountDetail.UltimateBeneficiary.BankAddress" id="ultimateBankAddress0" readonly></textarea>
-
                                             </div>
                                         </div>
                                         <p></p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default ng-show-hide" id="accountCallback_0" plindex="0" data-toggle='collapse' ng-if="!IsReportingOnly && !IsBNYMBroker && ((isEdit && IsPendingApproval)|| (isEdit && IsApproved)|| (IsKeyFieldsChanged))">
-                                <div class="panel-heading" data-toggle="collapse" data-target="#accountCallbackInfo_0" aria-expanded="false" aria-controls="accountCallbackInfo_0" ng-click="adjustContainer(true)" style="position: sticky;top: 47px;z-index: 2;">
+                            <div class="panel panel-default ng-show-hide" id="accountCallback_0" data-toggle='collapse' ng-if="!IsReportingOnly && !IsBNYMBroker && ((isEdit && IsPendingApproval)|| (isEdit && IsApproved)|| (IsKeyFieldsChanged))">
+                                <div class="panel-heading" data-toggle="collapse" data-target="#accountCallbackInfo_0" aria-expanded="false" aria-controls="accountCallbackInfo_0" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Callback Check</b>&nbsp;<span style="color: red"> *</span>
                                     <span class="pull-right">
                                         <a class="btn btn-xs btn-primary" ng-click="fnAddCallbackModal()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Callback</a>&nbsp;&nbsp;
@@ -603,15 +603,13 @@
                                     <div class="control-group">
                                         <p></p>
                                         <div class="row">
-                                            <div class="col-sm-12 col-md-12 col-lg-12">
-                                                <table id="accountCallbackTbl_0" class="table table-condensed table-bordered table-striped table-hover ssiTemplate table-highlighted" tindex="0"><tfoot></tfoot></table>
-                                            </div>
+                                            <table id="accountCallbackTbl_0" class="table table-condensed table-bordered table-striped table-hover ssiTemplate" tindex="0"><tfoot></tfoot></table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div ng-if="!IsReportingOnly" class="panel panel-default ng-show-hide" id="accountContactInfo_0" data-toggle='collapse'>
-                                <div class="panel-heading" data-toggle="collapse" data-target="#accountContactDetailInfo_0" aria-expanded="false" aria-controls="accountContactDetailInfo_0" ng-click="adjustContainer(false)" style="position: sticky;top: 47px;z-index: 2;">
+                                <div class="panel-heading" data-toggle="collapse" data-target="#accountContactDetailInfo_0" aria-expanded="false" aria-controls="accountContactDetailInfo_0" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Contact</b>
                                     <span class="pull-right">
                                         <a class="btn btn-xs btn-info" ng-click="$event.stopPropagation();fnCreateContact()"><i class="glyphicon glyphicon-phone"></i>&nbsp;Add Contact</a>&nbsp;&nbsp;
@@ -637,13 +635,11 @@
                                     </div>
                                     <p></p>
                                     <div class="row">
-                                        <div class="col-sm-12 col-md-12 col-lg-12">
-                                            <table id="contactTable0" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
-                                        </div>
+                                        <table id="contactTable0" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default ng-show-hide" id="accountAttachment_0" plindex="0" data-toggle='collapse' ng-if="!IsReportingOnly && isEdit">
+                            <div class="panel panel-default ng-show-hide" id="accountAttachment_0" data-toggle='collapse' ng-if="!IsReportingOnly && isEdit">
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountAttachmentDetailInfo_0" aria-expanded="false" aria-controls="accountAttachmentDetailInfo_0" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Attachments</b>&nbsp;<span style="color: red"> *</span><span class="pull-right"><i class="indicator glyphicon glyphicon-chevron-down"></i></span>
                                 </div>
@@ -654,11 +650,11 @@
                                             <ng-form class="dropzone uploadFiles" enctype="multipart/form-data" id="uploadFiles0" method="post" novalidate style="display: block" />
                                         </div>
                                         <p></p>
-                                        <table id="documentTable0" class="table table-condensed table-bordered table-striped table-hover table-highlighted"><tfoot></tfoot></table>
+                                        <table id="documentTable0" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default ng-show-hide" id="accountSsiAssociation_0" plindex="0" ng-if="!IsReportingOnly && !accountDetail.IsReceivingAccount" data-toggle='collapse'>
+                            <div class="panel panel-default ng-show-hide" id="accountSsiAssociation_0" ng-if="!IsReportingOnly && !accountDetail.IsReceivingAccount" data-toggle='collapse'>
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountSsiAssociationInfo_0" aria-expanded="false" aria-controls="accountSsiAssociationInfo_0" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Associated Settlement Instructions</b>
                                     <span class="pull-right">
@@ -678,14 +674,47 @@
                                     <div class="control-group">
                                         <p></p>
                                         <div class="row">
-                                            <div class="col-sm-12 col-md-12 col-lg-12">
-                                                <table id="ssiTemplateTable0" class="table table-condensed table-bordered table-striped table-hover ssiTemplate table-highlighted" tindex="0"><tfoot></tfoot></table>
-                                            </div>
+                                            <table id="ssiTemplateTable0" class="table table-condensed table-bordered table-striped table-hover ssiTemplate" tindex="0"><tfoot></tfoot></table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="panel panel-default ng-show-hide" id="accountClearingBrokers_0" data-toggle='collapse'>
+                                <div class="panel-heading" data-toggle="collapse" data-target="#accountClearingBrokerInfo_0" aria-expanded="false" aria-controls="accountClearingBrokerInfo_0" style="position: sticky;top: 47px;z-index: 2;">
+                                    <b>Associated Clearing Brokers</b>
+                                    <span class="pull-right">
+                                        @if (User.IsWireApprover())
+                                        {
+                                            <span class="btn-group" id="btnAccountMapStatusButtons" style="display: none;">
+                                                <a id="accountMapApprove" title="Approve" class="btn btn-success btn-xs disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Approved','Approve')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-ok"></i> Approve SSI Association</a>
+                                            </span>
+                                        }
 
+                                        <i class="indicator glyphicon glyphicon-chevron-down"></i>
+                                    </span>
+                                </div>
+                                <div id="accountClearingBrokerInfo_0" class="panel-body collapse">
+                                    <div class="control-group">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <b>Clearing Broker:</b><input style="width: 300px" type="text" class="form-control" id="txtNewClearingBroker" />
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <b>Exposure:</b><input type="hidden" id="liExposureAgreementType" style="width:300px" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <br />
+                                                <button class="btn btn-sm btn-primary" ng-click="fnAddClearingBroker()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Selection</button>&nbsp;&nbsp;
+                                            </div>
+                                        </div>
+                                        <p></p>
+                                        <div class="row">
+                                            <table id="tblAccClearingBrokers" class="table table-condensed table-bordered table-striped table-hover" tindex="0"><tfoot></tfoot></table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="accntActions modal-footer">
@@ -739,7 +768,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-12 col-md-12 col-lg-12">
-                            <table id="ssiTemplateTableMap" class="table table-condensed table-bordered table-striped table-hover ssiTemplate table-highlighted" tindex="0"><tfoot></tfoot></table>
+                            <table id="ssiTemplateTableMap" class="table table-condensed table-bordered table-striped table-hover ssiTemplate" tindex="0"><tfoot></tfoot></table>
                         </div>
                     </div>
                 </div>

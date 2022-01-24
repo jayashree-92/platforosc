@@ -19,12 +19,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.entityTypes = [{ id: "Agreement", text: "Agreement" }, { id: "Agreement (Reporting Only)", text: "Agreement (Reporting Only)" }, { id: "DDA", text: "DDA" }, { id: "Custody", text: "Custody" }];
     $scope.SwiftGroups = [];
     $scope.SwiftGroupData = [];
-    var accountDocumentTable = [];
-    var ssiMapTable = [];
+    var tblAccountDocuments;
+    var tblSsiTemplateAssociations;
+    var tblAccountCallBacks;
+    var tblAccClearingBrokers;
     $scope.onBoardingAccountSSITemplateMap = {};
     $scope.ssiTemplates = [];
     $scope.accountDocuments = [];
-    var contactTable = [];
+    var tblContacts = [];
     var approvedStatus = "Approved";
     //var rejectedStatus = "Rejected";
     var pendingStatus = "Pending Approval";
@@ -35,14 +37,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.DisabledAgreementForCashInstructions = ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"];
 
-    function viewAttachmentTable(data, key) {
+    function viewAttachmentTable(data) {
 
-        if ($("#documentTable" + key).hasClass("initialized")) {
-            fnDestroyDataTable("#documentTable" + key);
+        if ($("#documentTable0").hasClass("initialized")) {
+            fnDestroyDataTable("#documentTable0");
         }
-        accountDocumentTable[key] = $("#documentTable" + key).not(".initialized").addClass("initialized").DataTable({
+        tblAccountDocuments = $("#documentTable0").not(".initialized").addClass("initialized").DataTable({
             "bDestroy": true,
-            // responsive: true,
             aaData: data,
             "aoColumns": [
                 {
@@ -71,26 +72,16 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     "mData": "onBoardingAccountDocumentId",
                     "sTitle": "Remove", "className": "dt-center",
                     "mRender": function () {
-                        return "<button class='btn btn-danger btn-xs' title='Remove Document' id='" + key + "'><i class='glyphicon glyphicon-trash'></i></button>";
+                        return "<button class='btn btn-danger btn-xs' title='Remove Document'><i class='glyphicon glyphicon-trash'></i></button>";
                     }
                 }
             ],
             "deferRender": false,
             "bScrollCollapse": true,
-            //scroller: true,
-            //sortable: false,
-            //"sDom": "ift",
-            //pagination: true,
             "sScrollX": "100%",
             "sScrollXInner": "100%",
             "scrollY": 350,
             "order": [[2, "desc"]],
-
-            //"fnRowCallback": function (nRow, aData) {
-            //    if (aData.FileName != "") {
-            //        $("td:eq(0)", nRow).html("<a title ='click to download the file' href='/FundAccounts/DownloadAccountFile?fileName=" + getFormattedFileName(aData.FileName) + "&accountId=" + $scope.onBoardingAccountId + "'>" + aData.FileName + "</a>");
-            //    }
-            //},
             "oLanguage": {
                 "sSearch": "",
                 "sEmptyTable": "No files are available for the ssi templates",
@@ -99,8 +90,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
 
         $timeout(function () {
-            accountDocumentTable[key].columns.adjust().draw(true);
-            $scope.onBoardingAccountDetails[key].onBoardingAccountDocuments = angular.copy(data);
+            tblAccountDocuments.columns.adjust().draw(true);
+            $scope.onBoardingAccountDetails[0].onBoardingAccountDocuments = angular.copy(data);
         }, 50);
 
 
@@ -113,8 +104,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#accountDetailCP tbody tr td:last-child button").on("click", function (event) {
             event.preventDefault();
             var selectedRow = $(this).parents("tr");
-            var rowIndex = $(this).attr("id");
-            var rowElement = accountDocumentTable[rowIndex].row(selectedRow).data();
+            var rowElement = tblAccountDocuments.row(selectedRow).data();
             bootbox.confirm("Are you sure you want to remove this document from account?", function (result) {
                 if (!result) {
                     return;
@@ -122,18 +112,18 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     $timeout(function () {
                         if (rowElement.onBoardingAccountDocumentId > 0) {
                             $http.post("/FundAccounts/RemoveAccountDocument", { fileName: rowElement.FileName, documentId: rowElement.onBoardingAccountDocumentId }).then(function () {
-                                accountDocumentTable[rowIndex].row(selectedRow).remove().draw();
+                                tblAccountDocuments.row(selectedRow).remove().draw();
                                 $("#spnAgrCurrentStatus").html("Saved as Draft");
                                 $("#hmStatus").show();
-                                $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountDocuments.pop(rowElement);
+                                $scope.onBoardingAccountDetails[0].onBoardingAccountDocuments.pop(rowElement);
                                 notifySuccess("Account document has removed successfully");
 
                             });
                         } else {
-                            accountDocumentTable[rowIndex].row(selectedRow).remove().draw();
+                            tblAccountDocuments.row(selectedRow).remove().draw();
                             $("#spnAgrCurrentStatus").html("Saved as Draft");
                             $("#hmStatus").show();
-                            $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountDocuments.pop(rowElement);
+                            $scope.onBoardingAccountDetails[0].onBoardingAccountDocuments.pop(rowElement);
                             notifySuccess("Account document has removed successfully");
                         }
                         $scope.fnGetAccounts();
@@ -142,13 +132,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             });
         });
     }
-    $scope.contactTable = [];
+
     function viewContactTable(data) {
 
         if ($("#contactTable0").hasClass("initialized")) {
             fnDestroyDataTable("#contactTable0");
         }
-        $scope.contactTable[0] = $("#contactTable0").not(".initialized").addClass("initialized").DataTable({
+        tblContacts = $("#contactTable0").not(".initialized").addClass("initialized").DataTable({
             "bDestroy": true,
             // responsive: true,
             aaData: data,
@@ -195,7 +185,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
 
         $timeout(function () {
-            $scope.contactTable[0].columns.adjust().draw(true);
+            tblContacts.columns.adjust().draw(true);
         }, 1000);
     }
 
@@ -250,6 +240,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.counterpartyFamilies = response.data.counterpartyFamilies;
             $scope.ddaAgreementTypeId = response.data.ddaAgreementTypeId;
             $scope.custodyAgreementTypeId = response.data.custodyAgreementTypeId;
+            $scope.custodyAgreementTypeId = response.data.custodyAgreementTypeId;
         });
     }
 
@@ -292,6 +283,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             data: []
         });
 
+        $("#liExposureAgreementType").select2({
+            placeholder: "Select an Exposure Type",
+            allowClear: true,
+            data: []
+        });
+
+        $("#liExposureAgreementType").select2("val", "");
         $("#liAccountType").select2("val", "");
         $("#liFund").select2("val", "");
         $("#liAgreement").select2("val", "");
@@ -357,14 +355,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if (fundId > 0) {
 
             var agreements = $filter("filter")(angular.copy($scope.agreements), { 'hmFundId': parseInt(fundId) }, true);
-            //var agreements = $.grep($scope.agreements, function (v) { return v.hmFundId == fundId; });
-            //var agreementData = [];
-            //$.each(agreements, function (key, value) {
-            //    agreementData.push({ "id": value.AgreementOnboardingId, "text": value.AgreementShortName });
-            //});
-
-            //var agreementData = $filter('filter')($scope.)
-
             agreements = $filter("orderBy")(agreements, "text");
 
             if ($("#liAgreement").data("select2")) {
@@ -376,6 +366,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 allowClear: true,
                 data: agreements
             });
+
             $("#liAgreement").select2("val", "");
             $scope.FundName = $(this).select2("data").LegalName;
         }
@@ -410,7 +401,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $scope.broker = broker.text;
             $scope.loadAccountData();
         }
-
     });
 
     angular.element(document).on("change", "#liBroker", function (event) {
@@ -571,24 +561,24 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         { "mData": "Account.CashSweep", "sTitle": "Cash Sweep" },
                         {
                             "mData": "Account.CashSweepTime", "sTitle": "Cash Sweep Time",
-                            "mRender": function (tdata) {
-                                if (tdata == "" || tdata == null)
+                            "mRender": function (tData) {
+                                if (tData == "" || tData == null)
                                     return "";
 
-                                return moment(tdata).format("LT");
+                                return moment(tData).format("LT");
                             }
                         },
                         { "mData": "Account.CashSweepTimeZone", "sTitle": "Cash Sweep Time Zone" },
                         {
                             "mData": "Account.WirePortalCutoff", "sTitle": "Cutoff Time",
-                            "mRender": function (tdata) {
-                                if (tdata == null)
+                            "mRender": function (tData) {
+                                if (tData == null)
                                     return "";
 
-                                return moment(tdata.CutoffTime).format("LT");
+                                return moment(tData.CutoffTime).format("LT");
                             }
                         },
-                        { "mData": "Account.WirePortalCutoff", "sTitle": "Days to wire per V.D", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.DaystoWire : ""; } },
+                        { "mData": "Account.WirePortalCutoff", "sTitle": "Days to wire per V.D", "mRender": function (tData, type, row, meta) { return tData != null ? tData.DaystoWire : ""; } },
                         { "mData": "Account.HoldbackAmount", "sTitle": "Holdback Amount" },
                         { "mData": "Account.SweepComments", "sTitle": "Sweep Comments" },
                         { "mData": "Account.AssociatedCustodyAcct", "sTitle": "Associated Custody Acct" },
@@ -621,14 +611,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         { "mData": "Account.Reference", "sTitle": "Reference" },
                         {
                             "mData": "Account.onBoardingAccountStatus", "sTitle": "Status",
-                            "mRender": function (tdata) {
-                                if (tdata != null && tdata != "undefined") {
-                                    switch (tdata) {
-                                        case "Approved": return "<label class='label label-success'>" + tdata + "</label>";
-                                        case "Pending Approval": return "<label class='label label-warning'>" + tdata + "</label>";
+                            "mRender": function (tData) {
+                                if (tData != null && tData != "undefined") {
+                                    switch (tData) {
+                                        case "Approved": return "<label class='label label-success'>" + tData + "</label>";
+                                        case "Pending Approval": return "<label class='label label-warning'>" + tData + "</label>";
                                         case "Created": return "<label class='label label-default'>" + "Saved As Draft" + "</label>";
                                     }
-                                    return "<label class='label label-default'>" + tdata + "</label>";
+                                    return "<label class='label label-default'>" + tData + "</label>";
                                 }
                                 return "";
                             }
@@ -837,12 +827,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#btnApprove").show();
 
             if (account.CashSweepTime != null && account.CashSweepTime != "" && account.CashSweepTime != undefined) {
-                //var times = account.CashSweepTime.split(':');
                 account.CashSweepTime = new Date(2014, 0, 1, account.CashSweepTime.Hours, account.CashSweepTime.Minutes, account.CashSweepTime.Seconds);
             }
 
             if (account.WirePortalCutoff.CutoffTime != null && account.WirePortalCutoff.CutoffTime != "" && account.WirePortalCutoff.CutoffTime != undefined) {
-                //var cutoffTimes = account.CutoffTime.split(':');
                 account.WirePortalCutoff.CutoffTime = new Date(2014, 0, 1, account.WirePortalCutoff.CutoffTime.Hours, account.WirePortalCutoff.CutoffTime.Minutes, account.WirePortalCutoff.CutoffTime.Seconds);
             }
             account.CreatedAt = moment(account.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
@@ -1109,7 +1097,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnGetAccounts();
 
     $scope.fnCashSweep = function (cashSweep) {
-        //var cashSweepTimeZone = "#cashSweepTimeZone" + index;
         if (cashSweep == "Yes") {
             $(".cashSweepTimeDiv0").show();
         }
@@ -1212,7 +1199,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (cutOff != undefined && cutOff != "") {
 
                 $scope.onBoardingAccountDetails[0].WirePortalCutoff.CutoffTime = new Date(2014, 0, 1, cutOff.CutoffTime.Hours, cutOff.CutoffTime.Minutes, cutOff.CutoffTime.Seconds);
-                //$("#cutOffTime" + index).val($scope.onBoardingAccountDetails[0].CutoffTime);
                 $scope.onBoardingAccountDetails[0].WirePortalCutoff.DaystoWire = cutOff.DaystoWire;
                 $scope.onBoardingAccountDetails[0].WirePortalCutoff.CutOffTimeZone = cutOff.CutOffTimeZone;
                 $scope.onBoardingAccountDetails[0].WirePortalCutoff.hmsWirePortalCutoffId = cutOff.hmsWirePortalCutoffId;
@@ -1524,6 +1510,19 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
+    $scope.fnGetClearingBrokerData = function (accountId) {
+        $http.get("/FundAccounts/GetAccountClearingBrokers?accountId=" + accountId).then(function (response) {
+            $scope.ConstructClearingBrokerTable(response.data);
+            $scope.TotalClearingBrokers = response.data.length;
+            $("#liExposureAgreementType").select2({
+                placeholder: "Select an Agreement Type",
+                allowClear: true,
+                data: $scope.agreementTypes
+            });
+        });
+    }
+
+
     $scope.fnLoadDefaultDropDowns = function () {
 
         $("#liBeneficiaryType0").select2({
@@ -1543,8 +1542,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             allowClear: true,
             data: $scope.ultimateBeneficiaryType
         });
-
-
 
         $("#liUltimateBeneficiaryType0").on("change", function (e) {
             $("#liUltimateBeneficiaryBICorABA0").select2("val", "").trigger("change");
@@ -1614,17 +1611,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             allowClear: true,
             data: $scope.accountStatus
         });
-        //$("#liCustodyAcct0").select2({
-        //    placeholder: "Select a Associated Custody Account",
-        //    allowClear: true,
-        //    data: $scope.cusodyAccountData
-        //});
     }
 
-    function viewSsiTemplateTable(data, key) {
 
-        if ($("#ssiTemplateTable" + key).hasClass("initialized")) {
-            fnDestroyDataTable("#ssiTemplateTable" + key);
+
+    function viewSsiTemplateTable(data) {
+
+        if ($("#ssiTemplateTable0").hasClass("initialized")) {
+            fnDestroyDataTable("#ssiTemplateTable0");
         }
 
         if (data.length > 0)
@@ -1632,7 +1626,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         else
             $("#btnAccountMapStatusButtons").hide();
 
-        ssiMapTable[key] = $("#ssiTemplateTable" + key).not(".initialized").addClass("initialized").DataTable({
+        tblSsiTemplateAssociations = $("#ssiTemplateTable0").not(".initialized").addClass("initialized").DataTable({
             "bDestroy": true,
             //responsive: true,
             aaData: data,
@@ -1694,7 +1688,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 {
                     "mData": "onBoardingSSITemplateId", "sTitle": "Go to SSI Template", "className": "dt-center",
                     "mRender": function (data, type, row) {
-                        // return " <label class=\"label ng-show-only  label-success\" style=\"font-size: 12px;\">" + row.CompletedCount + "</label> <label class=\"label ng-show-only  label-warning\"  style=\"font-size: 12px;\">" + row.InProcessCount + "</label> <label class=\"label ng-show-only  label-info\" style=\"font-size: 12px;\">" + row.TbdCount + "</label>";
                         return "<a class=\"btn btn-primary btn-xs\" id=\"" + data + "\" ><i class=\"glyphicon glyphicon-share-alt\"></i></a>";
                     }
 
@@ -1702,7 +1695,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 {
                     "mData": "onBoardingAccountSSITemplateMapId", "className": "dt-center",
                     "sTitle": "Remove", "mRender": function (tdata) {
-                        return "<a class='btn btn-danger btn-xs' title='Remove SSI' id='" + key + "'><i class='glyphicon glyphicon-trash'></i></a>";
+                        return "<a class='btn btn-danger btn-xs' title='Remove SSI'><i class='glyphicon glyphicon-trash'></i></a>";
                     }
                 }
             ],
@@ -1737,31 +1730,30 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
 
         $timeout(function () {
-            ssiMapTable[key].columns.adjust().draw(true);
+            tblSsiTemplateAssociations.columns.adjust().draw(true);
         }, 1000);
 
 
         $("#accountDetailCP tbody tr td:last-child a").on("click", function (event) {
             event.preventDefault();
             var selectedRow = $(this).parents("tr");
-            var rowIndex = $(this).attr("id");
-            var rowElement = ssiMapTable[rowIndex].row(selectedRow).data();
+            var rowElement = tblSsiTemplateAssociations.row(selectedRow).data();
             bootbox.confirm("Are you sure you want to remove this ssi template from account?", function (result) {
                 if (!result) {
                     return;
                 } else {
                     if (rowElement.onBoardingAccountSSITemplateMapId > 0) {
                         $http.post("/SSITemplate/RemoveSsiTemplateMap", { ssiTemplateMapId: rowElement.onBoardingAccountSSITemplateMapId }).then(function () {
-                            ssiMapTable[rowIndex].row(selectedRow).remove().draw();
+                            tblSsiTemplateAssociations.row(selectedRow).remove().draw();
                             //$scope.ssiTemplateDocuments.pop(rowElement);
-                            $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountSSITemplateMaps.pop(rowElement);
-                            notifySuccess("ssi template has removed succesfully");
-                            $scope.fnSsiTemplateMap($scope.onBoardingAccountDetails[key].onBoardingAccountId, $scope.FundId, key, $scope.onBoardingAccountDetails[key].Currency);
+                            $scope.onBoardingAccountDetails[0].onBoardingAccountSSITemplateMaps.pop(rowElement);
+                            notifySuccess("ssi template has removed successfully");
+                            $scope.fnSsiTemplateMap($scope.onBoardingAccountDetails[0].onBoardingAccountId, $scope.FundId, $scope.onBoardingAccountDetails[0].Currency);
                         });
                     } else {
-                        ssiMapTable[rowIndex].row(selectedRow).remove().draw();
-                        $scope.onBoardingAccountDetails[rowIndex].onBoardingAccountSSITemplateMaps.pop(rowElement);
-                        notifySuccess("ssi template has removed succesfully");
+                        tblSsiTemplateAssociations.row(selectedRow).remove().draw();
+                        $scope.onBoardingAccountDetails[0].onBoardingAccountSSITemplateMaps.pop(rowElement);
+                        notifySuccess("ssi template has removed successfully");
                     }
                 }
             });
@@ -1782,11 +1774,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             }
 
             var selectedRow = $(this);
-            var rowIndex = $(this).parents("table").attr("tIndex");
-            var rowElement = ssiMapTable[rowIndex].row(selectedRow).data();
+            var rowElement = tblSsiTemplateAssociations.row(selectedRow).data();
 
             $scope.onBoardingAccountSSITemplateMapId = rowElement.onBoardingAccountSSITemplateMapId;
-            $scope.plIndex = rowIndex;
 
             if (rowElement.Status == pendingStatus && rowElement.onBoardingAccountSSITemplateMapId > 0 && rowElement.UpdatedBy != $("#userName").val()) {
                 $("#btnAccountMapStatusButtons a[title='Approve']").removeClass("disabled");
@@ -1801,14 +1791,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
-    $scope.fnSsiTemplateMap = function (accountId, fundId, index, currency) {
-        var messages = $scope.onBoardingAccountDetails[index].SwiftGroup != undefined ? $scope.onBoardingAccountDetails[index].SwiftGroup.AcceptedMessages : "";
+    $scope.fnSsiTemplateMap = function (accountId, fundId, currency) {
+        var messages = $scope.onBoardingAccountDetails[0].SwiftGroup != undefined ? $scope.onBoardingAccountDetails[0].SwiftGroup.AcceptedMessages : "";
         $http.get("/FundAccounts/GetAccountSsiTemplateMap?accountId=" + accountId + "&fundId=" + fundId + "&currency=" + currency + "&messages=" + messages).then(function (response) {
             $scope.ssiTemplates = response.data.ssiTemplates;
             $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
             if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined && $scope.ssiTemplateMaps.length > 0) {
-                //$scope.onBoardingAccountDetails[index].onBoardingAccountSSITemplateMaps = $scope.ssiTemplateMaps;
-                viewSsiTemplateTable($scope.ssiTemplateMaps, index);
+                viewSsiTemplateTable($scope.ssiTemplateMaps);
             }
         });
     }
@@ -1839,12 +1828,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             $("#btnAccountMapStatusButtons a[title='Approve']").addClass("disabled");
 
-            var rowElement = ssiMapTable[$scope.plIndex].row(".info").data();
+            var rowElement = tblSsiTemplateAssociations.row(".info").data();
             rowElement.Status = $scope.AccountMapStatus;
             rowElement.UpdatedBy = $("#userName").val();
             rowElement.Comments = $("#statusMapComments").val().trim();
             rowElement.UpdatedAt = moment();
-            var selectedRowNode = ssiMapTable[$scope.plIndex].row(".info").data(rowElement).draw().node();
+            var selectedRowNode = tblSsiTemplateAssociations.row(".info").data(rowElement).draw().node();
 
             $(selectedRowNode).addClass("success").removeClass("warning");
 
@@ -1853,9 +1842,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     }
 
-    function attachment(key) {
+    function attachment() {
 
-        $("#uploadFiles" + key).dropzone({
+        $("#uploadFiles0").dropzone({
             url: "/FundAccounts/UploadAccountFiles?accountId=" + $scope.onBoardingAccountId,
             dictDefaultMessage: "<span><span style=\"color: red\"> * </span>Drag/Drop account documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
             autoDiscover: false,
@@ -1877,25 +1866,25 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 //});
             },
             processing: function (file, result) {
-                $("#uploadFiles" + key).animate({ "min-height": "140px" });
+                $("#uploadFiles0").animate({ "min-height": "140px" });
             },
             success: function (file, result) {
                 $(".dzFileProgress").removeClass("progress-bar-striped").removeClass("active").removeClass("progress-bar-warning").addClass("progress-bar-success");
                 $(".dzFileProgress").html("Upload Successful");
-                $("#uploadFiles" + key).animate({ "min-height": "80px" });
+                $("#uploadFiles0").animate({ "min-height": "80px" });
                 var aDocument = result;
                 $.each(aDocument.Documents, function (index, value) {
                     $scope.accountDocuments.push(value);
                 });
                 $("#spnAgrCurrentStatus").html("Saved as Draft");
                 $("#hmStatus").show();
-                viewAttachmentTable($scope.accountDocuments, key);
+                viewAttachmentTable($scope.accountDocuments);
                 $scope.fnGetAccounts();
             },
             queuecomplete: function () {
             },
             complete: function (file, result) {
-                $("#uploadFiles" + key).removeClass("dz-drag-hover");
+                $("#uploadFiles0").removeClass("dz-drag-hover");
 
                 if (this.getRejectedFiles().length > 0 && this.getAcceptedFiles().length === 0 && this.getQueuedFiles().length === 0) {
                     showMessage("File format is not supported to upload.", "Status");
@@ -1910,14 +1899,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
-    $scope.fnAccountDocuments = function (accountId, index) {
+    $scope.fnAccountDocuments = function (accountId) {
         $http.get("/FundAccounts/GetAccountDocuments?accountId=" + accountId).then(function (response) {
             $scope.accountDocuments = response.data.accountDocuments;
             if ($scope.accountDocuments != null && $scope.accountDocuments != undefined && $scope.accountDocuments.length > 0) {
-                viewAttachmentTable($scope.accountDocuments, index);
+                viewAttachmentTable($scope.accountDocuments);
             }
 
-            if ($scope.accountDocuments.length > 0 && $scope.onBoardingAccountDetails[index].onBoardingAccountStatus == approvedStatus) {
+            if ($scope.accountDocuments.length > 0 && $scope.onBoardingAccountDetails[0].onBoardingAccountStatus == approvedStatus) {
                 $(".dz-hidden-input").prop("disabled", true);
             } else {
                 $(".dz-hidden-input").prop("disabled", false);
@@ -1927,83 +1916,100 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnIntialize = function () {
 
-        //Custody account
-        var cusodyAccountList = $.grep($scope.allAccountList, function (v) { return v.Account.AccountType == "Custody"; });
-        $scope.cusodyAccountData = [];
-
         $scope.fnGetAccountReports();
-        $.each($scope.onBoardingAccountDetails, function (key, value) {
+        var fndAccount = $scope.onBoardingAccountDetails[0];
 
-            $scope.fnGetAccountDescriptions();
-            $scope.fnGetAccountModules();
-            if (value.onBoardingAccountId > 0) {
-                $scope.fnLoadContactDetails(value.ContactName);
-                $scope.fnGetAccountCallbackData(value.onBoardingAccountId);
-            }
+        $scope.fnGetAccountDescriptions();
+        $scope.fnGetAccountModules();
+        if (fndAccount.onBoardingAccountId > 0) {
+            $scope.fnLoadContactDetails(fndAccount.ContactName);
+            $scope.fnGetAccountCallbackData(fndAccount.onBoardingAccountId);
+            $scope.fnGetClearingBrokerData(fndAccount.onBoardingAccountId);
+        }
 
-            $scope.fnLoadDefaultDropDowns();
-            $scope.fnGetAuthorizedParty();
-            $scope.fnGetSwiftGroup();
-            var cashSweepTimeDiv = ".cashSweepTimeDiv0";
-            var cashSweepTime = "#cashSweepTime0";
-            if (value.CashSweep == "Yes") {
-                $(cashSweepTimeDiv).show();
-                $("#cashSweepTimeZone0").val(value.CashSweepTimeZone);
-            }
-            else $(cashSweepTimeDiv).hide();
+        $scope.fnLoadDefaultDropDowns();
+        $scope.fnGetAuthorizedParty();
+        $scope.fnGetSwiftGroup();
+        var cashSweepTimeDiv = ".cashSweepTimeDiv0";
+        var cashSweepTime = "#cashSweepTime0";
+        if (fndAccount.CashSweep == "Yes") {
+            $(cashSweepTimeDiv).show();
+            $("#cashSweepTimeZone0").val(fndAccount.CashSweepTimeZone);
+        }
+        else $(cashSweepTimeDiv).hide();
 
-            $("#liAccountDescriptions0").val(value.Description);
+        $("#liAccountDescriptions0").val(fndAccount.Description);
 
 
-            $scope.fnToggleBeneficiaryBICorABA(value.BeneficiaryType, "Beneficiary");
-            $scope.fnToggleBeneficiaryBICorABA(value.IntermediaryType, "Intermediary");
-            $scope.fnToggleBeneficiaryBICorABA(value.UltimateBeneficiaryType, "UltimateBeneficiary");
+        $scope.fnToggleBeneficiaryBICorABA(fndAccount.BeneficiaryType, "Beneficiary");
+        $scope.fnToggleBeneficiaryBICorABA(fndAccount.IntermediaryType, "Intermediary");
+        $scope.fnToggleBeneficiaryBICorABA(fndAccount.UltimateBeneficiaryType, "UltimateBeneficiary");
 
-            if (value.onBoardingAccountStatus == createdStatus) {
-                $("#spnAgrCurrentStatus").html("Saved as Draft");
-                $("#hmStatus").show();
-            }
-            else if (value.onBoardingAccountStatus == pendingStatus && value.UpdatedBy != $("#userName").val()) {
-                $("#spnAgrCurrentStatus").html(value.onBoardingAccountStatus);
-                $("#hmStatus").show();
-                $("#spnAgrCurrentStatus").removeClass("text-default").removeClass("text-success").addClass("text-warning");
-            }
-            else if (value.onBoardingAccountStatus == approvedStatus) {
-                $("#spnAgrCurrentStatus").html(value.onBoardingAccountStatus);
-                $("#hmStatus").show();
-                $("#spnAgrCurrentStatus").parent().removeClass("text-default").removeClass("text-warning").addClass("text-success");
-            } else {
-                $("#spnAgrCurrentStatus").html(value.onBoardingAccountStatus);
-            }
-            $scope.fnSsiTemplateMap(value.onBoardingAccountId, $scope.FundId, key, value.Currency);
-            attachment(key);
-            $scope.fnAccountDocuments(value.onBoardingAccountId, key);
-            $scope.validateAccountNumber(true);
-        });
+        if (fndAccount.onBoardingAccountStatus == createdStatus) {
+            $("#spnAgrCurrentStatus").html("Saved as Draft");
+            $("#hmStatus").show();
+        }
+        else if (fndAccount.onBoardingAccountStatus == pendingStatus && fndAccount.UpdatedBy != $("#userName").val()) {
+            $("#spnAgrCurrentStatus").html(fndAccount.onBoardingAccountStatus);
+            $("#hmStatus").show();
+            $("#spnAgrCurrentStatus").removeClass("text-default").removeClass("text-success").addClass("text-warning");
+        }
+        else if (fndAccount.onBoardingAccountStatus == approvedStatus) {
+            $("#spnAgrCurrentStatus").html(fndAccount.onBoardingAccountStatus);
+            $("#hmStatus").show();
+            $("#spnAgrCurrentStatus").parent().removeClass("text-default").removeClass("text-warning").addClass("text-success");
+        } else {
+            $("#spnAgrCurrentStatus").html(fndAccount.onBoardingAccountStatus);
+        }
+        $scope.fnSsiTemplateMap(fndAccount.onBoardingAccountId, $scope.FundId, fndAccount.Currency);
+        attachment();
+        $scope.fnAccountDocuments(fndAccount.onBoardingAccountId);
+        $scope.validateAccountNumber(true);
+
 
         $("#accountDetailCP .panel-default .panel-heading").on("click", function (e) {
             $(this).parent().find("div.collapse").collapse("toggle");
             toggleChevron(e);
-            var tableIndex = parseInt($(this).parent().attr("plindex"));
-            if (ssiMapTable != null && ssiMapTable.length > 0 && tableIndex < ssiMapTable.length) {
-                window.setTimeout(function () {
-                    ssiMapTable[tableIndex].columns.adjust().draw(true);
-                }, 10);
-            }
-            if (accountDocumentTable != null && accountDocumentTable.length > 0 && tableIndex < accountDocumentTable.length) {
-                window.setTimeout(function () {
-                    accountDocumentTable[tableIndex].columns.adjust().draw(true);
-                }, 10);
-            }
-            if (contactTable != null && contactTable.length > 0 && tableIndex < contactTable.length) {
-                $timeout(function () {
-                    contactTable[tableIndex].columns.adjust().draw(true);
-                }, 1000);
-            }
+            $scope.fnAddjustTableColumns();
         });
+
+        $("#navListSideBarHelp li a").on("click", function (e) {
+            //$(this).parent().find("div.collapse").collapse("toggle");
+            //toggleChevron(e);
+            $scope.fnAddjustTableColumns();
+        });
+
     }
 
-    $scope.CheckSSIFieldsChanges = function (val, oldVal) {
+    $scope.fnAddjustTableColumns = function () {
+        if (tblSsiTemplateAssociations != undefined && tblSsiTemplateAssociations.columns != undefined) {
+            window.setTimeout(function () {
+                tblSsiTemplateAssociations.columns.adjust().draw(true);
+            }, 100);
+        }
+        if (tblAccountDocuments != undefined && tblAccountDocuments.columns != undefined) {
+            window.setTimeout(function () {
+                tblAccountDocuments.columns.adjust().draw(true);
+            }, 100);
+        }
+        if (tblContacts != undefined && tblContacts.columns != undefined) {
+            $timeout(function () {
+                tblContacts.columns.adjust().draw(true);
+            }, 100);
+        }
+        if (tblAccountCallBacks != undefined && tblAccountCallBacks.columns != undefined) {
+            $timeout(function () {
+                tblAccountCallBacks.columns.adjust().draw(true);
+            }, 100);
+        }
+        if (tblAccClearingBrokers != undefined && tblAccClearingBrokers.columns != undefined) {
+            $timeout(function () {
+                tblAccClearingBrokers.columns.adjust().draw(true);
+            }, 100);
+        }
+    }
+
+    $scope.CheckFundAccountFieldsChanges = function (val, oldVal) {
         if (val[0].SwiftGroupId != oldVal[0].SwiftGroupId || val[0].Currency != oldVal[0].currency || val[0].FFCName != oldVal[0].FFCName || val[0].FFCNumber != oldVal[0].FFCNumber || val[0].Reference != oldVal[0].Reference || val[0].MarginAccountNumber != oldVal[0].MarginAccountNumber || val[0].TopLevelManagerAccountNumber != oldVal[0].TopLevelManagerAccountNumber || val[0].IntermediaryAccountNumber != oldVal[0].IntermediaryAccountNumber || val[0].BeneficiaryAccountNumber != oldVal[0].BeneficiaryAccountNumber || val[0].UltimateBeneficiaryAccountNumber != oldVal[0].UltimateBeneficiaryAccountNumber || val[0].IntermediaryType != oldVal[0].IntermediaryType || val[0].BeneficiaryType != oldVal[0].BeneficiaryType || val[0].UltimateBeneficiaryType != oldVal[0].UltimateBeneficiaryType || val[0].Intermediary.BICorABA != oldVal[0].Intermediary.BICorABA || val[0].Beneficiary.BICorABA != oldVal[0].Beneficiary.BICorABA || val[0].UltimateBeneficiary.BICorABA != oldVal[0].UltimateBeneficiary.BICorABA || val[0].Intermediary.BankName != oldVal[0].Intermediary.BankName || val[0].Beneficiary.BankName != oldVal[0].Beneficiary.BankName || val[0].UltimateBeneficiary.BankName != oldVal[0].UltimateBeneficiary.BankName || val[0].UltimateBeneficiaryAccountName != oldVal[0].UltimateBeneficiaryAccountName || val[0].Intermediary.BankAddress != oldVal[0].Intermediary.BankAddress
             || val[0].Beneficiary.BankAddress != oldVal[0].Beneficiary.BankAddress || val[0].UltimateBeneficiary.BankAddress != oldVal[0].UltimateBeneficiary.BankAddress) {
 
@@ -2031,7 +2037,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
 
         if (val[0].onBoardingAccountId != 0)
-            $scope.CheckSSIFieldsChanges(val, oldVal);
+            $scope.CheckFundAccountFieldsChanges(val, oldVal);
 
         if (val[0].onBoardingAccountId == oldVal[0].onBoardingAccountId) {
             $scope.isApproved = false;
@@ -2043,7 +2049,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $scope.isDrafted = false;
                 $scope.isApproved = true;
             }
-
         }
 
     }, true);
@@ -2069,6 +2074,22 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#templateType").val("");
         }
     });
+    $scope.txtNewClearingBroker = "";
+    $scope.fnAddClearingBroker = function () {
+        $http({
+            method: "POST",
+            url: "/FundAccounts/AddClearingBrokers",
+            type: "json",
+            data: JSON.stringify({
+                accountId: $scope.onBoardingAccountDetails[0].onBoardingAccountId,
+                clearingBrokerName: $("#txtNewClearingBroker").val(),
+                exposureType: $("#liExposureAgreementType").select2("data").text
+            })
+        }).then(function () {
+            notifySuccess("Clearing broker added successfully");
+            $scope.fnGetClearingBrokerData($scope.onBoardingAccountDetails[0].onBoardingAccountId);
+        });
+    }
 
     $scope.fnAddAccountSSITemplateMap = function () {
 
@@ -2734,25 +2755,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
 
-    $scope.accountCallbackTable = [];
-    $scope.adjustContainer = function (isCallback) {
-        $timeout(function () {
-            if (isCallback) {
-                if ($scope.accountCallbackTable[0] != undefined)
-                    $scope.accountCallbackTable[0].columns.adjust().draw(true);
-            }
-            else {
-                if ($scope.contactTable[0] != undefined)
-                    $scope.contactTable[0].columns.adjust().draw(true);
-            }
-        }, 100);
-    }
     $scope.viewCallbackTable = function (data) {
 
         if ($("#accountCallbackTbl_0").hasClass("initialized")) {
             fnDestroyDataTable("#accountCallbackTbl_0");
         }
-        $scope.accountCallbackTable[0] = $("#accountCallbackTbl_0").DataTable(
+        tblAccountCallBacks = $("#accountCallbackTbl_0").DataTable(
             {
                 aaData: data,
                 "bDestroy": true,
@@ -2840,41 +2848,120 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 iDisplayLength: -1
             });
 
-        $(document).on("click", ".btnCallbackConfirm", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-            var selectedRow = $(this).parents("tr");
-            $scope.rowElement = $scope.accountCallbackTable[0].row(selectedRow).data();
-            $scope.tdEle = $(this).closest("td");
-            $scope.tdEle.popover("destroy");
-            $timeout(function () {
-                angular.element($scope.tdEle).attr("title", "Are you sure to confirm the call back?").popover("destroy").popover({
-                    trigger: "click",
-                    title: "Are you sure to confirm the call back?",
-                    placement: "top",
-                    container: "body",
-                    content: function () {
-                        return "<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
-                            + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i>&nbsp;Yes</button>"
-                            + "&nbsp;&nbsp;<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i>&nbsp;No</button>"
-                            + "</div>";
-                    },
-                    html: true
-                }).popover("show");
-                $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
-                    + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
-                    + "<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
-                    + "</div>");
+        //$(document).on("click", ".btnCallbackConfirm", function (event) {
+        //    event.preventDefault();
+        //    event.stopPropagation();
+        //    event.stopImmediatePropagation();
+        //    var selectedRow = $(this).parents("tr");
+        //    $scope.rowElement = tblAccountCallBacks.row(selectedRow).data();
+        //    $scope.tdEle = $(this).closest("td");
+        //    $scope.tdEle.popover("destroy");
+        //    $timeout(function () {
+        //        angular.element($scope.tdEle).attr("title", "Are you sure to confirm the call back?").popover("destroy").popover({
+        //            trigger: "click",
+        //            title: "Are you sure to confirm the call back?",
+        //            placement: "top",
+        //            container: "body",
+        //            content: function () {
+        //                return "<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
+        //                    + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i>&nbsp;Yes</button>"
+        //                    + "&nbsp;&nbsp;<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i>&nbsp;No</button>"
+        //                    + "</div>";
+        //            },
+        //            html: true
+        //        }).popover("show");
+        //        $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
+        //            + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
+        //            + "<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
+        //            + "</div>");
 
-            }, 50);
-        });
+        //    }, 50);
+        //});
 
         $timeout(function () {
-            $scope.accountCallbackTable[0].columns.adjust().draw(true);
+            tblAccountCallBacks.columns.adjust().draw(true);
+        }, 1000);
+    }
+
+    $scope.ConstructClearingBrokerTable = function (data) {
+
+        if ($("#tblAccClearingBrokers").hasClass("initialized")) {
+            fnDestroyDataTable("#tblAccClearingBrokers");
+        }
+        tblAccClearingBrokers = $("#tblAccClearingBrokers").DataTable(
+            {
+                aaData: data,
+                "bDestroy": true,
+                "columns": [
+                    { "mData": "hmsFundAccountClearingBrokerId", "sTitle": "hmsFundAccountClearingBrokerId", visible: false },
+                    { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
+                    {
+                        "mData": "ClearingBrokerName", "sTitle": "Clearing Broker"
+                    },
+                    {
+                        "mData": "MarginExposureType", "sTitle": "Margin Exposure"
+                    },
+                    {
+                        "mData": "RecCreatedAt",
+                        "sTitle": "Created At",
+                        "type": "dotnet-date",
+                        "mRender": function (tdata) {
+                            return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                        }
+                    },
+                    {
+                        "mData": "hmsFundAccountClearingBrokerId",
+                        "sTitle": "Remove", "className": "dt-center",
+                        "mRender": function () {
+                            return "<button class='btn btn-danger btn-xs' title='Remove Clearing Broker'><i class='glyphicon glyphicon-trash'></i></button>";
+                        }
+                    }
+                ],
+                "oLanguage": {
+                    "sSearch": "",
+                    "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Clearing Brokers",
+                    "sInfoFiltered": " - filtering from _MAX_ Clearing Brokers"
+                },
+
+                "deferRender": true,
+                // "scroller": true,
+                "orderClasses": false,
+                "sScrollX": "100%",
+                //sDom: "ift",
+                "sScrollY": 450,
+                "sScrollXInner": "100%",
+                "bScrollCollapse": true,
+                "order": [],
+                //"bPaginate": false,
+                iDisplayLength: -1
+            });
+
+        $timeout(function () {
+            tblAccClearingBrokers.columns.adjust().draw(true);
         }, 1000);
 
+
+        $("#tblAccClearingBrokers tbody tr td:last-child button").on("click", function (event) {
+            event.preventDefault();
+            var selectedRow = $(this).parents("tr");
+            var rowElement = tblAccClearingBrokers.row(selectedRow).data();
+            bootbox.confirm("Are you sure you want to remove this Clearing Broker from Account?", function (result) {
+                if (!result) {
+                    return;
+                } else {
+                    $timeout(function () {
+                        $http.post("/FundAccounts/DeleteClearingBrokers", { clearingBrokerId: rowElement.hmsFundAccountClearingBrokerId }).then(function () {
+                            //    tblAccClearingBrokers.row(selectedRow).remove().draw();
+                            notifySuccess("Clearing broker removed successfully");
+                        });
+                        $scope.fnGetClearingBrokerData(rowElement.onBoardingAccountId);
+                    }, 100);
+                }
+            });
+        });
     }
+
+
 
     $(document).on("click", ".confirmCallback", function () {
         angular.element($scope.tdEle).popover("destroy");

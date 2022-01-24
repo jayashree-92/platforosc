@@ -252,8 +252,6 @@ namespace HM.Operations.Secure.Middleware
                             var accountToBeDeleted = context.onBoardingAccountModuleAssociations.Where(x => x.onBoardingAccountId == account.onBoardingAccountId).ToList();
                             context.onBoardingAccountModuleAssociations.RemoveRange(accountToBeDeleted);
                             context.onBoardingAccountModuleAssociations.AddRange(account.onBoardingAccountModuleAssociations);
-
-                            //new Repository<onBoardingAccountSSITemplateMap>().BulkInsert(account.onBoardingAccountSSITemplateMaps, dbSchemaName: "HMADMIN.");
                         }
 
                         if (account.onBoardingAccountSSITemplateMaps != null && account.onBoardingAccountSSITemplateMaps.Count > 0)
@@ -261,19 +259,8 @@ namespace HM.Operations.Secure.Middleware
                             var ssiTemplateMapToBeDeleted = context.onBoardingAccountSSITemplateMaps.Where(x => x.onBoardingAccountId == account.onBoardingAccountId).ToList();
                             context.onBoardingAccountSSITemplateMaps.RemoveRange(ssiTemplateMapToBeDeleted);
                             context.onBoardingAccountSSITemplateMaps.AddRange(account.onBoardingAccountSSITemplateMaps);
-
-                            //new Repository<onBoardingAccountSSITemplateMap>().BulkInsert(account.onBoardingAccountSSITemplateMaps, dbSchemaName: "HMADMIN.");
                         }
                     }
-
-                    //if (account.WirePortalCutoffId == 0 && !string.IsNullOrWhiteSpace(account.Currency) && !string.IsNullOrWhiteSpace(account.CashInstruction))
-                    //{
-                    //    var wirePortalCutoff = new onBoardingWirePortalCutoff()
-                    //    {
-                    //        CashInstruction = account.CashInstruction,
-
-                    //    };
-                    //}
 
                     if (account.WirePortalCutoffId == 0)
                         account.WirePortalCutoffId = null;
@@ -426,7 +413,7 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-   
+
         public static List<onBoardingAccount> GetAllApprovedAccounts(List<long> hmFundIds, string messageType, string currency, bool isServiceType)
         {
             using (var context = new OperationsSecureContext())

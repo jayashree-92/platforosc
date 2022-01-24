@@ -23,6 +23,7 @@ namespace HM.Operations.Secure.DataModel
             this.onBoardingAccountSSITemplateMaps = new HashSet<onBoardingAccountSSITemplateMap>();
             this.hmsWires = new HashSet<hmsWire>();
             this.hmsWires1 = new HashSet<hmsWire>();
+            this.hmsFundAccountClearingBrokers = new HashSet<hmsFundAccountClearingBroker>();
         }
     
         public long onBoardingAccountId { get; set; }
@@ -99,5 +100,7 @@ namespace HM.Operations.Secure.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWire> hmsWires1 { get; set; }
         public virtual hmsSwiftGroup SwiftGroup { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsFundAccountClearingBroker> hmsFundAccountClearingBrokers { get; set; }
     }
 }

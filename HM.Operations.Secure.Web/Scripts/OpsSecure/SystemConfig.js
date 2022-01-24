@@ -1,6 +1,6 @@
 ﻿/// <reference path="../data.js" />
 
-$("#liTools").addClass("active");
+$("#liSystemConfig").addClass("active");
 
 HmOpsApp.controller("systemConfiguationCtrl", function ($scope, $http, $interval, $timeout, $q) {
     $http.get("/Configuration/GetSwitchModules").then(function (response) {

@@ -491,7 +491,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.fnIsWireAmountValid = function () {
 
         $scope.validationMsg = "";
-        var currency = $scope.wireTicketObj.ReceivingAccountCurrency == null ? "USD" : $scope.wireTicketObj.ReceivingAccountCurrency;
+        var currency = $("#liCurrency").select2("val");// $scope.wireTicketObj.ReceivingAccountCurrency == null ? "USD" : $scope.wireTicketObj.ReceivingAccountCurrency;
         var wireAmount = $.convertToNumber($("#wireAmount").text(), true);
 
         if (wireAmount == NaN)

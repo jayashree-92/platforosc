@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
@@ -263,7 +264,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var fundAccounts = FundAccountManager.GetFundAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
             var fundAccountmap = fundAccounts.ToDictionary(s => s.onBoardingAccountId, v => v);
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
-            var receivingAccountTypes    = OpsSecureSwitches.AllowedAgreementTypesForReceivingFundAccounts;
+            var receivingAccountTypes = OpsSecureSwitches.AllowedAgreementTypesForReceivingFundAccounts;
 
             onBoardingAccounts.ForEach(fndAcc =>
             {
@@ -461,6 +462,55 @@ namespace HM.Operations.Secure.Web.Controllers
             return Json(callbacks, JsonContentType, JsonContentEncoding);
         }
 
+        public JsonResult GetAccountClearingBrokers(long accountId)
+        {
+            List<hmsFundAccountClearingBroker> clearingBrokers;
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                clearingBrokers = context.hmsFundAccountClearingBrokers.Where(s => s.onBoardingAccountId == accountId).AsNoTracking().ToList();
+            }
+            return Json(clearingBrokers, JsonContentType, JsonContentEncoding);
+        }
+
+        public void AddClearingBrokers(long accountId, string clearingBrokerName, string exposureType)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+
+
+                var clearingBroker = context.hmsFundAccountClearingBrokers.FirstOrDefault(s => s.onBoardingAccountId == accountId && s.ClearingBrokerName == clearingBrokerName);
+                if (clearingBroker != null) context.hmsFundAccountClearingBrokers.Remove(clearingBroker);
+                context.SaveChanges();
+
+                context.hmsFundAccountClearingBrokers.Add(new hmsFundAccountClearingBroker()
+                {
+                    ClearingBrokerName = clearingBrokerName,
+                    MarginExposureType = exposureType,
+                    onBoardingAccountId = accountId,
+                    RecCreatedAt = DateTime.Now,
+                    RecCreatedById = UserId,
+                });
+                context.SaveChanges();
+            }
+        }
+
+
+        public void DeleteClearingBrokers(long clearingBrokerId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                var clearingBroker = context.hmsFundAccountClearingBrokers.FirstOrDefault(s => s.hmsFundAccountClearingBrokerId == clearingBrokerId);
+                if (clearingBroker != null) context.hmsFundAccountClearingBrokers.Remove(clearingBroker);
+                context.SaveChanges();
+            }
+        }
+
         public void AddOrUpdateCallback(hmsAccountCallback callback)
         {
             if (callback.hmsAccountCallbackId > 0)
@@ -576,10 +626,6 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public void RemoveAccountDocument(string fileName, long documentId)
         {
-            //var fileinfo = new FileInfo(FileSystemManager.OnboardingAccountFilesPath + fileName);
-
-            //if (System.IO.File.Exists(fileinfo.FullName))
-            //    System.IO.File.Delete(fileinfo.FullName);
             if (documentId > 0)
                 FundAccountManager.RemoveAccountDocument(documentId);
         }

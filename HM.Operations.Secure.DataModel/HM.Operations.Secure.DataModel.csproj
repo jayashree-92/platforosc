@@ -163,6 +163,9 @@
     <Compile Include="hmsDashboardTemplate.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsFundAccountClearingBroker.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsMQLog.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

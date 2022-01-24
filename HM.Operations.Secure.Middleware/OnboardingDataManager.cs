@@ -103,9 +103,12 @@ namespace HM.Operations.Secure.Middleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                
+
                 return context.vw_CounterpartyAgreements
-                    .Where(a => allowedAgreementStatus.Contains(a.AgreementStatus) && allowedAgreementTypes.Contains(a.AgreementType) && (isPriveledgedUser || hmFundIds.Contains(a.FundMapId ?? 0)))
+                    .Where(a => allowedAgreementStatus.Contains(a.AgreementStatus)
+                                && allowedAgreementTypes.Contains(a.AgreementType)
+                                && a.dmaCounterPartyOnBoardId != null && a.dmaCounterPartyOnBoardId > 0
+                                && (isPriveledgedUser || hmFundIds.Contains(a.FundMapId ?? 0)))
                     .AsNoTracking().Select(x => new AgreementBaseData()
                     {
                         AgreementOnboardingId = x.dmaAgreementOnBoardingId,

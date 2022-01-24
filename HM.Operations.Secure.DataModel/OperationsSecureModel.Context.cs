@@ -79,5 +79,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual DbSet<hmsSystemSwitch> hmsSystemSwitches { get; set; }
         public virtual DbSet<hmsWirePurposeControl> hmsWirePurposeControls { get; set; }
         public virtual DbSet<hmsSwiftGroup> hmsSwiftGroups { get; set; }
+        public virtual DbSet<hmsFundAccountClearingBroker> hmsFundAccountClearingBrokers { get; set; }
     }
 }
