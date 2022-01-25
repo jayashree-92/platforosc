@@ -26,7 +26,7 @@ namespace HM.Operations.Secure.DataModel
         public long onBoardingSSITemplateId { get; set; }
         public int dmaAgreementTypeId { get; set; }
         public string TemplateName { get; set; }
-        public int TemplateTypeId { get; set; }
+        public long TemplateTypeId { get; set; }
         public long TemplateEntityId { get; set; }
         public string SSITemplateType { get; set; }
         public string ServiceProvider { get; set; }
@@ -70,5 +70,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual ICollection<hmsSSICallback> hmsSSICallbacks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWire> hmsWires { get; set; }
+        public virtual OnBoardingSSITemplateAccountType OnBoardingSSITemplateAccountType { get; set; }
     }
 }

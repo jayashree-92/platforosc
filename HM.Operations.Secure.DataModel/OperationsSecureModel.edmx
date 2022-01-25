@@ -649,7 +649,7 @@
           <Property Name="onBoardingSSITemplateId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="dmaAgreementTypeId" Type="int" Nullable="false" />
           <Property Name="TemplateName" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="TemplateTypeId" Type="int" Nullable="false" />
+          <Property Name="TemplateTypeId" Type="bigint" Nullable="false" />
           <Property Name="TemplateEntityId" Type="bigint" Nullable="false" />
           <Property Name="SSITemplateType" Type="varchar" MaxLength="50" />
           <Property Name="ServiceProvider" Type="varchar" MaxLength="200" />
@@ -1333,6 +1333,18 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId">
+          <End Role="OnBoardingSSITemplateAccountType" Type="Self.OnBoardingSSITemplateAccountType" Multiplicity="1" />
+          <End Role="onBoardingSSITemplate" Type="Self.onBoardingSSITemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OnBoardingSSITemplateAccountType">
+              <PropertyRef Name="OnBoardingSSITemplateAccountTypeId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplate">
+              <PropertyRef Name="TemplateTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId">
           <End Role="onBoardingAccountBICorABA" Type="Self.onBoardingAccountBICorABA" Multiplicity="0..1" />
           <End Role="onBoardingSSITemplate" Type="Self.onBoardingSSITemplate" Multiplicity="*" />
@@ -1647,6 +1659,10 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABA" />
             <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplate" />
           </AssociationSet>
+          <AssociationSet Name="FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" Association="Self.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId">
+            <End Role="OnBoardingSSITemplateAccountType" EntitySet="OnBoardingSSITemplateAccountType" />
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplate" />
+          </AssociationSet>
           <AssociationSet Name="FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId" Association="Self.FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId">
             <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABA" />
             <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplate" />
@@ -1916,6 +1932,10 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
             <End Role="hmsFundAccountClearingBroker" EntitySet="hmsFundAccountClearingBrokers" />
           </AssociationSet>
+          <AssociationSet Name="FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" Association="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId">
+            <End Role="OnBoardingSSITemplateAccountType" EntitySet="OnBoardingSSITemplateAccountTypes" />
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
           <Key>
@@ -2153,6 +2173,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="OnBoardingSSITemplateAccountTypeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Reason" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="dmaAgreementTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="onBoardingSSITemplates" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" FromRole="OnBoardingSSITemplateAccountType" ToRole="onBoardingSSITemplate" />
         </EntityType>
         <EntityType Name="onBoardingSSITemplateDocument">
           <Key>
@@ -2271,7 +2292,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="onBoardingSSITemplateId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="dmaAgreementTypeId" Type="Int32" Nullable="false" />
           <Property Name="TemplateName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="TemplateTypeId" Type="Int32" Nullable="false" />
+          <Property Name="TemplateTypeId" Type="Int64" Nullable="false" />
           <Property Name="TemplateEntityId" Type="Int64" Nullable="false" />
           <Property Name="SSITemplateType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ServiceProvider" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
@@ -2309,6 +2330,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <NavigationProperty Name="hmsSSICallbacks" Relationship="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsSSICallback" />
           <Property Name="IsKeyFieldsChanged" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsWire" />
+          <NavigationProperty Name="OnBoardingSSITemplateAccountType" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" FromRole="onBoardingSSITemplate" ToRole="OnBoardingSSITemplateAccountType" />
         </EntityType>
         <Association Name="FK_onBoardingSSITemplate_BeneficiaryBICorABAId">
           <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
@@ -3357,6 +3379,18 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Principal>
             <Dependent Role="hmsFundAccountClearingBroker">
               <PropertyRef Name="onBoardingAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId">
+          <End Type="OperationsSecureModel.OnBoardingSSITemplateAccountType" Role="OnBoardingSSITemplateAccountType" Multiplicity="1" />
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OnBoardingSSITemplateAccountType">
+              <PropertyRef Name="OnBoardingSSITemplateAccountTypeId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplate">
+              <PropertyRef Name="TemplateTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

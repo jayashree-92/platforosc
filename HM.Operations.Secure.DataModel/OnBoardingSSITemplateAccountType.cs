@@ -14,8 +14,15 @@ namespace HM.Operations.Secure.DataModel
     
     public partial class OnBoardingSSITemplateAccountType
     {
+        public OnBoardingSSITemplateAccountType()
+        {
+            this.onBoardingSSITemplates = new HashSet<onBoardingSSITemplate>();
+        }
+    
         public long OnBoardingSSITemplateAccountTypeId { get; set; }
         public string Reason { get; set; }
         public int dmaAgreementTypeId { get; set; }
+    
+        public virtual ICollection<onBoardingSSITemplate> onBoardingSSITemplates { get; set; }
     }
 }

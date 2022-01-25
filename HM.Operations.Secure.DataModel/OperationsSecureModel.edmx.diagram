@@ -110,6 +110,7 @@
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsFundAccountClearingBroker" Width="1.5" PointX="21.125" PointY="15.25" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsFundAccountClearingBrokers_onBoardingAccountId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
