@@ -472,6 +472,7 @@
                             <b>Buffer :</b>{{CashBalance.MarginBuffer}} {{CashBalance.Currency}}
                             <b>Holdback Amount :</b>{{CashBalance.HoldBackAmount}} {{CashBalance.Currency}}
                             <b>Total Wire Entered (pending approval + approved):</b>{{CashBalance.TotalWireEntered}} {{CashBalance.Currency}}
+                            <span ng-if="CashBalance.Currency!='USD'"><b>Currency Conversion Rate from {{CashBalance.Currency}} to USD :</b> {{CashBalance.ConversionRate}}</span>
 
                             <table class="table table-bordered table-condensed table-striped text-center">
                                 <thead>

@@ -1584,6 +1584,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.CashBalance.CalculatedBalance = "N.A";
     $scope.CashBalance.IsNewBalanceOffLimit = false;
     $scope.CashBalance.HoldBackAmount = 0;
+    $scope.CashBalance.ConversionRate = 0;
 
     $scope.fnGetCashBalances = function (valueDate) {
 
@@ -1603,6 +1604,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.CashBalance.AvailableBalance = !$scope.CashBalance.IsCashBalanceAvailable ? "N.A" : $.convertToCurrency($scope.CashBalance.AvailableBalance, 2);
                 $scope.CashBalance.AvailableHoldBackBalance = !$scope.CashBalance.IsCashBalanceAvailable ? "N.A" : $.convertToCurrency($scope.CashBalance.AvailableHoldBackBalance, 2);
                 $scope.CashBalance.HoldBackAmount = $.convertToCurrency($scope.CashBalance.HoldBackAmount, 2);
+                $scope.CashBalance.ConversionRate = $.convertToCurrency($scope.CashBalance.ConversionRate, 4);
 
                 $($scope.CashBalance.WireDetails).each(function (i, v) {
                     v.ValueDate = moment(v.ValueDate).format("YYYY-MM-DD");

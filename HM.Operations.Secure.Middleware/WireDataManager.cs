@@ -75,6 +75,7 @@ namespace HM.Operations.Secure.Middleware
         public decimal TreasuryBalance { get; set; }
         public decimal TotalWireEntered { get; set; }
         public string Currency { get; set; }
+        public decimal ConversionRate { get; set; }
         public decimal AvailableBalance => TreasuryBalance - TotalWireEntered;
         public decimal TotalPendingWireEntered { get; set; }
         public decimal TotalApprovedWireAfterDeadline { get; set; }

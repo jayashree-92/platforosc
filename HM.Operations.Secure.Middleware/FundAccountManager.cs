@@ -772,6 +772,7 @@ namespace HM.Operations.Secure.Middleware
                 MarginBuffer = converForTreasuryBal == 0 ? treasuryBal.MarginBuffer ?? 0 : (treasuryBal.MarginBuffer ?? 0) * converForTreasuryBal,
                 Currency = converForTreasuryBal == 0 ? treasuryBal.Currency : fndAccount.Currency,
                 ContextDate = treasuryBal.ContextDate,
+                ConversionRate = conversionData.Where(s => s.FROM_CRNCY == treasuryBal.Currency && s.TO_CRNCY == "USD" && s.HM_CONTEXT_DT == contextDate).Select(s => s.FX_RATE).FirstOrDefault() ?? 0,
                 WireDetails = new List<CashBalances.WiredDetails>()
             };
 
@@ -802,9 +803,14 @@ namespace HM.Operations.Secure.Middleware
         private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate, DateTime deadline)
         {
             dmaTreasuryCashBalance treasuryBal;
+            decimal conversionRate = 0;
             using (var context = new OperationsContext())
             {
                 treasuryBal = context.dmaTreasuryCashBalances.FirstOrDefault(s => s.onboardAccountId == sendingFundAccountId && s.ContextDate == contextDate.Date);
+                if (treasuryBal != null)
+                    conversionRate = context.vw_ProxyCurrencyConversionData
+                        .Where(s => s.HM_CONTEXT_DT == contextDate && s.FROM_CRNCY == treasuryBal.Currency && s.TO_CRNCY == "USD")
+                        .Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
             }
 
             if (treasuryBal == null)
@@ -837,6 +843,7 @@ namespace HM.Operations.Secure.Middleware
                 TreasuryBalance = treasuryBal.CashBalance ?? 0,
                 Currency = treasuryBal.Currency,
                 ContextDate = treasuryBal.ContextDate,
+                ConversionRate = conversionRate,
                 WireDetails = new List<CashBalances.WiredDetails>()
             };
 
