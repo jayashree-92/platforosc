@@ -263,7 +263,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var onBoardingAccounts = FundAccountManager.GetAllOnBoardingAccounts(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
             var fundAccounts = FundAccountManager.GetFundAccountDetails(hmFundIds, AuthorizedSessionData.IsPrivilegedUser);
             var fundAccountmap = fundAccounts.ToDictionary(s => s.onBoardingAccountId, v => v);
-            var accountTypes = OnBoardingDataManager.GetAllAgreementTypes();
+            var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
             var receivingAccountTypes = OpsSecureSwitches.AllowedAgreementTypesForReceivingFundAccounts;
 
             onBoardingAccounts.ForEach(fndAcc =>
@@ -277,7 +277,10 @@ namespace HM.Operations.Secure.Web.Controllers
                 Account = FundAccountManager.SetAccountDefaults(account),
                 AccountNumber = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].AccountNumber : string.Empty,
                 AgreementName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].AgreementShortName : string.Empty,
-                AgreementTypeId = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].dmaAgreementTypeId ?? 0 : 0,
+                AgreementTypeId = fundAccountmap.ContainsKey(account.onBoardingAccountId)
+                    ? fundAccountmap[account.onBoardingAccountId].AccountType == "DDA" || fundAccountmap[account.onBoardingAccountId].AccountType == "Custody"
+                        ? agreementTypes.ContainsValue(fundAccountmap[account.onBoardingAccountId].AccountType) ? agreementTypes.First(s => s.Value == fundAccountmap[account.onBoardingAccountId].AccountType).Key
+                        : fundAccountmap[account.onBoardingAccountId].dmaAgreementTypeId ?? 0 : fundAccountmap[account.onBoardingAccountId].dmaAgreementTypeId ?? 0 : 0,
                 CounterpartyFamilyName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].CounterpartyFamily : string.Empty,
                 CounterpartyName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].CounterpartyName : string.Empty,
                 FundName = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId].LegalFundName : string.Empty,
@@ -289,7 +292,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
             return Json(new
             {
-                accountTypes = accountTypes.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
+                agreementTypes = agreementTypes.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
                 receivingAccountTypes,
                 OnBoardingAccounts = allFundAccounts
             });
@@ -471,6 +474,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 context.Configuration.ProxyCreationEnabled = false;
                 clearingBrokers = context.hmsFundAccountClearingBrokers.Where(s => s.onBoardingAccountId == accountId).AsNoTracking().ToList();
             }
+
             return Json(clearingBrokers, JsonContentType, JsonContentEncoding);
         }
 

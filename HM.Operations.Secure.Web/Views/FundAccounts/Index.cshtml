@@ -683,24 +683,19 @@
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountClearingBrokerInfo_0" aria-expanded="false" aria-controls="accountClearingBrokerInfo_0" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Associated Clearing Brokers</b>
                                     <span class="pull-right">
-                                        @if (User.IsWireApprover())
-                                        {
-                                            <span class="btn-group" id="btnAccountMapStatusButtons" style="display: none;">
-                                                <a id="accountMapApprove" title="Approve" class="btn btn-success btn-xs disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Approved','Approve')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-ok"></i> Approve SSI Association</a>
-                                            </span>
-                                        }
-
                                         <i class="indicator glyphicon glyphicon-chevron-down"></i>
                                     </span>
                                 </div>
                                 <div id="accountClearingBrokerInfo_0" class="panel-body collapse">
                                     <div class="control-group">
-                                        <div class="row">
+                                        <div class="row" ng-if="onBoardingAccountDetails[0].onBoardingAccountId==0">
+                                            <span class="font-danger">* Note: Clearing brokers can be added only after successfully creating new Fund Account. Please click "Save Account" and try again.</span>
+                                        </div>
+                                        <div class="row" ng-if="onBoardingAccountDetails[0].onBoardingAccountId!=0">
                                             <div class="col-md-4">
                                                 <b>Clearing Broker:</b><input style="width: 300px" type="text" class="form-control" id="txtNewClearingBroker" />
                                             </div>
-
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <b>Exposure:</b><input type="hidden" id="liExposureAgreementType" style="width:300px" />
                                             </div>
                                             <div class="col-md-4">

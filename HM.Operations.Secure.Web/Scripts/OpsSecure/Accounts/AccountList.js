@@ -484,7 +484,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $http.get("/FundAccounts/GetAllOnBoardingAccount").then(function (response) {
 
-            $scope.agreementTypes = response.data.accountTypes;
+            $scope.agreementTypes = response.data.agreementTypes;
             $scope.receivingAccountTypes = response.data.receivingAccountTypes;
             if (response.data.OnBoardingAccounts.length > 0)
                 $("#btnAccountStatusButtons").show();
@@ -756,6 +756,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $("#btnDel").prop("disabled", false);
     });
+
 
     $(document).on("dblclick", "#accountTable tbody tr", function () {
         var rowElement = accountTable.row(this).data();
@@ -2010,6 +2011,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 tblAccClearingBrokers.columns.adjust().draw(true);
             }, 100);
         }
+        
+        $("#liExposureAgreementType").select2("val", $scope.AgreementTypeId).trigger("change");
+
     }
 
     $scope.CheckFundAccountFieldsChanges = function (val, oldVal) {
