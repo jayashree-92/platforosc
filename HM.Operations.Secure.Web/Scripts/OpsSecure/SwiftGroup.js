@@ -35,8 +35,8 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
                     {
                         "sTitle": "Swift Messages",
                         "mData": "SwiftGroup.AcceptedMessages",
-                        "render": function (tdata) {
-                            return tdata != undefined ? tdata.replace(/,/g, ", ") : tdata;
+                        "render": function (tData) {
+                            return tData != undefined ? tData.replace(/,/g, ", ") : tData;
                         }
                     },
                     {

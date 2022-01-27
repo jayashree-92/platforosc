@@ -101,6 +101,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     switch (swiftStatusLkup[hmsSwiftGroup.SwiftGroupStatusId ?? 0])
                     {
                         case "Requested":
+                        case "Testing":
                             hmsSwiftGroup.RequestedBy = UserId;
                             hmsSwiftGroup.RequestedAt = DateTime.Now;
                             break;

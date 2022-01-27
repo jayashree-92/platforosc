@@ -164,7 +164,7 @@
 
                                 <li><a href="#accountBasicInfo_0">Basic Info</a></li>
                                 <li ng-if="!IsReportingOnly"><a href="#accountSwiftInfo_0">Swift Info</a></li>
-                                <li><a href="#accountSSIInfo_0">Account SSI</a></li>
+                                <li><a href="#accountSSIInfo_0">Account  {{IsReportingOnly?'Details':'SSI'}}</a></li>
                                 <li ng-if="!IsReportingOnly &&!IsBNYMBroker && ((isEdit && IsPendingApproval)|| (isEdit && IsApproved)|| (IsKeyFieldsChanged))"><a href="#accountCallback_0">Callback Check&nbsp;<span class="label label-info">{{ CallBackChecks.length }}</span>  </a></li>
                                 <li ng-if="!IsReportingOnly"><a href="#accountContactInfo_0">Contacts&nbsp;<span class="label label-info">{{ onboardingContacts.length }}</span>   </a></li>
                                 <li ng-if="!IsReportingOnly && isEdit"><a href="#accountAttachment_0">Attachments&nbsp;<span class="label label-info">{{ accountDocuments.length }}</span></a></li>
@@ -449,7 +449,7 @@
                             </div>
                             <div class="panel panel-default ng-show-hide" id="accountSSIInfo_0" data-toggle='collapse'>
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountSSIDetailInfo_0" aria-expanded="false" aria-controls="accountSSIDetailInfo_0" style="position: sticky;top: 47px;z-index: 2;">
-                                    <b>Account SSI</b>
+                                    <b>Account {{IsReportingOnly?'Details':'SSI'}}</b>
                                 </div>
                                 <div id="accountSSIDetailInfo_0" class="panel-body">
                                     <div class="row" ng-if="!IsReportingOnly">
