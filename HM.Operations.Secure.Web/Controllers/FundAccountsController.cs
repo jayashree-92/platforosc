@@ -159,7 +159,7 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var ssiTemplateMaps = FundAccountManager.GetAccountSsiTemplateMap(accountId);
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
-            var fundData = AuthorizedDMAFundData.First(s => s.HmFundId == fundId);
+            var fundData = AuthorizedDMAFundData.FirstOrDefault(s => s.HmFundId == fundId) ?? new HFundBasic();
 
             if (string.IsNullOrWhiteSpace(messages))
                 messages = string.Empty;

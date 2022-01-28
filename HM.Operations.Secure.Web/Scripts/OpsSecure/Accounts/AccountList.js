@@ -2124,10 +2124,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             })
         }).then(function () {
             notifySuccess("Ssi template mapped to account successfully");
-            //$scope.onBoardingAccountDetails[0].onBoardingAccountSSITemplateMaps.push($scope.onBoardingAccountSSITemplateMap);
-            var thisAccount = $filter("filter")($scope.onBoardingAccountDetails, { 'onBoardingAccountId': $scope.onBoardingAccountId }, true)[0];
+            var thisAccount = $scope.onBoardingAccountDetails[0];
             if (thisAccount != undefined)
-                $scope.fnSsiTemplateMap(thisAccount.onBoardingAccountId, $scope.FundId, 0, thisAccount.Currency);
+                $scope.fnSsiTemplateMap(thisAccount.onBoardingAccountId, $scope.FundId, thisAccount.Currency);
         });
 
         $("#accountSSITemplateMapModal").modal("hide");
@@ -2983,7 +2982,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 callback: $scope.rowElement
             })
         }).then(function (response) {
-            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId, 0);
+            $scope.fnGetAccountCallbackData($scope.onBoardingAccountDetails[0].onBoardingAccountId);
             notifySuccess("Account callback confirmed successfully");
 
         });

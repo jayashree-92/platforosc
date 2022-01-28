@@ -498,7 +498,7 @@
                                         </div>
                                     </div>
                                     <p></p>
-                                    <div class="row">
+                                    <div class="row" ng-if="!IsReportingOnly">
                                         <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
@@ -515,10 +515,10 @@
                                         <div class="col-sm-6 col-md-3 col-lg-2 paddingleft">
                                             <label class="control-label" style="margin-left: 15px;">Account Number</label>
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft" ng-if="!IsReportingOnly">
                                             <input type="text" class="form-control" ng-model="accountDetail.IntermediaryAccountNumber" placeholder="Account Number" />
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">
+                                        <div class="col-sm-6 col-md-3 col-lg-3 paddingleft" ng-if="!IsReportingOnly">
                                             <input type="text" ng-model="accountDetail.BeneficiaryAccountNumber" class="form-control control-label" placeholder="Account Number" />
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3 paddingleft">

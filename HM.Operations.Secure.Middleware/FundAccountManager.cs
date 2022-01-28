@@ -262,6 +262,12 @@ namespace HM.Operations.Secure.Middleware
                         }
                     }
 
+                    if (account.AccountType == "Agreement (Reporting Only)")
+                    {
+                        account.onBoardingAccountStatus = "Approved";
+                        account.ApprovedBy = userName;
+                    }
+
                     if (account.WirePortalCutoffId == 0)
                         account.WirePortalCutoffId = null;
 
@@ -680,7 +686,7 @@ namespace HM.Operations.Secure.Middleware
 
             var cashBalance = fndAccount.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(fndAccount.AgreementType)
                 ? ComputePBCashBalances(valueDate, contextDate, fndAccount, deadline)
-                : ComputeNonPBCashBalances(sendingFundAccountId, valueDate, contextDate, deadline);
+                : ComputeNonPBCashBalances(sendingFundAccountId, valueDate, contextDate, deadline, fndAccount);
 
             if (cashBalance != null)
                 cashBalance.HoldBackAmount = (decimal)(fndAccount.HoldbackAmount ?? 0);
@@ -735,11 +741,15 @@ namespace HM.Operations.Secure.Middleware
                 allFromCurrency.Add(fndAccount.Currency);
 
             List<vw_ProxyCurrencyConversionData> conversionData;
+            decimal fndAccountConversionRate;
             using (var context = new OperationsContext())
             {
                 conversionData = context.vw_ProxyCurrencyConversionData.Where(s =>
                     s.HM_CONTEXT_DT == contextDate && s.TO_CRNCY == fndAccount.Currency &&
                     allFromCurrency.Contains(s.FROM_CRNCY)).ToList();
+
+                fndAccountConversionRate = context.vw_ProxyCurrencyConversionData
+                    .Where(s => s.FROM_CRNCY == fndAccount.Currency && s.TO_CRNCY == "USD" && s.HM_CONTEXT_DT == contextDate).Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
             }
 
             var totalWiredInLocalCur = (from wire in wires
@@ -772,7 +782,7 @@ namespace HM.Operations.Secure.Middleware
                 MarginBuffer = converForTreasuryBal == 0 ? treasuryBal.MarginBuffer ?? 0 : (treasuryBal.MarginBuffer ?? 0) * converForTreasuryBal,
                 Currency = converForTreasuryBal == 0 ? treasuryBal.Currency : fndAccount.Currency,
                 ContextDate = treasuryBal.ContextDate,
-                ConversionRate = conversionData.Where(s => s.FROM_CRNCY == treasuryBal.Currency && s.TO_CRNCY == "USD" && s.HM_CONTEXT_DT == contextDate).Select(s => s.FX_RATE).FirstOrDefault() ?? 0,
+                ConversionRate = fndAccountConversionRate,
                 WireDetails = new List<CashBalances.WiredDetails>()
             };
 
@@ -800,17 +810,17 @@ namespace HM.Operations.Secure.Middleware
             return cashBalances;
         }
 
-        private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate, DateTime deadline)
+        private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate, DateTime deadline, vw_FundAccounts vwFundAccounts)
         {
             dmaTreasuryCashBalance treasuryBal;
             decimal conversionRate = 0;
             using (var context = new OperationsContext())
             {
                 treasuryBal = context.dmaTreasuryCashBalances.FirstOrDefault(s => s.onboardAccountId == sendingFundAccountId && s.ContextDate == contextDate.Date);
-                if (treasuryBal != null)
-                    conversionRate = context.vw_ProxyCurrencyConversionData
-                        .Where(s => s.HM_CONTEXT_DT == contextDate && s.FROM_CRNCY == treasuryBal.Currency && s.TO_CRNCY == "USD")
-                        .Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
+
+                conversionRate = context.vw_ProxyCurrencyConversionData
+                    .Where(s => s.HM_CONTEXT_DT == contextDate && s.FROM_CRNCY == vwFundAccounts.Currency && s.TO_CRNCY == "USD")
+                    .Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
             }
 
             if (treasuryBal == null)
