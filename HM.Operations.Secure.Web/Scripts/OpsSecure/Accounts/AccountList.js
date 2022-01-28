@@ -249,13 +249,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     //$scope.fnInitializeSelect2 = function() {
 
     //}
-
-    var initAccount = function () {
-        $q.all([$scope.fnGetBicorAba(null), $scope.fnGetCurrency(), $scope.fnGetCashInstruction()]).then($scope.fnPreloadAccountData);
-    }
-
-    initAccount();
-
     $scope.fnInitPreLoadEvents = function () {
 
 
@@ -519,7 +512,33 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         { "mData": "Account.dmaCounterpartyFamilyId", "sTitle": "CounterpartyFamilyId", visible: false },
                         { "mData": "Account.dmaCounterpartyId", "sTitle": "CounterpartyId", visible: false },
                         //{ "mData": "AccountType", "sTitle": "Account Type" },
-                        { "mData": "Account.onBoardingAccountId", "sTitle": "SSI Association Status" },
+                        {
+                            "mData": "Account.onBoardingAccountId", "sTitle": "SSI Association Status", "mRender":
+                                function (tdata, type, row, meta) {
+                                    var totalTemplateMaps = row.PendingApprovalMaps + row.ApprovedMaps;
+                                    if (totalTemplateMaps == 0) {
+                                        return "";
+                                    }
+
+                                    //return row.ApprovedMaps + "/" + totalTemplateMaps + " approved";
+
+                                    var totalApproved = (row.ApprovedMaps / totalTemplateMaps) * 100;
+                                    var totalPending = (row.PendingApprovalMaps / totalTemplateMaps) * 100;
+
+
+                                    var taskProgress = "<div class=\"progress\" style=\"margin-bottom: 0px;\">"
+                                        + "<div class=\"progress-bar progress-bar-success\"  aria-value=\"" + totalApproved + "\">"
+                                        + "<span class=\"checklistProgressText\">" + (row.ApprovedMaps == "0" ? "" : row.ApprovedMaps) + " </span>"
+                                        + "</div>"
+                                        + "<div class=\"progress-bar progress-bar-warning progress-bar-striped\" aria-value=\"" + totalPending + "\">"
+                                        + "<span class=\"checklistProgressText\">" + (row.PendingApprovalMaps == "0" ? "" : row.PendingApprovalMaps) + " </span>"
+                                        + "</div>"
+                                        + "</div>";
+
+                                    return taskProgress;
+                                }
+
+                        },
                         {
                             "mData": "Account.AccountType", "sTitle": "Entity Type",
                             render: {
@@ -590,19 +609,19 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         //{ "mData": "ContactEmail", "sTitle": "Contact Email" },
                         //{ "mData": "ContactNumber", "sTitle": "Contact Number" },
                         { "mData": "Account.BeneficiaryType", "sTitle": "Beneficiary Type" },
-                        { "mData": "Account.Beneficiary", "sTitle": "Beneficiary BIC or ABA", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BICorABA : ""; } },
-                        { "mData": "Account.Beneficiary", "sTitle": "Beneficiary Bank/Account Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
-                        { "mData": "Account.Beneficiary", "sTitle": "Beneficiary Bank Address", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankAddress : ""; } },
+                        { "mData": "Account.Beneficiary", "sTitle": "Beneficiary BIC or ABA", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BICorABA : ""; } },
+                        { "mData": "Account.Beneficiary", "sTitle": "Beneficiary Bank/Account Name", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankName : ""; } },
+                        { "mData": "Account.Beneficiary", "sTitle": "Beneficiary Bank Address", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankAddress : ""; } },
                         { "mData": "Account.BeneficiaryAccountNumber", "sTitle": "Beneficiary Account Number" },
                         { "mData": "Account.IntermediaryType", "sTitle": "Intermediary Beneficiary Type" },
-                        { "mData": "Account.Intermediary", "sTitle": "Intermediary BIC or ABA", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BICorABA : ""; } },
-                        { "mData": "Account.Intermediary", "sTitle": "Intermediary Bank/Account Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
-                        { "mData": "Account.Intermediary", "sTitle": "Intermediary Bank Address", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankAddress : ""; } },
+                        { "mData": "Account.Intermediary", "sTitle": "Intermediary BIC or ABA", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BICorABA : ""; } },
+                        { "mData": "Account.Intermediary", "sTitle": "Intermediary Bank/Account Name", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankName : ""; } },
+                        { "mData": "Account.Intermediary", "sTitle": "Intermediary Bank Address", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankAddress : ""; } },
                         { "mData": "Account.IntermediaryAccountNumber", "sTitle": "Intermediary Account Number" },
                         { "mData": "Account.UltimateBeneficiaryType", "sTitle": "Ultimate Beneficiary Type" },
-                        { "mData": "Account.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary BIC or ABA", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BICorABA : ""; } },
-                        { "mData": "Account.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
-                        { "mData": "Account.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Address", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankAddress : ""; } },
+                        { "mData": "Account.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary BIC or ABA", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BICorABA : ""; } },
+                        { "mData": "Account.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Name", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankName : ""; } },
+                        { "mData": "Account.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Address", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankAddress : ""; } },
                         { "mData": "Account.UltimateBeneficiaryAccountName", "sTitle": "Ultimate Beneficiary Account Name" },
                         { "mData": "Account.FFCName", "sTitle": "FFC Name" },
                         { "mData": "Account.FFCNumber", "sTitle": "FFC Number" },
@@ -624,11 +643,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                             }
                         },
                         { "mData": "Account.StatusComments", "sTitle": "Comments" },
-                        { "mData": "Account.CreatedBy", "sTitle": "Created By", "mRender": function (data) { return humanizeEmail(data); } },
+                        { "mData": "Account.CreatedBy", "sTitle": "Created By" },// "mRender": function (data) { return humanizeEmail(data); } },
                         { "mData": "Account.CreatedAt", "sTitle": "Created Date", "mRender": renderDotNetDateAndTime },
-                        { "mData": "Account.UpdatedBy", "sTitle": "Last Modified By", "mRender": function (data) { return humanizeEmail(data); } },
+                        { "mData": "Account.UpdatedBy", "sTitle": "Last Modified By" },// "mRender": function (data) { return humanizeEmail(data); } },
                         { "mData": "Account.UpdatedAt", "sTitle": "Last Modified At", "mRender": renderDotNetDateAndTime },
-                        { "mData": "Account.ApprovedBy", "sTitle": "Approved By", "mRender": function (data) { return humanizeEmail(data == null ? "" : data); } }
+                        { "mData": "Account.ApprovedBy", "sTitle": "Approved By" },// "mRender": function (data) { return humanizeEmail(data == null ? "" : data); } }
 
                     ],
                     "oLanguage": {
@@ -648,43 +667,19 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         }
 
                     },
-                    //"scrollX": false,
                     "deferRender": true,
                     "scroller": true,
                     "orderClasses": false,
                     "sScrollX": "100%",
-                    //sDom: "ift",
                     "scrollY": window.innerHeight - 400,
                     "sScrollXInner": "100%",
                     "bScrollCollapse": true,
                     "order": [[60, "desc"]],
                     "rowCallback": function (row, data) {
-
-                        var totalTemplateMaps = data.PendingApprovalMaps + data.ApprovedMaps;
-                        if (totalTemplateMaps == 0) {
-                            $("td:eq(0)", row).html("");
-                            return;
-                        }
-
-                        var totalApproved = (data.ApprovedMaps / totalTemplateMaps) * 100;
-                        var totalPending = (data.PendingApprovalMaps / totalTemplateMaps) * 100;
-
-
-                        var taskProgress = "<div class=\"progress\" style=\"margin-bottom: 0px;\">"
-                            + "<div class=\"progress-bar progress-bar-success\"  aria-value=\"" + totalApproved + "\">"
-                            + "<span class=\"checklistProgressText\">" + (data.ApprovedMaps == "0" ? "" : data.ApprovedMaps) + " </span>"
-                            + "</div>"
-                            + "<div class=\"progress-bar progress-bar-warning progress-bar-striped\" aria-value=\"" + totalPending + "\">"
-                            + "<span class=\"checklistProgressText\">" + (data.PendingApprovalMaps == "0" ? "" : data.PendingApprovalMaps) + " </span>"
-                            + "</div>"
-                            + "</div>";
-
-                        $("td:eq(0)", row).html(taskProgress);
                     },
                     "drawCallback": function (settings) {
                         $scope.fnLoadProgress();
                     },
-                    //"bPaginate": false,
                     iDisplayLength: -1
                 });
             }
@@ -762,6 +757,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         var rowElement = accountTable.row(this).data();
         $scope.fnEditAccountDetails(rowElement);
     });
+
+
+    var initAccount = function () {
+        $q.all([$scope.fnGetBicorAba(null), $scope.fnGetCurrency(), $scope.fnGetCashInstruction()]).then($scope.fnPreloadAccountData);
+    }
+    $scope.fnGetAccounts();
+    initAccount();
 
 
     $scope.fnAddAccountDetail = function () {
@@ -1098,7 +1100,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#accountModal").modal("hide");
         });
     }
-    $scope.fnGetAccounts();
 
     $scope.fnCashSweep = function (cashSweep) {
         if (cashSweep == "Yes") {
@@ -2011,7 +2012,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 tblAccClearingBrokers.columns.adjust().draw(true);
             }, 100);
         }
-        
+
         $("#liExposureAgreementType").select2("val", $scope.AgreementTypeId).trigger("change");
 
     }

@@ -49,7 +49,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 var row = new Row
                 {
                     ["Report Name"] = purpose.ReportName,
-                    ["Wire Purpose Id"] = purpose.hmsWirePurposeId.ToString(),
+                    ["WirePurposeId"] = purpose.hmsWirePurposeId.ToString(),
                     ["Wire Purpose"] = purpose.Purpose
                 };
 
@@ -69,7 +69,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 //     row["ModifiedAt"] = purpose.ModifiedAt?.ToString("yyyy-MM-dd hh:mm tt");
                 wireControlRows.Add(row);
             }
-            return Json(JsonHelper.GetJson(wireControlRows));
+            return Json(JsonHelper.GetJson(wireControlRows,hiddenHeaders:new List<string>(){ "WirePurposeId" }));
         }
 
         private class WireControls
