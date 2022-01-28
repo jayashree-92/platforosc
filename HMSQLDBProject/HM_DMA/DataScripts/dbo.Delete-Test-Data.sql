@@ -1,1 +1,0 @@
-DELETE FROM hmsWirePurposeLkup WHERE CreatedBy =5229
