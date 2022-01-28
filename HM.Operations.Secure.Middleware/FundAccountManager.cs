@@ -697,9 +697,13 @@ namespace HM.Operations.Secure.Middleware
         private static CashBalances ComputePBCashBalances(DateTime valueDate, DateTime contextDate, vw_FundAccounts fndAccount, DateTime deadline)
         {
             List<dmaTreasuryCashBalance> allTreasuryBals;
+            decimal fndAccountConversionRate;
+
             using (var context = new OperationsContext())
             {
                 allTreasuryBals = context.dmaTreasuryCashBalances.Where(s => TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(s.AccountOrAgreementType) && s.ContextDate == contextDate.Date).ToList();
+                fndAccountConversionRate = context.vw_ProxyCurrencyConversionData
+                    .Where(s => s.FROM_CRNCY == fndAccount.Currency && s.TO_CRNCY == "USD" && s.HM_CONTEXT_DT == contextDate).Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
             }
 
             var allPBForContextDate = allTreasuryBals.Select(s => s.onboardAccountId).ToList();
@@ -714,7 +718,7 @@ namespace HM.Operations.Secure.Middleware
                 treasuryBal = allTreasuryBals.FirstOrDefault(s => s.onboardAccountId == treasuryBalAccId);
 
                 if (treasuryBal == null)
-                    return new CashBalances() { IsCashBalanceAvailable = false };
+                    return new CashBalances() { IsCashBalanceAvailable = false, ConversionRate = fndAccountConversionRate, Currency = fndAccount.Currency, ContextDate = contextDate };
 
                 wires = (from wire in context.hmsWires
                          join acc in context.vw_FundAccounts on wire.OnBoardAccountId equals acc.onBoardingAccountId
@@ -741,15 +745,12 @@ namespace HM.Operations.Secure.Middleware
                 allFromCurrency.Add(fndAccount.Currency);
 
             List<vw_ProxyCurrencyConversionData> conversionData;
-            decimal fndAccountConversionRate;
+
             using (var context = new OperationsContext())
             {
                 conversionData = context.vw_ProxyCurrencyConversionData.Where(s =>
                     s.HM_CONTEXT_DT == contextDate && s.TO_CRNCY == fndAccount.Currency &&
                     allFromCurrency.Contains(s.FROM_CRNCY)).ToList();
-
-                fndAccountConversionRate = context.vw_ProxyCurrencyConversionData
-                    .Where(s => s.FROM_CRNCY == fndAccount.Currency && s.TO_CRNCY == "USD" && s.HM_CONTEXT_DT == contextDate).Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
             }
 
             var totalWiredInLocalCur = (from wire in wires
@@ -810,7 +811,7 @@ namespace HM.Operations.Secure.Middleware
             return cashBalances;
         }
 
-        private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate, DateTime deadline, vw_FundAccounts vwFundAccounts)
+        private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate, DateTime deadline, vw_FundAccounts fundAccount)
         {
             dmaTreasuryCashBalance treasuryBal;
             decimal conversionRate = 0;
@@ -819,12 +820,12 @@ namespace HM.Operations.Secure.Middleware
                 treasuryBal = context.dmaTreasuryCashBalances.FirstOrDefault(s => s.onboardAccountId == sendingFundAccountId && s.ContextDate == contextDate.Date);
 
                 conversionRate = context.vw_ProxyCurrencyConversionData
-                    .Where(s => s.HM_CONTEXT_DT == contextDate && s.FROM_CRNCY == vwFundAccounts.Currency && s.TO_CRNCY == "USD")
+                    .Where(s => s.HM_CONTEXT_DT == contextDate && s.FROM_CRNCY == fundAccount.Currency && s.TO_CRNCY == "USD")
                     .Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
             }
 
             if (treasuryBal == null)
-                return new CashBalances() { IsCashBalanceAvailable = false };
+                return new CashBalances() { IsCashBalanceAvailable = false, ConversionRate = conversionRate, Currency = fundAccount.Currency, ContextDate = contextDate };
 
             List<WireAccountBaseData> wires;
             using (var context = new OperationsSecureContext())
