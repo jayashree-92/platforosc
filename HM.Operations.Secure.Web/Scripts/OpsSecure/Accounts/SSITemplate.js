@@ -495,15 +495,19 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     }
 
+    $scope.fnIsSSIBrokerType = function () {
+        return $scope.SSITemplateType == "Broker" || $scope.SSITemplateType == "Bank Loan/Private/IPO";
+    }
+
     $("#liBroker").change(function () {
-        if ($scope.SSITemplateType == "Broker") {
+        if ($scope.fnIsSSIBrokerType()) {
             $scope.broker = ($(this).val() > 0) ? $("#liBroker").select2("data").text : "";
             $scope.IsBNYMBroker = $scope.broker == "The Bank of New York Mellon";
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
         }
     });
     $("#liAccountType").change(function () {
-        if ($scope.SSITemplateType == "Broker") {
+        if ($scope.fnIsSSIBrokerType()) {
             $scope.accountType = ($(this).val() > 0) ? $("#liAccountType").select2("data").text : "";
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
             $scope.fnPaymentOrReceiptReason();
@@ -511,7 +515,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     });
     $("#liCurrency").change(function () {
         $scope.currency = $(this).val();
-        if ($scope.SSITemplateType == "Broker")
+        if ($scope.fnIsSSIBrokerType())
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
         else
             $scope.ssiTemplate.TemplateName = $scope.serviceProvider + " - " + $scope.currency + " - " + $scope.reasonDetail;
@@ -525,7 +529,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $("#liReasonDetail").change(function () {
         $scope.reasonDetail = $(this).val();
-        if ($scope.SSITemplateType == "Broker")
+        if ($scope.fnIsSSIBrokerType())
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
         else
             $scope.ssiTemplate.TemplateName = $scope.serviceProvider + " - " + $scope.currency + " - " + $scope.reasonDetail;
@@ -551,7 +555,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             // $scope.SSITemplateType = $scope.ssiTemplate.SSITemplateType;
             $scope.ssiTemplate.CreatedAt = moment($scope.ssiTemplate.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.IsKeyFieldsChanged = $scope.ssiTemplate.IsKeyFieldsChanged;
-            if ($scope.ssiTemplate.SSITemplateType == "Broker") {
+            if ($scope.fnIsSSIBrokerType()) {
                 var templateList = $scope.ssiTemplate.TemplateName.split("-");
                 $scope.broker = templateList[0].trim();
                 $scope.accountType = templateList[1].trim();
@@ -626,7 +630,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $scope.fnSSITemplateType = function (templateType) {
         $scope.SSITemplateType = templateType;
-        if (templateType != "Broker")
+        if (!$scope.fnIsSSIBrokerType())
             $scope.fnLoadServiceProvider();
         $scope.fnPaymentOrReceiptReason();
     }
@@ -660,8 +664,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $scope.fnGetAssociatedAccounts = function () {
-        var brokerId = $scope.ssiTemplate.SSITemplateType == "Broker" ? $scope.ssiTemplate.TemplateEntityId : 0;
-        var isServiceType = $scope.ssiTemplate.SSITemplateType != "Broker";
+        var brokerId = $scope.fnIsSSIBrokerType() ? $scope.ssiTemplate.TemplateEntityId : 0;
+        var isServiceType = !$scope.fnIsSSIBrokerType();
         $http.get("/FundAccounts/GetSsiTemplateAccountMap?ssiTemplateId=" + $scope.ssiTemplateId + "&brokerId=" + brokerId + "&currency=" + $scope.ssiTemplate.Currency + "&message=" + $scope.ssiTemplate.MessageType + "&isServiceType=" + isServiceType).then(function (response) {
             $scope.fundAccounts = response.data.fundAccounts;
             $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
@@ -1292,8 +1296,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
         $scope.ssiTemplate.TemplateTypeId = $scope.BrokerTemplateTypeId;
         $scope.ssiTemplate.TemplateEntityId = $("#liBroker").val();
-        $scope.ssiTemplate.dmaAgreementTypeId = $("#liSSITemplateType").val() == "Broker" ? $("#liAccountType").val() : 0;
-        $scope.ssiTemplate.ServiceProvider = $("#liSSITemplateType").val() != "Broker" ? $("#liServiceProvider").val() : "";
+        $scope.ssiTemplate.dmaAgreementTypeId = $scope.fnIsSSIBrokerType() ? $("#liAccountType").val() : 0;
+        $scope.ssiTemplate.ServiceProvider = !$scope.fnIsSSIBrokerType() ? $("#liServiceProvider").val() : "";
         $scope.ssiTemplate.onBoardingSSITemplateDocuments = $scope.ssiTemplateDocuments;
 
         $scope.ssiTemplate.BeneficiaryBankName = $("#beneficiaryBankName").val();
