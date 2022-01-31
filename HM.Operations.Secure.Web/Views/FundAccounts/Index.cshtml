@@ -169,7 +169,7 @@
                                 <li ng-if="!IsReportingOnly"><a href="#accountContactInfo_0">Contacts&nbsp;<span class="label label-info">{{ onboardingContacts.length }}</span>   </a></li>
                                 <li ng-if="!IsReportingOnly && isEdit"><a href="#accountAttachment_0">Attachments&nbsp;<span class="label label-info">{{ accountDocuments.length }}</span></a></li>
                                 <li ng-if="!IsReportingOnly && !accountDetail.IsReceivingAccount"><a href="#accountSsiAssociation_0">Associated SSI&nbsp;<span class="label label-info">{{ ssiTemplateMaps.length }}</span></a></li>
-                                <li><a href="#accountClearingBrokers_0">Clearing Brokers&nbsp;<span class="label label-info">{{ TotalClearingBrokers}}</span></a></li>
+                                <li><a href="#accountClearingBrokers_0">Admin Accounts&nbsp;<span class="label label-info">{{ TotalClearingBrokers}}</span></a></li>
 
                             </ul>
                         </div>
@@ -681,7 +681,7 @@
                             </div>
                             <div class="panel panel-default ng-show-hide" id="accountClearingBrokers_0" data-toggle='collapse'>
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountClearingBrokerInfo_0" aria-expanded="false" aria-controls="accountClearingBrokerInfo_0" style="position: sticky;top: 47px;z-index: 2;">
-                                    <b>Associated Clearing Brokers</b>
+                                    <b>Associated Admin Accounts</b>
                                     <span class="pull-right">
                                         <i class="indicator glyphicon glyphicon-chevron-down"></i>
                                     </span>
@@ -689,11 +689,11 @@
                                 <div id="accountClearingBrokerInfo_0" class="panel-body collapse">
                                     <div class="control-group">
                                         <div class="row" ng-if="onBoardingAccountDetails[0].onBoardingAccountId==0">
-                                            <span class="font-danger">* Note: Clearing brokers can be added only after successfully creating new Fund Account. Please click "Save Account" and try again.</span>
+                                            <span class="font-danger">* Note: Admin Accounts can be added only after successfully creating new Fund Account. Please click "Save Account" and try again.</span>
                                         </div>
                                         <div class="row" ng-if="onBoardingAccountDetails[0].onBoardingAccountId!=0">
                                             <div class="col-md-4">
-                                                <b>Clearing Broker:</b><input style="width: 300px" type="text" class="form-control" id="txtNewClearingBroker" />
+                                                <b>Admin Account:</b><input style="width: 300px" type="text" class="form-control" id="txtNewClearingBroker" />
                                             </div>
                                             <div class="col-md-3">
                                                 <b>Exposure:</b><input type="hidden" id="liExposureAgreementType" style="width:300px" />

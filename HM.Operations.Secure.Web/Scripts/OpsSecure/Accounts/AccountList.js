@@ -2094,7 +2094,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 exposureType: $("#liExposureAgreementType").select2("data").text
             })
         }).then(function () {
-            notifySuccess("Clearing broker added successfully");
+            notifySuccess("Admin Account added successfully");
             $scope.fnGetClearingBrokerData($scope.onBoardingAccountDetails[0].onBoardingAccountId);
         });
     }
@@ -2903,7 +2903,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     { "mData": "hmsFundAccountClearingBrokerId", "sTitle": "hmsFundAccountClearingBrokerId", visible: false },
                     { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
                     {
-                        "mData": "ClearingBrokerName", "sTitle": "Clearing Broker"
+                        "mData": "ClearingBrokerName", "sTitle": "Admin Account"
                     },
                     {
                         "mData": "MarginExposureType", "sTitle": "Margin Exposure"
@@ -2920,14 +2920,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         "mData": "hmsFundAccountClearingBrokerId",
                         "sTitle": "Remove", "className": "dt-center",
                         "mRender": function () {
-                            return "<button class='btn btn-danger btn-xs' title='Remove Clearing Broker'><i class='glyphicon glyphicon-trash'></i></button>";
+                            return "<button class='btn btn-danger btn-xs' title='Remove Admin Account'><i class='glyphicon glyphicon-trash'></i></button>";
                         }
                     }
                 ],
                 "oLanguage": {
                     "sSearch": "",
-                    "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Clearing Brokers",
-                    "sInfoFiltered": " - filtering from _MAX_ Clearing Brokers"
+                    "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Admin Accounts",
+                    "sInfoFiltered": " - filtering from _MAX_ Admin Accounts"
                 },
 
                 "deferRender": true,
@@ -2952,14 +2952,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             event.preventDefault();
             var selectedRow = $(this).parents("tr");
             var rowElement = tblAccClearingBrokers.row(selectedRow).data();
-            bootbox.confirm("Are you sure you want to remove this Clearing Broker from Account?", function (result) {
+            bootbox.confirm("Are you sure you want to remove this Admin Account from Fund Account?", function (result) {
                 if (!result) {
                     return;
                 } else {
                     $timeout(function () {
                         $http.post("/FundAccounts/DeleteClearingBrokers", { clearingBrokerId: rowElement.hmsFundAccountClearingBrokerId }).then(function () {
                             //    tblAccClearingBrokers.row(selectedRow).remove().draw();
-                            notifySuccess("Clearing broker removed successfully");
+                            notifySuccess("Admin Account removed successfully");
                         });
                         $scope.fnGetClearingBrokerData(rowElement.onBoardingAccountId);
                     }, 100);
