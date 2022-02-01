@@ -107,9 +107,9 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties().Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList();
             var templates = SSITemplateManager.GetAllSsiTemplates().Select(x => new { id = x.Key, text = x.Value }).ToList();
-            var permittedAgreementTypes = new List<string>() { "ISDA", "PB", "FCM", "CDA", "FXPB", "GMRA", "MSLA", "MRA", "MSFTA", "Listed Options", "Non-US Listed Options" };
+            var permittedAgreementTypes  = OpsSecureSwitches.AllowedAgreementTypesForSSITemplateCreation;
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes().Where(x => permittedAgreementTypes.Contains(x.Value)).Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList();
-            var currencies = FundAccountManager.GetAllCurrencies().Select(y => new { id = y.Currency, text = y.Currency }).OrderBy(x => x.text).ToList();
+            var currencies = FundAccountManager.GetAllCurrencies().Select(currency => new { id = currency, text = currency }).ToList();
             var addressList = FundAccountManager.GetAllBankAccountAddress().Select(s => new { id = s.AccountName, text = s.AccountName }).OrderBy(s => s.text).ToList();
             return Json(new
             {

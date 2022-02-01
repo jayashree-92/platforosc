@@ -235,11 +235,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         return $http.get("/FundAccounts/GetAccountPreloadData").then(function (response) {
             $scope.funds = response.data.funds;
             $scope.fundsWithAgreements = response.data.fundsWithAgreements;
-            $scope.agreementData = response.data.agreementData;
             $scope.agreements = response.data.agreements;
             $scope.counterpartyFamilies = response.data.counterpartyFamilies;
             $scope.ddaAgreementTypeId = response.data.ddaAgreementTypeId;
-            $scope.custodyAgreementTypeId = response.data.custodyAgreementTypeId;
             $scope.custodyAgreementTypeId = response.data.custodyAgreementTypeId;
         });
     }
@@ -597,31 +595,19 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                                 return moment(tData.CutoffTime).format("LT");
                             }
                         },
-                        { "mData": "Account.WirePortalCutoff", "sTitle": "Days to wire per V.D", "mRender": function (tData, type, row, meta) { return tData != null ? tData.DaystoWire : ""; } },
                         { "mData": "Account.HoldbackAmount", "sTitle": "Holdback Amount" },
                         { "mData": "Account.SweepComments", "sTitle": "Sweep Comments" },
                         { "mData": "Account.AssociatedCustodyAcct", "sTitle": "Associated Custody Acct" },
                         { "mData": "Account.PortfolioSelection", "sTitle": "Portfolio Selection" },
                         { "mData": "Account.TickerorISIN", "sTitle": "Ticker/ISIN" },
                         { "mData": "Account.SweepCurrency", "sTitle": "Sweep Currency" },
-                        //{ "mData": "ContactType", "sTitle": "Contact Type" },
-                        //{ "mData": "ContactName", "sTitle": "Contact Name" },
-                        //{ "mData": "ContactEmail", "sTitle": "Contact Email" },
-                        //{ "mData": "ContactNumber", "sTitle": "Contact Number" },
                         { "mData": "Account.BeneficiaryType", "sTitle": "Beneficiary Type" },
                         { "mData": "Account.Beneficiary", "sTitle": "Beneficiary BIC or ABA", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BICorABA : ""; } },
                         { "mData": "Account.Beneficiary", "sTitle": "Beneficiary Bank/Account Name", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankName : ""; } },
-                        { "mData": "Account.Beneficiary", "sTitle": "Beneficiary Bank Address", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankAddress : ""; } },
                         { "mData": "Account.BeneficiaryAccountNumber", "sTitle": "Beneficiary Account Number" },
-                        { "mData": "Account.IntermediaryType", "sTitle": "Intermediary Beneficiary Type" },
-                        { "mData": "Account.Intermediary", "sTitle": "Intermediary BIC or ABA", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BICorABA : ""; } },
-                        { "mData": "Account.Intermediary", "sTitle": "Intermediary Bank/Account Name", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankName : ""; } },
-                        { "mData": "Account.Intermediary", "sTitle": "Intermediary Bank Address", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankAddress : ""; } },
-                        { "mData": "Account.IntermediaryAccountNumber", "sTitle": "Intermediary Account Number" },
                         { "mData": "Account.UltimateBeneficiaryType", "sTitle": "Ultimate Beneficiary Type" },
                         { "mData": "Account.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary BIC or ABA", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BICorABA : ""; } },
                         { "mData": "Account.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Name", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankName : ""; } },
-                        { "mData": "Account.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Address", "mRender": function (tData, type, row, meta) { return tData != null ? tData.BankAddress : ""; } },
                         { "mData": "Account.UltimateBeneficiaryAccountName", "sTitle": "Ultimate Beneficiary Account Name" },
                         { "mData": "Account.FFCName", "sTitle": "FFC Name" },
                         { "mData": "Account.FFCNumber", "sTitle": "FFC Number" },
@@ -674,7 +660,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     "scrollY": window.innerHeight - 400,
                     "sScrollXInner": "100%",
                     "bScrollCollapse": true,
-                    "order": [[60, "desc"]],
+                    "order": [[52, "desc"]],
                     "rowCallback": function (row, data) {
                     },
                     "drawCallback": function (settings) {
@@ -711,7 +697,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     };
 
-    $(document).on("click", "#accountTable tbody tr ", function () {
+    $(document).on("click", "#accountTable tbody tr", function () {
         $("#accountTable tbody tr").removeClass("info");
         if (!$(this).hasClass("info")) {
             $(this).addClass("info");
@@ -796,7 +782,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnEditAccountDetails = function (rowElement) {
         $scope.watchAccountDetails = [];
         $scope.onBoardingAccountDetails = [];
-
 
         var accDetails = rowElement.Account;
         $scope.accountDetail = accDetails;
@@ -978,16 +963,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
     }
     $scope.fnEditAccount = function () {
-
-        var searchText = $('#accountListDiv input[type="search"]').val();
-
         var rowElement = accountTable.row(".info").data();
         $scope.fnEditAccountDetails(rowElement);
-
-
-        //var accountListUrl = "/FundAccounts/Index?searchText=" + searchText;
-        //window.history.pushState("", "", accountListUrl);
-        //window.location.assign("/FundAccounts/Account?fundId=" + $scope.FundId + "&brokerId=" + $scope.CounterpartyFamilyId + "&agreementId=" + $scope.AgreementId + "&accountType=" + $scope.AccountType + "&searchText=" + searchText);
     }
 
     $scope.fnCreateAccount = function () {
@@ -2010,10 +1987,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if (tblAccClearingBrokers != undefined && tblAccClearingBrokers.columns != undefined) {
             $timeout(function () {
                 tblAccClearingBrokers.columns.adjust().draw(true);
+                $("#liExposureAgreementType").select2("val", $scope.AgreementTypeId).trigger("change");
             }, 100);
         }
 
-        $("#liExposureAgreementType").select2("val", $scope.AgreementTypeId).trigger("change");
 
     }
 

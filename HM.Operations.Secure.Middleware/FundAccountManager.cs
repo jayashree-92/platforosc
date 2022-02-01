@@ -436,11 +436,11 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-        public static List<hmsCurrency> GetAllCurrencies()
+        public static List<string> GetAllCurrencies()
         {
             using (var context = new OperationsSecureContext())
             {
-                return context.hmsCurrencies.AsNoTracking().ToList();
+                return context.hmsCurrencies.AsNoTracking().Select(s=>s.Currency).OrderBy(s=>s).ToList();
             }
         }
 

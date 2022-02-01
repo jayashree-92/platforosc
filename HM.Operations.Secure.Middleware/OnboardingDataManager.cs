@@ -95,30 +95,28 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-        public static List<AgreementBaseData> GetAgreementsForOnboardingAccountPreloadData(List<long> hmFundIds, bool isPriveledgedUser)
+        public static List<AgreementBaseData> GetAgreementsForOnboardingAccountPreloadData(List<long> hmFundIds, bool isPrivilegedUser)
         {
             var allowedAgreementTypes = OpsSecureSwitches.AllowedAgreementTypesForFundAccountCreation;
             var allowedAgreementStatus = OpsSecureSwitches.AllowedAgreementStatusForFundAccountCreation;
             using (var context = new AdminContext())
             {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-
-                return context.vw_CounterpartyAgreements
+                var allAgreements = context.vw_CounterpartyAgreements
                     .Where(a => allowedAgreementStatus.Contains(a.AgreementStatus)
                                 && allowedAgreementTypes.Contains(a.AgreementType)
-                                && a.dmaCounterPartyOnBoardId != null && a.dmaCounterPartyOnBoardId > 0
-                                && (isPriveledgedUser || hmFundIds.Contains(a.FundMapId ?? 0)))
-                    .AsNoTracking().Select(x => new AgreementBaseData()
-                    {
-                        AgreementOnboardingId = x.dmaAgreementOnBoardingId,
-                        AgreementShortName = x.AgreementShortName,
-                        HMFundId = x.FundMapId ?? 0,
-                        AgreementTypeId = x.AgreementTypeId ?? 0,
-                        AgreementType = x.AgreementType,
-                        CounterpartyFamilyId = x.dmaCounterPartyFamilyId ?? 0,
-                        CounterpartyId = x.dmaCounterPartyOnBoardId ?? 0
-                    }).ToList();
+                                && a.dmaCounterPartyOnBoardId != null && a.dmaCounterPartyOnBoardId > 0)
+                                    .AsNoTracking().Select(x => new AgreementBaseData()
+                                    {
+                                        AgreementOnboardingId = x.dmaAgreementOnBoardingId,
+                                        AgreementShortName = x.AgreementShortName,
+                                        HMFundId = x.FundMapId ?? 0,
+                                        AgreementTypeId = x.AgreementTypeId ?? 0,
+                                        AgreementType = x.AgreementType,
+                                        CounterpartyFamilyId = x.dmaCounterPartyFamilyId ?? 0,
+                                        CounterpartyId = x.dmaCounterPartyOnBoardId ?? 0
+                                    }).ToList();
+
+                return isPrivilegedUser ? allAgreements : allAgreements.Where(s => hmFundIds.Contains(s.HMFundId)).ToList();
             }
         }
 
@@ -164,7 +162,7 @@ namespace HM.Operations.Secure.Middleware
             {
                 if (agreementTypes == null)
                     agreementTypes = new List<string>();
-                return context.dmaAgreementTypes.Where(s => agreementTypes.Count == 0 || agreementTypes.Contains(s.AgreementType)).ToDictionary(x => x.dmaAgreementTypeId, x => x.AgreementType);
+                return context.dmaAgreementTypes.AsNoTracking().Where(s => agreementTypes.Count == 0 || agreementTypes.Contains(s.AgreementType)).ToDictionary(x => x.dmaAgreementTypeId, x => x.AgreementType);
             }
         }
     }

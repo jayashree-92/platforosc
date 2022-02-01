@@ -16,6 +16,7 @@ namespace HM.Operations.Secure.Middleware
         }
 
         public static List<string> AllowedAgreementTypesForFundAccountCreation => GetSwitchValue(SwitchKey.AllowedAgreementTypesForFundAccountCreation);
+        public static List<string> AllowedAgreementTypesForSSITemplateCreation => GetSwitchValue(SwitchKey.AllowedAgreementTypesForSSITemplateCreation);
         public static List<string> AllowedAgreementStatusForFundAccountCreation => GetSwitchValue(SwitchKey.AllowedAgreementStatusForFundAccountCreation);
         public static List<string> AllowedAgreementTypesForReceivingFundAccounts => GetSwitchValue(SwitchKey.AllowedAgreementTypesForReceivingFundAccounts);
         public static List<string> TreasuryReportAgreementTypesToUseMarginExcessOrDeficit => GetSwitchValue(SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit);

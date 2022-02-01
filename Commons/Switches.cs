@@ -115,6 +115,7 @@ namespace Com.HedgeMark.Commons
             /*HM-Ops-Secure settings*/
             TreasuryReportAgreementTypesToUseMarginExcessOrDeficit,
             AllowedAgreementTypesForFundAccountCreation,
+            AllowedAgreementTypesForSSITemplateCreation,
             AllowedAgreementStatusForFundAccountCreation,
             AllowedAgreementTypesForReceivingFundAccounts,
             /*Wire settings*/
@@ -143,6 +144,8 @@ Disclaimer: This message is Confidential until classified otherwise.
                 CreateSwitch(SwitchKey.AllowedAgreementTypesForFundAccountCreation, SwitchType.StringList, Modules.OpsSecure, "CDA,Custody,DDA,Deemed ISDA,Enhanced Custody,FCM,FXPB,GMRA,ISDA,Listed Options,MRA,MSFTA,Non-US Listed Options,PB,Synthetic Prime Brokerage,CDA Amnd"),
                 CreateSwitch(SwitchKey.AllowedAgreementStatusForFundAccountCreation, SwitchType.StringList, Modules.OpsSecure, "Fully Executed"),
                 CreateSwitch(SwitchKey.AllowedAgreementTypesForReceivingFundAccounts, SwitchType.StringList, Modules.OpsSecure, "FCM,CDA,ISDA,GMRA,MRA,MSFTA,FXPB,CDA Amnd"),
+                CreateSwitch(SwitchKey.AllowedAgreementTypesForSSITemplateCreation , SwitchType.StringList, Modules.OpsSecure,  "ISDA,PB,FCM,CDA,FXPB,GMRA,MSLA,MRA,MSFTA,Listed Options,Non-US Listed Options"),
+
                 CreateSwitch(SwitchKey.AgreementTypesEligibleForSendingWires, SwitchType.StringList, Modules.WireSettings, "Custody,DDA,PB,Synthetic Prime Brokerage"),
                 CreateSwitch(SwitchKey.SwiftBicToEnableField21, SwitchType.StringList, Modules.WireSettings, "SBOSUS30,SBOSUS3U,CNORLULX,SBOSUS3UIMS"),
                 CreateSwitch(SwitchKey.SwiftGroupToIncludeWirePurposeInWireMessage, SwitchType.StringList, Modules.WireSettings, "Credit Suisse")
