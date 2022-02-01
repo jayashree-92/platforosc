@@ -276,11 +276,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
         $("#liExposureAgreementType").select2({
             placeholder: "Select an Exposure Type",
-            allowClear: true,
+            allowClear: false,
             data: []
         });
-
-        $("#liExposureAgreementType").select2("val", "");
+        
         $("#liAccountType").select2("val", "");
         $("#liFund").select2("val", "");
         $("#liAgreement").select2("val", "");
@@ -1079,10 +1078,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnCashSweep = function (cashSweep) {
-        if (cashSweep == "Yes") {
+        if (cashSweep == "Yes")
             $(".cashSweepTimeDiv0").show();
-        }
-        else $(".cashSweepTimeDiv0").hide();
+        else
+            $(".cashSweepTimeDiv0").hide();
     }
 
     $scope.fnGetAuthorizedParty = function () {
@@ -1987,11 +1986,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if (tblAccClearingBrokers != undefined && tblAccClearingBrokers.columns != undefined) {
             $timeout(function () {
                 tblAccClearingBrokers.columns.adjust().draw(true);
-                $("#liExposureAgreementType").select2("val", $scope.AgreementTypeId).trigger("change");
+                $("#liExposureAgreementType").select2("val", $scope.onBoardingAccountDetails[0].MarginExposureTypeID).trigger("change");
             }, 100);
         }
-
-
     }
 
     $scope.CheckFundAccountFieldsChanges = function (val, oldVal) {
@@ -2059,6 +2056,24 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#templateType").val("");
         }
     });
+
+
+
+
+    $scope.fnUpdateMarginExposureType = function () {
+        $http({
+            method: "POST",
+            url: "/FundAccounts/AddOrUpdateMarginExposureType",
+            type: "json",
+            data: JSON.stringify({
+                accountId: $scope.onBoardingAccountDetails[0].onBoardingAccountId,
+                exposureTypeId: $("#liExposureAgreementType").val()
+            })
+        }).then(function () {
+            $scope.onBoardingAccountDetails[0].MarginExposureTypeID = $("#liExposureAgreementType").val();
+            notifySuccess("Margin Exposure Type updated successfully");
+        });
+    }
     $scope.txtNewClearingBroker = "";
     $scope.fnAddClearingBroker = function () {
         $http({
@@ -2068,7 +2083,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             data: JSON.stringify({
                 accountId: $scope.onBoardingAccountDetails[0].onBoardingAccountId,
                 clearingBrokerName: $("#txtNewClearingBroker").val(),
-                exposureType: $("#liExposureAgreementType").select2("data").text
             })
         }).then(function () {
             notifySuccess("Admin Account added successfully");
@@ -2881,9 +2895,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     { "mData": "onBoardingAccountId", "sTitle": "onBoardingAccountId", visible: false },
                     {
                         "mData": "ClearingBrokerName", "sTitle": "Admin Account"
-                    },
-                    {
-                        "mData": "MarginExposureType", "sTitle": "Margin Exposure"
                     },
                     {
                         "mData": "RecCreatedAt",

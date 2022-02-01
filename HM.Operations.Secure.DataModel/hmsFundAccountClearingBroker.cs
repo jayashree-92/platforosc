@@ -16,10 +16,9 @@ namespace HM.Operations.Secure.DataModel
     {
         public long hmsFundAccountClearingBrokerId { get; set; }
         public long onBoardingAccountId { get; set; }
-        public string MarginExposureType { get; set; }
+        public string ClearingBrokerName { get; set; }
         public System.DateTime RecCreatedAt { get; set; }
         public int RecCreatedById { get; set; }
-        public string ClearingBrokerName { get; set; }
     
         public virtual onBoardingAccount onBoardingAccount { get; set; }
     }

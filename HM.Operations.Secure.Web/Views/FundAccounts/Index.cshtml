@@ -693,10 +693,17 @@
                                         </div>
                                         <div class="row" ng-if="onBoardingAccountDetails[0].onBoardingAccountId!=0">
                                             <div class="col-md-4">
-                                                <b>Admin Account:</b><input style="width: 300px" type="text" class="form-control" id="txtNewClearingBroker" />
-                                            </div>
-                                            <div class="col-md-3">
                                                 <b>Exposure:</b><input type="hidden" id="liExposureAgreementType" style="width:300px" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <br />
+                                                <button class="btn btn-sm btn-primary" ng-click="fnUpdateMarginExposureType()">Update Exposure</button>&nbsp;&nbsp;
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="row" ng-if="onBoardingAccountDetails[0].onBoardingAccountId!=0">
+                                            <div class="col-md-4">
+                                                <b>Admin Account:</b><input style="width: 300px" type="text" class="form-control" id="txtNewClearingBroker" />
                                             </div>
                                             <div class="col-md-4">
                                                 <br />

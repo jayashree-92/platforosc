@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
@@ -474,13 +475,27 @@ namespace HM.Operations.Secure.Web.Controllers
             return Json(clearingBrokers, JsonContentType, JsonContentEncoding);
         }
 
-        public void AddClearingBrokers(long accountId, string clearingBrokerName, string exposureType)
+        public void AddOrUpdateMarginExposureType(long accountId, int exposureTypeId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var account = context.onBoardingAccounts.FirstOrDefault(s => s.onBoardingAccountId == accountId);
+
+                if (account == null)
+                    return;
+
+                account.MarginExposureTypeID = exposureTypeId;
+                context.onBoardingAccounts.AddOrUpdate(account);
+            }
+        }
+
+
+        public void AddClearingBrokers(long accountId, string clearingBrokerName)
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-
 
                 var clearingBroker = context.hmsFundAccountClearingBrokers.FirstOrDefault(s => s.onBoardingAccountId == accountId && s.ClearingBrokerName == clearingBrokerName);
                 if (clearingBroker != null) context.hmsFundAccountClearingBrokers.Remove(clearingBroker);
@@ -489,7 +504,6 @@ namespace HM.Operations.Secure.Web.Controllers
                 context.hmsFundAccountClearingBrokers.Add(new hmsFundAccountClearingBroker()
                 {
                     ClearingBrokerName = clearingBrokerName,
-                    MarginExposureType = exposureType,
                     onBoardingAccountId = accountId,
                     RecCreatedAt = DateTime.Now,
                     RecCreatedById = UserId,

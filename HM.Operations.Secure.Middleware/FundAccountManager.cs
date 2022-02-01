@@ -5,6 +5,7 @@ using log4net;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Mapping;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
@@ -228,6 +229,19 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
+        private static int GetAgreementId(onBoardingAccount account)
+        {
+            if (account.AccountType == "DDA" || account.AccountType == "Custody")
+            {
+                return OnBoardingDataManager.GetAllAgreementTypes(new List<string>() { account.AccountType }).First().Key;
+            }
+
+            using (var context = new AdminContext())
+            {
+                return context.vw_CounterpartyAgreements.First(s => s.dmaAgreementOnBoardingId == account.dmaAgreementOnBoardingId).AgreementTypeId ?? 0;
+            }
+        }
+
         public static long AddAccount(onBoardingAccount account, string userName)
         {
             using (var context = new OperationsSecureContext())
@@ -241,6 +255,7 @@ namespace HM.Operations.Secure.Middleware
                         account.UpdatedAt = DateTime.Now;
                         account.UpdatedBy = userName;
                         account.onBoardingAccountStatus = "Created";
+                        account.MarginExposureTypeID = GetAgreementId(account);
                     }
                     else
                     {
@@ -440,7 +455,7 @@ namespace HM.Operations.Secure.Middleware
         {
             using (var context = new OperationsSecureContext())
             {
-                return context.hmsCurrencies.AsNoTracking().Select(s=>s.Currency).OrderBy(s=>s).ToList();
+                return context.hmsCurrencies.AsNoTracking().Select(s => s.Currency).OrderBy(s => s).ToList();
             }
         }
 

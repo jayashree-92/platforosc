@@ -3,7 +3,7 @@ GO
 
 IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'onBoardingAccount_bkup_V45_0' AND TABLE_SCHEMA = 'DmaBackup')
 BEGIN
-SELECT * INTO DmaBackup.onBoardingAccount_bkup_V45_0 FROM onBoardingAccount
+	SELECT * INTO DmaBackup.onBoardingAccount_bkup_V45_0 FROM onBoardingAccount
 END
 GO
 
@@ -23,6 +23,21 @@ BEGIN
 END
 GO
 
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'MarginExposureTypeID' AND TABLE_NAME = 'onboardingAccount')
+BEGIN
+
+	UPDATE TGT SET TGT.MarginExposureTypeID = SRC.dmaAgreementTypeId 
+	FROM vw_FundAccounts SRC 
+	INNER JOIN onboardingAccount TGT ON TGT.dmaAgreementOnBoardingId = SRC.dmaAgreementOnBoardingId
+	WHERE SRC.dmaAgreementTypeId IS NOT NULL AND TGT.MarginExposureTypeID =0
+
+	UPDATE TGT SET TGT.MarginExposureTypeID = SRC.dmaAgreementTypeId 
+	FROM HM.HMADMIN.dmaAgreementTypes SRC 
+	INNER JOIN onboardingAccount TGT ON TGT.AccountType = SRC.AgreementType
+	WHERE SRC.dmaAgreementTypeId IS NOT NULL AND TGT.MarginExposureTypeID =0
+	
+END
+GO
 
 
 

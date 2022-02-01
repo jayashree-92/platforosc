@@ -53,5 +53,6 @@ namespace HM.Operations.Secure.DataModel
         public bool IsUmberllaFund { get; set; }
         public bool IsExcludedFromTreasuryMarginCheck { get; set; }
         public string CustodianCompanyName { get; set; }
+        public string MarginExposureType { get; set; }
     }
 }

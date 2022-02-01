@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="21922e52691542eda2a5b6d3ddb68a43" Name="Diagram1" ZoomLevel="82">
+      <Diagram DiagramId="21922e52691542eda2a5b6d3ddb68a43" Name="Diagram1" ZoomLevel="80">
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireDocument" Width="1.5" PointX="11.875" PointY="6.375" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireMessageType" Width="1.5" PointX="8.25" PointY="7.5" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireStatusLkup" Width="1.5" PointX="5.625" PointY="1" />
@@ -108,9 +108,9 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsSwiftGroup" Width="1.5" PointX="12.625" PointY="18.375" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsFundAccountClearingBroker" Width="1.5" PointX="21.125" PointY="15.25" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsFundAccountClearingBrokers_onBoardingAccountId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
