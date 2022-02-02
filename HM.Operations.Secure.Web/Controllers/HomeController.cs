@@ -549,12 +549,12 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public JsonResult GetAuthorizedFunds(int transferTypeId)
         {
-                var fundsWithApprovedAccounts = FundAccountManager.GetFundsOfApprovedAccounts();
-                var hFunds = AuthorizedDMAFundData.Where(fund =>fundsWithApprovedAccounts.Contains(fund.HmFundId))
-                    .Where(s => transferTypeId != 5 || s.IsFundAllowedForBankLoanAndIpOs)
-                    .Select(s => new { id = s.HmFundId, text = s.PreferredFundName }).ToList();
+            var fundsWithApprovedAccounts = FundAccountManager.GetFundsOfApprovedAccounts();
+            var hFunds = AuthorizedDMAFundData.Where(fund => fundsWithApprovedAccounts.Contains(fund.HmFundId))
+                .Where(s => transferTypeId != 5 || s.IsFundAllowedForBankLoanAndIpOs)
+                .Select(s => new { id = s.HmFundId, text = s.PreferredFundName }).ToList();
 
-                return Json(hFunds, JsonRequestBehavior.AllowGet);
+            return Json(hFunds, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetApprovedAgreementsForFund(long fundId)
@@ -604,13 +604,13 @@ namespace HM.Operations.Secure.Web.Controllers
             return Json(new { sendingAccountsList, receivingAccountsList, currencies });
         }
 
-        public JsonResult GetApprovedSSITemplatesForAccount(long accountId, bool isNormalTransfer)
+        public JsonResult GetApprovedSSITemplatesForAccount(long accountId, int wireTransferTypeId)
         {
             List<onBoardingSSITemplate> receivingAccounts;
             bool shouldEnableCollateralPurpose;
             using (var context = new OperationsSecureContext())
             {
-                var templateType = isNormalTransfer ? "Broker" : "Fee/Expense Payment";
+                var templateType = wireTransferTypeId == 1 ? "Broker" : wireTransferTypeId == 3 ? "Fee/Expense Payment" : wireTransferTypeId == 5 ? "Bank Loan/Private/IPO" : "";
 
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -624,7 +624,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     .Where(s => s.SSITemplateType == templateType)
                     .ToList();
 
-                shouldEnableCollateralPurpose = isNormalTransfer && context.onBoardingAccounts.Include(s => s.SwiftGroup)
+                shouldEnableCollateralPurpose = wireTransferTypeId == 1 && context.onBoardingAccounts.Include(s => s.SwiftGroup)
                     .Any(s => s.onBoardingAccountId == accountId && s.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(s.SwiftGroup.SendersBIC));
             }
 
@@ -648,22 +648,20 @@ namespace HM.Operations.Secure.Web.Controllers
                 ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates1 = ssiTemplate.UltimateBeneficiary.onBoardingSSITemplates2 = null;
                 ssiTemplate.onBoardingSSITemplateDocuments.ForEach(s => s.onBoardingSSITemplate = null);
                 ssiTemplate.onBoardingAccountSSITemplateMaps.ForEach(s => { s.onBoardingSSITemplate = null; s.onBoardingAccount = null; });
-
             });
-
-
 
             using (var context = new AdminContext())
             {
                 var entityIds = receivingAccounts.Select(s => s.TemplateEntityId).Distinct().ToList();
-                var counterparties = context.dmaCounterPartyOnBoardings.Where(s => entityIds.Contains(s.dmaCounterPartyOnBoardId)).ToDictionary(s => s.dmaCounterPartyOnBoardId.ToString(), v => v.CounterpartyName);
+                var counterParties = context.dmaCounterPartyOnBoardings.Where(s => entityIds.Contains(s.dmaCounterPartyOnBoardId))
+                    .ToDictionary(s => s.dmaCounterPartyOnBoardId.ToString(), v => v.CounterpartyName);
+
                 var receivingAccountList = receivingAccounts.Select(s => new
                 {
                     id = s.onBoardingSSITemplateId,
-                    text = string.IsNullOrWhiteSpace(s.FFCNumber) ? $"{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}"
-                    : $"{s.FFCNumber}-{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}"
+                    text = string.IsNullOrWhiteSpace(s.FFCNumber) ? $"{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}" : $"{s.FFCNumber}-{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}"
                 }).ToList();
-                return Json(new { receivingAccounts, receivingAccountList, counterparties, shouldEnableCollateralPurpose });
+                return Json(new { receivingAccounts, receivingAccountList, counterparties = counterParties, shouldEnableCollateralPurpose });
             }
         }
 
