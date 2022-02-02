@@ -92,17 +92,11 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         { "mData": "SSITemplate.BeneficiaryType", "sTitle": "Beneficiary Type" },
                         { "mData": "SSITemplate.Beneficiary", "sTitle": "Beneficiary BIC or ABA", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BICorABA : ""; } },
                         { "mData": "SSITemplate.Beneficiary", "sTitle": "Beneficiary Bank/Account Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
-                        { "mData": "SSITemplate.Beneficiary", "sTitle": "Beneficiary Bank Address", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankAddress : ""; } },
                         { "mData": "SSITemplate.BeneficiaryAccountNumber", "sTitle": "Beneficiary Account Number" },
-                        { "mData": "SSITemplate.IntermediaryType", "sTitle": "Intermediary Beneficiary Type" },
-                        { "mData": "SSITemplate.Intermediary", "sTitle": "Intermediary BIC or ABA", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BICorABA : ""; } },
                         { "mData": "SSITemplate.Intermediary", "sTitle": "Intermediary Bank/Account Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
-                        { "mData": "SSITemplate.Intermediary", "sTitle": "Intermediary Bank Address", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankAddress : ""; } },
-                        { "mData": "SSITemplate.IntermediaryAccountNumber", "sTitle": "Intermediary Account Number" },
                         { "mData": "SSITemplate.UltimateBeneficiaryType", "sTitle": "Ultimate Beneficiary Type" },
                         { "mData": "SSITemplate.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary BIC or ABA", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BICorABA : ""; } },
                         { "mData": "SSITemplate.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
-                        { "mData": "SSITemplate.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Address", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankAddress : ""; } },
                         { "mData": "SSITemplate.UltimateBeneficiaryAccountName", "sTitle": "Ultimate Beneficiary Account Name" },
                         { "mData": "SSITemplate.UltimateBeneficiaryAccountNumber", "sTitle": "Ultimate Beneficiary Account Number" },
 
@@ -179,7 +173,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                     "scrollY": window.innerHeight - 350,
                     "sScrollXInner": "100%",
                     "bScrollCollapse": true,
-                    "order": [[33, "desc"]],
+                    "order": [[27, "desc"]],
                     //"bPaginate": false,
                     iDisplayLength: -1
                 });
