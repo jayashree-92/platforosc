@@ -854,7 +854,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         angular.element("button").button("reset");
         angular.element("#cancelWire").popover("hide");
         $("#wireErrorStatus").collapse("hide");
-        angular.element("#liWireTransferType").select2("val", 1).trigger("change");
+     //   angular.element("#liWireTransferType").select2("val", 1).trigger("change");
         $scope.fnResetAcknowledgementAllToggle();
         $scope.WireTicket = {};
         $scope.wireTicketObj = {};
