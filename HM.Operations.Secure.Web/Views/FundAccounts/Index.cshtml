@@ -166,7 +166,7 @@
                                 <li ng-if="!IsReportingOnly"><a href="#accountSwiftInfo_0">Swift Info</a></li>
                                 <li><a href="#accountSSIInfo_0">Account  {{IsReportingOnly?'Details':'SSI'}}</a></li>
                                 <li ng-if="!IsReportingOnly &&!IsBNYMBroker && ((isEdit && IsPendingApproval)|| (isEdit && IsApproved)|| (IsKeyFieldsChanged))"><a href="#accountCallback_0">Callback Check&nbsp;<span class="label label-info">{{ CallBackChecks.length }}</span>  </a></li>
-                                <li ng-if="!IsReportingOnly"><a href="#accountContactInfo_0">Contacts&nbsp;<span class="label label-info">{{ onboardingContacts.length }}</span>   </a></li>
+                                <li><a href="#accountContactInfo_0">Contacts&nbsp;<span class="label label-info">{{ onboardingContacts.length }}</span>   </a></li>
                                 <li ng-if="!IsReportingOnly && isEdit"><a href="#accountAttachment_0">Attachments&nbsp;<span class="label label-info">{{ accountDocuments.length }}</span></a></li>
                                 <li ng-if="!IsReportingOnly && !accountDetail.IsReceivingAccount"><a href="#accountSsiAssociation_0">Associated SSI&nbsp;<span class="label label-info">{{ ssiTemplateMaps.length }}</span></a></li>
                                 <li><a href="#accountClearingBrokers_0">Admin Accounts&nbsp;<span class="label label-info">{{ TotalClearingBrokers}}</span></a></li>
@@ -608,7 +608,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div ng-if="!IsReportingOnly" class="panel panel-default ng-show-hide" id="accountContactInfo_0" data-toggle='collapse'>
+                            <div class="panel panel-default ng-show-hide" id="accountContactInfo_0" data-toggle='collapse'>
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountContactDetailInfo_0" aria-expanded="false" aria-controls="accountContactDetailInfo_0" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Contact</b>
                                     <span class="pull-right">
@@ -692,7 +692,7 @@
                                             <span class="font-danger">* Note: Admin Accounts can be added only after successfully creating new Fund Account. Please click "Save Account" and try again.</span>
                                         </div>
                                         <div class="row" ng-if="onBoardingAccountDetails[0].onBoardingAccountId!=0">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <b>Exposure:</b><input type="hidden" id="liExposureAgreementType" style="width:300px" />
                                             </div>
                                             <div class="col-md-4">
@@ -702,7 +702,7 @@
                                         </div>
                                         <hr />
                                         <div class="row" ng-if="onBoardingAccountDetails[0].onBoardingAccountId!=0">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <b>Admin Account:</b><input style="width: 300px" type="text" class="form-control" id="txtNewClearingBroker" />
                                             </div>
                                             <div class="col-md-4">

@@ -279,7 +279,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             allowClear: false,
             data: []
         });
-        
+
         $("#liAccountType").select2("val", "");
         $("#liFund").select2("val", "");
         $("#liAgreement").select2("val", "");
@@ -2076,6 +2076,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
     $scope.txtNewClearingBroker = "";
     $scope.fnAddClearingBroker = function () {
+
+        if ($("#txtNewClearingBroker").val() == "") {
+            notifyWarning("Please add an Admin Broker and try again.");
+            $("#txtNewClearingBroker").pulse();
+            return;
+        }
+
         $http({
             method: "POST",
             url: "/FundAccounts/AddClearingBrokers",
