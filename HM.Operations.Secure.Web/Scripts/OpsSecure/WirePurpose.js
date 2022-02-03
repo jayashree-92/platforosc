@@ -49,17 +49,17 @@ HmOpsApp.controller("WirePurposeMgmtCtrl", function ($scope, $http, $timeout) {
                 pageResize: true,
                 "bDestroy": true,
                 "createdRow": function (row, data) {
-                    for (var i = 3; i < data.length - 2; i++) {
+                    for (var i = 0; i < data.length - 2; i++) {
                         var controlResult = data[i];
                         switch (controlResult) {
                             case "Blocked":
-                                $("td:eq(" + i + ")", row).html("<label class='label label-default'>" + controlResult + "</label>");
+                                $("td:eq(" + (i - 1) + ")", row).html("<label class='label label-default'>" + controlResult + "</label>");
                                 break;
                             case "Approved":
-                                $("td:eq(" + i + ")", row).html("<label class='label label-success'>" + controlResult + "</label>");
+                                $("td:eq(" + (i - 1) + ")", row).html("<label class='label label-success'>" + controlResult + "</label>");
                                 break;
                             case "Requested":
-                                $("td:eq(" + i + ")", row).html("<label class='label label-warning'>" + controlResult + "</label>");
+                                $("td:eq(" + (i - 1) + ")", row).html("<label class='label label-warning'>" + controlResult + "</label>");
                                 break;
                         }
                     }
@@ -196,7 +196,7 @@ HmOpsApp.controller("WirePurposeMgmtCtrl", function ($scope, $http, $timeout) {
         $scope.fnSelectedWirePurpose = wirePurpose;
         $("#mdlManageControls").modal("show").off("shown.bs.modal").on("shown.bs.modal", function () {
             $scope.fnGetWirePurposeControls(wirePurpose);
-        }).off("hidden.bs.modal").on("hidden.bs.modal", function() {
+        }).off("hidden.bs.modal").on("hidden.bs.modal", function () {
             $scope.fnGetWirePurposes();
         });
     }
