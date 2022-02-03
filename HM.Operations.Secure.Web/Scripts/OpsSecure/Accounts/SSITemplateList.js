@@ -93,7 +93,6 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                         { "mData": "SSITemplate.Beneficiary", "sTitle": "Beneficiary BIC or ABA", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BICorABA : ""; } },
                         { "mData": "SSITemplate.Beneficiary", "sTitle": "Beneficiary Bank/Account Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
                         { "mData": "SSITemplate.BeneficiaryAccountNumber", "sTitle": "Beneficiary Account Number" },
-                        { "mData": "SSITemplate.Intermediary", "sTitle": "Intermediary Bank/Account Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
                         { "mData": "SSITemplate.UltimateBeneficiaryType", "sTitle": "Ultimate Beneficiary Type" },
                         { "mData": "SSITemplate.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary BIC or ABA", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BICorABA : ""; } },
                         { "mData": "SSITemplate.UltimateBeneficiary", "sTitle": "Ultimate Beneficiary Bank Name", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.BankName : ""; } },
