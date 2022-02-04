@@ -723,12 +723,12 @@
 
                         @if (User.IsWireUser())
                         {
-                            <button type="submit" id="btnSave" ng-click="fnSaveAccount('Created')" ng-disabled="!isAccountChanged || isApproved" title="Save the account" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Account</button>
-                            <button id="btnPendingApproval" ng-show="isEdit" ng-disabled="isApproved" ng-click="fnUpdateAccountStatus('Pending Approval','Request for Approval')" title="Pending approval the account" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
-                            <button id="btnRevert" ng-click="fnUpdateAccountStatus('Created','Revert')" ng-show="isEdit && !isDrafted" ng-disabled="!isAccountChanged" title="Revert the account" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-repeat"></i>&nbsp;Save and Update</button>
+                            <button type="submit" id="btnSave" ng-click="fnSaveAccount('Created')" ng-disabled="!IsReportingOnly && (!isAccountChanged || isApproved)" title="Save the account" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save Account</button>
+                            <button ng-if="!IsReportingOnly" id="btnPendingApproval" ng-show="isEdit" ng-disabled="isApproved" ng-click="fnUpdateAccountStatus('Pending Approval','Request for Approval')" title="Pending approval the account" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for Approval</button>
+                            <button ng-if="!IsReportingOnly" id="btnRevert" ng-click="fnUpdateAccountStatus('Created','Revert')" ng-show="isEdit && !isDrafted" ng-disabled="!isAccountChanged" title="Revert the account" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-repeat"></i>&nbsp;Save and Update</button>
                             if (User.IsWireApprover())
                             {
-                                <button id="btnApprove" ng-click="fnUpdateAccountStatus('Approved','Approve')" title="Approve the account" ng-if="isAuthorizedUserToApprove" ng-disabled="isAccountChanged" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
+                                <button id="btnApprove" ng-if="!IsReportingOnly" ng-click="fnUpdateAccountStatus('Approved','Approve')" title="Approve the account" ng-if="isAuthorizedUserToApprove" ng-disabled="isAccountChanged" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
                             }
                         }
 

@@ -886,29 +886,30 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnUpdateAccountStatus = function (status, statusAction) {
 
-        if ($scope.onBoardingAccountDetails[0].AccountType != "Agreement (Reporting Only)") {
-            if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.accountDocuments.length == 0) {
-                notifyWarning("Please upload document to approve/request to approve account");
-                return;
-            }
+        //Status need not be updated for Reporting Only Type
+        if ($scope.onBoardingAccountDetails[0].AccountType == "Agreement (Reporting Only)")
+            return;
 
-            if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0) && !$scope.IsBNYMBroker && $scope.onBoardingAccountDetails[0].AccountStatus != "Closed") {
-                notifyWarning("Please add atleast one Callback check to approve account");
-                //$scope.IsKeyFieldsChanged=false;
-                return;
-            }
+        if ((statusAction == "Request for Approval" || statusAction == "Approve") && $scope.accountDocuments.length == 0) {
+            notifyWarning("Please upload document to approve/request to approve account");
+            return;
         }
+
+        if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0) && !$scope.IsBNYMBroker && $scope.onBoardingAccountDetails[0].AccountStatus != "Closed") {
+            notifyWarning("Please add at-least one Callback check to approve account");
+            return;
+        }
+
         $scope.AccountStatus = status;
         var confirmationMsg = "Are you sure you want to " + ((statusAction === "Request for Approval") ? "<b>request</b> for approval of" : "<b>" + (statusAction == "Revert" ? "save changes or sending approval for" : statusAction) + "</b>") + " the selected account?";
         if (statusAction == "Request for Approval") {
             $("#btnSaveComment").addClass("btn-warning").removeClass("btn-success").removeClass("btn-primary");
             $("#btnSaveComment").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
         } else if (statusAction == "Approve") {
-            if ($scope.onBoardingAccountDetails[0].AccountType != "Agreement (Reporting Only)") {
-                if ($scope.IsKeyFieldsChanged && !$scope.IsBNYMBroker && $scope.onBoardingAccountDetails[0].AccountStatus != "Closed") {
-                    notifyWarning("Please add one Callback check to approve account");
-                    return;
-                }
+
+            if ($scope.IsKeyFieldsChanged && !$scope.IsBNYMBroker && $scope.onBoardingAccountDetails[0].AccountStatus != "Closed") {
+                notifyWarning("Please add one Callback check to approve account");
+                return;
             }
             $("#btnSaveComment").removeClass("btn-warning").addClass("btn-success").removeClass("btn-primary");
             $("#btnSaveComment").html('<i class="glyphicon glyphicon-ok"></i>&nbsp;Approve');
