@@ -2,9 +2,10 @@ USE [HM_WIRES]
 GO
 
 
-IF NOT EXISTS(SELECT * FROM hmsAccountCallback WHERE onBoardingAccountId=13 ) 
-BEGIN 
-INSERT INTO [dbo].[hmsAccountCallback]
+IF NOT EXISTS(SELECT * FROM hmsAccountCallback WHERE RecCreatedby ='Retrofit' and onBoardingAccountId!=13)
+BEGIN
+    
+	INSERT INTO [dbo].[hmsAccountCallback]
            ([onBoardingAccountId]
            ,[ContactName]
            ,[ContactNumber]
@@ -14,8 +15,9 @@ INSERT INTO [dbo].[hmsAccountCallback]
            ,[RecCreatedDt]
            ,[ConfirmedBy]
            ,[ConfirmedAt])
-     VALUES
-           (13
+     
+
+			select onBoardingAccountId           
            ,'Retrofit'
            ,'Retrofit'
            ,'Retrofit'
@@ -23,8 +25,10 @@ INSERT INTO [dbo].[hmsAccountCallback]
            ,'Retrofit'
            ,getdate()
            ,'Retrofit'
-           ,getdate())
-		   END
-GO
+           ,getdate()	
+				FROM onBoardingAccount a WHERE onBoardingAccountId not in 
+				(SELECT onBoardingAccountId  FROM hmsAccountCallback) and isdeleted=0 and hmfundid!=0 and a.createdat<='2021-02-16'	  
+  
+ END
 
 
