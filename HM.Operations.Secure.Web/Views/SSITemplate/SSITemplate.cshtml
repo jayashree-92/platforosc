@@ -33,23 +33,34 @@
                                             <input name="Template Type" type="text" class="form-control" ng-model="ssiTemplate.SSITemplateType" id="liSSITemplateType" ng-change="fnSSITemplateType(ssiTemplate.SSITemplateType)" required />
                                         </div>
                                     </div>
-                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker' || ssiTemplate.SSITemplateType == 'Bank Loan/Private/IPO'">
+                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker'">
                                         <div class="col-md-2">
                                             <label class="control-label">Legal Entity <span style="color: red">  *</span></label>
                                         </div>
                                         <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                            <input type="text" class="form-control" ng-model="ssiTemplate.TemplateEntityId" id="liBroker" name="Legal Entity" ng-required="ssiTemplate.SSITemplateType == 'Broker' || ssiTemplate.SSITemplateType == 'Bank Loan/Private/IPO'" />
+                                            <input type="text" class="form-control" ng-model="ssiTemplate.TemplateEntityId" id="liBroker" name="Legal Entity" ng-required="ssiTemplate.SSITemplateType == 'Broker'" />
                                         </div>
                                     </div>
                                 </div>
                                 <p></p>
                                 <div class="row">
-                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker' || ssiTemplate.SSITemplateType == 'Bank Loan/Private/IPO'">
+                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Broker'">
                                         <div class="col-md-3">
                                             <label class="control-label">Account Type <span style="color: red">  *</span></label>
                                         </div>
                                         <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                            <input type="text" class="form-control" ng-model="ssiTemplate.dmaAgreementTypeId" id="liAccountType" name="Account Type" ng-required="ssiTemplate.SSITemplateType == 'Broker' || ssiTemplate.SSITemplateType == 'Bank Loan/Private/IPO'" />
+                                            <input type="text" class="form-control" ng-model="ssiTemplate.dmaAgreementTypeId" id="liAccountType" name="Account Type" ng-required="ssiTemplate.SSITemplateType == 'Broker'" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Bank Loan/Private/IPO'">
+                                        <div class="col-md-3">
+                                            <label class="control-label">Agent Bank / Deal Name<span style="color: red">  *</span></label>
+                                        </div>
+                                        <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
+                                            <input type="text" class="form-control" ng-model="ssiTemplate.hmsSSIDescriptionId" id="liSSIDescriptions" name="Description" ng-required="ssiTemplate.SSITemplateType == 'Bank Loan/Private/IPO'" />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Description')" title="Add Description"><i class="glyphicon glyphicon-plus"></i></a>
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Fee/Expense Payment'">
@@ -60,9 +71,10 @@
                                             <input type="text" class="form-control" ng-model="ssiTemplate.ServiceProvider" id="liServiceProvider" name="Service Provider" ng-required="ssiTemplate.SSITemplateType == 'Fee/Expense Payment'" />
                                         </div>
                                         <div class="col-md-2">
-                                            <a id="btnSSITemplateServiceProvider" class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Service Provider')" title="Add Service Provider"><i class="glyphicon glyphicon-plus"></i></a>
+                                            <a class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Service Provider')" title="Add Service Provider"><i class="glyphicon glyphicon-plus"></i></a>
                                         </div>
                                     </div>
+
                                     <div class="col-sm-12 col-md-9 col-lg-6">
                                         <div class="col-md-2">
                                             <label class="control-label">Currency <span style="color: red">  *</span></label>
@@ -492,7 +504,7 @@
                     <div class="modal-footer">
                         @if (User.IsWireUser())
                         {
-                            <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddSSITemplateDetail($index)">
+                            <button type="button" class="btn btn-sm btn-primary" ng-click="fnAddSSITemplateDetail()">
                                 <i class="glyphicon glyphicon-copy"></i>&nbsp;Add {{ detail }}
                             </button>
                         }
@@ -512,7 +524,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-sm-12 col-md-12 col-lg-12">
-                                <table id="ssiTemplateTableMap" class="table table-condensed table-bordered table-striped table-hover ssiTemplate" tindex="{{$index}}"><tfoot></tfoot></table>
+                                <table id="ssiTemplateTableMap" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
                             </div>
                         </div>
                     </div>

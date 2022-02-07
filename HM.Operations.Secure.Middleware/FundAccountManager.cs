@@ -444,7 +444,10 @@ namespace HM.Operations.Secure.Middleware
 
                 return (from account in context.onBoardingAccounts
                         join swift in context.hmsSwiftGroups on account.SwiftGroupId equals swift.hmsSwiftGroupId
-                        where !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && account.AccountStatus != "Closed" && (isServiceType || hmFundIds.Contains(account.hmFundId)) && (currency == null || account.Currency == currency) && swift.AcceptedMessages.Contains(messageType)
+                        where !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && account.AccountStatus != "Closed"
+                              && (isServiceType || hmFundIds.Contains(account.hmFundId))
+                              && (currency == null || account.Currency == currency)
+                              && swift.AcceptedMessages.Contains(messageType)
                         select account).ToList();
 
                 //return context.onBoardingAccounts.Include(s => s.SwiftGroup).Where(account => !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && (hmFundIds.Contains(account.hmFundId) || isServiceType) && (currency == null || account.Currency == currency) && ((account.SwiftGroup ?? new hmsSwiftGroup()).AcceptedMessages.Contains(messageType))).ToList();

@@ -36,17 +36,10 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireCutoffTimeZone" Width="1.5" PointX="13.375" PointY="15.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsActionInProgress" Width="1.5" PointX="16.25" PointY="18.25" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsSwiftGroupStatusLkp" Width="1.5" PointX="10.375" PointY="19.625" />
-        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingSSITemplate" Width="1.5" PointX="4.375" PointY="16.625" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_BeneficiaryBICorABAId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_IntermediaryBICorABAId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsAccountCallback" Width="1.5" PointX="24.125" PointY="14.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsCurrency" Width="1.5" PointX="13.375" PointY="9.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.vw_FundAccounts" Width="1.5" PointX="0.75" PointY="17.75" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsSSICallback" Width="1.5" PointX="6.625" PointY="22.5" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" />
         <EntityTypeShape EntityType="OperationsSecureModel.onBoardingAccount" Width="1.5" PointX="18.875" PointY="9.25" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsAccountCallback_onBoardingAccountId" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_BeneficiaryBICorABAId" />
@@ -87,7 +80,6 @@
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_OnBoardAccountId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsWireWorkflowLog" Width="1.5" PointX="29.75" PointY="7.625" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsSwiftStatusLkup_WireStatusId" />
@@ -108,9 +100,21 @@
         <EntityTypeShape EntityType="OperationsSecureModel.hmsSwiftGroup" Width="1.5" PointX="12.625" PointY="18.375" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" />
         <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" />
-        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" />
         <EntityTypeShape EntityType="OperationsSecureModel.hmsFundAccountClearingBroker" Width="1.5" PointX="21.125" PointY="15.25" />
         <AssociationConnector Association="OperationsSecureModel.FK_hmsFundAccountClearingBrokers_onBoardingAccountId" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsSSIDescription" Width="1.5" PointX="19.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.hmsSSIPaymentReasonForDescription" Width="1.5" PointX="22" PointY="1.75" />
+        <EntityTypeShape EntityType="OperationsSecureModel.onBoardingSSITemplate" Width="1.5" PointX="22" PointY="5" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsSSIPaymentReasonForDescription_hmsSSIDescriptionId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_hmsSSIDescriptionId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_BeneficiaryBICorABAId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_IntermediaryBICorABAId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" />
+        <AssociationConnector Association="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

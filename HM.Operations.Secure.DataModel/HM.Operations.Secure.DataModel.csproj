@@ -184,6 +184,12 @@
     <Compile Include="hmsSSICallback.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="hmsSSIDescription.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="hmsSSIPaymentReasonForDescription.cs">
+      <DependentUpon>OperationsSecureModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="hmsSwiftGroup.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

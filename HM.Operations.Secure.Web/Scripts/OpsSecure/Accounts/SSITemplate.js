@@ -8,11 +8,12 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.currency = "";
     $scope.serviceProvider = "";
     $scope.reasonDetail = "";
+    $scope.description = "";
     $scope.BrokerTemplateTypeId = 2;
     $scope.IsBNYMBroker = false;
     $scope.IsPendingApproval = false;
     $scope.IsApproved = false;
-    $scope.SSITemplateTypeData = [{ id: "Broker", text: "Broker" }, { id: "Fee/Expense Payment", text: "Fee/Expense Payment" }, { id: "Bank Loan/Private/IPO", text: "Bank Loan/Private/IPO" }];
+    $scope.SSITemplateTypeData = [{ id: "Broker", text: "Broker" }, { id: "Fee/Expense Payment", text: "Fee / Expense Payment" }, { id: "Bank Loan/Private/IPO", text: "Bank Loan / Private / IPO" }];
     $scope.messageTypes = [{ id: "MT103", text: "MT103" }, { id: "MT202", text: "MT202" }, { id: "MT202 COV", text: "MT202 COV" }];
     // { id: "MT210", text: "MT210" }, { id: "MT540", text: "MT540" },{ id: "MT542", text: "MT542" }
     $scope.ssiTemplate.TemplateName = "";
@@ -259,14 +260,11 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     }
 
     $scope.fnToggleBeneficiaryBICorABA = function (item, id) {
-        //var $toggleBtn = $("#" + id + index);
 
         var isAba = (item == "ABA");
 
         switch (id) {
             case "Beneficiary":
-                //$scope.ssiTemplate.IsBeneficiaryABA = $("#btnBeneficiaryBICorABA" + index).prop("checked");
-
                 var accountBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
                 var accountBicorAbaData = [];
                 $.each(accountBicorAba, function (key, value) {
@@ -285,7 +283,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 });
                 break;
             case "Intermediary":
-                //$scope.ssiTemplate.IsIntermediaryABA = $("#btnIntermediaryBICorABA" + index).prop("checked");
                 var intermediaryBicorAba = $.grep($scope.accountBicorAba, function (v) { return v.IsABA == isAba; });
                 var intermediaryBicorAbaData = [];
                 $.each(intermediaryBicorAba, function (key, value) {
@@ -304,19 +301,15 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 });
                 break;
             case "UltimateBeneficiary":
-                //$scope.ssiTemplate.IsUltimateBeneficiaryABA = $("#btnUltimateBICorABA" + index).prop("checked");
                 $scope.ssiTemplate.UltimateBeneficiaryType = item;
                 if (item == "Account Name") {
                     $scope.fnGetAccountAddressDetails($scope.ssiTemplate.UltimateBeneficiaryAccountName);
                     $("#divUltimateBeneficiaryBICorABA").hide();
-                    $("#liUltimateBeneficiaryAccount").show()
+                    $("#liUltimateBeneficiaryAccount").show();
                     $("#ultimateBankName").hide();
                     $("#ultimateBankAddress").show();
                     $("#accountName").hide();
                     $scope.ssiTemplate.UltimateBeneficiary = {};
-                    //$scope.ssiTemplate.UltimateBeneficiaryBICorABA = null;
-                    //$scope.ssiTemplate.UltimateBeneficiaryBankName = null;
-                    //$scope.ssiTemplate.UltimateBeneficiaryBankAddress = null;
                     if ($("#liUltimateBeneficiaryAccount").data("select2")) {
                         $("#liUltimateBeneficiaryAccount").select2("destroy");
                     }
@@ -421,7 +414,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $scope.AccountTypes = response.data.accountTypes;
             $scope.currencies = response.data.currencies;
             $scope.accountAddressList = response.data.addressList;
-            //$scope.serviceProviders = response.data.serviceProviders;            
 
             $("#liSSITemplateType").select2({
                 placeholder: "Select Template Type",
@@ -440,7 +432,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 allowClear: true,
                 data: $scope.AccountTypes
             });
-            //if ($scope.ssiTemplate.dmaAgreementTypeId != "") $("#liAccountType").val($scope.ssiTemplate.dmaAgreementTypeId);
 
             $("#liCurrency").select2({
                 placeholder: "Select a currency",
@@ -479,47 +470,47 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 data: $scope.accountAddressList
             });
             $("#liUltimateBeneficiaryAccount").hide();
-            // if ($scope.ssiTemplate.Currency != "") $("#liCurrency").val($scope.ssiTemplate.Currency);
-
-            //$scope.ssiTemplate.SSITemplateType != "" && $scope.ssiTemplate.SSITemplateType != "undefined" && 
             if (ssiTemplateId == 0) {
                 $scope.ssiTemplate.SSITemplateType = "Broker";
                 $scope.SSITemplateType = $scope.ssiTemplate.SSITemplateType;
             } else {
-                //$("#liBroker").val($scope.ssiTemplate.TemplateEntityId);
                 $scope.fnSSITemplateType($scope.ssiTemplate.SSITemplateType);
-                $scope.ReasonDetail = $scope.ssiTemplate.ReasonDetail;
+                $scope.reasonDetail = $scope.ssiTemplate.ReasonDetail;
             }
             $scope.ssiTemplate.TemplateName = $scope.ssiTemplate.TemplateName.replace("undefined", "");
         });
-
-    }
-
-    $scope.fnIsSSIBrokerType = function () {
-        return $scope.SSITemplateType == "Broker" || $scope.SSITemplateType == "Bank Loan/Private/IPO";
     }
 
     $("#liBroker").change(function () {
-        if ($scope.fnIsSSIBrokerType()) {
+        if ($scope.SSITemplateType == "Broker") {
             $scope.broker = ($(this).val() > 0) ? $("#liBroker").select2("data").text : "";
             $scope.IsBNYMBroker = $scope.broker == "The Bank of New York Mellon";
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
         }
     });
+
     $("#liAccountType").change(function () {
-        if ($scope.fnIsSSIBrokerType()) {
+        if ($scope.SSITemplateType == "Broker") {
             $scope.accountType = ($(this).val() > 0) ? $("#liAccountType").select2("data").text : "";
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
             $scope.fnPaymentOrReceiptReason();
         }
     });
+
+    $scope.fnSetTemplateName = function () {
+        if ($scope.SSITemplateType == "Broker")
+            $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
+        else if ($scope.SSITemplateType == "Fee/Expense Payment")
+            $scope.ssiTemplate.TemplateName = $scope.serviceProvider + " - " + $scope.currency + " - " + $scope.reasonDetail;
+        else if ($scope.SSITemplateType == "Bank Loan/Private/IPO")
+            $scope.ssiTemplate.TemplateName = $scope.description + " - " + $scope.currency + " - " + $scope.reasonDetail;
+    }
+
     $("#liCurrency").change(function () {
         $scope.currency = $(this).val();
-        if ($scope.fnIsSSIBrokerType())
-            $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
-        else
-            $scope.ssiTemplate.TemplateName = $scope.serviceProvider + " - " + $scope.currency + " - " + $scope.reasonDetail;
+        $scope.fnSetTemplateName();
     });
+
 
     $("#liServiceProvider").change(function () {
         $scope.serviceProvider = $(this).val();
@@ -527,18 +518,24 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         $scope.fnPaymentOrReceiptReason();
     });
 
+
+    $("#liSSIDescriptions").change(function () {
+        $scope.description = $("#liSSIDescriptions").select2("data").text;
+        $scope.ssiTemplate.TemplateName = $scope.description + " - " + $scope.currency + " - " + $scope.reasonDetail;
+        $scope.fnPaymentOrReceiptReason();
+    });
+
     $("#liReasonDetail").change(function () {
+        if ($scope.isLoad)
+            return;
         $scope.reasonDetail = $(this).val();
-        if ($scope.fnIsSSIBrokerType())
-            $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
-        else
-            $scope.ssiTemplate.TemplateName = $scope.serviceProvider + " - " + $scope.currency + " - " + $scope.reasonDetail;
+        $scope.fnSetTemplateName();
         if ($scope.reasonDetail == "Other") {
             $("#otherReason").show();
         } else
             $("#otherReason").hide();
-
     });
+
     $scope.isLoad = false;
     if (ssiTemplateId !== 0 && ssiTemplateId !== "0") {
         $http.get("/SSITemplate/GetSsiTemplate?templateId=" + ssiTemplateId).then(function (response) {
@@ -548,20 +545,24 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $scope.isLoad = true;
             $scope.isSSITemplateChanged = false;
             $scope.isAuthorizedUserToApprove = response.data.isAuthorizedUserToApprove;
-            // $scope.fnPaymentOrReceiptReason();
             $scope.ssiTemplate = response.data.OnBoardingSsiTemplate;
             $scope.serviceProvider = $scope.ssiTemplate.ServiceProvider;
             $scope.reasonDetail = $scope.ssiTemplate.ReasonDetail;
-            // $scope.SSITemplateType = $scope.ssiTemplate.SSITemplateType;
+
             $scope.ssiTemplate.CreatedAt = moment($scope.ssiTemplate.CreatedAt).format("YYYY-MM-DD HH:mm:ss");
             $scope.IsKeyFieldsChanged = $scope.ssiTemplate.IsKeyFieldsChanged;
-            if ($scope.fnIsSSIBrokerType()) {
+            if ($scope.SSITemplateType == "Broker") {
                 var templateList = $scope.ssiTemplate.TemplateName.split("-");
                 $scope.broker = templateList[0].trim();
                 $scope.accountType = templateList[1].trim();
                 $scope.currency = templateList[2].trim();
                 $scope.reasonDetail = templateList[3].trim();
-
+            }
+            else if ($scope.SSITemplateType == "Bank Loan/Private/IPO") {
+                var templateListBank = $scope.ssiTemplate.TemplateName.split("-");
+                $scope.description = templateListBank[0].trim();
+                $scope.currency = templateListBank[1].trim();
+                $scope.reasonDetail = templateListBank[2].trim();
             }
             $scope.IsBNYMBroker = $scope.broker == "The Bank of New York Mellon";
             $scope.IsPendingApproval = $scope.ssiTemplate.SSITemplateStatus == "Pending Approval";
@@ -630,9 +631,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $scope.fnSSITemplateType = function (templateType) {
         $scope.SSITemplateType = templateType;
-        if (!$scope.fnIsSSIBrokerType())
-            $scope.fnLoadServiceProvider();
-        $scope.fnPaymentOrReceiptReason();
+        $q.all([$scope.SSITemplateType == "Fee/Expense Payment" ? $scope.fnLoadServiceProvider() : $scope.SSITemplateType == "Bank Loan/Private/IPO" ? $scope.fnLoadDecription() : ""]).then($scope.fnPaymentOrReceiptReason());
     }
 
     $scope.fnLoadServiceProvider = function () {
@@ -644,33 +643,57 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 data: response.data
             });
         });
-        //if ($scope.ssiTemplate.ServiceProvider != "")
-        //    $("#liServiceProvider").val($scope.ssiTemplate.ServiceProvider);           
     }
 
-    $scope.fnPaymentOrReceiptReason = function () {
-        if ($("#liAccountType").val() > 0 || $("#liServiceProvider").val() != null) {
-            $http.get("/SSITemplate/PaymentOrReceiptReasonDetails?templateType=" + $("#liSSITemplateType").val() + "&agreementTypeId=" + $("#liAccountType").val() + "&serviceProviderName=" + encodeURIComponent($("#liServiceProvider").val())).then(function (response) {
-                $scope.SSIPaymentReasons = response.data;
-                $scope.SSIPaymentReasons.push({ id: "Other", text: "Other" });
-                $("#liReasonDetail").select2({
-                    placeholder: "Select Reason",
-                    allowClear: true,
-                    data: $scope.SSIPaymentReasons
-                });
+
+    $scope.fnLoadDecription = function () {
+        return $http.get("/SSITemplate/GetAllDescriptions").then(function (response) {
+            $scope.SSIDescriptions = response.data;
+            $("#liSSIDescriptions").select2({
+                placeholder: "Select Description",
+                allowClear: true,
+                data: response.data
             });
+        });
+    }
+
+
+    $scope.fnPaymentOrReceiptReason = function (defaultVal) {
+        if ($("#liAccountType").val() > 0 || $("#liServiceProvider").val() != null || $("#liSSIDescriptions").val() != null) {
+            $http.get("/SSITemplate/PaymentOrReceiptReasonDetails?templateType=" + $("#liSSITemplateType").val()
+                + "&agreementTypeId=" + $("#liAccountType").val()
+                + "&serviceProviderName=" + encodeURIComponent($("#liServiceProvider").val())
+                + "&descriptionId=" + $("#liSSIDescriptions").val()).then(function (response) {
+                    $scope.SSIPaymentReasons = response.data;
+                    if ($scope.SSITemplateType != "Bank Loan/Private/IPO") {
+                        $scope.SSIPaymentReasons.push({ id: "Other", text: "Other" });
+                    }
+                    $("#liReasonDetail").select2({
+                        placeholder: "Select Reason",
+                        allowClear: false,
+                        data: $scope.SSIPaymentReasons
+                    });
+
+                    if (defaultVal != null)
+                        $("#liReasonDetail").select2("val", defaultVal).trigger("change");
+                    else if ($scope.reasonDetail != "")
+                        $("#liReasonDetail").select2("val", $scope.reasonDetail);
+
+                });
         }
-        if ($scope.ssiTemplate.ReasonDetail != "") $scope.ReasonDetail = $scope.ssiTemplate.ReasonDetail;
+
+        if ($scope.ssiTemplate.ReasonDetail != "") {
+            $scope.reasonDetail = $scope.ssiTemplate.ReasonDetail;
+        }
     }
 
     $scope.fnGetAssociatedAccounts = function () {
-        var brokerId = $scope.fnIsSSIBrokerType() ? $scope.ssiTemplate.TemplateEntityId : 0;
-        var isServiceType = !$scope.fnIsSSIBrokerType();
+        var brokerId = $scope.SSITemplateType == "Broker" ? $scope.ssiTemplate.TemplateEntityId : 0;
+        var isServiceType = $scope.SSITemplateType == "Fee/Expense Payment" || $scope.SSITemplateType == "Bank Loan/Private/IPO";
         $http.get("/FundAccounts/GetSsiTemplateAccountMap?ssiTemplateId=" + $scope.ssiTemplateId + "&brokerId=" + brokerId + "&currency=" + $scope.ssiTemplate.Currency + "&message=" + $scope.ssiTemplate.MessageType + "&isServiceType=" + isServiceType).then(function (response) {
             $scope.fundAccounts = response.data.fundAccounts;
             $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
             if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined && $scope.ssiTemplateMaps.length > 0) {
-                //$scope.onBoardingAccountDetails[index].onBoardingAccountSSITemplateMaps = $scope.ssiTemplateMaps;
                 viewSsiTemplateTable($scope.ssiTemplateMaps);
             }
         });
@@ -1022,7 +1045,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         }, 50);
     });
 
-    $scope.fnAddSSITemplateDetail = function (panelIndex) {
+    $scope.fnAddSSITemplateDetail = function () {
 
         $scope.isAuthorizedUserToApprove = false;
         if ($("#txtDescription").val() == undefined || $("#txtDescription").val() == "") {
@@ -1045,8 +1068,11 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         if ($scope.detail == "Reason") {
             isExists = $filter("filter")($scope.SSIPaymentReasons, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
         }
-        else {
+        else if ($scope.detail == "Service Provider") {
             isExists = $filter("filter")($scope.serviceProviders, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
+        }
+        else if ($scope.detail == "Description") {
+            isExists = $filter("filter")($scope.SSIDescriptions, { 'text': $("#txtDescription").val().trim() }, true).length > 0;
         }
 
         if (isExists) {
@@ -1058,27 +1084,39 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 html: true,
                 width: "250px"
             });
-            //notifyWarning("Governing Law is already exists. Please enter a valid governing law");
             $("#txtDescription").popover("show");
             return;
         }
-        //PaymentOrReceiptReasonDetails?templateType=" + $("#liSSITemplateType").val() + "&agreementTypeId=" + $("#liAccountType").val() + "&serviceProviderName=" + $("#liServiceProvider").val()
         if ($scope.detail == "Reason") {
-            $http.post("/SSITemplate/AddPaymentOrReceiptReasonDetails", { reason: $("#txtDescription").val(), templateType: $("#liSSITemplateType").val(), agreementTypeId: $("#liAccountType").val(), serviceProviderName: $("#liServiceProvider").val() }).then(function (response) {
+            $http.post("/SSITemplate/AddPaymentOrReceiptReasonDetails", {
+                reason: $("#txtDescription").val(),
+                templateType: $("#liSSITemplateType").val(),
+                agreementTypeId: $("#liAccountType").val(),
+                serviceProviderName: $("#liServiceProvider").val(),
+                descriptionId: $("#liSSIDescriptions").val()
+
+            }).then(function (response) {
                 notifySuccess("Reason added successfully");
-                $scope.fnPaymentOrReceiptReason();
-                $("#liReasonDetail").val($("#txtDescription").val());
-                //$scope.onBoardingAccountDetails[panelIndex].Description = $('#txtDescription').val();  
+                $scope.fnPaymentOrReceiptReason($("#txtDescription").val());
+
             });
         }
-        else {
+        else if ($scope.detail == "Service Provider") {
             $http.post("/SSITemplate/AddServiceProvider", { serviceProviderName: $("#txtDescription").val() }).then(function (response) {
                 notifySuccess("Service Provider added successfully");
                 $scope.fnLoadServiceProvider().then(function () {
                     var provider = $filter("filter")($scope.serviceProviders, { 'text': $("#txtDescription").val() }, true)[0];
                     $("#liServiceProvider").select2("val", provider.id).trigger("change");
                 });
-                //$scope.onBoardingAccountDetails[panelIndex].Description = $('#txtDescription').val();  
+            });
+        }
+        else if ($scope.detail == "Description") {
+            $http.post("/SSITemplate/AddDescription", { description: $("#txtDescription").val() }).then(function (response) {
+                notifySuccess("Description added successfully");
+                $scope.fnLoadDecription().then(function () {
+                    var provider = $filter("filter")($scope.SSIDescriptions, { 'text': $("#txtDescription").val() }, true)[0];
+                    $("#liSSIDescriptions").select2("val", provider.id).trigger("change");
+                });
             });
         }
 
@@ -1153,7 +1191,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             keyboard: true
         }).on("hidden.bs.modal", function () {
             $("#txtCurrency").popover("hide");
-            // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
         });
     }
 
@@ -1296,8 +1333,9 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
         $scope.ssiTemplate.TemplateTypeId = $scope.BrokerTemplateTypeId;
         $scope.ssiTemplate.TemplateEntityId = $("#liBroker").val();
-        $scope.ssiTemplate.dmaAgreementTypeId = $scope.fnIsSSIBrokerType() ? $("#liAccountType").val() : 0;
-        $scope.ssiTemplate.ServiceProvider = !$scope.fnIsSSIBrokerType() ? $("#liServiceProvider").val() : "";
+        $scope.ssiTemplate.dmaAgreementTypeId = $scope.SSITemplateType == "Broker" ? $("#liAccountType").val() : 0;
+        $scope.ssiTemplate.ServiceProvider = $scope.SSITemplateType == "Fee/Expense Payment" ? $("#liServiceProvider").val() : "";
+        $scope.ssiTemplate.hmsSSIDescriptionId = $scope.SSITemplateType == "Bank Loan/Private/IPO" ? $("#liSSIDescriptions").val() : "";
         $scope.ssiTemplate.onBoardingSSITemplateDocuments = $scope.ssiTemplateDocuments;
 
         $scope.ssiTemplate.BeneficiaryBankName = $("#beneficiaryBankName").val();
@@ -1657,10 +1695,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 if ($scope.ssiCallbackTable != undefined)
                     $scope.ssiCallbackTable.columns.adjust().draw(true);
             }
-            //else {
-            //    if ($scope.contactTable[index] != undefined)
-            //        $scope.contactTable[index].columns.adjust().draw(true);
-            //}
         }, 100);
     }
 

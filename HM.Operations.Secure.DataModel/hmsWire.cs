@@ -76,7 +76,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual hmsWireStatusLkup hmsWireStatusLkup { get; set; }
         public virtual hmsWireTransferTypeLKup hmsWireTransferTypeLKup { get; set; }
         public virtual onBoardingAccount SendingAccount { get; set; }
-        public virtual onBoardingSSITemplate ReceivingSSITemplate { get; set; }
         public virtual onBoardingAccount ReceivingAccount { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireWorkflowLog> hmsWireWorkflowLogs { get; set; }
@@ -84,5 +83,6 @@ namespace HM.Operations.Secure.DataModel
         public virtual ICollection<hmsWireAutoCancellationJob> hmsWireAutoCancellationJobs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsWireInterestAssociation> hmsWireInterestAssociations { get; set; }
+        public virtual onBoardingSSITemplate ReceivingSSITemplate { get; set; }
     }
 }

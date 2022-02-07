@@ -130,7 +130,7 @@ namespace HM.Operations.Secure.Middleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.OnBoardingSSITemplateAccountTypes.Where(x => x.dmaAgreementTypeId == agreementTypeId).ToList();
+                return context.OnBoardingSSITemplateAccountTypes.Where(x => x.dmaAgreementTypeId == agreementTypeId).OrderBy(s => s.Reason).ToList();
             }
         }
 
@@ -140,7 +140,26 @@ namespace HM.Operations.Secure.Middleware
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
-                return context.OnBoardingServiceProviders.Where(x => x.ServiceProvider == serviceProviderName).ToList();
+                return context.OnBoardingServiceProviders.Where(x => x.ServiceProvider == serviceProviderName).OrderBy(s => s.FeeType).ToList();
+            }
+        }
+        public static List<hmsSSIPaymentReasonForDescription> GetAllSsiPaymentReasonForDescription(int hmsSSIDescriptionId)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.hmsSSIPaymentReasonForDescriptions.Where(x => x.hmsSSIDescriptionId == hmsSSIDescriptionId).OrderBy(s => s.PaymentReason).ToList();
+            }
+        }
+
+        public static List<hmsSSIDescription> GetAllSSITemplateDescriptions()
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                return context.hmsSSIDescriptions.ToList();
             }
         }
 

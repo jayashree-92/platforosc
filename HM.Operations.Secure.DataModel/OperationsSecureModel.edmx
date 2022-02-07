@@ -216,6 +216,25 @@
           <Property Name="ConfirmedBy" Type="varchar" MaxLength="50" />
           <Property Name="ConfirmedAt" Type="datetime" />
         </EntityType>
+        <EntityType Name="hmsSSIDescriptions">
+          <Key>
+            <PropertyRef Name="hmsSSIDescriptionId" />
+          </Key>
+          <Property Name="hmsSSIDescriptionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="RecCreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="RecCreatedDt" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="hmsSSIPaymentReasonForDescription">
+          <Key>
+            <PropertyRef Name="hmsSSIPaymentReasonForDescriptionId" />
+          </Key>
+          <Property Name="hmsSSIPaymentReasonForDescriptionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="hmsSSIDescriptionId" Type="int" Nullable="false" />
+          <Property Name="PaymentReason" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="RecCreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="RecCreatedDt" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="hmsSwiftGroup">
           <Key>
             <PropertyRef Name="hmsSwiftGroupId" />
@@ -681,6 +700,7 @@
           <Property Name="UltimateBeneficiaryBICorABAId" Type="bigint" />
           <Property Name="LastUsedAt" Type="datetime" Nullable="false" />
           <Property Name="IsKeyFieldsChanged" Type="bit" Nullable="false" />
+          <Property Name="hmsSSIDescriptionId" Type="int" />
         </EntityType>
         <EntityType Name="OnBoardingSSITemplateAccountType">
           <Key>
@@ -875,6 +895,18 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Principal>
             <Dependent Role="hmsSSICallback">
               <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsSSIPaymentReasonForDescription_hmsSSIDescriptionId">
+          <End Role="hmsSSIDescriptions" Type="Self.hmsSSIDescriptions" Multiplicity="1" />
+          <End Role="hmsSSIPaymentReasonForDescription" Type="Self.hmsSSIPaymentReasonForDescription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSSIDescriptions">
+              <PropertyRef Name="hmsSSIDescriptionId" />
+            </Principal>
+            <Dependent Role="hmsSSIPaymentReasonForDescription">
+              <PropertyRef Name="hmsSSIDescriptionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1322,6 +1354,18 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_onBoardingSSITemplate_hmsSSIDescriptionId">
+          <End Role="hmsSSIDescriptions" Type="Self.hmsSSIDescriptions" Multiplicity="0..1" />
+          <End Role="onBoardingSSITemplate" Type="Self.onBoardingSSITemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSSIDescriptions">
+              <PropertyRef Name="hmsSSIDescriptionId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplate">
+              <PropertyRef Name="hmsSSIDescriptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_onBoardingSSITemplate_IntermediaryBICorABAId">
           <End Role="onBoardingAccountBICorABA" Type="Self.onBoardingAccountBICorABA" Multiplicity="0..1" />
           <End Role="onBoardingSSITemplate" Type="Self.onBoardingSSITemplate" Multiplicity="*" />
@@ -1389,6 +1433,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySet Name="hmsSchedules" EntityType="Self.hmsSchedules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsScheduleWorkflowLkup" EntityType="Self.hmsScheduleWorkflowLkup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSSICallback" EntityType="Self.hmsSSICallback" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsSSIDescriptions" EntityType="Self.hmsSSIDescriptions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="hmsSSIPaymentReasonForDescription" EntityType="Self.hmsSSIPaymentReasonForDescription" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftGroup" EntityType="Self.hmsSwiftGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftGroupStatusLkp" EntityType="Self.hmsSwiftGroupStatusLkp" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="hmsSwiftStatusLkup" EntityType="Self.hmsSwiftStatusLkup" Schema="dbo" store:Type="Tables" />
@@ -1508,6 +1554,10 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <AssociationSet Name="FK_hmsSSICallback_onBoardingSSITemplateId" Association="Self.FK_hmsSSICallback_onBoardingSSITemplateId">
             <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplate" />
             <End Role="hmsSSICallback" EntitySet="hmsSSICallback" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsSSIPaymentReasonForDescription_hmsSSIDescriptionId" Association="Self.FK_hmsSSIPaymentReasonForDescription_hmsSSIDescriptionId">
+            <End Role="hmsSSIDescriptions" EntitySet="hmsSSIDescriptions" />
+            <End Role="hmsSSIPaymentReasonForDescription" EntitySet="hmsSSIPaymentReasonForDescription" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsSwiftGroup_SwiftGroupStatusId" Association="Self.FK_hmsSwiftGroup_SwiftGroupStatusId">
             <End Role="hmsSwiftGroupStatusLkp" EntitySet="hmsSwiftGroupStatusLkp" />
@@ -1657,6 +1707,10 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABA" />
             <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplate" />
           </AssociationSet>
+          <AssociationSet Name="FK_onBoardingSSITemplate_hmsSSIDescriptionId" Association="Self.FK_onBoardingSSITemplate_hmsSSIDescriptionId">
+            <End Role="hmsSSIDescriptions" EntitySet="hmsSSIDescriptions" />
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplate" />
+          </AssociationSet>
           <AssociationSet Name="FK_onBoardingSSITemplate_IntermediaryBICorABAId" Association="Self.FK_onBoardingSSITemplate_IntermediaryBICorABAId">
             <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABA" />
             <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplate" />
@@ -1719,35 +1773,10 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySet Name="hmsWireCutoffTimeZones" EntityType="OperationsSecureModel.hmsWireCutoffTimeZone" />
           <EntitySet Name="hmsActionInProgresses" EntityType="OperationsSecureModel.hmsActionInProgress" />
           <EntitySet Name="hmsSwiftGroupStatusLkps" EntityType="OperationsSecureModel.hmsSwiftGroupStatusLkp" />
-          <EntitySet Name="onBoardingSSITemplates" EntityType="OperationsSecureModel.onBoardingSSITemplate" />
-          <AssociationSet Name="FK_onBoardingSSITemplate_BeneficiaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingSSITemplate_BeneficiaryBICorABAId">
-            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
-            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
-          </AssociationSet>
-          <AssociationSet Name="FK_onBoardingSSITemplate_IntermediaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingSSITemplate_IntermediaryBICorABAId">
-            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
-            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
-          </AssociationSet>
-          <AssociationSet Name="FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId">
-            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
-            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
-          </AssociationSet>
-          <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId">
-            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
-            <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMaps" />
-          </AssociationSet>
-          <AssociationSet Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" Association="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
-            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
-            <End Role="onBoardingSSITemplateDocument" EntitySet="onBoardingSSITemplateDocuments" />
-          </AssociationSet>
           <EntitySet Name="hmsAccountCallbacks" EntityType="OperationsSecureModel.hmsAccountCallback" />
           <EntitySet Name="hmsCurrencies" EntityType="OperationsSecureModel.hmsCurrency" />
           <EntitySet Name="vw_FundAccounts" EntityType="OperationsSecureModel.vw_FundAccounts" />
           <EntitySet Name="hmsSSICallbacks" EntityType="OperationsSecureModel.hmsSSICallback" />
-          <AssociationSet Name="FK_hmsSSICallback_onBoardingSSITemplateId" Association="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId">
-            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
-            <End Role="hmsSSICallback" EntitySet="hmsSSICallbacks" />
-          </AssociationSet>
           <EntitySet Name="onBoardingAccounts" EntityType="OperationsSecureModel.onBoardingAccount" />
           <AssociationSet Name="FK_hmsAccountCallback_onBoardingAccountId" Association="OperationsSecureModel.FK_hmsAccountCallback_onBoardingAccountId">
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
@@ -1869,10 +1898,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
             <End Role="hmsWire" EntitySet="hmsWires" />
           </AssociationSet>
-          <AssociationSet Name="FK_hmsWires_OnBoardSSITemplateId" Association="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId">
-            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
-            <End Role="hmsWire" EntitySet="hmsWires" />
-          </AssociationSet>
           <AssociationSet Name="FK_hmsWires_ReceivingOnBoardAccountId" Association="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId">
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
             <End Role="hmsWire" EntitySet="hmsWires" />
@@ -1929,14 +1954,53 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             <End Role="hmsSwiftGroup" EntitySet="hmsSwiftGroups" />
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
           </AssociationSet>
-          <AssociationSet Name="FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" Association="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId">
-            <End Role="OnBoardingSSITemplateAccountType" EntitySet="OnBoardingSSITemplateAccountTypes" />
-            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
-          </AssociationSet>
           <EntitySet Name="hmsFundAccountClearingBrokers" EntityType="OperationsSecureModel.hmsFundAccountClearingBroker" />
           <AssociationSet Name="FK_hmsFundAccountClearingBrokers_onBoardingAccountId" Association="OperationsSecureModel.FK_hmsFundAccountClearingBrokers_onBoardingAccountId">
             <End Role="onBoardingAccount" EntitySet="onBoardingAccounts" />
             <End Role="hmsFundAccountClearingBroker" EntitySet="hmsFundAccountClearingBrokers" />
+          </AssociationSet>
+          <EntitySet Name="hmsSSIDescriptions" EntityType="OperationsSecureModel.hmsSSIDescription" />
+          <EntitySet Name="hmsSSIPaymentReasonForDescriptions" EntityType="OperationsSecureModel.hmsSSIPaymentReasonForDescription" />
+          <EntitySet Name="onBoardingSSITemplates" EntityType="OperationsSecureModel.onBoardingSSITemplate" />
+          <AssociationSet Name="FK_hmsSSICallback_onBoardingSSITemplateId" Association="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId">
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+            <End Role="hmsSSICallback" EntitySet="hmsSSICallbacks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsSSIPaymentReasonForDescription_hmsSSIDescriptionId" Association="OperationsSecureModel.FK_hmsSSIPaymentReasonForDescription_hmsSSIDescriptionId">
+            <End Role="hmsSSIDescription" EntitySet="hmsSSIDescriptions" />
+            <End Role="hmsSSIPaymentReasonForDescription" EntitySet="hmsSSIPaymentReasonForDescriptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingSSITemplate_hmsSSIDescriptionId" Association="OperationsSecureModel.FK_onBoardingSSITemplate_hmsSSIDescriptionId">
+            <End Role="hmsSSIDescription" EntitySet="hmsSSIDescriptions" />
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_hmsWires_OnBoardSSITemplateId" Association="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId">
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+            <End Role="hmsWire" EntitySet="hmsWires" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingSSITemplate_BeneficiaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingSSITemplate_BeneficiaryBICorABAId">
+            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingSSITemplate_IntermediaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingSSITemplate_IntermediaryBICorABAId">
+            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId" Association="OperationsSecureModel.FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId">
+            <End Role="onBoardingAccountBICorABA" EntitySet="onBoardingAccountBICorABAs" />
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" Association="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId">
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+            <End Role="onBoardingAccountSSITemplateMap" EntitySet="onBoardingAccountSSITemplateMaps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" Association="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId">
+            <End Role="OnBoardingSSITemplateAccountType" EntitySet="OnBoardingSSITemplateAccountTypes" />
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" Association="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
+            <End Role="onBoardingSSITemplate" EntitySet="onBoardingSSITemplates" />
+            <End Role="onBoardingSSITemplateDocument" EntitySet="onBoardingSSITemplateDocuments" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hmsWireDocument">
@@ -2106,12 +2170,12 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="onBoardingSSITemplates" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_BeneficiaryBICorABAId" FromRole="onBoardingAccountBICorABA" ToRole="onBoardingSSITemplate" />
-          <NavigationProperty Name="onBoardingSSITemplates1" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_IntermediaryBICorABAId" FromRole="onBoardingAccountBICorABA" ToRole="onBoardingSSITemplate" />
-          <NavigationProperty Name="onBoardingSSITemplates2" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId" FromRole="onBoardingAccountBICorABA" ToRole="onBoardingSSITemplate" />
           <NavigationProperty Name="onBoardingAccounts" Relationship="OperationsSecureModel.FK_onBoardingAccount_BeneficiaryBICorABAId" FromRole="onBoardingAccountBICorABA" ToRole="onBoardingAccount" />
           <NavigationProperty Name="onBoardingAccounts1" Relationship="OperationsSecureModel.FK_onBoardingAccount_IntermediaryBICorABAId" FromRole="onBoardingAccountBICorABA" ToRole="onBoardingAccount" />
           <NavigationProperty Name="onBoardingAccounts2" Relationship="OperationsSecureModel.FK_onBoardingAccount_UltimateBeneficiaryBICorABAId" FromRole="onBoardingAccountBICorABA" ToRole="onBoardingAccount" />
+          <NavigationProperty Name="onBoardingSSITemplates" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_BeneficiaryBICorABAId" FromRole="onBoardingAccountBICorABA" ToRole="onBoardingSSITemplate" />
+          <NavigationProperty Name="onBoardingSSITemplates1" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_IntermediaryBICorABAId" FromRole="onBoardingAccountBICorABA" ToRole="onBoardingSSITemplate" />
+          <NavigationProperty Name="onBoardingSSITemplates2" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId" FromRole="onBoardingAccountBICorABA" ToRole="onBoardingSSITemplate" />
           </EntityType>
         <EntityType Name="OnBoardingAccountDescription">
           <Key>
@@ -2148,8 +2212,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StatusComments" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="onBoardingSSITemplate" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingAccountSSITemplateMap" ToRole="onBoardingSSITemplate" />
           <NavigationProperty Name="onBoardingAccount" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_AccountId" FromRole="onBoardingAccountSSITemplateMap" ToRole="onBoardingAccount" />
+          <NavigationProperty Name="onBoardingSSITemplate" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingAccountSSITemplateMap" ToRole="onBoardingSSITemplate" />
         </EntityType>
         <EntityType Name="onBoardingAuthorizedParty">
           <Key>
@@ -2287,113 +2351,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="Status" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsSwiftGroups" Relationship="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" FromRole="hmsSwiftGroupStatusLkp" ToRole="hmsSwiftGroup" />
         </EntityType>
-        <EntityType Name="onBoardingSSITemplate">
-          <Key>
-            <PropertyRef Name="onBoardingSSITemplateId" />
-          </Key>
-          <Property Name="onBoardingSSITemplateId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="dmaAgreementTypeId" Type="Int32" Nullable="false" />
-          <Property Name="TemplateName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="TemplateTypeId" Type="Int64" Nullable="false" />
-          <Property Name="TemplateEntityId" Type="Int64" Nullable="false" />
-          <Property Name="SSITemplateType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ServiceProvider" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ReasonDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="OtherReason" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="AccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-		  <Property Name="UltimateBeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />          <Property Name="BeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IntermediaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="IntermediaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="UltimateBeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FFCName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="FFCNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Reference" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="SSITemplateStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StatusComments" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="MessageType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="UltimateBeneficiaryAccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ApprovedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BeneficiaryBICorABAId" Type="Int64" />
-          <Property Name="IntermediaryBICorABAId" Type="Int64" />
-          <Property Name="UltimateBeneficiaryBICorABAId" Type="Int64" />
-          <NavigationProperty Name="Beneficiary" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_BeneficiaryBICorABAId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountBICorABA" />
-          <NavigationProperty Name="Intermediary" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_IntermediaryBICorABAId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountBICorABA" />
-          <NavigationProperty Name="UltimateBeneficiary" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountBICorABA" />
-          <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountSSITemplateMap" />
-          <NavigationProperty Name="onBoardingSSITemplateDocuments" Relationship="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingSSITemplateDocument" />
-          <Property Name="LastUsedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="hmsSSICallbacks" Relationship="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsSSICallback" />
-          <Property Name="IsKeyFieldsChanged" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsWire" />
-          <NavigationProperty Name="OnBoardingSSITemplateAccountType" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" FromRole="onBoardingSSITemplate" ToRole="OnBoardingSSITemplateAccountType" />
-        </EntityType>
-        <Association Name="FK_onBoardingSSITemplate_BeneficiaryBICorABAId">
-          <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
-          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingAccountBICorABA">
-              <PropertyRef Name="onBoardingAccountBICorABAId" />
-            </Principal>
-            <Dependent Role="onBoardingSSITemplate">
-              <PropertyRef Name="BeneficiaryBICorABAId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_onBoardingSSITemplate_IntermediaryBICorABAId">
-          <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
-          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingAccountBICorABA">
-              <PropertyRef Name="onBoardingAccountBICorABAId" />
-            </Principal>
-            <Dependent Role="onBoardingSSITemplate">
-              <PropertyRef Name="IntermediaryBICorABAId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId">
-          <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
-          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingAccountBICorABA">
-              <PropertyRef Name="onBoardingAccountBICorABAId" />
-            </Principal>
-            <Dependent Role="onBoardingSSITemplate">
-              <PropertyRef Name="UltimateBeneficiaryBICorABAId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId">
-          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
-          <End Type="OperationsSecureModel.onBoardingAccountSSITemplateMap" Role="onBoardingAccountSSITemplateMap" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingSSITemplate">
-              <PropertyRef Name="onBoardingSSITemplateId" />
-            </Principal>
-            <Dependent Role="onBoardingAccountSSITemplateMap">
-              <PropertyRef Name="onBoardingSSITemplateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
-          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
-          <End Type="OperationsSecureModel.onBoardingSSITemplateDocument" Role="onBoardingSSITemplateDocument" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingSSITemplate">
-              <PropertyRef Name="onBoardingSSITemplateId" />
-            </Principal>
-            <Dependent Role="onBoardingSSITemplateDocument">
-              <PropertyRef Name="onBoardingSSITemplateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="hmsAccountCallback">
           <Key>
             <PropertyRef Name="hmsAccountCallbackId" />
@@ -2483,18 +2440,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="ConfirmedAt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="onBoardingSSITemplate" Relationship="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" FromRole="hmsSSICallback" ToRole="onBoardingSSITemplate" />
         </EntityType>
-        <Association Name="FK_hmsSSICallback_onBoardingSSITemplateId">
-          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
-          <End Type="OperationsSecureModel.hmsSSICallback" Role="hmsSSICallback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingSSITemplate">
-              <PropertyRef Name="onBoardingSSITemplateId" />
-            </Principal>
-            <Dependent Role="hmsSSICallback">
-              <PropertyRef Name="onBoardingSSITemplateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="onBoardingAccount">
           <Key>
             <PropertyRef Name="onBoardingAccountId" />
@@ -2926,11 +2871,11 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <NavigationProperty Name="hmsWireStatusLkup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireStatusLkup_WireStatusId" FromRole="hmsWire" ToRole="hmsWireStatusLkup" />
           <NavigationProperty Name="hmsWireTransferTypeLKup" Relationship="OperationsSecureModel.FK_hmsWires_hmsWireTransferTypeLKup_WireTransferTypeId" FromRole="hmsWire" ToRole="hmsWireTransferTypeLKup" />
           <NavigationProperty Name="SendingAccount" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardAccountId" FromRole="hmsWire" ToRole="onBoardingAccount" />
-          <NavigationProperty Name="ReceivingSSITemplate" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="hmsWire" ToRole="onBoardingSSITemplate" />
           <NavigationProperty Name="ReceivingAccount" Relationship="OperationsSecureModel.FK_hmsWires_ReceivingOnBoardAccountId" FromRole="hmsWire" ToRole="onBoardingAccount" />
           <NavigationProperty Name="hmsWireWorkflowLogs" Relationship="OperationsSecureModel.FK_hmsWireWorkflowLog_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireWorkflowLog" />
           <NavigationProperty Name="hmsWireAutoCancellationJobs" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireAutoCancellationJob" />
           <NavigationProperty Name="hmsWireInterestAssociations" Relationship="OperationsSecureModel.FK_hmsWireInterestAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireInterestAssociation" />
+          <NavigationProperty Name="ReceivingSSITemplate" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="hmsWire" ToRole="onBoardingSSITemplate" />
         </EntityType>
         <Association Name="FK_hmsActionInProgress_hmsWireId">
           <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
@@ -3085,18 +3030,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Principal>
             <Dependent Role="hmsWire">
               <PropertyRef Name="OnBoardAccountId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsWires_OnBoardSSITemplateId">
-          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="0..1" />
-          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingSSITemplate">
-              <PropertyRef Name="onBoardingSSITemplateId" />
-            </Principal>
-            <Dependent Role="hmsWire">
-              <PropertyRef Name="OnBoardSSITemplateId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3362,18 +3295,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId">
-          <End Type="OperationsSecureModel.OnBoardingSSITemplateAccountType" Role="OnBoardingSSITemplateAccountType" Multiplicity="1" />
-          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OnBoardingSSITemplateAccountType">
-              <PropertyRef Name="OnBoardingSSITemplateAccountTypeId" />
-            </Principal>
-            <Dependent Role="onBoardingSSITemplate">
-              <PropertyRef Name="TemplateTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="hmsFundAccountClearingBroker">
           <Key>
             <PropertyRef Name="hmsFundAccountClearingBrokerId" />
@@ -3394,6 +3315,198 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
             </Principal>
             <Dependent Role="hmsFundAccountClearingBroker">
               <PropertyRef Name="onBoardingAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="hmsSSIDescription">
+          <Key>
+            <PropertyRef Name="hmsSSIDescriptionId" />
+          </Key>
+          <Property Name="hmsSSIDescriptionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="hmsSSIPaymentReasonForDescriptions" Relationship="OperationsSecureModel.FK_hmsSSIPaymentReasonForDescription_hmsSSIDescriptionId" FromRole="hmsSSIDescription" ToRole="hmsSSIPaymentReasonForDescription" />
+          <NavigationProperty Name="onBoardingSSITemplates" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_hmsSSIDescriptionId" FromRole="hmsSSIDescription" ToRole="onBoardingSSITemplate" />
+        </EntityType>
+        <EntityType Name="hmsSSIPaymentReasonForDescription">
+          <Key>
+            <PropertyRef Name="hmsSSIPaymentReasonForDescriptionId" />
+          </Key>
+          <Property Name="hmsSSIPaymentReasonForDescriptionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hmsSSIDescriptionId" Type="Int32" Nullable="false" />
+          <Property Name="PaymentReason" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecCreatedDt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="hmsSSIDescription" Relationship="OperationsSecureModel.FK_hmsSSIPaymentReasonForDescription_hmsSSIDescriptionId" FromRole="hmsSSIPaymentReasonForDescription" ToRole="hmsSSIDescription" />
+        </EntityType>
+        <EntityType Name="onBoardingSSITemplate">
+          <Key>
+            <PropertyRef Name="onBoardingSSITemplateId" />
+          </Key>
+          <Property Name="onBoardingSSITemplateId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dmaAgreementTypeId" Type="Int32" Nullable="false" />
+          <Property Name="TemplateName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="TemplateTypeId" Type="Int64" Nullable="false" />
+          <Property Name="TemplateEntityId" Type="Int64" Nullable="false" />
+          <Property Name="SSITemplateType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ServiceProvider" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ReasonDetail" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="OtherReason" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntermediaryAccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FFCName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FFCNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Reference" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SSITemplateStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StatusComments" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="MessageType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UltimateBeneficiaryAccountName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ApprovedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BeneficiaryBICorABAId" Type="Int64" />
+          <Property Name="IntermediaryBICorABAId" Type="Int64" />
+          <Property Name="UltimateBeneficiaryBICorABAId" Type="Int64" />
+          <Property Name="LastUsedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsKeyFieldsChanged" Type="Boolean" Nullable="false" />
+          <Property Name="hmsSSIDescriptionId" Type="Int32" />
+          <NavigationProperty Name="hmsSSICallbacks" Relationship="OperationsSecureModel.FK_hmsSSICallback_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsSSICallback" />
+          <NavigationProperty Name="hmsSSIDescription" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_hmsSSIDescriptionId" FromRole="onBoardingSSITemplate" ToRole="hmsSSIDescription" />
+          <NavigationProperty Name="hmsWires" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="hmsWire" />
+          <NavigationProperty Name="Beneficiary" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_BeneficiaryBICorABAId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountBICorABA" />
+          <NavigationProperty Name="Intermediary" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_IntermediaryBICorABAId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountBICorABA" />
+          <NavigationProperty Name="UltimateBeneficiary" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountBICorABA" />
+          <NavigationProperty Name="onBoardingAccountSSITemplateMaps" Relationship="OperationsSecureModel.FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingAccountSSITemplateMap" />
+          <NavigationProperty Name="OnBoardingSSITemplateAccountType" Relationship="OperationsSecureModel.FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId" FromRole="onBoardingSSITemplate" ToRole="OnBoardingSSITemplateAccountType" />
+          <NavigationProperty Name="onBoardingSSITemplateDocuments" Relationship="OperationsSecureModel.FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId" FromRole="onBoardingSSITemplate" ToRole="onBoardingSSITemplateDocument" />
+        </EntityType>
+        <Association Name="FK_hmsSSICallback_onBoardingSSITemplateId">
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsSSICallback" Role="hmsSSICallback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="hmsSSICallback">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsSSIPaymentReasonForDescription_hmsSSIDescriptionId">
+          <End Type="OperationsSecureModel.hmsSSIDescription" Role="hmsSSIDescription" Multiplicity="1" />
+          <End Type="OperationsSecureModel.hmsSSIPaymentReasonForDescription" Role="hmsSSIPaymentReasonForDescription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSSIDescription">
+              <PropertyRef Name="hmsSSIDescriptionId" />
+            </Principal>
+            <Dependent Role="hmsSSIPaymentReasonForDescription">
+              <PropertyRef Name="hmsSSIDescriptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingSSITemplate_hmsSSIDescriptionId">
+          <End Type="OperationsSecureModel.hmsSSIDescription" Role="hmsSSIDescription" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="hmsSSIDescription">
+              <PropertyRef Name="hmsSSIDescriptionId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplate">
+              <PropertyRef Name="hmsSSIDescriptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_hmsWires_OnBoardSSITemplateId">
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="hmsWire">
+              <PropertyRef Name="OnBoardSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingSSITemplate_BeneficiaryBICorABAId">
+          <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccountBICorABA">
+              <PropertyRef Name="onBoardingAccountBICorABAId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplate">
+              <PropertyRef Name="BeneficiaryBICorABAId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingSSITemplate_IntermediaryBICorABAId">
+          <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccountBICorABA">
+              <PropertyRef Name="onBoardingAccountBICorABAId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplate">
+              <PropertyRef Name="IntermediaryBICorABAId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingSSITemplate_UltimateBeneficiaryBICorABAId">
+          <End Type="OperationsSecureModel.onBoardingAccountBICorABA" Role="onBoardingAccountBICorABA" Multiplicity="0..1" />
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingAccountBICorABA">
+              <PropertyRef Name="onBoardingAccountBICorABAId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplate">
+              <PropertyRef Name="UltimateBeneficiaryBICorABAId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingAccountSSITemplateMap_onBoardingSSITemplateId">
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
+          <End Type="OperationsSecureModel.onBoardingAccountSSITemplateMap" Role="onBoardingAccountSSITemplateMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="onBoardingAccountSSITemplateMap">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingSSITemplate_OnBoardingSSITemplateAccountType_TemplateTypeId">
+          <End Type="OperationsSecureModel.OnBoardingSSITemplateAccountType" Role="OnBoardingSSITemplateAccountType" Multiplicity="1" />
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OnBoardingSSITemplateAccountType">
+              <PropertyRef Name="OnBoardingSSITemplateAccountTypeId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplate">
+              <PropertyRef Name="TemplateTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_onBoardingSSITemplateDocument_onBoardingSSITemplateId">
+          <End Type="OperationsSecureModel.onBoardingSSITemplate" Role="onBoardingSSITemplate" Multiplicity="1" />
+          <End Type="OperationsSecureModel.onBoardingSSITemplateDocument" Role="onBoardingSSITemplateDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onBoardingSSITemplate">
+              <PropertyRef Name="onBoardingSSITemplateId" />
+            </Principal>
+            <Dependent Role="onBoardingSSITemplateDocument">
+              <PropertyRef Name="onBoardingSSITemplateId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3705,46 +3818,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
               <MappingFragment StoreEntitySet="hmsSwiftGroupStatusLkp">
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="hmsSwiftGroupStatusLkpId" ColumnName="hmsSwiftGroupStatusLkpId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="onBoardingSSITemplates">
-            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingSSITemplate">
-              <MappingFragment StoreEntitySet="onBoardingSSITemplate">
-                <ScalarProperty Name="IsKeyFieldsChanged" ColumnName="IsKeyFieldsChanged" />
-                <ScalarProperty Name="LastUsedAt" ColumnName="LastUsedAt" />
-                <ScalarProperty Name="UltimateBeneficiaryBICorABAId" ColumnName="UltimateBeneficiaryBICorABAId" />
-                <ScalarProperty Name="IntermediaryBICorABAId" ColumnName="IntermediaryBICorABAId" />
-                <ScalarProperty Name="BeneficiaryBICorABAId" ColumnName="BeneficiaryBICorABAId" />
-                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
-                <ScalarProperty Name="UltimateBeneficiaryAccountName" ColumnName="UltimateBeneficiaryAccountName" />
-                <ScalarProperty Name="MessageType" ColumnName="MessageType" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="StatusComments" ColumnName="StatusComments" />
-                <ScalarProperty Name="SSITemplateStatus" ColumnName="SSITemplateStatus" />
-                <ScalarProperty Name="Reference" ColumnName="Reference" />
-                <ScalarProperty Name="FFCNumber" ColumnName="FFCNumber" />
-                <ScalarProperty Name="FFCName" ColumnName="FFCName" />
-                <ScalarProperty Name="UltimateBeneficiaryType" ColumnName="UltimateBeneficiaryType" />
-                <ScalarProperty Name="IntermediaryAccountNumber" ColumnName="IntermediaryAccountNumber" />
-                <ScalarProperty Name="IntermediaryType" ColumnName="IntermediaryType" />
-                <ScalarProperty Name="BeneficiaryAccountNumber" ColumnName="BeneficiaryAccountNumber" />
-                <ScalarProperty Name="BeneficiaryType" ColumnName="BeneficiaryType" />
-                <ScalarProperty Name="UltimateBeneficiaryAccountNumber" ColumnName="UltimateBeneficiaryAccountNumber" />                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
-                <ScalarProperty Name="OtherReason" ColumnName="OtherReason" />
-                <ScalarProperty Name="ReasonDetail" ColumnName="ReasonDetail" />
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
-                <ScalarProperty Name="SSITemplateType" ColumnName="SSITemplateType" />
-                <ScalarProperty Name="TemplateEntityId" ColumnName="TemplateEntityId" />
-                <ScalarProperty Name="TemplateTypeId" ColumnName="TemplateTypeId" />
-                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
-                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
-                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -4194,6 +4267,69 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
                 <ScalarProperty Name="ClearingBrokerName" ColumnName="ClearingBrokerName" />
                 <ScalarProperty Name="onBoardingAccountId" ColumnName="onBoardingAccountId" />
                 <ScalarProperty Name="hmsFundAccountClearingBrokerId" ColumnName="hmsFundAccountClearingBrokerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsSSIDescriptions">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsSSIDescription">
+              <MappingFragment StoreEntitySet="hmsSSIDescriptions">
+                <ScalarProperty Name="RecCreatedDt" ColumnName="RecCreatedDt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="hmsSSIDescriptionId" ColumnName="hmsSSIDescriptionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hmsSSIPaymentReasonForDescriptions">
+            <EntityTypeMapping TypeName="OperationsSecureModel.hmsSSIPaymentReasonForDescription">
+              <MappingFragment StoreEntitySet="hmsSSIPaymentReasonForDescription">
+                <ScalarProperty Name="RecCreatedDt" ColumnName="RecCreatedDt" />
+                <ScalarProperty Name="RecCreatedBy" ColumnName="RecCreatedBy" />
+                <ScalarProperty Name="PaymentReason" ColumnName="PaymentReason" />
+                <ScalarProperty Name="hmsSSIDescriptionId" ColumnName="hmsSSIDescriptionId" />
+                <ScalarProperty Name="hmsSSIPaymentReasonForDescriptionId" ColumnName="hmsSSIPaymentReasonForDescriptionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="onBoardingSSITemplates">
+            <EntityTypeMapping TypeName="OperationsSecureModel.onBoardingSSITemplate">
+              <MappingFragment StoreEntitySet="onBoardingSSITemplate">
+                <ScalarProperty Name="hmsSSIDescriptionId" ColumnName="hmsSSIDescriptionId" />
+                <ScalarProperty Name="IsKeyFieldsChanged" ColumnName="IsKeyFieldsChanged" />
+                <ScalarProperty Name="LastUsedAt" ColumnName="LastUsedAt" />
+                <ScalarProperty Name="UltimateBeneficiaryBICorABAId" ColumnName="UltimateBeneficiaryBICorABAId" />
+                <ScalarProperty Name="IntermediaryBICorABAId" ColumnName="IntermediaryBICorABAId" />
+                <ScalarProperty Name="BeneficiaryBICorABAId" ColumnName="BeneficiaryBICorABAId" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="UltimateBeneficiaryAccountName" ColumnName="UltimateBeneficiaryAccountName" />
+                <ScalarProperty Name="MessageType" ColumnName="MessageType" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="StatusComments" ColumnName="StatusComments" />
+                <ScalarProperty Name="SSITemplateStatus" ColumnName="SSITemplateStatus" />
+                <ScalarProperty Name="Reference" ColumnName="Reference" />
+                <ScalarProperty Name="FFCNumber" ColumnName="FFCNumber" />
+                <ScalarProperty Name="FFCName" ColumnName="FFCName" />
+                <ScalarProperty Name="UltimateBeneficiaryType" ColumnName="UltimateBeneficiaryType" />
+                <ScalarProperty Name="IntermediaryAccountNumber" ColumnName="IntermediaryAccountNumber" />
+                <ScalarProperty Name="IntermediaryType" ColumnName="IntermediaryType" />
+                <ScalarProperty Name="BeneficiaryAccountNumber" ColumnName="BeneficiaryAccountNumber" />
+                <ScalarProperty Name="BeneficiaryType" ColumnName="BeneficiaryType" />
+                <ScalarProperty Name="UltimateBeneficiaryAccountNumber" ColumnName="UltimateBeneficiaryAccountNumber" />
+                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="OtherReason" ColumnName="OtherReason" />
+                <ScalarProperty Name="ReasonDetail" ColumnName="ReasonDetail" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="ServiceProvider" ColumnName="ServiceProvider" />
+                <ScalarProperty Name="SSITemplateType" ColumnName="SSITemplateType" />
+                <ScalarProperty Name="TemplateEntityId" ColumnName="TemplateEntityId" />
+                <ScalarProperty Name="TemplateTypeId" ColumnName="TemplateTypeId" />
+                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
+                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
+                <ScalarProperty Name="onBoardingSSITemplateId" ColumnName="onBoardingSSITemplateId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -27,7 +27,7 @@ namespace HM.Operations.Secure.DataModel
         public string Status { get; set; }
         public string StatusComments { get; set; }
     
-        public virtual onBoardingSSITemplate onBoardingSSITemplate { get; set; }
         public virtual onBoardingAccount onBoardingAccount { get; set; }
+        public virtual onBoardingSSITemplate onBoardingSSITemplate { get; set; }
     }
 }

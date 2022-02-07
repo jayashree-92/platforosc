@@ -17,10 +17,10 @@ namespace HM.Operations.Secure.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public onBoardingSSITemplate()
         {
-            this.onBoardingAccountSSITemplateMaps = new HashSet<onBoardingAccountSSITemplateMap>();
-            this.onBoardingSSITemplateDocuments = new HashSet<onBoardingSSITemplateDocument>();
             this.hmsSSICallbacks = new HashSet<hmsSSICallback>();
             this.hmsWires = new HashSet<hmsWire>();
+            this.onBoardingAccountSSITemplateMaps = new HashSet<onBoardingAccountSSITemplateMap>();
+            this.onBoardingSSITemplateDocuments = new HashSet<onBoardingSSITemplateDocument>();
         }
     
         public long onBoardingSSITemplateId { get; set; }
@@ -58,18 +58,20 @@ namespace HM.Operations.Secure.DataModel
         public Nullable<long> UltimateBeneficiaryBICorABAId { get; set; }
         public System.DateTime LastUsedAt { get; set; }
         public bool IsKeyFieldsChanged { get; set; }
+        public Nullable<int> hmsSSIDescriptionId { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsSSICallback> hmsSSICallbacks { get; set; }
+        public virtual hmsSSIDescription hmsSSIDescription { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hmsWire> hmsWires { get; set; }
         public virtual onBoardingAccountBICorABA Beneficiary { get; set; }
         public virtual onBoardingAccountBICorABA Intermediary { get; set; }
         public virtual onBoardingAccountBICorABA UltimateBeneficiary { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingAccountSSITemplateMap> onBoardingAccountSSITemplateMaps { get; set; }
+        public virtual OnBoardingSSITemplateAccountType OnBoardingSSITemplateAccountType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onBoardingSSITemplateDocument> onBoardingSSITemplateDocuments { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hmsSSICallback> hmsSSICallbacks { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<hmsWire> hmsWires { get; set; }
-        public virtual OnBoardingSSITemplateAccountType OnBoardingSSITemplateAccountType { get; set; }
     }
 }

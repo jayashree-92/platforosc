@@ -97,9 +97,22 @@ namespace HM.Operations.Secure.Web.Controllers
             return Json(serviceProviders, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult PaymentOrReceiptReasonDetails(string templateType, int? agreementTypeId, string serviceProviderName)
+        public JsonResult GetAllDescriptions()
         {
-            var reasonDetail = templateType == "Broker" ? SSITemplateManager.GetAllSsiTemplateAccountTypes(agreementTypeId).Select(x => new { id = x.Reason, text = x.Reason }).OrderBy(x => x.text).ToList() : SSITemplateManager.GetAllSsiTemplateServiceProviders(serviceProviderName).Select(x => new { id = x.FeeType, text = x.FeeType }).OrderBy(x => x.text).ToList();
+            var ssiDescriptions = SSITemplateManager.GetAllSSITemplateDescriptions().Select(s => new { id = s.hmsSSIDescriptionId, text = s.Description }).OrderBy(s => s.text).ToList();
+            return Json(ssiDescriptions, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult PaymentOrReceiptReasonDetails(string templateType, int? agreementTypeId, string serviceProviderName, int descriptionId = 0)
+        {
+            var reasonDetail = templateType == "Broker"
+                ? SSITemplateManager.GetAllSsiTemplateAccountTypes(agreementTypeId).Select(x => new { id = x.Reason, text = x.Reason }).ToList()
+                : templateType == "Fee/Expense Payment"
+                    ? SSITemplateManager.GetAllSsiTemplateServiceProviders(serviceProviderName).Select(x => new { id = x.FeeType, text = x.FeeType }).ToList()
+                    : templateType == "Bank Loan/Private/IPO"
+                        ? SSITemplateManager.GetAllSsiPaymentReasonForDescription(descriptionId).Select(x => new { id = x.PaymentReason, text = x.PaymentReason }).ToList()
+                        : null;
+
             return Json(reasonDetail, JsonRequestBehavior.AllowGet);
         }
 
@@ -107,17 +120,18 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties().Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList();
             var templates = SSITemplateManager.GetAllSsiTemplates().Select(x => new { id = x.Key, text = x.Value }).ToList();
-            var permittedAgreementTypes  = OpsSecureSwitches.AllowedAgreementTypesForSSITemplateCreation;
+            var permittedAgreementTypes = OpsSecureSwitches.AllowedAgreementTypesForSSITemplateCreation;
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes().Where(x => permittedAgreementTypes.Contains(x.Value)).Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList();
             var currencies = FundAccountManager.GetAllCurrencies().Select(currency => new { id = currency, text = currency }).ToList();
             var addressList = FundAccountManager.GetAllBankAccountAddress().Select(s => new { id = s.AccountName, text = s.AccountName }).OrderBy(s => s.text).ToList();
+
             return Json(new
             {
                 counterParties,
                 templates,
                 accountTypes,
                 currencies,
-                addressList
+                addressList,
             });
         }
 
@@ -445,36 +459,41 @@ namespace HM.Operations.Secure.Web.Controllers
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
-        public void AddPaymentOrReceiptReasonDetails(string reason, string templateType, int? agreementTypeId, string serviceProviderName)
+        public void AddPaymentOrReceiptReasonDetails(string reason, string templateType, int? agreementTypeId, string serviceProviderName, int descriptionId = 0)
         {
-            if (templateType == "Broker")
+            switch (templateType)
             {
-                using (var context = new OperationsSecureContext())
-                {
-
-                    var onBoardingSsiTemplateAccountType = new OnBoardingSSITemplateAccountType
+                case "Broker":
                     {
-                        Reason = reason,
-                        dmaAgreementTypeId = agreementTypeId ?? 0
-                    };
-                    context.OnBoardingSSITemplateAccountTypes.Add(onBoardingSsiTemplateAccountType);
+                        using (var context = new OperationsSecureContext())
+                        {
+                            var onBoardingSsiTemplateAccountType = new OnBoardingSSITemplateAccountType { Reason = reason, dmaAgreementTypeId = agreementTypeId ?? 0 };
+                            context.OnBoardingSSITemplateAccountTypes.Add(onBoardingSsiTemplateAccountType);
+                            context.SaveChanges();
+                        }
 
-                    context.SaveChanges();
-                }
-            }
-            else
-            {
-                using (var context = new AdminContext())
-                {
-
-                    var onBoardingSsiTemplateServiceProvider = new OnBoardingServiceProvider()
+                        break;
+                    }
+                case "Fee/Expense Payment":
                     {
-                        FeeType = reason,
-                        ServiceProvider = serviceProviderName
-                    };
-                    context.OnBoardingServiceProviders.Add(onBoardingSsiTemplateServiceProvider);
-                    context.SaveChanges();
-                }
+                        using (var context = new AdminContext())
+                        {
+                            var onBoardingSsiTemplateServiceProvider = new OnBoardingServiceProvider { FeeType = reason, ServiceProvider = serviceProviderName };
+                            context.OnBoardingServiceProviders.Add(onBoardingSsiTemplateServiceProvider);
+                            context.SaveChanges();
+                        }
+                        break;
+                    }
+                case "Bank Loan/Private/IPO":
+                    {
+                        using (var context = new OperationsSecureContext())
+                        {
+                            var hmsSSIReasonForDesc = new hmsSSIPaymentReasonForDescription { PaymentReason = reason, hmsSSIDescriptionId = descriptionId, RecCreatedBy = UserName, RecCreatedDt = DateTime.Now };
+                            context.hmsSSIPaymentReasonForDescriptions.Add(hmsSSIReasonForDesc);
+                            context.SaveChanges();
+                        }
+                        break;
+                    }
             }
         }
 
@@ -484,6 +503,15 @@ namespace HM.Operations.Secure.Web.Controllers
             {
                 var onboardingServiceProvider = new OnBoardingServiceProvider() { FeeType = "Vendor Expenses", ServiceProvider = serviceProviderName };
                 context.OnBoardingServiceProviders.Add(onboardingServiceProvider);
+                context.SaveChanges();
+            }
+        }
+        public void AddDescription(string description)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var ssiDescription = new hmsSSIDescription() { Description = description, RecCreatedBy = UserName, RecCreatedDt = DateTime.Now };
+                context.hmsSSIDescriptions.Add(ssiDescription);
                 context.SaveChanges();
             }
         }
