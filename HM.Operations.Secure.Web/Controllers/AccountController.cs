@@ -168,10 +168,8 @@ namespace HM.Operations.Secure.Web.Controllers
                 user.AllowedWireAmountLimit = 10000000;
             else if (totalExperienceInHM <= 0.5)
                 user.AllowedWireAmountLimit = user.IsUserVp ? 100000000 : 10000000;
-            else if (totalExperienceInHM <= 1)
+            else
                 user.AllowedWireAmountLimit = user.IsUserVp ? 500000000 : 100000000;
-            else if (totalExperienceInHM > 1)
-                user.AllowedWireAmountLimit = 500000000;
 
         }
     }
