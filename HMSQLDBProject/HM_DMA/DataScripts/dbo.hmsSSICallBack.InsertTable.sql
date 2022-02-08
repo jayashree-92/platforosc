@@ -2,11 +2,11 @@ USE [HM_WIRES]
 GO
 
 
-IF NOT EXISTS(SELECT * FROM hmsAccountCallback WHERE RecCreatedby ='Retrofit')
+IF NOT EXISTS(SELECT * FROM hmsSSICallback WHERE RecCreatedby ='Retrofit')
 BEGIN
     
-	INSERT INTO [dbo].[hmsAccountCallback]
-           ([onBoardingAccountId]
+	INSERT INTO [dbo].[hmsSSICallback]
+           ([onBoardingSSITemplateId]
            ,[ContactName]
            ,[ContactNumber]
            ,[Title]
@@ -16,8 +16,7 @@ BEGIN
            ,[ConfirmedBy]
            ,[ConfirmedAt])
      
-
-			select onBoardingAccountId           
+	 select onBoardingSSITemplateId           
            ,'Retrofit'
            ,'Retrofit'
            ,'Retrofit'
@@ -26,8 +25,9 @@ BEGIN
            ,getdate()
            ,'Retrofit'
            ,getdate()	
-				FROM onBoardingAccount a WHERE onBoardingAccountId not in 
-				(SELECT onBoardingAccountId  FROM hmsAccountCallback) and isdeleted=0 and hmfundid!=0 and a.createdat<='2021-02-16'	  
+				FROM onBoardingSSITemplate a WHERE onBoardingSSITemplateId NOT IN 
+				(SELECT onBoardingSSITemplateId  FROM hmsSSICallback) AND isdeleted=0 AND  a.createdat<='2021-02-16'
+			 
   
  END
 
