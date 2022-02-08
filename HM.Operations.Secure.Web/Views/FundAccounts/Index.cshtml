@@ -728,7 +728,7 @@
                             <button ng-if="!IsReportingOnly" id="btnRevert" ng-click="fnUpdateAccountStatus('Created','Revert')" ng-show="isEdit && !isDrafted" ng-disabled="!isAccountChanged" title="Revert the account" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-repeat"></i>&nbsp;Save and Update</button>
                             if (User.IsWireApprover())
                             {
-                                <button id="btnApprove" ng-if="!IsReportingOnly" ng-click="fnUpdateAccountStatus('Approved','Approve')" title="Approve the account" ng-disabled="isAccountChanged||isApproved" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
+                                <button id="btnApprove" ng-if="!IsReportingOnly && isAuthorizedUserToApprove" ng-click="fnUpdateAccountStatus('Approved','Approve')" title="Approve the account" ng-disabled="isAccountChanged" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
                             }
                         }
 
