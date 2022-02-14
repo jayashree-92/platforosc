@@ -854,7 +854,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         angular.element("button").button("reset");
         angular.element("#cancelWire").popover("hide");
         $("#wireErrorStatus").collapse("hide");
-     //   angular.element("#liWireTransferType").select2("val", 1).trigger("change");
+        //   angular.element("#liWireTransferType").select2("val", 1).trigger("change");
         $scope.fnResetAcknowledgementAllToggle();
         $scope.WireTicket = {};
         $scope.wireTicketObj = {};
@@ -1621,33 +1621,32 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.fnCalculateCashBalance = function (isRetry) {
 
         $scope.fnIsWireAmountValid();
-
         $scope.CashBalance.IsNewBalanceOffLimit = false;
         if ($("#chkCashBalOff").prop("checked"))
             $("#chkCashBalOff").prop("checked", false).trigger("change");
-        if (!$scope.CashBalance.IsCashBalanceAvailable)
+        if (!$scope.CashBalance.IsCashBalanceAvailable) {
             $scope.CashBalance.CalculatedBalance = "N.A";
+            $scope.CashBalance.AvailableBalance = 0;
+            $scope.CashBalance.AvailableHoldBackBalance = 0;
+        }
         else {
 
-            var holdBackBalance = $scope.WireTicket.WireStatusId <= 1 && !$scope.wireTicketObj.IsNotice
-                ? $.convertToNumber($scope.CashBalance.AvailableHoldBackBalance) - $.convertToNumber($("#wireAmount").text())
-                : $.convertToNumber($scope.CashBalance.AvailableHoldBackBalance);
+            if ($scope.IsDeadlineCrossed) {
+                if ($.convertToNumber($scope.CashBalance.AvailableHoldBackBalance) < $.convertToNumber($scope.CashBalance.AvailableBalance))
+                    $scope.CashBalance.AvailableBalance = $scope.CashBalance.AvailableHoldBackBalance;
+            }
 
             var newBalance = $scope.WireTicket.WireStatusId <= 1 && !$scope.wireTicketObj.IsNotice
                 ? $.convertToNumber($scope.CashBalance.AvailableBalance) - $.convertToNumber($("#wireAmount").text())
                 : $.convertToNumber($scope.CashBalance.AvailableBalance);
 
-            if ($scope.IsDeadlineCrossed)
-                $scope.CashBalance.CalculatedBalance = $.convertToCurrency(Math.min($.convertToNumber(holdBackBalance), $.convertToNumber(newBalance)), 2);
-            else
-                $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
+            $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
 
             $scope.CashBalance.IsNewBalanceOffLimit = $.convertToNumber($scope.CashBalance.CalculatedBalance) < 0;
             $scope.CashBalance.HoldBackAmount = $.convertToCurrency($scope.CashBalance.HoldBackAmount, 2);
 
             if (($scope.CashBalance.CalculatedBalance == "NaN.00" || $scope.CashBalance.CalculatedBalance == "N.A") && !isRetry)
-                $timeout($scope.fnCalculateCashBalance(true), 300);
-
+                $timeout($scope.fnCalculateCashBalance(true), 500);
         }
     };
 
