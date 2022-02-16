@@ -867,7 +867,7 @@ namespace HM.Operations.Secure.Middleware
             {
                 IsCashBalanceAvailable = true,
                 TotalWireEntered = wires.Sum(s => s.Amount),
-                TotalPendingWireEntered = wires.Where(s => s.WireStatusId != (int)WireDataManager.WireStatus.Approved).Sum(s => s.Amount),
+                TotalPendingWireEntered = wires.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated).Sum(s => s.Amount),
                 TotalApprovedWireAfterDeadline = wires.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved && s.ApprovedAt != null && s.ApprovedAt > deadline).Sum(s => s.Amount),
                 TreasuryBalance = treasuryBal.CashBalance ?? 0,
                 Currency = treasuryBal.Currency,
