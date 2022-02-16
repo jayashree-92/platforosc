@@ -175,8 +175,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 context.Configuration.ProxyCreationEnabled = false;
 
                 ssiTemplates = context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved" 
-                   && (template.SSITemplateType != "Bank Loan/Private/IPO" || fundData.IsFundAllowedForBankLoanAndIpOs)
-                   && (template.SSITemplateType == "Bank Loan/Private/IPO" || counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType== "Fee/Expense Payment")
+                   && ((template.SSITemplateType == "Bank Loan/Private/IPO" && fundData.IsFundAllowedForBankLoanAndIpOs) || counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType== "Fee/Expense Payment")
                    && (currency == null || template.Currency == currency) && (shouldBringAllMessageTypes || messageTypes.Contains(template.MessageType))).ToList();
             }
 
