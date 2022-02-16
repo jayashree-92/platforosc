@@ -1601,7 +1601,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.CashBalance.TreasuryBalance = $.convertToCurrency($scope.CashBalance.TreasuryBalance, 2);
                 $scope.CashBalance.TotalWireEntered = $.convertToCurrency($scope.CashBalance.TotalWireEntered, 2);
                 $scope.CashBalance.AvailableBalance = !$scope.CashBalance.IsCashBalanceAvailable ? "N.A" : $.convertToCurrency($scope.CashBalance.AvailableBalance, 2);
-                $scope.CashBalance.AvailableHoldBackBalance = !$scope.CashBalance.IsCashBalanceAvailable ? "N.A" : $.convertToCurrency($scope.CashBalance.AvailableHoldBackBalance, 2);
+                $scope.CashBalance.AvailableHoldBackBalance =  $.convertToCurrency($scope.CashBalance.AvailableHoldBackBalance, 2);
                 $scope.CashBalance.HoldBackAmount = $.convertToCurrency($scope.CashBalance.HoldBackAmount, 2);
                 $scope.CashBalance.ConversionRate = $.convertToCurrency($scope.CashBalance.ConversionRate, 4);
 
@@ -1627,7 +1627,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if (!$scope.CashBalance.IsCashBalanceAvailable) {
             $scope.CashBalance.CalculatedBalance = "N.A";
             $scope.CashBalance.AvailableBalance = 0;
-            $scope.CashBalance.AvailableHoldBackBalance = 0;
         }
         else {
 

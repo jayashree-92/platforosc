@@ -777,7 +777,7 @@ namespace HM.Operations.Secure.Middleware
                                         select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum();
 
             var totalPendingWiredInLocalCur = (from wire in wires
-                                               where wire.WireStatusId != (int)WireDataManager.WireStatus.Approved
+                                               where wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated
                                                let fxRate = conversionData.Where(s => s.FROM_CRNCY == wire.Currency && s.TO_CRNCY == fndAccount.Currency)
                                                                 .Select(s => s.FX_RATE).FirstOrDefault() ?? 0
                                                select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum();
