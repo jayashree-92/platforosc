@@ -90,7 +90,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading row">
                     Total Experience: <b>{{UserDetail.TotalYearsOfExperience}} years</b><br />
-                    Total Experience in HM: <b>{{UserDetail.TotalYearsOfExperience}} years</b><br />
+                    Total Experience in HM: <b>{{UserDetail.TotalYearsOfExperienceInHM}} years</b><br />
+                    @*Is VP and Above: <label class="label" ng-class="{'label-default':!UserDetail.IsUserVp,'label-success':UserDetail.IsUserVp }">{{UserDetail.IsUserVp==true ? 'Yes' : 'No'}}</label><br />*@
                     Authorized Wire limit per transaction: <b>{{AllowedWireAmountLimit}} USD</b>
                     <button type="button" class="close" ng-click="fnHideUserSettings()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>

@@ -497,7 +497,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if (wireAmount == NaN)
             wireAmount = 0;
         //Check if the wire-amount is within the limit 
-        $http.get("/Home/IsWireAmountValid?wireAmount=" + wireAmount + "&valueDate=" + $("#wireValueDate").text() + "&currency=" + currency).then(
+        $http.get("/Home/IsWireAmountValid?wireAmount=" + wireAmount + "&valueDate=" + $("#wireValueDate").text() + "&currency=" + currency + "&wireStatusId=" + $scope.WireTicket.WireStatusId).then(
             function (response) {
                 $scope.IsWireAmountWithInAllowedLimit = response.data == "true";
                 if (!$scope.IsWireAmountWithInAllowedLimit)
@@ -1641,7 +1641,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 : $.convertToNumber($scope.CashBalance.AvailableBalance);
 
             $scope.CashBalance.CalculatedBalance = $.convertToCurrency(newBalance, 2);
-
             $scope.CashBalance.IsNewBalanceOffLimit = $.convertToNumber($scope.CashBalance.CalculatedBalance) < 0;
             $scope.CashBalance.HoldBackAmount = $.convertToCurrency($scope.CashBalance.HoldBackAmount, 2);
 

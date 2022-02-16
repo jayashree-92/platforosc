@@ -682,7 +682,7 @@ namespace HM.Operations.Secure.Web.Controllers
         }
 
 
-        public JsonResult IsWireAmountValid(double wireAmount, DateTime valueDate, string currency)
+        public JsonResult IsWireAmountValid(double wireAmount, DateTime valueDate, string currency, int wireStatusId)
         {
             //Get the user details from the view hmUserCoverageDetails
             var usdWireAmount = wireAmount;
@@ -704,7 +704,10 @@ namespace HM.Operations.Secure.Web.Controllers
             }
 
             if (usdWireAmount > UserDetails.User.AllowedWireAmountLimit)
-                return Json($"Wire Amount is not within your allowed initiation or approval limits of {UserDetails.User.AllowedWireAmountLimit.ToCurrency()} USD.");
+            {
+                //If already initiated and pending approval
+                return Json(wireStatusId == 2 ? $"User is not authorized to approve wire" : $"Wire Amount is not within your allowed initiation or approval limits of {UserDetails.User.AllowedWireAmountLimit.ToCurrency()} USD.");
+            }
 
             return Json("true");
         }
