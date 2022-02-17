@@ -777,7 +777,7 @@ namespace HM.Operations.Secure.Middleware
                                         select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum();
 
             var totalPendingWiredInLocalCur = (from wire in wires
-                                               where wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated
+                                               where wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated || wire.WireStatusId == (int)WireDataManager.WireStatus.OnHold
                                                let fxRate = conversionData.Where(s => s.FROM_CRNCY == wire.Currency && s.TO_CRNCY == fndAccount.Currency)
                                                                 .Select(s => s.FX_RATE).FirstOrDefault() ?? 0
                                                select fxRate == 0 ? wire.Amount : wire.Amount * fxRate).Sum();
@@ -836,7 +836,6 @@ namespace HM.Operations.Secure.Middleware
             using (var context = new OperationsContext())
             {
                 treasuryBal = context.dmaTreasuryCashBalances.FirstOrDefault(s => s.onboardAccountId == sendingFundAccountId && s.ContextDate == contextDate.Date);
-
                 conversionRate = context.vw_ProxyCurrencyConversionData
                     .Where(s => s.HM_CONTEXT_DT == contextDate && s.FROM_CRNCY == fundAccount.Currency && s.TO_CRNCY == "USD")
                     .Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
@@ -867,7 +866,7 @@ namespace HM.Operations.Secure.Middleware
             {
                 IsCashBalanceAvailable = true,
                 TotalWireEntered = wires.Sum(s => s.Amount),
-                TotalPendingWireEntered = wires.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated).Sum(s => s.Amount),
+                TotalPendingWireEntered = wires.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated || s.WireStatusId == (int)WireDataManager.WireStatus.OnHold).Sum(s => s.Amount),
                 TotalApprovedWireAfterDeadline = wires.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Approved && s.ApprovedAt != null && s.ApprovedAt > deadline).Sum(s => s.Amount),
                 TreasuryBalance = treasuryBal.CashBalance ?? 0,
                 Currency = treasuryBal.Currency,
