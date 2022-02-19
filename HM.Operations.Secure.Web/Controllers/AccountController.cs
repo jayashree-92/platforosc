@@ -158,7 +158,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var userDetails = GetUserCoverageDetails(user.CommitId);
 
             var totalExperienceInHM = (DateTime.Today - userDetails.JoinedHedgemarkOn).TotalDays / 365;
-            user.TotalYearsOfExperienceInHM = Math.Round(userDetails.TotalYearsofExperiencePriortoHedgemark, 1);
+            user.TotalYearsOfExperienceInHM = Math.Round(totalExperienceInHM, 1);
             user.TotalYearsOfExperience = Math.Round(userDetails.TotalYearsofExperiencePriortoHedgemark + totalExperienceInHM, 1);
 
             //---->>>>
