@@ -193,7 +193,7 @@
                             <input type="text" id="liDeliveryCharges" class="form-control" disabled />
                         </div>
                     </div>
-                    <p style="height:5px;" ng-show="WireTicket.WireMessageTypeId == 1" />
+                    <p style="height:5px;" ng-show="WireTicket.WireMessageTypeId == 1  || WireTicket.WireMessageTypeId == 5" />
                     <div class="row" ng-show="WireTicketStatus.ShouldEnableCollateralPurpose">
                         <div class="col-md-3">
                             <label>Collateral Purpose (field 21):<span style="color: red">  *</span></label>
