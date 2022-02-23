@@ -15,6 +15,7 @@
     var isWireInitiator = User.IsWireInitiator();
     var isWireApproverStr = isWireApprover ? "true" : "false";
     var isWireAdmin = User.IsWireAdmin();
+    var isWireReadOnlyStr = User.IsWireReadOnly() ? "true" : "false";
     var isWireAdminStr = isWireAdmin ? "true" : "false";
     var indexURL = isWireAdmin ? @Url.Action("Index", "Home") : @Url.Action("Index", "User");
 }
@@ -51,6 +52,7 @@
         <input type="hidden" id="environment" value="@Util.Environment.ToLower()" />
         <input type="hidden" id="userName" value="@User.Identity.Name" />
         <input type="hidden" id="IsWireApprover" value="@isWireApproverStr" />
+        <input type="hidden" id="IsWireReadOnly" value="@isWireReadOnlyStr" />
         <input type="hidden" id="IsWireAdmin" value="@isWireAdminStr" />
 
         <div class="navbar-ops-menu">

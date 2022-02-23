@@ -197,7 +197,7 @@
                                                 <input type="text" class="form-control" ng-model="accountDetail.Currency" id="liCurrency0" ng-change="fnCutOffTime(accountDetail.Currency,accountDetail.CashInstruction)" />
                                             </div>
                                             <div class="col-sm-8 col-md-3 col-lg-3">
-                                                <a class="btn btn-sm btn-info" ng-click="fnAddCurrencyModal()" title="Add Currency"><i class="glyphicon glyphicon-plus"></i></a>
+                                                <a class="btn btn-sm btn-info" ng-disabled="IsWireReadOnly" ng-click="fnAddCurrencyModal()" title="Add Currency"><i class="glyphicon glyphicon-plus"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -230,7 +230,7 @@
                                                 <input ng-model="accountDetail.Description" class="form-control control-label" id="liAccountDescriptions0">
                                             </div>
                                             <div class="col-sm-8 col-md-3 col-lg-3">
-                                                <a id="btnAccountDescription" class="btn btn-sm btn-info" ng-click="fnAddAccountDetailModal('Description')" title="Add Description"><i class="glyphicon glyphicon-plus"></i></a>
+                                                <a id="btnAccountDescription" ng-disabled="IsWireReadOnly" class="btn btn-sm btn-info" ng-click="fnAddAccountDetailModal('Description')" title="Add Description"><i class="glyphicon glyphicon-plus"></i></a>
                                             </div>
                                         </div>
                                         <div class="col-sm-12 col-md-9 col-lg-6 paddingleft">
@@ -595,7 +595,7 @@
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountCallbackInfo_0" aria-expanded="false" aria-controls="accountCallbackInfo_0" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Callback Check</b>&nbsp;<span style="color: red"> *</span>
                                     <span class="pull-right">
-                                        <a class="btn btn-xs btn-primary" ng-click="fnAddCallbackModal()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Callback</a>&nbsp;&nbsp;
+                                        <a class="btn btn-xs btn-primary" ng-disabled="IsWireReadOnly" ng-click="fnAddCallbackModal()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Callback</a>&nbsp;&nbsp;
                                         <i class="indicator glyphicon glyphicon-chevron-down"></i>
                                     </span>
                                 </div>
@@ -612,7 +612,7 @@
                                 <div class="panel-heading" data-toggle="collapse" data-target="#accountContactDetailInfo_0" aria-expanded="false" aria-controls="accountContactDetailInfo_0" style="position: sticky;top: 47px;z-index: 2;">
                                     <b>Contact</b>
                                     <span class="pull-right">
-                                        <a class="btn btn-xs btn-info" ng-click="$event.stopPropagation();fnCreateContact()"><i class="glyphicon glyphicon-phone"></i>&nbsp;Add Contact</a>&nbsp;&nbsp;
+                                        <a class="btn btn-xs btn-info" ng-disabled="IsWireReadOnly" ng-click="$event.stopPropagation();fnCreateContact()"><i class="glyphicon glyphicon-phone"></i>&nbsp;Add Contact</a>&nbsp;&nbsp;
                                         <i class="indicator glyphicon glyphicon-chevron-down"></i>
                                     </span>
                                 </div>
@@ -647,7 +647,7 @@
                                     <div class="control-group">
                                         <div id="dropZoneDiv0">
                                             @* ReSharper disable once Html.TagNotResolved *@
-                                            <ng-form class="dropzone uploadFiles" enctype="multipart/form-data" id="uploadFiles0" method="post" novalidate style="display: block" />
+                                            <ng-form class="dropzone uploadFiles" ng-disabled="IsWireReadOnly" enctype="multipart/form-data" id="uploadFiles0" method="post" novalidate style="display: block" />
                                         </div>
                                         <p></p>
                                         <table id="documentTable0" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
@@ -666,7 +666,7 @@
                                                 @*<a id="accountMapRevert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Created','Revert')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</a>*@
                                             </span>
                                         }
-                                        <a class="btn btn-xs btn-primary" ng-click="$event.stopPropagation();fnAssociationSSI()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
+                                        <a class="btn btn-xs btn-primary" ng-disabled="IsWireReadOnly" ng-click="$event.stopPropagation();fnAssociationSSI()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
                                         <i class="indicator glyphicon glyphicon-chevron-down"></i>
                                     </span>
                                 </div>
@@ -697,7 +697,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <br />
-                                                <button class="btn btn-sm btn-primary" ng-click="fnUpdateMarginExposureType()">Update Exposure</button>&nbsp;&nbsp;
+                                                <button class="btn btn-sm btn-primary" ng-disabled="IsWireReadOnly" ng-click="fnUpdateMarginExposureType()">Update Exposure</button>&nbsp;&nbsp;
                                             </div>
                                         </div>
                                         <hr />
@@ -707,7 +707,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <br />
-                                                <button class="btn btn-sm btn-primary" ng-click="fnAddClearingBroker()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Selection</button>&nbsp;&nbsp;
+                                                <button class="btn btn-sm btn-primary" ng-disabled="IsWireReadOnly" ng-click="fnAddClearingBroker()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Selection</button>&nbsp;&nbsp;
                                             </div>
                                         </div>
                                         <p></p>

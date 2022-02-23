@@ -5,6 +5,7 @@ var tblWireStatusDetails;
 HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSharedScopes, $interval) {
 
     $scope.IsWireTicketModelOpen = false;
+    $scope.IsWireReadOnly = $("#IsWireReadOnly").val() === "true";
 
     $scope.$on("loadWireDetailsGrid", function (event, statusId, startContextDate, endContextDate) {
         $scope.fnLoadWireDetailsGrid(statusId, startContextDate, endContextDate);

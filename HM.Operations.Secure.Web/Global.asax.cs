@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -32,7 +33,7 @@ namespace HM.Operations.Secure.Web
         private const string SiteMinderHeaderToken = "SMUSER";
         protected void Application_Start()
         {
-            //Log4Net Instantiator
+            //Log4Net Initiation
             XmlConfigurator.ConfigureAndWatch(new FileInfo($"{AppDomain.CurrentDomain.BaseDirectory}web.config"));
 
             //Security measure - hide server details in the response header
@@ -47,7 +48,7 @@ namespace HM.Operations.Secure.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             //Boot up required assemblies to middleware
-            BootUpMiddleware.BootUp();
+            Task.Factory.StartNew(BootUpMiddleware.BootUp);
 
             System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls12;
 

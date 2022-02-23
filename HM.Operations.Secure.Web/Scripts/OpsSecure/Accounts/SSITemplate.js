@@ -13,6 +13,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.IsBNYMBroker = false;
     $scope.IsPendingApproval = false;
     $scope.IsApproved = false;
+    $scope.IsWireReadOnly = $("#IsWireReadOnly").val() === "true";
     $scope.SSITemplateTypeData = [{ id: "Broker", text: "Broker" }, { id: "Fee/Expense Payment", text: "Fee / Expense Payment" }, { id: "Bank Loan/Private/IPO", text: "Bank Loan / Private / IPO" }];
     $scope.messageTypes = [{ id: "MT103", text: "MT103" }, { id: "MT202", text: "MT202" }, { id: "MT202 COV", text: "MT202 COV" }];
     // { id: "MT210", text: "MT210" }, { id: "MT540", text: "MT540" },{ id: "MT542", text: "MT542" }
@@ -172,7 +173,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     "mData": "onBoardingSSITemplateDocumentId",
                     "sTitle": "Remove Document", "className": "dt-center",
                     "mRender": function () {
-                        return "<button class='btn btn-danger btn-xs' title='Remove Document'><i class='glyphicon glyphicon-trash'></i></button>";
+                        return "<button class='btn btn-danger btn-xs' " + ($scope.IsWireReadOnly ? "disabled='disabled'":"") + " title='Remove Document'><i class='glyphicon glyphicon-trash'></i></button>";
                     }
                 }
             ],

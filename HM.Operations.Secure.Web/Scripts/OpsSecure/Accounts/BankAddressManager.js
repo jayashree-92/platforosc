@@ -439,6 +439,8 @@ HmOpsApp.controller("BankAddressController", function ($scope, $http, $timeout, 
 
     $scope.fnGetBicorAba = function () {
         return $http.get("/FundAccounts/GetAllAccountBicorAba").then(function (response) {
+            console.log(response.data);
+
             $scope.accountBicorAba = response.data.accountBicorAba;
             if ($("#accountBICorABATable").hasClass("initialized")) {
                 accountBICorABATable.clear();

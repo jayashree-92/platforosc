@@ -13,9 +13,6 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
     });
 
     $(".dashBoardTile").on("click", function () {
-
-        //var isAlreaadySelected = $(this).hasClass("shadowBoxSelect");
-
         $(".dashBoardTile").removeClass("tileSelected").removeClass("shadowBoxSelect");
         $(this).toggleClass("tileSelected").toggleClass("shadowBoxSelect");
     });
@@ -45,12 +42,9 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
 
     $scope.IsWireTicketModelOpen = false;
     $scope.$on("wireTicketModelClosed", function (event, args) {
-
-        console.log(args);
-
         //Remove user viewing information
         if (args.wireId != undefined && args.wireId > 0)
-        $scope.fnRemoveActionInProgres(args.wireId);
+            $scope.fnRemoveActionInProgres(args.wireId);
 
         $scope.SelectedStatusId = args.statusId;
         $scope.fnRetriveWireCounts();

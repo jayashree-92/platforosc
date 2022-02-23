@@ -34,7 +34,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.IsBNYMBroker = false;
     $scope.IsPendingApproval = false;
     $scope.IsApproved = false;
-
+    $scope.IsWireReadOnly = $("#IsWireReadOnly").val() === "true";
     $scope.DisabledAgreementForCashInstructions = ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"];
 
     function viewAttachmentTable(data) {
@@ -72,7 +72,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     "mData": "onBoardingAccountDocumentId",
                     "sTitle": "Remove", "className": "dt-center",
                     "mRender": function () {
-                        return "<button class='btn btn-danger btn-xs' title='Remove Document'><i class='glyphicon glyphicon-trash'></i></button>";
+                        return "<button class='btn btn-danger btn-xs' " + ($scope.IsWireReadOnly ? "disabled='disabled'" : "") + " title='Remove Document'><i class='glyphicon glyphicon-trash'></i></button>";
                     }
                 }
             ],

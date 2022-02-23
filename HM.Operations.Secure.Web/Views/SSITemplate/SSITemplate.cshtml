@@ -60,7 +60,7 @@
                                             <input type="text" class="form-control" ng-model="ssiTemplate.hmsSSIDescriptionId" id="liSSIDescriptions" name="Description" ng-required="ssiTemplate.SSITemplateType == 'Bank Loan/Private/IPO'" />
                                         </div>
                                         <div class="col-md-2">
-                                            <a class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Description')" title="Add Description"><i class="glyphicon glyphicon-plus"></i></a>
+                                            <a class="btn btn-sm btn-info" ng-disabled="IsWireReadOnly" ng-click="fnAddSSITemplateDetailModal('Description')" title="Add Description"><i class="glyphicon glyphicon-plus"></i></a>
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-9 col-lg-6" ng-show="ssiTemplate.SSITemplateType == 'Fee/Expense Payment'">
@@ -71,7 +71,7 @@
                                             <input type="text" class="form-control" ng-model="ssiTemplate.ServiceProvider" id="liServiceProvider" name="Service Provider" ng-required="ssiTemplate.SSITemplateType == 'Fee/Expense Payment'" />
                                         </div>
                                         <div class="col-md-2">
-                                            <a class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Service Provider')" title="Add Service Provider"><i class="glyphicon glyphicon-plus"></i></a>
+                                            <a class="btn btn-sm btn-info" ng-disabled="IsWireReadOnly" ng-click="fnAddSSITemplateDetailModal('Service Provider')" title="Add Service Provider"><i class="glyphicon glyphicon-plus"></i></a>
                                         </div>
                                     </div>
 
@@ -83,7 +83,7 @@
                                             <input type="text" class="form-control" ng-model="ssiTemplate.Currency" id="liCurrency" name="Currency" required />
                                         </div>
                                         <div class="col-sm-8 col-md-3 col-lg-3">
-                                            <a class="btn btn-sm btn-info" ng-click="fnAddCurrencyModal()" title="Add Currency"><i class="glyphicon glyphicon-plus"></i></a>
+                                            <a class="btn btn-sm btn-info" ng-disabled="IsWireReadOnly" ng-click="fnAddCurrencyModal()" title="Add Currency"><i class="glyphicon glyphicon-plus"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -97,7 +97,7 @@
                                             <input type="text" ng-model="ssiTemplate.ReasonDetail" class="form-control" id="liReasonDetail" name="Payment Reason" required />
                                         </div>
                                         <div class="col-md-2">
-                                            <a id="btnSSITemplateReason" class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Reason')" title="Add Reason"><i class="glyphicon glyphicon-plus"></i></a>
+                                            <a id="btnSSITemplateReason" ng-disabled="IsWireReadOnly" class="btn btn-sm btn-info" ng-click="fnAddSSITemplateDetailModal('Reason')" title="Add Reason"><i class="glyphicon glyphicon-plus"></i></a>
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-9 col-lg-6 cashSweepTimeDiv" id="otherReason" style="display: none;">
@@ -249,7 +249,7 @@
                             <div class="panel-heading" data-toggle="collapse" data-target="#ssiCallBack" aria-expanded="false" aria-controls="ssiCallBack" ng-click="adjustContainer(true)">
                                 <b>Callback Check</b>&nbsp;<span style="color: red"> *</span>
                                 <span class="pull-right">
-                                    <a class="btn btn-xs btn-primary" ng-click="$event.stopPropagation();fnAddCallbackModal()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Callback</a>&nbsp;&nbsp;
+                                    <a class="btn btn-xs btn-primary" ng-disabled="IsWireReadOnly" ng-click="$event.stopPropagation();fnAddCallbackModal()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Callback</a>&nbsp;&nbsp;
                                     <i class="glyphicon glyphicon-chevron-down"></i>
                                 </span>
                             </div>
@@ -273,7 +273,7 @@
                             </div>
                             <div class="panel-body collapse" id="ssiAttachmentInfo">
                                 <div class="row">
-                                    <div id="dropZoneDiv" style="width: 100%;">
+                                    <div id="dropZoneDiv" style="width: 100%;" ng-disabled="IsWireReadOnly" >
                                         <ng-form class="dropzone" enctype="multipart/form-data" id="uploadSSIFiles" method="post" novalidate style="min-height: 50px !important;display: block;" />
                                     </div>
                                 </div>
@@ -294,7 +294,7 @@
                                             @*<a id="accountMapRevert" title="Revert" class="btn btn-info btn-sm disabled" ng-click="$event.stopPropagation();fnUpdateAccountMapStatus('Created','Revert')" style="text-transform: capitalize;"><i class="glyphicon glyphicon-repeat icon-flipped"></i> Revert</a>*@
                                         </span>
                                     }
-                                    <a class="btn btn-xs btn-primary" ng-click="$event.stopPropagation();fnAssociationSSI($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
+                                    <a class="btn btn-xs btn-primary" ng-disabled="IsWireReadOnly" ng-click="$event.stopPropagation();fnAssociationSSI($index)"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Association</a>&nbsp;&nbsp;
                                     <i class="glyphicon glyphicon-chevron-down"></i>
                                 </span>
 

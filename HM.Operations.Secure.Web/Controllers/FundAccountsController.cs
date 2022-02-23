@@ -174,8 +174,8 @@ namespace HM.Operations.Secure.Web.Controllers
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                ssiTemplates = context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved" 
-                   && ((template.SSITemplateType == "Bank Loan/Private/IPO" && fundData.IsFundAllowedForBankLoanAndIpOs) || counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType== "Fee/Expense Payment")
+                ssiTemplates = context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved"
+                   && ((template.SSITemplateType == "Bank Loan/Private/IPO" && fundData.IsFundAllowedForBankLoanAndIpOs) || counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType == "Fee/Expense Payment")
                    && (currency == null || template.Currency == currency) && (shouldBringAllMessageTypes || messageTypes.Contains(template.MessageType))).ToList();
             }
 
@@ -551,7 +551,11 @@ namespace HM.Operations.Secure.Web.Controllers
                 s.BICorABA,
                 s.BankAddress,
                 s.BankName,
-                s.IsABA
+                s.IsABA,
+                s.CreatedAt,
+                s.CreatedBy,
+                s.UpdatedAt,
+                s.UpdatedBy
             });
             return Json(new
             {
