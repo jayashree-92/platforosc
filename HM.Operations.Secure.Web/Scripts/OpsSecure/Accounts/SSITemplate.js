@@ -173,7 +173,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     "mData": "onBoardingSSITemplateDocumentId",
                     "sTitle": "Remove Document", "className": "dt-center",
                     "mRender": function () {
-                        return "<button class='btn btn-danger btn-xs' " + ($scope.IsWireReadOnly ? "disabled='disabled'":"") + " title='Remove Document'><i class='glyphicon glyphicon-trash'></i></button>";
+                        return "<button class='btn btn-danger btn-xs' " + ($scope.IsWireReadOnly ? "disabled='disabled'" : "") + " title='Remove Document'><i class='glyphicon glyphicon-trash'></i></button>";
                     }
                 }
             ],
@@ -581,7 +581,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
             $scope.fnConstructDocumentTable($scope.ssiTemplateDocuments);
             $scope.viewCallbackTable($scope.ssiTemplate.hmsSSICallbacks);
-            $scope.fnGetAssociatedAccounts();
+            //$scope.fnGetAssociatedAccounts();
 
             //$scope.fnConstructAssociatedAccountsTable($scope.associatedAccounts);
 
@@ -697,13 +697,14 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined && $scope.ssiTemplateMaps.length > 0) {
                 viewSsiTemplateTable($scope.ssiTemplateMaps);
             }
+            $timeout(function () {
+                $scope.ssiMapTable.columns.adjust().draw(true);
+            }, 100);
         });
     }
 
     $scope.showAssociations = function () {
-        $timeout(function () {
-            $scope.ssiMapTable.columns.adjust().draw(true);
-        }, 100);
+        $scope.fnGetAssociatedAccounts();
     }
 
     function viewSsiTemplateTable(data) {
@@ -787,7 +788,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 {
                     "mData": "onBoardingAccountSSITemplateMapId", "className": "dt-center",
                     "sTitle": "Remove", "mRender": function (tdata) {
-                        return "<a class='btn btn-danger btn-xs' title='Remove SSI'><i class='glyphicon glyphicon-trash'></i></a>";
+                        return "<a " + ($scope.IsWireReadOnly ? "disabled='disabled'" : "") + "class='btn btn-danger btn-xs' title='Remove SSI'><i class='glyphicon glyphicon-trash'></i></a>";
                     }
                 }
             ],
@@ -837,24 +838,17 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     if (rowElement.onBoardingAccountSSITemplateMapId > 0) {
                         $http.post("/SSITemplate/RemoveSsiTemplateMap", { ssiTemplateMapId: rowElement.onBoardingAccountSSITemplateMapId }).then(function () {
                             $scope.ssiMapTable.row(selectedRow).remove().draw();
-                            //$scope.ssiTemplateDocuments.pop(rowElement);             
-                            notifySuccess("Fund account removed succesfully");
+                            notifySuccess("Fund account removed successfully");
                             $scope.fnGetAssociatedAccounts();
                         });
                     } else {
                         $scope.ssiMapTable.row(selectedRow).remove().draw();
-                        //$scope.onBoardingAccountDetails[rowIndex].onBoardingAccountSSITemplateMaps.pop(rowElement);
-                        notifySuccess("Fund account removed succesfully");
+                        notifySuccess("Fund account removed successfully");
                     }
                 }
             });
-
         });
-        //$("#accountDetailCP tbody tr td a.btn-primary").on("click", function (event) {
-        //    event.preventDefault();
-        //    var ssitemplateId = $(this).attr("id");
-        //    window.open("/FundAccounts/SSITemplate?ssiTemplateId=" + ssitemplateId, "_blank");
-        //});
+
 
         $("#tblAssociatedAccounts tbody tr").on("click", function (event) {
             event.preventDefault();
@@ -869,9 +863,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $scope.onBoardingAccountSSITemplateMapId = rowElement.onBoardingAccountSSITemplateMapId;
             if (rowElement.Status == "Pending Approval" && rowElement.onBoardingAccountSSITemplateMapId > 0 && rowElement.UpdatedBy != $("#userName").val()) {
                 $("#btnAccountMapStatusButtons a[title='Approve']").removeClass("disabled");
-                //$scope.IsPendingApproval = true;
             }
-
         });
     }
 
@@ -989,26 +981,11 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 },
 
             ],
-            //"createdRow": function (row, rowData) {
-            //    switch (rowData.Status) {
-            //        case "Approved":
-            //            $(row).addClass("success");
-            //            break;
-            //        case "Pending Approval":
-            //            $(row).addClass("warning");
-            //            break;
-            //    }
-
-            //},
             "deferRender": false,
             "bScrollCollapse": true,
             "bPaginate": false,
-            //"scroller": false,
             "scrollX": $scope.fundAccounts.length > 0,
             "scrollY": "350px",
-            //sortable: false,
-            //"sDom": "ift",
-            //pagination: true,
             "sScrollX": "100%",
             "sScrollXInner": "100%",
             "order": [[0, "asc"]],
@@ -1022,7 +999,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
         $timeout(function () {
             $scope.ssiTemplateTableMap.columns.adjust().draw(true);
         }, 1000);
-
         $("#accountSSITemplateMapModal").modal({
             show: true,
             keyboard: true
@@ -1035,6 +1011,8 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
         });
     }
+
+
 
     $(document).on("click", "#ssiTemplateTableMap tbody tr", function () {
         if ($(this).hasClass("info"))
@@ -1120,21 +1098,17 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 });
             });
         }
-
-        //$("#txtDescription").val("");
+        
         $("#ssiTemplateDetailModal").modal("hide");
     }
 
     $scope.fnAddSSITemplateDetailModal = function (detail) {
-        //$scope.scrollPosition = $(window).scrollTop();
-        //$("#txtGoverningLaw").prop("placeholder", "Enter a governing law");
         $scope.detail = detail;
         $("#ssiTemplateDetailModal").modal({
             show: true,
             keyboard: true
         }).on("hidden.bs.modal", function () {
             $("#txtDescription").popover("hide").val("");
-            // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
         });
     }
 
@@ -1326,7 +1300,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $("#txtBICorABA").popover("hide");
             $("#txtBankAddress").popover("hide");
             $("#txtBankName").popover("hide");
-            // $("html, body").animate({ scrollTop: $scope.scrollPosition }, "fast");
         });
     }
 
@@ -1588,15 +1561,15 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     container: "body",
                     content: function () {
                         return "<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
-                            + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i>&nbsp;Yes</button>"
-                            + "&nbsp;&nbsp;<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i>&nbsp;No</button>"
+                            + "<button " + ($scope.IsWireReadOnly ? "disabled='disabled'" : "") + "class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i>&nbsp;Yes</button>"
+                            + "&nbsp;&nbsp;<button " + ($scope.IsWireReadOnly ? "disabled='disabled'" : "") + "class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i>&nbsp;No</button>"
                             + "</div>";
                     },
                     html: true
                 }).popover("show");
                 $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
-                    + "<button class=\"btn btn-sm btn-success confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
-                    + "<button class=\"btn btn-sm btn-default dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
+                    + "<button class=\"btn btn-sm btn-success " + ($scope.IsWireReadOnly ? "disabled='disabled'" : "") + "confirmCallback\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
+                    + "<button class=\"btn btn-sm btn-default " + ($scope.IsWireReadOnly ? "disabled='disabled'" : "") + "dismissCallback\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
                     + "</div>");
 
             }, 50);
