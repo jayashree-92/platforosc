@@ -624,7 +624,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     .Where(s => s.SSITemplateType == templateType)
                     .ToList();
 
-                shouldEnableCollateralPurpose = wireTransferTypeId == 1 && context.onBoardingAccounts.Include(s => s.SwiftGroup)
+                shouldEnableCollateralPurpose = (wireTransferTypeId == 1 || wireTransferTypeId == 4) && context.onBoardingAccounts.Include(s => s.SwiftGroup)
                     .Any(s => s.onBoardingAccountId == accountId && s.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(s.SwiftGroup.SendersBIC));
             }
 
