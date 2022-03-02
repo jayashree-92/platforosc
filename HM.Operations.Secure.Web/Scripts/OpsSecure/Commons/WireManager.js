@@ -1550,6 +1550,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         $scope.wireTicketObj.ReceivingAccountCurrency = $scope.accountDetail.Currency;
                         var wireMessageType = $filter("filter")($scope.MessageTypes, function (message) { return message.text == "MT210" }, true)[0];
                         angular.element("#liMessageType").select2("val", wireMessageType.id).trigger("change");
+                        $scope.WireTicketStatus.ShouldEnableCollateralPurpose = response.data.shouldEnableCollateralPurpose;
                     }
                     if ($scope.wireTicketObj.IsFundTransfer) {
                         var acceptedMsg = $scope.accountDetail.SwiftGroup.AcceptedMessages.split(",");
@@ -1601,7 +1602,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $scope.CashBalance.TreasuryBalance = $.convertToCurrency($scope.CashBalance.TreasuryBalance, 2);
                 $scope.CashBalance.TotalWireEntered = $.convertToCurrency($scope.CashBalance.TotalWireEntered, 2);
                 $scope.CashBalance.AvailableBalance = !$scope.CashBalance.IsCashBalanceAvailable ? "N.A" : $.convertToCurrency($scope.CashBalance.AvailableBalance, 2);
-                $scope.CashBalance.AvailableHoldBackBalance =  $.convertToCurrency($scope.CashBalance.AvailableHoldBackBalance, 2);
+                $scope.CashBalance.AvailableHoldBackBalance = $.convertToCurrency($scope.CashBalance.AvailableHoldBackBalance, 2);
                 $scope.CashBalance.HoldBackAmount = $.convertToCurrency($scope.CashBalance.HoldBackAmount, 2);
                 $scope.CashBalance.ConversionRate = $.convertToCurrency($scope.CashBalance.ConversionRate, 4);
 

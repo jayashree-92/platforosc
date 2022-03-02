@@ -672,7 +672,10 @@ namespace HM.Operations.Secure.Web.Controllers
             var deadlineToApprove = WireDataManager.GetDeadlineToApprove(onboardAccount, valueDate);
             var registerdAddress = WireDataManager.GetFundRegistedAddress(onboardAccount.hmFundId);
 
-            return Json(new { onboardAccount, deadlineToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.hmsWirePortalCutoffId == 0 || onboardAccount.WirePortalCutoff.IsApproved, registerdAddress });
+            var shouldEnableCollateralPurpose = onboardAccount.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(onboardAccount.SwiftGroup
+                                                  .SendersBIC);
+
+            return Json(new { onboardAccount, deadlineToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.hmsWirePortalCutoffId == 0 || onboardAccount.WirePortalCutoff.IsApproved, registerdAddress, shouldEnableCollateralPurpose });
         }
 
         public JsonResult GetCashBalances(long sendingAccountId, DateTime valueDate)
