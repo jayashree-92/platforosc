@@ -129,7 +129,7 @@ namespace HM.Operations.Secure.Middleware
 
             IsAuthorizedUserToApprove = IsWireStatusInitiated && !isUserInvolvedInInitiation && !IsDeadlineCrossed && isWireApprover && !IsNoticePending;
 
-            ShouldEnableCollateralPurpose = wireTicket.Is3rdPartyTransfer && wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(wireTicket.SendingAccount.SwiftGroup.SendersBIC);
+            ShouldEnableCollateralPurpose = (wireTicket.Is3rdPartyTransfer || wireTicket.IsNotice) && wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(wireTicket.SendingAccount.SwiftGroup.SendersBIC);
 
             IsLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == userId;
         }
