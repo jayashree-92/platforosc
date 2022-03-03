@@ -110,16 +110,6 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-        public static List<onBoardingAccountSSITemplateMap> GetSsiTemplateAccountMap(long ssiTemplateId)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.onBoardingAccountSSITemplateMaps.Where(x => x.onBoardingSSITemplateId == ssiTemplateId).ToList();
-            }
-        }
-
         public static List<OnBoardingAccountDescription> GetAccountDescriptionsByAgreementTypeId(long agreementTypeId)
         {
             using (var context = new OperationsSecureContext())
@@ -434,25 +424,6 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-
-        public static List<onBoardingAccount> GetAllApprovedAccounts(List<long> hmFundIds, string messageType, string currency, bool isServiceType)
-        {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-
-                return (from account in context.onBoardingAccounts
-                        join swift in context.hmsSwiftGroups on account.SwiftGroupId equals swift.hmsSwiftGroupId
-                        where !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && account.AccountStatus != "Closed"
-                              && (isServiceType || hmFundIds.Contains(account.hmFundId))
-                              && (currency == null || account.Currency == currency)
-                              && swift.AcceptedMessages.Contains(messageType)
-                        select account).ToList();
-
-                //return context.onBoardingAccounts.Include(s => s.SwiftGroup).Where(account => !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && (hmFundIds.Contains(account.hmFundId) || isServiceType) && (currency == null || account.Currency == currency) && ((account.SwiftGroup ?? new hmsSwiftGroup()).AcceptedMessages.Contains(messageType))).ToList();
-            }
-        }
 
         public static List<string> GetAllCurrencies()
         {

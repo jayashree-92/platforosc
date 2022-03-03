@@ -690,15 +690,16 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
 
     $scope.fnGetAssociatedAccounts = function () {
         var brokerId = $scope.SSITemplateType == "Broker" ? $scope.ssiTemplate.TemplateEntityId : 0;
-        var isServiceType = $scope.SSITemplateType == "Fee/Expense Payment" || $scope.SSITemplateType == "Bank Loan/Private/IPO";
-        $http.get("/FundAccounts/GetSsiTemplateAccountMap?ssiTemplateId=" + $scope.ssiTemplateId + "&brokerId=" + brokerId + "&currency=" + $scope.ssiTemplate.Currency + "&message=" + $scope.ssiTemplate.MessageType + "&isServiceType=" + isServiceType).then(function (response) {
+
+        $http.get("/FundAccounts/GetSsiTemplateAccountMap?ssiTemplateId=" + $scope.ssiTemplateId + "&brokerId=" + brokerId + "&currency=" + $scope.ssiTemplate.Currency + "&message=" + $scope.ssiTemplate.MessageType + "&ssiTemplateType=" + $scope.SSITemplateType).then(function (response) {
             $scope.fundAccounts = response.data.fundAccounts;
             $scope.ssiTemplateMaps = response.data.ssiTemplateMaps;
-            if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined && $scope.ssiTemplateMaps.length > 0) {
+            if ($scope.ssiTemplateMaps != null && $scope.ssiTemplateMaps != undefined) {
                 viewSsiTemplateTable($scope.ssiTemplateMaps);
             }
             $timeout(function () {
-                $scope.ssiMapTable.columns.adjust().draw(true);
+                if ($scope.ssiMapTable != undefined)
+                    $scope.ssiMapTable.columns.adjust().draw(true);
             }, 100);
         });
     }
@@ -1098,7 +1099,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 });
             });
         }
-        
+
         $("#ssiTemplateDetailModal").modal("hide");
     }
 

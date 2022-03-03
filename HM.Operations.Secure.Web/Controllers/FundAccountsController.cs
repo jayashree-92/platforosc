@@ -156,6 +156,8 @@ namespace HM.Operations.Secure.Web.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
+
+
         public JsonResult GetAccountSsiTemplateMap(long accountId, long fundId, string currency, string messages)
         {
             var ssiTemplateMaps = FundAccountManager.GetAccountSsiTemplateMap(accountId);
@@ -210,13 +212,38 @@ namespace HM.Operations.Secure.Web.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
-        public JsonResult GetSsiTemplateAccountMap(long ssiTemplateId, long brokerId, string currency, string message, bool isServiceType)
+
+        public JsonResult GetSsiTemplateAccountMap(long ssiTemplateId, long brokerId, string currency, string message, string ssiTemplateType)
         {
-            var ssiTemplateMaps = FundAccountManager.GetSsiTemplateAccountMap(ssiTemplateId);
-            var hmFundIds = OnBoardingDataManager.GetFundIdsbyCounterparty(brokerId);
+            var isServiceType = ssiTemplateType == "Fee/Expense Payment";
+            var isBankLoanOrIpo = ssiTemplateType == "Bank Loan/Private/IPO";
+            var isBrokerType = ssiTemplateType == "Broker";
+
+            var hmFundIds = isBrokerType ? OnBoardingDataManager.GetFundIdsbyCounterparty(brokerId)
+                : isBankLoanOrIpo ? AuthorizedDMAFundData.Where(s => s.IsFundAllowedForBankLoanAndIpOs).Select(s => s.HmFundId).ToList()
+                : new List<long>();
+
             if (string.IsNullOrWhiteSpace(message))
                 message = string.Empty;
-            var fundAccounts = FundAccountManager.GetAllApprovedAccounts(hmFundIds, message, currency, isServiceType);
+
+            List<onBoardingAccount> fundAccounts;
+            List<onBoardingAccountSSITemplateMap> ssiTemplateMaps;
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+
+                fundAccounts = (from account in context.onBoardingAccounts
+                                join swift in context.hmsSwiftGroups on account.SwiftGroupId equals swift.hmsSwiftGroupId
+                                where !account.IsDeleted && account.onBoardingAccountStatus == "Approved" && account.AccountStatus != "Closed"
+                                      && (isServiceType || hmFundIds.Contains(account.hmFundId))
+                                      && (currency == null || account.Currency == currency)
+                                      && swift.AcceptedMessages.Contains(message)
+                                select account).ToList();
+
+                ssiTemplateMaps = context.onBoardingAccountSSITemplateMaps.Where(x => x.onBoardingSSITemplateId == ssiTemplateId).ToList();
+            }
+
             var existingAccountMaps = ssiTemplateMaps.Select(p => p.onBoardingAccountId).ToList();
             var availableFundAccounts = fundAccounts.Where(s => !existingAccountMaps.Contains(s.onBoardingAccountId)).ToList();
             availableFundAccounts.ForEach(s => s.SwiftGroup = null);
