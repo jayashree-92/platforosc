@@ -646,6 +646,11 @@ namespace HM.Operations.Secure.Web.Controllers
         }
 
 
+        public void UpdateTreasuryMarginCheck(long accountId, bool isExcludedFromTreasuryMarginCheck)
+        {
+            FundAccountManager.UpdateTreasuryMarginCheck(accountId, isExcludedFromTreasuryMarginCheck, UserName);
+        }
+
         public void UpdateAccountStatus(string accountStatus, long accountId, string comments)
         {
             FundAccountManager.UpdateAccountStatus(accountStatus, accountId, comments, UserName);

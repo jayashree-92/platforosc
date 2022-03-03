@@ -169,6 +169,23 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
+        public static  void UpdateTreasuryMarginCheck(long accountId, bool isExcludedFromTreasuryMarginCheck, string userName)
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                var account = context.onBoardingAccounts.FirstOrDefault(s => s.onBoardingAccountId == accountId);
+
+                if (account == null)
+                    return;
+
+                account.IsExcludedFromTreasuryMarginCheck = isExcludedFromTreasuryMarginCheck;
+                account.UpdatedAt = DateTime.Now;
+                account.UpdatedBy =  userName;
+                context.onBoardingAccounts.AddOrUpdate(account);
+                context.SaveChanges();
+            }
+        }
+
         public static void UpdateAccountStatus(string accountStatus, long accountId, string comments, string userName)
         {
             using (var context = new OperationsSecureContext())

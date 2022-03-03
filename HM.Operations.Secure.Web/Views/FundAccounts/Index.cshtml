@@ -257,8 +257,8 @@
                                                 <label class="control-label">Treasury Margin Check</label>
                                             </div>
                                             <div class="col-sm-8 col-md-5 col-lg-5 AdjustDropDownWidth">
-                                                <div ng-model="accountDetail.IsExcludedFromTreasuryMarginCheck" ng-click="accountDetail.IsExcludedFromTreasuryMarginCheck=!accountDetail.IsExcludedFromTreasuryMarginCheck">
-                                                    <input id="chkIsExcludedFromMarginCheck" type="checkbox" data-size="mini" data-width="200" data-height="25" data-onstyle="btn btn-xs btn-danger" data-offstyle="btn btn-xs btn-success" data-toggle="toggle" data-off="Included" data-on="Excluded">
+                                                <div>
+                                                    <input id="chkIsExcludedFromMarginCheck" ng-change="fnUpdateTreasuryMarginCheck()" ng-model="accountDetail.IsExcludedFromTreasuryMarginCheck" type="checkbox" data-size="mini" data-width="200" data-height="25" data-onstyle="btn btn-xs btn-danger" data-offstyle="btn btn-xs btn-success" data-toggle="toggle" data-off="Included" data-on="Excluded">
                                                 </div>
                                             </div>
                                         </div>

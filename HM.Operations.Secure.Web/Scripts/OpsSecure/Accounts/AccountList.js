@@ -2002,7 +2002,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.$watch("watchAccountDetails", function (val, oldVal) {
 
-        if (val == undefined || val.length == 0 || oldVal == undefined || oldVal.length == 0 || $scope.isLoad) {
+        if (val == undefined || val.length == 0 || oldVal == undefined || oldVal.length == 0 || $scope.isLoad || $scope.IsTreasuryMarginCheckUpdated) {
             $scope.isAccountChanged = false;
             $scope.isApproved = false;
             if ($("#spnAgrCurrentStatus").html() == "Saved as Draft" || !$scope.isEdit) {
@@ -2058,7 +2058,25 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
     });
 
-
+    $scope.IsTreasuryMarginCheckUpdated = false;
+    $scope.fnUpdateTreasuryMarginCheck = function () {
+        if ($scope.isEdit) {
+            $http({
+                method: "POST",
+                url: "/FundAccounts/UpdateTreasuryMarginCheck",
+                type: "json",
+                data: JSON.stringify({
+                    accountId: $scope.onBoardingAccountDetails[0].onBoardingAccountId,
+                    isExcludedFromTreasuryMarginCheck: $("#chkIsExcludedFromMarginCheck").prop("checked")
+                })
+            }).then(function () {
+                $scope.IsTreasuryMarginCheckUpdated = true;
+                $scope.onBoardingAccountDetails[0].IsExcludedFromTreasuryMarginCheck = $("#chkIsExcludedFromMarginCheck").prop("checked");
+                notifySuccess("Treasury Margin Check updated successfully");
+                $scope.fnGetAccounts();
+            });
+        }
+    }
 
 
     $scope.fnUpdateMarginExposureType = function () {
