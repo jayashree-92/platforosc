@@ -1551,6 +1551,14 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                         var wireMessageType = $filter("filter")($scope.MessageTypes, function (message) { return message.text == "MT210" }, true)[0];
                         angular.element("#liMessageType").select2("val", wireMessageType.id).trigger("change");
                         $scope.WireTicketStatus.ShouldEnableCollateralPurpose = response.data.shouldEnableCollateralPurpose;
+
+                        if ($scope.WireTicket.hmsWireId == 0 || $scope.WireTicketStatus.IsEditEnabled) {
+                            angular.element("#liCollateralPurpose").select2("enable");
+                        }
+                        else {
+                            angular.element("#liCollateralPurpose").select2("disable");
+                        }
+
                     }
                     if ($scope.wireTicketObj.IsFundTransfer) {
                         var acceptedMsg = $scope.accountDetail.SwiftGroup.AcceptedMessages.split(",");
