@@ -82,8 +82,8 @@
     <Reference Include="ExcelUtility.Operations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HedgeMark.ExcelUtility.Operations.1.0.0.18\lib\net48\ExcelUtility.Operations.dll</HintPath>
     </Reference>
-    <Reference Include="Hangfire.Core, Version=1.7.24.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hangfire.Core.1.7.24\lib\net46\Hangfire.Core.dll</HintPath>
+    <Reference Include="Hangfire.Core, Version=1.7.28.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.7.28\lib\net46\Hangfire.Core.dll</HintPath>
     </Reference>
     <Reference Include="HedgeMark.Operations.FileParseEngine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HedgeMark.Operations.FileParseEngine.1.0.0.1\lib\net46\HedgeMark.Operations.FileParseEngine.dll</HintPath>
