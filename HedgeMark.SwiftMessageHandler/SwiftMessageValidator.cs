@@ -44,11 +44,10 @@ namespace HedgeMark.SwiftMessageHandler
         public static void Validate(string message)
         {
             //Get field elements
-            string messageType;
-            var fieldElements = GetFieldElements(message, out messageType);
+            var fieldElements = GetFieldElements(message, out var messageType);
             var mandatoryFields = ManadatoryFields.ContainsKey(messageType) ? ManadatoryFields[messageType] : new List<string>();
             var builder = new StringBuilder();
-            //Check if the manadatory fields has values
+            //Check if the mandatory fields has values
             foreach (var fieldElement in fieldElements)
             {
                 var thisFieldDetails = string.Empty;

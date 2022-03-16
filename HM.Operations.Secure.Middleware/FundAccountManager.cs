@@ -169,7 +169,7 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-        public static  void UpdateTreasuryMarginCheck(long accountId, bool isExcludedFromTreasuryMarginCheck, string userName)
+        public static void UpdateTreasuryMarginCheck(long accountId, bool isExcludedFromTreasuryMarginCheck, string userName)
         {
             using (var context = new OperationsSecureContext())
             {
@@ -180,7 +180,7 @@ namespace HM.Operations.Secure.Middleware
 
                 account.IsExcludedFromTreasuryMarginCheck = isExcludedFromTreasuryMarginCheck;
                 account.UpdatedAt = DateTime.Now;
-                account.UpdatedBy =  userName;
+                account.UpdatedBy = userName;
                 context.onBoardingAccounts.AddOrUpdate(account);
                 context.SaveChanges();
             }
@@ -695,7 +695,7 @@ namespace HM.Operations.Secure.Middleware
                 : ComputeNonPBCashBalances(sendingFundAccountId, valueDate, contextDate, deadline, fndAccount);
 
             if (cashBalance != null)
-                cashBalance.HoldBackAmount = (decimal)(fndAccount.HoldbackAmount ?? 0);
+                cashBalance.HoldBackAmount = fndAccount.CashSweep != null && fndAccount.CashSweep == "No" ? 0 : (decimal)(fndAccount.HoldbackAmount ?? 0);
 
             return cashBalance;
         }
