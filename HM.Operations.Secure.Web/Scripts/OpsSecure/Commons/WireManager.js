@@ -12,6 +12,21 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.loadAdhocWireRelatedData();
     }
 
+    $scope.fnResetWireModel = function () {
+        if ($scope.dzRawFileUploads != undefined)
+            $scope.dzRawFileUploads.removeAllFiles(true);
+        $scope.isAccountCollapsed = true;
+        $scope.isCashBalancesCollapsed = true;
+        $scope.isReceivingAccountCollapsed = true;
+        $scope.isSSITemplateCollapsed = true;
+        $scope.isAttachmentsCollapsed = true;
+        $scope.isWorkflowLogsCollapsed = true;
+        $scope.isSwiftMessagesCollapsed = true;
+        $scope.canSave = false;
+        $scope.initializeControls();
+        $scope.fnResetDeadlineTimer();
+    }
+
     $scope.promise = null;
     $scope.WireTicketStatus = {};
     $scope.WireSourceModuleDetails = {};
@@ -19,22 +34,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.loadWireRelatedData = function () {
 
         $q.all([$scope.getWireDetails($scope.wireObj.WireId), $scope.getWireMessageTypes($scope.wireObj.Report)])
-            .then(function () {
-                if ($scope.dzRawFileUploads != undefined)
-                    $scope.dzRawFileUploads.removeAllFiles(true);
-                $scope.isAccountCollapsed = true;
-                $scope.isCashBalancesCollapsed = true;
-                $scope.isReceivingAccountCollapsed = true;
-                $scope.isSSITemplateCollapsed = true;
-                $scope.isAttachmentsCollapsed = true;
-                $scope.isWorkflowLogsCollapsed = true;
-                $scope.isSwiftMessagesCollapsed = true;
-                $scope.canSave = false;
-                $scope.initializeControls();
-
-                $scope.fnResetDeadlineTimer();
-
-            });
+            .then($scope.fnResetWireModel);
     }
 
     $scope.loadAdhocWireRelatedData = function () {
@@ -42,21 +42,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $q.all([
             $scope.getAdhocWireDetails(), $scope.getWireMessageTypes($scope.wireObj.Report),
             $scope.getAdhocWireAssociations()
-        ])
-            .then(function () {
-                if ($scope.dzRawFileUploads != undefined)
-                    $scope.dzRawFileUploads.removeAllFiles(true);
-                $scope.isAccountCollapsed = true;
-                $scope.isCashBalancesCollapsed = true;
-                $scope.isReceivingAccountCollapsed = true;
-                $scope.isSSITemplateCollapsed = true;
-                $scope.isAttachmentsCollapsed = true;
-                $scope.isWorkflowLogsCollapsed = true;
-                $scope.isSwiftMessagesCollapsed = true;
-                $scope.canSave = false;
-                $scope.initializeControls();
-                $scope.fnResetDeadlineTimer();
-            });
+        ]).then($scope.fnResetWireModel);
     }
 
     $scope.initializeDatePicker = function () {
@@ -95,9 +81,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }, 50);
     });
 
-    $scope.getWireMessageTypes = function (module) {
-        return $http.get("/Home/GetWireMessageTypeDetails?module=" + module).then(function (response) {
-            if (module == "Adhoc Report" || module == "Invoices" || module == "Interest Report")
+    $scope.getWireMessageTypes = function (reportName) {
+        return $http.get("/Home/GetWireMessageTypeDetails?reportName=" + reportName).then(function (response) {
+            if (reportName != "Collateral" && reportName != "Repo Collateral")
                 $scope.MessageTypes = response.data.wireMessages;
             else {
                 if ($scope.wireObj.Purpose == "Respond to Broker Call")
@@ -772,7 +758,6 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.bindValues = function () {
-        var account = null, receivingAccount = null;
         if ($scope.WireTicket.hmsWireId == 0) {
             $scope.WireTicket.ContextDate = angular.copy($scope.wireObj.ContextDate);
             if ($scope.wireObj.Amount == "")
@@ -1674,12 +1659,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     $http.get("/Home/GetFundAccount?onBoardingAccountId=" + $scope.WireTicket.ReceivingOnBoardAccountId + "&valueDate=" + $("#wireValueDate").text()).then(function (response) {
 
                         var receivingAccount = response.data.onboardAccount;
-
-                        //var receivingAccount = $filter('filter')(angular.copy($scope.sendingAccounts), function (template) {
-                        //    return template.onBoardingAccountId == $scope.WireTicket.ReceivingOnBoardAccountId;
-                        //}, true)[0];
-
-
+                        
                         $scope.castToDate(receivingAccount);
                         $scope.receivingAccountDetail = receivingAccount;
                         $scope.wireTicketObj.ReceivingAccountCurrency = angular.copy($scope.receivingAccountDetail.Currency);

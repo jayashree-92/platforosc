@@ -7,12 +7,6 @@ namespace HM.Operations.Secure.Middleware.Util
 {
     public static class Utility
     {
-
-        //public static List<dmaHoliday> Holidays = new List<dmaHoliday>();
-        //public static List<DateTime> HolidayDates
-        //{
-        //    get { return Holidays.Select(s => s.HolidayContextDate.Date).ToList(); }
-        //}
         public static string Environment = ConfigurationManagerWrapper.StringSetting("Environment");
 
         public static readonly TimeZoneInfo DefaultSystemTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
@@ -86,7 +80,7 @@ namespace HM.Operations.Secure.Middleware.Util
         {
             get
             {
-                var mailSignatureLine =  OpsSecureSwitches.GetSwitchValue(Switches.SwitchKey.HedgeMarkMailOpsSignatureLines).Replace("\n", "<br />");
+                var mailSignatureLine = OpsSecureSwitches.GetSwitchValue(Switches.SwitchKey.HedgeMarkMailOpsSignatureLines).Replace("\n", "<br />");
                 return @"<br /><br /><div style = 'font-size:11px' >" + mailSignatureLine + "</div>";
             }
         }
@@ -106,6 +100,7 @@ namespace HM.Operations.Secure.Middleware.Util
         public static readonly string CapitalActivity = "Capital Activity";
         public static readonly string Loader = "Loader";
         public static readonly string InterestReport = "Interest Report";
+        public static readonly string Treasury = "Treasury";
         public static readonly string Invoices = "Invoices";
         public static readonly string Expenses = "Expenses";
         public static readonly string NavReview = "NAV Review";

@@ -105,7 +105,7 @@ namespace HM.Operations.Secure.Web.Controllers
             return Json(new { wireData, AuthorizedSessionData.IsPrivilegedUser, isAdmin = User.IsInRole(OpsSecureUserRoles.DMAAdmin) });
         }
 
-        public JsonResult GetWireMessageTypeDetails(string module)
+        public JsonResult GetWireMessageTypeDetails(string reportName)
         {
             using (var context = new OperationsSecureContext())
             {
@@ -138,7 +138,10 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             { ReportName.AdhocWireReport , new List<string>() { "MT103", "MT202", "MT202 COV", "MT210", "MT540", "MT542" } },
             { ReportName.Collateral, new List<string>() { "MT103", "MT202", "MT202 COV", "MT210" } },
-            { ReportName.Invoices, new List<string>() { "MT103", "MT202", "MT202 COV" } }
+            { ReportName.RepoCollateral, new List<string>() { "MT103", "MT202", "MT202 COV", "MT210" } },
+            { ReportName.Invoices, new List<string>() { "MT103", "MT202", "MT202 COV" } },
+            { ReportName.InterestReport, new List<string>() { "MT103", "MT202", "MT202 COV"} },
+            { ReportName.Treasury, new List<string>() { "MT103", "MT202"} },
         };
 
 
@@ -675,7 +678,14 @@ namespace HM.Operations.Secure.Web.Controllers
             var shouldEnableCollateralPurpose = onboardAccount.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(onboardAccount.SwiftGroup
                                                   .SendersBIC);
 
-            return Json(new { onboardAccount, deadlineToApprove, IsWireCutOffApproved = onboardAccount.WirePortalCutoff.hmsWirePortalCutoffId == 0 || onboardAccount.WirePortalCutoff.IsApproved, registerdAddress, shouldEnableCollateralPurpose });
+            return Json(new
+            {
+                onboardAccount,
+                deadlineToApprove,
+                IsWireCutOffApproved = onboardAccount.WirePortalCutoff.hmsWirePortalCutoffId == 0 || onboardAccount.WirePortalCutoff.IsApproved,
+                registerdAddress,
+                shouldEnableCollateralPurpose
+            });
         }
 
         public JsonResult GetCashBalances(long sendingAccountId, DateTime valueDate)

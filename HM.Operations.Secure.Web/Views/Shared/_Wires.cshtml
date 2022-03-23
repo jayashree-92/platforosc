@@ -47,7 +47,7 @@
                         <div class="col-md-3">
                             <label>Transfer type:</label>
                         </div>
-                        <div class="col-md-3" ng-show="!WireTicketStatus.IsEditEnabled">
+                        <div class="col-md-3" ng-show="!WireTicketStatus.IsEditEnabled || !WireTicketStatus.IsWirePurposeAdhoc">
                             <input type="text" class="form-control primary-info" ng-model="WireTicket.hmsWireTransferTypeLKup.TransferType" readonly />
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                         <div class="col-md-3">
                             <label>Purpose:</label>
                         </div>
-                        <div class="col-md-3" ng-show="!WireTicketStatus.IsEditEnabled">
+                        <div class="col-md-3" ng-show="!WireTicketStatus.IsEditEnabled || !WireTicketStatus.IsWirePurposeAdhoc">
                             <input type="text" class="form-control primary-info" ng-model="WireTicket.hmsWirePurposeLkup.Purpose" readonly />
                         </div>
                     </div>
@@ -303,7 +303,7 @@
                             </div>
                             <div class="col-sm-12 col-md-9 col-lg-6">
                                 <div class="col-md-4">
-                                    <label class="control-label">Registed Address </label>
+                                    <label class="control-label">Registered Address </label>
                                 </div>
                                 <div class="col-md-5">
                                     <textarea cols="10" rows="3" ng-model="FundRegistedAddress" class="form-control control-label" readonly></textarea>
