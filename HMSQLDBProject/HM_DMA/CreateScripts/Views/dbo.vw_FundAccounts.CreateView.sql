@@ -25,7 +25,7 @@ BEGIN
 				acc.FFCNumber,acc.UltimateBeneficiaryAccountNumber,acc.MarginAccountNumber,acc.AssociatedCustodyAcctNumber,acc.TopLevelManagerAccountNumber,acc.Currency,acc.AccountPurpose,acc.AccountStatus,acc.AuthorizedParty,
 				acc.[Description],acc.TickerorISIN,acc.CashSweep,acc.CashSweepTime,acc.CashSweepTimeZone,hcompany.Company AS ClientName,obClient.dmaClientOnBoardId,obfund.LaunchStatus,acc.HoldbackAmount,OBAC.dmaOnBoardingAdminChoiceId,OBAC.AdminChoice,
 				ISNULL(CAST (CASE obfund.FundStructureId WHEN 6 THEN 1 ELSE 0 END AS BIT),0) AS IsUmberllaFund,
-				acc.IsExcludedFromTreasuryMarginCheck,CC.CustodianCompanyName,expTyp.AgreementType as MarginExposureType,SG.AcceptedMessages
+				acc.IsExcludedFromTreasuryMarginCheck,CC.CustodianCompanyName,expTyp.AgreementType as MarginExposureType,SG.AcceptedMessages,SG.SwiftGroupStatusId
 				FROM HM_WIRES..onBoardingAccount acc
 				LEFT JOIN HM_WIRES.DBO.hmsSwiftGroup SG  WITH(NOLOCK) ON SG.hmsSwiftGroupId = acc.SwiftGroupId
 				LEFT JOIN HM.DBO.Fund F  WITH(NOLOCK) ON F.FundID = acc.hmFundId
