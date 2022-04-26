@@ -82,6 +82,7 @@ namespace HM.Operations.Secure.Middleware
         public decimal AvailableHoldBackBalance => HoldBackAmount - TotalPendingWireEntered - TotalApprovedWireAfterDeadline;
         public decimal MarginBuffer { get; set; }
         public decimal HoldBackAmount { get; set; }
+        public bool IsCashSweepAccount { get; set; }
     }
 
     public class WireTicketStatus

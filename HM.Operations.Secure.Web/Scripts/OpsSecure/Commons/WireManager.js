@@ -1624,7 +1624,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
         else {
 
-            if ($scope.IsDeadlineCrossed) {
+            if ($scope.IsDeadlineCrossed && $scope.CashBalance.IsCashSweepAccount) {
                 if ($.convertToNumber($scope.CashBalance.AvailableHoldBackBalance) < $.convertToNumber($scope.CashBalance.AvailableBalance))
                     $scope.CashBalance.AvailableBalance = $scope.CashBalance.AvailableHoldBackBalance;
             }
@@ -1659,7 +1659,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     $http.get("/Home/GetFundAccount?onBoardingAccountId=" + $scope.WireTicket.ReceivingOnBoardAccountId + "&valueDate=" + $("#wireValueDate").text()).then(function (response) {
 
                         var receivingAccount = response.data.onboardAccount;
-                        
+
                         $scope.castToDate(receivingAccount);
                         $scope.receivingAccountDetail = receivingAccount;
                         $scope.wireTicketObj.ReceivingAccountCurrency = angular.copy($scope.receivingAccountDetail.Currency);

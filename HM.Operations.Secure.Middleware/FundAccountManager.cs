@@ -695,7 +695,10 @@ namespace HM.Operations.Secure.Middleware
                 : ComputeNonPBCashBalances(sendingFundAccountId, valueDate, contextDate, deadline, fndAccount);
 
             if (cashBalance != null)
-                cashBalance.HoldBackAmount = fndAccount.CashSweep != null && fndAccount.CashSweep == "No" ? 0 : (decimal)(fndAccount.HoldbackAmount ?? 0);
+            {
+                cashBalance.IsCashSweepAccount = fndAccount.CashSweep != null && fndAccount.CashSweep == "Yes";
+                cashBalance.HoldBackAmount = (decimal)(fndAccount.HoldbackAmount ?? 0);
+            }
 
             return cashBalance;
         }
