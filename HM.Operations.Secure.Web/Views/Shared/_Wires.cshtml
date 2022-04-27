@@ -463,15 +463,15 @@
                         <span class="small" ng-if="CashBalance.IsCashBalanceAvailable">
                             (<b>Beginning Treasury:</b>{{ CashBalance.TreasuryBalance}} {{CashBalance.Currency}} - <b>Total Wire Entered:</b>{{CashBalance.TotalWireEntered}} {{CashBalance.Currency}})  <span style="font-size: 13px;">+</span> <b>Buffer</b> :{{CashBalance.MarginBuffer}} {{CashBalance.Currency}}
                         </span><span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isCashBalancesCollapsed , 'glyphicon-chevron-down': isCashBalancesCollapsed }"></span>
-                        <span class="small" ng-if="IsDeadlineCrossed">(<b>Hold Back Balance:</b>{{CashBalance.AvailableHoldBackBalance}} USD)</span>
+                        <span class="small" ng-if="IsDeadlineCrossed && CashBalance.IsCashSweepAccount">(<b>Hold Back Balance:</b>{{CashBalance.AvailableHoldBackBalance}} USD)</span>
                     </div>
                     <div id="cashBalancesDiv" class="panel-body collapse">
                         <span class="ng-show-hide" style="line-height: 2; padding: 0px;white-space:pre-line">
                             <b>Available Balances :</b>{{CashBalance.AvailableBalance}} {{CashBalance.Currency}}
                             <b>Beginning Treasury :</b>{{CashBalance.TreasuryBalance}} {{CashBalance.Currency}}
                             <b>Buffer :</b>{{CashBalance.MarginBuffer}} {{CashBalance.Currency}}
-                            <b>Holdback Balance :</b>{{CashBalance.AvailableHoldBackBalance}} {{CashBalance.Currency}}
-                            <b>Holdback Amount :</b>{{CashBalance.HoldBackAmount}} {{CashBalance.Currency}}
+                            <b ng-if="CashBalance.IsCashSweepAccount">Holdback Balance :</b>{{CashBalance.AvailableHoldBackBalance}} {{CashBalance.Currency}}
+                            <b ng-if="CashBalance.IsCashSweepAccount">Holdback Amount :</b>{{CashBalance.HoldBackAmount}} {{CashBalance.Currency}}
                             <b>Total Wire Entered (pending approval + approved):</b>{{CashBalance.TotalWireEntered}} {{CashBalance.Currency}}
                             <span ng-if="CashBalance.Currency!='USD'"><b>Currency Conversion Rate from {{CashBalance.Currency}} to USD :</b> {{CashBalance.ConversionRate}}</span>
 
