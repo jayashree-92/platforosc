@@ -99,6 +99,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         });
     }
 
+    $scope.OriginalSystemAmount = 0;
+    $scope.ModifiedWireAmount = 0;
+
     $scope.getAdhocWireDetails = function () {
         return $http.get("/Home/GetNewWireDetails").then(function (response) {
             $scope.wireTicketObj = response.data.wireTicket;
@@ -157,6 +160,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.receivingAccountsListOfFund = response.data.receivingAccountsList;
 
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
+            $scope.OriginalSystemAmount = $.convertToCurrency($scope.WireTicket.SystemAmount, 2);
+            $scope.ModifiedWireAmount = $.convertToCurrency($scope.WireTicket.Amount, 2);
             $scope.castToDate($scope.wireTicketObj.SendingAccount);
             $scope.accountDetail = angular.copy($scope.wireTicketObj.SendingAccount);
 
@@ -544,6 +549,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.CashBalanceAcknowledgedNotes = "";
     $scope.DuplicateWireCreatedAcknowledgedNotes = "";
     $scope.DeadlineCrossedAcknowledgedNotes = "";
+    $scope.WireAmountModifiedAcknowledgedNotes = "";
 
     $scope.fnGetFormattedAckNotes = function (message) {
         return "<br/><i class='glyphicon glyphicon-ok'></i><span class='small'>&nbsp;&nbsp;" + message + "</span>";;
@@ -559,6 +565,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         if ($scope.CashBalanceAcknowledgedNotes !== "")
             allNotes += $scope.CashBalanceAcknowledgedNotes;
+
+        if ($scope.WireAmountModifiedAcknowledgedNotes !== "")
+            allNotes += $scope.WireAmountModifiedAcknowledgedNotes;
 
         return allNotes;
     }
@@ -576,6 +585,16 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.CashBalanceAcknowledgedNotes = "";
         }
     });
+
+    $("body").on("change", "#chkWireAmountChanged", function () {
+        if ($("#chkWireAmountChanged").prop("checked")) {
+            $scope.WireAmountModifiedAcknowledgedNotes = $scope.fnGetFormattedAckNotes("Acknowledged that the Amount Populated by the system is changed from " + $scope.OriginalSystemAmount + " to " + $scope.ModifiedWireAmount + ".");
+        } else {
+            $scope.WireAmountModifiedAcknowledgedNotes = "";
+        }
+        //$scope.$apply();
+    });
+
 
     $("body").on("change", "#chkDuplicateWireCreation", function () {
         if ($("#chkDuplicateWireCreation").prop("checked")) {
@@ -597,6 +616,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $("#chkDuplicateWireCreation").prop("checked", false).trigger("change");
         $("#chkDeadlineCrossed").prop("checked", false).trigger("change");
         $("#chkCashBalOff").prop("checked", false).trigger("change");
+        $("#chkWireAmountChanged").prop("checked", false).trigger("change");
     }
 
     $scope.fnIsAllConditionsAcknowledged = function () {
@@ -615,6 +635,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
 
         if (($scope.CashBalance.IsNewBalanceOffLimit || !$scope.CashBalance.IsCashBalanceAvailable) && !$("#chkCashBalOff").prop("checked"))
+            return false;
+
+        if (!$scope.wireObj.IsAdhocWire && $scope.OriginalSystemAmount != $scope.ModifiedWireAmount && !$("#chkWireAmountChanged").prop("checked"))
             return false;
 
         return true;

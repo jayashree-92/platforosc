@@ -54,5 +54,7 @@ namespace HM.Operations.Secure.DataModel
         public bool IsExcludedFromTreasuryMarginCheck { get; set; }
         public string CustodianCompanyName { get; set; }
         public string MarginExposureType { get; set; }
+        public string AcceptedMessages { get; set; }
+        public Nullable<int> SwiftGroupStatusId { get; set; }
     }
 }

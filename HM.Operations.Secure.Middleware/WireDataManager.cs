@@ -579,6 +579,7 @@ namespace HM.Operations.Secure.Middleware
                     wireTicket.HMWire.CreatedAt = currentUtcTime;
                     wireTicket.HMWire.LastModifiedAt = currentUtcTime;
                     wireTicket.HMWire.LastUpdatedBy = userId;
+                    wireTicket.HMWire.SystemAmount = wireTicket.HMWire.Amount;
 
                     if (wireTicket.HMWire.OnBoardSSITemplateId == 0)
                         wireTicket.HMWire.OnBoardSSITemplateId = null;
@@ -586,11 +587,13 @@ namespace HM.Operations.Secure.Middleware
                     if (wireTicket.HMWire.ReceivingOnBoardAccountId == 0)
                         wireTicket.HMWire.ReceivingOnBoardAccountId = null;
 
-                    context.hmsWires.AddOrUpdate(wireTicket.HMWire);
+                    context.hmsWires.Add(wireTicket.HMWire);
                     context.SaveChanges();
                 }
+
                 if (wireTicket.HMWire.hmsWireField != null)
                     context.hmsWireFields.AddOrUpdate(wireTicket.HMWire.hmsWireField);
+
                 context.hmsWireDocuments.AddRange(wireTicket.HMWire.hmsWireDocuments.Where(s => s.hmsWireDocumentId == 0));
                 context.SaveChanges();
             }

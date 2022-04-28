@@ -57,6 +57,7 @@ namespace HM.Operations.Secure.DataModel
         public Nullable<int> ApprovedBy { get; set; }
         public Nullable<long> ReceivingOnBoardAccountId { get; set; }
         public Nullable<long> hmsWireFieldId { get; set; }
+        public decimal SystemAmount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hmsActionInProgress> hmsActionInProgresses { get; set; }

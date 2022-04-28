@@ -477,6 +477,7 @@
           <Property Name="ApprovedBy" Type="int" />
           <Property Name="ReceivingOnBoardAccountId" Type="bigint" />
           <Property Name="hmsWireFieldId" Type="bigint" />
+          <Property Name="SystemAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsWireSenderInformation">
           <Key>
@@ -771,6 +772,8 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
           <Property Name="IsExcludedFromTreasuryMarginCheck" Type="bit" Nullable="false" />
           <Property Name="CustodianCompanyName" Type="varchar" MaxLength="500" />
           <Property Name="MarginExposureType" Type="varchar" MaxLength="500" />
+          <Property Name="AcceptedMessages" Type="varchar" MaxLength="1000" />
+          <Property Name="SwiftGroupStatusId" Type="int" />
         </EntityType>
         <Association Name="FK_hmsAccountCallback_onBoardingAccountId">
           <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
@@ -853,18 +856,6 @@ warning 6002: The table/view 'HM_WIRES.dbo.vw_FundAccounts' does not have a prim
             </Principal>
             <Dependent Role="hmsDashboardSchedules">
               <PropertyRef Name="hmsScheduleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_hmsFundAccountClearingBrokers_onBoardingAccountId">
-          <End Role="onBoardingAccount" Type="Self.onBoardingAccount" Multiplicity="1" />
-          <End Role="hmsFundAccountClearingBrokers" Type="Self.hmsFundAccountClearingBrokers" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="onBoardingAccount">
-              <PropertyRef Name="onBoardingAccountId" />
-            </Principal>
-            <Dependent Role="hmsFundAccountClearingBrokers">
-              <PropertyRef Name="onBoardingAccountId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1512,7 +1503,9 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
     [vw_FundAccounts].[IsUmberllaFund] AS [IsUmberllaFund], 
     [vw_FundAccounts].[IsExcludedFromTreasuryMarginCheck] AS [IsExcludedFromTreasuryMarginCheck], 
     [vw_FundAccounts].[CustodianCompanyName] AS [CustodianCompanyName], 
-    [vw_FundAccounts].[MarginExposureType] AS [MarginExposureType]
+    [vw_FundAccounts].[MarginExposureType] AS [MarginExposureType], 
+    [vw_FundAccounts].[AcceptedMessages] AS [AcceptedMessages], 
+    [vw_FundAccounts].[SwiftGroupStatusId] AS [SwiftGroupStatusId]
     FROM [dbo].[vw_FundAccounts] AS [vw_FundAccounts]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_hmsAccountCallback_onBoardingAccountId" Association="Self.FK_hmsAccountCallback_onBoardingAccountId">
@@ -1542,10 +1535,6 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <AssociationSet Name="FK_hmsDashboardSchedules_hmsScheduleId" Association="Self.FK_hmsDashboardSchedules_hmsScheduleId">
             <End Role="hmsSchedules" EntitySet="hmsSchedules" />
             <End Role="hmsDashboardSchedules" EntitySet="hmsDashboardSchedules" />
-          </AssociationSet>
-          <AssociationSet Name="FK_hmsFundAccountClearingBrokers_onBoardingAccountId" Association="Self.FK_hmsFundAccountClearingBrokers_onBoardingAccountId">
-            <End Role="onBoardingAccount" EntitySet="onBoardingAccount" />
-            <End Role="hmsFundAccountClearingBrokers" EntitySet="hmsFundAccountClearingBrokers" />
           </AssociationSet>
           <AssociationSet Name="FK_hmsScheduleLogs_hmsScheduleId" Association="Self.FK_hmsScheduleLogs_hmsScheduleId">
             <End Role="hmsSchedules" EntitySet="hmsSchedules" />
@@ -2423,6 +2412,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="IsExcludedFromTreasuryMarginCheck" Type="Boolean" Nullable="false" />
           <Property Name="CustodianCompanyName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="MarginExposureType" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AcceptedMessages" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="SwiftGroupStatusId" Type="Int32" />
         </EntityType>
         <EntityType Name="hmsSSICallback">
           <Key>
@@ -2876,6 +2867,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <NavigationProperty Name="hmsWireAutoCancellationJobs" Relationship="OperationsSecureModel.FK_hmsWireJobScheduler_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireAutoCancellationJob" />
           <NavigationProperty Name="hmsWireInterestAssociations" Relationship="OperationsSecureModel.FK_hmsWireInterestAssociation_hmsWires_hmsWireId" FromRole="hmsWire" ToRole="hmsWireInterestAssociation" />
           <NavigationProperty Name="ReceivingSSITemplate" Relationship="OperationsSecureModel.FK_hmsWires_OnBoardSSITemplateId" FromRole="hmsWire" ToRole="onBoardingSSITemplate" />
+          <Property Name="SystemAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
         <Association Name="FK_hmsActionInProgress_hmsWireId">
           <End Type="OperationsSecureModel.hmsWire" Role="hmsWire" Multiplicity="1" />
@@ -3848,6 +3840,8 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="vw_FundAccounts">
             <EntityTypeMapping TypeName="OperationsSecureModel.vw_FundAccounts">
               <MappingFragment StoreEntitySet="vw_FundAccounts">
+                <ScalarProperty Name="SwiftGroupStatusId" ColumnName="SwiftGroupStatusId" />
+                <ScalarProperty Name="AcceptedMessages" ColumnName="AcceptedMessages" />
                 <ScalarProperty Name="MarginExposureType" ColumnName="MarginExposureType" />
                 <ScalarProperty Name="CustodianCompanyName" ColumnName="CustodianCompanyName" />
                 <ScalarProperty Name="IsExcludedFromTreasuryMarginCheck" ColumnName="IsExcludedFromTreasuryMarginCheck" />
@@ -4111,6 +4105,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="hmsWires">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsWire">
               <MappingFragment StoreEntitySet="hmsWires">
+                <ScalarProperty Name="SystemAmount" ColumnName="SystemAmount" />
                 <ScalarProperty Name="hmsWireFieldId" ColumnName="hmsWireFieldId" />
                 <ScalarProperty Name="ReceivingOnBoardAccountId" ColumnName="ReceivingOnBoardAccountId" />
                 <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />

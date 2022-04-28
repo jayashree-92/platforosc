@@ -174,6 +174,9 @@
                         <div class="col-md-1" style="padding:0px">
                             <input type="text" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountCurrency" readonly style="width:60px;height:30px;" />
                         </div>
+                        <div class="col-md-1" style="padding-top:11px" ng-if="WireTicket.hmsWireId > 0 && WireTicket.Amount!=WireTicket.SystemAmount">
+                            <label class="label label-danger"><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Amount edited from <b>{{OriginalSystemAmount}}</b></label>
+                        </div>
                     </div>
                     <p style="height: 5px;" />
                     <div class="row">
@@ -1031,6 +1034,11 @@
                             &nbsp;<span ng-if="CashBalance.IsNewBalanceOffLimit"><b>I understand that the amount entered exceeds cash balances and still wish to initiate this wire.</b></span>
                             &nbsp;<span ng-if="!CashBalance.IsCashBalanceAvailable"><b>I understand that Cash balance calculation is not available and still wish to initiate this wire.</b></span>
                         </span>
+                        <p></p>
+                        <div id="wireAmountChangedDiv" ng-show="WireTicketStatus.IsAuthorizedUserToApprove && OriginalSystemAmount!=ModifiedWireAmount">
+                            <input id="chkWireAmountChanged" type="checkbox" data-size="small" data-width="60" data-height="30" data-onstyle="btn btn-sm btn-success" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on="Yes" data-off="No" />
+                            &nbsp;<span><b>I acknowledge that the Amount Populated by the system is changed from {{OriginalSystemAmount}} to {{ModifiedWireAmount}} and Still wish to Initiate this Wire.</b></span>
+                        </div>
                     </div>
                     <textarea type="text" placeholder="Enter Comments" id="wireComment" ng-model="wireComments" class="form-control" rows="2" style="width: 50%; float: left;"></textarea>
                     <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save"
