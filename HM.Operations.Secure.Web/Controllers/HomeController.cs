@@ -354,8 +354,8 @@ namespace HM.Operations.Secure.Web.Controllers
                                                           && s.hmsWirePurposeLkup.Purpose == purpose
                                                           && s.hmsWireId != wireId
                                                           && s.OnBoardAccountId == sendingAccountId
-                                                          && (receivingSSITemplateId > 0 && s.OnBoardSSITemplateId == receivingSSITemplateId || receivingAccountId > 0
-                                                              && s.ReceivingOnBoardAccountId == receivingAccountId));
+                                                          && (receivingSSITemplateId > 0 && s.OnBoardSSITemplateId == receivingSSITemplateId
+                                                              || receivingAccountId > 0 && s.ReceivingOnBoardAccountId == receivingAccountId));
             }
 
             return Json(isDuplicateWire);

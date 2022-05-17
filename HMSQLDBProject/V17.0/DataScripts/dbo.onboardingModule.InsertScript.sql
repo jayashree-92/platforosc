@@ -52,5 +52,3 @@ BEGIN
 	INSERT INTO [hmsWirePurposeLkup] ([ReportName], [Purpose],[CreatedAt],[CreatedBy],[ModifiedBy],[ModifiedAt],[IsApproved]) VALUES('Treasury', 'Redemption Payment',GETDATE(),-1, NULL, NULL, 1)
 END 
 GO
-
-select * from hmsWirePurposeLkup

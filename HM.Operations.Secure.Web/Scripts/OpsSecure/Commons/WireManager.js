@@ -729,17 +729,18 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.fnCheckIfThisWireIsDuplicate = function () {
+        $scope.IsDuplicateWireCreated = false;
         if ($scope.accountDetail.onBoardingAccountId == 0 || ($scope.WireTicket.OnBoardSSITemplateId == 0 && $scope.WireTicket.receivingAccountId == 0))
             return;
 
         $http.post("/Home/IsThisWireDuplicate", JSON.stringify({
             valueDate: $("#wireValueDate").text(),
             purpose: $scope.wireObj.Purpose, sendingAccountId: $scope.accountDetail.onBoardingAccountId,
-            receivingAccountId: $scope.receivingAccountDetail != undefined ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : "",
-            receivingSSITemplateId: angular.copy($scope.ssiTemplate.onBoardingSSITemplateId),
+            receivingAccountId: $scope.receivingAccountDetail != undefined ? $scope.receivingAccountDetail.onBoardingAccountId : "",
+            receivingSSITemplateId: $scope.ssiTemplate.onBoardingSSITemplateId,
             wireId: $scope.WireTicket.hmsWireId
         }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
-            $scope.IsDuplicateWireCreated = $scope.WireTicket.hmsWireId == 0 && response.data;
+            $scope.IsDuplicateWireCreated = response.data;
             if ($scope.IsDuplicateWireCreated) {
                 $("#chkDuplicateWireCreation").prop("checked", false).trigger("change");
                 $scope.fnShowErrorMessage("An Initiated wire exists for the same value date, purpose, sending and receiving account.");
@@ -853,7 +854,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.wireComments = "";
     }
 
-    angular.element("#modalToRetrieveWires").on("hidden.bs.modal", function () {
+    angular.element("#modalToRetrieveWires").on("hide.bs.modal", function () {
         angular.element("#accountDetailDiv,#receivingAccountDetailDiv,#ssiTemplateDetailDiv,#attachmentsDiv,#wireWorkflowLogsDiv,#wireSwiftMessagesDiv").collapse("hide");
         if (($scope.wireObj.Purpose == "Respond to Broker Call" || $scope.wireObj.Purpose == "Send Call") && !$scope.wireObj.IsAdhocPage) {
             $opsSharedScopes.get("CollateralTableCtrl").wireObj.Amount = angular.copy($scope.WireTicket.Amount);
@@ -867,6 +868,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.WireTicket = {};
         $scope.wireTicketObj = {};
         $scope.isSwiftMessagesCollapsed = true;
+        $scope.IsDuplicateWireCreated = false;
         $scope.$apply();
     });
 
