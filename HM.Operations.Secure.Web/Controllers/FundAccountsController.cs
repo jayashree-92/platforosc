@@ -645,6 +645,10 @@ namespace HM.Operations.Secure.Web.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
+        public void UpdateContacts(long accountId,string contactType, string contactName)
+        {
+            FundAccountManager.UpdateContacts(accountId, contactType,contactName, UserName);
+        }
 
         public void UpdateTreasuryMarginCheck(long accountId, bool isExcludedFromTreasuryMarginCheck)
         {

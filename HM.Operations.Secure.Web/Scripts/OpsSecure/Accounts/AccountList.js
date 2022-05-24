@@ -1136,6 +1136,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             });
             $scope.onBoardingAccountDetails[0].ContactName = contacts;
             viewContactTable(onboardingContacts);
+            $scope.fnUpdateContacts(contacts)
         }
     }
     $scope.fnOnSwiftGroupChange = function (swiftGroup) {
@@ -1456,6 +1457,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnLoadContactDetails = function (contactName) {
         $http.get("/FundAccounts/GetAllOnBoardingAccountContacts?hmFundId=" + $scope.FundId).then(function (response) {
             $scope.contactNames = [];
+            $scope.OnBoardingContactsDetails = [];
             if (response.data.OnBoardingContacts.length > 0) {
                 $.each(response.data.OnBoardingContacts, function (i, v) {
                     $scope.contactNames.push({ id: v.id, text: v.name });
@@ -2002,7 +2004,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.$watch("watchAccountDetails", function (val, oldVal) {
 
-        if (val == undefined || val.length == 0 || oldVal == undefined || oldVal.length == 0 || $scope.isLoad || $scope.IsTreasuryMarginCheckUpdated) {
+        if (val == undefined || val.length == 0 || oldVal == undefined || oldVal.length == 0 || $scope.isLoad || $scope.IsTreasuryMarginCheckUpdated || $scope.IsContactsUpdated || $scope.IsContactTypeChanged) {
             $scope.isAccountChanged = false;
             $scope.isApproved = false;
             if ($("#spnAgrCurrentStatus").html() == "Saved as Draft" || !$scope.isEdit) {
@@ -2078,6 +2080,31 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
     }
 
+    $scope.IsContactTypeChanged = false;
+    $scope.fnOnContactTypeChange = function (contactType) {
+        if ($scope.isEdit)
+            $scope.IsContactTypeChanged = true;
+    }
+   
+    $scope.IsContactsUpdated = false;
+    $scope.fnUpdateContacts = function (contacts) {
+        if ($scope.isEdit) {
+            $http({
+                method: "POST",
+                url: "/FundAccounts/UpdateContacts",
+                type: "json",
+                data: JSON.stringify({
+                    accountId: $scope.onBoardingAccountDetails[0].onBoardingAccountId,
+                    contactType: $("#contactType0").val(),
+                    contactName: contacts
+                })
+            }).then(function () {
+                $scope.IsContactsUpdated = true;
+                notifySuccess("Contact details updated successfully");
+                $scope.fnGetAccounts();
+            });
+        }
+    }
 
     $scope.fnUpdateMarginExposureType = function () {
         $http({
