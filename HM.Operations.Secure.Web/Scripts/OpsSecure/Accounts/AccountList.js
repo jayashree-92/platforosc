@@ -35,7 +35,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.IsPendingApproval = false;
     $scope.IsApproved = false;
     $scope.IsWireReadOnly = $("#IsWireReadOnly").val() === "true";
-    $scope.DisabledAgreementForCashInstructions = ["FCM", "CDA", "ISDA", "GMRA", "MRA", "MSFTA", "FXPB"];
+    $scope.DisabledAgreementForCashInstructions = ["CDA", "ISDA", "GMRA", "MRA", "MSFTA"];
 
     function viewAttachmentTable(data) {
 
