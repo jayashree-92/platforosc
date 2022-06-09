@@ -864,12 +864,13 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         angular.element("#cancelWire").popover("hide");
         $("#wireErrorStatus").collapse("hide");
         //   angular.element("#liWireTransferType").select2("val", 1).trigger("change");
-        $scope.fnResetAcknowledgementAllToggle();
-        $scope.WireTicket = {};
-        $scope.wireTicketObj = {};
-        $scope.isSwiftMessagesCollapsed = true;
-        $scope.IsDuplicateWireCreated = false;
-        $scope.$apply();
+        $timeout(function () {
+            $scope.fnResetAcknowledgementAllToggle();
+            $scope.WireTicket = {};
+            $scope.wireTicketObj = {};
+            $scope.isSwiftMessagesCollapsed = true;
+            $scope.IsDuplicateWireCreated = false;
+        }, 50);
     });
 
     $scope.fnUpdateWireWithStatus = function (statusId) {
