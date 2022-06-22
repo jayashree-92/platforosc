@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Com.HedgeMark.Commons;
+using Com.HedgeMark.Commons.Extensions;
 using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.SqlServer;
@@ -28,10 +29,10 @@ namespace HM.Operations.Secure.Web
     public class Startup
     {
         public static readonly int HangFireWorkerCount = ConfigurationManagerWrapper.IntegerSetting("HangFireWorkerCount", Environment.ProcessorCount * 4);
-
+        private static readonly string HangfireConnectionString = ConfigurationManagerWrapper.GetConnectionString("HangfireContext");
         public void Configuration(IAppBuilder app)
         {
-            GlobalConfiguration.Configuration.UseSqlServerStorage(new OperationsSecureSettings().ConnectionString,
+            GlobalConfiguration.Configuration.UseSqlServerStorage(HangfireConnectionString,
                      new SqlServerStorageOptions
                      {
                          CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
@@ -39,7 +40,8 @@ namespace HM.Operations.Secure.Web
                          QueuePollInterval = TimeSpan.Zero,
                          UseRecommendedIsolationLevel = true,
                          UsePageLocksOnDequeue = true,
-                         DisableGlobalLocks = true
+                         DisableGlobalLocks = true,
+                         SchemaName = "HMOpsSecure"
                      });
 
 

@@ -57,6 +57,11 @@ namespace Com.HedgeMark.Commons
             return parseSucess ? value : defaultValue;
         }
 
+        public static string GetConnectionString(string connectionName)
+        {
+            return ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
+        }
+
 
         public static DateTime DateSetting(Config key, string defaultValue = "", string format = "yyyyMMdd")
         {
