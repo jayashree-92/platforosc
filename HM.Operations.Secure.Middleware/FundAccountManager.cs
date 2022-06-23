@@ -1,5 +1,6 @@
 ﻿using Com.HedgeMark.Commons.Extensions;
 using HM.Operations.Secure.DataModel;
+using HM.Operations.Secure.Middleware.Models;
 using HM.Operations.Secure.Middleware.Util;
 using log4net;
 using System;
@@ -44,6 +45,23 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
+        public static List<FundAccountClearingBrokerData> GetAllClearingBrokers()
+        {
+            using (var context = new OperationsSecureContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                context.Configuration.ProxyCreationEnabled = false;
+                var clearingBrokerlist = context.hmsFundAccountClearingBrokers.Include(s => s.onBoardingAccount).Select(s => new FundAccountClearingBrokerData
+                            {
+                                ClearingBroker=s,
+                                AccountName=s.onBoardingAccount.AccountName,
+                            }).ToList();
+                var userIds = clearingBrokerlist.Select(s => s.ClearingBroker.RecCreatedById).ToList();
+                var userIdMap = FileSystemManager.GetUsersList(userIds);
+                clearingBrokerlist.ForEach(s => s.RecCreatedBy = userIdMap.ContainsKey(s.ClearingBroker.RecCreatedById) ? userIdMap[s.ClearingBroker.RecCreatedById] : "Unknown User");
+                return clearingBrokerlist;
+            }
+        }
         public static onBoardingAccount GetOnBoardingAccount(long accountId)
         {
             using (var context = new OperationsSecureContext())

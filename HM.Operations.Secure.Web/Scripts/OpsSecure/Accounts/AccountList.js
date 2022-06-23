@@ -1,7 +1,7 @@
 ﻿$("#liAccounts").addClass("active");
 HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, $filter, $q) {
     $("#onboardingMenu").addClass("active");
-    var accountTable, accountSsiTemplateTable, tblSsiTemplateRow;
+    var accountTable, accountSsiTemplateTable,accountClearingBrokerTable, tblSsiTemplateRow;
     var myDropZone;
 
     $scope.onBoardingAccountDetails = [];
@@ -480,7 +480,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $("#btnAccountStatusButtons").show();
             $scope.allAccountList = response.data.OnBoardingAccounts;
             $scope.accountDetail = response.data.OnBoardingAccounts[0];
-
+            $scope.clearingBrokersList = response.data.FundAccountClearingBrokers;
             if ($("#accountTable").hasClass("initialized")) {
                 accountTable.clear();
                 accountTable.rows.add($scope.allAccountList);
@@ -3036,6 +3036,83 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $(document).on("click", ".dismissCallback", function () {
         angular.element($scope.tdEle).popover("destroy");
     });
+    $("#clearingBrokersTab").on("click", function () {
+        viewClearingBrokerAssociationTable($scope.clearingBrokersList);
+    });
+    function viewClearingBrokerAssociationTable(data) {
+
+        if ($("#accountClearingBrokerTable").hasClass("initialized")) {
+            fnDestroyDataTable("#accountClearingBrokerTable");
+        }
+
+        accountClearingBrokerTable = $("#accountClearingBrokerTable").DataTable(
+            {
+                aaData: data,
+                "bDestroy": true,
+                "columns": [
+                    { "mData": "ClearingBroker.hmsFundAccountClearingBrokerId", "sTitle": "hmsFundAccountClearingBrokerId", visible: false },                    
+                    {
+                        "mData": "AccountName", "sTitle": "Fund Account Name",// visible: false
+                    },
+                    {
+                        "mData": "ClearingBroker.ClearingBrokerName", "sTitle": "ClearingBrokerName",
+                    },
+                    {
+                        "mData": "RecCreatedBy", "sTitle": "Created By"
+                    },
+                    {
+                        "mData": "ClearingBroker.RecCreatedAt",
+                        "sTitle": "Created Date",
+                        "type": "dotnet-date",
+                        "mRender": function (tdata) {
+                            return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
+                        }
+                    },
+                   
+                ],
+                "oLanguage": {
+                    "sSearch": "",
+                    "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Clearing Brokers",
+                    "sInfoFiltered": " - filtering from _MAX_ Clearing Brokers"
+                },
+                
+                //"scrollX": false,
+                "deferRender": true,
+                // "scroller": true,
+                "orderClasses": false,
+                "sScrollX": "100%",
+                //sDom: "ift",
+                "sScrollY": 450,
+                "sScrollXInner": "100%",
+                "bScrollCollapse": true,
+                "order": [[3, "desc"]],
+                //"bPaginate": false,
+                iDisplayLength: -1,
+                "drawCallback": function (settings) {
+
+                    $(this).closest("div.dataTables_scrollBody").scrollTop($scope.tblTaskPageScrollPos);
+                    var api = this.api();
+                    var rows = api.rows({ page: "current" }).nodes();
+                    var last = "";
+
+                    api.column(1, { page: "current" }).data().each(function (groupName, i) {
+                        if (groupName !== null && groupName !== undefined && last.toString().toLowerCase() !== groupName.toString().toLowerCase()) {
+                            $(rows).eq(i).before(
+                                "<tr class=\"blocked\"><td colspan=\"10\"><b>" + groupName + "</b></td></tr>"
+                            );
+
+                            last = groupName;
+                        }
+                    });
+                },
+            });
+
+
+        window.setTimeout(function () {
+            accountClearingBrokerTable.columns.adjust().draw(true);
+        }, 200);
+
+    }
 
     function viewAssociationTable(data) {
 

@@ -312,7 +312,7 @@ namespace HM.Operations.Secure.Middleware
 
                 var userIds = hmWire.hmsWireWorkflowLogs.Select(s => s.CreatedBy).ToList();
                 userIds.AddRange(hmWire.hmsWireDocuments.Select(s => s.CreatedBy).ToList());
-                var users = context.hLoginRegistrations.Where(s => userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
+                var users = FileSystemManager.GetUsersList(userIds);
                 users.Add(-1, "System");
 
                 workflowUsers = hmWire.hmsWireWorkflowLogs.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();

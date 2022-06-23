@@ -198,12 +198,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 .Union(jobSchedules.Select(s => s.Schedule.ExternalToModifiedBy ?? 0))
                 .Union(jobSchedules.Select(s => s.Schedule.SFTPFolderModifiedBy ?? 0)).Distinct().ToList();
 
-            Dictionary<int, string> userIdMap;
-            using (var context = new AdminContext())
-            {
-                var userIds = context.hLoginRegistrations.Where(s => allUserIds.Contains(s.intLoginID)).Select(s => new { id = s.intLoginID, text = s.varLoginID });
-                userIdMap = userIds.ToDictionary(s => s.id, v => v.text.HumanizeEmail());
-            }
+            var userIdMap = FileSystemManager.GetUsersList(allUserIds);
 
             foreach (var job in jobSchedules)
             {

@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using HedgeMark.Operations.FileParseEngine.Models;
 using HM.Operations.Secure.DataModel;
+using HM.Operations.Secure.Middleware;
 using HM.Operations.Secure.Middleware.Util;
 using HM.Operations.Secure.Web.Utility;
 
@@ -34,13 +35,8 @@ namespace HM.Operations.Secure.Web.Controllers
             }
 
             var userIds = wirePurposes.Select(s => s.CreatedBy)
-                .Union(wirePurposes.Where(s => s.ModifiedBy != null).Select(s => (int)s.ModifiedBy)).ToList();
-
-            Dictionary<int, string> users;
-            using (var context = new AdminContext())
-            {
-                users = context.hLoginRegistrations.Where(s => UserDetails.Id == s.intLoginID || userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
-            }
+                .Union(wirePurposes.Where(s => s.ModifiedBy != null).Select(s => (int)s.ModifiedBy)).ToList();           
+            var users = FileSystemManager.GetUsersList(userIds);
 
             var wireControlRows = new List<Row>();
 
@@ -101,15 +97,8 @@ namespace HM.Operations.Secure.Web.Controllers
             }
 
             var userIds = wireControls.Select(s => s.LastModifiedById).Union(wireControls.Select(s => s.RecCreatedById)).Distinct().ToList();
-
-            Dictionary<int, string> users;
-            using (var context = new AdminContext())
-            {
-                users = context.hLoginRegistrations
-                    .Where(s => UserDetails.Id == s.intLoginID || userIds.Contains(s.intLoginID))
-                    .ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
-            }
-
+            var users = FileSystemManager.GetUsersList(userIds);
+            
             users.Add(-1, "#Data Retrofit");
             var wireCtrls = new List<WireControls>();
             foreach (var transferType in transferTypes)

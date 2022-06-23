@@ -10,6 +10,7 @@
     <ul id="accountTabs" class="nav nav-tabs" data-tabs="tabs">
         <li class="active"><a id="create" href="#dvList" data-toggle="tab">List</a></li>
         <li><a href="#dvAssociation" data-toggle="tab">Associated SSI</a></li>
+        <li id="clearingBrokersTab"><a href="#dvAssociationClearingBrokers" data-toggle="tab">Associated Clearing Brokers</a></li>
     </ul>
     <div class="tab-content">
         <div id="dvList" class="tab-pane fade in active">
@@ -76,6 +77,13 @@
                 </div>
                 <div class="panel-body row">
                     <table id="accountSSITemplateTable" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
+                </div>
+            </div>
+        </div>
+        <div id="dvAssociationClearingBrokers" class="tab-pane">
+            <div class="panel panel-default" id="basicDetail">                
+                <div class="panel-body row">
+                    <table id="accountClearingBrokerTable" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
                 </div>
             </div>
         </div>
@@ -692,7 +700,7 @@
                                             <span class="font-danger">* Note: Admin Accounts can be added only after successfully creating new Fund Account. Please click "Save Account" and try again.</span>
                                         </div>
                                         <div class="row" ng-if="onBoardingAccountDetails[0].onBoardingAccountId!=0">
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <b>Exposure:</b><input type="hidden" id="liExposureAgreementType" style="width:300px" />
                                             </div>
                                             <div class="col-md-4">
@@ -702,7 +710,7 @@
                                         </div>
                                         <hr />
                                         <div class="row" ng-if="onBoardingAccountDetails[0].onBoardingAccountId!=0">
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <b>Admin Account:</b><input style="width: 300px" type="text" class="form-control" id="txtNewClearingBroker" />
                                             </div>
                                             <div class="col-md-4">

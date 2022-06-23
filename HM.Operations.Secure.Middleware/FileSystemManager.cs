@@ -5,6 +5,7 @@ using Com.HedgeMark.Commons;
 using Com.HedgeMark.Commons.Extensions;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware.Models;
+using HM.Operations.Secure.Middleware.Util;
 
 namespace HM.Operations.Secure.Middleware
 {
@@ -120,6 +121,17 @@ namespace HM.Operations.Secure.Middleware
             var folderNames = rootDirectories.Select(s => s.Name).ToList();
             folders.AddRange(folderNames.Select(s => new Select2Type { id = s, text = s }).OrderBy(s1 => s1.text).ToList());
             return folders;
+        }
+
+        public static Dictionary<int,string> GetUsersList(List<int> userIds)
+        {
+            using (var context = new AdminContext())
+            {
+                context.Configuration.ProxyCreationEnabled = false;
+                context.Configuration.LazyLoadingEnabled = false;
+
+                return context.hLoginRegistrations.Where(s => userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
+            }
         }
 
     }

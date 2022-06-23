@@ -41,10 +41,10 @@ namespace HM.Operations.Secure.Web.Controllers
 
             Dictionary<int, string> userEmailMap, userGroupMap;
             var allUserIds = users.Select(s => s.hmLoginId).Distinct().ToList();
+            userEmailMap = FileSystemManager.GetUsersList(allUserIds);
 
             using (var context = new AdminContext())
             {
-                userEmailMap = context.hLoginRegistrations.Where(s => allUserIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
                 userGroupMap = context.onBoardingAssignmentUserGroupMaps.Include(s => s.onBoardingAssignmentUserGroup).Where(s => s.onBoardingAssignmentUserGroup.IsActive && s.onBoardingAssignmentUserGroup.IsPrimaryGroup && allUserIds.Contains(s.UserId)).GroupBy(s => s.UserId).ToDictionary(s => s.Key, v => v.Select(s1 => s1.onBoardingAssignmentUserGroup.GroupDescription).FirstOrDefault());
             }
 

@@ -131,17 +131,9 @@ namespace HM.Operations.Secure.Middleware
                 }
             }
 
-
-            Dictionary<int, string> users;
-            using (var context = new AdminContext())
-            {
-                context.Configuration.ProxyCreationEnabled = false;
-                context.Configuration.LazyLoadingEnabled = false;
-
-                var userIds = wireStatusDetails.Select(s => s.LastUpdatedBy).Union(wireStatusDetails.Select(s => s.CreatedBy))
-                    .Union(wireStatusDetails.Select(s => s.ApprovedBy ?? 0)).Distinct().ToList();
-                users = context.hLoginRegistrations.Where(s => userIds.Contains(s.intLoginID)).ToDictionary(s => s.intLoginID, v => v.varLoginID.HumanizeEmail());
-            }
+            var userIds = wireStatusDetails.Select(s => s.LastUpdatedBy).Union(wireStatusDetails.Select(s => s.CreatedBy))
+                .Union(wireStatusDetails.Select(s => s.ApprovedBy ?? 0)).Distinct().ToList();
+            var users = FileSystemManager.GetUsersList(userIds);
 
             var authorizedFundMap = authorizedDMAFundData == null ? AdminFundManager.GetHFundsCreatedForDMAOnly(PreferencesManager.FundNameInDropDown.OpsShortName).ToDictionary(s => s.HmFundId, v => v) : authorizedDMAFundData.ToDictionary(s => s.HmFundId, v => v);
             var timeZones = FileSystemManager.GetAllTimeZones();
