@@ -517,17 +517,17 @@ namespace HM.Operations.Secure.Web.Controllers
         }
 
 
-        public void AddClearingBrokers(long accountId, string clearingBrokerName)
+        public string AddClearingBrokers(long accountId, string clearingBrokerName)
         {
             using (var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                var clearingBroker = context.hmsFundAccountClearingBrokers.FirstOrDefault(s => s.onBoardingAccountId == accountId && s.ClearingBrokerName == clearingBrokerName);
-                if (clearingBroker != null) context.hmsFundAccountClearingBrokers.Remove(clearingBroker);
-                context.SaveChanges();
-
+                var clearingBroker = context.hmsFundAccountClearingBrokers.FirstOrDefault(s => s.ClearingBrokerName == clearingBrokerName);
+                if (clearingBroker != null)
+                    return context.vw_FundAccounts.FirstOrDefault(s => s.onBoardingAccountId == clearingBroker.onBoardingAccountId).AccountName;
+                
                 context.hmsFundAccountClearingBrokers.Add(new hmsFundAccountClearingBroker()
                 {
                     ClearingBrokerName = clearingBrokerName,
@@ -536,6 +536,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     RecCreatedById = UserId,
                 });
                 context.SaveChanges();
+                return string.Empty;
             }
         }
 

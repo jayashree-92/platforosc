@@ -2137,7 +2137,11 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 accountId: $scope.onBoardingAccountDetails[0].onBoardingAccountId,
                 clearingBrokerName: $("#txtNewClearingBroker").val(),
             })
-        }).then(function () {
+        }).then(function (response) {
+            if (response.data != ''){
+                notifyError("Clearing broker - '" + $("#txtNewClearingBroker").val() + "' already added in Fund Account-'" + response.data + "'");
+                return;
+            }
             notifySuccess("Admin Account added successfully");
             $scope.fnGetClearingBrokerData($scope.onBoardingAccountDetails[0].onBoardingAccountId);
         });
