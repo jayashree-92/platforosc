@@ -3039,6 +3039,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $("#clearingBrokersTab").on("click", function () {
         viewClearingBrokerAssociationTable($scope.clearingBrokersList);
     });
+    $scope.CollapsedFundAccountGroupsInMapped = {};
     function viewClearingBrokerAssociationTable(data) {
 
         if ($("#accountClearingBrokerTable").hasClass("initialized")) {
@@ -3052,10 +3053,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 "columns": [
                     { "mData": "ClearingBroker.hmsFundAccountClearingBrokerId", "sTitle": "hmsFundAccountClearingBrokerId", visible: false },                    
                     {
-                        "mData": "AccountName", "sTitle": "Fund Account Name",// visible: false
+                        "mData": "AccountName", "sTitle": "Fund Account Name", visible: false
                     },
                     {
-                        "mData": "ClearingBroker.ClearingBrokerName", "sTitle": "ClearingBrokerName",
+                        "mData": "ClearingBroker.ClearingBrokerName", "sTitle": "Clearing Broker Name",
                     },
                     {
                         "mData": "RecCreatedBy", "sTitle": "Created By"
@@ -3088,25 +3089,36 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 "order": [[3, "desc"]],
                 //"bPaginate": false,
                 iDisplayLength: -1,
+                rowGroup: {
+                    startRender: function (rows, group) {
+
+                        var isCollapsed = !!$scope.CollapsedFundAccountGroupsInMapped[group];
+                        rows.nodes().each(function (r) {
+                            r.style.display = isCollapsed ? "none" : "";
+                        });
+
+                        $scope.CollapsedFundAccountGroupsInMapped[group] = isCollapsed;
+
+                        return $("<tr style='cursor:pointer;'/>")
+                            .append("<td colspan=\"10\"> " + "<i class=\"glyphicon " + (isCollapsed ? "glyphicon-chevron-right" : "glyphicon-chevron-down") + "\" ></i>&nbsp;&nbsp;" + group + " (" + rows.count() + ")</td>")
+                            .attr("data-name", group)
+                            .toggleClass("collapsed", isCollapsed);
+                    },
+                    dataSrc: function (row, sdata) {
+                        return row.AccountName
+                    }
+
+                },
                 "drawCallback": function (settings) {
-
-                    $(this).closest("div.dataTables_scrollBody").scrollTop($scope.tblTaskPageScrollPos);
-                    var api = this.api();
-                    var rows = api.rows({ page: "current" }).nodes();
-                    var last = "";
-
-                    api.column(1, { page: "current" }).data().each(function (groupName, i) {
-                        if (groupName !== null && groupName !== undefined && last.toString().toLowerCase() !== groupName.toString().toLowerCase()) {
-                            $(rows).eq(i).before(
-                                "<tr class=\"blocked\"><td colspan=\"10\"><b>" + groupName + "</b></td></tr>"
-                            );
-
-                            last = groupName;
-                        }
-                    });
                 },
             });
 
+        $("#accountClearingBrokerTable tbody").off("click", "tr.group-start").on("click", "tr.group-start", function (event) {
+            var name = $(this).data("name");
+            $scope.CollapsedFundAccountGroupsInMapped[name] = !$scope.CollapsedFundAccountGroupsInMapped[name];
+            accountClearingBrokerTable.draw(false);
+            $timeout(function () { accountClearingBrokerTable.columns.adjust().draw(false); }, 100);
+        });
 
         window.setTimeout(function () {
             accountClearingBrokerTable.columns.adjust().draw(true);
