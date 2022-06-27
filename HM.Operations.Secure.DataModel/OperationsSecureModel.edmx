@@ -253,6 +253,7 @@
           <Property Name="ApprovedAt" Type="datetime" />
           <Property Name="RequestedBy" Type="int" />
           <Property Name="RequestedAt" Type="datetime" />
+          <Property Name="IsAllowWireCancellation" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="hmsSwiftGroupStatusLkp">
           <Key>
@@ -3262,6 +3263,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="RequestedAt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="hmsSwiftGroupStatusLkp" Relationship="OperationsSecureModel.FK_hmsSwiftGroup_SwiftGroupStatusId" FromRole="hmsSwiftGroup" ToRole="hmsSwiftGroupStatusLkp" />
           <NavigationProperty Name="onBoardingAccounts" Relationship="OperationsSecureModel.FK_onBoardingAccount_SwiftGroupId" FromRole="hmsSwiftGroup" ToRole="onBoardingAccount" />
+          <Property Name="IsAllowWireCancellation" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_hmsSwiftGroup_SwiftGroupStatusId">
           <End Type="OperationsSecureModel.hmsSwiftGroupStatusLkp" Role="hmsSwiftGroupStatusLkp" Multiplicity="0..1" />
@@ -4237,6 +4239,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <EntitySetMapping Name="hmsSwiftGroups">
             <EntityTypeMapping TypeName="OperationsSecureModel.hmsSwiftGroup">
               <MappingFragment StoreEntitySet="hmsSwiftGroup">
+                <ScalarProperty Name="IsAllowWireCancellation" ColumnName="IsAllowWireCancellation" />
                 <ScalarProperty Name="RequestedAt" ColumnName="RequestedAt" />
                 <ScalarProperty Name="RequestedBy" ColumnName="RequestedBy" />
                 <ScalarProperty Name="ApprovedAt" ColumnName="ApprovedAt" />
