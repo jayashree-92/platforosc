@@ -167,12 +167,10 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
             $("#liBrokerEntity").select2("val", $scope.swiftGroup.SwiftGroup.BrokerLegalEntityId);
             $("#liSwiftGroupStatus").select2("val", $scope.swiftGroup.SwiftGroup.SwiftGroupStatusId);
             $("#liMessageTypes").select2("val", [$scope.swiftGroup.SwiftGroup.AcceptedMessages]);
-            $scope.IsAllowWireCancellation = $scope.swiftGroup.SwiftGroup.IsAllowWireCancellation;
+
             $scope.ExistingSwiftGroup = angular.copy($scope.swiftGroup);
             $timeout(function () {
                 $scope.IsSwiftGroupLoading = false;
-                $("#chkIsAllowWireCancellation").bootstrapToggle();
-                $("#chkIsAllowWireCancellation").prop("checked", $scope.IsAllowWireCancellation).change();
                 $scope.fnChangeSwiftGroupStatus();
             }, 50);
 
@@ -187,10 +185,6 @@ HmOpsApp.controller("SwiftGroupCtrl", function ($scope, $http, $timeout, $filter
 
     $scope.ShouldDisableLive = false;
     $scope.fnChangeSwiftGroupStatus = function () {
-        if ($("#liMessageTypes").select2("val").indexOf("MT192") > -1 || $("#liMessageTypes").select2("val").indexOf("MT292") > -1)
-            $scope.IsCancelledMessageType = true;
-        else
-            $scope.IsCancelledMessageType = false;
 
         $scope.ShouldDisableLive = false;
         if ($scope.IsSwiftGroupLoading)
