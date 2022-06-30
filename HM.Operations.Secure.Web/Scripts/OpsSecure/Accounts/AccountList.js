@@ -3059,6 +3059,32 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         "mData": "ClearingBroker.ClearingBrokerName", "sTitle": "Clearing Broker Name",
                     },
                     {
+                        "mData": "CounterpartyName", "sTitle": "Counterparty",
+                    },
+                    {
+                        "mData": "AgreementName", "sTitle": "Agreement Name",
+                    },
+                    {
+                        "mData": "AccountType", "sTitle": "Account Type",
+                    },
+                    {
+                        "mData": "AccountNumber", "sTitle": "Account Number",
+                    },
+                    {
+                        "mData": "ExposureTypeId", "sTitle": "Exposure Type", mRender: function (tdata) {
+                           var selectedData=  $.grep($scope.agreementTypes, function (value) {
+                                return (value.id == tdata)
+                            });
+                            return selectedData[0].text;
+                        }
+                    },
+                    {
+                        "mData": "FFCName", "sTitle": "FFC Name",
+                    },
+                    {
+                        "mData": "FFCNumber", "sTitle": "FFC Number",
+                    },
+                    {
                         "mData": "RecCreatedBy", "sTitle": "Created By"
                     },
                     {

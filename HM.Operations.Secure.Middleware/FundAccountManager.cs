@@ -55,6 +55,10 @@ namespace HM.Operations.Secure.Middleware
                             {
                                 ClearingBroker=s,
                                 AccountName=s.onBoardingAccount.AccountName,
+                                AccountType=s.onBoardingAccount.AccountType,
+                                FFCName=s.onBoardingAccount.FFCName,
+                                ExposureTypeId=s.onBoardingAccount.MarginExposureTypeID,
+                                FFCNumber=s.onBoardingAccount.FFCNumber
                             }).ToList();
                 var userIds = clearingBrokerlist.Select(s => s.ClearingBroker.RecCreatedById).ToList();
                 var userIdMap = FileSystemManager.GetUsersList(userIds);

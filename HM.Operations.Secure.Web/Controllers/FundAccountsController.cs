@@ -319,6 +319,15 @@ namespace HM.Operations.Secure.Web.Controllers
                 };
             }).ToList();
 
+            foreach (var clearingBroker in clearingBrokers)
+            {
+                var fundAccount = allFundAccounts.FirstOrDefault(s => s.Account.onBoardingAccountId == clearingBroker.ClearingBroker.onBoardingAccountId);
+                clearingBroker.AgreementName = fundAccount.AgreementName;
+                clearingBroker.AccountNumber = fundAccount.AccountNumber;
+                clearingBroker.CounterpartyName = fundAccount.CounterpartyName;
+                clearingBroker.ClientName = fundAccount.ClientName;
+                clearingBroker.AccountName = fundAccount.AccountNumber;
+            }
             return Json(new
             {
                 agreementTypes = agreementTypes.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
