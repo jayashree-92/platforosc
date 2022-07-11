@@ -107,31 +107,29 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public JsonResult GetWireMessageTypeDetails(string reportName)
         {
-            using (var context = new OperationsSecureContext())
+            using var context = new OperationsSecureContext();
+            var wireMessageTypes = context.hmsWireMessageTypes.ToList();
+            var wireMessages = wireMessageTypes.Select(s => new { id = s.hmsWireMessageTypeId, text = s.MessageType }).ToList();
+            var wireTransferTypes = context.hmsWireTransferTypeLKups.Select(s => new { id = s.WireTransferTypeId, text = s.TransferType }).ToList();
+            var wireSenderInformation = context.hmsWireSenderInformations.ToList();
+            var collateralCashPurpose = context.hmsCollateralCashPurposeLkups.ToList();
+            return Json(new
             {
-                var wireMessageTypes = context.hmsWireMessageTypes.ToList();
-                var wireMessages = wireMessageTypes.Select(s => new { id = s.hmsWireMessageTypeId, text = s.MessageType }).ToList();
-                var wireTransferTypes = context.hmsWireTransferTypeLKups.Select(s => new { id = s.WireTransferTypeId, text = s.TransferType }).ToList();
-                var wireSenderInformation = context.hmsWireSenderInformations.ToList();
-                var collateralCashPurpose = context.hmsCollateralCashPurposeLkups.ToList();
-                return Json(new
+                wireMessages,
+                wireTransferTypes,
+                wireSenderInformation = wireSenderInformation.Select(s => new
                 {
-                    wireMessages,
-                    wireTransferTypes,
-                    wireSenderInformation = wireSenderInformation.Select(s => new
-                    {
-                        id = s.hmsWireSenderInformationId,
-                        text = $"{s.SenderInformation}-{s.Description}",
-                        value = s.SenderInformation
-                    }).ToList(),
-                    wireCollateralCashPurpose = collateralCashPurpose.Select(s => new
-                    {
-                        id = s.hmsCollateralCashPurposeLkupId,
-                        text = $"{s.PurposeCode}-{s.Description}",
-                        value = s.PurposeCode
-                    }).ToList()
-                });
-            }
+                    id = s.hmsWireSenderInformationId,
+                    text = $"{s.SenderInformation}-{s.Description}",
+                    value = s.SenderInformation
+                }).ToList(),
+                wireCollateralCashPurpose = collateralCashPurpose.Select(s => new
+                {
+                    id = s.hmsCollateralCashPurposeLkupId,
+                    text = $"{s.PurposeCode}-{s.Description}",
+                    value = s.PurposeCode
+                }).ToList()
+            });
         }
 
         public static Dictionary<string, List<string>> MessageTypes = new Dictionary<string, List<string>>()
@@ -208,71 +206,62 @@ namespace HM.Operations.Secure.Web.Controllers
             {
                 wireSourceModule.SourceModuleName = "Invoices";
 
-                using (var context = new OperationsContext())
-                {
-                    var invoiceId = wireTicket.HMWire.hmsWireInvoiceAssociations.Last().InvoiceId;
-                    var invoiceReport = context.vw_dmaInvoiceReport.First(s => s.dmaInvoiceReportId == invoiceId);
+                using var context = new OperationsContext();
+                var invoiceId = wireTicket.HMWire.hmsWireInvoiceAssociations.Last().InvoiceId;
+                var invoiceReport = context.vw_dmaInvoiceReport.First(s => s.dmaInvoiceReportId == invoiceId);
 
-                    wireSourceModule.AttachmentName = invoiceReport.FileName;
-                    wireSourceModule.FileSource = invoiceReport.FileSource;
-                    wireSourceModule.SourceModuleId = invoiceId;
+                wireSourceModule.AttachmentName = invoiceReport.FileName;
+                wireSourceModule.FileSource = invoiceReport.FileSource;
+                wireSourceModule.SourceModuleId = invoiceId;
 
-                    wireSourceModule.Details.Add("Invoice No", invoiceReport.InvoiceNo);
-                    wireSourceModule.Details.Add("Invoice Date", invoiceReport.InvoiceDate.ToShortDateString());
-                    wireSourceModule.Details.Add("Amount", invoiceReport.Amount.ToCurrency());
-                    wireSourceModule.Details.Add("Fee Type", invoiceReport.FeeType);
-                    wireSourceModule.Details.Add("Currency", invoiceReport.Currency);
-                    wireSourceModule.Details.Add("Pay Date", invoiceReport.PaidDate.ToDateString());
-                    wireSourceModule.Details.Add("Service Provider", invoiceReport.Vendor);
-                }
-
+                wireSourceModule.Details.Add("Invoice No", invoiceReport.InvoiceNo);
+                wireSourceModule.Details.Add("Invoice Date", invoiceReport.InvoiceDate.ToShortDateString());
+                wireSourceModule.Details.Add("Amount", invoiceReport.Amount.ToCurrency());
+                wireSourceModule.Details.Add("Fee Type", invoiceReport.FeeType);
+                wireSourceModule.Details.Add("Currency", invoiceReport.Currency);
+                wireSourceModule.Details.Add("Pay Date", invoiceReport.PaidDate.ToDateString());
+                wireSourceModule.Details.Add("Service Provider", invoiceReport.Vendor);
             }
             else if (wireTicket.HMWire.hmsWireCollateralAssociations.Any())
             {
                 wireSourceModule.SourceModuleName = "Collateral Report";
 
-                using (var context = new OperationsContext())
-                {
-                    var opsCashCollateralId = wireTicket.HMWire.hmsWireCollateralAssociations.First().dmaCashCollateralId;
-                    var collateralReport = context.dmaOpsCashCollaterals.Include(a => a.dmaCollateralData).First(s => s.dmaOpsCashCollateralId == opsCashCollateralId);
+                using var context = new OperationsContext();
+                var opsCashCollateralId = wireTicket.HMWire.hmsWireCollateralAssociations.First().dmaCashCollateralId;
+                var collateralReport = context.dmaOpsCashCollaterals.Include(a => a.dmaCollateralData).First(s => s.dmaOpsCashCollateralId == opsCashCollateralId);
 
-                    wireSourceModule.Details.Add("Counterparty", collateralReport.dmaCollateralData.BrokerName);
-                    wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (System Balance)", collateralReport.dmaCollateralData.CollateralPledgedToByFundSystemBalance.ToCurrency());
-                    wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (Verified Balance)", collateralReport.dmaCollateralData.CollateralPledgedToByFundVerifiedBalance.ToCurrency());
-                    wireSourceModule.Details.Add("Collateral Pending to / (from) Fund", collateralReport.dmaCollateralData.CollateralPendingToFromFund.ToCurrency());
-                    wireSourceModule.Details.Add("Exposure / MTM", collateralReport.dmaCollateralData.ExposureOrMtm.ToCurrency());
-                    if (collateralReport.dmaCollateralData.IsCollateralReport)
-                        wireSourceModule.Details.Add("Independent Amount (CounterParty)", collateralReport.dmaCollateralData.IndependentAmount.ToCurrency());
-                    wireSourceModule.Details.Add("Credit Support Amount", collateralReport.dmaCollateralData.CreditSupportAmount.ToCurrency());
-                    wireSourceModule.Details.Add("Agreed Movement to / (from) Fund", collateralReport.dmaCollateralData.AgreedMovementToFromFund.ToCurrency());
+                wireSourceModule.Details.Add("Counterparty", collateralReport.dmaCollateralData.BrokerName);
+                wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (System Balance)", collateralReport.dmaCollateralData.CollateralPledgedToByFundSystemBalance.ToCurrency());
+                wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (Verified Balance)", collateralReport.dmaCollateralData.CollateralPledgedToByFundVerifiedBalance.ToCurrency());
+                wireSourceModule.Details.Add("Collateral Pending to / (from) Fund", collateralReport.dmaCollateralData.CollateralPendingToFromFund.ToCurrency());
+                wireSourceModule.Details.Add("Exposure / MTM", collateralReport.dmaCollateralData.ExposureOrMtm.ToCurrency());
+                if (collateralReport.dmaCollateralData.IsCollateralReport)
+                    wireSourceModule.Details.Add("Independent Amount (CounterParty)", collateralReport.dmaCollateralData.IndependentAmount.ToCurrency());
+                wireSourceModule.Details.Add("Credit Support Amount", collateralReport.dmaCollateralData.CreditSupportAmount.ToCurrency());
+                wireSourceModule.Details.Add("Agreed Movement to / (from) Fund", collateralReport.dmaCollateralData.AgreedMovementToFromFund.ToCurrency());
 
-                    //Cash Collateral details
-                    wireSourceModule.Details.Add("Eligible Currency", collateralReport.EligibleCurrency);
-                    wireSourceModule.Details.Add("Settlement Date", collateralReport.SettlementDate.ToShortDateString());
-                    wireSourceModule.Details.Add("Agreed Movement Type", collateralReport.AgreedMovementType);
-                    wireSourceModule.Details.Add("Local Collateral Value", collateralReport.CollateralValue.ToCurrency());
-                    wireSourceModule.Details.Add("Base Collateral Value", collateralReport.BaseCollateralValue.ToCurrency());
-                    wireSourceModule.Details.Add("FX Rate", collateralReport.FXRate.ToCurrency());
-                    wireSourceModule.Details.Add("Deliver Amount", collateralReport.PledgeAmount.ToCurrency());
-                    wireSourceModule.Details.Add("Return Amount", collateralReport.ReturnAmount.ToCurrency());
-
-                }
+                //Cash Collateral details
+                wireSourceModule.Details.Add("Eligible Currency", collateralReport.EligibleCurrency);
+                wireSourceModule.Details.Add("Settlement Date", collateralReport.SettlementDate.ToShortDateString());
+                wireSourceModule.Details.Add("Agreed Movement Type", collateralReport.AgreedMovementType);
+                wireSourceModule.Details.Add("Local Collateral Value", collateralReport.CollateralValue.ToCurrency());
+                wireSourceModule.Details.Add("Base Collateral Value", collateralReport.BaseCollateralValue.ToCurrency());
+                wireSourceModule.Details.Add("FX Rate", collateralReport.FXRate.ToCurrency());
+                wireSourceModule.Details.Add("Deliver Amount", collateralReport.PledgeAmount.ToCurrency());
+                wireSourceModule.Details.Add("Return Amount", collateralReport.ReturnAmount.ToCurrency());
             }
             else if (wireTicket.HMWire.hmsWireInterestAssociations.Any())
             {
                 wireSourceModule.SourceModuleName = "Interest Payment";
 
-                using (var context = new OperationsContext())
-                {
-                    var interestId = wireTicket.HMWire.hmsWireInterestAssociations.Last().dmaInterestReportEodDataId;
-                    var interestReport = context.dmaInterestReportEodDatas.First(s => s.dmaInterestReportEodDataId == interestId);
+                using var context = new OperationsContext();
+                var interestId = wireTicket.HMWire.hmsWireInterestAssociations.Last().dmaInterestReportEodDataId;
+                var interestReport = context.dmaInterestReportEodDatas.First(s => s.dmaInterestReportEodDataId == interestId);
 
-                    wireSourceModule.Details.Add("Start Date", interestReport.startDate.ToShortDateString());
-                    wireSourceModule.Details.Add("End Date", interestReport.endDate.ToShortDateString());
-                    wireSourceModule.Details.Add("Broker Name", interestReport.brokerName);
-                    wireSourceModule.Details.Add("Agreed Amount", interestReport.AgreedAmount.ToCurrency());
-                }
-
+                wireSourceModule.Details.Add("Start Date", interestReport.startDate.ToShortDateString());
+                wireSourceModule.Details.Add("End Date", interestReport.endDate.ToShortDateString());
+                wireSourceModule.Details.Add("Broker Name", interestReport.brokerName);
+                wireSourceModule.Details.Add("Agreed Amount", interestReport.AgreedAmount.ToCurrency());
             }
 
             return wireSourceModule;
@@ -303,44 +292,40 @@ namespace HM.Operations.Secure.Web.Controllers
                 return new List<string>();
 
             var readableName = UserName.HumanizeEmail();
-            using (var context = new OperationsSecureContext())
+            using var context = new OperationsSecureContext();
+            var allUsers = context.hmsActionInProgresses.Where(s => s.hmsWireId == wireId).Select(s => s.UserName).ToList();
+
+            //remove all actionsInProgress for this User - as he will be able to do one wire at a time.
+            var allWires = context.hmsActionInProgresses.Where(s => s.UserName == readableName).ToList();
+
+            if (allWires.Any())
             {
-                var allUsers = context.hmsActionInProgresses.Where(s => s.hmsWireId == wireId).Select(s => s.UserName).ToList();
-
-                //remove all actionsInProgress for this User - as he will be able to do one wire at a time.
-                var allWires = context.hmsActionInProgresses.Where(s => s.UserName == readableName).ToList();
-
-                if (allWires.Any())
-                {
-                    context.hmsActionInProgresses.RemoveRange(allWires);
-                    context.SaveChanges();
-                }
-
-                context.hmsActionInProgresses.Add(new hmsActionInProgress() { UserName = readableName, hmsWireId = wireId, RecCreatedDt = DateTime.Now });
+                context.hmsActionInProgresses.RemoveRange(allWires);
                 context.SaveChanges();
-
-                if (!allUsers.Contains(readableName))
-                    return allUsers;
-
-                //same user name should not appear on his item
-                allUsers.Remove(readableName);
-                return allUsers;
             }
+
+            context.hmsActionInProgresses.Add(new hmsActionInProgress() { UserName = readableName, hmsWireId = wireId, RecCreatedDt = DateTime.Now });
+            context.SaveChanges();
+
+            if (!allUsers.Contains(readableName))
+                return allUsers;
+
+            //same user name should not appear on his item
+            allUsers.Remove(readableName);
+            return allUsers;
         }
 
         public void RemoveActionInProgress(long wireId)
         {
             var readableName = UserName.HumanizeEmail();
-            using (var context = new OperationsSecureContext())
-            {
-                var thisAction = context.hmsActionInProgresses.FirstOrDefault(s => s.hmsWireId == wireId && s.UserName == readableName);
+            using var context = new OperationsSecureContext();
+            var thisAction = context.hmsActionInProgresses.FirstOrDefault(s => s.hmsWireId == wireId && s.UserName == readableName);
 
-                if (thisAction == null)
-                    return;
+            if (thisAction == null)
+                return;
 
-                context.hmsActionInProgresses.Remove(thisAction);
-                context.SaveChanges();
-            }
+            context.hmsActionInProgresses.Remove(thisAction);
+            context.SaveChanges();
         }
 
         public JsonResult IsThisWireDuplicate(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId, long receivingSSITemplateId, long wireId)
@@ -499,12 +484,10 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public FileResult DownloadInvoiceWireFile(long sourceModuleId)
         {
-            using (var context = new OperationsContext())
-            {
-                var invoiceReport = context.vw_dmaInvoiceReport.First(s => s.dmaInvoiceReportId == sourceModuleId);
-                var file = GetInvoiceFileLocation(invoiceReport);
-                return DownloadFile(file, invoiceReport.FileName);
-            }
+            using var context = new OperationsContext();
+            var invoiceReport = context.vw_dmaInvoiceReport.First(s => s.dmaInvoiceReportId == sourceModuleId);
+            var file = GetInvoiceFileLocation(invoiceReport);
+            return DownloadFile(file, invoiceReport.FileName);
         }
 
         private FileInfo GetInvoiceFileLocation(vw_dmaInvoiceReport invoice)
@@ -534,15 +517,11 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public JsonResult GetAllCurrencies()
         {
-            using (var context = new OperationsSecureContext())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                //var adhocWirePurposes = context.hmsWirePurposeLkups.Where(s => s.ReportName == ReportName.AdhocWireReport && s.IsApproved).ToList();
-                //var wirePurposes = adhocWirePurposes.Select(s => new { id = s.hmsWirePurposeId, text = s.Purpose }).ToList();
-                var currencies = context.hmsCurrencies.AsNoTracking().Select(s => new { id = s.Currency, text = s.Currency }).ToList();
-                return Json(new { currencies });
-            }
+            using var context = new OperationsSecureContext();
+            context.Configuration.LazyLoadingEnabled = false;
+            context.Configuration.ProxyCreationEnabled = false;
+            var currencies = context.hmsCurrencies.AsNoTracking().Select(s => new { id = s.Currency, text = s.Currency }).ToList();
+            return Json(new { currencies });
         }
         private class AgreementBaseDetails
         {
@@ -624,7 +603,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     .Include(x => x.onBoardingSSITemplateDocuments)
                     .Include(x => x.onBoardingAccountSSITemplateMaps)
                     .Where(s => s.onBoardingAccountSSITemplateMaps.Any(s1 => s1.Status == "Approved" && s1.onBoardingAccountId == accountId))
-                    .Where(s => s.SSITemplateType == templateType)
+                    .Where(s => wireTransferTypeId == 4 ? (s.SSITemplateType == "Broker" || s.SSITemplateType == "Bank Loan/Private/IPO") : s.SSITemplateType == templateType)
                     .ToList();
 
                 shouldEnableCollateralPurpose = (wireTransferTypeId == 1 || wireTransferTypeId == 4) && context.onBoardingAccounts.Include(s => s.SwiftGroup)
@@ -634,16 +613,11 @@ namespace HM.Operations.Secure.Web.Controllers
             //remove proxies to avoid circular dependency issue
             receivingAccounts.ForEach(ssiTemplate =>
             {
-                if (ssiTemplate.Beneficiary == null)
-                    ssiTemplate.Beneficiary = new onBoardingAccountBICorABA();
-                if (ssiTemplate.Intermediary == null)
-                    ssiTemplate.Intermediary = new onBoardingAccountBICorABA();
-                if (ssiTemplate.UltimateBeneficiary == null)
-                    ssiTemplate.UltimateBeneficiary = new onBoardingAccountBICorABA();
-                if (ssiTemplate.onBoardingSSITemplateDocuments == null)
-                    ssiTemplate.onBoardingSSITemplateDocuments = new List<onBoardingSSITemplateDocument>();
-                if (ssiTemplate.onBoardingAccountSSITemplateMaps == null)
-                    ssiTemplate.onBoardingAccountSSITemplateMaps = new List<onBoardingAccountSSITemplateMap>();
+                ssiTemplate.Beneficiary ??= new onBoardingAccountBICorABA();
+                ssiTemplate.Intermediary ??= new onBoardingAccountBICorABA();
+                ssiTemplate.UltimateBeneficiary ??= new onBoardingAccountBICorABA();
+                ssiTemplate.onBoardingSSITemplateDocuments ??= new List<onBoardingSSITemplateDocument>();
+                ssiTemplate.onBoardingAccountSSITemplateMaps ??= new List<onBoardingAccountSSITemplateMap>();
 
                 //remove circular references
                 ssiTemplate.Beneficiary.onBoardingSSITemplates = ssiTemplate.Beneficiary.onBoardingSSITemplates1 = ssiTemplate.Beneficiary.onBoardingSSITemplates2 = null;

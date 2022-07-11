@@ -131,7 +131,7 @@
                     <p style="height:5px;" ng-show="wireObj.IsAdhocWire" />
                     <div class="row">
                         <div class="col-md-3">
-                            <label>Select {{wireTicketObj.IsNotice?'Receiving':'Sending'}} Account:</label>
+                            <label>Select Sending Account:</label>
                         </div>
                         <div class="col-md-3">
                             <input id="liSendingAccount" type="text" class="form-control primary-info" name="liSendingAccount" />
@@ -149,7 +149,7 @@
                         <img style="margin: 15px 0px 0px 0px;display:none" src="..\Images\spinner.gif" alt="Loading..." id="liReceivingBookAccountLoading" />
                     </div>
                     <p style="height:5px;" ng-show="wireTicketObj.IsFundTransfer" />
-                    <div class="row" ng-show="!wireTicketObj.IsFundTransfer && !wireTicketObj.IsNotice">
+                    <div class="row" ng-show="!wireTicketObj.IsFundTransfer">
                         <div class="col-md-3">
                             <label>Select Receiving Account:</label>
                         </div>
@@ -161,7 +161,7 @@
                         </div>
                         <img style="margin: 15px 0px 0px 0px;display:none" src="..\Images\spinner.gif" alt="Loading..." id="liReceivingAccountLoading" />
                     </div>
-                    <p style="height:5px;" ng-show="!wireTicketObj.IsFundTransfer && !wireTicketObj.IsNotice" />
+                    <p style="height:5px;" ng-show="!wireTicketObj.IsFundTransfer" />
                 </div>
                 <div class="container">
                     <div class="row">
@@ -737,7 +737,7 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default ng-show-hide" id="panelSSITemplateSelector" ng-if="!wireTicketObj.IsFundTransfer && !wireTicketObj.IsNotice && WireTicket.OnboardSSITemplateId != ''">
+                <div class="panel panel-default ng-show-hide" id="panelSSITemplateSelector" ng-if="!wireTicketObj.IsFundTransfer && WireTicket.OnboardSSITemplateId != ''">
                     <div class="panel-heading" data-toggle="collapse" data-target="#ssiTemplateDetailDiv" ng-click="collapseContainer('SSITemplate')" aria-expanded="false" aria-controls="ssiTemplateDetailDiv">
                         <span class=""> Receiving Account Details</span>&nbsp;&nbsp;<span class="label label-primary prewrap">
                             {{  (ssiTemplate.FFCNumber != undefined && ssiTemplate.FFCNumber.trim() != '' ? ssiTemplate.FFCNumber: ssiTemplate.UltimateBeneficiaryAccountNumber) + " - " + ssiTemplate.TemplateName }}
