@@ -547,11 +547,6 @@ function getDateAndTimeForDisplay(dateTime) {
     return momentDate.format("lll");
 }
 
-function validateEmailAddress(mailIds) {
-    var emailAddressRegEx = new RegExp(/^([\w+-.%]+(?:@hedgemark|@bnymellon)\.[A-Za-z]{2,4},*[\W]*)+$/);
-    return emailAddressRegEx.test(mailIds);
-}
-
 function placeCaretAtEnd(el) {
     el = el.get(0);
     el.focus();

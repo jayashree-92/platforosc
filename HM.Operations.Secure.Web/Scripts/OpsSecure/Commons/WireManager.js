@@ -25,6 +25,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.canSave = false;
         $scope.initializeControls();
         $scope.fnResetDeadlineTimer();
+        $scope.IsWireCancellationRequested = false;
     }
 
     $scope.promise = null;
@@ -211,9 +212,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $("#wireSwiftMessagesDiv").collapse("show");
 
             $timeout(function () {
-                $scope.fnShowFormattedSwiftMsg(null,
-                    "Outbound",
-                    $scope.wireTicketObj.SwiftMessages["Outbound"]);
+                $scope.fnShowFormattedSwiftMsg(null, "Outbound", $scope.wireTicketObj.SwiftMessages["Outbound"]);
             }, 10);
             $scope.isSwiftMessagesCollapsed = false;
             return;
@@ -236,19 +235,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $event.stopPropagation();
         }
 
-        //if ($scope.SwiftFormatMessageActiveTag == key) {
-        //    return;
-
-        //    //$("#wireSwiftMessagesDiv").collapse("hide");
-        //    //$scope.SwiftFormatMessageActiveTag = "";
-        //    //$scope.isSwiftMessagesCollapsed = true;
-        //}
-
         $("#wireSwiftMessagesDiv").collapse("show");
         $scope.SwiftFormatMessageActiveTag = key;
         $scope.isSwiftMessagesCollapsed = false;
 
-        //$scope.SwiftFormatMessageActiveTag = key;
         $scope.TrustedSwiftFINMessage = $sce.trustAsHtml(value.OriginalFinMsg);
         $scope.TrustedSwiftMessage = $sce.trustAsHtml(value.FormatedMsg);
     }
@@ -471,8 +461,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         fnFocusInCallback: function () {
             if ($(this).text() == "0")
                 $(this).html("");
-        },
-        fnFocusOutCallback: function () {
+        }, fnFocusOutCallback: function () {
             $scope.WireTicket.Amount = Math.abs($.convertToNumber($(this).text(), true));
             $(this).html($.convertToCurrency($scope.WireTicket.Amount, 2));
             angular.element("#liMessageType").trigger("change");
@@ -550,6 +539,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.DuplicateWireCreatedAcknowledgedNotes = "";
     $scope.DeadlineCrossedAcknowledgedNotes = "";
     $scope.WireAmountModifiedAcknowledgedNotes = "";
+    $scope.AckWireCancellationRequestNotes = "";
 
     $scope.fnGetFormattedAckNotes = function (message) {
         return "<br/><i class='glyphicon glyphicon-ok'></i><span class='small'>&nbsp;&nbsp;" + message + "</span>";;
@@ -569,6 +559,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         if ($scope.WireAmountModifiedAcknowledgedNotes !== "")
             allNotes += $scope.WireAmountModifiedAcknowledgedNotes;
 
+        if ($scope.AckWireCancellationRequestNotes !== "")
+            allNotes += $scope.AckWireCancellationRequestNotes;
+
         return allNotes;
     }
 
@@ -586,13 +579,21 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
     });
 
+    $("body").on("change", "#chkAckWireCancelled", function () {
+        if ($("#chkAckWireCancelled").prop("checked")) {
+            $scope.AckWireCancellationRequestNotes = $scope.fnGetFormattedAckNotes("Acknowledged that I have checked with Counterparty that this wire is not debited");
+        } else {
+            $scope.AckWireCancellationRequestNotes = "";
+        }
+    });
+
+
     $("body").on("change", "#chkWireAmountChanged", function () {
         if ($("#chkWireAmountChanged").prop("checked")) {
             $scope.WireAmountModifiedAcknowledgedNotes = $scope.fnGetFormattedAckNotes("Acknowledged that the Amount Populated by the system is changed from " + $scope.OriginalSystemAmount + " to " + $scope.ModifiedWireAmount + ".");
         } else {
             $scope.WireAmountModifiedAcknowledgedNotes = "";
         }
-        //$scope.$apply();
     });
 
 
@@ -617,6 +618,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $("#chkDeadlineCrossed").prop("checked", false).trigger("change");
         $("#chkCashBalOff").prop("checked", false).trigger("change");
         $("#chkWireAmountChanged").prop("checked", false).trigger("change");
+        $("#chkAckWireCancelled").prop("checked", false).trigger("change");
     }
 
     $scope.fnIsAllConditionsAcknowledged = function () {
@@ -720,12 +722,20 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
     $scope.fnShowErrorMessage = function (message) {
         $scope.validationMsg = message;
-        $("#wireErrorStatus").collapse("show");
+
+        if ($scope.IsWireCancellationRequested)
+            $("#wireCancellationStatus").collapse("show");
+        else
+            $("#wireErrorStatus").collapse("show");
+
     }
 
     $scope.fnHideErrorMessage = function () {
-        $("#wireErrorStatus").collapse("hide");
         $scope.validationMsg = "";
+        if ($scope.IsWireCancellationRequested)
+            $("#wireCancellationStatus").collapse("hide");
+        else
+            $("#wireErrorStatus").collapse("hide");
     }
 
     $scope.fnCheckIfThisWireIsDuplicate = function () {
@@ -765,7 +775,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.WireTicket.OnBoardSSITemplateId = angular.copy($scope.ssiTemplate.onBoardingSSITemplateId);
             $scope.WireTicket.ReceivingOnBoardAccountId = $scope.wireTicketObj.IsFundTransfer ? angular.copy($scope.receivingAccountDetail.onBoardingAccountId) : 0;
         }
-        //$scope.WireTicket.OnBoardAgreementId = !$scope.wireTicketObj.IsFundTransfer && $scope.wireObj.IsAdhocWire ? $("#liAgreement").select2('val') : angular.copy($scope.wireObj.AgreementId);
+
         $scope.WireTicket.WireMessageTypeId = angular.element("#liMessageType").select2("val");
         $scope.WireTicket.DeliveryCharges = $scope.WireTicket.WireMessageTypeId == "1" ? angular.element("#liDeliveryCharges").select2("val") : null;
         if ($scope.wireTicketObj.IsSenderInformationRequired) {
@@ -862,8 +872,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
         angular.element("button").button("reset");
         angular.element("#cancelWire").popover("hide");
-        $("#wireErrorStatus").collapse("hide");
-        //   angular.element("#liWireTransferType").select2("val", 1).trigger("change");
+        $("#wireErrorStatus,#wireCancellationStatus").collapse("hide");
         $timeout(function () {
             $scope.fnResetAcknowledgementAllToggle();
             $scope.WireTicket = {};
@@ -877,7 +886,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         $scope.fnBindValuesBeforeUpdate();
 
         if (!$scope.fnIsValidWireData(statusId)) {
-            $("#wireErrorStatus").collapse("show").pulse({ times: 3 });
+            $("#wireErrorStatus,#wireCancellationStatus").collapse("show").pulse({ times: 3 });
             return;
         }
 
@@ -940,31 +949,25 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     $scope.confirmCancellation = function () {
-        angular.element("#cancelWire").popover("destroy").popover({
-            trigger: "click",
-            title: "Are you sure to " + ($scope.WireTicket.SwiftStatusId == 1 ? "reject" : "cancel") + " this wire?",
-            placement: "top",
-            container: "body",
-            content: function () {
-                return "<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
-                    + "<button class=\"btn btn-sm btn-success confirmCancellation\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
-                    + "<button class=\"btn btn-sm btn-default dismissCancellation\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
-                    + "</div>";
-            },
-            html: true
-        }).popover("show");
-        $(".popover-content").html("<div class=\"btn-group pull-right\" style='margin-bottom:7px;'>"
-            + "<button class=\"btn btn-sm btn-success confirmCancellation\"><i class=\"glyphicon glyphicon-ok\"></i></button>"
-            + "<button class=\"btn btn-sm btn-default dismissCancellation\"><i class=\"glyphicon glyphicon-remove\"></i></button>"
-            + "</div>");
+
+        $scope.IsWireCancellationRequested = $scope.WireTicket.SwiftStatusId > 1;
+
+        if ($scope.IsWireCancellationRequested && !$("#chkAckWireCancelled").prop("checked")) {
+            $scope.fnShowErrorMessage();
+            return false;
+        }
+
+        $("#cancelWire").popover("show");
     }
 
     $(document).on("click", ".confirmCancellation", function () {
         angular.element("#cancelWire").popover("hide");
+        $scope.fnHideErrorMessage();
         $scope.fnUpdateWireWithStatus(4);
 
     });
     $(document).on("click", ".dismissCancellation", function () {
+        $scope.fnHideErrorMessage();
         angular.element("#cancelWire").popover("hide");
     });
 

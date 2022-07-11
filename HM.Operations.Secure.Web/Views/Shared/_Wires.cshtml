@@ -25,7 +25,7 @@
                 <span class="pull-right" style="padding: 5px; position: absolute; margin:6px 0px 0px -32px">
                     <button title="close this log" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </span>
-                <div class="collapse container-fluid" id="wireCurrentlyViewedBy">
+                <div class="collapse" id="wireCurrentlyViewedBy">
                     <div class="panel panel-warning panel-body" style="background: #f9f4cd;padding: 10px;">
                         <span><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;This wire is currently also being viewed by <i style="font-weight: bold">{{currentlyViewedBy}}</i>.</span>
                     </div>
@@ -1040,6 +1040,12 @@
                             &nbsp;<span><b>I acknowledge that the Amount Populated by the system is changed from {{OriginalSystemAmount}} to {{ModifiedWireAmount}} and Still wish to Initiate this Wire.</b></span>
                         </div>
                     </div>
+                    <div class="panel panel-heading collapse wireError" id="wireCancellationStatus" data-toggle="collapse" style="background: #F5F5F5; text-transform: inherit; font-size: 13px; padding: 0px;">
+                        <div id="wireCancellationRequestedDiv" ng-show="IsWireCancellationRequested">
+                            <input id="chkAckWireCancelled" type="checkbox" data-size="small" data-width="60" data-height="30" data-onstyle="btn btn-sm btn-success" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on="Yes" data-off="No" />
+                            &nbsp;<span><b>I acknowledge that I have checked with Counterparty that this wire is not debited.</b></span>
+                        </div>
+                    </div>
                     <textarea type="text" placeholder="Enter Comments" id="wireComment" ng-model="wireComments" class="form-control" rows="2" style="width: 50%; float: left;"></textarea>
                     <button id="draftWire" type="button" class="btn btn-sm btn-warning ng-show-only" title="Save"
                             ng-if="WireTicketStatus.IsDraftEnabled" ng-click="fnUpdateWireWithStatus(1)"
@@ -1058,7 +1064,11 @@
                     <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-if="WireTicketStatus.IsAuthorizedUserToApprove" ng-disabled="!IsWireAmountWithInAllowedLimit" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align: -webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
                         <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
                     </button>
-                    <button id="cancelWire" type="button" class="btn btn-sm btn-danger ng-show-only" ng-if="WireTicketStatus.IsCancelEnabled" ng-click="confirmCancellation()" style="vertical-align: -webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ getCancelButtonText(true) }}...</span>">
+                    <button id="cancelWire" type="button"
+                            data-container="body" data-toggle="popover" data-placement="top" data-html="true"
+                            data-title="Are you sure to {{WireTicket.SwiftStatusId == 1 ? 'reject' : 'cancel'}} this wire?"
+                            data-content="<span  class='btn-group'><a class='btn btn-sm btn-success confirmCancellation'><i class='glyphicon glyphicon-ok'></i></a><a class='btn btn-sm btn-default dismissCancellation'><i class='glyphicon glyphicon-remove'></i></a></span>"
+                            class="btn btn-sm btn-danger ng-show-only" ng-if="WireTicketStatus.IsCancelEnabled" ng-click="confirmCancellation()" style="vertical-align: -webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>{{ getCancelButtonText(true) }}...</span>">
                         <i class="glyphicon glyphicon-remove"></i>&nbsp;{{ getCancelButtonText(false) }}
                     </button>
                 }
