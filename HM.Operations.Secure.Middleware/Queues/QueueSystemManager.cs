@@ -81,7 +81,7 @@ namespace HM.Operations.Secure.Middleware.Queues
 
             new TaskFactory().StartNew(() =>
             {
-                Task.Delay(1000 * 3);
+                Task.Delay(1000 * 2);
 
                 //Look out for FEACK or ACK
                 GetAndProcessAcknowledgement();

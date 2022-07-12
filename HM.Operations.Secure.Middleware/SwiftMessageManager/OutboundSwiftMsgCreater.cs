@@ -17,8 +17,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
     public class OutboundSwiftMsgCreator
     {
         protected static readonly string HMBIC = ConfigurationManagerWrapper.StringSetting("HMBIC", "HMRKUS30");
-        protected static readonly string HMBICSender =
-            $"{HMBIC}{ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX")}";
+        protected static readonly string HMBICSender = $"{HMBIC}{ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX")}";
         public static AbstractMT CreateMessage(WireTicket wire, string messageType, string originalMessageType, string referenceTag = "")
         {
             switch (messageType)
@@ -64,8 +63,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         private static Field20 GetField20(WireTicket wire, string referenceTag = "")
         {
             var transactionId = WireDataManager.GetWireTransactionId(wire.WireId);
-            return new Field20(
-                $"{transactionId}{(string.IsNullOrWhiteSpace(referenceTag) ? string.Empty : "/")}{referenceTag}");
+            return new Field20($"{transactionId}{(string.IsNullOrWhiteSpace(referenceTag) ? string.Empty : "/")}{referenceTag}");
         }
 
         private static Field21 GetField21ForCancellation(WireTicket wire)

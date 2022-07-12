@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT;
+using HedgeMark.SwiftMessageHandler.Model.MT.MT1XX;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware.Models;
 using HM.Operations.Secure.Middleware.Queues;
@@ -121,8 +122,7 @@ namespace HM.Operations.Secure.Middleware
                 var originalMessageType = wire.HMWire.hmsWireMessageType.MessageType.Replace("MT", string.Empty);
 
                 //For cancellation of a processing wire, we will send a different message Type
-                var cancelMsgTypeStr =
-                    $"MT{(originalMessageType.StartsWith("1") ? MTDirectory.MT_192 : MTDirectory.MT_292)}";
+                var cancelMsgTypeStr = $"MT{(originalMessageType.StartsWith("1") ? MTDirectory.MT_192 : MTDirectory.MT_292)}";
 
                 hmsWireMessageType cancellationMessageType;
                 using (var context = new OperationsSecureContext())
@@ -145,26 +145,21 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
+        public const string MT103 = "MT103";
+        public const string MT202COV = "MT202 COV";
+        public const string MT210 = "MT210";
+
         private static void CreateAndSendMessageToMQ(WireTicket wire, hmsWireMessageType messageType, hmsWireMessageType originalMessageType, long workflowLogId)
         {
             AbstractMT swiftMessage103 = null;
-            var is202Cov = messageType.MessageType.Equals("MT202 COV") || messageType.MessageType.Equals("MT202COV");
+            var is202Cov = messageType.MessageType.Equals(MT202COV) || messageType.MessageType.Equals("MT202COV");
 
             if (is202Cov)
             {
-                hmsWireMessageType mt103MessageType;
-                using (var context = new OperationsSecureContext())
-                {
-                    mt103MessageType = context.hmsWireMessageTypes.First(s => s.MessageType == "MT103");
-                }
-
+                var mt103MessageType = GetMessageType(MT103);
                 //We need to create an MT 103 and use TransactionRef of 103 as Related Ref of MT 202 COV
-                swiftMessage103 = OutboundSwiftMsgCreator.CreateMessage(wire, "MT103", string.Empty, "COV");
-
-                //This has to be sent-out first
-                QueueSystemManager.SendMessage(swiftMessage103.GetMessage());
-
-                LogOutBoundWireTransaction(wire, mt103MessageType, swiftMessage103.GetMessage(), workflowLogId);
+                swiftMessage103 = OutboundSwiftMsgCreator.CreateMessage(wire, MT103, string.Empty, "COV");
+                SendAndLogWireTransaction(wire, mt103MessageType, workflowLogId, swiftMessage103);
             }
 
             //Create Swift message
@@ -176,14 +171,33 @@ namespace HM.Operations.Secure.Middleware
                 swiftMessage.updateFieldValue(FieldDirectory.FIELD_21, swiftMessage103.Block4.GetFieldValue(FieldDirectory.FIELD_20));
             }
 
+            SendAndLogWireTransaction(wire, messageType, workflowLogId, swiftMessage);
+
+            if (wire.IsFundTransfer)
+            {
+                var mt210MessageType = GetMessageType(MT210);
+                var swiftMessage210 = OutboundSwiftMsgCreator.CreateMessage(wire, MT210, string.Empty, string.Empty);
+                swiftMessage210.updateFieldValue(FieldDirectory.FIELD_21, swiftMessage.Block4.GetFieldValue(FieldDirectory.FIELD_20));
+                SendAndLogWireTransaction(wire, mt210MessageType, workflowLogId, swiftMessage210);
+            }
+        }
+
+        private static hmsWireMessageType GetMessageType(string MTMessageType)
+        {
+            using var context = new OperationsSecureContext();
+            return context.hmsWireMessageTypes.First(s => s.MessageType == MTMessageType);
+        }
+
+        private static void SendAndLogWireTransaction(WireTicket wire, hmsWireMessageType messageType, long workflowLogId, AbstractMT swiftMessage)
+        {
             //Validate Error Message 
             //SwiftMessageValidator.Validate(swiftMessage);
 
-            //Put an entry to Wire Log table with the parameters used to create Swift Message
-            LogOutBoundWireTransaction(wire, messageType, swiftMessage.GetMessage(), workflowLogId);
-
             //Send the message to MQ
             QueueSystemManager.SendMessage(swiftMessage.GetMessage());
+
+            //Put an entry to Wire Log table with the parameters used to create Swift Message
+            LogOutBoundWireTransaction(wire, messageType, swiftMessage.GetMessage(), workflowLogId);
         }
 
         public static void ProcessInboundMessage(string swiftMessage)
@@ -198,15 +212,14 @@ namespace HM.Operations.Secure.Middleware
             if (confirmationData.ReferenceTag == "COV")
                 return;
 
-            //Ignore messges from the ignore list Eg. MT 094 - Broadcast messages
+            //Ignore messages from the ignore list Eg. MT 094 - Broadcast messages
             if (InboundSwiftMsgParser.MTMessageTypesToIgnore.Any(s => s.Equals(confirmationData.SwiftMessage.GetMTType())))
                 return;
 
             var isCancellationMessage = confirmationData.MessageType.EndsWith("192") || confirmationData.MessageType.EndsWith("292");
             var wireTicket = WireDataManager.GetWire(confirmationData.WireId);
             if (wireTicket == null)
-                throw new UnhandledWireMessageException(
-                    $"Unknown Transaction - unable to wire with id {confirmationData.WireId}");
+                throw new UnhandledWireMessageException($"Unknown Transaction - unable to wire with id {confirmationData.WireId}");
 
             hmsWireWorkflowLog workflowLog = null;
             if (confirmationData.IsAckOrNack && confirmationData.IsAcknowledged)
@@ -220,8 +233,7 @@ namespace HM.Operations.Secure.Middleware
                 workflowLog = WireDataManager.SetWireStatusAndWorkFlow(wireTicket, isCancellationMessage ? WireDataManager.WireStatus.Cancelled : WireDataManager.WireStatus.Approved, WireDataManager.SwiftStatus.Completed, confirmationData.ConfirmationMessage, -1);
 
             else if (!string.IsNullOrWhiteSpace(confirmationData.ExceptionMessage))
-                workflowLog = WireDataManager.SetWireStatusAndWorkFlow(wireTicket, isCancellationMessage ? WireDataManager.WireStatus.Cancelled : WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.Failed,
-                    $"Wire Transaction Failed with error: {confirmationData.ExceptionMessage}", -1);
+                workflowLog = WireDataManager.SetWireStatusAndWorkFlow(wireTicket, isCancellationMessage ? WireDataManager.WireStatus.Cancelled : WireDataManager.WireStatus.Failed, WireDataManager.SwiftStatus.Failed, $"Wire Transaction Failed with error: {confirmationData.ExceptionMessage}", -1);
 
             //Put an entry to Wire Log table with the parameters used to create Swift Message
             LogInBoundWireTransaction(confirmationData, workflowLog.hmsWireWorkflowLogId);
