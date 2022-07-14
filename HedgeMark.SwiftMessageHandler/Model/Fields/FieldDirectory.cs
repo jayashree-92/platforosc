@@ -160,9 +160,14 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         public const string FIELD_32B = "32B";
 
         /// <summary>
-        /// "Ordering Customer"
+        /// "Ordering Institution"
         /// </summary>
-        public const string FIELD_50A = "50A";
+        public const string FIELD_50C = "50C";
+
+        /// <summary>
+        /// "Ordering Institution"
+        /// </summary>
+        public const string FIELD_50F = "50F";
 
         /// <summary>
         /// "Ordering Customer"
@@ -370,7 +375,8 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
             {FIELD_35B ,"Identification of the Financial Instrument"},
             {FIELD_36B ,"Quantity of Financial Instrument"},
 
-            {FIELD_50A ,"Ordering Customer"},
+            {FIELD_50C ,"Ordering Institution"},
+            {FIELD_50F ,"Ordering Institution"},
             {FIELD_50K ,"Ordering Customer"},
             {FIELD_52A ,"Ordering Institution"},
             {FIELD_52D ,"Ordering Institution"},

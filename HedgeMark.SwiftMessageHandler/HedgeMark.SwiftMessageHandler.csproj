@@ -101,8 +101,9 @@
     <Compile Include="Model\Fields\Field36B.cs" />
     <Compile Include="Model\Fields\Field405.cs" />
     <Compile Include="Model\Fields\Field451.cs" />
-    <Compile Include="Model\Fields\Field50A.cs" />
+    <Compile Include="Model\Fields\Field50C.cs" />
     <Compile Include="Model\Fields\Field50K.cs" />
+    <Compile Include="Model\Fields\Field50F.cs" />
     <Compile Include="Model\Fields\Field53B.cs" />
     <Compile Include="Model\Fields\Field54A.cs" />
     <Compile Include="Model\Fields\Field53A.cs" />

@@ -1104,7 +1104,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             });
             angular.element("#liSendingAccount").select2("destroy").val("");
             angular.element("#liSendingAccount").select2({
-                placeholder: "Select Sending Account",
+                placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                 data: [],
                 allowClear: true,
                 closeOnSelect: false,
@@ -1124,7 +1124,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
             angular.element("#liReceivingAccount").select2("destroy").val("");
             angular.element("#liReceivingAccount").select2({
-                placeholder: "Select Receiving Account",
+                placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Sending" : "Receiving") + " Account",
                 data: [],
                 allowClear: true,
                 closeOnSelect: false
@@ -1148,7 +1148,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         else if ($scope.WireTicket.hmsWireId == 0) {
             angular.element("#liSendingAccount").select2("destroy").val("");
             angular.element("#liSendingAccount").select2({
-                placeholder: "Select Sending Account",
+                placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                 data: $scope.sendingAccountsList,
                 formatSelection: formatAccountList,
                 formatResult: formatAccountList,
@@ -1164,7 +1164,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 angular.element("#liWireTransferType").select2("val", $scope.WireTicket.WireTransferTypeId).trigger("change");
                 angular.element("#liSendingAccount").select2("destroy").val("");
                 angular.element("#liSendingAccount").select2({
-                    placeholder: "Select Sending Account",
+                    placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                     data: $scope.sendingAccountsList,
                     allowClear: true,
                     closeOnSelect: false,
@@ -1460,7 +1460,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $("#liSendingAccountLoading").show();
                 $scope.sendingAccountsList = $filter("filter")(angular.copy($scope.sendingAccountsListOfFund), { 'Currency': $("#liCurrency").select2("val") }, true);
                 angular.element("#liSendingAccount").select2({
-                    placeholder: "Select Sending Account",
+                    placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Receiving" : "Sending") + " Account",
                     data: $scope.sendingAccountsList,
                     allowClear: true,
                     closeOnSelect: false,
@@ -1508,7 +1508,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                             $scope.counterParties = response.data.counterparties;
                             angular.element("#liReceivingAccount").select2("destroy");
                             angular.element("#liReceivingAccount").select2({
-                                placeholder: "Select Receiving Account",
+                                placeholder: "Select " + ($scope.wireTicketObj.IsNotice ? "Sending" : "Receiving") + " Account",
                                 data: $scope.receivingAccountList,
                                 allowClear: true,
                                 closeOnSelect: false
@@ -1826,34 +1826,35 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $("#wireValueDate").datepicker("setStartDate", "+0d");
 
             $("#liCurrency").select2("val", "").trigger("change");
-            $("#liAgreement").select2("val", "").trigger("change");
-            $("#liSendingAccount").select2("val", "").trigger("change");
             $("#liCurrency").select2("disable");
+
+            $("#liAgreement").select2("val", "").trigger("change");
+
+            $("#liSendingAccount").select2("val", "").trigger("change");
             $("#liSendingAccount").select2("disable");
+            $("#liSendingAccount").attr("data-placeholder", `Select ${$scope.wireTicketObj.IsNotice ? "Receiving" : "Sending"} Account`);
+            
             if ($scope.WireTicket.WireStatusId <= 1) {
                 $("#wireAmount").text("0");
                 $("#wireSenderDescription").val("");
             }
 
-            if ($scope.wireTicketObj.IsFundTransfer)
+            if ($scope.wireTicketObj.IsFundTransfer) {
+                $("#liReceivingBookAccount").select2("val", "").trigger("change");
                 $("#liReceivingBookAccount").select2("disable");
-            else
+            }
+            else {
+                $("#liReceivingAccount").select2("val", "").trigger("change");
                 $("#liReceivingAccount").select2("disable");
-
-            $timeout(function () {
-                $("#s2id_liSendingAccount .select2-chosen").html("Select Sending Account");
-            }, 501);
-
-
-
-            $("#liReceivingBookAccount").select2("val", "").trigger("change");
-            $("#liReceivingAccount").select2("val", "").trigger("change");
-
+                $("#liReceivingAccount").attr("data-placeholder", `Select ${$scope.wireTicketObj.IsNotice ? "Sending" : "Receiving"} Account`);
+            }
+            
             //*** NOTE: For a Fund Transfer "MT202 COV" is not qualified  - hence restricting only to MT103 and MT202 *****/
             if ($scope.wireTicketObj.IsFundTransfer)
                 $scope.QualifiedMessageTypes = $filter("filter")($scope.MessageTypes, function (message) { return (message.text == "MT103" || message.text == "MT202") }, true);
             else
                 $scope.QualifiedMessageTypes = angular.copy($scope.MessageTypes);
+
             angular.element("#liMessageType").select2({
                 placeholder: "Select Message Type",
                 data: $scope.QualifiedMessageTypes,

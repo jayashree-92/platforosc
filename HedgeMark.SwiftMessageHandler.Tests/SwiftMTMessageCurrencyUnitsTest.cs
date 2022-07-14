@@ -29,7 +29,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
                     .setAmount((decimal)1234567.89);
                 m.addField(f32A);
 
-                Field50A f50A = new Field50A()
+                Field50C f50A = new Field50C()
                     .setAccount("12345678901234567890")
                     .setBIC("FOOBANKXXXXX");
                 m.addField(f50A);

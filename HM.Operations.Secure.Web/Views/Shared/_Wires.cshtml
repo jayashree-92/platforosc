@@ -61,7 +61,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-3">
-                            <label>Sending Account:</label>
+                            <label>{{wireTicketObj.IsNotice?'Receiving':'Sending'}} Account:</label>
                         </div>
                         <div class="col-md-3" ng-show="!WireTicketStatus.IsEditEnabled || !WireTicketStatus.IsWirePurposeAdhoc">
                             <input type="text" class="form-control primary-info" ng-model="accountDetail.AccountName" readonly />
@@ -72,9 +72,9 @@
                     </div>
                     <p ng-show="!WireTicketStatus.IsEditEnabled" />
                     <p style="height:5px;" ng-show="WireTicketStatus.IsEditEnabled" />
-                    <div class="row" ng-if="!wireTicketObj.IsNotice">
+                    <div class="row">
                         <div class="col-md-3">
-                            <label>Receiving Account:</label>
+                            <label>{{wireTicketObj.IsNotice?'Sending':'Receiving'}} Account:</label>
                         </div>
                         <div class="col-md-3" ng-show="!(WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled)">
                             <input type="text" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
@@ -131,7 +131,7 @@
                     <p style="height:5px;" ng-show="wireObj.IsAdhocWire" />
                     <div class="row">
                         <div class="col-md-3">
-                            <label>Select Sending Account:</label>
+                            <label>Select {{wireTicketObj.IsNotice?'Receiving':'Sending'}} Account:</label>
                         </div>
                         <div class="col-md-3">
                             <input id="liSendingAccount" type="text" class="form-control primary-info" name="liSendingAccount" />
@@ -151,7 +151,7 @@
                     <p style="height:5px;" ng-show="wireTicketObj.IsFundTransfer" />
                     <div class="row" ng-show="!wireTicketObj.IsFundTransfer">
                         <div class="col-md-3">
-                            <label>Select Receiving Account:</label>
+                            <label>Select {{wireTicketObj.IsNotice?'Sending':'Receiving'}} Account:</label>
                         </div>
                         <div class="col-md-3" ng-show="wireObj.IsAdhocWire">
                             <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" />

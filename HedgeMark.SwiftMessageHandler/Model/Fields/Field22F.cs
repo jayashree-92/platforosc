@@ -52,11 +52,12 @@ namespace HedgeMark.SwiftMessageHandler.Model.Fields
         }
 
 
-        public override List<string> Components =>
-            new List<string>()
-            {
-                FieldConstants.QUALIFIER,FieldConstants.DATA_SOURCE,FieldConstants.INDICATOR
-            };
+        public override List<string> Components => new()
+        {
+            FieldConstants.QUALIFIER,
+            FieldConstants.DATA_SOURCE,
+            FieldConstants.INDICATOR
+        };
 
         public override string GetComponentValue(string component)
         {
