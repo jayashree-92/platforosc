@@ -322,11 +322,11 @@ namespace HM.Operations.Secure.Web.Controllers
             foreach (var clearingBroker in clearingBrokers)
             {
                 var fundAccount = allFundAccounts.FirstOrDefault(s => s.Account.onBoardingAccountId == clearingBroker.ClearingBroker.onBoardingAccountId);
-                clearingBroker.AgreementName = fundAccount.AgreementName;
-                clearingBroker.AccountNumber = fundAccount.AccountNumber;
-                clearingBroker.CounterpartyName = fundAccount.CounterpartyName;
-                clearingBroker.ClientName = fundAccount.ClientName;
-                clearingBroker.AccountName = fundAccount.AccountNumber;
+                clearingBroker.AgreementName = fundAccount?.AgreementName;
+                clearingBroker.AccountNumber = fundAccount?.AccountNumber;
+                clearingBroker.CounterpartyName = fundAccount?.CounterpartyName;
+                clearingBroker.ClientName = fundAccount?.ClientName;
+                clearingBroker.AccountName = fundAccount?.AccountNumber;
             }
             return Json(new
             {
