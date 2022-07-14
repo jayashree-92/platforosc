@@ -29,10 +29,10 @@ namespace HedgeMark.SwiftMessageHandler.Tests
                     .setAmount((decimal)1234567.89);
                 m.addField(f32A);
 
-                Field50C f50A = new Field50C()
+                Field50C f50C = new Field50C()
                     .setAccount("12345678901234567890")
                     .setBIC("FOOBANKXXXXX");
-                m.addField(f50A);
+                m.addField(f50C);
 
                 Field59 f59 = new Field59()
                     .setAccount("12345678901234567890")
@@ -45,23 +45,23 @@ namespace HedgeMark.SwiftMessageHandler.Tests
 
                 var finalMessage = m.GetMessage();
 
-                var expectedAmount = string.Format("190228{0}1234567", currencyToDecimalPoint.Key);
+                var expectedAmount = $"190228{currencyToDecimalPoint.Key}1234567";
 
                 if (currencyToDecimalPoint.Value == 0)
-                    expectedAmount = string.Format("{0},", expectedAmount);
+                    expectedAmount = $"{expectedAmount},";
                 if (currencyToDecimalPoint.Value == 1)
-                    expectedAmount = string.Format("{0},8", expectedAmount);
+                    expectedAmount = $"{expectedAmount},8";
                 if (currencyToDecimalPoint.Value == 2)
-                    expectedAmount = string.Format("{0},89", expectedAmount);
+                    expectedAmount = $"{expectedAmount},89";
                 if (currencyToDecimalPoint.Value == 3)
-                    expectedAmount = string.Format("{0},890", expectedAmount);
+                    expectedAmount = $"{expectedAmount},890";
                 if (currencyToDecimalPoint.Value == 4)
-                    expectedAmount = string.Format("{0},8900", expectedAmount);
+                    expectedAmount = $"{expectedAmount},8900";
                 if (currencyToDecimalPoint.Value == 5)
-                    expectedAmount = string.Format("{0},89000", expectedAmount);
+                    expectedAmount = $"{expectedAmount},89000";
 
 
-                Assert.AreEqual(finalMessage, "{1:F01FOOSEDR0AXXX" + m.Block1.GetSessionNo() + m.Block1.GetSequenceNo() + "}{2:I103FOORECV0XXXXN}{3:{121:guid-123-guid}}{4:\r\n:20:REFERENCE\r\n:23B:CRED\r\n:32A:" + expectedAmount + "\r\n:50A:/12345678901234567890\r\nFOOBANKXXXXX\r\n:59:/12345678901234567890\r\nJOE DOE\r\n:71A:OUR\r\n-}");
+                Assert.AreEqual(finalMessage, "{1:F01FOOSEDR0AXXX" + m.Block1.GetSessionNo() + m.Block1.GetSequenceNo() + "}{2:I103FOORECV0XXXXN}{3:{121:guid-123-guid}}{4:\r\n:20:REFERENCE\r\n:23B:CRED\r\n:32A:" + expectedAmount + "\r\n:50C:/12345678901234567890\r\nFOOBANKXXXXX\r\n:59:/12345678901234567890\r\nJOE DOE\r\n:71A:OUR\r\n-}");
             }
 
         }

@@ -26,10 +26,10 @@ namespace HedgeMark.SwiftMessageHandler.Tests
                 .setAmount((decimal)1234567.89);
             m.addField(f32A);
 
-            Field50C f50A = new Field50C()
+            Field50C f50C = new Field50C()
                 .setAccount("12345678901234567890")
                 .setBIC("FOOBANKXXXXX");
-            m.addField(f50A);
+            m.addField(f50C);
 
             Field59 f59 = new Field59()
                 .setAccount("12345678901234567890")
@@ -42,7 +42,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
 
             var finalMessage = m.GetMessage();
 
-            Assert.AreEqual(finalMessage, "{1:F01FOOSEDR0AXXX" + m.Block1.GetSessionNo() + m.Block1.GetSequenceNo() + "}{2:I103FOORECV0XXXXN}{3:{121:guid-123-guid}}{4:\r\n:20:REFERENCE\r\n:23B:CRED\r\n:32A:190228EUR1234567,89\r\n:50A:/12345678901234567890\r\nFOOBANKXXXXX\r\n:59:/12345678901234567890\r\nJOE DOE\r\n:71A:OUR\r\n-}");
+            Assert.AreEqual(finalMessage, "{1:F01FOOSEDR0AXXX" + m.Block1.GetSessionNo() + m.Block1.GetSequenceNo() + "}{2:I103FOORECV0XXXXN}{3:{121:guid-123-guid}}{4:\r\n:20:REFERENCE\r\n:23B:CRED\r\n:32A:190228EUR1234567,89\r\n:50C:/12345678901234567890\r\nFOOBANKXXXXX\r\n:59:/12345678901234567890\r\nJOE DOE\r\n:71A:OUR\r\n-}");
         }
 
         //HedgeMark Swift framework currently will not support construction using sequence
@@ -233,10 +233,10 @@ namespace HedgeMark.SwiftMessageHandler.Tests
             /*
              * Add the orderer field
              */
-            Field50C f50A = new Field50C()
+            Field50C f50C = new Field50C()
                 .setAccount("12345678901234567890")
                 .setBIC("FOOBANKXXXXX");
-            m.addField(f50A);
+            m.addField(f50C);
 
             /*
              * Add the beneficiary field
@@ -274,7 +274,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
 :20:REFERENCE
 :23B:CRED
 :32A:" + DateTime.Today.ToString("yyMMdd") + @"EUR1234567,
-:50A:/12345678901234567890
+:50C:/12345678901234567890
 FOOBANKXXXXX
 :59:/12345678901234567890
 JOE DOE

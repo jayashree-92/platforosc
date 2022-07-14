@@ -10,7 +10,7 @@ namespace HedgeMark.SwiftMessageHandler.Tests
                                               ":20:REFERENCE\n" +
                                               ":23B:CRED\n" +
                                               ":32A:180730USD1234567,89\n" +
-                                              ":50A:/12345678901234567890\n" +
+                                              ":50C:/12345678901234567890\n" +
                                               "CFIMHKH1XXX\n" +
                                               ":59:/12345678901234567890\n" +
                                               "JOE DOE\n" +
@@ -86,7 +86,7 @@ MSNYUS33XXX
         Date: Jul 30, 2018
         Currency: USD
         Amount: 1,234,567.89
-50A: Ordering Customer
+50C: Ordering Institution
         Account: 12345678901234567890
         BIC: CFIMHKH1XXX
 59:  Beneficiary Customer
@@ -122,7 +122,7 @@ MUR      : FOOB3926BE868XXX
         Date: Jul 30, 2018
         Currency: USD
         Amount: 1,234,567.89
-50A: Ordering Customer
+50C: Ordering Institution
         Account: 12345678901234567890
         BIC: CFIMHKH1XXX
 59:  Beneficiary Customer
