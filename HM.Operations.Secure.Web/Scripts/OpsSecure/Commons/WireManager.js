@@ -1744,9 +1744,14 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     }, true)[0];
                     $scope.wireTicketObj.ReceivingAccountCurrency = angular.copy($scope.ssiTemplate.Currency);
                     $scope.wireTicketObj.Counterparty = $scope.counterParties[$scope.ssiTemplate.TemplateEntityId];
-                    var wireMessageType = $filter("filter")($scope.MessageTypes, function (message) { return message.text == $scope.ssiTemplate.MessageType }, true)[0];
+
+                    var wireMessageType = $filter("filter")($scope.MessageTypes, function (message) {
+                        return message.text == $scope.wireTicketObj.IsNotice ? "MT210" : $scope.ssiTemplate.MessageType;
+                    }, true)[0];
                     angular.element("#liMessageType").select2("val", wireMessageType.id).trigger("change");
+
                     angular.element("#liDeliveryCharges").select2("val", ($scope.ssiTemplate.MessageType != "MT103" ? null : "OUR")).trigger("change");
+
                     if (!$scope.isWireLoadingInProgress && $scope.WireTicket.hmsWireId == 0)
                         $scope.fnCheckIfThisWireIsDuplicate();
                     if (!$scope.wireTicketObj.IsFundTransfer) {
@@ -1833,7 +1838,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $("#liSendingAccount").select2("val", "").trigger("change");
             $("#liSendingAccount").select2("disable");
             $("#liSendingAccount").attr("data-placeholder", `Select ${$scope.wireTicketObj.IsNotice ? "Receiving" : "Sending"} Account`);
-            
+
             if ($scope.WireTicket.WireStatusId <= 1) {
                 $("#wireAmount").text("0");
                 $("#wireSenderDescription").val("");
@@ -1848,7 +1853,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 $("#liReceivingAccount").select2("disable");
                 $("#liReceivingAccount").attr("data-placeholder", `Select ${$scope.wireTicketObj.IsNotice ? "Sending" : "Receiving"} Account`);
             }
-            
+
             //*** NOTE: For a Fund Transfer "MT202 COV" is not qualified  - hence restricting only to MT103 and MT202 *****/
             if ($scope.wireTicketObj.IsFundTransfer)
                 $scope.QualifiedMessageTypes = $filter("filter")($scope.MessageTypes, function (message) { return (message.text == "MT103" || message.text == "MT202") }, true);

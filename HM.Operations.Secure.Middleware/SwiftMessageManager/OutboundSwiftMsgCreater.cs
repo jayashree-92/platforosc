@@ -18,7 +18,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
     {
         protected static readonly string HMBIC = ConfigurationManagerWrapper.StringSetting("HMBIC", "HMRKUS30");
         protected static readonly string HMBICSender = $"{HMBIC}{ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX")}";
-        public static AbstractMT CreateMessage(WireTicket wire, string messageType, string originalMessageType, string referenceTag = "")
+        public static AbstractMT CreateMessage(WireTicket wire, string messageType, string originalMessageType, WireReferenceTag referenceTag = WireReferenceTag.NA)
         {
             switch (messageType)
             {
@@ -60,10 +60,10 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             return f11S;
         }
 
-        private static Field20 GetField20(WireTicket wire, string referenceTag = "")
+        private static Field20 GetField20(WireTicket wire, WireReferenceTag referenceTag = WireReferenceTag.NA)
         {
             var transactionId = WireDataManager.GetWireTransactionId(wire.WireId);
-            return new Field20($"{transactionId}{(string.IsNullOrWhiteSpace(referenceTag) ? string.Empty : "/")}{referenceTag}");
+            return new Field20($"{transactionId}{(referenceTag != WireReferenceTag.NA ? string.Empty : "/")}{referenceTag}");
         }
 
         private static Field21 GetField21ForCancellation(WireTicket wire)
@@ -118,7 +118,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         {
             if (!wire.IsFundTransfer && wire.SSITemplate != null
                     ? wire.SSITemplate.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiary.BICorABA)
-                    : wire.ReceivingAccount.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.UltimateBeneficiary.BICorABA))
+                    : wire.SendingAccount.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiary.BICorABA))
                 mtMessage.addField(GetField50C(wire));
             else
                 mtMessage.addField(GetField50F(wire));
@@ -129,10 +129,10 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         {
             var shouldUseSSI = !wire.IsFundTransfer && wire.SSITemplate != null;
             var f50A = new Field50C()
-                .setAccount(shouldUseSSI ? wire.SSITemplate.UltimateBeneficiaryAccountNumber : wire.ReceivingAccount.UltimateBeneficiaryAccountNumber)
+                .setAccount(shouldUseSSI ? wire.SSITemplate.UltimateBeneficiaryAccountNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setBIC(shouldUseSSI
                     ? wire.SSITemplate.UltimateBeneficiaryType == "ABA" ? string.Empty : wire.SSITemplate.UltimateBeneficiary.BICorABA
-                    : wire.ReceivingAccount.UltimateBeneficiaryType == "ABA" ? string.Empty : wire.ReceivingAccount.UltimateBeneficiary.BICorABA);
+                    : wire.SendingAccount.UltimateBeneficiaryType == "ABA" ? string.Empty : wire.SendingAccount.UltimateBeneficiary.BICorABA);
             return f50A;
         }
 
@@ -140,16 +140,16 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         private static Field50F GetField50F(WireTicket wire)
         {
             var shouldUseSSI = !wire.IsFundTransfer && wire.SSITemplate != null;
-            var ffcNumber = shouldUseSSI ? wire.SSITemplate.FFCNumber : wire.ReceivingAccount.FFCNumber;
-            var ffcName = shouldUseSSI ? wire.SSITemplate.FFCName : wire.ReceivingAccount.FFCName;
+            var ffcNumber = shouldUseSSI ? wire.SSITemplate.FFCNumber : wire.SendingAccount.FFCNumber;
+            var ffcName = shouldUseSSI ? wire.SSITemplate.FFCName : wire.SendingAccount.FFCName;
 
-            var nameAndAddress = !string.IsNullOrWhiteSpace(ffcName) ? ffcName : shouldUseSSI ? wire.SSITemplate.UltimateBeneficiary.BankName : wire.ReceivingAccount.UltimateBeneficiaryAccountName;
+            var nameAndAddress = !string.IsNullOrWhiteSpace(ffcName) ? ffcName : shouldUseSSI ? wire.SSITemplate.UltimateBeneficiary.BankName : wire.SendingAccount.UltimateBeneficiaryAccountName;
             nameAndAddress += $"\n{wire.FundRegisterAddress}";
 
             var f50F = new Field50F()
                 .setAccount(!string.IsNullOrWhiteSpace(ffcNumber)
-                    ? ffcNumber 
-                    : shouldUseSSI ? wire.SSITemplate.UltimateBeneficiaryAccountNumber : wire.ReceivingAccount.UltimateBeneficiaryAccountNumber)
+                    ? ffcNumber
+                    : shouldUseSSI ? wire.SSITemplate.UltimateBeneficiaryAccountNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setNameAndAddress(nameAndAddress);
 
             return f50F;
@@ -182,7 +182,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             if (shouldUseSSIBeneficiary
                     ? !wire.IsFundTransfer && wire.SSITemplate != null
                         ? wire.SSITemplate.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Beneficiary.BICorABA)
-                        : wire.ReceivingAccount.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.Beneficiary.BICorABA)
+                        : wire.SendingAccount.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.Beneficiary.BICorABA)
                     : wire.SendingAccount.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiary.BICorABA))
                 mtMessage.addField(GetField52A(wire, shouldUseSSIBeneficiary));
             else
@@ -211,12 +211,12 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 .setAccount(shouldUseBeneficiary
                     ? shouldUseSSI
                         ? wire.SSITemplate.BeneficiaryAccountNumber
-                        : wire.ReceivingAccount.BeneficiaryAccountNumber
-                        : shouldUseSSI ? wire.SSITemplate.UltimateBeneficiaryAccountNumber : wire.ReceivingAccount.UltimateBeneficiaryAccountNumber)
+                        : wire.SendingAccount.BeneficiaryAccountNumber
+                        : shouldUseSSI ? wire.SSITemplate.UltimateBeneficiaryAccountNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setBIC(shouldUseBeneficiary
                     ? shouldUseSSI
                         ? wire.SSITemplate.BeneficiaryType == "ABA" ? string.Empty : wire.SSITemplate.Beneficiary.BICorABA
-                        : wire.ReceivingAccount.BeneficiaryType == "ABA" ? string.Empty : wire.ReceivingAccount.Beneficiary.BICorABA
+                        : wire.SendingAccount.BeneficiaryType == "ABA" ? string.Empty : wire.SendingAccount.Beneficiary.BICorABA
                     : wire.SendingAccount.UltimateBeneficiaryType == "ABA" ? string.Empty : wire.SendingAccount.UltimateBeneficiary.BICorABA);
             return f52A;
         }
@@ -225,19 +225,19 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         {
             var shouldUseSSI = !wire.IsFundTransfer && wire.SSITemplate != null;
             var ffcNumber = shouldUseBeneficiary
-                ? shouldUseSSI ? wire.SSITemplate.FFCNumber : wire.ReceivingAccount.FFCNumber
+                ? shouldUseSSI ? wire.SSITemplate.FFCNumber : wire.SendingAccount.FFCNumber
                 : wire.SendingAccount.FFCNumber;
 
             var ffcName = shouldUseBeneficiary
                 ? shouldUseSSI
                     ? wire.SSITemplate.FFCName
-                    : wire.ReceivingAccount.FFCName
+                    : wire.SendingAccount.FFCName
                 : wire.SendingAccount.FFCName;
 
             var nameAndAddress = !string.IsNullOrWhiteSpace(ffcName)
                 ? ffcName
                 : shouldUseBeneficiary
-                    ? shouldUseSSI ? wire.SSITemplate.Beneficiary.BankName : wire.ReceivingAccount.Beneficiary.BankName
+                    ? shouldUseSSI ? wire.SSITemplate.Beneficiary.BankName : wire.SendingAccount.Beneficiary.BankName
                     : wire.SendingAccount.UltimateBeneficiaryAccountName;
 
             nameAndAddress += $"\n{wire.FundRegisterAddress}";
@@ -246,7 +246,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 .setAccount(!string.IsNullOrWhiteSpace(ffcNumber)
                     ? ffcNumber
                     : shouldUseBeneficiary
-                        ? shouldUseSSI ? wire.SSITemplate.BeneficiaryAccountNumber : wire.ReceivingAccount.BeneficiaryAccountNumber
+                        ? shouldUseSSI ? wire.SSITemplate.BeneficiaryAccountNumber : wire.SendingAccount.BeneficiaryAccountNumber
                         : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setNameAndAddress(nameAndAddress);
 
@@ -520,7 +520,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             callingMethod.setSenderAndReceiver(HMBICSender, wire.SendingAccount.SwiftGroup.SendersBIC);
         }
 
-        private static MT103 CreateMt103(WireTicket wire, string messageType, string referenceTag)
+        private static MT103 CreateMt103(WireTicket wire, string messageType, WireReferenceTag referenceTag)
         {
             var mt103 = new MT103();
             SetSenderAndReceiverFromHM(mt103, wire);
@@ -656,7 +656,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             var mt192 = new MT192();
             SetSenderAndReceiverFromHM(mt192, wire);
 
-            mt192.addField(GetField20(wire, "CANC"));
+            mt192.addField(GetField20(wire, WireReferenceTag.CANC));
 
             mt192.addField(GetField21ForCancellation(wire));
 
@@ -678,7 +678,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             var mt292 = new MT292();
             SetSenderAndReceiverFromHM(mt292, wire);
 
-            mt292.addField(GetField20(wire, "CANC"));
+            mt292.addField(GetField20(wire, WireReferenceTag.CANC));
 
             mt292.addField(GetField21ForCancellation(wire));
 

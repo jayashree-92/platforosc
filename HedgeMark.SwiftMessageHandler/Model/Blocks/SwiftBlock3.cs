@@ -18,7 +18,7 @@ namespace HedgeMark.SwiftMessageHandler.Model.Blocks
         public SwiftBlock3(string messageType) : base("3", "User Header")
         {
             MessageType = messageType;
-            
+
             if (MessageType.Contains("COV"))
                 Fields.Add(new Field119().setValidationFlag("COV"));
 

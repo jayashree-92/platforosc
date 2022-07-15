@@ -12,12 +12,15 @@ using log4net;
 
 namespace HM.Operations.Secure.Middleware
 {
+    public enum WireReferenceTag { NA, COV, NOT, CANC }
+
     public class WireTransactionManager
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(WireTransactionManager));
 
         //We need to make sure only one transaction is performed at a given time - to avoid same wire is being approved by two different scenario
         public static object WireTransactionLock = new object();
+
 
 
         /// <summary>
@@ -158,7 +161,7 @@ namespace HM.Operations.Secure.Middleware
             {
                 var mt103MessageType = GetMessageType(MT103);
                 //We need to create an MT 103 and use TransactionRef of 103 as Related Ref of MT 202 COV
-                swiftMessage103 = OutboundSwiftMsgCreator.CreateMessage(wire, MT103, string.Empty, "COV");
+                swiftMessage103 = OutboundSwiftMsgCreator.CreateMessage(wire, MT103, string.Empty, WireReferenceTag.COV);
                 SendAndLogWireTransaction(wire, mt103MessageType, workflowLogId, swiftMessage103);
             }
 
@@ -173,10 +176,14 @@ namespace HM.Operations.Secure.Middleware
 
             SendAndLogWireTransaction(wire, messageType, workflowLogId, swiftMessage);
 
-            if (wire.IsFundTransfer)
+            if (wire.IsFundTransfer && wire.SendingAccount.SwiftGroup.AcceptedMessages.Contains(MT210))
             {
+                var familyName = OnBoardingDataManager.GetCounterpartyFamilyName(wire.SendingAccount.SwiftGroup.BrokerLegalEntityId ?? 0);
+                if (familyName.Equals("BNY", StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
                 var mt210MessageType = GetMessageType(MT210);
-                var swiftMessage210 = OutboundSwiftMsgCreator.CreateMessage(wire, MT210, string.Empty, string.Empty);
+                var swiftMessage210 = OutboundSwiftMsgCreator.CreateMessage(wire, MT210, string.Empty, WireReferenceTag.NOT);
                 swiftMessage210.updateFieldValue(FieldDirectory.FIELD_21, swiftMessage.Block4.GetFieldValue(FieldDirectory.FIELD_20));
                 SendAndLogWireTransaction(wire, mt210MessageType, workflowLogId, swiftMessage210);
             }
@@ -209,7 +216,7 @@ namespace HM.Operations.Secure.Middleware
                 return;
 
             //When  reference tag has "COV", it means its a MT103 generated on behalf of MT202COV. We should skip tracking MT103 and track only original MT202COV
-            if (confirmationData.ReferenceTag == "COV")
+            if (confirmationData.ReferenceTag == WireReferenceTag.COV.ToString() || confirmationData.ReferenceTag == WireReferenceTag.NOT.ToString())
                 return;
 
             //Ignore messages from the ignore list Eg. MT 094 - Broadcast messages

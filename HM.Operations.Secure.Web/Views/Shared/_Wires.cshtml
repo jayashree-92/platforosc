@@ -223,7 +223,7 @@
                 <p style="height:5px;" ng-show="wireTicketObj.IsSenderInformationRequired" />
                 <div class="panel panel-default" id="panelAccountSelector" ng-if="WireTicket.OnboardAccountId != ''">
                     <div class="panel-heading" data-toggle="collapse" data-target="#accountDetailDiv" ng-click="collapseContainer('Account')" aria-expanded="false" aria-controls="accountDetailDiv">
-                        <span class="">Sending Account Details</span>&nbsp;&nbsp;<span class="label label-primary prewrap">
+                        <span class="">{{wireTicketObj.IsNotice?'Receiving':'Sending'}} Account Details</span>&nbsp;&nbsp;<span class="label label-primary prewrap">
                             {{    (accountDetail.FFCNumber != undefined && accountDetail.FFCNumber.trim() != '' ? accountDetail.FFCNumber: accountDetail.UltimateBeneficiaryAccountNumber) + " - " + accountDetail.AccountName }}
                         </span><span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isAccountCollapsed , 'glyphicon-chevron-down': isAccountCollapsed }"></span>
                     </div>
@@ -739,7 +739,7 @@
 
                 <div class="panel panel-default ng-show-hide" id="panelSSITemplateSelector" ng-if="!wireTicketObj.IsFundTransfer && WireTicket.OnboardSSITemplateId != ''">
                     <div class="panel-heading" data-toggle="collapse" data-target="#ssiTemplateDetailDiv" ng-click="collapseContainer('SSITemplate')" aria-expanded="false" aria-controls="ssiTemplateDetailDiv">
-                        <span class=""> Receiving Account Details</span>&nbsp;&nbsp;<span class="label label-primary prewrap">
+                        <span class=""> {{wireTicketObj.IsNotice?'Sending':'Receiving'}} Account Details</span>&nbsp;&nbsp;<span class="label label-primary prewrap">
                             {{  (ssiTemplate.FFCNumber != undefined && ssiTemplate.FFCNumber.trim() != '' ? ssiTemplate.FFCNumber: ssiTemplate.UltimateBeneficiaryAccountNumber) + " - " + ssiTemplate.TemplateName }}
                         </span>
                         <span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isSSITemplateCollapsed , 'glyphicon-chevron-down': isSSITemplateCollapsed }"></span>
