@@ -18,26 +18,34 @@ namespace HM.Operations.Secure.Web.Jobs
         public static void DeActivateStaleSSITemplates()
         {
             var deactivationDeadline = DateTime.Today.AddMonths(-DeactivationPeriodInMonths);
-            using (var context = new OperationsSecureContext())
-            {
-                var allSsIDateMap = context.hmsWires.Where(s => s.OnBoardSSITemplateId != null && s.OnBoardSSITemplateId > 0).GroupBy(s => s.OnBoardSSITemplateId ?? 0).ToDictionary(s => s.Key, v => v.Max(v1 => v1.CreatedAt.DateTime));
-                var lastUsedToDeactivateMap = allSsIDateMap.Where(s => s.Value < deactivationDeadline).ToDictionary(s => s.Key, v => v.Value);
+            using var context = new OperationsSecureContext();
+            var allSsIDateMap = context.hmsWires.Where(s => s.OnBoardSSITemplateId != null && s.OnBoardSSITemplateId > 0).GroupBy(s => s.OnBoardSSITemplateId ?? 0).ToDictionary(s => s.Key, v => v.Max(v1 => v1.CreatedAt.DateTime));
+            var lastUsedToDeactivateMap = allSsIDateMap.Where(s => s.Value < deactivationDeadline).ToDictionary(s => s.Key, v => v.Value);
+            var staleSSIIds = lastUsedToDeactivateMap.Keys.ToList();
 
-                var staleSSIIds = lastUsedToDeactivateMap.Keys.ToList();
-                var allStaleSSITemplatesToDeactivate = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Approved" && staleSSIIds.Contains(s.onBoardingSSITemplateId) && s.UpdatedAt < deactivationDeadline).ToList();
+            //All SSIs used in Wires
+            var allUsedSSis = allSsIDateMap.Keys;
+
+            //All SSIs NOT used in Wires
+            var allSsIDateMapNotUserAnyTime = context.onBoardingSSITemplates
+                .Where(s => !allUsedSSis.Contains(s.onBoardingSSITemplateId) && s.UpdatedAt < deactivationDeadline)
+                .Select(s => s.onBoardingSSITemplateId).ToList();
+
+            staleSSIIds.AddRange(allSsIDateMapNotUserAnyTime);
+
+            var allStaleSSITemplatesToDeactivate = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Approved" && staleSSIIds.Contains(s.onBoardingSSITemplateId) && s.UpdatedAt < deactivationDeadline).ToList();
                 
-                if (allStaleSSITemplatesToDeactivate.Count == 0)
-                    return;
+            if (allStaleSSITemplatesToDeactivate.Count == 0)
+                return;
 
-                foreach (var staleSSI in allStaleSSITemplatesToDeactivate)
-                {
-                    staleSSI.SSITemplateStatus = "De-Activated";
-                    staleSSI.LastUsedAt = lastUsedToDeactivateMap.ContainsKey(staleSSI.onBoardingSSITemplateId) ? lastUsedToDeactivateMap[staleSSI.onBoardingSSITemplateId] : deactivationDeadline;
-                }
-
-                context.onBoardingSSITemplates.AddOrUpdate(s => new { s.onBoardingSSITemplateId }, allStaleSSITemplatesToDeactivate.ToArray());
-                context.SaveChanges();
+            foreach (var staleSSI in allStaleSSITemplatesToDeactivate)
+            {
+                staleSSI.SSITemplateStatus = "De-Activated";
+                staleSSI.LastUsedAt = lastUsedToDeactivateMap.ContainsKey(staleSSI.onBoardingSSITemplateId) ? lastUsedToDeactivateMap[staleSSI.onBoardingSSITemplateId] : deactivationDeadline;
             }
+
+            context.onBoardingSSITemplates.AddOrUpdate(s => new { s.onBoardingSSITemplateId }, allStaleSSITemplatesToDeactivate.ToArray());
+            context.SaveChanges();
         }
     }
 }
