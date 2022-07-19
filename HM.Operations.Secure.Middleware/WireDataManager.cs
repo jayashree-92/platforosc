@@ -596,6 +596,14 @@ namespace HM.Operations.Secure.Middleware
 
                 context.hmsWireDocuments.AddRange(wireTicket.HMWire.hmsWireDocuments.Where(s => s.hmsWireDocumentId == 0));
                 context.SaveChanges();
+
+                if (wireTicket.HMWire.OnBoardSSITemplateId is > 0)
+                {
+                    var ssiTemplate = context.onBoardingSSITemplates.First(s => s.onBoardingSSITemplateId == wireTicket.HMWire.OnBoardSSITemplateId);
+                    ssiTemplate.LastUsedAt = DateTime.Now;
+                    context.SaveChanges();
+                }
+
             }
             lock (WireSaveTransactionLock)
             {

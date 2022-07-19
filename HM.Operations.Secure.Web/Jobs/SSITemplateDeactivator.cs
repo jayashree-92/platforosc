@@ -21,6 +21,21 @@ namespace HM.Operations.Secure.Web.Jobs
             using var context = new OperationsSecureContext();
             var allSsIDateMap = context.hmsWires.Where(s => s.OnBoardSSITemplateId != null && s.OnBoardSSITemplateId > 0).GroupBy(s => s.OnBoardSSITemplateId ?? 0).ToDictionary(s => s.Key, v => v.Max(v1 => v1.CreatedAt.DateTime));
             var lastUsedToDeactivateMap = allSsIDateMap.Where(s => s.Value < deactivationDeadline).ToDictionary(s => s.Key, v => v.Value);
+
+            var lastUsedToUpdateExistingSSis = allSsIDateMap.Where(s => s.Value >= deactivationDeadline).ToDictionary(s => s.Key, v => v.Value);
+            var lastUsedToUpdateExistingSSisKeys = lastUsedToUpdateExistingSSis.Keys;
+            var allActiveSSITemplatesToUpdateLast = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Approved" && lastUsedToUpdateExistingSSisKeys.Contains(s.onBoardingSSITemplateId)).ToList();
+
+            if (allActiveSSITemplatesToUpdateLast.Count > 0)
+            {
+                foreach (var staleSSI in allActiveSSITemplatesToUpdateLast.Where(staleSSI => lastUsedToUpdateExistingSSis.ContainsKey(staleSSI.onBoardingSSITemplateId)))
+                {
+                    staleSSI.LastUsedAt = lastUsedToUpdateExistingSSis[staleSSI.onBoardingSSITemplateId];
+                }
+
+                context.SaveChanges();
+            }
+            
             var staleSSIIds = lastUsedToDeactivateMap.Keys.ToList();
 
             //All SSIs used in Wires
@@ -34,7 +49,7 @@ namespace HM.Operations.Secure.Web.Jobs
             staleSSIIds.AddRange(allSsIDateMapNotUserAnyTime);
 
             var allStaleSSITemplatesToDeactivate = context.onBoardingSSITemplates.Where(s => s.SSITemplateStatus == "Approved" && staleSSIIds.Contains(s.onBoardingSSITemplateId) && s.UpdatedAt < deactivationDeadline).ToList();
-                
+
             if (allStaleSSITemplatesToDeactivate.Count == 0)
                 return;
 
