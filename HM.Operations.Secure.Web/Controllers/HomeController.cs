@@ -515,14 +515,14 @@ namespace HM.Operations.Secure.Web.Controllers
 
         #region Adhoc Wires
 
-        public JsonResult GetAllCurrencies()
-        {
-            using var context = new OperationsSecureContext();
-            context.Configuration.LazyLoadingEnabled = false;
-            context.Configuration.ProxyCreationEnabled = false;
-            var currencies = context.hmsCurrencies.AsNoTracking().Select(s => new { id = s.Currency, text = s.Currency }).ToList();
-            return Json(new { currencies });
-        }
+        //public JsonResult GetAllCurrencies()
+        //{
+        //    using var context = new OperationsSecureContext();
+        //    context.Configuration.LazyLoadingEnabled = false;
+        //    context.Configuration.ProxyCreationEnabled = false;
+        //    var currencies = context.hmsCurrencies.AsNoTracking().Select(s => new { id = s.Currency, text = s.Currency }).ToList();
+        //    return Json(new { currencies });
+        //}
         private class AgreementBaseDetails
         {
             public long AgreementId { get; set; }

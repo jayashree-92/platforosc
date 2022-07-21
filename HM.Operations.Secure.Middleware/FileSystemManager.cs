@@ -11,11 +11,11 @@ namespace HM.Operations.Secure.Middleware
 {
     public class FileSystemManager
     {
-        public static string OpsSecureRootDirectory => ConfigurationManagerWrapper.StringSetting("OpsSecureRootDirectory", @"D:\HM-Operations-Secure\").GetValidatedConfigPath();
+        public static string OpsSecureRootDirectory => ConfigurationManagerWrapper.StringSetting("OpsSecureRootDirectory", @"C:\HM-Operations-Secure\").GetValidatedConfigPath();
 
-        public static string ManagedAccountRootDirectory => ConfigurationManagerWrapper.StringSetting("ManagedAccountRootDirectory", @"D:\HM-Operations\ManagedAccountFiles\").GetValidatedConfigPath();
+        public static string ManagedAccountRootDirectory => ConfigurationManagerWrapper.StringSetting("ManagedAccountRootDirectory", @"C:\HM-Operations\ManagedAccountFiles\").GetValidatedConfigPath();
 
-        public static string InternalOutputFilesDropPath => ConfigurationManagerWrapper.StringSetting("InternalOutputFilesDropPath", @"D:\InternalOutputFilesDropPath\").GetValidatedConfigPath();
+        public static string InternalOutputFilesDropPath => ConfigurationManagerWrapper.StringSetting("InternalOutputFilesDropPath", @"C:\InternalOutputFilesDropPath\").GetValidatedConfigPath();
 
         public static string SftpOutputFilesPath => ConfigurationManagerWrapper.StringSetting("SftpOutputFilesPath", $@"{OpsSecureRootDirectory}\{"SftpOutputFilesPath"}\").GetValidatedConfigPath();
 

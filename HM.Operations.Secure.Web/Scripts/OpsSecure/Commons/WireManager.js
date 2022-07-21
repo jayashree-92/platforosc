@@ -42,7 +42,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         $q.all([
             $scope.getAdhocWireDetails(), $scope.getWireMessageTypes($scope.wireObj.Report),
-            $scope.getAdhocWireAssociations()
+         //   $scope.getAdhocWireAssociations()
         ]).then($scope.fnResetWireModel);
     }
 
@@ -411,7 +411,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
     }
 
-    angular.element(document).on("change", "#liMessageType", function () {
+    angular.element(document).off("change", "#liMessageType").on("change", "#liMessageType", function () {
         $timeout(function () {
             $scope.WireTicket.WireMessageTypeId = $("#liMessageType").select2("val");
             if ($scope.WireTicket.WireMessageTypeId != "") {
@@ -419,9 +419,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     if ($scope.accountDetail.onBoardingAccountId != 0 && $scope.receivingAccountDetail.onBoardingAccountId != 0) {
                         angular.element("#liDeliveryCharges").select2("val", ($scope.WireTicket.WireMessageTypeId != "1" ? null : "OUR")).trigger("change");
                     }
-                } else if ($scope.accountDetail.onBoardingAccountId != 0 &&
-                    $scope.ssiTemplate.onBoardingSSITemplateId != 0) {
+                } else if ($scope.accountDetail.onBoardingAccountId != 0 && $scope.ssiTemplate.onBoardingSSITemplateId != 0) {
                 }
+
                 var messageType = $("#liMessageType").select2("data").text;
                 if (messageType.indexOf("MT103") > -1 || messageType.indexOf("MT202") > -1) {
                     $scope.wireTicketObj.IsSenderInformationRequired = true;
@@ -441,14 +441,14 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }, 50);
     });
 
-    angular.element(document).on("change", "#liSenderInformation",
+    angular.element(document).off("change", "#liSenderInformation").on("change", "#liSenderInformation",
         function () {
             $timeout(function () {
                 $scope.WireTicket.SenderInformationId = $("#liSenderInformation").select2("val");
             }, 50);
         });
 
-    angular.element(document).on("change", "#liCollateralPurpose",
+    angular.element(document).off("change", "#liCollateralPurpose").on("change", "#liCollateralPurpose",
         function () {
             $timeout(function () {
                 if ($scope.WireTicket.hmsWireField != undefined)
@@ -1366,12 +1366,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     }
 
     // Adhoc 
-    $scope.getAdhocWireAssociations = function () {
-        return $http.get("/Home/GetAllCurrencies").then(function (response) {
-            //$scope.purposes = response.data.wirePurposes;
-            $scope.currencies = response.data.currencies;
-        });
-    };
+    //$scope.getAdhocWireAssociations = function () {
+    //    return $http.get("/Home/GetAllCurrencies").then(function (response) {
+    //        //$scope.purposes = response.data.wirePurposes;
+    //        $scope.currencies = response.data.currencies;
+    //    });
+    //};
 
     angular.element(document).on("change", "#liWiresPurpose", function () {
         $timeout(function () {
@@ -1746,7 +1746,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     $scope.wireTicketObj.Counterparty = $scope.counterParties[$scope.ssiTemplate.TemplateEntityId];
 
                     var wireMessageType = $filter("filter")($scope.MessageTypes, function (message) {
-                        return message.text == $scope.wireTicketObj.IsNotice ? "MT210" : $scope.ssiTemplate.MessageType;
+                        return message.text == ($scope.wireTicketObj.IsNotice ? "MT210" : $scope.ssiTemplate.MessageType);
                     }, true)[0];
                     angular.element("#liMessageType").select2("val", wireMessageType.id).trigger("change");
 
