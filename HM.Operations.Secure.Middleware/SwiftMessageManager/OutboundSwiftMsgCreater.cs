@@ -224,30 +224,21 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         private static Field52D GetField52D(WireTicket wire, bool shouldUseBeneficiary)
         {
             var shouldUseSSI = !wire.IsFundTransfer && wire.SSITemplate != null;
-            var ffcNumber = shouldUseBeneficiary
-                ? shouldUseSSI ? wire.SSITemplate.FFCNumber : wire.SendingAccount.FFCNumber
-                : wire.SendingAccount.FFCNumber;
 
-            var ffcName = shouldUseBeneficiary
-                ? shouldUseSSI
-                    ? wire.SSITemplate.FFCName
-                    : wire.SendingAccount.FFCName
-                : wire.SendingAccount.FFCName;
-
-            var nameAndAddress = !string.IsNullOrWhiteSpace(ffcName)
-                ? ffcName
-                : shouldUseBeneficiary
+            var nameAndAddress = shouldUseBeneficiary
                     ? shouldUseSSI ? wire.SSITemplate.Beneficiary.BankName : wire.SendingAccount.Beneficiary.BankName
-                    : wire.SendingAccount.UltimateBeneficiaryAccountName;
+                    : !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCName)
+                        ? wire.SendingAccount.FFCName
+                        : wire.SendingAccount.UltimateBeneficiaryAccountName;
 
             nameAndAddress += $"\n{wire.FundRegisterAddress}";
 
             var f52D = new Field52D()
-                .setAccount(!string.IsNullOrWhiteSpace(ffcNumber)
-                    ? ffcNumber
-                    : shouldUseBeneficiary
+                .setAccount(shouldUseBeneficiary
                         ? shouldUseSSI ? wire.SSITemplate.BeneficiaryAccountNumber : wire.SendingAccount.BeneficiaryAccountNumber
-                        : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
+                        : !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber)
+                            ? wire.SendingAccount.FFCNumber
+                            : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setNameAndAddress(nameAndAddress);
 
             return f52D;

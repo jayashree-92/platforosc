@@ -1987,6 +1987,19 @@ div.DTCR_pointer {
     border-bottom: 2px solid #E65032;
 }
 
+    #modalToRetrieveWires ol.status-track li.status-track-failed:before {
+        content: "\2715";
+        color: white;
+        background-color: #E65032;
+        height: 1.2em;
+        width: 1.2em;
+        line-height: 1.2em;
+        border: none;
+        border-radius: 1.2em;
+        cursor: pointer;
+    }
+
+
 #modalToRetrieveWires ol.status-track li.status-track-active {
     font-weight: bold;
     border-bottom: 2px solid #F4BD0C;
