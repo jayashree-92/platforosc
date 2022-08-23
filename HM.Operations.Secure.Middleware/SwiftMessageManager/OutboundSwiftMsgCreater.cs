@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using Com.HedgeMark.Commons;
@@ -226,7 +226,9 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             var shouldUseSSI = !wire.IsFundTransfer && wire.SSITemplate != null;
 
             var nameAndAddress = shouldUseBeneficiary
-                    ? shouldUseSSI ? wire.SSITemplate.Beneficiary.BankName : wire.SendingAccount.Beneficiary.BankName
+                    ? shouldUseSSI 
+                        ? wire.SSITemplate.Beneficiary.BankName 
+                        : wire.SendingAccount.Beneficiary.BankName
                     : !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCName)
                         ? wire.SendingAccount.FFCName
                         : wire.SendingAccount.UltimateBeneficiaryAccountName;
@@ -632,7 +634,8 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
             mt210.addField(GetField32B(wire));
 
-            SetField50X(mt210, wire);
+            //SetField50X(mt210, wire);
+         
             //Optional
             SetField52X(mt210, wire, true);
 
