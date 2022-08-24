@@ -155,7 +155,6 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             return f50F;
         }
 
-
         /// <summary>
         /// Ordering Customer
         /// </summary>
@@ -205,7 +204,6 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
         private static Field52A GetField52A(WireTicket wire, bool shouldUseBeneficiary)
         {
-
             var shouldUseSSI = !wire.IsFundTransfer && wire.SSITemplate != null;
             var f52A = new Field52A()
                 .setAccount(shouldUseBeneficiary
@@ -215,9 +213,9 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                         : shouldUseSSI ? wire.SSITemplate.UltimateBeneficiaryAccountNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setBIC(shouldUseBeneficiary
                     ? shouldUseSSI
-                        ? wire.SSITemplate.BeneficiaryType == "ABA" ? string.Empty : wire.SSITemplate.Beneficiary.BICorABA
-                        : wire.SendingAccount.BeneficiaryType == "ABA" ? string.Empty : wire.SendingAccount.Beneficiary.BICorABA
-                    : wire.SendingAccount.UltimateBeneficiaryType == "ABA" ? string.Empty : wire.SendingAccount.UltimateBeneficiary.BICorABA);
+                        ? wire.SSITemplate.BeneficiaryType == "BIC" ? wire.SSITemplate.Beneficiary.BICorABA : string.Empty
+                        : wire.SendingAccount.BeneficiaryType == "BIC" ? wire.SendingAccount.Beneficiary.BICorABA : string.Empty
+                    : wire.SendingAccount.UltimateBeneficiaryType == "BIC" ? wire.SendingAccount.UltimateBeneficiary.BICorABA : string.Empty);
             return f52A;
         }
 
@@ -237,7 +235,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
             var f52D = new Field52D()
                 .setAccount(shouldUseBeneficiary
-                        ? shouldUseSSI ? wire.SSITemplate.BeneficiaryAccountNumber : wire.SendingAccount.BeneficiaryAccountNumber
+                        ? shouldUseSSI ? wire.SSITemplate.Beneficiary.BICorABA : wire.SendingAccount.Beneficiary.BICorABA
                         : !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber)
                             ? wire.SendingAccount.FFCNumber
                             : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
@@ -636,7 +634,6 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
             //SetField50X(mt210, wire);
          
-            //Optional
             SetField52X(mt210, wire, true);
 
             //Optional
