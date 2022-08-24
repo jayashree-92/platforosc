@@ -204,46 +204,55 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
         private static Field52A GetField52A(WireTicket wire, bool shouldUseBeneficiary)
         {
-            var shouldUseSSI = !wire.IsFundTransfer && wire.SSITemplate != null;
-            var f52A = new Field52A()
-                .setAccount(shouldUseBeneficiary
-                    ? shouldUseSSI
-                        ? wire.SSITemplate.BeneficiaryAccountNumber
-                        : wire.SendingAccount.BeneficiaryAccountNumber
-                        : shouldUseSSI ? wire.SSITemplate.UltimateBeneficiaryAccountNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
-                .setBIC(shouldUseBeneficiary
-                    ? shouldUseSSI
-                        ? wire.SSITemplate.BeneficiaryType == "BIC" ? wire.SSITemplate.Beneficiary.BICorABA : string.Empty
-                        : wire.SendingAccount.BeneficiaryType == "BIC" ? wire.SendingAccount.Beneficiary.BICorABA : string.Empty
-                    : wire.SendingAccount.UltimateBeneficiaryType == "BIC" ? wire.SendingAccount.UltimateBeneficiary.BICorABA : string.Empty);
+            Field52A f52A;
+            if (shouldUseBeneficiary)
+            {
+                var shouldUseSsi = !wire.IsFundTransfer && wire.SSITemplate != null;
+                f52A = new Field52A()
+                    .setAccount(shouldUseSsi ? wire.SSITemplate.BeneficiaryAccountNumber : wire.SendingAccount.BeneficiaryAccountNumber)
+                    .setBIC(shouldUseSsi
+                            ? wire.SSITemplate.BeneficiaryType == "BIC" ? wire.SSITemplate.Beneficiary.BICorABA : string.Empty
+                           : wire.SendingAccount.BeneficiaryType == "BIC" ? wire.SendingAccount.Beneficiary.BICorABA : string.Empty);
+                return f52A;
+            }
+
+            f52A = new Field52A()
+                .setAccount(wire.SendingAccount.UltimateBeneficiaryAccountNumber)
+                .setBIC(wire.SendingAccount.UltimateBeneficiaryType == "BIC" ? wire.SendingAccount.UltimateBeneficiary.BICorABA : string.Empty);
             return f52A;
         }
 
         private static Field52D GetField52D(WireTicket wire, bool shouldUseBeneficiary)
         {
-            var shouldUseSSI = !wire.IsFundTransfer && wire.SSITemplate != null;
+            string nameAndAddress;
+            Field52D f52D;
+            if (shouldUseBeneficiary)
+            {
+                var shouldUseSsi = !wire.IsFundTransfer && wire.SSITemplate != null;
+                nameAndAddress = shouldUseSsi ? wire.SSITemplate.Beneficiary.BankName : wire.SendingAccount.Beneficiary.BankName;
+                nameAndAddress += $"\n{wire.FundRegisterAddress}";
 
-            var nameAndAddress = shouldUseBeneficiary
-                    ? shouldUseSSI 
-                        ? wire.SSITemplate.Beneficiary.BankName 
-                        : wire.SendingAccount.Beneficiary.BankName
-                    : !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCName)
-                        ? wire.SendingAccount.FFCName
-                        : wire.SendingAccount.UltimateBeneficiaryAccountName;
+                f52D = new Field52D()
+                    .setAccount(shouldUseSsi ? wire.SSITemplate.Beneficiary.BICorABA : wire.SendingAccount.Beneficiary.BICorABA)
+                    .setNameAndAddress(nameAndAddress);
+
+                return f52D;
+            }
+
+            nameAndAddress = !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCName)
+                ? wire.SendingAccount.FFCName
+                : !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiaryAccountName)
+                    ? wire.SendingAccount.UltimateBeneficiaryAccountName
+                    : wire.SendingAccount.UltimateBeneficiary.BankName;
 
             nameAndAddress += $"\n{wire.FundRegisterAddress}";
 
-            var f52D = new Field52D()
-                .setAccount(shouldUseBeneficiary
-                        ? shouldUseSSI ? wire.SSITemplate.Beneficiary.BICorABA : wire.SendingAccount.Beneficiary.BICorABA
-                        : !string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber)
-                            ? wire.SendingAccount.FFCNumber
-                            : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
+            f52D = new Field52D()
+                .setAccount(!string.IsNullOrWhiteSpace(wire.SendingAccount.FFCNumber) ? wire.SendingAccount.FFCNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setNameAndAddress(nameAndAddress);
 
             return f52D;
         }
-
 
         /// <summary>
         /// Sender's Correspondence
@@ -633,7 +642,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             mt210.addField(GetField32B(wire));
 
             //SetField50X(mt210, wire);
-         
+
             SetField52X(mt210, wire, true);
 
             //Optional
