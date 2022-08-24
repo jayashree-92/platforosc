@@ -8,27 +8,36 @@
   
 <!-- <property name="msbuild.args" value="/p:RunOctoPack=true;OctoPackPublishPackageToFileShare=${package.dir}" /> -->
 <!-- <property name="msbuild-VS2013" value="C:\Program Files (x86)\MSBuild\12.0\Bin\msbuild.exe" unless="${property::exists('msbuild-VS2013')}"/> -->
-  <property name="msbuild-VS2015" value="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" unless="${property::exists('msbuild-VS2015')}"/>
-  <property name="MSTest" value="C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\MSTest.exe"/>
-  
+  <property name="MSBuildPath" value="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin\MSBuild.exe"/>
+<property name="MSTest" value="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\MSTest.exe"/> 
+
   <!-- Target for Building -->
    <target name="Build" >
 	<echo message="Clearing the builds and test results.."/>
     <delete dir="${testResults}" failonerror="false" />	
-	<msbuild project="${SolutionFile}" >
-	  <arg value="/p:Configuration=${Configuration}" />
-      <arg value="/t:Clean"/>
-    </msbuild>  
+	<!-- <msbuild project="${SolutionFile}" > -->
+	  <!-- <arg value="/p:Configuration=${Configuration}" /> -->
+      <!-- <arg value="/t:Clean"/> -->
+    <!-- </msbuild>   -->
+	<exec program="${MSBuildPath}" failonerror="true">
+      <arg value="${SolutionFile}" />
+      <arg value="/p:Configuration=${Configuration}" />
+	  <arg value="/t:Clean"/>
+    </exec>
+    <mkdir dir="${testResults}" />
     <mkdir dir="${testResults}" />	
    
 	<echo message="Building the Application by setting Configuration to '${Configuration}'" /> 
-	<msbuild project="${SolutionFile}" > 
-	<arg value="/tv:4.0"/> 
-	<arg line="/property:Configuration=${Configuration}" /> 
-	<arg value="/verbosity:detailed" /> 
-	<arg value="/v:minimal" /> 
-	</msbuild> 
-   
+	<!-- <msbuild project="${SolutionFile}" >  -->
+	<!-- <arg value="/tv:4.0"/>  -->
+	<!-- <arg line="/property:Configuration=${Configuration}" />  -->
+	<!-- <arg value="/verbosity:detailed" />  -->
+	<!-- <arg value="/v:minimal" />  -->
+	<!-- </msbuild>  -->
+   <exec program="${MSBuildPath}" failonerror="true">
+      <arg value="${SolutionFile}" />
+      <arg value="/p:Configuration=${Configuration}" />
+    </exec>
     <copy todir="${buildDirectory}\" verbose="true">
 	<fileset basedir=".">
 		<include name="${buildDirectory}\ExternalLibraries\Aspose.Cells.lic"/>
@@ -51,7 +60,7 @@
   
   <!-- Target for Publishing -->
   <target name="Publish" description="Publish Project" depends="UnitTestBuild" >
-    <exec program="${msbuild-VS2015}" failonerror="true">
+    <exec program="${MSBuildPath}" failonerror="true">
       <arg value="${ProjectFile}" />
       <arg value="/p:Configuration=${Configuration}" />
       <arg value="/t:_WPPCopyWebApplication" />
