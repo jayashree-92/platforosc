@@ -46,17 +46,17 @@
     </copy>  
    </target>  
 
-  <target name="UnitTestBuild"  depends="Build">
-    <echo message="Current Directory= '${CurrentDir}'" />
-	<property name="testCount" value="0"/>
-	<foreach item="String" in="${UnitTestProjectReference}" delim="," property="unitTestProject">
-	   <property name="testCount" value="${int::parse(testCount) + 1}" /> 
-		<exec program ="${MSTest}" basedir="."  verbose="true" failonerror="true" >	   
-		 <arg value="/testcontainer:${string::trim(unitTestProject)}"/>
-		 <arg value="/resultsfile:${testResults}\${testCount}.TestResults.trx"/> 
-		</exec>
-	</foreach>
-  </target>
+  <!-- <target name="UnitTestBuild"  depends="Build"> -->
+    <!-- <echo message="Current Directory= '${CurrentDir}'" /> -->
+	<!-- <property name="testCount" value="0"/> -->
+	<!-- <foreach item="String" in="${UnitTestProjectReference}" delim="," property="unitTestProject"> -->
+	   <!-- <property name="testCount" value="${int::parse(testCount) + 1}" />  -->
+		<!-- <exec program ="${MSTest}" basedir="."  verbose="true" failonerror="true" >	    -->
+		 <!-- <arg value="/testcontainer:${string::trim(unitTestProject)}"/> -->
+		 <!-- <arg value="/resultsfile:${testResults}\${testCount}.TestResults.trx"/>  -->
+		<!-- </exec> -->
+	<!-- </foreach> -->
+  <!-- </target> -->
   
   <!-- Target for Publishing -->
   <target name="Publish" description="Publish Project" depends="UnitTestBuild" >
