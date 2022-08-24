@@ -59,7 +59,7 @@
   <!-- </target> -->
   
   <!-- Target for Publishing -->
-  <target name="Publish" description="Publish Project" depends="UnitTestBuild" >
+  <target name="Publish" description="Publish Project" depends="Build" >
     <exec program="${MSBuildPath}" failonerror="true">
       <arg value="${ProjectFile}" />
       <arg value="/p:Configuration=${Configuration}" />
