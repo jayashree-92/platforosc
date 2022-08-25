@@ -38,7 +38,7 @@
     </properties>
 	</nant>
 	
-	<nant buildfile="RestartIISAppPool.build" />
+	<nant buildfile="CleanAndDeployPackage.build" />
   </target>
   
 </project>
