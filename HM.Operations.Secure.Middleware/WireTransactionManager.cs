@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT1XX;
@@ -183,9 +184,15 @@ namespace HM.Operations.Secure.Middleware
                     return;
 
                 var mt210MessageType = GetMessageType(MT210);
-                var swiftMessage210 = OutboundSwiftMsgCreator.CreateMessage(wire, MT210, string.Empty, WireReferenceTag.NOT);
+                var mt210Message = wire.DeepCopy();
+                var stagedSendingAccount = mt210Message.SendingAccount.DeepCopy();
+                var stagedReceivingAccount = mt210Message.SendingAccount.DeepCopy();
+                mt210Message.ReceivingAccount = stagedSendingAccount;
+                mt210Message.SendingAccount = stagedReceivingAccount;
+
+                var swiftMessage210 = OutboundSwiftMsgCreator.CreateMessage(mt210Message, MT210, string.Empty, WireReferenceTag.NOT);
                 swiftMessage210.updateFieldValue(FieldDirectory.FIELD_21, swiftMessage.Block4.GetFieldValue(FieldDirectory.FIELD_20));
-                SendAndLogWireTransaction(wire, mt210MessageType, workflowLogId, swiftMessage210);
+                SendAndLogWireTransaction(mt210Message, mt210MessageType, workflowLogId, swiftMessage210);
             }
         }
 
