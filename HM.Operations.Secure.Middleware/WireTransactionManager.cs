@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Com.HedgeMark.Commons.Extensions;
@@ -177,7 +177,7 @@ namespace HM.Operations.Secure.Middleware
 
             SendAndLogWireTransaction(wire, messageType, workflowLogId, swiftMessage);
 
-            if (wire.IsFundTransfer && wire.SendingAccount.SwiftGroup.AcceptedMessages.Contains(MT210))
+            if (wire.IsFundTransfer && wire.ReceivingAccount.SwiftGroup.AcceptedMessages.Contains(MT210))
             {
                 var familyName = OnBoardingDataManager.GetCounterpartyFamilyName(wire.SendingAccount.SwiftGroup.BrokerLegalEntityId ?? 0);
                 if (familyName.Equals("BNY", StringComparison.InvariantCultureIgnoreCase))
