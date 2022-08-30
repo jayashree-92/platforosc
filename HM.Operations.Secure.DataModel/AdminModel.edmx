@@ -666,18 +666,12 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
 warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vw_hmUserCoverageDetails">
           <Key>
-            <PropertyRef Name="intLoginId" />
-            <PropertyRef Name="UserID" />
-            <PropertyRef Name="Email" />
+            <PropertyRef Name="CommitId" />
             <PropertyRef Name="JoinedHedgemarkOn" />
             <PropertyRef Name="TotalYearsofExperiencePriortoHedgemark" />
             <PropertyRef Name="IsVPAndAbove" />
           </Key>
-          <Property Name="intLoginId" Type="int" Nullable="false" />
-          <Property Name="UserID" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="FirstName" Type="varchar" MaxLength="50" />
-          <Property Name="LastName" Type="varchar" MaxLength="50" />
+          <Property Name="CommitId" Type="varchar" MaxLength="250" Nullable="false" />
           <Property Name="JoinedHedgemarkOn" Type="date" Nullable="false" />
           <Property Name="TotalYearsofExperiencePriortoHedgemark" Type="float" Nullable="false" />
           <Property Name="IsVPAndAbove" Type="bit" Nullable="false" />
@@ -934,11 +928,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
           </EntitySet>
           <EntitySet Name="vw_hmUserCoverageDetails" EntityType="Self.vw_hmUserCoverageDetails" store:Type="Views" store:Schema="HMADMIN">
             <DefiningQuery>SELECT 
-    [vw_hmUserCoverageDetails].[intLoginId] AS [intLoginId], 
-    [vw_hmUserCoverageDetails].[UserID] AS [UserID], 
-    [vw_hmUserCoverageDetails].[Email] AS [Email], 
-    [vw_hmUserCoverageDetails].[FirstName] AS [FirstName], 
-    [vw_hmUserCoverageDetails].[LastName] AS [LastName], 
+    [vw_hmUserCoverageDetails].[CommitId] AS [CommitId], 
     [vw_hmUserCoverageDetails].[JoinedHedgemarkOn] AS [JoinedHedgemarkOn], 
     [vw_hmUserCoverageDetails].[TotalYearsofExperiencePriortoHedgemark] AS [TotalYearsofExperiencePriortoHedgemark], 
     [vw_hmUserCoverageDetails].[IsVPAndAbove] AS [IsVPAndAbove]
@@ -1857,21 +1847,15 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
         </Association>
         <EntityType Name="vw_hmUserCoverageDetails">
           <Key>
-            <PropertyRef Name="intLoginId" />
-            <PropertyRef Name="UserID" />
-            <PropertyRef Name="Email" />
             <PropertyRef Name="JoinedHedgemarkOn" />
             <PropertyRef Name="TotalYearsofExperiencePriortoHedgemark" />
             <PropertyRef Name="IsVPAndAbove" />
+            <PropertyRef Name="CommitId" />
           </Key>
-          <Property Name="intLoginId" Type="Int32" Nullable="false" />
-          <Property Name="UserID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="JoinedHedgemarkOn" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="TotalYearsofExperiencePriortoHedgemark" Type="Double" Nullable="false" />
           <Property Name="IsVPAndAbove" Type="Boolean" Nullable="false" />
+          <Property Name="CommitId" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2610,15 +2594,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
           <EntitySetMapping Name="vw_hmUserCoverageDetails">
             <EntityTypeMapping TypeName="AdminModel.vw_hmUserCoverageDetails">
               <MappingFragment StoreEntitySet="vw_hmUserCoverageDetails">
+                <ScalarProperty Name="CommitId" ColumnName="CommitId" />
                 <ScalarProperty Name="IsVPAndAbove" ColumnName="IsVPAndAbove" />
                 <ScalarProperty Name="TotalYearsofExperiencePriortoHedgemark" ColumnName="TotalYearsofExperiencePriortoHedgemark" />
                 <ScalarProperty Name="JoinedHedgemarkOn" ColumnName="JoinedHedgemarkOn" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="intLoginId" ColumnName="intLoginId" />
-              </MappingFragment>
+                </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
         </EntityContainerMapping>

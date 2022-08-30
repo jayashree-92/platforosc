@@ -142,9 +142,9 @@ namespace HM.Operations.Secure.Web.Controllers
             vw_hmUserCoverageDetails userDetails;
             using (var context = new AdminContext())
             {
-                userDetails = context.vw_hmUserCoverageDetails.FirstOrDefault(s => s.UserID == commitId) ?? new vw_hmUserCoverageDetails()
+                userDetails = context.vw_hmUserCoverageDetails.FirstOrDefault(s => s.CommitId == commitId) ?? new vw_hmUserCoverageDetails()
                 {
-                    UserID = commitId,
+                    CommitId = commitId,
                     JoinedHedgemarkOn = DateTime.Today,
                     TotalYearsofExperiencePriortoHedgemark = 0
                 };
