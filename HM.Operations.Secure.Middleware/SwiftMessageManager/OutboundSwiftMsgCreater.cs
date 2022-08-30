@@ -180,7 +180,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         {
             if (shouldUseSSIBeneficiary
                     ? !wire.IsFundTransfer && wire.SSITemplate != null
-                        ?? (wire.SSITemplate.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA) || wire.SSITemplate.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Beneficiary.BICorABA))
+                        ? (wire.SSITemplate.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA) || wire.SSITemplate.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Beneficiary.BICorABA))
                         : wire.SendingAccount.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.Beneficiary.BICorABA)
                     : wire.SendingAccount.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiary.BICorABA))
                 mtMessage.addField(GetField52A(wire, shouldUseSSIBeneficiary));
