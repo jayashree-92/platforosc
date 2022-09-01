@@ -14,7 +14,8 @@ namespace HM.Operations.Secure.Middleware.Models
         public string AccountType { get; set; }
         public string FFCName { get; set; }
         public string FFCNumber { get; set; }
-
+        public string FundName { get; set; }
+        public string Currency { get; set; }
         public string RecCreatedBy { get; set; }
     }
 }

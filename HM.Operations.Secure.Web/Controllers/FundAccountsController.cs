@@ -327,6 +327,8 @@ namespace HM.Operations.Secure.Web.Controllers
                 clearingBroker.CounterpartyName = fundAccount?.CounterpartyName;
                 clearingBroker.ClientName = fundAccount?.ClientName;
                 clearingBroker.AccountName = fundAccount?.AccountNumber;
+                clearingBroker.FundName = fundAccount?.FundName;
+                clearingBroker.Currency = fundAccount?.Account?.Currency;
             }
             return Json(new
             {

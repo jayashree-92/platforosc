@@ -3056,10 +3056,16 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         "mData": "AccountName", "sTitle": "Fund Account Name", visible: false
                     },
                     {
+                        "mData": "FundName", "sTitle": "Fund Name", visible: false
+                    },
+                    {
+                        "mData": "Currency", "sTitle": "Currency", visible: false
+                    },
+                    {
                         "mData": "ClearingBroker.ClearingBrokerName", "sTitle": "Clearing Broker Name",
                     },
                     {
-                        "mData": "CounterpartyName", "sTitle": "Counterparty",
+                        "mData": "CounterpartyName", "sTitle": "Counterparty", visible: false
                     },
                     {
                         "mData": "AgreementName", "sTitle": "Agreement Name",
@@ -3131,7 +3137,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                             .toggleClass("collapsed", isCollapsed);
                     },
                     dataSrc: function (row, sdata) {
-                        return row.AccountName
+                        return row.AccountName + " - " + row.FundName + " - " + row.CounterpartyName + " - " + row.Currency;
                     }
 
                 },
