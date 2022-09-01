@@ -186,7 +186,7 @@ namespace HM.Operations.Secure.Middleware
                 var mt210MessageType = GetMessageType(MT210);
                 var mt210Message = wire.DeepCopy();
                 var stagedSendingAccount = mt210Message.SendingAccount.DeepCopy();
-                var stagedReceivingAccount = mt210Message.SendingAccount.DeepCopy();
+                var stagedReceivingAccount = mt210Message.ReceivingAccount.DeepCopy();
                 mt210Message.ReceivingAccount = stagedSendingAccount;
                 mt210Message.SendingAccount = stagedReceivingAccount;
 
