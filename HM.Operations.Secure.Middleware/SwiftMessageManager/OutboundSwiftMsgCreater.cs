@@ -238,10 +238,10 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 f52A = new Field52A()
                     .setAccount(shouldUseSsi
                         ? isInterBicAvailable ? wire.SSITemplate.IntermediaryAccountNumber ?? string.Empty : wire.SSITemplate.BeneficiaryAccountNumber ?? string.Empty
-                        : wire.SendingAccount.BeneficiaryAccountNumber)
+                        : wire.ReceivingAccount.BeneficiaryAccountNumber)
                     .setBIC(shouldUseSsi
                         ? isInterBicAvailable ? wire.SSITemplate.Intermediary.BICorABA : wire.SSITemplate.Beneficiary.BICorABA
-                        : wire.SendingAccount.Beneficiary.BICorABA);
+                        : wire.ReceivingAccount.Beneficiary.BICorABA);
                 return f52A;
             }
 
@@ -262,13 +262,13 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
                 nameAndAddress = shouldUseSsi
                     ? isInterBicAvailable ? wire.SSITemplate.Intermediary.BankName ?? string.Empty : wire.SSITemplate.Beneficiary.BankName ?? string.Empty
-                    : wire.SendingAccount.Beneficiary.BankName;
+                    : wire.ReceivingAccount.Beneficiary.BankName;
                 nameAndAddress += $"\n{wire.FundRegisterAddress}";
 
                 f52D = new Field52D()
                     .setAccount(shouldUseSsi
                         ? isInterBicAvailable ? wire.SSITemplate.Intermediary.BICorABA : wire.SSITemplate.Beneficiary.BICorABA
-                        : wire.SendingAccount.Beneficiary.BICorABA)
+                        : wire.ReceivingAccount.Beneficiary.BICorABA)
                     .setNameAndAddress(nameAndAddress);
 
                 return f52D;
