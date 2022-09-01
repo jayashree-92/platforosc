@@ -185,10 +185,11 @@ namespace HM.Operations.Secure.Middleware
 
                 var mt210MessageType = GetMessageType(MT210);
                 var mt210Message = wire.DeepCopy();
-                var stagedSendingAccount = mt210Message.SendingAccount.DeepCopy();
-                var stagedReceivingAccount = mt210Message.ReceivingAccount.DeepCopy();
+                var stagedSendingAccount = mt210Message.SendingAccount;
+                var stagedReceivingAccount = mt210Message.ReceivingAccount;
                 mt210Message.ReceivingAccount = stagedSendingAccount;
                 mt210Message.SendingAccount = stagedReceivingAccount;
+
 
                 var swiftMessage210 = OutboundSwiftMsgCreator.CreateMessage(mt210Message, MT210, string.Empty, WireReferenceTag.NOT);
                 swiftMessage210.updateFieldValue(FieldDirectory.FIELD_21, swiftMessage.Block4.GetFieldValue(FieldDirectory.FIELD_20));
