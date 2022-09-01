@@ -178,14 +178,38 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
         private static void SetField52X(AbstractMT mtMessage, WireTicket wire, bool shouldUseSSIBeneficiary)
         {
-            if (shouldUseSSIBeneficiary
-                    ? !wire.IsFundTransfer && wire.SSITemplate != null
-                        ? (wire.SSITemplate.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA) || wire.SSITemplate.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Beneficiary.BICorABA))
-                        : wire.SendingAccount.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.Beneficiary.BICorABA)
-                    : wire.SendingAccount.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiary.BICorABA))
-                mtMessage.addField(GetField52A(wire, shouldUseSSIBeneficiary));
+
+            if (shouldUseSSIBeneficiary)
+            {
+                var shouldUseSsi = !wire.IsFundTransfer && wire.SSITemplate != null;
+
+                if (shouldUseSsi)
+                {
+                    if (wire.SSITemplate.IntermediaryType == "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA))
+                        mtMessage.addField(GetField52D(wire, false));
+                    else if (wire.SSITemplate.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA) || wire.SSITemplate.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Beneficiary.BICorABA))
+                        mtMessage.addField(GetField52A(wire, false));
+                    else
+                        mtMessage.addField(GetField52D(wire, false));
+                }
+                else
+                {
+                    if (wire.SendingAccount.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.Beneficiary.BICorABA))
+                        mtMessage.addField(GetField52A(wire, true));
+                    else
+                        mtMessage.addField(GetField52D(wire, true));
+                }
+            }
             else
-                mtMessage.addField(GetField52D(wire, shouldUseSSIBeneficiary));
+            {
+
+                if (wire.SendingAccount.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiary.BICorABA))
+                    mtMessage.addField(GetField52A(wire, false));
+                else
+                    mtMessage.addField(GetField52D(wire, false));
+            }
+
+
         }
 
         /// <summary>
@@ -202,8 +226,8 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         //    return f50A;
         //}
 
-      private static Field52A GetField52A(WireTicket wire, bool shouldUseBeneficiary)
-      {
+        private static Field52A GetField52A(WireTicket wire, bool shouldUseBeneficiary)
+        {
             Field52A f52A;
             if (shouldUseBeneficiary)
             {
