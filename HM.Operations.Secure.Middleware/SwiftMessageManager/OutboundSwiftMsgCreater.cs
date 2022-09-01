@@ -187,7 +187,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 {
                     if (wire.SSITemplate.IntermediaryType == "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA))
                         mtMessage.addField(GetField52D(wire, false));
-                    else if (wire.SSITemplate.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA) || wire.SSITemplate.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Beneficiary.BICorABA))
+                    else if ((wire.SSITemplate.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA)) || (wire.SSITemplate.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Beneficiary.BICorABA)))
                         mtMessage.addField(GetField52A(wire, false));
                     else
                         mtMessage.addField(GetField52D(wire, false));
