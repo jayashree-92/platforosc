@@ -195,7 +195,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 }
                 else
                 {
-                    if (wire.SendingAccount.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.Beneficiary.BICorABA))
+                    if (wire.ReceivingAccount.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.Beneficiary.BICorABA))
                         mtMessage.addField(GetField52A(wire, true));
                     else
                         mtMessage.addField(GetField52D(wire, true));
@@ -203,14 +203,11 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             }
             else
             {
-
                 if (wire.SendingAccount.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiary.BICorABA))
                     mtMessage.addField(GetField52A(wire, false));
                 else
                     mtMessage.addField(GetField52D(wire, false));
             }
-
-
         }
 
         /// <summary>
