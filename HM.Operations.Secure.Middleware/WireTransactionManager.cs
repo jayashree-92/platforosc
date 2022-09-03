@@ -224,7 +224,7 @@ namespace HM.Operations.Secure.Middleware
                 return;
 
             //When  reference tag has "COV", it means its a MT103 generated on behalf of MT202COV. We should skip tracking MT103 and track only original MT202COV
-            if (confirmationData.ReferenceTag == WireReferenceTag.COV.ToString() || confirmationData.ReferenceTag == WireReferenceTag.NOT.ToString())
+            if (confirmationData.ReferenceTag == WireReferenceTag.COV.ToString())
                 return;
 
             //Ignore messages from the ignore list Eg. MT 094 - Broadcast messages
