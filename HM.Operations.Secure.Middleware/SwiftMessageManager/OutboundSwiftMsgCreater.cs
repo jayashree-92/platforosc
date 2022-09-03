@@ -27,14 +27,14 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                     return CreateMt103(wire, messageType, referenceTag);
                 //MT202 - General Financial inst Transfer
                 case "MT202":
-                    return CreateMt202(wire, messageType);
+                    return CreateMt202(wire, messageType, referenceTag);
                 //MT202 COV - General Financial inst Transfer
                 case "MT202 COV":
                 case "MT202COV":
-                    return CreateMt202Cov(wire);
+                    return CreateMt202Cov(wire, referenceTag);
                 //MT210 - Notice to Receive
                 case "MT210":
-                    return CreateMt210(wire);
+                    return CreateMt210(wire, referenceTag);
                 //MT192 - request for cancellation
                 case "MT192":
                     return CreateMt192(wire, originalMessageType);
@@ -590,13 +590,13 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             return mt103;
         }
 
-        private static MT202 CreateMt202(WireTicket wire, string messageType)
+        private static MT202 CreateMt202(WireTicket wire, string messageType, WireReferenceTag wireReferenceTag)
         {
             var mt202 = new MT202();
 
             SetSenderAndReceiverFromHM(mt202, wire);
 
-            mt202.addField(GetField20(wire));
+            mt202.addField(GetField20(wire, wireReferenceTag));
 
             mt202.addField(GetField21(wire));
 
@@ -622,13 +622,13 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             return mt202;
         }
 
-        private static MT202COV CreateMt202Cov(WireTicket wire)
+        private static MT202COV CreateMt202Cov(WireTicket wire, WireReferenceTag wireReferenceTag)
         {
             var mt202Cov = new MT202COV();
 
             SetSenderAndReceiverFromHM(mt202Cov, wire);
 
-            mt202Cov.addField(GetField20(wire));
+            mt202Cov.addField(GetField20(wire, wireReferenceTag));
 
             mt202Cov.addField(GetField21(wire));
 
@@ -658,12 +658,12 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         }
 
 
-        private static MT210 CreateMt210(WireTicket wire)
+        private static MT210 CreateMt210(WireTicket wire, WireReferenceTag wireReferenceTag)
         {
             var mt210 = new MT210();
             SetSenderAndReceiverFromHM(mt210, wire);
 
-            mt210.addField(GetField20(wire));
+            mt210.addField(GetField20(wire, wireReferenceTag));
 
             mt210.addField(GetField25(wire));
 
