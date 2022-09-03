@@ -63,7 +63,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         private static Field20 GetField20(WireTicket wire, WireReferenceTag referenceTag = WireReferenceTag.NA)
         {
             var transactionId = WireDataManager.GetWireTransactionId(wire.WireId);
-            return new Field20($"{transactionId}{(referenceTag != WireReferenceTag.NA ? string.Empty : "/")}{referenceTag}");
+            return new Field20($"{transactionId}{(referenceTag == WireReferenceTag.NA ? string.Empty : "/")}{referenceTag}");
         }
 
         private static Field21 GetField21ForCancellation(WireTicket wire)
