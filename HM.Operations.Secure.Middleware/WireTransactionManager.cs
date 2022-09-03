@@ -5,6 +5,7 @@ using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler.Model.Fields;
 using HedgeMark.SwiftMessageHandler.Model.MT;
 using HedgeMark.SwiftMessageHandler.Model.MT.MT1XX;
+using HedgeMark.SwiftMessageHandler.Model.MT.MT2XX;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware.Models;
 using HM.Operations.Secure.Middleware.Queues;
@@ -150,6 +151,7 @@ namespace HM.Operations.Secure.Middleware
         }
 
         public const string MT103 = "MT103";
+        public const string MT202 = "MT202";
         public const string MT202COV = "MT202 COV";
         public const string MT210 = "MT210";
 
@@ -177,7 +179,7 @@ namespace HM.Operations.Secure.Middleware
 
             SendAndLogWireTransaction(wire, messageType, workflowLogId, swiftMessage);
 
-            if (wire.IsFundTransfer && wire.ReceivingAccount.SwiftGroup.AcceptedMessages.Contains(MT210))
+            if (wire.IsFundTransfer && wire.ReceivingAccount.SwiftGroup.AcceptedMessages.Contains(MT210) && (messageType.MessageType.Equals(MT103) || messageType.MessageType.Equals(MT202)))
             {
                 var familyName = OnBoardingDataManager.GetCounterpartyFamilyName(wire.ReceivingAccount.SwiftGroup.BrokerLegalEntityId ?? 0);
                 if (familyName.Equals("BNY", StringComparison.InvariantCultureIgnoreCase))
