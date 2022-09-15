@@ -20,6 +20,7 @@ namespace HM.Operations.Secure.Middleware.Models
         public bool Is3rdPartyTransfer => HMWire.WireTransferTypeId == 1;
 
         public bool IsNotice => HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.TransferType == "Notice";
+        public bool IsNoticeToFund => HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.TransferType == "Notice to Fund";
 
         public string TransferType => HMWire.hmsWireTransferTypeLKup == null ? "3rd Party Transfer" : HMWire.hmsWireTransferTypeLKup.TransferType;
 
@@ -67,7 +68,7 @@ namespace HM.Operations.Secure.Middleware.Models
                 if (WireId == 0)
                     return string.Empty;
 
-                if (IsFundTransfer)
+                if (IsFundTransfer || IsNoticeToFund)
                     return ReceivingAccount.AccountName;
 
                 if (!IsNotice)
@@ -89,7 +90,7 @@ namespace HM.Operations.Secure.Middleware.Models
                 if (WireId == 0)
                     return string.Empty;
 
-                if (IsFundTransfer)
+                if (IsFundTransfer || IsNoticeToFund)
                     return !string.IsNullOrEmpty(ReceivingAccount.FFCNumber) ? ReceivingAccount.FFCNumber : ReceivingAccount.UltimateBeneficiaryAccountNumber;
 
                 if (!IsNotice)
@@ -106,12 +107,12 @@ namespace HM.Operations.Secure.Middleware.Models
                 if (WireId == 0)
                     return string.Empty;
 
-                var accName = IsFundTransfer ? ReceivingAccount.AccountName : SSITemplate.TemplateName;
+                var accName = IsFundTransfer || IsNoticeToFund ? ReceivingAccount.AccountName : SSITemplate.TemplateName;
                 return string.IsNullOrWhiteSpace(accName) ? "N/A" : accName;
             }
         }
 
-        public string ReceivingAccountCurrency => IsNotice ? SendingAccount.Currency : IsFundTransfer ? ReceivingAccount.Currency : SSITemplate.Currency;
+        public string ReceivingAccountCurrency => IsNotice ? SendingAccount.Currency : (IsFundTransfer || IsNoticeToFund) ? ReceivingAccount.Currency : SSITemplate.Currency;
 
         public bool ShouldIncludeWirePurpose => OpsSecureSwitches.SwiftGroupToIncludeWirePurposeInWireMessage.Contains((SendingAccount.SwiftGroup ?? new hmsSwiftGroup()).SwiftGroup);
 

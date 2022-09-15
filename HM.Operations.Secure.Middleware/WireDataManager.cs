@@ -109,11 +109,11 @@ namespace HM.Operations.Secure.Middleware
 
             ValidationMessage = string.Empty;
 
-            if (wireTicket.IsNotice)
+            if (wireTicket.IsNotice || wireTicket.IsNoticeToFund)
             {
                 IsNoticePending = WireDataManager.IsNoticeWirePendingAcknowledgement(wireTicket.HMWire);
                 if (IsNoticePending)
-                    ValidationMessage = "The notice with same amount, value date and currency is already Processing with SWIFT.You cannot notice the same untill it gets a Confirmation";
+                    ValidationMessage = "The notice with same amount, value date and currency is already Processing with SWIFT.You cannot notice the same until it gets a Confirmation";
             }
 
             IsDeadlineCrossed = DateTime.Now.Date > wireTicket.HMWire.ValueDate.Date;
@@ -130,7 +130,7 @@ namespace HM.Operations.Secure.Middleware
 
             IsAuthorizedUserToApprove = IsWireStatusInitiated && !isUserInvolvedInInitiation && !IsDeadlineCrossed && isWireApprover && !IsNoticePending;
 
-            ShouldEnableCollateralPurpose = (wireTicket.Is3rdPartyTransfer || wireTicket.IsNotice) && wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(wireTicket.SendingAccount.SwiftGroup.SendersBIC);
+            ShouldEnableCollateralPurpose = (wireTicket.Is3rdPartyTransfer || wireTicket.IsNotice || wireTicket.IsNoticeToFund) && wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(wireTicket.SendingAccount.SwiftGroup.SendersBIC);
 
             IsLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == userId;
         }
@@ -189,7 +189,8 @@ namespace HM.Operations.Secure.Middleware
             FundTransfer,
             FeeOrExpensesPayment,
             Notice,
-            BankLoanOrPrivateOrIPO
+            BankLoanOrPrivateOrIPO,
+            NoticeToFund,
         }
 
         public class WireTicketStatus
@@ -342,6 +343,7 @@ namespace HM.Operations.Secure.Middleware
 
             var isFundTransfer = wireTransferType == TransferType.FundTransfer;
             var isNotice = wireTransferType == TransferType.Notice;
+            var isNoticeToFund = wireTransferType == TransferType.NoticeToFund;
 
             Dictionary<long, IEnumerable<long>> umberllaFundMap;
             using (var context = new AdminContext())
@@ -371,7 +373,7 @@ namespace HM.Operations.Secure.Middleware
                 var fundAccounts = (from oAccnt in context.onBoardingAccounts
                                     where allFundIds.Contains(oAccnt.hmFundId) && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed"
                                     let isAuthorizedSendingAccount = (currency == null || oAccnt.Currency == currency) && oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
-                                    let isAuthorizedSendingAccountFinal = isNotice ? isAuthorizedSendingAccount && oAccnt.SwiftGroup.AcceptedMessages.Contains("MT210") : isAuthorizedSendingAccount
+                                    let isAuthorizedSendingAccountFinal = (isNotice || isNoticeToFund) ? isAuthorizedSendingAccount && oAccnt.SwiftGroup.AcceptedMessages.Contains("MT210") : isAuthorizedSendingAccount
                                     where (isFundTransfer || isAuthorizedSendingAccountFinal)
 
                                     select new WireAccountBaseData
@@ -617,14 +619,13 @@ namespace HM.Operations.Secure.Middleware
 
                 //if the wire is already approved, user can only cancel it, and cannot perform other options such as hold
                 else if (existingWireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus != WireStatus.Cancelled)
-                    throw new InvalidOperationException(
-                        $"Wire already Approved and '{wireStatus}' action cannot be performed at this time");
+                    throw new InvalidOperationException($"Wire already Approved and '{wireStatus}' action cannot be performed at this time");
 
                 else
                 {
                     wireTicket.HMWire.CreatedAt = existingWireTicket.HMWire.CreatedAt;
                     SetWireStatusAndWorkFlow(wireTicket.HMWire, wireStatus, SwiftStatus.NotInitiated, comment, userId);
-                    if (existingWireTicket.IsNotice && wireStatus == WireStatus.Initiated)
+                    if ((existingWireTicket.IsNotice || existingWireTicket.IsNoticeToFund) && wireStatus == WireStatus.Initiated)
                         SaveWireData(wireTicket, WireStatus.Approved, comment, userId);
                 }
 

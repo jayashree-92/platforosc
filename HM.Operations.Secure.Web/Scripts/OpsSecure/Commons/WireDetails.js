@@ -234,6 +234,7 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
             IsAdhocWire: true,
             ReportMapId: 0,
             IsFundTransfer: false,
+            IsNoticeToFund: false,
             AgreementName: "",
             IsAdhocPage: true
         };

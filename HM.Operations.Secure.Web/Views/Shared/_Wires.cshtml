@@ -8,7 +8,7 @@
                     <p class="panel panel-heading" style="background: #F5F5F5;border-bottom: 1px solid lightgray;">
                         <img src="..\Images\spinner.gif" alt="Loading..." ng-style="{ 'display': isWireLoadingInProgress ? 'inline' : 'none' }" />
                         <span style="font-size: 15px;font-weight: bold">Wire Ticket Details  </span>
-                        <span ng-if="!WireTicketStatus.IsApprovedOrFailed && !wireTicketObj.IsNotice" class="ng-show-hide">
+                        <span ng-if="!WireTicketStatus.IsApprovedOrFailed && !wireTicketObj.IsNotice && !wireTicketObj.IsNoticeToFund" class="ng-show-hide">
                             <span style="padding-top: 5px;font-size: 12px;">
                                 | &nbsp;<span ng-style="{'color': IsDeadlineCrossed ? 'darkred' : 'black' }">Deadline To Approve:</span>
                             </span>
@@ -17,8 +17,8 @@
                                 <span class="col-md-2" style="font-size: 13px;padding: 0px;"><label class="label {{ timeToShow.indexOf('ago')>0 ? 'label-danger':'label-success' }}">{{ timeToShow }}</label></span>
                             </span>|&nbsp;
                         </span>&nbsp;
-                        <span ng-style="{'margin-left': WireTicketStatus.IsApprovedOrFailed || wireTicketObj.IsNotice ? '0px' : '55px' }">|&nbsp;Wire Status: <span id="spnwireStatus" style="font-size: 12px;" class="label"><b>{{ getWireStatus() }}</b></span></span>
-                        <span ng-style="{'margin-left': WireTicketStatus.IsApprovedOrFailed || wireTicketObj.IsNotice ? '0px' : '55px' }" ng-show="WireTicket.SwiftStatusId > 1">|&nbsp;Swift Status: <span id="spnswiftStatus" style="font-size: 12px;" class="label"><b>{{ getSwiftStatus() }}</b></span></span>
+                        <span ng-style="{'margin-left': WireTicketStatus.IsApprovedOrFailed || wireTicketObj.IsNotice || wireTicketObj.IsNoticeToFund ? '0px' : '55px' }">|&nbsp;Wire Status: <span id="spnwireStatus" style="font-size: 12px;" class="label"><b>{{ getWireStatus() }}</b></span></span>
+                        <span ng-style="{'margin-left': WireTicketStatus.IsApprovedOrFailed || wireTicketObj.IsNotice || wireTicketObj.IsNoticeToFund ? '0px' : '55px' }" ng-show="WireTicket.SwiftStatusId > 1">|&nbsp;Swift Status: <span id="spnswiftStatus" style="font-size: 12px;" class="label"><b>{{ getSwiftStatus() }}</b></span></span>
                         <span ng-show="WireTicket.WireStatusId == 6" style="font-weight: bold"> - by {{workflowUsers[0]}}</span>
                     </p>
                 </span>
@@ -61,7 +61,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-3">
-                            <label>{{wireTicketObj.IsNotice?'Receiving':'Sending'}} Account:</label>
+                            <label>{{(wireTicketObj.IsNotice || wireTicketObj.IsNoticeToFund)?'Receiving':'Sending'}} Account:</label>
                         </div>
                         <div class="col-md-3" ng-show="!WireTicketStatus.IsEditEnabled || !WireTicketStatus.IsWirePurposeAdhoc">
                             <input type="text" class="form-control primary-info" ng-model="accountDetail.AccountName" readonly />
@@ -74,15 +74,15 @@
                     <p style="height:5px;" ng-show="WireTicketStatus.IsEditEnabled" />
                     <div class="row">
                         <div class="col-md-3">
-                            <label>{{wireTicketObj.IsNotice?'Sending':'Receiving'}} Account:</label>
+                            <label>{{(wireTicketObj.IsNotice || wireTicketObj.IsNoticeToFund)?'Sending':'Receiving'}} Account:</label>
                         </div>
                         <div class="col-md-3" ng-show="!(WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled)">
                             <input type="text" class="form-control primary-info" ng-model="wireTicketObj.ReceivingAccountName" readonly />
                         </div>
-                        <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && !wireTicketObj.IsFundTransfer">
+                        <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && !wireTicketObj.IsFundTransfer && !wireTicketObj.IsNoticeToFund">
                             <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" />
                         </div>
-                        <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && wireTicketObj.IsFundTransfer">
+                        <div class="col-md-3" ng-if="WireTicketStatus.IsWirePurposeAdhoc && WireTicketStatus.IsEditEnabled && (wireTicketObj.IsFundTransfer || wireTicketObj.IsNoticeToFund)">
                             <input id="liReceivingBookAccount" type="text" class="form-control primary-info" name="liReceivingBookAccount" />
                         </div>
                     </div>
@@ -131,7 +131,7 @@
                     <p style="height:5px;" ng-show="wireObj.IsAdhocWire" />
                     <div class="row">
                         <div class="col-md-3">
-                            <label>Select {{wireTicketObj.IsNotice?'Receiving':'Sending'}} Account:</label>
+                            <label>Select {{(wireTicketObj.IsNotice || wireTicketObj.IsNoticeToFund)?'Receiving':'Sending'}} Account:</label>
                         </div>
                         <div class="col-md-3">
                             <input id="liSendingAccount" type="text" class="form-control primary-info" name="liSendingAccount" />
@@ -139,19 +139,19 @@
                         <img style="margin: 15px 0px 0px 0px;display:none" src="..\Images\spinner.gif" alt="Loading..." id="liSendingAccountLoading" />
                     </div>
                     <p style="height:5px;" />
-                    <div class="row" ng-show="wireTicketObj.IsFundTransfer">
+                    <div class="row" ng-show="(wireTicketObj.IsFundTransfer || wireTicketObj.IsNoticeToFund)">
                         <div class="col-md-3">
-                            <label>Select Receiving Account:</label>
+                            <label>Select {{(wireTicketObj.IsNotice || wireTicketObj.IsNoticeToFund)?'Sending':'Receiving'}} Account:</label>
                         </div>
                         <div class="col-md-3">
                             <input id="liReceivingBookAccount" type="text" class="form-control primary-info" name="liReceivingBookAccount" />
                         </div>
                         <img style="margin: 15px 0px 0px 0px;display:none" src="..\Images\spinner.gif" alt="Loading..." id="liReceivingBookAccountLoading" />
                     </div>
-                    <p style="height:5px;" ng-show="wireTicketObj.IsFundTransfer" />
-                    <div class="row" ng-show="!wireTicketObj.IsFundTransfer">
+                    <p style="height:5px;" ng-show="(wireTicketObj.IsFundTransfer || wireTicketObj.IsNoticeToFund)" />
+                    <div class="row" ng-show="!(wireTicketObj.IsFundTransfer || wireTicketObj.IsNoticeToFund)">
                         <div class="col-md-3">
-                            <label>Select {{wireTicketObj.IsNotice?'Sending':'Receiving'}} Account:</label>
+                            <label>Select {{(wireTicketObj.IsNotice || wireTicketObj.IsNoticeToFund)?'Sending':'Receiving'}} Account:</label>
                         </div>
                         <div class="col-md-3" ng-show="wireObj.IsAdhocWire">
                             <input id="liReceivingAccount" type="text" class="form-control primary-info" name="liReceivingAccount" />
@@ -161,7 +161,7 @@
                         </div>
                         <img style="margin: 15px 0px 0px 0px;display:none" src="..\Images\spinner.gif" alt="Loading..." id="liReceivingAccountLoading" />
                     </div>
-                    <p style="height:5px;" ng-show="!wireTicketObj.IsFundTransfer" />
+                    <p style="height:5px;" ng-show="!(wireTicketObj.IsFundTransfer || wireTicketObj.IsNoticeToFund)" />
                 </div>
                 <div class="container">
                     <div class="row">
@@ -223,7 +223,7 @@
                 <p style="height:5px;" ng-show="wireTicketObj.IsSenderInformationRequired" />
                 <div class="panel panel-default" id="panelAccountSelector" ng-if="WireTicket.OnboardAccountId != ''">
                     <div class="panel-heading" data-toggle="collapse" data-target="#accountDetailDiv" ng-click="collapseContainer('Account')" aria-expanded="false" aria-controls="accountDetailDiv">
-                        <span class="">{{wireTicketObj.IsNotice?'Receiving':'Sending'}} Account Details</span>&nbsp;&nbsp;<span class="label label-primary prewrap">
+                        <span class="">{{(wireTicketObj.IsNotice || wireTicketObj.IsNoticeToFund)?'Receiving':'Sending'}} Account Details</span>&nbsp;&nbsp;<span class="label label-primary prewrap">
                             {{    (accountDetail.FFCNumber != undefined && accountDetail.FFCNumber.trim() != '' ? accountDetail.FFCNumber: accountDetail.UltimateBeneficiaryAccountNumber) + " - " + accountDetail.AccountName }}
                         </span><span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isAccountCollapsed , 'glyphicon-chevron-down': isAccountCollapsed }"></span>
                     </div>
@@ -505,7 +505,7 @@
 
                     </div>
                 </div>
-                <div class="panel panel-default ng-show-hide" id="panelReceivingAccountSelector" ng-if="wireTicketObj.IsFundTransfer && WireTicket.ReceivingOnBoardAccountId != ''">
+                <div class="panel panel-default ng-show-hide" id="panelReceivingAccountSelector" ng-if="(wireTicketObj.IsFundTransfer || wireTicketObj.IsNoticeToFund) && WireTicket.ReceivingOnBoardAccountId != ''">
                     <div class="panel-heading" data-toggle="collapse" data-target="#receivingAccountDetailDiv" ng-click="collapseContainer('ReceivingAccount')" aria-expanded="false" aria-controls="receivingAccountDetailDiv">
                         <span class="">Receiving Account Details</span>&nbsp;&nbsp;<span class="label label-primary">
                             {{    (receivingAccountDetail.FFCNumber != undefined && receivingAccountDetail.FFCNumber.trim() != '' ? receivingAccountDetail.FFCNumber: receivingAccountDetail.UltimateBeneficiaryAccountNumber) + " - " + receivingAccountDetail.AccountName }}
@@ -737,9 +737,9 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default ng-show-hide" id="panelSSITemplateSelector" ng-if="!wireTicketObj.IsFundTransfer && WireTicket.OnboardSSITemplateId != ''">
+                <div class="panel panel-default ng-show-hide" id="panelSSITemplateSelector" ng-if="!(wireTicketObj.IsFundTransfer || wireTicketObj.IsNoticeToFund) && WireTicket.OnboardSSITemplateId != ''">
                     <div class="panel-heading" data-toggle="collapse" data-target="#ssiTemplateDetailDiv" ng-click="collapseContainer('SSITemplate')" aria-expanded="false" aria-controls="ssiTemplateDetailDiv">
-                        <span class=""> {{wireTicketObj.IsNotice?'Sending':'Receiving'}} Account Details</span>&nbsp;&nbsp;<span class="label label-primary prewrap">
+                        <span class=""> {{(wireTicketObj.IsNotice || wireTicketObj.IsNoticeToFund)?'Sending':'Receiving'}} Account Details</span>&nbsp;&nbsp;<span class="label label-primary prewrap">
                             {{  (ssiTemplate.FFCNumber != undefined && ssiTemplate.FFCNumber.trim() != '' ? ssiTemplate.FFCNumber: ssiTemplate.UltimateBeneficiaryAccountNumber) + " - " + ssiTemplate.TemplateName }}
                         </span>
                         <span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isSSITemplateCollapsed , 'glyphicon-chevron-down': isSSITemplateCollapsed }"></span>
@@ -1029,7 +1029,7 @@
                             &nbsp;<span><b>I understand that the deadline has crossed and still wish to initiate this wire.</b></span>
                         </div>
                         <p></p>
-                        <span id="cashBalOffDiv" ng-if="!wireTicketObj.IsNotice" ng-show="CashBalance.IsNewBalanceOffLimit || !CashBalance.IsCashBalanceAvailable">
+                        <span id="cashBalOffDiv" ng-if="!wireTicketObj.IsNotice && !wireTicketObj.IsNoticeToFund" ng-show="CashBalance.IsNewBalanceOffLimit || !CashBalance.IsCashBalanceAvailable">
                             <input id="chkCashBalOff" type="checkbox" data-size="small" data-width="60" data-height="30" data-onstyle="btn btn-sm btn-success" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on="Yes" data-off="No" />
                             &nbsp;<span ng-if="CashBalance.IsNewBalanceOffLimit"><b>I understand that the amount entered exceeds cash balances and still wish to initiate this wire.</b></span>
                             &nbsp;<span ng-if="!CashBalance.IsCashBalanceAvailable"><b>I understand that Cash balance calculation is not available and still wish to initiate this wire.</b></span>

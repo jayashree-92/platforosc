@@ -23,7 +23,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static void CreateExportFile(Dictionary<string, List<Row>> contentToExport, FileInfo exportFileInfo, bool shouldUseExportHeader = true)
         {
-            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, shouldUseExportHeader);
+            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName, new ExportOptions() { ShouldUseExportHeader = shouldUseExportHeader });
         }
 
         public static void CreateExportFile(List<Row> rowData, string tabName, FileInfo exportFileInfo, bool shouldExcludeIsExportable = true)
