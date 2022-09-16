@@ -61,8 +61,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HedgeMark.Secrets.Management.Services">
-      <HintPath>..\packages\HedgeMark.Secret.Management.Services.1.0.0.18\lib\net48\HedgeMark.Secrets.Management.Services.dll</HintPath>
+    <Reference Include="HedgeMark.Secrets.Management.Services, Version=1.0.0.20, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\HedgeMark.Secret.Management.Services.1.0.0.20\lib\net48\HedgeMark.Secrets.Management.Services.dll</HintPath>
     </Reference>
     <Reference Include="Kerberos.NET, Version=4.5.0.0, Culture=neutral, PublicKeyToken=10b231fbfc8c4b4d, processorArchitecture=MSIL">
       <HintPath>..\packages\Kerberos.NET.4.5.115\lib\netstandard2.0\Kerberos.NET.dll</HintPath>
