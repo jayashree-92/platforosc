@@ -507,8 +507,8 @@
                 </div>
                 <div class="panel panel-default ng-show-hide" id="panelReceivingAccountSelector" ng-if="(wireTicketObj.IsFundTransfer || wireTicketObj.IsNoticeToFund) && WireTicket.ReceivingOnBoardAccountId != ''">
                     <div class="panel-heading" data-toggle="collapse" data-target="#receivingAccountDetailDiv" ng-click="collapseContainer('ReceivingAccount')" aria-expanded="false" aria-controls="receivingAccountDetailDiv">
-                        <span class="">Receiving Account Details</span>&nbsp;&nbsp;<span class="label label-primary">
-                            {{    (receivingAccountDetail.FFCNumber != undefined && receivingAccountDetail.FFCNumber.trim() != '' ? receivingAccountDetail.FFCNumber: receivingAccountDetail.UltimateBeneficiaryAccountNumber) + " - " + receivingAccountDetail.AccountName }}
+                        <span class="">{{(wireTicketObj.IsNotice || wireTicketObj.IsNoticeToFund)?'Sending':'Receiving'}} Account Details</span>&nbsp;&nbsp;<span class="label label-primary">
+                            {{ (receivingAccountDetail.FFCNumber != undefined && receivingAccountDetail.FFCNumber.trim() != '' ? receivingAccountDetail.FFCNumber: receivingAccountDetail.UltimateBeneficiaryAccountNumber) + " - " + receivingAccountDetail.AccountName }}
                         </span>
                         <span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isReceivingAccountCollapsed , 'glyphicon-chevron-down': isReceivingAccountCollapsed }"></span>
                     </div>
