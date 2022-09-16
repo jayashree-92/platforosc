@@ -258,8 +258,11 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 var isInterBicAvailable = shouldUseSsi && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA);
 
                 nameAndAddress = shouldUseSsi
-                    ? isInterBicAvailable ? wire.SSITemplate.Intermediary.BankName ?? string.Empty : wire.SSITemplate.Beneficiary.BankName ?? string.Empty
-                    : wire.ReceivingAccount.Beneficiary.BankName;
+                    ? isInterBicAvailable
+                        ? wire.SSITemplate.Intermediary.BankName ?? string.Empty
+                        : wire.SSITemplate.Beneficiary.BankName ?? string.Empty
+                    : wire.ReceivingAccount.Beneficiary.BankName ?? string.Empty;
+
                 nameAndAddress += $"\n{wire.FundRegisterAddress}";
 
                 f52D = new Field52D()
