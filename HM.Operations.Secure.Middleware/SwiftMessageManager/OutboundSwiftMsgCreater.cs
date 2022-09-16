@@ -116,7 +116,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
         private static void SetField50X(AbstractMT mtMessage, WireTicket wire)
         {
-            if (!wire.IsFundTransfer && wire.SSITemplate != null
+            if (!wire.IsFundTransfer && !wire.IsNoticeToFund && wire.SSITemplate != null
                     ? wire.SSITemplate.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiary.BICorABA)
                     : wire.SendingAccount.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiary.BICorABA))
                 mtMessage.addField(GetField50C(wire));
@@ -127,7 +127,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
         private static Field50C GetField50C(WireTicket wire)
         {
-            var shouldUseSSI = !wire.IsFundTransfer && wire.SSITemplate != null;
+            var shouldUseSSI = !wire.IsFundTransfer && !wire.IsNoticeToFund && wire.SSITemplate != null;
             var f50A = new Field50C()
                 .setAccount(shouldUseSSI ? wire.SSITemplate.UltimateBeneficiaryAccountNumber : wire.SendingAccount.UltimateBeneficiaryAccountNumber)
                 .setBIC(shouldUseSSI
@@ -139,7 +139,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
         private static Field50F GetField50F(WireTicket wire)
         {
-            var shouldUseSSI = !wire.IsFundTransfer && wire.SSITemplate != null;
+            var shouldUseSSI = !wire.IsFundTransfer && !wire.IsNoticeToFund && wire.SSITemplate != null;
             var ffcNumber = shouldUseSSI ? wire.SSITemplate.FFCNumber : wire.SendingAccount.FFCNumber;
             var ffcName = shouldUseSSI ? wire.SSITemplate.FFCName : wire.SendingAccount.FFCName;
 
@@ -181,7 +181,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
             if (shouldUseSSIBeneficiary)
             {
-                var shouldUseSsi = !wire.IsFundTransfer && wire.SSITemplate != null;
+                var shouldUseSsi = !wire.IsFundTransfer && !wire.IsNoticeToFund && wire.SSITemplate != null;
 
                 if (shouldUseSsi)
                 {
@@ -229,7 +229,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             Field52A f52A;
             if (shouldUseBeneficiary)
             {
-                var shouldUseSsi = !wire.IsFundTransfer && wire.SSITemplate != null;
+                var shouldUseSsi = !wire.IsFundTransfer && !wire.IsNoticeToFund && wire.SSITemplate != null;
                 var isInterBicAvailable = shouldUseSsi && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA);
 
                 f52A = new Field52A()
@@ -254,7 +254,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             Field52D f52D;
             if (shouldUseBeneficiary)
             {
-                var shouldUseSsi = !wire.IsFundTransfer && wire.SSITemplate != null;
+                var shouldUseSsi = !wire.IsFundTransfer && !wire.IsNoticeToFund && wire.SSITemplate != null;
                 var isInterBicAvailable = shouldUseSsi && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA);
 
                 nameAndAddress = shouldUseSsi
