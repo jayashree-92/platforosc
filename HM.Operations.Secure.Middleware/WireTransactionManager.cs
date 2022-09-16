@@ -179,7 +179,7 @@ namespace HM.Operations.Secure.Middleware
 
             SendAndLogWireTransaction(wire, messageType, workflowLogId, swiftMessage);
 
-            if (wire.IsFundTransfer && wire.ReceivingAccount.SwiftGroup.AcceptedMessages.Contains(MT210) && (messageType.MessageType.Equals(MT103) || messageType.MessageType.Equals(MT202)))
+            if (wire.IsFundTransfer && wire.ReceivingAccount?.SwiftGroup?.AcceptedMessages != null && wire.ReceivingAccount.SwiftGroup.AcceptedMessages.Contains(MT210) && (messageType.MessageType.Equals(MT103) || messageType.MessageType.Equals(MT202)))
             {
                 var familyName = OnBoardingDataManager.GetCounterpartyFamilyName(wire.ReceivingAccount.SwiftGroup.BrokerLegalEntityId ?? 0);
                 if (familyName.Equals("BNY", StringComparison.InvariantCultureIgnoreCase))

@@ -78,7 +78,7 @@
       <HintPath>..\packages\HedgeMark.Operations.FileParseEngine.1.0.0.1\lib\net46\HedgeMark.Operations.FileParseEngine.dll</HintPath>
     </Reference>
     <Reference Include="HedgeMark.Secrets.Management.Services">
-      <HintPath>..\packages\HedgeMark.Secret.Management.Services.1.0.0.18\lib\net48\HedgeMark.Secrets.Management.Services.dll</HintPath>
+      <HintPath>..\packages\HedgeMark.Secret.Management.Services.1.0.0.20\lib\net48\HedgeMark.Secrets.Management.Services.dll</HintPath>
     </Reference>
     <Reference Include="HedgeMark.Stats.DataContracts, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HedgeMark.Stats.DataContracts.2.0.0\lib\net48\HedgeMark.Stats.DataContracts.dll</HintPath>
