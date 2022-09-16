@@ -327,7 +327,7 @@ namespace HM.Operations.Secure.Middleware
                 HMWire = hmWire,
                 FundRegisterAddress = hFund.RegisteredAddress,
                 SendingAccount = hmWire.SendingAccount,
-                ReceivingAccount = hmWire.WireTransferTypeId == 2 ? hmWire.ReceivingAccount : new onBoardingAccount(),
+                ReceivingAccount = hmWire.ReceivingAccount ?? new onBoardingAccount(),
                 SSITemplate = hmWire.ReceivingSSITemplate ?? new onBoardingSSITemplate(),
                 AttachmentUsers = attachmentUsers,
                 WorkflowUsers = workflowUsers,

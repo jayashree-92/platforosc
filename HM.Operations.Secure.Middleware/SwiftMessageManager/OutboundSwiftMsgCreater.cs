@@ -261,7 +261,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                     ? isInterBicAvailable
                         ? wire.SSITemplate.Intermediary.BankName ?? string.Empty
                         : wire.SSITemplate.Beneficiary.BankName ?? string.Empty
-                    : wire.ReceivingAccount.Beneficiary.BankName ?? string.Empty;
+                    : wire.ReceivingAccount?.Beneficiary?.BankName ?? string.Empty;
 
                 nameAndAddress += $"\n{wire.FundRegisterAddress}";
 
