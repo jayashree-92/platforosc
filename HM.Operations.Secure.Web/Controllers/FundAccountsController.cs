@@ -7,8 +7,10 @@ using System.Linq;
 using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.Operations.FileParseEngine.Models;
+using ExcelUtility.Operations.ManagedAccounts;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
+using HM.Operations.Secure.Middleware.Models;
 using HM.Operations.Secure.Middleware.Util;
 using HM.Operations.Secure.Web.Utility;
 
@@ -330,6 +332,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 clearingBroker.FundName = fundAccount?.FundName;
                 clearingBroker.Currency = fundAccount?.Account?.Currency;
             }
+            SetSessionValue(OpsSecureSessionVars.ClearingBrokersData.ToString(), clearingBrokers);
             return Json(new
             {
                 agreementTypes = agreementTypes.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
@@ -771,6 +774,20 @@ namespace HM.Operations.Secure.Web.Controllers
             return DownloadAndDeleteFile(exportFileInfo);
         }
 
+        public FileResult ExportClearingBrokerslist()
+        {
+            var clearingBrokers = (List<FundAccountClearingBrokerData>)GetSessionValue(OpsSecureSessionVars.ClearingBrokersData.ToString());
+            var exportContent = CreateClearingBrokersExportContent(clearingBrokers);
+            var contentToExport = new List<ExportContent>();
+            contentToExport.Add(exportContent);
+            var fileName = $"Associated Clearing Brokers_{DateTime.Now:yyyyMMdd}";
+            var exportFileInfo = new FileInfo(
+                $"{FileSystemManager.UploadTemporaryFilesPath}{fileName}{DefaultExportFileFormat}");
+            Exporter.CreateExcelFile(contentToExport, exportFileInfo.FullName);
+
+            return DownloadAndDeleteFile(exportFileInfo);
+        }
+
         private List<Row> BuildBankAccountExportRows(List<hmsBankAccountAddress> accountList)
         {
             var accountRows = new List<Row>();
@@ -791,6 +808,70 @@ namespace HM.Operations.Secure.Web.Controllers
             }
 
             return accountRows;
+        }
+
+
+        private List<Row> BuildClearingBrokersExportRows(List<FundAccountClearingBrokerData> clearingBrokers)
+        {
+            var clearingBrokerRows = new List<Row>();
+
+            foreach (var clearingBroker in clearingBrokers)
+            {
+                var row = new Row
+                {
+                    ["Clearing Broker Name"] = clearingBroker.ClearingBroker.ClearingBrokerName,
+                    ["Counterparty"] = clearingBroker.CounterpartyName,
+                    ["Agreement Name"] = clearingBroker.AgreementName,
+                    ["Account Type"] = clearingBroker.AccountType,
+                    ["Account Number"] = clearingBroker.AccountNumber,
+                    ["FFC Name"] = clearingBroker.FFCName,
+                    ["FFC Number"] = clearingBroker.FFCNumber,
+                    ["CreatedBy"] = clearingBroker.RecCreatedBy,
+                    ["CreatedAt"] = clearingBroker.ClearingBroker.RecCreatedAt + ""
+                };
+                clearingBrokerRows.Add(row);
+            }
+            return clearingBrokerRows;
+
+        }
+        private Row BuildClearingBrokerGroupRow(FundAccountClearingBrokerData data)
+        {
+            return new Row
+            {
+                ["Clearing Broker Name"] = $"{data.AccountName} - {data.FundName} - {data.CounterpartyName} - {data.Currency}",
+                ["Counterparty"] = string.Empty,
+                ["Agreement Name"] = string.Empty,
+                ["Account Type"] = string.Empty,
+                ["Account Number"] = string.Empty,
+                ["FFC Name"] = string.Empty,
+                ["FFC Number"] = string.Empty,
+                ["CreatedBy"] = string.Empty,
+                ["CreatedAt"] = string.Empty,
+            };
+        }
+        private ExportContent CreateClearingBrokersExportContent(List<FundAccountClearingBrokerData> clearingBrokers)
+        {       
+            var groupRows = new List<GroupRow>();
+            var dataRows=new List<Row>();
+            var groupedData = clearingBrokers.GroupBy(s => s.AccountName).ToDictionary(s => s.Key, v => v.ToList());
+            var startIndex =  1;
+            var endIndex = 0;
+            foreach (var fund in groupedData.Keys)
+            {
+                startIndex = dataRows.Count+2;
+                endIndex = startIndex+ groupedData[fund].Count-1;
+                var row = BuildClearingBrokerGroupRow(groupedData[fund][0]);
+                row.RowHighlight = Row.Highlight.SubHeader;
+                dataRows.Add(row);
+                dataRows.AddRange(BuildClearingBrokersExportRows(groupedData[fund]));
+                groupRows.Add(new GroupRow() { StartRow = startIndex, EndRow = endIndex, IsHidden = false });
+            }
+            return new ExportContent()
+            {
+                Rows = dataRows,
+                TabName = "Clearing Brokers",
+                GroupRows = groupRows,
+            };
         }
 
         //Build Account Rows

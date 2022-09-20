@@ -21,7 +21,8 @@ namespace HM.Operations.Secure.Web.Controllers
         AuthorizedFundData,
         UserPreferencesInSession,
         WiresDashboardData,
-        WireUserGroupData
+        WireUserGroupData,
+        ClearingBrokersData,
     }
 
     public class AuthorizedRolesAttribute : AuthorizeAttribute

@@ -3157,7 +3157,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }, 200);
 
     }
-
+    $scope.fnExportClearingBrokerslist = function () {
+        window.location.assign("/FundAccounts/ExportClearingBrokerslist");
+    }
     function viewAssociationTable(data) {
 
         if ($("#accountSSITemplateTable").hasClass("initialized")) {

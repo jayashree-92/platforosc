@@ -81,7 +81,12 @@
             </div>
         </div>
         <div id="dvAssociationClearingBrokers" class="tab-pane">
-            <div class="panel panel-default" id="basicDetail">                
+            <div class="panel panel-default" id="basicDetail"> 
+                <div class="panel-heading row">
+                    <div class="pull-right btn-group" style="padding-right: 2px;">
+                        &nbsp;&nbsp;<a class="btn btn-sm btn-default" ng-click="$event.stopPropagation();fnExportClearingBrokerslist()"><i class="glyphicon glyphicon-download-alt"></i>&nbsp;Export</a>
+                    </div>
+                </div>
                 <div class="panel-body row">
                     <table id="accountClearingBrokerTable" class="table table-condensed table-bordered table-striped table-hover"><tfoot></tfoot></table>
                 </div>
