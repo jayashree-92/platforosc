@@ -332,6 +332,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 clearingBroker.FundName = fundAccount?.FundName;
                 clearingBroker.Currency = fundAccount?.Account?.Currency;
             }
+            clearingBrokers = clearingBrokers.Where(s => s.AccountName != null).ToList();
             SetSessionValue(OpsSecureSessionVars.ClearingBrokersData.ToString(), clearingBrokers);
             return Json(new
             {
