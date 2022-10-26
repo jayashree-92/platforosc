@@ -663,6 +663,33 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <Property Name="Domain" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'HM.HMADMIN.vw_FundAgreementDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_FundAgreementDetails">
+          <Key>
+            <PropertyRef Name="FundID" />
+            <PropertyRef Name="IsUmberllaFund" />
+          </Key>
+          <Property Name="dmaAgreementOnBoardingId" Type="bigint" />
+          <Property Name="dmaAgreementTypeId" Type="int" />
+          <Property Name="AgreementType" Type="varchar" MaxLength="500" />
+          <Property Name="dmaCounterPartyOnBoardId" Type="bigint" />
+          <Property Name="FundID" Type="int" Nullable="false" />
+          <Property Name="AgreementLongName" Type="nvarchar" MaxLength="1114" />
+          <Property Name="AgreementShortName" Type="nvarchar" MaxLength="1106" />
+          <Property Name="ShortFundName" Type="varchar" MaxLength="100" />
+          <Property Name="LegalFundName" Type="varchar" MaxLength="100" />
+          <Property Name="CounterpartyName" Type="nvarchar" MaxLength="500" />
+          <Property Name="CounterpartyFamily" Type="varchar" MaxLength="100" />
+          <Property Name="ClientName" Type="varchar" MaxLength="200" />
+          <Property Name="dmaClientOnBoardId" Type="bigint" />
+          <Property Name="LaunchStatus" Type="varchar" MaxLength="100" />
+          <Property Name="dmaOnBoardingAdminChoiceId" Type="bigint" />
+          <Property Name="AdminChoice" Type="varchar" MaxLength="1000" />
+          <Property Name="IsUmberllaFund" Type="bit" Nullable="false" />
+          <Property Name="CustodianCompanyName" Type="varchar" MaxLength="500" />
+          <Property Name="MarginExposureType" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vw_hmUserCoverageDetails">
           <Key>
@@ -926,6 +953,29 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
     [vw_EmailDomailForFunds].[Domain] AS [Domain]
     FROM [HMADMIN].[vw_EmailDomailForFunds] AS [vw_EmailDomailForFunds]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="vw_FundAgreementDetails" EntityType="Self.vw_FundAgreementDetails" store:Type="Views" store:Schema="HMADMIN">
+            <DefiningQuery>SELECT 
+    [vw_FundAgreementDetails].[dmaAgreementOnBoardingId] AS [dmaAgreementOnBoardingId], 
+    [vw_FundAgreementDetails].[dmaAgreementTypeId] AS [dmaAgreementTypeId], 
+    [vw_FundAgreementDetails].[AgreementType] AS [AgreementType], 
+    [vw_FundAgreementDetails].[dmaCounterPartyOnBoardId] AS [dmaCounterPartyOnBoardId], 
+    [vw_FundAgreementDetails].[FundID] AS [FundID], 
+    [vw_FundAgreementDetails].[AgreementLongName] AS [AgreementLongName], 
+    [vw_FundAgreementDetails].[AgreementShortName] AS [AgreementShortName], 
+    [vw_FundAgreementDetails].[ShortFundName] AS [ShortFundName], 
+    [vw_FundAgreementDetails].[LegalFundName] AS [LegalFundName], 
+    [vw_FundAgreementDetails].[CounterpartyName] AS [CounterpartyName], 
+    [vw_FundAgreementDetails].[CounterpartyFamily] AS [CounterpartyFamily], 
+    [vw_FundAgreementDetails].[ClientName] AS [ClientName], 
+    [vw_FundAgreementDetails].[dmaClientOnBoardId] AS [dmaClientOnBoardId], 
+    [vw_FundAgreementDetails].[LaunchStatus] AS [LaunchStatus], 
+    [vw_FundAgreementDetails].[dmaOnBoardingAdminChoiceId] AS [dmaOnBoardingAdminChoiceId], 
+    [vw_FundAgreementDetails].[AdminChoice] AS [AdminChoice], 
+    [vw_FundAgreementDetails].[IsUmberllaFund] AS [IsUmberllaFund], 
+    [vw_FundAgreementDetails].[CustodianCompanyName] AS [CustodianCompanyName], 
+    [vw_FundAgreementDetails].[MarginExposureType] AS [MarginExposureType]
+    FROM [HMADMIN].[vw_FundAgreementDetails] AS [vw_FundAgreementDetails]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="vw_hmUserCoverageDetails" EntityType="Self.vw_hmUserCoverageDetails" store:Type="Views" store:Schema="HMADMIN">
             <DefiningQuery>SELECT 
     [vw_hmUserCoverageDetails].[CommitId] AS [CommitId], 
@@ -1119,6 +1169,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
             <End Role="onboardingSubAdvisorFundMap" EntitySet="onboardingSubAdvisorFundMaps" />
           </AssociationSet>
           <EntitySet Name="vw_hmUserCoverageDetails" EntityType="AdminModel.vw_hmUserCoverageDetails" />
+          <EntitySet Name="vw_FundAgreementDetails" EntityType="AdminModel.vw_FundAgreementDetails" />
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -1856,6 +1907,31 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
           <Property Name="TotalYearsofExperiencePriortoHedgemark" Type="Double" Nullable="false" />
           <Property Name="IsVPAndAbove" Type="Boolean" Nullable="false" />
           <Property Name="CommitId" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="vw_FundAgreementDetails">
+          <Key>
+            <PropertyRef Name="FundID" />
+            <PropertyRef Name="IsUmberllaFund" />
+          </Key>
+          <Property Name="dmaAgreementOnBoardingId" Type="Int64" />
+          <Property Name="dmaAgreementTypeId" Type="Int32" />
+          <Property Name="AgreementType" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="dmaCounterPartyOnBoardId" Type="Int64" />
+          <Property Name="FundID" Type="Int32" Nullable="false" />
+          <Property Name="AgreementLongName" Type="String" MaxLength="1114" FixedLength="false" Unicode="true" />
+          <Property Name="AgreementShortName" Type="String" MaxLength="1106" FixedLength="false" Unicode="true" />
+          <Property Name="ShortFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LegalFundName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CounterpartyName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CounterpartyFamily" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ClientName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="dmaClientOnBoardId" Type="Int64" />
+          <Property Name="LaunchStatus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="dmaOnBoardingAdminChoiceId" Type="Int64" />
+          <Property Name="AdminChoice" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="IsUmberllaFund" Type="Boolean" Nullable="false" />
+          <Property Name="CustodianCompanyName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="MarginExposureType" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2599,6 +2675,31 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
                 <ScalarProperty Name="TotalYearsofExperiencePriortoHedgemark" ColumnName="TotalYearsofExperiencePriortoHedgemark" />
                 <ScalarProperty Name="JoinedHedgemarkOn" ColumnName="JoinedHedgemarkOn" />
                 </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_FundAgreementDetails">
+            <EntityTypeMapping TypeName="AdminModel.vw_FundAgreementDetails">
+              <MappingFragment StoreEntitySet="vw_FundAgreementDetails">
+                <ScalarProperty Name="MarginExposureType" ColumnName="MarginExposureType" />
+                <ScalarProperty Name="CustodianCompanyName" ColumnName="CustodianCompanyName" />
+                <ScalarProperty Name="IsUmberllaFund" ColumnName="IsUmberllaFund" />
+                <ScalarProperty Name="AdminChoice" ColumnName="AdminChoice" />
+                <ScalarProperty Name="dmaOnBoardingAdminChoiceId" ColumnName="dmaOnBoardingAdminChoiceId" />
+                <ScalarProperty Name="LaunchStatus" ColumnName="LaunchStatus" />
+                <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
+                <ScalarProperty Name="ClientName" ColumnName="ClientName" />
+                <ScalarProperty Name="CounterpartyFamily" ColumnName="CounterpartyFamily" />
+                <ScalarProperty Name="CounterpartyName" ColumnName="CounterpartyName" />
+                <ScalarProperty Name="LegalFundName" ColumnName="LegalFundName" />
+                <ScalarProperty Name="ShortFundName" ColumnName="ShortFundName" />
+                <ScalarProperty Name="AgreementShortName" ColumnName="AgreementShortName" />
+                <ScalarProperty Name="AgreementLongName" ColumnName="AgreementLongName" />
+                <ScalarProperty Name="FundID" ColumnName="FundID" />
+                <ScalarProperty Name="dmaCounterPartyOnBoardId" ColumnName="dmaCounterPartyOnBoardId" />
+                <ScalarProperty Name="AgreementType" ColumnName="AgreementType" />
+                <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
+                <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
+              </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
         </EntityContainerMapping>

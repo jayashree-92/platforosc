@@ -301,7 +301,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 account.CreatedBy = account.CreatedBy.HumanizeEmail();
                 account.UpdatedBy = account.UpdatedBy.HumanizeEmail();
                 account.ApprovedBy = account.ApprovedBy.HumanizeEmail();
-                var fundAccMap = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId] : new vw_FundAccounts();
+                var fundAccMap = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId] : new FundAccountData();
                 return new
                 {
                     Account = FundAccountManager.SetAccountDefaults(account),
@@ -543,7 +543,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
                 var clearingBroker = context.hmsFundAccountClearingBrokers.FirstOrDefault(s => s.ClearingBrokerName == clearingBrokerName);
                 if (clearingBroker != null)
-                    return context.vw_FundAccounts.FirstOrDefault(s => s.onBoardingAccountId == clearingBroker.onBoardingAccountId).AccountName;
+                    return context.onBoardingAccounts.FirstOrDefault(s => s.onBoardingAccountId == clearingBroker.onBoardingAccountId).AccountName;
                 
                 context.hmsFundAccountClearingBrokers.Add(new hmsFundAccountClearingBroker()
                 {
@@ -876,7 +876,7 @@ namespace HM.Operations.Secure.Web.Controllers
         }
 
         //Build Account Rows
-        private List<Row> BuildAccountRows(List<onBoardingAccount> onBoardingAccounts, List<vw_FundAccounts> fundAccounts)
+        private List<Row> BuildAccountRows(List<onBoardingAccount> onBoardingAccounts, List<FundAccountData> fundAccounts)
         {
             var fundAccountMap = fundAccounts.ToDictionary(s => s.onBoardingAccountId, v => v);
             var accountListRows = new List<Row>();

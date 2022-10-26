@@ -200,6 +200,7 @@
     <Compile Include="Models\AuditLogData.cs" />
     <Compile Include="Models\DashboardReportData.cs" />
     <Compile Include="Models\JobScheduleData.cs" />
+    <Compile Include="Models\FundAccountData.cs" />
     <Compile Include="Models\SwiftGroupData.cs" />
     <Compile Include="Models\FundAccountClearingBrokerData.cs" />
     <Compile Include="Models\WirePortalCutOffData.cs" />

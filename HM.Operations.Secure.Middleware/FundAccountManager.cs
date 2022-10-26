@@ -17,14 +17,70 @@ namespace HM.Operations.Secure.Middleware
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(FundAccountManager));
 
-        public static List<vw_FundAccounts> GetFundAccountDetails(List<long> hmFundIds, bool isPrivilegedUser)
+        public static List<FundAccountData> GetFundAccountsData()
         {
+            var fundAccounts = new List<onBoardingAccount>();
             using (var context = new OperationsSecureContext())
             {
-                context.Configuration.LazyLoadingEnabled = false;
-                context.Configuration.ProxyCreationEnabled = false;
-                return context.vw_FundAccounts.Where(s => isPrivilegedUser || hmFundIds.Contains(s.hmFundId)).ToList();
+                fundAccounts = context.onBoardingAccounts.Include(s => s.SwiftGroup).Where(s => !s.IsDeleted && s.hmFundId != 0).ToList();
             }
+            using (var context = new  AdminContext())
+            {
+                return (from acc in fundAccounts
+                        join agr in context.vw_FundAgreementDetails on new { fundid = acc.hmFundId, dmaAgreementTypeId = acc.MarginExposureTypeID, dmaCounterPartyOnBoardId = acc.dmaCounterpartyId ?? 0 } equals new { fundid = (long)agr?.FundID, dmaAgreementTypeId = agr?.dmaAgreementTypeId ?? 0, dmaCounterPartyOnBoardId = agr?.dmaCounterPartyOnBoardId ?? 0 } into fundAgr
+                        from p in fundAgr.DefaultIfEmpty()
+                        select new FundAccountData
+                        {
+                            onBoardingAccountId = acc.onBoardingAccountId,
+                            dmaAgreementOnBoardingId = p?.dmaAgreementOnBoardingId,
+                            dmaAgreementTypeId = p?.dmaAgreementTypeId,
+                            AgreementType = p?.AgreementType,
+                            AgreementLongName = p?.AgreementLongName,
+                            AgreementShortName = p?.AgreementShortName,
+                            AccountType = acc.AccountType,
+                            ApprovalStatus = acc.onBoardingAccountStatus,
+                            hmFundId = acc.hmFundId,
+                            ShortFundName = p?.ShortFundName ?? p?.LegalFundName,
+                            LegalFundName = p?.LegalFundName,
+                            dmaCounterpartyId = acc.dmaCounterpartyId,
+                            CounterpartyName = p?.CounterpartyName,
+                            CounterpartyFamily = p?.CounterpartyFamily,
+                            AccountName = acc.AccountName,
+                            AccountNumber = !string.IsNullOrEmpty(acc.FFCNumber) ? acc.FFCNumber : acc.UltimateBeneficiaryAccountNumber,
+                            FFCNumber = acc.FFCNumber,
+                            UltimateBeneficiaryAccountNumber = acc.UltimateBeneficiaryAccountNumber,
+                            MarginAccountNumber = acc.MarginAccountNumber,
+                            AssociatedCustodyAcctNumber = acc.AssociatedCustodyAcctNumber,
+                            TopLevelManagerAccountNumber = acc.TopLevelManagerAccountNumber,
+                            Currency = acc.Currency,
+                            AccountPurpose = acc.AccountPurpose,
+                            AccountStatus = acc.AccountStatus,
+                            AuthorizedParty = acc.AuthorizedParty,
+                            Description = acc.Description,
+                            TickerorISIN = acc.TickerorISIN,
+                            CashSweep = acc.CashSweep,
+                            CashSweepTime = acc.CashSweepTime,
+                            CashSweepTimeZone = acc.CashSweepTimeZone,
+                            ClientName = p?.ClientName,
+                            dmaClientOnBoardId = p?.dmaClientOnBoardId,
+                            LaunchStatus = p?.LaunchStatus,
+                            HoldbackAmount = acc.HoldbackAmount,
+                            dmaOnBoardingAdminChoiceId = p?.dmaOnBoardingAdminChoiceId,
+                            AdminChoice = p?.AdminChoice,
+                            IsUmberllaFund = p?.IsUmberllaFund ?? false,
+                            IsExcludedFromTreasuryMarginCheck = acc.IsExcludedFromTreasuryMarginCheck,
+                            CustodianCompanyName = p?.CustodianCompanyName,
+                            MarginExposureType = p?.AgreementType,
+                            AcceptedMessages = acc.SwiftGroup?.AcceptedMessages,
+                            SwiftGroupStatusId = acc.SwiftGroup?.SwiftGroupStatusId
+                        }).GroupBy(s => s.onBoardingAccountId).Select(s => s.First()).OrderBy(s => s.onBoardingAccountId).ToList();
+            }
+
+        }
+
+        public static List<FundAccountData> GetFundAccountDetails(List<long> hmFundIds, bool isPrivilegedUser)
+        {            
+            return GetFundAccountsData().Where(s => isPrivilegedUser || hmFundIds.Contains(s.hmFundId)).ToList();            
         }
 
         public static List<onBoardingAccount> GetAllOnBoardingAccounts(List<long> hmFundIds, bool isPreviledgedUser)
@@ -719,12 +775,12 @@ namespace HM.Operations.Secure.Middleware
         {
             var contextDate = DateTime.Today.GetContextDate();
 
-            vw_FundAccounts fndAccount;
+            FundAccountData fndAccount;
 
             //Is PB Account 
             using (var context = new OperationsSecureContext())
             {
-                fndAccount = context.vw_FundAccounts.First(s => s.onBoardingAccountId == sendingFundAccountId);
+                fndAccount = GetFundAccountsData().First(s => s.onBoardingAccountId == sendingFundAccountId);
             }
 
             var deadline = WireDataManager.GetCashSweepDeadline(valueDate, fndAccount.CashSweepTime, fndAccount.CashSweepTimeZone);
@@ -742,7 +798,7 @@ namespace HM.Operations.Secure.Middleware
             return cashBalance;
         }
 
-        private static CashBalances ComputePBCashBalances(DateTime valueDate, DateTime contextDate, vw_FundAccounts fndAccount, DateTime deadline)
+        private static CashBalances ComputePBCashBalances(DateTime valueDate, DateTime contextDate, FundAccountData fndAccount, DateTime deadline)
         {
             List<dmaTreasuryCashBalance> allTreasuryBals;
             decimal fndAccountConversionRate;
@@ -753,13 +809,13 @@ namespace HM.Operations.Secure.Middleware
                 fndAccountConversionRate = context.vw_ProxyCurrencyConversionData
                     .Where(s => s.FROM_CRNCY == fndAccount.Currency && s.TO_CRNCY == "USD" && s.HM_CONTEXT_DT == contextDate).Select(s => s.FX_RATE).FirstOrDefault() ?? 0;
             }
-
+            var fundAccountData = GetFundAccountsData();
             var allPBForContextDate = allTreasuryBals.Select(s => s.onboardAccountId).ToList();
             dmaTreasuryCashBalance treasuryBal;
             List<WireAccountBaseData> wires;
             using (var context = new OperationsSecureContext())
             {
-                var treasuryBalAccId = (from acc in context.vw_FundAccounts
+                var treasuryBalAccId = (from acc in fundAccountData
                                         where allPBForContextDate.Contains(acc.onBoardingAccountId)
                                         where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(acc.AgreementType)
                                         select acc.onBoardingAccountId).FirstOrDefault();
@@ -769,7 +825,7 @@ namespace HM.Operations.Secure.Middleware
                     return new CashBalances() { IsCashBalanceAvailable = false, ConversionRate = fndAccountConversionRate, Currency = fndAccount.Currency, ContextDate = contextDate };
 
                 wires = (from wire in context.hmsWires
-                         join acc in context.vw_FundAccounts on wire.OnBoardAccountId equals acc.onBoardingAccountId
+                         join acc in fundAccountData on wire.OnBoardAccountId equals acc.onBoardingAccountId
                          where acc.AccountNumber == fndAccount.AccountNumber && acc.AccountType == "Agreement" && TreasuryAgreementTypesToUseMarginExcessOrDeficit.Contains(acc.AgreementType)
                          where wire.ValueDate > contextDate && wire.ValueDate <= valueDate && (wire.WireStatusId == (int)WireDataManager.WireStatus.Approved || wire.WireStatusId == (int)WireDataManager.WireStatus.Initiated)
                          where wire.hmsWireMessageType.MessageType != "MT210"
@@ -859,7 +915,7 @@ namespace HM.Operations.Secure.Middleware
             return cashBalances;
         }
 
-        private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate, DateTime deadline, vw_FundAccounts fundAccount)
+        private static CashBalances ComputeNonPBCashBalances(long sendingFundAccountId, DateTime valueDate, DateTime contextDate, DateTime deadline, FundAccountData fundAccount)
         {
             dmaTreasuryCashBalance treasuryBal;
             decimal conversionRate = 0;

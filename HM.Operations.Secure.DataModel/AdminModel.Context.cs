@@ -46,6 +46,7 @@ namespace HM.Operations.Secure.DataModel
         public virtual DbSet<onboardingSubAdvisorFundMap> onboardingSubAdvisorFundMaps { get; set; }
         public virtual DbSet<onboardingFund> onboardingFunds { get; set; }
         public virtual DbSet<vw_hmUserCoverageDetails> vw_hmUserCoverageDetails { get; set; }
+        public virtual DbSet<vw_FundAgreementDetails> vw_FundAgreementDetails { get; set; }
     
         public virtual ObjectResult<USP_NEXEN_GetUserDetails_Result> USP_NEXEN_GetUserDetails(string userID, string userType)
         {
