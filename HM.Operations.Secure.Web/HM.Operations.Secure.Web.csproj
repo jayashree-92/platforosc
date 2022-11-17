@@ -501,6 +501,7 @@
     <Content Include="Images\loading-background.png" />
     <Content Include="Images\loading.gif" />
     <Content Include="Images\LoginBackground.jpg" />
+    <Content Include="Images\LOGO_innocap-hm_rgb.png" />
     <Content Include="Images\spinner.gif" />
     <Content Include="login\forms\css\bootstrap-bny-2.css" />
     <Content Include="login\forms\css\login.css" />

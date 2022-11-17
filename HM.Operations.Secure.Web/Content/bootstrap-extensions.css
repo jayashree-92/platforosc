@@ -1132,15 +1132,15 @@ table.dataTable tbody td.selected {
 
 
 .navbar-ops-brand {
-    background-color: #2d3a51;
+    /*background-color: #2d3a51;*/
 }
 
     .navbar-ops-brand .nav > li > a {
-        color: #ffffff !important;
+        color: #4b4b4b !important;
     }
 
     .navbar-ops-brand .navbar-brand {
-        padding-top: 4px;
+        padding-top: 6px;
     }
 
     .navbar-ops-brand .navbar-right {
@@ -1160,26 +1160,26 @@ table.dataTable tbody td.selected {
 
 
 .navbar-ops-title-divider {
-    height: 27px;
-    border: #FFFFFF 0.8px solid;
-    margin-top: 8px;
+    height: 25px;
+    border: #454545 0.8px solid;
+    margin-top: 10px;
     margin-left: -11px;
     padding: 0px;
     font-size: 19px;
     position: absolute;
-    color: #ffffff;
+    color: #4b4b4b;
     border-radius: 2px;
 }
 
 .navbar-ops-title {
     font-size: 20px;
-    padding-top: 8px;
+    padding-top: 9px;
     position: absolute;
-    color: #ffffff;
+    color: #4b4b4b;
 }
 
     .navbar-ops-title:hover {
-        color: #a4a4a4;
+        color: #4b4b4b;
         text-decoration: none;
     }
 

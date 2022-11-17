@@ -30,8 +30,8 @@
     <title>HM OPs Secure-@ViewBag.Title</title>
     <div ng-controller="layoutSettingsCtrl">
         <div class="navbar navbar-ops navbar-ops-brand">
-            <span class="navbar-ops-title-divider"></span><span>
-                <a class="navbar-ops-title" href=@indexURL>
+            <span class="navbar-ops-title-divider" style="height:25px;margin-left:10px"></span><span>
+                <a class="navbar-ops-title" style="padding-top:8px;margin-left:27px" href=@Url.Action("Index", "Home")>
                     HM-OPS-SECURE
                     @if (@Util.IsLowerEnvironment)
                     {
@@ -40,7 +40,7 @@
                 </a>
             </span>
             <div class="navbar-brand">
-                <a href=@indexURL> <img src="~/images/bnymellon_logo.png"></a>
+                <a href=@indexURL>  <img src="~/images/LOGO_innocap-hm_rgb.png" style="height:35px"></a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li style="padding-top: 13px;" title="@User.Identity.Name"><label style="font-size: 13px;" class="label label-default" href="#"><i class="glyphicon glyphicon-user"></i> @userRole</label></li>
