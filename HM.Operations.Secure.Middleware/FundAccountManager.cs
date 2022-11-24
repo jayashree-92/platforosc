@@ -27,8 +27,7 @@ namespace HM.Operations.Secure.Middleware
             using (var context = new  AdminContext())
             {
                 return (from acc in fundAccounts
-                        join agr in context.vw_FundAgreementDetails on new { fundid = acc.hmFundId, dmaAgreementTypeId = acc.MarginExposureTypeID, dmaCounterPartyOnBoardId = acc.dmaCounterpartyId ?? 0 } equals new { fundid = (long)agr?.FundID, dmaAgreementTypeId = agr?.dmaAgreementTypeId ?? 0, dmaCounterPartyOnBoardId = agr?.dmaCounterPartyOnBoardId ?? 0 } into fundAgr
-                        from p in fundAgr.DefaultIfEmpty()
+                        join p in context.vw_FundAgreementDetails on acc.hmFundId equals p.FundID                       
                         select new FundAccountData
                         {
                             onBoardingAccountId = acc.onBoardingAccountId,
