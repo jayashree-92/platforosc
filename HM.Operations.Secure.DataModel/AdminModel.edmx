@@ -666,9 +666,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
 warning 6002: The table/view 'HM.HMADMIN.vw_FundAgreementDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vw_FundAgreementDetails">
           <Key>
+            <PropertyRef Name="RowId" />
             <PropertyRef Name="FundID" />
             <PropertyRef Name="IsUmberllaFund" />
           </Key>
+          <Property Name="RowId" Type="bigint" Nullable="false" />
           <Property Name="dmaAgreementOnBoardingId" Type="bigint" />
           <Property Name="dmaAgreementTypeId" Type="int" />
           <Property Name="AgreementType" Type="varchar" MaxLength="500" />
@@ -955,6 +957,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
           </EntitySet>
           <EntitySet Name="vw_FundAgreementDetails" EntityType="Self.vw_FundAgreementDetails" store:Type="Views" store:Schema="HMADMIN">
             <DefiningQuery>SELECT 
+    [vw_FundAgreementDetails].[RowId] AS [RowId], 
     [vw_FundAgreementDetails].[dmaAgreementOnBoardingId] AS [dmaAgreementOnBoardingId], 
     [vw_FundAgreementDetails].[dmaAgreementTypeId] AS [dmaAgreementTypeId], 
     [vw_FundAgreementDetails].[AgreementType] AS [AgreementType], 
@@ -1910,9 +1913,11 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
         </EntityType>
         <EntityType Name="vw_FundAgreementDetails">
           <Key>
+            <PropertyRef Name="RowId" />
             <PropertyRef Name="FundID" />
             <PropertyRef Name="IsUmberllaFund" />
           </Key>
+          <Property Name="RowId" Type="Int64" Nullable="false" />
           <Property Name="dmaAgreementOnBoardingId" Type="Int64" />
           <Property Name="dmaAgreementTypeId" Type="Int32" />
           <Property Name="AgreementType" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
@@ -2699,6 +2704,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
                 <ScalarProperty Name="AgreementType" ColumnName="AgreementType" />
                 <ScalarProperty Name="dmaAgreementTypeId" ColumnName="dmaAgreementTypeId" />
                 <ScalarProperty Name="dmaAgreementOnBoardingId" ColumnName="dmaAgreementOnBoardingId" />
+                <ScalarProperty Name="RowId" ColumnName="RowId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

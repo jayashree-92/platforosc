@@ -95,62 +95,65 @@ namespace HM.Operations.Secure.Middleware
                 agrIDs = fundAccounts.Where(s=>s.dmaAgreementOnBoardingId>0).Select(s => s.dmaAgreementOnBoardingId??0).Distinct().ToList();
                 fundIds= fundAccounts.Select(s => s.hmFundId).Distinct().ToList();
             }
-            using (var context = new  AdminContext())
+
+            using (var context = new AdminContext())
             {
                 var agrData = context.vw_FundAgreementDetails.Where(s => agrIDs.Contains(s.dmaAgreementOnBoardingId ?? 0)).ToList();
-                var agrFundData= context.vw_FundAgreementDetails.Where(s => fundIds.Contains(s.FundID)).ToList();
-                var data =( from acc in fundAccounts                           
+                var agrFundData = context.vw_FundAgreementDetails.Where(s => fundIds.Contains(s.FundID)).ToList();
+                var data = (from acc in fundAccounts
                             join p in agrData
-                            on  new { fundid = acc.hmFundId, dmaCounterPartyOnBoardId = acc.dmaCounterpartyId ?? 0, dmaAgreementTypeId=acc.MarginExposureTypeID,agrId=acc.dmaAgreementOnBoardingId } equals new { fundid = (long)p?.FundID, dmaCounterPartyOnBoardId = p?.dmaCounterPartyOnBoardId ?? 0, dmaAgreementTypeId=p.dmaAgreementTypeId??0, agrId=p.dmaAgreementOnBoardingId }
-                           //where acc.AccountType == "Agreement" || acc.AccountType == "Agreement (Reporting Only)"
-                           select new FundAccountData
-                           {
-                               onBoardingAccountId = acc.onBoardingAccountId,
-                               dmaAgreementOnBoardingId = p.dmaAgreementOnBoardingId,
-                               dmaAgreementTypeId = p.dmaAgreementTypeId,
-                               AgreementType = p.AgreementType,
-                               AgreementLongName = p.AgreementLongName,
-                               AgreementShortName = p.AgreementShortName,
-                               AccountType = acc.AccountType,
-                               ApprovalStatus = acc.onBoardingAccountStatus,
-                               hmFundId = acc.hmFundId,
-                               ShortFundName = p.ShortFundName ?? p.LegalFundName,
-                               LegalFundName = p.LegalFundName,
-                               dmaCounterpartyId = acc.dmaCounterpartyId,
-                               CounterpartyName = p.CounterpartyName,
-                               CounterpartyFamily = p.CounterpartyFamily,
-                               AccountName = acc.AccountName,
-                               AccountNumber = !string.IsNullOrEmpty(acc.FFCNumber) ? acc.FFCNumber : acc.UltimateBeneficiaryAccountNumber,
-                               FFCNumber = acc.FFCNumber,
-                               UltimateBeneficiaryAccountNumber = acc.UltimateBeneficiaryAccountNumber,
-                               MarginAccountNumber = acc.MarginAccountNumber,
-                               AssociatedCustodyAcctNumber = acc.AssociatedCustodyAcctNumber,
-                               TopLevelManagerAccountNumber = acc.TopLevelManagerAccountNumber,
-                               Currency = acc.Currency,
-                               AccountPurpose = acc.AccountPurpose,
-                               AccountStatus = acc.AccountStatus,
-                               AuthorizedParty = acc.AuthorizedParty,
-                               Description = acc.Description,
-                               TickerorISIN = acc.TickerorISIN,
-                               CashSweep = acc.CashSweep,
-                               CashSweepTime = acc.CashSweepTime,
-                               CashSweepTimeZone = acc.CashSweepTimeZone,
-                               ClientName = p.ClientName,
-                               dmaClientOnBoardId = p.dmaClientOnBoardId,
-                               LaunchStatus = p.LaunchStatus,
-                               HoldbackAmount = acc.HoldbackAmount,
-                               dmaOnBoardingAdminChoiceId = p.dmaOnBoardingAdminChoiceId,
-                               AdminChoice = p.AdminChoice,
-                               IsUmberllaFund = p.IsUmberllaFund,
-                               IsExcludedFromTreasuryMarginCheck = acc.IsExcludedFromTreasuryMarginCheck,
-                               CustodianCompanyName = p.CustodianCompanyName,
-                               MarginExposureType = p.AgreementType,
-                               //AcceptedMessages = acc.SwiftGroup?.AcceptedMessages,
-                               //SwiftGroupStatusId = acc.SwiftGroup?.SwiftGroupStatusId
-                           }).ToList();
+                            on new { dmaCounterPartyOnBoardId = acc.dmaCounterpartyId ?? 0, dmaAgreementTypeId = acc.MarginExposureTypeID, agrId = acc.dmaAgreementOnBoardingId } equals new { dmaCounterPartyOnBoardId = p?.dmaCounterPartyOnBoardId ?? 0, dmaAgreementTypeId = p.dmaAgreementTypeId ?? 0, agrId = p.dmaAgreementOnBoardingId }
+                            where acc.AccountType == "Agreement" || acc.AccountType == "Agreement (Reporting Only)"
+                            select new FundAccountData
+                            {
+                                onBoardingAccountId = acc.onBoardingAccountId,
+                                dmaAgreementOnBoardingId = p.dmaAgreementOnBoardingId,
+                                dmaAgreementTypeId = p.dmaAgreementTypeId,
+                                AgreementType = p.AgreementType,
+                                AgreementLongName = p.AgreementLongName,
+                                AgreementShortName = p.AgreementShortName,
+                                AccountType = acc.AccountType,
+                                ApprovalStatus = acc.onBoardingAccountStatus,
+                                hmFundId = acc.hmFundId,
+                                ShortFundName = p.ShortFundName ?? p.LegalFundName,
+                                LegalFundName = p.LegalFundName,
+                                dmaCounterpartyId = acc.dmaCounterpartyId,
+                                CounterpartyName = p.CounterpartyName,
+                                CounterpartyFamily = p.CounterpartyFamily,
+                                AccountName = acc.AccountName,
+                                AccountNumber = !string.IsNullOrEmpty(acc.FFCNumber) ? acc.FFCNumber : acc.UltimateBeneficiaryAccountNumber,
+                                FFCNumber = acc.FFCNumber,
+                                UltimateBeneficiaryAccountNumber = acc.UltimateBeneficiaryAccountNumber,
+                                MarginAccountNumber = acc.MarginAccountNumber,
+                                AssociatedCustodyAcctNumber = acc.AssociatedCustodyAcctNumber,
+                                TopLevelManagerAccountNumber = acc.TopLevelManagerAccountNumber,
+                                Currency = acc.Currency,
+                                AccountPurpose = acc.AccountPurpose,
+                                AccountStatus = acc.AccountStatus,
+                                AuthorizedParty = acc.AuthorizedParty,
+                                Description = acc.Description,
+                                TickerorISIN = acc.TickerorISIN,
+                                CashSweep = acc.CashSweep,
+                                CashSweepTime = acc.CashSweepTime,
+                                CashSweepTimeZone = acc.CashSweepTimeZone,
+                                ClientName = p.ClientName,
+                                dmaClientOnBoardId = p.dmaClientOnBoardId,
+                                LaunchStatus = p.LaunchStatus,
+                                HoldbackAmount = acc.HoldbackAmount,
+                                dmaOnBoardingAdminChoiceId = p.dmaOnBoardingAdminChoiceId,
+                                AdminChoice = p.AdminChoice,
+                                IsUmberllaFund = p.IsUmberllaFund,
+                                IsExcludedFromTreasuryMarginCheck = acc.IsExcludedFromTreasuryMarginCheck,
+                                CustodianCompanyName = p.CustodianCompanyName,
+                                MarginExposureType = p.AgreementType,
+                                //AcceptedMessages = acc.SwiftGroup?.AcceptedMessages,
+                                //SwiftGroupStatusId = acc.SwiftGroup?.SwiftGroupStatusId
+                            }).ToList();
+
+                
                 var custodyData = (from acc in fundAccounts
-                                   join agr in agrFundData  
-                                   on new { fundid = acc.hmFundId, dmaCounterPartyOnBoardId = acc.dmaCounterpartyId ?? 0 } equals new { fundid = (long)agr?.FundID, dmaCounterPartyOnBoardId = agr?.dmaCounterPartyOnBoardId ?? 0 } into fundAgr
+                                   join agr in agrFundData
+                                   on new { fundid = acc.hmFundId, dmaCounterPartyOnBoardId = acc.dmaCounterpartyId ?? 0 } equals new { fundid = (long)agr.FundID, dmaCounterPartyOnBoardId = agr.dmaCounterPartyOnBoardId ?? 0 } into fundAgr
                                    from p in fundAgr.DefaultIfEmpty()
                                    where acc.AccountType == "DDA" || acc.AccountType == "Custody"
                                    select new FundAccountData
@@ -197,10 +200,10 @@ namespace HM.Operations.Secure.Middleware
                                        MarginExposureType = p?.AgreementType,
                                        //AcceptedMessages = acc.SwiftGroup?.AcceptedMessages,
                                        //SwiftGroupStatusId = acc.SwiftGroup?.SwiftGroupStatusId
-                                   }).ToList();
+                                   }).GroupBy(s=>s.onBoardingAccountId).Select(s=>s.First()).ToList();
 
                 return data.Union
-                       (custodyData).GroupBy(s => s.onBoardingAccountId).Select(s => s.First()).OrderBy(s => s.onBoardingAccountId).ToList();
+                 (custodyData).OrderBy(s => s.onBoardingAccountId).ToList();
             }
 
         }
