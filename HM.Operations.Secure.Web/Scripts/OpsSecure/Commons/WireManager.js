@@ -475,7 +475,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         var currency = $("#liCurrency").select2("val") != "" && $scope.WireTicket.hmsWireId == 0 ? $("#liCurrency").select2("val") : $scope.wireTicketObj.ReceivingAccountCurrency == null ? "USD" : $scope.wireTicketObj.ReceivingAccountCurrency;
         var wireAmount = $.convertToNumber($("#wireAmount").text(), true);
 
-        if (wireAmount == NaN)
+        if (isNaN(wireAmount))
             wireAmount = 0;
         //Check if the wire-amount is within the limit 
         $http.get("/Home/IsWireAmountValid?wireAmount=" + wireAmount + "&valueDate=" + $("#wireValueDate").text() + "&currency=" + currency + "&wireStatusId=" + $scope.WireTicket.WireStatusId).then(
