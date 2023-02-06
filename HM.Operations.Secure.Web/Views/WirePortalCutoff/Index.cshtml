@@ -21,7 +21,7 @@
                     <button class=" btn btn-primary btn-sm" id="btnEdit" ng-disabled="!enableWireActions" ng-click="fnAddOrUpdateWirePortalCutoff(false)">
                         <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
                     </button>
-                    if (User.IsWireApprover())
+                    @if (User.IsWireApprover())
                     {
                     <button class="btn btn-danger btn-sm" id="btnDel" ng-disabled="!enableWireActions" ng-click="fnDeleteWireCutoff()"><i class="glyphicon glyphicon-trash"></i>&nbsp;Delete </button>
                     }

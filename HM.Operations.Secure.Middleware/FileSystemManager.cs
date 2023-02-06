@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Com.HedgeMark.Commons;
+﻿using Com.HedgeMark.Commons;
 using Com.HedgeMark.Commons.Extensions;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware.Models;
 using HM.Operations.Secure.Middleware.Util;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace HM.Operations.Secure.Middleware
 {
@@ -17,7 +17,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static string InternalOutputFilesDropPath => ConfigurationManagerWrapper.StringSetting("InternalOutputFilesDropPath", @"C:\InternalOutputFilesDropPath\").GetValidatedConfigPath();
 
-        public static string SftpOutputFilesPath => ConfigurationManagerWrapper.StringSetting("SftpOutputFilesPath", $@"{OpsSecureRootDirectory}\{"SftpOutputFilesPath"}\").GetValidatedConfigPath();
+        //public static string SftpOutputFilesPath => ConfigurationManagerWrapper.StringSetting("SftpOutputFilesPath", $@"{OpsSecureRootDirectory}\{"SftpOutputFilesPath"}\").GetValidatedConfigPath();
 
         public static string OpsSecureWiresFilesPath => ConfigurationManagerWrapper.StringSetting("OpsSecureWiresPath", $@"{OpsSecureRootDirectory}\{"Wires"}\").GetValidatedConfigPath();
 
@@ -37,7 +37,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static string RawFilesOverridesPath => $@"{ManagedAccountRootDirectory}\Overrides\".GetValidatedConfigPath();
 
-        public static string SftpRawFilesOfHM => ConfigurationManagerWrapper.StringSetting("SftpRawFilesOfHM", $@"{ManagedAccountRootDirectory}\{"SftpOutputFilesPath"}\{"HM"}\").GetValidatedConfigPath();
+        public static string SftpIncomingDirectory => ConfigurationManagerWrapper.StringSetting("SftpIncomingDirectory", $@"{ManagedAccountRootDirectory}\{"SftpIncomingFilesPath"}\{"HM"}\").GetValidatedConfigPath();
 
         public static string DefaultTimeZone => ConfigurationManagerWrapper.StringSetting("DefaultTimeZone", "EST");
 
@@ -48,25 +48,25 @@ namespace HM.Operations.Secure.Middleware
             InitialiseLock = new object();
             Initialise();
 
-            if (!Directory.Exists(UploadTemporaryFilesPath))
+            if(!Directory.Exists(UploadTemporaryFilesPath))
                 Directory.CreateDirectory(UploadTemporaryFilesPath);
 
-            if (!Directory.Exists(OpsSecureWiresFilesPath))
+            if(!Directory.Exists(OpsSecureWiresFilesPath))
                 Directory.CreateDirectory(OpsSecureWiresFilesPath);
 
-            if (!Directory.Exists(OpsSecureSSITemplateFileUploads))
+            if(!Directory.Exists(OpsSecureSSITemplateFileUploads))
                 Directory.CreateDirectory(OpsSecureSSITemplateFileUploads);
 
-            if (!Directory.Exists(InternalOutputFilesDropPath))
+            if(!Directory.Exists(InternalOutputFilesDropPath))
                 Directory.CreateDirectory(InternalOutputFilesDropPath);
 
-            if (!Directory.Exists(OpsSecureInternalConfigFiles))
+            if(!Directory.Exists(OpsSecureInternalConfigFiles))
                 Directory.CreateDirectory(OpsSecureInternalConfigFiles);
         }
 
         private static void Initialise()
         {
-            lock (InitialiseLock)
+            lock(InitialiseLock)
             {
                 DmaReports = GetAllReports();
             }
@@ -83,7 +83,7 @@ namespace HM.Operations.Secure.Middleware
 
         private static List<dmaReport> GetAllReports()
         {
-            using (var context = new OperationsContext())
+            using(var context = new OperationsContext())
             {
                 return context.dmaReports.OrderBy(s => s.DisplayOrder).ToList();
             }
@@ -91,7 +91,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static Dictionary<string, string> GetAllTimeZones()
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 return context.hmsWireCutoffTimeZones.OrderBy(s => s.hmsWireCutoffTimeZoneId).ToDictionary(s => s.TimeZone, v => v.TimeZoneStandardName);
             }
@@ -113,7 +113,7 @@ namespace HM.Operations.Secure.Middleware
             var index = 0;
             var folders = new List<Select2Type>();
 
-            if (shoulShowRootFiles)
+            if(shoulShowRootFiles)
                 folders.Add(new Select2Type { id = "-Root-", text = "-Root-" });
 
             var rootDirectories = dirInfo.GetDirectories().ToList();
@@ -123,9 +123,9 @@ namespace HM.Operations.Secure.Middleware
             return folders;
         }
 
-        public static Dictionary<int,string> GetUsersList(List<int> userIds)
+        public static Dictionary<int, string> GetUsersList(List<int> userIds)
         {
-            using (var context = new AdminContext())
+            using(var context = new AdminContext())
             {
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;

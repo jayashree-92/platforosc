@@ -42,7 +42,7 @@ HmOpsApp.controller("MQLogsCtrl", function ($scope, $http, $timeout, $filter) {
         $("#btnGetInboundLogs").button("loading");
         fnDestroyDataTable("#tblAuditLogsDetails");
         $http.get("/Audit/GetMQLogs?startDate=" + moment(auditStartDate).format("YYYY-MM-DD") + "&endDate=" + moment(auditEndDate).format("YYYY-MM-DD")).then(function (response) {
-            var auditLogTable = $("#tblInboundLogsDetails").DataTable({
+            var tblInboundLogsDetails = $("#tblInboundLogsDetails").DataTable({
                 "aaData": response.data,
                 "dom": "<\"toolbar\"><'row header'<'col-md-6 header-left'i><'col-md-6 header-right'f>>trI",
                 "deferRender": true,
@@ -56,6 +56,16 @@ HmOpsApp.controller("MQLogsCtrl", function ($scope, $http, $timeout, $filter) {
                 "order": [[4, "desc"]],
                 "scrollX": true,
                 "scrollY": window.innerHeight - 350,
+                "buttons": [
+                    {
+                        extend: "csv",
+                        text: "Export as .csv",
+                        className: "btn-sm",
+                        customize: function (csv) {
+                            return constructCSVstring(tblInboundLogsDetails);
+                        }
+                    }
+                ],
                 "aoColumns": [
                     {
                         "mData": "IsOutBound", "sTitle": "Inbound/Outbound",
@@ -94,6 +104,9 @@ HmOpsApp.controller("MQLogsCtrl", function ($scope, $http, $timeout, $filter) {
                     "sInfo": "Showing _START_ to _END_ of _TOTAL_ user actions"
                 }
             });
+
+            tblInboundLogsDetails.buttons().container().appendTo("#spnCustomButtons");
+
             $("html, body").animate({ scrollTop: $("#tblInboundLogsDetails").offset().top }, "slow");
             $("#btnGetInboundLogs").button("reset");
         }, function (error) {

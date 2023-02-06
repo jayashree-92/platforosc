@@ -4,7 +4,7 @@
     {
         public int LoginId { get; set; }
         public string Name { get; set; }
-        public string CommitId { get; set; }
+        public string Email { get; set; }
         public double AllowedWireAmountLimit { get; set; }
         public double TotalYearsOfExperienceInHM { get; set; }
         public double TotalYearsOfExperience { get; set; }

@@ -298,7 +298,7 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
         $scope.fnIsNewExternalToApprovalsAvailable();
 
         $("#dvInptScheduleInternalTo").AutoCompleteEmail({
-            domains: ["bnymellon.com"],
+            domains: ["innocap.com"],
             excludedEmails: ["reconfiles"],
             bAllowListedDomainsOnly: true,
             onFocusOutCallback: function () {
@@ -311,7 +311,7 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
         });
 
         $("#dvInptScheduleInternalCC").AutoCompleteEmail({
-            domains: ["bnymellon.com"],
+            domains: ["innocap.com"],
             excludedEmails: ["reconfiles"],
             bAllowListedDomainsOnly: true,
             onFocusOutCallback: function () {

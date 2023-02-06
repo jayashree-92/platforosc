@@ -1,28 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Mime;
-using System.Text;
-using System.Web.Mvc;
-using Com.HedgeMark.Commons.Extensions;
+﻿using Com.HedgeMark.Commons.Extensions;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.DataModel.Models;
 using HM.Operations.Secure.Middleware;
 using HM.Operations.Secure.Middleware.Util;
 using HM.Operations.Secure.Web.Filters;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Mime;
+using System.Security.Claims;
+using System.Text;
+using System.Web;
+using System.Web.Mvc;
 
 namespace HM.Operations.Secure.Web.Controllers
 {
     public enum OpsSecureSessionVars
     {
-        UserCommitId,
         AuthorizedUserData,
         AuthorizedFundData,
         UserPreferencesInSession,
         WiresDashboardData,
         WireUserGroupData,
-        ClearingBrokersData,
+        ClearingBrokersData
     }
 
     public class AuthorizedRolesAttribute : AuthorizeAttribute
@@ -31,6 +32,44 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             Roles = string.Join(",", roles);
         }
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        {
+            if(!httpContext.User.Identity.IsAuthenticated)
+            {
+                return false;
+            }
+            if(!(ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, OpsSecureUserRoles.DMAAdmin) || ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, OpsSecureUserRoles.DMAUser)))
+            {
+                var userRole = httpContext.Session["userRole"].ToString();
+                if(string.IsNullOrWhiteSpace(userRole))
+                {
+                    userRole = GetUserRole(httpContext.User.Identity.Name);
+                    httpContext.Session["userRole"] = userRole;
+                }
+                else
+                {
+                    var claimsIdentity = ClaimsPrincipal.Current.Identities.First();
+                    {
+                        claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, userRole));
+                    }
+                }
+            }
+
+            return this.Roles.Split(',').Any(role => ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[role]));
+        }
+
+        private static string GetUserRole(string userName)
+        {
+            using(var context = new AdminContext())
+            {
+                return (from aspUser in context.aspnet_Users
+                            //join usr in context.hLoginRegistrations on aspUser.UserName equals usr.varLoginID
+                        where aspUser.UserName == userName && aspUser.aspnet_Roles.Any(r => AuthorizationManager.AuthorizedDmaUserRoles.Contains(r.RoleName)) //&& !usr.isDeleted
+                        let role = aspUser.aspnet_Roles.Any(r => r.RoleName == OpsSecureUserRoles.DMAAdmin) ? OpsSecureUserRoles.DMAAdmin : OpsSecureUserRoles.DMAUser
+                        select role).FirstOrDefault() ?? string.Empty;
+            }
+        }
+
     }
 
 
@@ -51,10 +90,10 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             get
             {
-                if (GetSessionValue("UserDetails") is UserAccountDetails userDetails)
+                if(GetSessionValue("UserDetails") is UserAccountDetails userDetails)
                     return userDetails;
 
-                userDetails = AccountController.GetUserDetails(Session[OpsSecureSessionVars.UserCommitId.ToString()].ToString(), User);
+                userDetails = AccountController.GetUserDetails(User);
                 SetSessionValue("UserDetails", userDetails);
                 return userDetails;
             }
@@ -71,7 +110,7 @@ namespace HM.Operations.Secure.Web.Controllers
         public bool IsWireApprover => User.IsInRole(OpsSecureUserRoles.WireApprover);
         public bool IsWireReadOnly => User.IsInRole(OpsSecureUserRoles.WireReadOnly);
 
-        public bool IsWireAdmin => User.IsInRole(OpsSecureUserRoles.WireAdmin);
+        public bool IsWireAdmin => true;//User.IsInRole(OpsSecureUserRoles.WireAdmin);
 
 
         protected static readonly string JsonContentType = "application/json";
@@ -102,11 +141,11 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var validFileFullName = fileInfo.FullName.GetValidatedConfigPath();
 
-            if (!System.IO.File.Exists(validFileFullName))
+            if(!System.IO.File.Exists(validFileFullName))
                 return null;
 
             FileContentResult fileContent;
-            using (var fileStream = System.IO.File.Open(validFileFullName, FileMode.Open, FileAccess.Read))
+            using(var fileStream = System.IO.File.Open(validFileFullName, FileMode.Open, FileAccess.Read))
             {
                 var returnBytes = new byte[fileStream.Length];
                 fileStream.Read(returnBytes, 0, returnBytes.Length);
@@ -114,7 +153,7 @@ namespace HM.Operations.Secure.Web.Controllers
             }
 
             //delete will happen only if the file is in the Temp directory - which is often the case of file creation - this is to avoid junk file creation
-            if (fileInfo.Directory != null && FileSystemManager.UploadTemporaryFilesPath.Contains(fileInfo.Directory.FullName))
+            if(fileInfo.Directory != null && FileSystemManager.UploadTemporaryFilesPath.Contains(fileInfo.Directory.FullName))
                 fileInfo.Delete();
 
             return fileContent;
@@ -124,10 +163,10 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var validFileFullName = fileInfo.FullName.GetValidatedConfigPath();
 
-            if (!System.IO.File.Exists(validFileFullName))
+            if(!System.IO.File.Exists(validFileFullName))
                 return null;
 
-            using (var fileStream = System.IO.File.Open(validFileFullName, FileMode.Open, FileAccess.Read))
+            using(var fileStream = System.IO.File.Open(validFileFullName, FileMode.Open, FileAccess.Read))
             {
                 var returnBytes = new byte[fileStream.Length];
                 fileStream.Read(returnBytes, 0, returnBytes.Length);
@@ -136,7 +175,7 @@ namespace HM.Operations.Secure.Web.Controllers
         }
     }
 
-    [AuthorizedRoles(OpsSecureUserRoles.WireAdmin)]
+    //[AuthorizedRoles(OpsSecureUserRoles.WireAdmin)]
     public abstract class WireAdminBaseController : BaseController
     {
 
@@ -150,7 +189,7 @@ namespace HM.Operations.Secure.Web.Controllers
             get
             {
                 var preferncesKey = $"{UserId}{OpsSecureSessionVars.UserPreferencesInSession}";
-                if (GetSessionValue(preferncesKey) != null)
+                if(GetSessionValue(preferncesKey) != null)
                     return (List<dmaUserPreference>)GetSessionValue(preferncesKey);
 
                 var allPreferences = PreferencesManager.GetAllUserPreferences(UserId);
@@ -185,10 +224,10 @@ namespace HM.Operations.Secure.Web.Controllers
             get
             {
                 var preferncesKey = $"{UserName}{OpsSecureSessionVars.AuthorizedUserData}";
-                if (GetSessionValue(preferncesKey) != null)
+                if(GetSessionValue(preferncesKey) != null)
                     return (AuthorizedData)GetSessionValue(preferncesKey);
-
-                var authorizedData = AuthorizationManager.GetAuthorizedData(UserDetails.Id, UserName, User.IsInRole(OpsSecureUserRoles.DMAAdmin) ? OpsSecureUserRoles.DMAAdmin : User.IsInRole(OpsSecureUserRoles.DMAUser) ? OpsSecureUserRoles.DMAUser : string.Empty);
+                var userRole = ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, OpsSecureUserRoles.DMAAdmin) ? OpsSecureUserRoles.DMAAdmin : OpsSecureUserRoles.DMAUser;
+                var authorizedData = AuthorizationManager.GetAuthorizedData(UserDetails.Id, UserName, userRole);//User.IsInRole(OpsSecureUserRoles.DMAAdmin) ? OpsSecureUserRoles.DMAAdmin : User.IsInRole(OpsSecureUserRoles.DMAUser) ? OpsSecureUserRoles.DMAUser : string.Empty);
                 SetSessionValue(preferncesKey, authorizedData);
                 return authorizedData;
             }
@@ -212,10 +251,10 @@ namespace HM.Operations.Secure.Web.Controllers
             {
                 var preferncesKey = $"{UserName}{OpsSecureSessionVars.AuthorizedFundData}";
                 var authorizedData = new List<HFundBasic>();
-                if (GetSessionValue(preferncesKey) != null)
+                if(GetSessionValue(preferncesKey) != null)
                     authorizedData = (List<HFundBasic>)GetSessionValue(preferncesKey);
 
-                if (authorizedData.Count > 0)
+                if(authorizedData.Count > 0)
                     return authorizedData;
 
                 authorizedData = AdminFundManager.GetFundData(AuthorizedSessionData, PreferredFundNameInSession);

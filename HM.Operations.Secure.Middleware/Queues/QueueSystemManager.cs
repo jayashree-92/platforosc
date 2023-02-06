@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Com.HedgeMark.Commons;
+using HM.Operations.Secure.DataModel;
+using HM.Operations.Secure.Middleware.Util;
+using IBM.WMQ;
+using log4net;
+using System;
 using System.Collections;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Com.HedgeMark.Commons;
-using HM.Operations.Secure.DataModel;
-using HM.Operations.Secure.Middleware.Util;
-using IBM.WMQ;
-using log4net;
 using MQC = IBM.WMQ.MQC;
 
 namespace HM.Operations.Secure.Middleware.Queues
@@ -18,11 +18,13 @@ namespace HM.Operations.Secure.Middleware.Queues
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(QueueSystemManager));
 
-        private static string QueueManagerName => ConfigurationManagerWrapper.StringSetting("QueueManagerName", "LQAL");
-        private static string HostName => ConfigurationManagerWrapper.StringSetting("ChannelConnectionName", "r26ln00.bnymellon.net");
-        private static int ChannelConnectionPort => ConfigurationManagerWrapper.IntegerSetting("ChannelConnectionPort", 1462);
-        private static string ClientChannelName => ConfigurationManagerWrapper.StringSetting("ClientChannelName", QueueManagerName + ".DMO.CLIENT");
-
+        private static string QueueManagerName => ConfigurationManagerWrapper.StringSetting("QueueManagerName", "TMSINNOCAP01");
+        private static string HostName => ConfigurationManagerWrapper.StringSetting("ChannelConnectionName", "mqinnocapuat.sha.extranet.sbexpertus.com");
+        private static int ChannelConnectionPort => ConfigurationManagerWrapper.IntegerSetting("ChannelConnectionPort", 11416);
+        private static string ClientChannelName => ConfigurationManagerWrapper.StringSetting("ClientChannelName", "CLIN.TO.TMSINNOCAP01");
+        private static string SSLKeyRepository => ConfigurationManagerWrapper.StringSetting("SSLKeyRepository", @"E:\Innocap-IBM-UAT-Key\");
+        private static string SSLCipherSpec => ConfigurationManagerWrapper.StringSetting("SSLCipherSpec", "TLS_RSA_WITH_AES_256_GCM_SHA3843");
+        private static string CertificateLabel => ConfigurationManagerWrapper.StringSetting("CertificateLabel", "ibmwebspheremqtmsinnocap01");
         private static string QueueManagerCcIdProperty => ConfigurationManagerWrapper.StringSetting("QueueManagerCCIdProperty", "1208");
 
         /*Out-Bound Parameters*/
@@ -48,12 +50,16 @@ namespace HM.Operations.Secure.Middleware.Queues
         {
             try
             {
+                MQEnvironment.SSLCipherSpec = SSLCipherSpec;
+                MQEnvironment.SSLKeyRepository = SSLKeyRepository;
+
                 var connectionParams = new Hashtable
                 {
-                    {MQC.CHANNEL_PROPERTY, ClientChannelName},
+                    {MQC.TRANSPORT_PROPERTY, MQC.TRANSPORT_MQSERIES_CLIENT},
                     {MQC.HOST_NAME_PROPERTY, HostName},
                     {MQC.PORT_PROPERTY, ChannelConnectionPort},
-                    {MQC.TRANSPORT_PROPERTY, MQC.TRANSPORT_MQSERIES_CLIENT}
+                    {MQC.CHANNEL_PROPERTY, ClientChannelName},
+                    {MQC.MQCA_CERT_LABEL, CertificateLabel},
                 };
 
                 QueueManager = new MQQueueManager(QueueManagerName, connectionParams);
@@ -61,19 +67,19 @@ namespace HM.Operations.Secure.Middleware.Queues
                 QueueManager.Connect(QueueManagerName);
                 Logger.Debug("MQ Connected Successfully to Send Message");
             }
-            catch (MQException mexc)
+            catch(MQException mexc)
             {
-                var message =
-                    $"Unable to connect to Queue Manager: {mexc.Message} ReasonCode: {mexc.ReasonCode}{mexc.StackTrace}";
-                if (DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
+                var message = $"Unable to connect to Queue Manager: {mexc.Message} ReasonCode: {mexc.ReasonCode}{mexc.StackTrace}";
+                if(DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
                     Logger.Error(message, mexc);
                 throw new Exception(message, mexc);
             }
         }
 
+
         public static void SendMessage(string swiftMessage)
         {
-            if (Utility.IsLocal)
+            if(Utility.IsLocal)
                 return;
 
             //Send this Swift Message
@@ -92,7 +98,7 @@ namespace HM.Operations.Secure.Middleware.Queues
         {
             try
             {
-                if (QueueManager == null || !QueueManager.IsConnected)
+                if(QueueManager == null || !QueueManager.IsConnected)
                     ConnectMQ();
 
                 var queue = QueueManager.AccessQueue(SenderQueueName, MQC.MQOO_OUTPUT + MQC.MQOO_FAIL_IF_QUIESCING);
@@ -110,10 +116,10 @@ namespace HM.Operations.Secure.Middleware.Queues
                 Logger.Debug("MQ Message sent Successfully");
             }
 
-            catch (MQException ex)
+            catch(MQException ex)
             {
                 //Retry once to fix the Broken connection - will fail on the second retry
-                if (!isRetry && ex.Message == "MQRC_CONNECTION_BROKEN")
+                if(!isRetry && ex.Message == "MQRC_CONNECTION_BROKEN")
                 {
                     //sleep for 2 second
                     Thread.Sleep(1000 * 2);
@@ -126,7 +132,7 @@ namespace HM.Operations.Secure.Middleware.Queues
                 }
             }
 
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Logger.Error("Sending Message Failed: " + ex.Message, ex);
                 throw;
@@ -136,7 +142,7 @@ namespace HM.Operations.Secure.Middleware.Queues
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void GetAndProcessAcknowledgement(long wireId = -1)
         {
-            if (!IsPendingResponseQueue())
+            if(!IsPendingResponseQueue())
                 return;
 
             GetAndProcessQueueMessage(ReceiverAckQueueName);
@@ -145,7 +151,7 @@ namespace HM.Operations.Secure.Middleware.Queues
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void GetAndProcessMessage()
         {
-            if (!IsPendingResponseQueue())
+            if(!IsPendingResponseQueue())
                 return;
 
             GetAndProcessQueueMessage(ReceiverQueueName);
@@ -153,10 +159,10 @@ namespace HM.Operations.Secure.Middleware.Queues
 
         private static void GetAndProcessQueueMessage(string queueName)
         {
-            if (Utility.IsLocal)
+            if(Utility.IsLocal)
                 return;
 
-            if (QueueManager == null || !QueueManager.IsConnected)
+            if(QueueManager == null || !QueueManager.IsConnected)
                 ConnectMQ();
 
             // accessing queue
@@ -170,7 +176,7 @@ namespace HM.Operations.Secure.Middleware.Queues
             // creating a message options object
             var mqGetMsgOpts = new MQGetMessageOptions { Options = MQC.MQGMO_FAIL_IF_QUIESCING | MQC.MQGMO_WAIT };
 
-            while (true)
+            while(true)
             {
                 hmsMQLog mqLog = null;
                 try
@@ -190,27 +196,27 @@ namespace HM.Operations.Secure.Middleware.Queues
 
                     message.ClearMessage();
                 }
-                catch (MQException mqe)
+                catch(MQException mqe)
                 {
                     //This means no messages available in Queue to Process
-                    if (mqe.ReasonCode == 2033)
+                    if(mqe.ReasonCode == 2033)
                         break;
 
                     var msg = $"MQException caught: {mqe.ReasonCode} {mqe.Message}";
                     Logger.Error(msg, mqe);
-                    if (mqLog != null)
+                    if(mqLog != null)
                         UpdateMQMessageLog(mqLog, msg);
                 }
-                catch (UnhandledWireMessageException ex)
+                catch(UnhandledWireMessageException ex)
                 {
-                    if (mqLog != null)
+                    if(mqLog != null)
                         UpdateMQMessageLog(mqLog, ex.Message);
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     var msg = $"Unhandled Exception when processing inbound : {ex.Message}";
                     Logger.Error(msg, ex);
-                    if (mqLog != null)
+                    if(mqLog != null)
                         UpdateMQMessageLog(mqLog, msg);
                 }
             }
@@ -227,7 +233,7 @@ namespace HM.Operations.Secure.Middleware.Queues
             //Completed=5,
             //Failed=6,
 
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 return context.hmsWires.Any(s => s.SwiftStatusId == 2 || s.SwiftStatusId == 3);
             }
@@ -235,7 +241,7 @@ namespace HM.Operations.Secure.Middleware.Queues
 
         public static hmsMQLog LogMQMessage(string message, string queueName, bool isOutBound)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 var messageMqLog = new hmsMQLog()
                 {
@@ -246,7 +252,7 @@ namespace HM.Operations.Secure.Middleware.Queues
                     CreatedAt = DateTime.Now
                 };
 
-                if (isOutBound)
+                if(isOutBound)
                     messageMqLog.OpsSecureHandlerMessage = "MQ Message sent Successfully";
 
 
@@ -259,7 +265,7 @@ namespace HM.Operations.Secure.Middleware.Queues
 
         public static void UpdateMQMessageLog(hmsMQLog log, string hmOpsHandlerMessage)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 log.OpsSecureHandlerMessage = hmOpsHandlerMessage;
                 context.hmsMQLogs.AddOrUpdate(log);

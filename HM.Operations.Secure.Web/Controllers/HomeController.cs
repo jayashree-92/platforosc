@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using System.IO;
-using System.Linq;
-using System.Web.Mvc;
-using Com.HedgeMark.Commons.Extensions;
+﻿using Com.HedgeMark.Commons.Extensions;
 using Hangfire;
-using HedgeMark.Operations.FileParseEngine.Models;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
 using HM.Operations.Secure.Middleware.Models;
@@ -15,7 +7,12 @@ using HM.Operations.Secure.Middleware.Util;
 using HM.Operations.Secure.Web.Jobs;
 using HM.Operations.Secure.Web.Utility;
 using log4net;
-using ReturnNode = Microsoft.Ajax.Utilities.ReturnNode;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.IO;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace HM.Operations.Secure.Web.Controllers
 {
@@ -44,11 +41,11 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult GetWireStatusCount(DateTime valueDate)
         {
             WireStatusCount wireStatusCount;
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 var wireStatusCountMap = context.hmsWires.Where(s => s.WireStatusId == 2 || s.ValueDate == valueDate || DbFunctions.TruncateTime(s.CreatedAt) == DbFunctions.TruncateTime(valueDate)).Select(s => new { s.hmFundId, s.WireStatusId, s.SwiftStatusId }).ToList();
 
-                if (!AuthorizedSessionData.IsPrivilegedUser)
+                if(!AuthorizedSessionData.IsPrivilegedUser)
                 {
                     var authorizedFundsIds = AuthorizedSessionData.HMFundIds.Where(s => s.Level > 1).Select(s => s.Id).ToList();
                     wireStatusCountMap = wireStatusCountMap.Where(s => authorizedFundsIds.Contains(s.hmFundId)).ToList();
@@ -56,37 +53,37 @@ namespace HM.Operations.Secure.Web.Controllers
 
                 wireStatusCount = new WireStatusCount();
 
-                foreach (var statusCount in wireStatusCountMap)
+                foreach(var statusCount in wireStatusCountMap)
                 {
                     //Initiated and Pending Approval
-                    if (statusCount.WireStatusId == 2)
+                    if(statusCount.WireStatusId == 2)
                         wireStatusCount.Pending += 1;
 
                     //Approved and Processing
-                    if (statusCount.WireStatusId == 3 && (statusCount.SwiftStatusId == 2 || statusCount.SwiftStatusId == 3))
+                    if(statusCount.WireStatusId == 3 && (statusCount.SwiftStatusId == 2 || statusCount.SwiftStatusId == 3))
                         wireStatusCount.Approved += 1;
 
                     //Cancelled and Processing
-                    if (statusCount.WireStatusId == 4 && (statusCount.SwiftStatusId == 2 || statusCount.SwiftStatusId == 3))
+                    if(statusCount.WireStatusId == 4 && (statusCount.SwiftStatusId == 2 || statusCount.SwiftStatusId == 3))
                         wireStatusCount.CancelledAndProcessing += 1;
 
                     //Approved and Completed
-                    if (statusCount.WireStatusId == 3 && statusCount.SwiftStatusId == 5)
+                    if(statusCount.WireStatusId == 3 && statusCount.SwiftStatusId == 5)
                         wireStatusCount.Completed += 1;
 
                     //Cancelled and Completed
-                    if (statusCount.WireStatusId == 4 && (statusCount.SwiftStatusId == 1 || statusCount.SwiftStatusId == 5))
+                    if(statusCount.WireStatusId == 4 && (statusCount.SwiftStatusId == 1 || statusCount.SwiftStatusId == 5))
                         wireStatusCount.Cancelled += 1;
 
                     //Failed
-                    if (statusCount.WireStatusId == 5 || statusCount.SwiftStatusId == 4 || statusCount.SwiftStatusId == 6)
+                    if(statusCount.WireStatusId == 5 || statusCount.SwiftStatusId == 4 || statusCount.SwiftStatusId == 6)
                         wireStatusCount.Failed += 1;
 
                     //Acknowledged
-                    if (statusCount.SwiftStatusId == 3)
+                    if(statusCount.SwiftStatusId == 3)
                         wireStatusCount.Acknowledged += 1;
 
-                    if (statusCount.WireStatusId == 6)
+                    if(statusCount.WireStatusId == 6)
                         wireStatusCount.OnHold += 1;
                 }
             }
@@ -150,9 +147,9 @@ namespace HM.Operations.Secure.Web.Controllers
             var fundAccounts = new List<WireAccountBaseData>();
             long reportId = 0;
 
-            if (wireTicketStatus.IsEditEnabled)
+            if(wireTicketStatus.IsEditEnabled)
             {
-                if (!wireTicketStatus.IsWirePurposeAdhoc)
+                if(!wireTicketStatus.IsWirePurposeAdhoc)
                     reportId = FileSystemManager.GetReportId(wireTicket.HMWire.hmsWirePurposeLkup.ReportName);
 
                 fundAccounts = wireTicketStatus.IsWirePurposeAdhoc
@@ -202,7 +199,7 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var wireSourceModule = new WireSourceDetails();
 
-            if (wireTicket.HMWire.hmsWireInvoiceAssociations.Any())
+            if(wireTicket.HMWire.hmsWireInvoiceAssociations.Any())
             {
                 wireSourceModule.SourceModuleName = "Invoices";
 
@@ -222,7 +219,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 wireSourceModule.Details.Add("Pay Date", invoiceReport.PaidDate.ToDateString());
                 wireSourceModule.Details.Add("Service Provider", invoiceReport.Vendor);
             }
-            else if (wireTicket.HMWire.hmsWireCollateralAssociations.Any())
+            else if(wireTicket.HMWire.hmsWireCollateralAssociations.Any())
             {
                 wireSourceModule.SourceModuleName = "Collateral Report";
 
@@ -235,7 +232,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 wireSourceModule.Details.Add("Collateral Pledged to / (by) Fund (Verified Balance)", collateralReport.dmaCollateralData.CollateralPledgedToByFundVerifiedBalance.ToCurrency());
                 wireSourceModule.Details.Add("Collateral Pending to / (from) Fund", collateralReport.dmaCollateralData.CollateralPendingToFromFund.ToCurrency());
                 wireSourceModule.Details.Add("Exposure / MTM", collateralReport.dmaCollateralData.ExposureOrMtm.ToCurrency());
-                if (collateralReport.dmaCollateralData.IsCollateralReport)
+                if(collateralReport.dmaCollateralData.IsCollateralReport)
                     wireSourceModule.Details.Add("Independent Amount (CounterParty)", collateralReport.dmaCollateralData.IndependentAmount.ToCurrency());
                 wireSourceModule.Details.Add("Credit Support Amount", collateralReport.dmaCollateralData.CreditSupportAmount.ToCurrency());
                 wireSourceModule.Details.Add("Agreed Movement to / (from) Fund", collateralReport.dmaCollateralData.AgreedMovementToFromFund.ToCurrency());
@@ -250,7 +247,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 wireSourceModule.Details.Add("Deliver Amount", collateralReport.PledgeAmount.ToCurrency());
                 wireSourceModule.Details.Add("Return Amount", collateralReport.ReturnAmount.ToCurrency());
             }
-            else if (wireTicket.HMWire.hmsWireInterestAssociations.Any())
+            else if(wireTicket.HMWire.hmsWireInterestAssociations.Any())
             {
                 wireSourceModule.SourceModuleName = "Interest Payment";
 
@@ -288,7 +285,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         private List<string> GetCurrentlyViewingUsers(long wireId)
         {
-            if (wireId == 0)
+            if(wireId == 0)
                 return new List<string>();
 
             var readableName = UserName.HumanizeEmail();
@@ -298,7 +295,7 @@ namespace HM.Operations.Secure.Web.Controllers
             //remove all actionsInProgress for this User - as he will be able to do one wire at a time.
             var allWires = context.hmsActionInProgresses.Where(s => s.UserName == readableName).ToList();
 
-            if (allWires.Any())
+            if(allWires.Any())
             {
                 context.hmsActionInProgresses.RemoveRange(allWires);
                 context.SaveChanges();
@@ -307,7 +304,7 @@ namespace HM.Operations.Secure.Web.Controllers
             context.hmsActionInProgresses.Add(new hmsActionInProgress() { UserName = readableName, hmsWireId = wireId, RecCreatedDt = DateTime.Now });
             context.SaveChanges();
 
-            if (!allUsers.Contains(readableName))
+            if(!allUsers.Contains(readableName))
                 return allUsers;
 
             //same user name should not appear on his item
@@ -321,7 +318,7 @@ namespace HM.Operations.Secure.Web.Controllers
             using var context = new OperationsSecureContext();
             var thisAction = context.hmsActionInProgresses.FirstOrDefault(s => s.hmsWireId == wireId && s.UserName == readableName);
 
-            if (thisAction == null)
+            if(thisAction == null)
                 return;
 
             context.hmsActionInProgresses.Remove(thisAction);
@@ -331,7 +328,7 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult IsThisWireDuplicate(DateTime valueDate, string purpose, long sendingAccountId, long receivingAccountId, long receivingSSITemplateId, long wireId)
         {
             var isDuplicateWire = false;
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -356,29 +353,29 @@ namespace HM.Operations.Secure.Web.Controllers
                 SaveWireCancellationSchedule(wireTicket.WireId, wireTicket.HMWire.ValueDate, (WireDataManager.WireStatus)statusId, daysToAdd);
                 var tempFilePath = $"Temp\\{UserName}";
 
-                foreach (var file in wireTicket.HMWire.hmsWireDocuments)
+                foreach(var file in wireTicket.HMWire.hmsWireDocuments)
                 {
                     var fileName = $"{FileSystemManager.OpsSecureWiresFilesPath}\\{tempFilePath}\\{file.FileName}";
                     var fileInfo = new FileInfo(fileName);
 
-                    if (!System.IO.File.Exists(fileInfo.FullName))
+                    if(!System.IO.File.Exists(fileInfo.FullName))
                         continue;
 
                     var newFileName =
                         $"{FileSystemManager.OpsSecureWiresFilesPath}\\{wireTicket.WireId}\\{file.FileName}";
                     var newFileInfo = new FileInfo(newFileName);
 
-                    if (newFileInfo.Directory != null && !Directory.Exists(newFileInfo.Directory.FullName))
+                    if(newFileInfo.Directory != null && !Directory.Exists(newFileInfo.Directory.FullName))
                         Directory.CreateDirectory(newFileInfo.Directory.FullName);
 
-                    if (System.IO.File.Exists(newFileInfo.FullName))
+                    if(System.IO.File.Exists(newFileInfo.FullName))
                         continue;
 
                     System.IO.File.Copy(fileName, newFileName);
                     System.IO.File.Delete(fileInfo.FullName);
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Logger.Error(ex.Message, ex);
                 Response.StatusCode = 500;
@@ -396,11 +393,11 @@ namespace HM.Operations.Secure.Web.Controllers
                 JobId = string.Empty
             };
 
-            if (workflowStatus == WireDataManager.WireStatus.Initiated)
+            if(workflowStatus == WireDataManager.WireStatus.Initiated)
             {
                 var schedule = thisWireSchedule;
 
-                if (!string.IsNullOrWhiteSpace(thisWireSchedule.JobId))
+                if(!string.IsNullOrWhiteSpace(thisWireSchedule.JobId))
                     BackgroundJob.Delete(thisWireSchedule.JobId);
 
                 thisWireSchedule.ScheduledDate = valueDate.AddDays(daysToAdd).Date.Add(new TimeSpan(23, 59, 0));
@@ -410,7 +407,7 @@ namespace HM.Operations.Secure.Web.Controllers
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(thisWireSchedule.JobId))
+                if(string.IsNullOrWhiteSpace(thisWireSchedule.JobId))
                     return;
 
                 BackgroundJob.Delete(thisWireSchedule.JobId);
@@ -428,22 +425,22 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var aDocments = new List<hmsWireDocument>();
             var tempFilePath = $"Temp\\{UserName}";
-            for (var i = 0; i < Request.Files.Count; i++)
+            for(var i = 0; i < Request.Files.Count; i++)
             {
                 var file = Request.Files[i];
 
-                if (file == null)
+                if(file == null)
                     throw new Exception("unable to retrieve file information");
 
                 var fileName = $"{FileSystemManager.OpsSecureWiresFilesPath}\\{(wireId > 0 ? wireId.ToString() : tempFilePath)}\\{file.FileName}";
                 var fileInfo = new FileInfo(fileName);
 
-                if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
+                if(fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
                     Directory.CreateDirectory(fileInfo.Directory.FullName);
 
-                if (System.IO.File.Exists(fileInfo.FullName))
+                if(System.IO.File.Exists(fileInfo.FullName))
                 {
-                    if (wireId > 0)
+                    if(wireId > 0)
                         WireDataManager.RemoveWireDocument(wireId, file.FileName);
 
                     System.IO.File.Delete(fileInfo.FullName);
@@ -492,7 +489,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         private FileInfo GetInvoiceFileLocation(vw_dmaInvoiceReport invoice)
         {
-            switch (invoice.FileSource)
+            switch(invoice.FileSource)
             {
                 case "Manual":
                     return new FileInfo($"{FileSystemManager.InvoicesFileAttachement}/{invoice.dmaInvoiceReportId}/{invoice.FileName}");
@@ -501,7 +498,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 default:
                     return invoice.FileSource == "Config"
                 ? new FileInfo($"{FileSystemManager.InternalConfigFiles}{invoice.FileName}")
-                : new FileInfo($"{((invoice.FileSource == "Overriden") && (!invoice.FileName.StartsWith("Overrides\\") || !invoice.FileName.StartsWith("Overrides/")) ? FileSystemManager.RawFilesOverridesPath : FileSystemManager.SftpRawFilesOfHM)}{invoice.FilePath}");  // FileOriginManager.GetRawFileDirectoryIncludingSubSir(fileOrigin, contextDate)
+                : new FileInfo($"{((invoice.FileSource == "Overriden") && (!invoice.FileName.StartsWith("Overrides\\") || !invoice.FileName.StartsWith("Overrides/")) ? FileSystemManager.RawFilesOverridesPath : FileSystemManager.SftpIncomingDirectory)}{invoice.FilePath}");  // FileOriginManager.GetRawFileDirectoryIncludingSubSir(fileOrigin, contextDate)
             }
         }
 
@@ -542,14 +539,14 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult GetApprovedAgreementsForFund(long fundId)
         {
             List<AgreementBaseDetails> onBoardedAgreements;
-            using (var context = new AdminContext())
+            using(var context = new AdminContext())
             {
                 onBoardedAgreements = (from oAgreement in context.vw_CounterpartyAgreements
                                        where oAgreement.FundMapId == fundId && oAgreement.HMOpsStatus == "Approved"
                                        select new AgreementBaseDetails { AgreementId = oAgreement.dmaAgreementOnBoardingId, AgreementShortName = oAgreement.AgreementShortName }).ToList();
             }
 
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 var qualifiedData = (from agr in onBoardedAgreements
                                      join oAcc in context.onBoardingAccounts on agr.AgreementId equals oAcc.dmaAgreementOnBoardingId
@@ -590,7 +587,7 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             List<onBoardingSSITemplate> receivingAccounts;
             bool shouldEnableCollateralPurpose;
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 var templateType = wireTransferTypeId == 1 ? "Broker" : wireTransferTypeId == 3 ? "Fee/Expense Payment" : wireTransferTypeId == 5 ? "Bank Loan/Private/IPO" : "";
 
@@ -627,7 +624,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 ssiTemplate.onBoardingAccountSSITemplateMaps.ForEach(s => { s.onBoardingSSITemplate = null; s.onBoardingAccount = null; });
             });
 
-            using (var context = new AdminContext())
+            using(var context = new AdminContext())
             {
                 var entityIds = receivingAccounts.Select(s => s.TemplateEntityId).Distinct().ToList();
                 var counterParties = context.dmaCounterPartyOnBoardings.Where(s => entityIds.Contains(s.dmaCounterPartyOnBoardId))
@@ -675,14 +672,14 @@ namespace HM.Operations.Secure.Web.Controllers
             var usdWireAmount = wireAmount;
             var contextDate = DateTime.Today.GetContextDate();
 
-            if (valueDate < contextDate)
+            if(valueDate < contextDate)
                 contextDate = valueDate;
 
-            if (currency != "USD")
+            if(currency != "USD")
             {
                 //convert currency to USD
                 double conversionRate;
-                using (var context = new OperationsContext())
+                using(var context = new OperationsContext())
                 {
                     conversionRate = context.vw_ProxyCurrencyConversionData.Where(s => s.HM_CONTEXT_DT == contextDate && s.TO_CRNCY == "USD" && s.FROM_CRNCY == currency).Select(s => s.FX_RATE).FirstOrDefault().ToDouble(1);
                 }
@@ -690,7 +687,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 usdWireAmount = wireAmount * conversionRate;
             }
 
-            if (usdWireAmount > UserDetails.User.AllowedWireAmountLimit)
+            if(usdWireAmount > UserDetails.User.AllowedWireAmountLimit)
             {
                 //If already initiated and pending approval
                 return Json(wireStatusId == 2 ? $"User is not authorized to approve wire" : $"Wire Amount is not within your allowed initiation or approval limits of {UserDetails.User.AllowedWireAmountLimit.ToCurrency()} USD.");

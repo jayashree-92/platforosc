@@ -7,7 +7,7 @@ namespace Com.HedgeMark.Commons.Mail
     public class MailInfo
     {
         public string Server => ConfigurationManagerWrapper.StringSetting(Config.MailServer);
-        public static string DefaultFromAddress => ConfigurationManagerWrapper.StringSetting(Config.FromMailAddress, "no-reply-local@bnymellon.com");
+        public static string DefaultFromAddress => ConfigurationManagerWrapper.StringSetting(Config.FromMailAddress, "no-reply-ops-secure@innocap.com");
 
         private string fromAddress;
         public string FromAddress

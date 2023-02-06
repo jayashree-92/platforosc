@@ -97,8 +97,7 @@ namespace HM.Operations.Secure.Web
 
 
             bundles.Add(new StyleBundle("~/Content/bundle")
-                .Include("~/Content/bootstrap-bny-3.css", new CssRewriteUrlTransform())
-                .Include("~/Content/bootstrap-bny-nexen.css", new CssRewriteUrlTransform())
+                .Include("~/Content/bootstrap-innocap.css", new CssRewriteUrlTransform())
                 .Include("~/Content/bootstrap-extensions.css", new CssRewriteUrlTransform())
                 .Include("~/Content/css/select2.css", new CssRewriteUrlTransform())
                 .Include("~/Content/select2-bootstrap.css", new CssRewriteUrlTransform())

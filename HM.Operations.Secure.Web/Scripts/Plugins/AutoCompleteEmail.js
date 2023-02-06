@@ -12,7 +12,7 @@
 
 (function ($) {
 
-    var aDefaultDomains = ["bnymellon.com"];
+    var aDefaultDomains = ["innocap.com"];
     var aExcludedEmails = ["noreply", "no-reply"];
 
     var spanClassName = "spn_temp_span_auto_sugst_email";

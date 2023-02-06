@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.IO;
-using System.Linq;
-using System.Web.Mvc;
-using Com.HedgeMark.Commons;
+﻿using Com.HedgeMark.Commons;
 using Com.HedgeMark.Commons.Extensions;
-using HedgeMark.Secrets.Management.Services;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
 using HM.Operations.Secure.Middleware.Models;
 using HM.Operations.Secure.Middleware.Util;
 using HM.Operations.Secure.Web.Jobs;
 using PDFUtility.Operations.ManagedAccounts;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.IO;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace HM.Operations.Secure.Web.Controllers
 {
@@ -30,7 +29,7 @@ namespace HM.Operations.Secure.Web.Controllers
             Dictionary<int, int> initiatorCount, approvedCount;
             Dictionary<int, DateTime> lastAccessedOnMap;
 
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 users = context.hmsUsers.ToList();
                 var allWires = context.hmsWires.Select(s => new { s.WireStatusId, s.CreatedBy, s.ApprovedBy, s.LastUpdatedBy, s.LastModifiedAt }).ToList();
@@ -43,7 +42,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var allUserIds = users.Select(s => s.hmLoginId).Distinct().ToList();
             userEmailMap = FileSystemManager.GetUsersList(allUserIds);
 
-            using (var context = new AdminContext())
+            using(var context = new AdminContext())
             {
                 userGroupMap = context.onBoardingAssignmentUserGroupMaps.Include(s => s.onBoardingAssignmentUserGroup).Where(s => s.onBoardingAssignmentUserGroup.IsActive && s.onBoardingAssignmentUserGroup.IsPrimaryGroup && allUserIds.Contains(s.UserId)).GroupBy(s => s.UserId).ToDictionary(s => s.Key, v => v.Select(s1 => s1.onBoardingAssignmentUserGroup.GroupDescription).FirstOrDefault());
             }
@@ -83,7 +82,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var fileName = $"HMAuthTransfer_{DateTime.Today:yyyy_MM_dd}_{groupOption}.pdf";
             var exportFileInfo = new FileInfo($"{FileSystemManager.UploadTemporaryFilesPath}{fileName}");
 
-            switch (groupOption)
+            switch(groupOption)
             {
                 case "Group_A_only":
                     allWireUsers = allWireUsers.Where(s => s.Role == "hm-wire-approver").ToList();
@@ -98,7 +97,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var digiSignInfo = new DigitalSignatureInfo()
             {
                 PfxFile = new FileInfo(FileSystemManager.OpsSecureInternalConfigFiles + "\\" + ConfigurationManagerWrapper.StringSetting("DigiSignatureFileName", "HedgeMarkOperationsQA.pfx")),
-                Password = SecretManagementService.GetGenericSecret("DigiSignaturePassword").Value
+                Password = ConfigurationManagerWrapper.GetAzureConfig("DigiSignaturePassword")
             };
 
             exportFileInfo = SecureExporter.ExportSignedReport(userRows, groupOption, exportFileInfo, digiSignInfo.PfxFile.Exists ? digiSignInfo : null);

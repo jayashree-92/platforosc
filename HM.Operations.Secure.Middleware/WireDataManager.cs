@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using Com.HedgeMark.Commons;
+﻿using Com.HedgeMark.Commons;
 using Com.HedgeMark.Commons.Extensions;
 using HedgeMark.SwiftMessageHandler;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware.Models;
 using HM.Operations.Secure.Middleware.Util;
 using log4net;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace HM.Operations.Secure.Middleware
 {
@@ -109,10 +109,10 @@ namespace HM.Operations.Secure.Middleware
 
             ValidationMessage = string.Empty;
 
-            if (wireTicket.IsNotice || wireTicket.IsNoticeToFund)
+            if(wireTicket.IsNotice || wireTicket.IsNoticeToFund)
             {
                 IsNoticePending = WireDataManager.IsNoticeWirePendingAcknowledgement(wireTicket.HMWire);
-                if (IsNoticePending)
+                if(IsNoticePending)
                     ValidationMessage = "The notice with same amount, value date and currency is already Processing with SWIFT.You cannot notice the same until it gets a Confirmation";
             }
 
@@ -209,7 +209,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static string GetFundRegistedAddress(long hmFundId)
         {
-            using (var context = new OperationsContext())
+            using(var context = new OperationsContext())
             {
                 return context.vw_HFundOps.Where(s => s.hmFundId == hmFundId).Select(s => s.RegisterAddress).FirstOrDefault();
             }
@@ -219,7 +219,7 @@ namespace HM.Operations.Secure.Middleware
         {
             hmsWire hmWire;
 
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 //context.Database.Log = s =>
                 //{
@@ -248,10 +248,10 @@ namespace HM.Operations.Secure.Middleware
 
             hmWire.SendingAccount = FundAccountManager.GetOnBoardingAccount(hmWire.OnBoardAccountId);
 
-            if (hmWire.ReceivingOnBoardAccountId != null)
+            if(hmWire.ReceivingOnBoardAccountId != null)
                 hmWire.ReceivingAccount = FundAccountManager.GetOnBoardingAccount(hmWire.ReceivingOnBoardAccountId ?? 0);
 
-            if (hmWire.OnBoardSSITemplateId != null)
+            if(hmWire.OnBoardSSITemplateId != null)
                 hmWire.ReceivingSSITemplate = SSITemplateManager.GetSsiTemplate(hmWire.OnBoardSSITemplateId ?? 0);
 
 
@@ -282,7 +282,7 @@ namespace HM.Operations.Secure.Middleware
             hmWire.hmsWireInvoiceAssociations.ForEach(s => s.hmsWire = null);
             hmWire.hmsWireInterestAssociations.ForEach(s => s.hmsWire = null);
 
-            if (hmWire.hmsWireField != null)
+            if(hmWire.hmsWireField != null)
             {
                 hmWire.hmsWireField.hmsWires = null;
                 hmWire.hmsWireField.hmsCollateralCashPurposeLkup.hmsWireFields = null;
@@ -290,12 +290,12 @@ namespace HM.Operations.Secure.Middleware
             else
                 hmWire.hmsWireField = new hmsWireField();
 
-            if (hmWire.hmsSwiftStatusLkup != null)
+            if(hmWire.hmsSwiftStatusLkup != null)
             {
                 hmWire.hmsSwiftStatusLkup.hmsWires = null;
                 hmWire.hmsSwiftStatusLkup.hmsWireWorkflowLogs = null;
             }
-            if (hmWire.hmsWireSenderInformation != null)
+            if(hmWire.hmsWireSenderInformation != null)
                 hmWire.hmsWireSenderInformation.hmsWires = null;
 
             hmWire.hmsWireWorkflowLogs = hmWire.hmsWireWorkflowLogs.OrderByDescending(s => s.CreatedAt).ToList();
@@ -306,7 +306,7 @@ namespace HM.Operations.Secure.Middleware
 
             var hFund = AdminFundManager.GetHFundsCreatedForDMAOnly(PreferencesManager.FundNameInDropDown.OpsShortName, hmWire.hmFundId);
 
-            using (var context = new AdminContext())
+            using(var context = new AdminContext())
             {
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
@@ -318,7 +318,7 @@ namespace HM.Operations.Secure.Middleware
 
                 workflowUsers = hmWire.hmsWireWorkflowLogs.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
                 attachmentUsers = hmWire.hmsWireDocuments.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
-                if (hmWire.ReceivingSSITemplate != null)
+                if(hmWire.ReceivingSSITemplate != null)
                     counterparty = context.dmaCounterPartyOnBoardings.FirstOrDefault(s => hmWire.ReceivingSSITemplate.TemplateEntityId == s.dmaCounterPartyOnBoardId);
             }
 
@@ -346,7 +346,7 @@ namespace HM.Operations.Secure.Middleware
             var isNoticeToFund = wireTransferType == TransferType.NoticeToFund;
 
             Dictionary<long, IEnumerable<long>> umberllaFundMap;
-            using (var context = new AdminContext())
+            using(var context = new AdminContext())
             {
                 var onbFundId = context.vw_HFund.Where(s => s.hmFundId == hmFundId).Select(s => s.dmaFundOnBoardId).FirstOrDefault() ?? 0;
                 umberllaFundMap = context.onboardingSubAdvisorFundMaps.Include(s => s.parentFund).Include(s => s.umberllaFund).Where(s => !s.IsDeleted && (s.dmaFundOnBoardId == onbFundId || s.UmbrellaFundId == onbFundId))
@@ -355,7 +355,7 @@ namespace HM.Operations.Secure.Middleware
 
             List<long> parentFundIds = new List<long>(), subFundIds = new List<long>();
 
-            foreach (var umberllaMap in umberllaFundMap)
+            foreach(var umberllaMap in umberllaFundMap)
             {
                 parentFundIds.Add(umberllaMap.Key);
                 subFundIds.AddRange(umberllaMap.Value);
@@ -365,7 +365,7 @@ namespace HM.Operations.Secure.Middleware
             allFundIds.AddRange(parentFundIds.Union(subFundIds));
             allFundIds = allFundIds.Distinct().ToList();
 
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -397,7 +397,7 @@ namespace HM.Operations.Secure.Middleware
         {
             var allEligibleAgreementIds = AllEligibleAgreementIds();
 
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -421,11 +421,11 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-        public static readonly List<string> AgreementTypesEligibleForSendingWires = OpsSecureSwitches.GetSwitchValue(Switches.SwitchKey.AgreementTypesEligibleForSendingWires);
+        public static List<string> AgreementTypesEligibleForSendingWires => OpsSecureSwitches.GetSwitchValue(Switches.SwitchKey.AgreementTypesEligibleForSendingWires);
 
         private static List<long> AllEligibleAgreementIds()
         {
-            using (var context = new AdminContext())
+            using(var context = new AdminContext())
             {
                 return context.vw_CounterpartyAgreements.Where(s => AgreementTypesEligibleForSendingWires.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
             }
@@ -437,19 +437,19 @@ namespace HM.Operations.Secure.Middleware
 
             List<hmsWireLog> wireLogs;
 
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 wireLogs = context.hmsWireLogs.Include("hmsWireMessageType").Include("hmsWireLogTypeLkup").Where(s => s.hmsWireId == wireId).OrderBy(s => s.hmsWireLogId).ToList();
             }
 
-            if (wireLogs.Count == 0)
+            if(wireLogs.Count == 0)
                 return swiftMessages;
 
             var isMultiMessage = wireLogs.Select(s => s.WireMessageTypeId).Distinct().Count() > 1;
 
             var lastMessageStatus = 0;
             var lastKey = string.Empty;
-            foreach (var log in wireLogs)
+            foreach(var log in wireLogs)
             {
                 var lastMessageType = log.hmsWireMessageType.MessageType;
 
@@ -463,14 +463,14 @@ namespace HM.Operations.Secure.Middleware
             }
 
             //Outbound
-            if (lastMessageStatus == 1)
+            if(lastMessageStatus == 1)
             {
                 swiftMessages.Add(new FormattedSwiftMessage() { Key = lastKey.Replace("Outbound", isMultiMessage ? "Ack" : "Acknowledged"), FormatedMsg = string.Empty, OriginalFinMsg = string.Empty });
                 swiftMessages.Add(new FormattedSwiftMessage() { Key = lastKey.Replace("Outbound", "Confirmation"), FormatedMsg = string.Empty, OriginalFinMsg = string.Empty });
             }
 
             //Acknowledgment
-            else if (lastMessageStatus == 2)
+            else if(lastMessageStatus == 2)
             {
                 swiftMessages.Add(new FormattedSwiftMessage() { Key = lastKey.Replace(isMultiMessage ? "Ack" : "Acknowledged", "Confirmation"), FormatedMsg = string.Empty, OriginalFinMsg = string.Empty });
             }
@@ -480,7 +480,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static hmsWire GetWire(long wireId)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 var wireTicket = context.hmsWires.FirstOrDefault(s => s.hmsWireId == wireId);
                 return wireTicket;
@@ -511,31 +511,31 @@ namespace HM.Operations.Secure.Middleware
 
         public static hmsWireWorkflowLog SetWireStatusAndWorkFlow(hmsWire wire, WireStatus wireStatus, SwiftStatus swiftStatus, string comment, int userId)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 wire.WireStatusId = (int)wireStatus;
                 wire.SwiftStatusId = (int)swiftStatus;
 
-                if (userId != -1 && wireStatus != WireStatus.Approved)
+                if(userId != -1 && wireStatus != WireStatus.Approved)
                 {
                     wire.LastUpdatedBy = userId;
                     wire.LastModifiedAt = DateTime.UtcNow;
                 }
 
-                if (wireStatus == WireStatus.Approved && userId != -1)
+                if(wireStatus == WireStatus.Approved && userId != -1)
                 {
                     wire.ApprovedAt = DateTime.UtcNow;
                     wire.ApprovedBy = userId;
                 }
-                else if (swiftStatus == SwiftStatus.NotInitiated)
+                else if(swiftStatus == SwiftStatus.NotInitiated)
                 {
                     wire.ApprovedAt = null;
                     wire.ApprovedBy = null;
                 }
 
-                if (wire.ReceivingOnBoardAccountId == 0)
+                if(wire.ReceivingOnBoardAccountId == 0)
                     wire.ReceivingOnBoardAccountId = null;
-                if (wire.OnBoardSSITemplateId == 0)
+                if(wire.OnBoardSSITemplateId == 0)
                     wire.OnBoardSSITemplateId = null;
 
                 //if (wireStatus == WireStatus.Initiated)
@@ -567,12 +567,12 @@ namespace HM.Operations.Secure.Middleware
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static WireTicket SaveWireData(WireTicket wireTicket, WireStatus wireStatus, string comment, int userId)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
-                if (wireTicket.HMWire.hmsWireField != null && wireTicket.HMWire.hmsWireField.hmsCollateralCashPurposeLkupId == 0)
+                if(wireTicket.HMWire.hmsWireField != null && wireTicket.HMWire.hmsWireField.hmsCollateralCashPurposeLkupId == 0)
                     wireTicket.HMWire.hmsWireField = null;
 
-                if (wireTicket.HMWire.hmsWireId == 0)
+                if(wireTicket.HMWire.hmsWireId == 0)
                 {
                     wireTicket.HMWire.WireStatusId = (int)wireStatus;
                     wireTicket.HMWire.SwiftStatusId = (int)SwiftStatus.NotInitiated;
@@ -583,23 +583,23 @@ namespace HM.Operations.Secure.Middleware
                     wireTicket.HMWire.LastUpdatedBy = userId;
                     wireTicket.HMWire.SystemAmount = wireTicket.HMWire.Amount;
 
-                    if (wireTicket.HMWire.OnBoardSSITemplateId == 0)
+                    if(wireTicket.HMWire.OnBoardSSITemplateId == 0)
                         wireTicket.HMWire.OnBoardSSITemplateId = null;
 
-                    if (wireTicket.HMWire.ReceivingOnBoardAccountId == 0)
+                    if(wireTicket.HMWire.ReceivingOnBoardAccountId == 0)
                         wireTicket.HMWire.ReceivingOnBoardAccountId = null;
 
                     context.hmsWires.Add(wireTicket.HMWire);
                     context.SaveChanges();
                 }
 
-                if (wireTicket.HMWire.hmsWireField != null)
+                if(wireTicket.HMWire.hmsWireField != null)
                     context.hmsWireFields.AddOrUpdate(wireTicket.HMWire.hmsWireField);
 
                 context.hmsWireDocuments.AddRange(wireTicket.HMWire.hmsWireDocuments.Where(s => s.hmsWireDocumentId == 0));
                 context.SaveChanges();
 
-                if (wireTicket.HMWire.OnBoardSSITemplateId is > 0)
+                if(wireTicket.HMWire.OnBoardSSITemplateId is > 0)
                 {
                     var ssiTemplate = context.onBoardingSSITemplates.First(s => s.onBoardingSSITemplateId == wireTicket.HMWire.OnBoardSSITemplateId);
                     ssiTemplate.LastUsedAt = DateTime.Now;
@@ -607,25 +607,25 @@ namespace HM.Operations.Secure.Middleware
                 }
 
             }
-            lock (WireSaveTransactionLock)
+            lock(WireSaveTransactionLock)
             {
                 var existingWireTicket = GetWireData(wireTicket.HMWire.hmsWireId);
 
-                if (wireStatus == WireStatus.Approved)
+                if(wireStatus == WireStatus.Approved)
                     WireTransactionManager.ApproveAndInitiateWireTransfer(existingWireTicket, comment, userId);
 
-                else if (existingWireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus == WireStatus.Cancelled)
+                else if(existingWireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus == WireStatus.Cancelled)
                     WireTransactionManager.CancelWireTransfer(existingWireTicket, comment, userId);
 
                 //if the wire is already approved, user can only cancel it, and cannot perform other options such as hold
-                else if (existingWireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus != WireStatus.Cancelled)
+                else if(existingWireTicket.HMWire.WireStatusId == (int)WireStatus.Approved && wireStatus != WireStatus.Cancelled)
                     throw new InvalidOperationException($"Wire already Approved and '{wireStatus}' action cannot be performed at this time");
 
                 else
                 {
                     wireTicket.HMWire.CreatedAt = existingWireTicket.HMWire.CreatedAt;
                     SetWireStatusAndWorkFlow(wireTicket.HMWire, wireStatus, SwiftStatus.NotInitiated, comment, userId);
-                    if ((existingWireTicket.IsNotice || existingWireTicket.IsNoticeToFund) && wireStatus == WireStatus.Initiated)
+                    if((existingWireTicket.IsNotice || existingWireTicket.IsNoticeToFund) && wireStatus == WireStatus.Initiated)
                         SaveWireData(wireTicket, WireStatus.Approved, comment, userId);
                 }
 
@@ -635,23 +635,23 @@ namespace HM.Operations.Secure.Middleware
 
         public static TimeSpan GetDeadlineToApprove(onBoardingAccount onboardAccount, DateTime valueDate, Dictionary<string, string> timeZones = null)
         {
-            if (timeZones == null)
+            if(timeZones == null)
                 timeZones = FileSystemManager.GetAllTimeZones();
 
-            if (onboardAccount.WirePortalCutoff == null)
+            if(onboardAccount.WirePortalCutoff == null)
                 onboardAccount.WirePortalCutoff = new hmsWirePortalCutoff();
 
             var baseTimeZone = timeZones[FileSystemManager.DefaultTimeZone];
             var destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(baseTimeZone);
 
             var currentTime = DateTime.Now;
-            if (TimeZoneInfo.Local.Id != baseTimeZone)
+            if(TimeZoneInfo.Local.Id != baseTimeZone)
                 currentTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, baseTimeZone);
 
             var cutOffTimeDeadline = GetCutOffTime(onboardAccount.WirePortalCutoff.CutoffTime, valueDate, onboardAccount.WirePortalCutoff.CutOffTimeZone, timeZones, destinationTimeZone, onboardAccount.WirePortalCutoff.DaystoWire);
 
             //when there is no cash sweep, use only cut-off time
-            if (onboardAccount.CashSweep == "No")
+            if(onboardAccount.CashSweep == "No")
                 return cutOffTimeDeadline - currentTime;
 
             var cashSweepTimeDeadline = GetCashSweepDeadline(valueDate, onboardAccount.CashSweepTime, onboardAccount.CashSweepTimeZone, destinationTimeZone, timeZones);
@@ -661,10 +661,10 @@ namespace HM.Operations.Secure.Middleware
 
         public static DateTime GetCashSweepDeadline(DateTime valueDate, TimeSpan? cashSweepTime, string cashSweepTimeZone, TimeZoneInfo destinationTimeZone = null, Dictionary<string, string> timeZones = null)
         {
-            if (timeZones == null)
+            if(timeZones == null)
                 timeZones = FileSystemManager.GetAllTimeZones();
 
-            if (destinationTimeZone == null)
+            if(destinationTimeZone == null)
             {
                 var baseTimeZone = timeZones[FileSystemManager.DefaultTimeZone];
                 destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(baseTimeZone);
@@ -676,12 +676,12 @@ namespace HM.Operations.Secure.Middleware
 
         private static DateTime GetCutOffTime(TimeSpan cutOffTime, DateTime valueDate, string cutoffTimeZone, Dictionary<string, string> timeZones, TimeZoneInfo destinationTimeZone, int daysToAdd = 0)
         {
-            if (string.IsNullOrWhiteSpace(cutoffTimeZone))
+            if(string.IsNullOrWhiteSpace(cutoffTimeZone))
                 cutoffTimeZone = destinationTimeZone.Id;
 
             var cutOff = valueDate.AddDays(daysToAdd).Date.Add(cutOffTime);
 
-            if (cutoffTimeZone == destinationTimeZone.Id)
+            if(cutoffTimeZone == destinationTimeZone.Id)
                 return cutOff;
 
             var cutOffTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZones.ContainsKey(cutoffTimeZone) ? timeZones[cutoffTimeZone] : destinationTimeZone.Id);
@@ -692,7 +692,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static List<hmsWireMessageType> GetWireMessageTypes()
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -703,7 +703,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static bool IsNoticeWirePendingAcknowledgement(hmsWire wire)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 var duplicateNotice = context.hmsWires.FirstOrDefault(s => DbFunctions.TruncateTime(s.ValueDate) == DbFunctions.TruncateTime(wire.ValueDate) && s.Currency == wire.Currency && s.hmsWireTransferTypeLKup.TransferType == "Notice" && s.hmsWireId != wire.hmsWireId && ((SwiftStatus)s.SwiftStatusId == SwiftStatus.Processing || (SwiftStatus)s.SwiftStatusId == SwiftStatus.Acknowledged)) ?? new hmsWire();
                 return duplicateNotice.Amount == wire.Amount;
@@ -712,7 +712,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static void RemoveWireDocument(long documentId)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 var document = context.hmsWireDocuments.First(x => x.hmsWireDocumentId == documentId);
                 context.hmsWireDocuments.Remove(document);
@@ -722,10 +722,10 @@ namespace HM.Operations.Secure.Middleware
 
         public static void RemoveWireDocument(long wireId, string fileName)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 var document = context.hmsWireDocuments.Where(x => x.hmsWireId == wireId).FirstOrDefault(s => s.FileName == fileName);
-                if (document == null)
+                if(document == null)
                     return;
 
                 context.hmsWireDocuments.Remove(document);
@@ -736,7 +736,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static List<long> GetNoticeWiresAwaitingApproval()
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 return context.hmsWires.Where(s => s.hmsWireMessageType.MessageType == "MT210" && s.WireStatusId == (int)WireStatus.Initiated).Select(s => s.hmsWireId).ToList();
             }

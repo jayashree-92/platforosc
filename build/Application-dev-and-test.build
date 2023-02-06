@@ -2,43 +2,34 @@
 <project xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" basedir="." default="cleanAndDeployPackage"> 
  
   <!--Project properties-->
-  <property name="buildDirectory" value="../HM.Operations.Secure.Web/bin" /> 
-  <property name="Configuration" value="Test" overwrite="false"/>
+  <property name="buildDirectory" value="../HedgeMark.Operations.Secure.Web/bin" /> 
+  <property name="Configuration" value="Release" overwrite="false"/>
   <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
-  <property name="ProjectFile" value="../HM.Operations.Secure.Web/HM.Operations.Secure.Web.csproj"/>   
-  <property name="OutputFile1" value="../HM.Operations.Secure.Web/obj/Test/"/>   
+  <property name="ProjectFile" value="../HedgeMark.Operations.Secure.Web/HMOSecureWeb.csproj"/>   
+  <property name="OutputFile1" value="../HedgeMark.Operations.Secure.Web/obj/Release/"/>   
   <property name="sourcePackageLocation" value="\\WT81B10085TV00\d$\Operations_Secure_Jenkins\Test"/>   
   <property name="UnitTestProjectReference" value="../HedgeMark.SwiftMessageHandler.Tests/bin/QA/HedgeMark.SwiftMessageHandler.Tests.dll" />  
   
-  <property name="allServers" value="WT81B10085TV00,WT81B10086TV00" />
-  <property name="appPoolName" value="OPS-secure_Test01,OPS-secure_Test03" />
+  <property name="allServers" value="vmwclnwosdusc01" />
+  <property name="appPoolName" value="OPS_Secure_Dev01" />
   
   <property name="primaryServers" value="  
-	  \\Wt81b10085tv00\d$\OPS-secure_Test01,
-	  \\Wt81b10085tv00\d$\OPS-secure_Test03,
-	  \\Wt81b10086tv00\d$\OPS-secure_Test01,
-	  \\WT81B10086TV00\d$\OPS-secure_Test03"/>
+	  \\vmwclnwosdusc01\e$\OPS_Secure_Dev01
+	  "/>
 
    <!--SQL Properties-->
    <property name="sql.DB" value="HM_WIRES"/>
 
   <target name="cleanAndDeployPackage" >	
-	 <nant buildfile="TestBuildAndPublish.build" /> 
+	 <!--<nant buildfile="TestBuildAndPublish.build" />  -->
 	
 	<nant buildfile="SQL-GF.Build">
 		<properties>		 
-		  <property name="sql.svr" value="WT84B10091DV00\MSDMUD04"/>
+		  <property name="sql.svr" value="vmwclnsqldusc01"/>
 		</properties>
 	</nant>
-
 	
-	<nant buildfile="SQL-GF.Build">
-    <properties>		
-		<property name="sql.svr" value="WT84B10073TV00\MSDMUT11"/>
-    </properties>
-	</nant>
-	
-	<nant buildfile="CleanAndDeployPackage.build" />
+	<nant buildfile="RestartIISAppPool.build" />
   </target>
   
 </project>

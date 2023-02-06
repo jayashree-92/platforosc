@@ -14,7 +14,6 @@ namespace HM.Operations.Secure.DataModel
     
     public partial class vw_FundAgreementDetails
     {
-        public long RowId { get; set; }
         public Nullable<long> dmaAgreementOnBoardingId { get; set; }
         public Nullable<int> dmaAgreementTypeId { get; set; }
         public string AgreementType { get; set; }

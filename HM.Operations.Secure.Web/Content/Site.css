@@ -196,7 +196,7 @@
 }
 
 .shadowBoxWarning {
-    box-shadow: 10px 10px 15px -10px #107A83, 0 1px 15px yellow;
+    box-shadow: 10px 10px 15px -10px #044690, 0 1px 15px yellow;
 }
 
 
@@ -235,7 +235,7 @@
 }
 
 form.dz-drag-hover {
-    border-color: #107A83;
+    border-color: #044690;
     border-style: dashed !important;
 }
 
@@ -535,13 +535,13 @@ table.dataTable thead th {
 
 .info-block-right {
     background-color: #FEFAF3;
-    border-color: #107A83;
+    border-color: #044690;
     margin: 10px 2px;
     padding: 6px;
     border-left: 1px solid #e5e5e5;
     border-top: 1px solid #e5e5e5;
     border-bottom: 1px solid #e5e5e5;
-    border-right: 3px solid #107A83;
+    border-right: 3px solid #044690;
 }
 
 
@@ -706,11 +706,11 @@ tbody.ui-sortable {
     }
 
 .bs-callout-warning {
-    border-left-color: #107A83;
+    border-left-color: #044690;
 }
 
     .bs-callout-warning h4 {
-        color: #107A83;
+        color: #044690;
     }
 
 .bs-callout-info {
@@ -896,7 +896,7 @@ div.tooltip-inner {
 }
 
     .btn-file .glyphicon {
-        color: #107A83
+        color: #044690
     }
 
     .btn-file:hover {
@@ -1049,9 +1049,9 @@ ol.status-track li.status-track-bypass:before {
 
 
 .soften {
-    color: #107A83 !important;
-    background-color: #107A83 !important;
-    border-top: 1px solid #107A83;
+    color: #044690 !important;
+    background-color: #044690 !important;
+    border-top: 1px solid #044690;
 }
 
 /*This is added for the Rule-Editor for auto suggest not getting hidden inside accordian*/
@@ -1067,7 +1067,7 @@ ol.status-track li.status-track-bypass:before {
 }
 
 .select2-results .select2-highlighted {
-    background-color: #107a83;
+    background-color: #044690;
 }
 
 .select2-container-active .select2-choice,
@@ -1075,7 +1075,7 @@ ol.status-track li.status-track-bypass:before {
 .select2-drop-active,
 .select2-drop-auto-width,
 .select2-drop.select2-drop-above.select2-drop-active {
-    border-color: #107a83;
+    border-color: #044690;
 }
 
 
@@ -1137,7 +1137,7 @@ button#btnSaveIrConfig {
 
 .notifications div.alert {
     overflow: hidden; /* Ensures the content is not revealed until the animation */
-    /*border-left: 2px solid #107A83;*/ /* The typwriter cursor */
+    /*border-left: 2px solid #044690;*/ /* The typwriter cursor */
     white-space: nowrap; /* Keeps the content on a single line */
     margin: 0 auto; /* Gives that scrolling effect as the typing happens */
     letter-spacing: .05em;
@@ -1311,7 +1311,7 @@ button#btnSaveIrConfig {
 
 .text-primary {
     font-weight: normal;
-    color: #107A83;
+    color: #044690;
 }
 
 .text-default {
@@ -1519,7 +1519,7 @@ ul[id^="ctxMenuUI_"] {
 }
 
 .badge-primary {
-    background-color: #107A83 !important;
+    background-color: #044690 !important;
 }
 
 .btn-checkbox-group .btn {
@@ -1650,7 +1650,7 @@ div#summaryReportData {
         height: 11px;
         margin: 1px;
         text-indent: -999px;
-        border: 1px solid #107A83;
+        border: 1px solid #044690;
         border-radius: 10px;
         cursor: pointer;
         background-color: #000 \9;
@@ -1666,7 +1666,7 @@ div#summaryReportData {
         margin: 0;
         width: 14px;
         height: 14px;
-        background-color: #107A83;
+        background-color: #044690;
     }
 
 
@@ -1791,11 +1791,11 @@ div#summaryReportData {
 
 
 div.DTCR_pointer {
-    background-color: #107A83 !important;
+    background-color: #044690 !important;
 }
 
 .table-focus-excel {
-    outline: 2px solid #107A83;
+    outline: 2px solid #044690;
     outline-offset: -1px;
 }
 
@@ -1879,10 +1879,10 @@ div.DTCR_pointer {
 
 .footer {
     position: fixed;
-    padding-top: 10px;
+    padding-top: 7px;
     bottom: 0;
     width: 100%;
-    height: 40px;
+    height: 30px;
     background-color: #f5f5f5;
 }
 
@@ -1908,7 +1908,7 @@ div.DTCR_pointer {
 #modalToRetrieveWires .modal-body div.panel-heading {
     font-size: 14px;
     /*padding: 8px 15px;*/
-    border-top: 2px solid #107A83;
+    border-top: 2px solid #044690;
 }
 
 #modalToRetrieveWires .modal-body label {
@@ -2053,7 +2053,7 @@ div.DTCR_pointer {
 .swiftMessgeBlock {
     white-space: pre-wrap;
     padding-left: 15px;
-    border-left: 3px solid #107A83 !important;
+    border-left: 3px solid #044690 !important;
     border: 1px solid lightgray;
     background-color: #f6f6f6;
 }
@@ -2061,7 +2061,7 @@ div.DTCR_pointer {
 .messgeBlock {
     /*white-space: pre-wrap;*/
     padding: 5px 15px 5px 15px;
-    border-left: 3px solid #107A83 !important;
+    border-left: 3px solid #044690 !important;
     /*border: 1px solid lightgray;*/
     margin: 0px !important;
     background-color: #f6f6f6;
@@ -2074,13 +2074,13 @@ div.DTCR_pointer {
 }
 
 .atlwdg-trigger {
-    background: #107A83;
+    background: #044690;
 }
 
 .profileImage {
     cursor: pointer;
     border-radius: 50%;
-    /*border: 1px solid #107A83;*/
+    /*border: 1px solid #044690;*/
     width: 90%;
 }
 

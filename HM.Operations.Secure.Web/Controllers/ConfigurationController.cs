@@ -31,5 +31,10 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             OpsSecureSwitches.SetSwitch(key, HttpUtility.UrlDecode(value), UserName);
         }
+
+        public void RefreshClaims()
+        {
+            //ResetAuthorizedSessionData();           
+        }
     }
 }

@@ -11,6 +11,19 @@ HmOpsApp.controller("systemConfiguationCtrl", function ($scope, $http, $interval
         $scope.switchList = response.data;
     });
 
+    $scope.fnRefreshClaims = function () {
+
+        $("#btnRefreshClaims").button("loading");
+
+        $http.post("/Configuration/RefreshClaims").then(
+            function (response) {
+                notifySuccess("Claims refreshed successfully");
+                $("#btnRefreshClaims").button("reset");
+            }, function (response) {
+                notifyError("re-initialization failed");
+                $("#btnRefreshClaims").button("reset");
+            });
+    }
     $scope.reports = [];
     //$http.get("/Files/GetReportsList").then(function(response) {
     //    $scope.reports = response.data;

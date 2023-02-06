@@ -301,7 +301,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 account.CreatedBy = account.CreatedBy.HumanizeEmail();
                 account.UpdatedBy = account.UpdatedBy.HumanizeEmail();
                 account.ApprovedBy = account.ApprovedBy.HumanizeEmail();
-                var fundAccMap = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId] : new FundAccountData();
+                var fundAccMap = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId] : new vw_FundAccounts();
                 return new
                 {
                     Account = FundAccountManager.SetAccountDefaults(account),
@@ -876,7 +876,7 @@ namespace HM.Operations.Secure.Web.Controllers
         }
 
         //Build Account Rows
-        private List<Row> BuildAccountRows(List<onBoardingAccount> onBoardingAccounts, List<FundAccountData> fundAccounts)
+        private List<Row> BuildAccountRows(List<onBoardingAccount> onBoardingAccounts, List<vw_FundAccounts> fundAccounts)
         {
             var fundAccountMap = fundAccounts.ToDictionary(s => s.onBoardingAccountId, v => v);
             var accountListRows = new List<Row>();

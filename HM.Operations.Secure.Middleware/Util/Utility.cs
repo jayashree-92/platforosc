@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Com.HedgeMark.Commons;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Com.HedgeMark.Commons;
 
 namespace HM.Operations.Secure.Middleware.Util
 {
@@ -14,7 +14,7 @@ namespace HM.Operations.Secure.Middleware.Util
 
         public static bool IsLocal => Environment.Equals("Local");
 
-        public static bool IsLowerEnvironment => !ConfigurationManagerWrapper.StringSetting("Environment").Equals("Prod");
+        public static bool IsLowerEnvironment => !ConfigurationManagerWrapper.StringSetting("Environment").Equals("Production");
 
         public static bool IsWorkingDay(DateTime contextDate)
         {
@@ -24,7 +24,7 @@ namespace HM.Operations.Secure.Middleware.Util
         public static DateTime GetContextDate(this DateTime contextDate)
         {
             contextDate = contextDate.AddDays(-1);
-            while (!IsWorkingDay(contextDate))
+            while(!IsWorkingDay(contextDate))
             {
                 contextDate = contextDate.AddDays(-1);
             }
@@ -43,11 +43,11 @@ namespace HM.Operations.Secure.Middleware.Util
 
         public static string HumanizeEmail(this string emailId)
         {
-            if (string.IsNullOrWhiteSpace(emailId))
+            if(string.IsNullOrWhiteSpace(emailId))
                 return string.Empty;
 
             var charIndex = emailId.IndexOf("@", StringComparison.InvariantCultureIgnoreCase);
-            if (charIndex > 0)
+            if(charIndex > 0)
                 emailId = emailId.Substring(0, charIndex);
 
             return emailId.Replace(".", " ").Titleize();
@@ -62,7 +62,7 @@ namespace HM.Operations.Secure.Middleware.Util
         public static string GetMailBoxName(this string emailId)
         {
             var charIndex = emailId.IndexOf("@", StringComparison.InvariantCultureIgnoreCase);
-            if (charIndex > 0)
+            if(charIndex > 0)
                 emailId = emailId.Substring(0, charIndex);
 
             return emailId;

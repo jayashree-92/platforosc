@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Com.HedgeMark.Commons;
+﻿using Com.HedgeMark.Commons;
 using Com.HedgeMark.Commons.Extensions;
 using ExcelUtility.Operations.ManagedAccounts;
 using HedgeMark.Operations.FileParseEngine.Models;
 using KBCsv;
 using log4net;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace HM.Operations.Secure.Middleware
 {
@@ -34,7 +33,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static void CreateExportFile(ExportContent contentToExport, FileInfo exportFileInfo, bool shouldExcludeIsExportable = true)
         {
-            if (exportFileInfo.Extension.ToLower() == ".csv" || exportFileInfo.Extension.ToLower() == ".txt")
+            if(exportFileInfo.Extension.ToLower() == ".csv" || exportFileInfo.Extension.ToLower() == ".txt")
                 CreateCsvOrTxtFile(contentToExport.Rows.ToList(), exportFileInfo, contentToExport.IgnoreHeaders, shouldExcludeIsExportable);
             else
                 Exporter.CreateExcelFile(new List<ExportContent>() { contentToExport }, exportFileInfo.FullName.GetValidatedConfigPath());
@@ -42,21 +41,20 @@ namespace HM.Operations.Secure.Middleware
 
         public static void CreateCsvOrTxtFile(List<Row> contentTable, FileInfo file, List<string> ignoreHeaders = null, bool shouldExcludeIsExportable = true)
         {
-            if (ignoreHeaders == null)
-                ignoreHeaders = new List<string>();
+            ignoreHeaders ??= new List<string>();
 
             var colNames = new List<string>();
 
-            if (contentTable.Any())
+            if(contentTable.Any())
                 colNames = shouldExcludeIsExportable ? contentTable.First().CellValues.Select(col => col.Key.Name).ToList() : contentTable.First().CellValues.Where(s => s.Key.IsExportable).Select(col => col.Key.Name).ToList();
             else
                 colNames.Add("No Data Available");
 
             colNames = colNames.Where(s => !ignoreHeaders.Contains(s)).ToList();
 
-            using (var streamWriter = new System.IO.StreamWriter(file.FullName.GetValidatedConfigPath(), false))
+            using(var streamWriter = new System.IO.StreamWriter(file.FullName.GetValidatedConfigPath(), false))
             {
-                using (var writer = new CsvWriter(streamWriter))
+                using(var writer = new CsvWriter(streamWriter))
                 {
                     writer.ValueSeparator = file.Extension.ToLower() == ".csv" ? ',' : '|';
                     writer.WriteRecord(colNames);
@@ -76,10 +74,10 @@ namespace HM.Operations.Secure.Middleware
 
             var fileToDeliver = $"{deliveryPath}\\{reportFile.Name}".GetValidatedConfigPath();
 
-            if (!Directory.Exists(deliveryPath))
+            if(!Directory.Exists(deliveryPath))
                 Directory.CreateDirectory(deliveryPath);
 
-            if (File.Exists(fileToDeliver))
+            if(File.Exists(fileToDeliver))
                 File.Delete(fileToDeliver);
 
             File.Copy(reportFile.FullName.GetValidatedConfigPath(), fileToDeliver, true);
@@ -89,27 +87,7 @@ namespace HM.Operations.Secure.Middleware
 
         public static bool SftpThisReport(string clientFolderName, FileInfo reportFile)
         {
-            var deliveryPath = $"{FileSystemManager.SftpOutputFilesPath}\\{clientFolderName}\\".GetValidatedConfigPath();
-
-            var fileToDeliver = $"{deliveryPath}\\{reportFile.Name}".GetValidatedConfigPath();
-
-            if (!Directory.Exists(deliveryPath))
-                Directory.CreateDirectory(deliveryPath);
-
-            if (File.Exists(fileToDeliver))
-                File.Delete(fileToDeliver);
-
-            File.Copy(reportFile.FullName.GetValidatedConfigPath(), fileToDeliver, true);
-
-            var sftpLog = new StringBuilder();
-            var isTransmissionSuccess = NdmSftpTransfer.SendFilesToSftp(new[] { reportFile }, clientFolderName, ref sftpLog);
-
-            if (!isTransmissionSuccess)
-                Logger.ErrorFormat("SFTP Transmission Failure Logs ={0}", sftpLog);
-            else
-                Logger.InfoFormat("SFTP Transmission Logs ={0}", sftpLog);
-
-            return isTransmissionSuccess;
+            return ExternalSftpTransfer.SendFilesToClients(new List<FileInfo>() { reportFile }, clientFolderName);
         }
     }
 }

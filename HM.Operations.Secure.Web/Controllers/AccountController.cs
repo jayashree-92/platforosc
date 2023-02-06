@@ -1,52 +1,95 @@
-﻿using System;
+﻿using Com.HedgeMark.Commons;
+using HM.Operations.Secure.DataModel;
+using HM.Operations.Secure.DataModel.Models;
+using HM.Operations.Secure.Middleware;
+using log4net;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OpenIdConnect;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using Com.HedgeMark.Commons;
-using Com.HedgeMark.Commons.Extensions;
-using HM.Operations.Secure.DataModel;
-using HM.Operations.Secure.DataModel.Models;
-using HM.Operations.Secure.Middleware;
-using HM.Operations.Secure.Web.Utility;
-using log4net;
 
 namespace HM.Operations.Secure.Web.Controllers
 {
-    public class AccountController : BaseController
+    public class AccountController : Controller
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(AccountController));
         public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", $"{OpsSecureUserRoles.WireInitiator},{OpsSecureUserRoles.WireApprover},{OpsSecureUserRoles.WireAdmin},{OpsSecureUserRoles.WireReadOnly}");
 
         public static hLoginRegistration GetUserDetail(string userName)
         {
-            using (var context = new AdminContext())
+            using var context = new AdminContext();
+            return context.hLoginRegistrations.Single(s => s.varLoginID.Equals(userName));
+        }
+
+        public ActionResult Index()
+        {
+            if(!Request.IsAuthenticated)
             {
-                return context.hLoginRegistrations.Single(s => s.varLoginID.Equals(userName));
+                return View();
+            }
+            else
+            {
+                HttpCookie authCookie = System.Web.HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
+                if (authCookie != null)
+                    FormsAuthentication.SignOut();
+            }
+            if(!Utility.Util.IsWireUser(User))
+            {
+                ViewBag.errorMsg = "Unauthorized User";
+                return View();
+            }
+
+            return Redirect(new UrlHelper(Request.RequestContext).Action("Index", "Home"));
+        }
+
+
+        public void Login()
+        {
+            if(!Request.IsAuthenticated)
+            {
+                HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = "/Account/Index" },
+                      OpenIdConnectAuthenticationDefaults.AuthenticationType);
+
+                Redirect(new UrlHelper(Request.RequestContext).Action("Index", "Account"));
+            }
+            else
+            {
+                Response.Redirect(new UrlHelper(Request.RequestContext).Action("Index", "Home"));
             }
         }
 
-        public ActionResult Index(string returnUrl)
+        public static Dictionary<string, string> AuthorizeRoleObjectMap = new Dictionary<string, string>()
         {
-            return RedirectToAction("Index", User.IsWireAdmin() ? "User" : "Home");
-        }
+             { OpsSecureUserRoles.WireAdmin , ConfigurationManagerWrapper.GetAzureConfig("HM-Wire-Admin-Role-Id")},
+             { OpsSecureUserRoles.WireApprover ,ConfigurationManagerWrapper.GetAzureConfig("HM-Wire-Approver-Role-Id")},
+             { OpsSecureUserRoles.WireInitiator, ConfigurationManagerWrapper.GetAzureConfig("HM-Wire-Initiator-Role-Id")},
+             { OpsSecureUserRoles.WireReadOnly, ConfigurationManagerWrapper.GetAzureConfig("HM-Wire-Readonly-Role-Id")},
+        };
+
+        public static UserAccountDetails GetUserDetails(IPrincipal user)
+        {
+            var userDetail = GetUserDetailByCommitId(user.Identity.Name);
 
 
-        public static UserAccountDetails GetUserDetails(string commitId, IPrincipal user)
-        {
-            var userDetail = GetUserDetailByCommitId(commitId);
             var userDetails = new UserAccountDetails
             {
                 User = userDetail,
                 Name = userDetail.Name,
-                Role = user.IsInRole(OpsSecureUserRoles.WireReadOnly)
+                Role = ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AuthorizeRoleObjectMap[OpsSecureUserRoles.WireReadOnly])
                     ? OpsSecureUserRoles.WireReadOnly
-                : user.IsInRole(OpsSecureUserRoles.WireApprover)
+                : ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AuthorizeRoleObjectMap[OpsSecureUserRoles.WireApprover])
                     ? OpsSecureUserRoles.WireApprover
-                    : user.IsInRole(OpsSecureUserRoles.WireInitiator)
+                    : ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AuthorizeRoleObjectMap[OpsSecureUserRoles.WireInitiator])
                         ? OpsSecureUserRoles.WireInitiator
+                            : ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AuthorizeRoleObjectMap[OpsSecureUserRoles.WireAdmin])
+                            ? OpsSecureUserRoles.WireAdmin
                                 : "Unknown"
             };
             return userDetails;
@@ -68,9 +111,6 @@ namespace HM.Operations.Secure.Web.Controllers
             };
             AuditManager.LogAudit(auditData);
 
-            //Clear Site-Minder Cookie
-            ClearSiteMinder();
-
             // Delete the user details from Session.
             Session.Abandon();
             Session.Clear();
@@ -84,49 +124,38 @@ namespace HM.Operations.Secure.Web.Controllers
             Response.Cookies.Add(cookie);
 
             ViewBag.ReasonString = reasonStr ?? string.Empty;
+            HttpContext.GetOwinContext().Authentication.SignOut(OpenIdConnectAuthenticationDefaults.AuthenticationType, CookieAuthenticationDefaults.AuthenticationType);
 
             return View();
         }
 
-        private void ClearSiteMinder()
+        //public static HMUser GetUserDetailByCommitId(string commitId)
+        //{
+        //    using(var context = new AdminContext())
+        //    {
+        //        var userDetail = context.USP_NEXEN_GetUserDetails(commitId, "SITEMINDER").Select(s => new HMUser()
+        //        {
+        //            LoginId = s.intLoginID,
+        //            Name = s.varLoginID,
+        //            CommitId = s.LDAPUserID
+        //        }).First();
+
+        //        SetAllowedWireAmountLimit(userDetail);
+        //        return userDetail;
+
+        //    }
+        //}
+
+        public static HMUser GetUserDetailByCommitId(string email)
         {
-            if (Request.Cookies["SMSESSION"] != null)
+            using var context = new AdminContext();
+            var userDetail = context.hLoginRegistrations.Where(s => s.varLoginID == email).Select(s => new HMUser()
             {
-                //var smCookie = new HttpCookie("SMSESSION", "NO")
-                //{
-                //    Domain = Utility.Util.Domain,
-                //    Expires = DateTime.Now.AddDays(-30),
-                //    Value = "LOGGEDOFF"
-                //};
-                //Response.Cookies.Add(smCookie);
-                Response.Cookies.Clear();
-            }
-            if (Request.Cookies["SMUSRMSG"] != null)
-            {
-                var smUsrCookie = new HttpCookie("SMUSRMSG", "NO")
-                {
-                    Domain = Utility.Util.Domain,
-                    Expires = DateTime.Now.AddDays(-30)
-                };
-                Response.Cookies.Add(smUsrCookie);
-            }
-        }
-
-        public static HMUser GetUserDetailByCommitId(string commitId)
-        {
-            using (var context = new AdminContext())
-            {
-                var userDetail = context.USP_NEXEN_GetUserDetails(commitId, "SITEMINDER").Select(s => new HMUser()
-                {
-                    LoginId = s.intLoginID,
-                    Name = s.varLoginID,
-                    CommitId = s.LDAPUserID
-                }).First();
-
-                SetAllowedWireAmountLimit(userDetail);
-                return userDetail;
-
-            }
+                LoginId = s.intLoginID,
+                Name = s.varLoginID,
+            }).FirstOrDefault();
+            SetAllowedWireAmountLimit(userDetail);
+            return userDetail;
         }
 
         public static double GetTotalYearsOfExperience(string commitId)
@@ -140,22 +169,20 @@ namespace HM.Operations.Secure.Web.Controllers
         private static vw_hmUserCoverageDetails GetUserCoverageDetails(string commitId)
         {
             vw_hmUserCoverageDetails userDetails;
-            using (var context = new AdminContext())
+            using var context = new AdminContext();
+            userDetails = context.vw_hmUserCoverageDetails.FirstOrDefault(s => s.CommitId == commitId) ?? new vw_hmUserCoverageDetails()
             {
-                userDetails = context.vw_hmUserCoverageDetails.FirstOrDefault(s => s.CommitId == commitId) ?? new vw_hmUserCoverageDetails()
-                {
-                    CommitId = commitId,
-                    JoinedHedgemarkOn = DateTime.Today,
-                    TotalYearsofExperiencePriortoHedgemark = 0
-                };
-            }
+                CommitId = commitId,
+                JoinedHedgemarkOn = DateTime.Today,
+                TotalYearsofExperiencePriortoHedgemark = 0
+            };
 
             return userDetails;
         }
 
         public static void SetAllowedWireAmountLimit(HMUser user)
         {
-            var userDetails = GetUserCoverageDetails(user.CommitId);
+            var userDetails = GetUserCoverageDetails(user.Name);
 
             var totalExperienceInHM = (DateTime.Today - userDetails.JoinedHedgemarkOn).TotalDays / 365;
             user.TotalYearsOfExperienceInHM = Math.Round(totalExperienceInHM, 1);
@@ -164,9 +191,9 @@ namespace HM.Operations.Secure.Web.Controllers
             //---->>>>
             user.IsUserVp = userDetails.IsVPAndAbove;
 
-            if (user.TotalYearsOfExperience < 1)
+            if(user.TotalYearsOfExperience < 1)
                 user.AllowedWireAmountLimit = 10000000;
-            else if (totalExperienceInHM <= 0.5)
+            else if(totalExperienceInHM <= 0.5)
                 user.AllowedWireAmountLimit = user.IsUserVp ? 100000000 : 10000000;
             else
                 user.AllowedWireAmountLimit = user.IsUserVp ? 500000000 : 100000000;

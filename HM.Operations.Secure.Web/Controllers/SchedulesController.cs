@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Web.Mvc;
-using Com.HedgeMark.Commons;
+﻿using Com.HedgeMark.Commons;
 using Hangfire;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
@@ -13,6 +7,12 @@ using HM.Operations.Secure.Middleware.Models;
 using HM.Operations.Secure.Middleware.Util;
 using HM.Operations.Secure.Web.Jobs;
 using Humanizer;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace HM.Operations.Secure.Web.Controllers
 {
@@ -27,7 +27,7 @@ namespace HM.Operations.Secure.Web.Controllers
             counter = 0;
             var fundPreferences = Enum.GetNames(typeof(PreferencesManager.FundNameInDropDown)).Select(s => new { id = counter++, text = s.Humanize() }).ToArray();
 
-            var sftpFolders = NdmSftpTransfer.GetClientsForSftp();
+            var sftpFolders = ExternalSftpTransfer.ExternalClients.Select(s => new Select2Type { id = s, text = s }).ToList();
             var internalFolders = FileSystemManager.FetchFolderData(FileSystemManager.InternalOutputFilesDropPath, false);
             var timeZones = ScheduleManager.TimeZones.Keys.ToArray();
             var externalDomains = ScheduleManager.GetExternalDomains();
@@ -50,7 +50,7 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult GetScheduleLogs(long scheduleId, string timeZone, int totalItems = 10)
         {
             List<hmsScheduleLog> logs;
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
@@ -59,14 +59,14 @@ namespace HM.Operations.Secure.Web.Controllers
 
             var timeZoneInfo = ScheduleManager.TimeZones.ContainsKey(timeZone) ? ScheduleManager.TimeZones[timeZone] : Middleware.Util.Utility.DefaultSystemTimeZone;
 
-            foreach (var s in logs)
+            foreach(var s in logs)
             {
-                if (s.IsManualTrigger)
+                if(s.IsManualTrigger)
                     s.ExpectedScheduleStartAt = TimeZoneInfo.ConvertTime(s.ExpectedScheduleStartAt, timeZoneInfo);
 
                 s.ScheduleStartTime = TimeZoneInfo.ConvertTime(s.ScheduleStartTime, timeZoneInfo);
 
-                if (s.ScheduleEndTime != null)
+                if(s.ScheduleEndTime != null)
                     s.ScheduleEndTime = TimeZoneInfo.ConvertTime((s.ScheduleEndTime ?? new DateTime()), timeZoneInfo);
 
             }
@@ -84,7 +84,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public void TriggerNow(long jobId, DateTime? contextDate, bool isDashboard)
         {
-            if (contextDate == null) contextDate = DateTime.Today.GetContextDate();
+            if(contextDate == null) contextDate = DateTime.Today.GetContextDate();
 
             var job = DashboardScheduleHandler.GetDashboardSchedule(jobId);
             BackgroundJob.Enqueue(() => DashboardScheduleHandler.ExecuteDashboardSchedule(job.hmsDashboardScheduleId, job.hmsDashboardTemplate.TemplateName, true));
@@ -92,7 +92,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public void DeleteSchedule(long jobId, bool isDashboard)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 var schedule = context.hmsDashboardSchedules.First(s => s.hmsDashboardScheduleId == jobId);
@@ -113,13 +113,13 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult SetWorkflowCodeForExternalTo(long scheduleId, int workflowCode, bool isDashboard)
         {
             hmsSchedule schedule;
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 schedule = context.hmsSchedules.First(s => s.hmsScheduleId == scheduleId);
 
                 //If Approved
-                if (workflowCode == 1)
+                if(workflowCode == 1)
                     schedule.ExternalToApproved = schedule.ExternalTo;
 
                 schedule.ExternalToWorkflowCode = workflowCode;
@@ -172,7 +172,7 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult SetWorkflowCodeForSFTPFolder(long scheduleId, int workflowCode, bool isDashboard)
         {
             hmsSchedule schedule;
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 schedule = context.hmsSchedules.First(s => s.hmsScheduleId == scheduleId);
@@ -200,7 +200,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
             var userIdMap = FileSystemManager.GetUsersList(allUserIds);
 
-            foreach (var job in jobSchedules)
+            foreach(var job in jobSchedules)
             {
                 job.CreatedBy = userIdMap.ContainsKey(job.Schedule.CreatedBy) ? userIdMap[job.Schedule.CreatedBy] : "un-known user";
                 job.LastModifiedBy = userIdMap.ContainsKey(job.Schedule.LastModifiedBy) ? userIdMap[job.Schedule.LastModifiedBy] : "un-known user";
@@ -222,13 +222,13 @@ namespace HM.Operations.Secure.Web.Controllers
                 Due = due
             };
 
-            if (schedule.ExternalToWorkflowCode == 0 && schedule.LastModifiedBy > 0)
+            if(schedule.ExternalToWorkflowCode == 0 && schedule.LastModifiedBy > 0)
                 job.IsExternalToRequestCreatedBySameUser = schedule.LastModifiedBy == UserId;
 
-            if (schedule.SFTPFolderWorkflowCode == 0 && schedule.LastModifiedBy > 0)
+            if(schedule.SFTPFolderWorkflowCode == 0 && schedule.LastModifiedBy > 0)
                 job.IsSFTPFolderRequestCreatedBySameUser = schedule.LastModifiedBy == UserId;
 
-            if (job.Due.DueDayOfMonth == 0)
+            if(job.Due.DueDayOfMonth == 0)
                 job.Due.DueDayOfMonth = 1;
 
             return job;
@@ -238,10 +238,10 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var hmsSchedule = job.Schedule;
 
-            if (string.IsNullOrWhiteSpace(hmsSchedule.To))
+            if(string.IsNullOrWhiteSpace(hmsSchedule.To))
                 hmsSchedule.To = string.Empty;
 
-            if (hmsSchedule.CreatedBy == 0)
+            if(hmsSchedule.CreatedBy == 0)
             {
                 hmsSchedule.CreatedBy = UserId;
                 hmsSchedule.CreatedAt = DateTime.Now;
@@ -251,19 +251,19 @@ namespace HM.Operations.Secure.Web.Controllers
             hmsSchedule.LastUpdatedAt = DateTime.Now;
 
 
-            if (!string.IsNullOrWhiteSpace(hmsSchedule.ExternalTo) && hmsSchedule.ExternalToWorkflowCode == 0)
+            if(!string.IsNullOrWhiteSpace(hmsSchedule.ExternalTo) && hmsSchedule.ExternalToWorkflowCode == 0)
             {
                 hmsSchedule.ExternalToModifiedBy = UserId;
                 hmsSchedule.ExternalToModifiedAt = DateTime.Now;
             }
 
-            if (!string.IsNullOrWhiteSpace(hmsSchedule.SFTPFolder) && hmsSchedule.SFTPFolderWorkflowCode == 0)
+            if(!string.IsNullOrWhiteSpace(hmsSchedule.SFTPFolder) && hmsSchedule.SFTPFolderWorkflowCode == 0)
             {
                 hmsSchedule.SFTPFolderModifiedBy = UserId;
                 hmsSchedule.SFTPFolderModifiedAt = DateTime.Now;
             }
 
-            if (job.Schedule.Frequency == "Monthly" && !job.Due.IsMonthlyNthDaySelected)
+            if(job.Schedule.Frequency == "Monthly" && !job.Due.IsMonthlyNthDaySelected)
                 job.Due.ShouldGetNthBusinessDayOfMonth = true;
 
             hmsSchedule.ScheduleExpression = CronHelper.GetCronExpression(job.Due, (CronHelper.ScheduleFrequency)Enum.Parse(typeof(CronHelper.ScheduleFrequency), job.Schedule.Frequency, true));
@@ -276,7 +276,7 @@ namespace HM.Operations.Secure.Web.Controllers
         private List<JobSchedule> GetDashboardSchedules(long dashboardTemplateId)
         {
             List<JobSchedule> jobSchedules;
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 var schedules = context.hmsDashboardSchedules.Include(s => s.hmsSchedule).Where(s => s.hmsDashboardTemplateId == dashboardTemplateId && !s.IsDeleted).ToList();
@@ -307,7 +307,7 @@ namespace HM.Operations.Secure.Web.Controllers
             // reconstruct data 
             var schedule = ConstructDashboardSchedule(job, dashboardTemplateId);
 
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.hmsDashboardSchedules.AddOrUpdate(schedule);
                 context.hmsSchedules.AddOrUpdate(schedule.hmsSchedule);

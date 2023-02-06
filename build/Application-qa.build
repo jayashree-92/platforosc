@@ -2,11 +2,11 @@
 <project xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" basedir="." default="cleanAndDeployPackage"> 
  
   <!--Project properties-->
-  <property name="buildDirectory" value="../HM.Operations.Secure.Web/bin" /> 
-  <property name="Configuration" value="QA" overwrite="false"/>
+  <property name="buildDirectory" value="../HedgeMark.Operations.Secure.Web/bin" /> 
+  <property name="Configuration" value="Release" overwrite="false"/>
   <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
-  <property name="ProjectFile" value="../HM.Operations.Secure.Web/HM.Operations.Secure.Web.csproj"/>   
-  <property name="OutputFile1" value="../HM.Operations.Secure.Web/obj/QA/"/>   
+  <property name="ProjectFile" value="../HedgeMark.Operations.Secure.Web/HMOSecureWeb.csproj"/>   
+  <property name="OutputFile1" value="../HedgeMark.Operations.Secure.Web/obj/Release/"/>   
   <property name="sourcePackageLocation" value="\\WT81B10085TV00\d$\Operations_Secure_Jenkins\QA"/>
   <property name="UnitTestProjectReference" value="../HedgeMark.SwiftMessageHandler.Tests/bin/QA/HedgeMark.SwiftMessageHandler.Tests.dll" />  
    
@@ -22,9 +22,9 @@
    <property name="sql.svr" value="dmu-ms-agl02.db.qa.bnymellon.net,14331"/>
 
   <target name="cleanAndDeployPackage" >	
-	<nant buildfile="TestBuildAndPublish.build" />  
+	<!--<nant buildfile="TestBuildAndPublish.build" /> --> 
 	<nant buildfile="SQL-GF.Build" />  
-	<nant buildfile="CleanAndDeployPackage.build" />
+	<nant buildfile="RestartIISAppPool.build" />
   </target>
   
 </project>

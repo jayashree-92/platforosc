@@ -1,10 +1,10 @@
-﻿using System;
+﻿using HedgeMark.Operations.FileParseEngine.Models;
+using HedgeMark.Operations.FileParseEngine.RuleEngine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using HedgeMark.Operations.FileParseEngine.Models;
-using HedgeMark.Operations.FileParseEngine.RuleEngine;
 
 namespace HM.Operations.Secure.Web.Utility
 {
@@ -31,7 +31,7 @@ namespace HM.Operations.Secure.Web.Utility
     {
         public static string GetJsonInExcelFormat(List<Row> rows)
         {
-            if (rows == null || rows.Count == 0)
+            if(rows == null || rows.Count == 0)
                 return "{\"aaData\":[],\"aoColumns\":[{ \"sTitle\": \"\" }]}";
 
             var maxColumns = rows.Max(s => s.CellValues.Count);
@@ -50,7 +50,7 @@ namespace HM.Operations.Secure.Web.Utility
             jsonBuilder = new StringBuilder(jsonBuilder.ToString().TrimEnd(','));
             jsonBuilder.Append("],\"aoColumns\":[");
 
-            for (var i = 0; i <= maxColumns; i++)
+            for(var i = 0; i <= maxColumns; i++)
                 jsonBuilder.AppendFormat("{{ \"sTitle\": \"{0}\" }},", i.GetColumnName());
 
             jsonBuilder = new StringBuilder(jsonBuilder.ToString().TrimEnd(','));
@@ -65,7 +65,7 @@ namespace HM.Operations.Secure.Web.Utility
             jsonBuilder.AppendFormat("\"{0}\",", rowIndex++);
             jsonBuilder.AppendFormat("\"{0}\"", string.Join("\",\"", rowData));
 
-            for (var j = rowData.Count; j < maxColumns; j++)
+            for(var j = rowData.Count; j < maxColumns; j++)
                 jsonBuilder.Append(",\"\"");
 
             jsonBuilder.Append("],");
@@ -76,7 +76,7 @@ namespace HM.Operations.Secure.Web.Utility
         public static string GetJson(OutputContent result)
         {
             var jsonBuilder = new StringBuilder();
-            if (result.CompleteInfoRows == null || result.CompleteInfoRows.Count == 0)
+            if(result.CompleteInfoRows == null || result.CompleteInfoRows.Count == 0)
                 return "{\"aaData\":[],\"aoColumns\":[{ \"sTitle\": \"\" }],\"aaLogs\":[]}";
 
             var builderInput = new JsonBuilderInput() { RowsToBuild = result.Contents.SelectMany(s => s.Rows).ToList() };
@@ -85,7 +85,7 @@ namespace HM.Operations.Secure.Web.Utility
             jsonBuilder.Append("],\"aaLogs\":[");
 
             var logList = result.Logs.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Distinct();
-            foreach (var value in logList)
+            foreach(var value in logList)
             {
                 jsonBuilder.AppendFormat("[\"{0}\"],", Regex.Replace(value, AllSpaceRegex, string.Empty).Replace("\"", "'"));
             }
@@ -114,7 +114,7 @@ namespace HM.Operations.Secure.Web.Utility
         public static string GetJsonIncludingTriggerResults(List<InfoRow> rows, List<string> hiddenHeaders = null, List<string> visibleHeaders = null)
         {
             var allRows = new List<Row>();
-            foreach (var s in rows)
+            foreach(var s in rows)
             {
                 var violations = string.Join("|", s.Violations.Select(s1 => s1.Level + "~" + s1.Rule));
                 var warnings = string.Join("|", s.Warnings.Select(s1 => s1.Level + "~" + s1.Rule));
@@ -125,7 +125,7 @@ namespace HM.Operations.Secure.Web.Utility
                 allRows.Add(s.Row);
             }
 
-            if (hiddenHeaders == null)
+            if(hiddenHeaders == null)
                 hiddenHeaders = new List<string>();
 
             hiddenHeaders.Add(ViolationHeader);
@@ -144,7 +144,7 @@ namespace HM.Operations.Secure.Web.Utility
         public static string GetJson(JsonBuilderInput builderInput)
         {
             var jsonBuilder = new StringBuilder();
-            if (builderInput.RowsToBuild == null || builderInput.RowsToBuild.Count == 0)
+            if(builderInput.RowsToBuild == null || builderInput.RowsToBuild.Count == 0)
                 return "{\"aaData\":[],\"aoColumns\":[{ \"sTitle\": \"\" }]}";
 
             jsonBuilder.Append("{\"aaData\":[");
@@ -165,18 +165,18 @@ namespace HM.Operations.Secure.Web.Utility
 
             var uiColumnList = new List<string>();
 
-            foreach (var list in builderInput.RowsToBuild.Select(row => row.CellValues.Where(w => w.Key != null).Select(cell => cell.Key.UiName)).ToList())
+            foreach(var list in builderInput.RowsToBuild.Select(row => row.CellValues.Where(w => w.Key != null).Select(cell => cell.Key.UiName)).ToList())
             {
                 uiColumnList.AddRange(list);
             }
 
-            if (builderInput.VisibleHeaders.Count > 0)
+            if(builderInput.VisibleHeaders.Count > 0)
             {
                 var nonVisibleHeaders = uiColumnList.Where(s => !builderInput.VisibleHeaders.Contains(s)).ToList();
                 builderInput.HiddenHeaders.AddRange(nonVisibleHeaders);
             }
 
-            if (builderInput.ShouldConstructVisibleOnly)
+            if(builderInput.ShouldConstructVisibleOnly)
             {
                 var finalUiColumnList = new List<string>();
                 finalUiColumnList.AddRange(uiColumnList.Where(uiCol => !builderInput.HiddenHeaders.Contains(uiCol)));
@@ -189,20 +189,20 @@ namespace HM.Operations.Secure.Web.Utility
             var hiddenIndex = new List<int>();
             var rowItem = builderInput.RowsToBuild.First();
             var colIndex = 0;
-            foreach (var uiCol in uiColumnList)
+            foreach(var uiCol in uiColumnList)
             {
                 typeIndex.AddRange(rowItem.CellValues.Where(pair => pair.Key != null && (pair.Key.UiName).Equals(uiCol) && pair.Key.IsNumericType).Select(pair => colIndex));
                 colIndex++;
             }
 
             colIndex = 0;
-            foreach (var uiCol in uiColumnList)
+            foreach(var uiCol in uiColumnList)
             {
                 hiddenIndex.AddRange(rowItem.CellValues.Where(pair => pair.Key != null && (pair.Key.UiName).Equals(uiCol) && builderInput.HiddenHeaders.Contains(pair.Key.UiName)).Select(pair => colIndex));
                 colIndex++;
             }
 
-            foreach (var row in builderInput.RowsToBuild)
+            foreach(var row in builderInput.RowsToBuild)
             {
                 jsonBuilder.Append("[");
                 Row thisRow = row;
@@ -214,7 +214,7 @@ namespace HM.Operations.Secure.Web.Utility
             jsonBuilder = new StringBuilder(jsonBuilder.ToString().TrimEnd(','));
             jsonBuilder.Append("],\"aoColumns\":[");
 
-            if (builderInput.RowsToBuild.Count == 0 || builderInput.RowsToBuild[0].CellValues.Count == 0)
+            if(builderInput.RowsToBuild.Count == 0 || builderInput.RowsToBuild[0].CellValues.Count == 0)
                 jsonBuilder.Append("{ \"sTitle\": \"\" }");
             else
             {
@@ -228,9 +228,9 @@ namespace HM.Operations.Secure.Web.Utility
 
         private static Dictionary<string, List<long>> GetValue(Dictionary<string, List<long>> collection, string name, long id, List<string> allReports)
         {
-            if (!collection.ContainsKey(name))
+            if(!collection.ContainsKey(name))
                 collection.Add(name, new List<long> { id });
-            else if (!collection[name].Contains(id))
+            else if(!collection[name].Contains(id))
                 collection[name].Add(id);
 
             return collection.OrderBy(a => allReports.IndexOf(a.Key)).ToDictionary(s => s.Key, s => s.Value);
@@ -238,9 +238,9 @@ namespace HM.Operations.Secure.Web.Utility
 
         private static SortedDictionary<string, List<long>> AddToCollection(SortedDictionary<string, List<long>> collection, string name, long id)
         {
-            if (!collection.ContainsKey(name))
+            if(!collection.ContainsKey(name))
                 collection.Add(name, new List<long> { id });
-            else if (!collection[name].Contains(id))
+            else if(!collection[name].Contains(id))
                 collection[name].Add(id);
 
             return collection;
@@ -249,7 +249,7 @@ namespace HM.Operations.Secure.Web.Utility
         private static void BuildJson(StringBuilder jsonBuilder, IEnumerable<KeyValuePair<string, List<long>>> reports)
         {
             jsonBuilder.Append("{ ");
-            foreach (var item in reports)
+            foreach(var item in reports)
             {
                 jsonBuilder.Append($"\"{item.Key}\" : ");
                 jsonBuilder.Append("[");
@@ -267,7 +267,7 @@ namespace HM.Operations.Secure.Web.Utility
             var jsonBuilder = new StringBuilder();
 
             jsonBuilder.Append("[");
-            for (var i = 0; i < rowData.Count; i++)
+            for(var i = 0; i < rowData.Count; i++)
             {
                 jsonBuilder.Append("[");
                 jsonBuilder.AppendFormat("\"{0}\"", string.Join("\",\"", rowData[i]));

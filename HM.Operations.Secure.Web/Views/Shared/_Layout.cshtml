@@ -10,18 +10,17 @@
 
 @{
     var userRole = @Util.GetRole(User).Replace("-", " ").Replace("Hm ", string.Empty);
-    var commitId = @HttpContext.Current.Session[OpsSecureSessionVars.UserCommitId.ToString()].ToString();
     var isWireApprover = User.IsWireApprover();
     var isWireInitiator = User.IsWireInitiator();
     var isWireApproverStr = isWireApprover ? "true" : "false";
-    var isWireAdmin = User.IsWireAdmin();
+    var isWireAdmin = true;//User.IsWireAdmin();
     var isWireReadOnlyStr = User.IsWireReadOnly() ? "true" : "false";
     var isWireAdminStr = isWireAdmin ? "true" : "false";
     var indexURL = isWireAdmin ? @Url.Action("Index", "Home") : @Url.Action("Index", "User");
 }
 <body ng-app="HmOperationsSecureApp">
 
-    @foreach (var bundle in BundleTable.Bundles.Where(bundle => bundle is StyleBundle))
+    @foreach(var bundle in BundleTable.Bundles.Where(bundle => bundle is StyleBundle))
     {
         @Styles.Render(bundle.Path)
     }
@@ -30,22 +29,22 @@
     <title>HM OPs Secure-@ViewBag.Title</title>
     <div ng-controller="layoutSettingsCtrl">
         <div class="navbar navbar-ops navbar-ops-brand">
-            <span class="navbar-ops-title-divider" style="height:25px;margin-left:0px"></span><span>
-                <a class="navbar-ops-title" style="padding-top:8px;margin-left:15px" href=@Url.Action("Index", "Home")>
-                    HM-OPS-SECURE
-                    @if (@Util.IsLowerEnvironment)
-                    {
-                        @(Util.Environment.ToUpper());
-                    }
-                </a>
-            </span>
             <div class="navbar-brand">
                 <a href=@indexURL>  <img src="~/images/LOGO_innocap-hm_rgb.png" style="height:35px"></a>
+                <a class="navbar-ops-title" href=@Url.Action("Index", "Home")>
+                    <span style="background: #012c5d; margin-right: 5px; padding: 12px 6px 12px 12px; line-height: 16px; color: white; vertical-align: sub; ">
+                        @Util.InternalSitePrefix Operations Secure
+                    </span>
+                    @if(@Util.IsLowerEnvironment)
+                    {
+                        <span style="margin-left: 7px; vertical-align: sub;">  @(Util.Environment.ToUpper())</span>
+                    }
+                </a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li style="padding-top: 13px;" title="@User.Identity.Name"><label style="font-size: 13px;" class="label label-default" href="#"><i class="glyphicon glyphicon-user"></i> @userRole</label></li>
                 <li id="liMainNavUserSettings" title="@User.Identity.Name" style="padding-top: 1px;padding-left: 7px;" ng-click="fnShowUserSettings()">
-                    <img src="https://mysourcesocial.bnymellon.net/people/@commitId/avatar/45.png" alt="" onerror="this.onerror=null;this.src='../Images/45.png';" class="profileImage" />
+                    <img src="../Images/45.png" alt="" onerror="this.onerror=null;this.src='../Images/45.png';" class="profileImage" />
                 </li>
             </ul>
         </div>
@@ -60,10 +59,10 @@
             <ul class="nav navbar-nav">
                 <li title="home" id="liMainDashboardHome"><a href=@Url.Action("Index", "Home")><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;Home</a></li>
                 <li id="liWiresDashboard">@Html.ActionLink("Dashboard", "Index", "WiresDashboard")</li>
-                @if (isWireAdmin)
-                {
+                @*@if(isWireAdmin)
+                {*@
                     <li id="liUserOperations"><a href=@Url.Action("Index", "User")>&nbsp;User Management</a></li>
-                }
+                @*}*@
                 <li id="liAccounts">@Html.ActionLink("Fund Accounts", "Index", "FundAccounts")</li>
                 <li id="liSSITemplates">@Html.ActionLink("SSI Templates", "Index", "SSITemplate")</li>
                 <li id="liWirePurpose">@Html.ActionLink("Wire Purposes", "Index", "WirePurpose")</li>
@@ -77,9 +76,9 @@
 
             <ul class="nav navbar-nav navbar-right">
 
-                @if (!isWireAdmin)
+                @if(!isWireAdmin)
                 {
-                    if (!isWireInitiator)
+                    if(!isWireInitiator)
                     {
                         <li id="liSystemConfig"><a href="@Url.Action("Index", "Configuration")"><i class="glyphicon glyphicon-cog"></i></a></li>
                     }
@@ -116,12 +115,12 @@
     <br />
     <footer class="footer">
         <div class="container">
-            <p class="text-muted"><small>© @DateTime.Now.Year HedgeMark International, LLC. All rights reserved.</small></p>
+            <p class="text-muted"><small>© @DateTime.Today.Year – INNOCAP – All Rights Reserved – <a href="https://www.innocap.com/en/terms-of-use/" link-target="" target="_blank">Terms of use and Privacy</a></small></p>
         </div>
     </footer>
 
 
-    @foreach (var bundle in BundleTable.Bundles.Where(bundle => bundle is ScriptBundle))
+    @foreach(var bundle in BundleTable.Bundles.Where(bundle => bundle is ScriptBundle))
     {
         @Scripts.Render(bundle.Path)
     }

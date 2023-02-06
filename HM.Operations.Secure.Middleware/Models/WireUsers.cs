@@ -14,7 +14,7 @@ namespace HM.Operations.Secure.Middleware.Models
     public class WireUsers
     {
         public hmsUser User { get; set; }
-        public string CommitId { get; set; }
+        //public string CommitId { get; set; }
         public string Email { get; set; }
         public string UserName => Email.HumanizeEmail();
         public string UserGroup { get; set; }

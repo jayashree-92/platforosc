@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using Com.HedgeMark.Commons;
-using Com.HedgeMark.Commons.Extensions;
+﻿using Com.HedgeMark.Commons;
 using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.SqlServer;
-using HM.Operations.Secure.DataModel.Models;
+using HM.Authentication;
 using HM.Operations.Secure.Web;
+using HM.Operations.Secure.Web.Utility;
 using HM.Operations.Secure.Web.Controllers;
 using HM.Operations.Secure.Web.Jobs;
 using Microsoft.Owin;
 using Owin;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -23,15 +23,19 @@ namespace HM.Operations.Secure.Web
     {
         public bool Authorize(DashboardContext context)
         {
-            return HttpContext.Current.User.Identity.IsAuthenticated && AccountController.AllowedUserRoles.Any(role => HttpContext.Current.User.IsInRole(role));
+            return HttpContext.Current.User.IsWireUser();
+           // return HttpContext.Current.User.Identity.IsAuthenticated && AccountController.AllowedUserRoles.Any(role => HttpContext.Current.User.IsInRole(role));
         }
     }
     public class Startup
     {
         public static readonly int HangFireWorkerCount = ConfigurationManagerWrapper.IntegerSetting("HangFireWorkerCount", Environment.ProcessorCount * 4);
         private static readonly string HangfireConnectionString = ConfigurationManagerWrapper.GetConnectionString("HangfireContext");
+        private static bool IsLocalHost = ConfigurationManagerWrapper.BooleanSetting("IsLocalHost", true);
         public void Configuration(IAppBuilder app)
         {
+            AzureADAuthentication.ConfigureADAuth(app, Utility.Util.Environment, ConfigurationManagerWrapper.AppName, IsLocalHost);
+
             GlobalConfiguration.Configuration.UseSqlServerStorage(HangfireConnectionString,
                      new SqlServerStorageOptions
                      {

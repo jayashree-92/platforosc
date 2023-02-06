@@ -39,46 +39,52 @@
                             System Switches
                         </a>
                     </h4>
-                </div>
-                <div id="systemSwitchesConfiguration" class="panel-collapse collapse in">
+                    <div class="row pull-right">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <button ng-click="fnRefreshClaims()" id="btnRefreshClaims" class="btn btn-success">Refresh Claims</button>
 
-                    <div class="panel-body">
-                        <span ng-repeat="switches in switchList" on-last-repeat>
-                            <div ng-href="#dv{{switches.module}}" data-toggle="tab">
-                                <legend class="sm">{{switches.module}}</legend>
-                                <span ng-repeat="switch in switches.switches">
-                                    <p class="row col-md-offset-1">
-                                        <span class="col-md-4"> {{switch.label}}:&nbsp;&nbsp;&nbsp; </span>
-                                        <span class="col-md-6" ng-if="switch.type==0" ng-show="switch.type==0">
-                                            <input type="checkbox" id="chkSysSwitch-{{switch.key}}" ng-checked="{{switch.value}}" data-key="{{switch.key}}" data-onstyle="btn btn-sm btn-success" data-style="" data-width="80" data-height="28" style="line-height: 21px; margin-right: 0px !important" data-size="small" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on='YES' data-off='NO' />
-                                        </span>
-                                        <span class="col-md-6" ng-if="switch.type==1" ng-show="switch.type==1">
-                                            <input type="number" id="numSwitch-{{switch.key}}" value="{{switch.value}}" class="form-control" data-key="{{switch.key}}" data-style="" data-width="80" data-height="28" style="line-height: 21px; width: 100px; margin-right: 0px !important" />
-                                        </span>
-                                        <span class="col-md-6" ng-if="switch.type==2 || switch.type==3" ng-show="switch.type==2 || switch.type==3">
-                                            <input type="hidden" ng-if="switch.key.indexOf('Reports')>=0" id="selSysSwitch-{{switch.key}}" data-key="{{switch.key}}" data-val="{{switch.value}}" />
-                                            <input type="text" ng-if="switch.key.indexOf('Reports')!=0" id="txtSwitch-{{switch.key}}" value="{{switch.value}}" class="form-control col-md-12" data-key="{{switch.key}}" style="line-height: 21px; margin-right: 0px !important" rows="3" />
-                                        </span>
-                                        <span class="col-md-6" ng-if="switch.type==4" ng-show="switch.type==4">
-                                            <span class="input-group clockpicker" data-placement="right" data-align="top" data-autoclose="true" style="width: 100px;">
-                                                <input type="text" class="form-control" id="timeSwitch-{{switch.key}}" data-key="{{switch.key}}" value="{{switch.value}}">
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-time"></span>
-                                                </span>
-                                            </span>
-                                        </span>
-                                        <span class="col-md-6" ng-if="switch.type==5">
-                                            <textarea ng-if="switch.key.indexOf('Reports')!=0" id="tareSwitch-{{switch.key}}" class="form-control col-md-12" data-key="{{switch.key}}" style="line-height: 21px; margin-right: 0px !important" rows="6">{{switch.value}}</textarea>
-                                        </span>
-                                        <br /><br />
-                                    </p>
-                                </span>
-                            </div>
-                        </span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </dl>
+                        <div id="systemSwitchesConfiguration" class="panel-collapse collapse in">
+
+                            <div class="panel-body">
+                                <span ng-repeat="switches in switchList" on-last-repeat>
+                                    <div ng-href="#dv{{switches.module}}" data-toggle="tab">
+                                        <legend class="sm">{{switches.module}}</legend>
+                                        <span ng-repeat="switch in switches.switches">
+                                            <p class="row col-md-offset-1">
+                                                <span class="col-md-4"> {{switch.label}}:&nbsp;&nbsp;&nbsp; </span>
+                                                <span class="col-md-6" ng-if="switch.type==0" ng-show="switch.type==0">
+                                                    <input type="checkbox" id="chkSysSwitch-{{switch.key}}" ng-checked="{{switch.value}}" data-key="{{switch.key}}" data-onstyle="btn btn-sm btn-success" data-style="" data-width="80" data-height="28" style="line-height: 21px; margin-right: 0px !important" data-size="small" data-offstyle="btn btn-sm btn-default" data-toggle="toggle" data-on='YES' data-off='NO' />
+                                                </span>
+                                                <span class="col-md-6" ng-if="switch.type==1" ng-show="switch.type==1">
+                                                    <input type="number" id="numSwitch-{{switch.key}}" value="{{switch.value}}" class="form-control" data-key="{{switch.key}}" data-style="" data-width="80" data-height="28" style="line-height: 21px; width: 100px; margin-right: 0px !important" />
+                                                </span>
+                                                <span class="col-md-6" ng-if="switch.type==2 || switch.type==3" ng-show="switch.type==2 || switch.type==3">
+                                                    <input type="hidden" ng-if="switch.key.indexOf('Reports')>=0" id="selSysSwitch-{{switch.key}}" data-key="{{switch.key}}" data-val="{{switch.value}}" />
+                                                    <input type="text" ng-if="switch.key.indexOf('Reports')!=0" id="txtSwitch-{{switch.key}}" value="{{switch.value}}" class="form-control col-md-12" data-key="{{switch.key}}" style="line-height: 21px; margin-right: 0px !important" rows="3" />
+                                                </span>
+                                                <span class="col-md-6" ng-if="switch.type==4" ng-show="switch.type==4">
+                                                    <span class="input-group clockpicker" data-placement="right" data-align="top" data-autoclose="true" style="width: 100px;">
+                                                        <input type="text" class="form-control" id="timeSwitch-{{switch.key}}" data-key="{{switch.key}}" value="{{switch.value}}">
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-time"></span>
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                                <span class="col-md-6" ng-if="switch.type==5">
+                                                    <textarea ng-if="switch.key.indexOf('Reports')!=0" id="tareSwitch-{{switch.key}}" class="form-control col-md-12" data-key="{{switch.key}}" style="line-height: 21px; margin-right: 0px !important" rows="6">{{switch.value}}</textarea>
+                                                </span>
+                                                <br /><br />
+                                            </p>
+                                        </span>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+</dl>
     </div>
 </div>
 

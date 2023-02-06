@@ -1,0 +1,157 @@
+﻿@{
+    Layout = null;
+}
+@using Util = HM.Operations.Secure.Web.Utility.Util
+<html lang="en" dir="ltr" class="ng-scope">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
+    @*<META HTTP-EQUIV="X-FRAME-OPTIONS" CONTENT="DENY">*@
+
+    <meta name="viewport" content="width=device-width" />
+    <meta name="google-site-verification" content="EJIcNO6c1DD7Rqd2wrjvIGIXgbfLAKa8MfkMc1XUAe4" />
+    <title>Innocap - Operations Secure</title>
+    <link rel="stylesheet" href="/Content/bootstrap-innocap.css" type="text/css">
+    <link rel="stylesheet" href="/Content/site.css" type="text/css">
+    <link rel="stylesheet" href="/Content/login.css" type="text/css">
+    <script src="/Scripts/jquery-3.5.1.js"></script>
+    <script src="/Scripts/angular.js"></script>
+    <script src="/Scripts/angular-animate.js"></script>
+    <script src="/Scripts/angular-sanitize.js"></script>
+    <script src="/Scripts/bootstrap.js"></script>
+</head>
+
+<body>
+
+    <div class="oidc-container">
+        <div class="row hidden-xs">
+            <div class="logobar">
+                <div class="col-lg-12 col-md-12">
+                    <br>
+                    <label class="oidc-logo"> <img src="/Images/LOGO_innocap-hm_rgb.png"></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- nav -->
+        <div id="nxnNavUrlId">
+            <div class="nexen-header">
+                <div class="nexen-nav">
+                    <div class="navbar navbar-default">
+                        <div class="navbar-header">
+                            <div class="nexen-logo navbar-brand visible-sm visible-xs">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nxn-login-jumbotron-container" role="main">
+            <div class="jumbotron" style=" border-radius: 10px; ">
+                <div class="row">
+                    <div id="loginContainer" class="login-box col-sm-6 col-sm-push-6 col-md-4 col-md-push-8 ng-scope">
+                        <form id="loginForm" name="loginForm" class="login-form  ng-pristine ng-invalid ng-invalid-nxn-required ng-invalid-required" autocomplete="off">
+                            <fieldset>
+                                <div class="form-group button-container sign-in-links">
+                                    <button type="button" id="signInBtn" class="btn btn-lg btn-default" title="Sign In">Sign In</button>
+                                    <div id="errorMessage" class="errorMessage">@ViewBag.errorMsg</div>
+                                </div>
+                                @*<div class="form-group sign-in-links">
+                                        <a href="#" target="_blank" class="hyper-link">Change Password?</a><span>|</span>
+                                        <a href="#" class="hyper-link" target="_blank">Need Help?</a>
+                                    </div>*@
+                            </fieldset>
+                        </form>
+                    </div>
+
+                    <div class="hero-text-container col-sm-6 col-sm-pull-6 col-md-8 col-md-pull-4">
+                        <div class="heroText">
+                            <div class="nxn-herotext-tagline1">
+                                @Util.InternalSitePrefix Operations Secure
+                                @if(@Util.IsLowerEnvironment)
+                                {
+                                    @Util.Environment.ToUpper()
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="nexen-footer">
+            <div class="row">
+                <div class="col-sm-6">
+                    <ul class="footernav">
+                        <li class="ng-scope"><a href="https://www.innocap.com/en/contact/" link-target="" target="_blank">Contact</a></li>
+                        <li class="ng-scope"><a href="https://www.innocap.com/en/terms-of-use/" link-target="" target="_blank">Terms of Use</a></li>
+                    </ul>
+                </div><div class="col-sm-6">
+                    <div class="copyright ng-binding ng-scope">© @DateTime.Today.Year – INNOCAP – All Rights Reserved</div>
+                </div>
+            </div>
+
+        </footer>
+    </div>
+    <script type="text/javascript">
+
+        //var app = angular.module("loginApp", ["ngAnimate"]);
+        //app.controller('loginController', function ($scope) {
+        //});
+
+        //function setFocus(loginFailed, rememberUsernameCookieExists, enableRememberUsername, isChainedUsernameAvailable) {
+        //    var platform = navigator.platform;
+        //    if (platform != null && platform.indexOf("iPhone") == -1) {
+        //        if (loginFailed || (rememberUsernameCookieExists && enableRememberUsername) || isChainedUsernameAvailable)
+        //            document.getElementById('hmOpsPassword').focus();
+        //        else
+        //            document.getElementById('username').focus();
+        //    }
+        //}
+
+
+
+        $(document).ready(function () {
+
+            var arr = [];
+
+            for (var i = 0; i < localStorage.length; i++) {
+                if (localStorage.key(i).indexOf('hm-ops-signal-') === 0) {
+                    arr.push(localStorage.key(i));
+                }
+            }
+
+            for (var i = 0; i < arr.length; i++) {
+                localStorage.removeItem(arr[i]);
+            }
+            //$("#signInBtn").addClass($("#errorMessage").html() != "" ? "disabled" : "");
+
+
+            $("#signInBtn").click(function () {
+
+               // if ($("#errorMessage").html() != "")
+                //    return false;
+                //$("#signInBtn").css("disabled", "disabled");
+                window.location.href = "/Account/Login";
+            })
+
+            function postOk(ok) {
+                //trimming the username
+                //localStorage.setItem("SM-HM-Ops-Secure-CommitId", document.forms[0].USER.value);
+
+                //document.forms[0]["signInBtn"].disabled = true;
+                document.forms[0].submit();
+            }
+
+        });
+
+
+    </script>
+</body>
+</html>
