@@ -371,7 +371,7 @@ namespace HM.Operations.Secure.Middleware
                 context.Configuration.ProxyCreationEnabled = false;
 
                 var fundAccounts = (from oAccnt in context.onBoardingAccounts
-                                    where allFundIds.Contains(oAccnt.hmFundId) && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed"
+                                    where allFundIds.Contains(oAccnt.hmFundId) && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed" && oAccnt.AccountType != "Agreement (Reporting Only)"
                                     let isAuthorizedSendingAccount = (currency == null || oAccnt.Currency == currency) && (isNoticeToFund || oAccnt.AuthorizedParty == "Hedgemark") && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
                                     let isAuthorizedSendingAccountFinal = (isNotice) ? isAuthorizedSendingAccount && oAccnt.SwiftGroup.AcceptedMessages.Contains("MT210") : isAuthorizedSendingAccount
                                     where (isFundTransfer || isAuthorizedSendingAccountFinal)
