@@ -7,7 +7,7 @@
   <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
   <property name="ProjectFile" value="../HM.Operations.Secure.Web/HM.Operations.Secure.Web.csproj"/>   
   <property name="OutputFile1" value="../HM.Operations.Secure.Web/obj/Test/"/>   
-  <property name="sourcePackageLocation" value="\\swpfmoscqcu23q7\f$\Operations_Secure_Jenkins\Test"/>   
+  <property name="sourcePackageLocation" value="\\saappsclndusc01.file.core.windows.net\deployment-artifacts\QA01\IC_OPS_Secure"/>   
   <property name="UnitTestProjectReference" value="../HedgeMark.SwiftMessageHandler.Tests/bin/QA/HedgeMark.SwiftMessageHandler.Tests.dll" />  
   
   <property name="allServers" value="swpfmoscqcu23q7" />
@@ -24,7 +24,7 @@
 	 <nant buildfile="CleanAndDeployPackage.build" />
 	 <nant buildfile="SQL-GF.Build">
 		<properties>		 
-		  <property name="sql.svr" value="icsqlqa-ls-data.innocap.com, 14331"/>
+		  <property name="sql.svr" value="icsqlqa-ls-data.innocap.com,14331"/>
 		</properties>
 	 </nant>
 	
