@@ -323,7 +323,7 @@ namespace HM.Operations.Secure.Middleware
                         }
                     }
 
-                    if (account.AccountType == "Agreement (Reporting Only)")
+                    if (account.AccountType == WireDataManager.AgreementReportingOnly)
                     {
                         account.onBoardingAccountStatus = "Approved";
                         account.ApprovedBy = userName;
