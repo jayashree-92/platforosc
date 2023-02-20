@@ -110,7 +110,7 @@ namespace HM.Operations.Secure.Web.Controllers
         public bool IsWireApprover => User.IsInRole(OpsSecureUserRoles.WireApprover);
         public bool IsWireReadOnly => User.IsInRole(OpsSecureUserRoles.WireReadOnly);
 
-        public bool IsWireAdmin => true;//User.IsInRole(OpsSecureUserRoles.WireAdmin);
+        public bool IsWireAdmin => User.IsInRole(OpsSecureUserRoles.WireAdmin);
 
 
         protected static readonly string JsonContentType = "application/json";
@@ -175,7 +175,7 @@ namespace HM.Operations.Secure.Web.Controllers
         }
     }
 
-    //[AuthorizedRoles(OpsSecureUserRoles.WireAdmin)]
+    [AuthorizedRoles(OpsSecureUserRoles.WireAdmin)]
     public abstract class WireAdminBaseController : BaseController
     {
 
