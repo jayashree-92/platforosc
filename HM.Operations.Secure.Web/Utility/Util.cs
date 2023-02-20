@@ -43,7 +43,7 @@ namespace HM.Operations.Secure.Web.Utility
 
         public static bool IsWireAdmin(this IPrincipal principal)
         {
-            return true;//ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireAdmin]);//principal != null && principal.IsInRole(OpsSecureUserRoles.WireAdmin);
+            return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireAdmin]);//principal != null && principal.IsInRole(OpsSecureUserRoles.WireAdmin);
         }
 
         public static bool IsWireApprover(this IPrincipal principal)
