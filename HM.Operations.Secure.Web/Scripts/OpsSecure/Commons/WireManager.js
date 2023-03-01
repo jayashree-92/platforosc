@@ -477,13 +477,16 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         if (isNaN(wireAmount))
             wireAmount = 0;
-        //Check if the wire-amount is within the limit 
-        $http.get("/Home/IsWireAmountValid?wireAmount=" + wireAmount + "&valueDate=" + $("#wireValueDate").text() + "&currency=" + currency + "&wireStatusId=" + $scope.WireTicket.WireStatusId).then(
-            function (response) {
-                $scope.IsWireAmountWithInAllowedLimit = response.data == "true";
-                if (!$scope.IsWireAmountWithInAllowedLimit)
-                    $scope.fnShowErrorMessage(response.data);
-            });
+
+        if ($("#wireValueDate").text() != "") {
+            //Check if the wire-amount is within the limit 
+            $http.get("/Home/IsWireAmountValid?wireAmount=" + wireAmount + "&valueDate=" + $("#wireValueDate").text() + "&currency=" + currency + "&wireStatusId=" + $scope.WireTicket.WireStatusId).then(
+                function (response) {
+                    $scope.IsWireAmountWithInAllowedLimit = response.data == "true";
+                    if (!$scope.IsWireAmountWithInAllowedLimit)
+                        $scope.fnShowErrorMessage(response.data);
+                });
+        }
 
         if (wireAmount == 0) {
             $scope.fnShowErrorMessage("Please enter a non-zero amount to initiate the wire");
