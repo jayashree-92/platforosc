@@ -24,7 +24,6 @@ namespace HM.Operations.Secure.Web
         public bool Authorize(DashboardContext context)
         {
             return HttpContext.Current.User.IsWireUser();
-           // return HttpContext.Current.User.Identity.IsAuthenticated && AccountController.AllowedUserRoles.Any(role => HttpContext.Current.User.IsInRole(role));
         }
     }
     public class Startup

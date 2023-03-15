@@ -28,42 +28,45 @@ namespace HM.Operations.Secure.Web.Controllers
             return context.hLoginRegistrations.Single(s => s.varLoginID.Equals(userName));
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string returnUrl = "")
         {
             if(!Request.IsAuthenticated)
             {
                 return View();
             }
-            else
-            {
-                HttpCookie authCookie = System.Web.HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
-                if (authCookie != null)
-                    FormsAuthentication.SignOut();
-            }
-            if(!Utility.Util.IsWireUser(User))
-            {
-                ViewBag.errorMsg = "Unauthorized User";
-                return View();
-            }
 
-            return Redirect(new UrlHelper(Request.RequestContext).Action("Index", "Home"));
+            var authCookie = System.Web.HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
+            if (authCookie != null)
+                FormsAuthentication.SignOut();
+
+            if (Utility.Util.IsWireUser(User)) 
+                return RedirectAfterAuthentication(returnUrl);
+            
+            ViewBag.errorMsg = "Unauthorized User";
+            return View();
         }
 
 
-        public void Login()
+       public void Login()
         {
             if(!Request.IsAuthenticated)
             {
-                HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = "/Account/Index" },
+                HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = "/Account/Index" + Request.Url?.Query },
                       OpenIdConnectAuthenticationDefaults.AuthenticationType);
 
-                Redirect(new UrlHelper(Request.RequestContext).Action("Index", "Account"));
+                Redirect("/Account/Index" + Request.Url?.Query);
             }
             else
             {
-                Response.Redirect(new UrlHelper(Request.RequestContext).Action("Index", "Home"));
+                RedirectAfterAuthentication(Request.Url?.Query);
             }
         }
+
+        private ActionResult RedirectAfterAuthentication(string returnUrl)
+        {
+            return Redirect(string.IsNullOrWhiteSpace(returnUrl) || returnUrl == "/Account/Login" ? new UrlHelper(Request.RequestContext).Action("Index", "Home") : returnUrl);
+        }
+
 
         public static Dictionary<string, string> AuthorizeRoleObjectMap = new Dictionary<string, string>()
         {

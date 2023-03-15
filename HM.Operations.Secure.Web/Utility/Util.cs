@@ -43,27 +43,29 @@ namespace HM.Operations.Secure.Web.Utility
 
         public static bool IsWireAdmin(this IPrincipal principal)
         {
-            return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireAdmin]);//principal != null && principal.IsInRole(OpsSecureUserRoles.WireAdmin);
+            return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireAdmin]);
         }
 
         public static bool IsWireApprover(this IPrincipal principal)
         {
-            return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireApprover]);//principal != null && principal.IsInRole(OpsSecureUserRoles.WireApprover);
+            return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireApprover]);
         }
 
         public static bool IsWireInitiator(this IPrincipal principal)
         {
-            return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireInitiator]);//principal != null && principal.IsInRole(OpsSecureUserRoles.WireInitiator);
+            return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireInitiator]);
         }
 
         public static bool IsWireReadOnly(this IPrincipal principal)
         {
-            return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireReadOnly]);//principal != null && principal.IsInRole(OpsSecureUserRoles.WireReadOnly);
+            return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireReadOnly]);
         }
 
         public static bool IsWireUser(this IPrincipal principal)
         {
-            return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireInitiator]) || ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireApprover]);//principal != null && (principal.IsInRole(OpsSecureUserRoles.WireInitiator) || principal.IsInRole(OpsSecureUserRoles.WireApprover));
+            return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireInitiator])
+                   || ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireApprover]);
+
         }
     }
 }

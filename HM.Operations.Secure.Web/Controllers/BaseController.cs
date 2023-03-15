@@ -11,7 +11,6 @@ using System.Linq;
 using System.Net.Mime;
 using System.Security.Claims;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 
 namespace HM.Operations.Secure.Web.Controllers
@@ -24,52 +23,6 @@ namespace HM.Operations.Secure.Web.Controllers
         WiresDashboardData,
         WireUserGroupData,
         ClearingBrokersData
-    }
-
-    public class AuthorizedRolesAttribute : AuthorizeAttribute
-    {
-        public AuthorizedRolesAttribute(params string[] roles)
-        {
-            Roles = string.Join(",", roles);
-        }
-        protected override bool AuthorizeCore(HttpContextBase httpContext)
-        {
-            if(!httpContext.User.Identity.IsAuthenticated)
-            {
-                return false;
-            }
-            if(!(ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, OpsSecureUserRoles.DMAAdmin) || ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, OpsSecureUserRoles.DMAUser)))
-            {
-                var userRole = httpContext.Session["userRole"].ToString();
-                if(string.IsNullOrWhiteSpace(userRole))
-                {
-                    userRole = GetUserRole(httpContext.User.Identity.Name);
-                    httpContext.Session["userRole"] = userRole;
-                }
-                else
-                {
-                    var claimsIdentity = ClaimsPrincipal.Current.Identities.First();
-                    {
-                        claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, userRole));
-                    }
-                }
-            }
-
-            return this.Roles.Split(',').Any(role => ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[role]));
-        }
-
-        private static string GetUserRole(string userName)
-        {
-            using(var context = new AdminContext())
-            {
-                return (from aspUser in context.aspnet_Users
-                            //join usr in context.hLoginRegistrations on aspUser.UserName equals usr.varLoginID
-                        where aspUser.UserName == userName && aspUser.aspnet_Roles.Any(r => AuthorizationManager.AuthorizedDmaUserRoles.Contains(r.RoleName)) //&& !usr.isDeleted
-                        let role = aspUser.aspnet_Roles.Any(r => r.RoleName == OpsSecureUserRoles.DMAAdmin) ? OpsSecureUserRoles.DMAAdmin : OpsSecureUserRoles.DMAUser
-                        select role).FirstOrDefault() ?? string.Empty;
-            }
-        }
-
     }
 
 
@@ -103,13 +56,14 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             return Session[key];
         }
+
         public void SetSessionValue(string key, object value)
         {
             Session[key] = value;
         }
+
         public bool IsWireApprover => User.IsInRole(OpsSecureUserRoles.WireApprover);
         public bool IsWireReadOnly => User.IsInRole(OpsSecureUserRoles.WireReadOnly);
-
         public bool IsWireAdmin => User.IsInRole(OpsSecureUserRoles.WireAdmin);
 
 
