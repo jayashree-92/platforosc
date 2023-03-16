@@ -20,7 +20,6 @@ namespace HM.Operations.Secure.Web.Controllers
     public class AccountController : Controller
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(AccountController));
-        public static readonly List<string> AllowedUserRoles = ConfigurationManagerWrapper.StringListSetting("AllowedUserRoles", $"{OpsSecureUserRoles.WireInitiator},{OpsSecureUserRoles.WireApprover},{OpsSecureUserRoles.WireAdmin},{OpsSecureUserRoles.WireReadOnly}");
 
         public static hLoginRegistration GetUserDetail(string userName)
         {

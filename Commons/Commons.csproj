@@ -78,8 +78,8 @@
     <Reference Include="Azure.Security.KeyVault.Secrets, Version=4.4.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
       <HintPath>..\packages\Azure.Security.KeyVault.Secrets.4.4.0\lib\netstandard2.0\Azure.Security.KeyVault.Secrets.dll</HintPath>
     </Reference>
-    <Reference Include="HM.Azure.Config, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HM.Azure.Config.2.2.0\lib\netstandard2.0\HM.Azure.Config.dll</HintPath>
+    <Reference Include="HM.Azure.Config, Version=2.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HM.Azure.Config.2.8.0\lib\netstandard2.0\HM.Azure.Config.dll</HintPath>
     </Reference>
     <Reference Include="Kerberos.NET, Version=4.5.0.0, Culture=neutral, PublicKeyToken=10b231fbfc8c4b4d, processorArchitecture=MSIL">
       <HintPath>..\packages\Kerberos.NET.4.5.115\lib\netstandard2.0\Kerberos.NET.dll</HintPath>
