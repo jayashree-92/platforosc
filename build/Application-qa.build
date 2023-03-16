@@ -11,9 +11,9 @@
   <property name="UnitTestProjectReference" value="../HedgeMark.SwiftMessageHandler.Tests/bin/QA/HedgeMark.SwiftMessageHandler.Tests.dll" />  
   
   <property name="allServers" value="swpfmoscqcu23q7" />
-  <property name="appPoolName" value="IC_OPS_Secure" />
+  <property name="appPoolName" value="IC_ops_secure" />
   
-  <property name="primaryServers" value="\\swpfmoscqcu23q7\f$\IC_OPS_Secure,
+  <property name="primaryServers" value="\\swpfmoscqcu23q7\f$\Apps\IC_ops_secure,
   \\saappsclndusc01.file.core.windows.net\deployment-artifacts\HM-Ops-Secure-QA" />
 
    <!--SQL Properties-->

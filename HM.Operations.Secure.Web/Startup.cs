@@ -22,7 +22,7 @@ namespace HM.Operations.Secure.Web
     {
         public bool Authorize(DashboardContext context)
         {
-            return HttpContext.Current.User.IsWireUser();
+            return HttpContext.Current.User.IsSecurePortalAccessible();
         }
     }
     public class Startup

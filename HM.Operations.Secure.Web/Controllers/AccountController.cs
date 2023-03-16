@@ -38,7 +38,7 @@ namespace HM.Operations.Secure.Web.Controllers
             if (authCookie != null)
                 FormsAuthentication.SignOut();
 
-            if (Utility.Util.IsWireUser(User)) 
+            if (Utility.Util.IsSecurePortalAccessible(User)) 
                 return RedirectAfterAuthentication(returnUrl);
             
             ViewBag.errorMsg = "Unauthorized User";
