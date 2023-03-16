@@ -27,14 +27,15 @@
             </div>
 
             <div class="col-md-2">
-                <div class="thumbnail dashBoardTile" ng-click="fnRetriveAllWireTickets([2,6])" style="border-left: 2px solid #F6BD0C;">
+                <div class="thumbnail tileSelected shadowBoxSelect dashBoardTile" ng-click="fnRetriveAllWireTickets([2,5,6])" style="border-left: 2px solid #F6BD0C;">
                     <div class="caption dashBoardCaption" style="background-color: #FEF9E7">
-                        <h5 class="">Pending Approval</h5>
+                        <h5 class="">Action Required</h5>
                         <h1>
                             <label class="label text-warning number-counter" data-count="{{WireStatusCounts.Pending}}">0</label>
                             <span class="small ng-show-hide" ng-show="WireStatusCounts.OnHold>0">
                                 |&nbsp;<label class="label text-blocked number-counter" style="padding: 0px !important;font-size: 20px" data-count="{{WireStatusCounts.OnHold}}">0</label><span style="font-size: 70%">&nbsp;On Hold</span>
                             </span>
+                            <span class="small ng-show-hide" ng-show="WireStatusCounts.Failed>0">|&nbsp;<label class="label text-danger number-counter" style="padding: 0px !important;font-size: 20px" data-count="{{WireStatusCounts.Failed}}">0</label><span style="font-size: 70%">&nbsp;Failed</span></span>
                             <i class="glyphicon glyphicon-time dashboardIcon"></i>
                         </h1>
                     </div>
@@ -60,7 +61,6 @@
                         <h1>
                             <label class="label text-default number-counter" data-count="{{WireStatusCounts.Cancelled}}">0</label>
                             <span class="small ng-show-hide" ng-show="WireStatusCounts.CancelledAndProcessing>0">|&nbsp;<label class="label text-warning number-counter" style="padding: 0px !important;font-size: 20px" data-count="{{WireStatusCounts.CancelledAndProcessing}}">0</label><span style="font-size: 70%">&nbsp;Processing</span></span>
-                            <span class="small ng-show-hide" ng-show="WireStatusCounts.Failed>0">|&nbsp;<label class="label text-danger number-counter" style="padding: 0px !important;font-size: 20px" data-count="{{WireStatusCounts.Failed}}">0</label><span style="font-size: 70%">&nbsp;Failed</span></span>
                             <i class="glyphicon glyphicon-trash dashboardIcon"></i>
                         </h1>
                     </div>

@@ -5,7 +5,6 @@ using Hangfire.SqlServer;
 using HM.Authentication;
 using HM.Operations.Secure.Web;
 using HM.Operations.Secure.Web.Utility;
-using HM.Operations.Secure.Web.Controllers;
 using HM.Operations.Secure.Web.Jobs;
 using Microsoft.Owin;
 using Owin;

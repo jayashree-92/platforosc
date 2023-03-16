@@ -56,7 +56,7 @@ HmOpsApp.controller("WiresHomeCtrl", function ($scope, $http, $timeout, $interva
         $("#wireCurrentlyViewedBy").collapse("hide");
     });
 
-    $scope.SelectedStatusId = 0;
+    $scope.SelectedStatusId = "2,5,6";
     $scope.ShouldApplyDatepickerScope = false;
     $scope.ContextDate = {};
     $scope.WireStatusCounts = {};
