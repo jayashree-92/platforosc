@@ -339,7 +339,7 @@
           </Key>
           <Property Name="hmsWireDocumentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hmsWireId" Type="bigint" Nullable="false" />
-          <Property Name="FileName" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="int" Nullable="false" />
         </EntityType>
@@ -2000,7 +2000,7 @@ warning 6035: The relationship 'FK_hmsSchedules_SFTPFolderWorkflowCode' has colu
           <Property Name="hmsWireId" Type="Int64" Nullable="false" />
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="FileName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="hmsWire" Relationship="OperationsSecureModel.FK_hmsWireDocument_hmsWires_hmsWireId" FromRole="hmsWireDocument" ToRole="hmsWire" />
         </EntityType>
         <EntityType Name="hmsWireMessageType">

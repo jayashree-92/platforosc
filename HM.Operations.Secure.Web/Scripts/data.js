@@ -773,13 +773,19 @@ var getFormattedUIDate = function (date) {
 Dropzone.options.myAwesomeDropzone = false;
 Dropzone.autoDiscover = false;
 
-var validateDoubleExtensionInDZ = function (file, done) {
-    if (file.name.toLowerCase().indexOf(".exe") >= 0) {
+var validateUploadFile = function (file, done) {
+    if (file.name.length > 100) {
+        done("Warning:" + "File name '" + file.name + " cannot exceed 100 chars. Please shorten the file name and try again.  ");
+        $(".callout").pulse();
+    }
+    else if (file.name.toLowerCase().indexOf(".exe") >= 0) {
         notifyError("Warning: filename appeares to be .exe and cannot be uploaded to the system");
         done("Warning: filename appeares to be .exe and cannot be uploaded to the system");
         this.removeFile(file);
-    } else
+    }
+    else
         done();
+
 };
 
 /*************************************/

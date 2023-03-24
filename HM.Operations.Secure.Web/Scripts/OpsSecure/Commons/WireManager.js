@@ -1186,14 +1186,15 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.WireTicket = {
         hmsWireId: 0
     }
-
+    
     angular.element("#uploadWireFiles").dropzone({
         url: "/Home/UploadWireFiles?wireId=" + $scope.WireTicket.hmsWireId,
         dictDefaultMessage: "<span style='font-size:20px;font-weight:normal;font-style:italic'>Drag/Drop wire documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
         autoDiscover: false,
-        acceptedFiles: ".msg,.csv,.txt,.pdf,.xls,.xlsx,.zip,.rar", accept: validateDoubleExtensionInDZ,
+        acceptedFiles: ".msg,.csv,.txt,.pdf,.xls,.xlsx,.zip,.rar",
+        accept: validateUploadFile,
         maxFiles: 3,
-        previewTemplate: "<div class='row col-sm-2'><div class='panel panel-success panel-sm'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
+        previewTemplate: "<div class=\"panel-body dz-error-message text-danger\" style='padding: 10px 0px;'><span data-dz-errormessage=\"\"></span></div><div class='row col-sm-2'><div class='panel panel-success panel-sm'> <div class='panel-heading'> <h3 class='panel-title' style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;'><span data-dz-name></span> - (<span data-dz-size></span>)</h3> " +
             "</div> <div class='panel-body'> <span class='dz-upload' data-dz-uploadprogress></span>" +
             "<div class='progress'><div data-dz-uploadprogress class='progress-bar progress-bar-warning progress-bar-striped active dzFileProgress' style='width: 0%'></div>" +
             "</div></div></div></div>",
@@ -1220,10 +1221,13 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             });
 
             $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
+          
         },
         queuecomplete: function () {
         },
         complete: function (file, result) {
+            if (file.name.length > 100)
+                return;
             $scope.dzRawFileUploads = this;
             angular.element("#uploadWireFiles").removeClass("dz-drag-hover");
 
