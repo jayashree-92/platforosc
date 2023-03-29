@@ -59,7 +59,8 @@ namespace HM.Operations.Secure.Middleware
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
-                var wireTicketQuery = context.hmsWires
+                var authorizedFundIds = authorizedDMAFundData.Select(s => s.HmFundId).ToList();
+                var wireTicketQuery = context.hmsWires.Where(s => authorizedFundIds.Contains(s.hmFundId))
                     .Include(s => s.hmsWireMessageType)
                     .Include(s => s.hmsWirePurposeLkup)
                     .Include(s => s.hmsWireStatusLkup)
