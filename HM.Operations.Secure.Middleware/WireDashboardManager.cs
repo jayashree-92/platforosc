@@ -21,35 +21,35 @@ namespace HM.Operations.Secure.Middleware
             List<hmsWire> wireStatusDetails;
 
             var clientIds = new List<long>() { -1 };
-            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Clients))
+            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.Clients))
                 clientIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Clients].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var fundIds = new List<long>() { -1 };
-            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Funds))
+            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.Funds))
                 fundIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Funds].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var adminIds = new List<long>() { -1 };
-            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Admins))
+            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.Admins))
                 adminIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Admins].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var allStatusIds = new List<long>() { -1 };
-            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Status))
+            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.Status))
                 allStatusIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Status].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var agrTypes = new List<string>() { "-1" };
-            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.AccountTypes))
+            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.AccountTypes))
                 agrTypes = searchPreference[DashboardReport.PreferenceCode.AccountTypes].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             var msgTypes = new List<long>() { -1 };
-            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.MessageTypes))
+            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.MessageTypes))
                 msgTypes = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.MessageTypes].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var reports = new List<string>() { "-1" };
-            if (searchPreference.ContainsKey(DashboardReport.PreferenceCode.Modules))
+            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.Modules))
                 reports = searchPreference[DashboardReport.PreferenceCode.Modules].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-
-            using (var context = new OperationsSecureContext())
+            var authorizedFundMap = authorizedDMAFundData == null ? AdminFundManager.GetHFundsCreatedForDMAOnly(PreferencesManager.FundNameInDropDown.OpsShortName).ToDictionary(s => s.HmFundId, v => v) : authorizedDMAFundData.ToDictionary(s => s.HmFundId, v => v);
+            using(var context = new OperationsSecureContext())
             {
                 //context.Database.Log = s =>
                 //{
@@ -59,7 +59,7 @@ namespace HM.Operations.Secure.Middleware
                 context.Configuration.ProxyCreationEnabled = false;
                 context.Configuration.LazyLoadingEnabled = false;
 
-                var authorizedFundIds = authorizedDMAFundData.Select(s => s.HmFundId).ToList();
+                var authorizedFundIds = authorizedFundMap.Keys.ToList();
                 var wireTicketQuery = context.hmsWires.Where(s => authorizedFundIds.Contains(s.hmFundId))
                     .Include(s => s.hmsWireMessageType)
                     .Include(s => s.hmsWirePurposeLkup)
@@ -77,7 +77,7 @@ namespace HM.Operations.Secure.Middleware
                     .Include(s => s.ReceivingSSITemplate.UltimateBeneficiary)
                     .Include(s => s.hmsWireSenderInformation);
 
-                if (shouldBringAllPendingWires)
+                if(shouldBringAllPendingWires)
                     wireTicketQuery = wireTicketQuery.Where(s => ((allStatusIds.Contains(0) || allStatusIds.Contains(2)) && s.WireStatusId == 2)
                            || s.ValueDate >= startContextDate && s.ValueDate <= endContextDate && (allStatusIds.Contains(0) || allStatusIds.Contains(s.WireStatusId))
                            || DbFunctions.TruncateTime(s.CreatedAt) == DbFunctions.TruncateTime(endContextDate) && (allStatusIds.Contains(0) || allStatusIds.Contains(s.WireStatusId)));
@@ -94,19 +94,19 @@ namespace HM.Operations.Secure.Middleware
                 wireStatusDetails = wireTicketQuery.ToList();
             }
 
-            if (!agrTypes.Contains("-1"))
+            if(!agrTypes.Contains("-1"))
             {
                 var allWireIds = new List<long>();
 
-                if (agrTypes.Contains("DDA"))
+                if(agrTypes.Contains("DDA"))
                     allWireIds.AddRange(wireStatusDetails.Where(s => s.SendingAccount.AccountType == "DDA").Select(s => s.hmsWireId).ToList());
-                if (agrTypes.Contains("Custody"))
+                if(agrTypes.Contains("Custody"))
                     allWireIds.AddRange(wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Custody").Select(s => s.hmsWireId).ToList());
 
-                if (agrTypes.Any(s => s != "DDA" && s != "Custody"))
+                if(agrTypes.Any(s => s != "DDA" && s != "Custody"))
                 {
                     var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Agreement" && s.SendingAccount.dmaAgreementOnBoardingId > 0).Select(s => s.SendingAccount.dmaAgreementOnBoardingId).Distinct().ToList();
-                    using (var context = new AdminContext())
+                    using(var context = new AdminContext())
                     {
                         var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
                         allWireIds.AddRange(wireStatusDetails.Where(s => agrmtMap.Contains(s.SendingAccount.dmaAgreementOnBoardingId ?? 0)).Select(s => s.hmsWireId).ToList());
@@ -115,17 +115,17 @@ namespace HM.Operations.Secure.Middleware
 
                 wireStatusDetails = wireStatusDetails.Where(s => allWireIds.Contains(s.hmsWireId)).ToList();
             }
-            if (!clientIds.Contains(-1))
+            if(!clientIds.Contains(-1))
             {
-                using (var context = new AdminContext())
+                using(var context = new AdminContext())
                 {
                     var fundsOfSelectedClients = context.vw_HFund.Where(s => clientIds.Contains(s.dmaClientOnBoardId ?? 0)).Select(s => s.hmFundId).ToList();
                     wireStatusDetails = wireStatusDetails.Where(s => fundsOfSelectedClients.Contains((int)s.hmFundId)).ToList();
                 }
             }
-            if (!adminIds.Contains(-1))
+            if(!adminIds.Contains(-1))
             {
-                using (var context = new AdminContext())
+                using(var context = new AdminContext())
                 {
                     var fundsOfSelectedAdmins = context.vw_HFund.Where(s => adminIds.Contains(s.FundAdministrator ?? 0)).Select(s => s.hmFundId).ToList();
                     wireStatusDetails = wireStatusDetails.Where(s => fundsOfSelectedAdmins.Contains((int)s.hmFundId)).ToList();
@@ -136,12 +136,12 @@ namespace HM.Operations.Secure.Middleware
                 .Union(wireStatusDetails.Select(s => s.ApprovedBy ?? 0)).Distinct().ToList();
             var users = FileSystemManager.GetUsersList(userIds);
 
-            var authorizedFundMap = authorizedDMAFundData == null ? AdminFundManager.GetHFundsCreatedForDMAOnly(PreferencesManager.FundNameInDropDown.OpsShortName).ToDictionary(s => s.HmFundId, v => v) : authorizedDMAFundData.ToDictionary(s => s.HmFundId, v => v);
+
             var timeZones = FileSystemManager.GetAllTimeZones();
             var authFundIds = authorizedFundMap.Select(s => s.Key).ToList();
             var fundDetails = FundAccountManager.GetFundAccountDetails(authFundIds, isPrivilegedUser).Where(s => clientIds.Contains(-1) || clientIds.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
 
-            foreach (var wire in wireStatusDetails)
+            foreach(var wire in wireStatusDetails)
             {
                 var fund = authorizedFundMap.ContainsKey(wire.hmFundId) ? authorizedFundMap[wire.hmFundId] : new HFundBasic();
                 var fndAcct = fundDetails.FirstOrDefault(s => s.hmFundId == wire.hmFundId);
@@ -175,15 +175,15 @@ namespace HM.Operations.Secure.Middleware
 
             var timeZoneInfo = ScheduleManager.TimeZones.ContainsKey(timeZone) ? ScheduleManager.TimeZones[timeZone] : Utility.DefaultSystemTimeZone;
 
-            foreach (var s in wireData)
+            foreach(var s in wireData)
             {
                 s.HMWire.CreatedAt = TimeZoneInfo.ConvertTime(s.HMWire.CreatedAt, timeZoneInfo);
                 s.HMWire.LastModifiedAt = TimeZoneInfo.ConvertTime(s.HMWire.LastModifiedAt, timeZoneInfo);
 
-                if (s.HMWire.ApprovedAt != null)
+                if(s.HMWire.ApprovedAt != null)
                     s.HMWire.ApprovedAt = TimeZoneInfo.ConvertTime(s.HMWire.ApprovedAt ?? new DateTime(), timeZoneInfo);
 
-                foreach (var workflowLog in s.HMWire.hmsWireWorkflowLogs)
+                foreach(var workflowLog in s.HMWire.hmsWireWorkflowLogs)
                 {
                     workflowLog.CreatedAt = TimeZoneInfo.ConvertTime(workflowLog.CreatedAt, timeZoneInfo);
                 }
@@ -199,7 +199,7 @@ namespace HM.Operations.Secure.Middleware
         private static void SetUserTitles(WireTicket thisWire)
         {
             //When wire is Drafted - hide Last Modified by
-            if (thisWire.HMWire.WireStatusId == 1)
+            if(thisWire.HMWire.WireStatusId == 1)
             {
                 thisWire.WireLastUpdatedBy = "-";
                 thisWire.HMWire.LastModifiedAt = new DateTimeOffset(1, 1, 1, 1, 1, 1, new TimeSpan());
@@ -208,19 +208,19 @@ namespace HM.Operations.Secure.Middleware
             }
 
             //approved wire
-            if ((thisWire.HMWire.WireStatusId == 3 || thisWire.HMWire.WireStatusId == 5) && thisWire.HMWire.ApprovedBy == null)
+            if((thisWire.HMWire.WireStatusId == 3 || thisWire.HMWire.WireStatusId == 5) && thisWire.HMWire.ApprovedBy == null)
             {
                 thisWire.WireApprovedBy = thisWire.WireLastUpdatedBy;
                 thisWire.HMWire.ApprovedAt = thisWire.HMWire.LastModifiedAt;
             }
 
             //approved wire - MT210 -This has auto approval
-            if (thisWire.HMWire.WireMessageTypeId == 5 && thisWire.HMWire.WireStatusId == 3 && thisWire.WireApprovedBy == "-")
+            if(thisWire.HMWire.WireMessageTypeId == 5 && thisWire.HMWire.WireStatusId == 3 && thisWire.WireApprovedBy == "-")
             {
                 thisWire.WireApprovedBy = "System";
             }
 
-            if (thisWire.HMWire.CreatedAt == thisWire.HMWire.LastModifiedAt)
+            if(thisWire.HMWire.CreatedAt == thisWire.HMWire.LastModifiedAt)
             {
                 thisWire.WireLastUpdatedBy = "-";
                 thisWire.HMWire.LastModifiedAt = new DateTimeOffset(1, 1, 1, 1, 1, 1, new TimeSpan());
@@ -234,139 +234,139 @@ namespace HM.Operations.Secure.Middleware
             thisWire.HMWire.hmsWirePurposeLkup.hmsWires = null;
             thisWire.HMWire.hmsWireStatusLkup.hmsWires = null;
             thisWire.HMWire.hmsWireTransferTypeLKup.hmsWires = null;
-            if (thisWire.HMWire.hmsWireSenderInformation != null)
+            if(thisWire.HMWire.hmsWireSenderInformation != null)
                 thisWire.HMWire.hmsWireSenderInformation.hmsWires = null;
 
             thisWire.HMWire.SendingAccount.hmsWires = null;
-            if (thisWire.HMWire.ReceivingAccount != null)
+            if(thisWire.HMWire.ReceivingAccount != null)
                 thisWire.HMWire.ReceivingAccount.hmsWires1 = null;
-            if (thisWire.HMWire.ReceivingSSITemplate != null)
+            if(thisWire.HMWire.ReceivingSSITemplate != null)
                 thisWire.HMWire.ReceivingSSITemplate.hmsWires = null;
 
             thisWire.SendingAccount.onBoardingAccountSSITemplateMaps = null;
             thisWire.ReceivingAccount.onBoardingAccountSSITemplateMaps = null;
             thisWire.SSITemplate.onBoardingAccountSSITemplateMaps = null;
 
-            if (thisWire.SendingAccount.SwiftGroup != null)
+            if(thisWire.SendingAccount.SwiftGroup != null)
                 thisWire.SendingAccount.SwiftGroup.onBoardingAccounts = null;
 
-            if (thisWire.SendingAccount.WirePortalCutoff != null)
+            if(thisWire.SendingAccount.WirePortalCutoff != null)
                 thisWire.SendingAccount.WirePortalCutoff.onBoardingAccounts = null;
 
-            if (thisWire.ReceivingAccount.SwiftGroup != null)
+            if(thisWire.ReceivingAccount.SwiftGroup != null)
                 thisWire.ReceivingAccount.SwiftGroup.onBoardingAccounts = null;
 
-            if (thisWire.ReceivingAccount.WirePortalCutoff != null)
+            if(thisWire.ReceivingAccount.WirePortalCutoff != null)
                 thisWire.ReceivingAccount.WirePortalCutoff.onBoardingAccounts = null;
 
-            if (thisWire.SendingAccount.UltimateBeneficiary != null)
+            if(thisWire.SendingAccount.UltimateBeneficiary != null)
                 thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts =
                     thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts1 =
                         thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts2 = null;
             else
                 thisWire.SendingAccount.UltimateBeneficiary = new onBoardingAccountBICorABA();
 
-            if (thisWire.ReceivingAccount.UltimateBeneficiary != null)
+            if(thisWire.ReceivingAccount.UltimateBeneficiary != null)
                 thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts =
                     thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts1 =
                         thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts2 = null;
             else
                 thisWire.ReceivingAccount.UltimateBeneficiary = new onBoardingAccountBICorABA();
 
-            if (thisWire.SSITemplate.Beneficiary != null)
+            if(thisWire.SSITemplate.Beneficiary != null)
                 thisWire.SSITemplate.Beneficiary.onBoardingAccounts =
                     thisWire.SSITemplate.Beneficiary.onBoardingAccounts1 =
                         thisWire.SSITemplate.Beneficiary.onBoardingAccounts2 = null;
             else
                 thisWire.SSITemplate.Beneficiary = new onBoardingAccountBICorABA();
 
-            if (thisWire.SSITemplate.Intermediary != null)
+            if(thisWire.SSITemplate.Intermediary != null)
                 thisWire.SSITemplate.Intermediary.onBoardingAccounts =
                     thisWire.SSITemplate.Intermediary.onBoardingAccounts1 =
                         thisWire.SSITemplate.Intermediary.onBoardingAccounts2 = null;
 
-            if (thisWire.SSITemplate.UltimateBeneficiary != null)
+            if(thisWire.SSITemplate.UltimateBeneficiary != null)
                 thisWire.SSITemplate.UltimateBeneficiary.onBoardingAccounts =
                     thisWire.SSITemplate.UltimateBeneficiary.onBoardingAccounts1 =
                         thisWire.SSITemplate.UltimateBeneficiary.onBoardingAccounts2 = null;
             else
                 thisWire.SSITemplate.UltimateBeneficiary = new onBoardingAccountBICorABA();
 
-            if (thisWire.SSITemplate.Beneficiary != null)
+            if(thisWire.SSITemplate.Beneficiary != null)
                 thisWire.SSITemplate.Beneficiary.onBoardingSSITemplates =
                     thisWire.SSITemplate.Beneficiary.onBoardingSSITemplates1 =
                         thisWire.SSITemplate.Beneficiary.onBoardingSSITemplates2 = null;
 
-            if (thisWire.SSITemplate.Intermediary != null)
+            if(thisWire.SSITemplate.Intermediary != null)
                 thisWire.SSITemplate.Intermediary.onBoardingSSITemplates =
                     thisWire.SSITemplate.Intermediary.onBoardingSSITemplates1 =
                         thisWire.SSITemplate.Intermediary.onBoardingSSITemplates2 = null;
 
-            if (thisWire.SSITemplate.UltimateBeneficiary != null)
+            if(thisWire.SSITemplate.UltimateBeneficiary != null)
                 thisWire.SSITemplate.UltimateBeneficiary.onBoardingSSITemplates =
                     thisWire.SSITemplate.UltimateBeneficiary.onBoardingSSITemplates1 =
                         thisWire.SSITemplate.UltimateBeneficiary.onBoardingSSITemplates2 = null;
 
-            if (thisWire.SendingAccount.Beneficiary != null)
+            if(thisWire.SendingAccount.Beneficiary != null)
                 thisWire.SendingAccount.Beneficiary.onBoardingAccounts =
                     thisWire.SendingAccount.Beneficiary.onBoardingAccounts1 =
                         thisWire.SendingAccount.Beneficiary.onBoardingAccounts2 = null;
             else
                 thisWire.SendingAccount.Beneficiary = new onBoardingAccountBICorABA();
 
-            if (thisWire.SendingAccount.Intermediary != null)
+            if(thisWire.SendingAccount.Intermediary != null)
                 thisWire.SendingAccount.Intermediary.onBoardingAccounts =
                     thisWire.SendingAccount.Intermediary.onBoardingAccounts1 =
                         thisWire.SendingAccount.Intermediary.onBoardingAccounts2 = null;
 
-            if (thisWire.SendingAccount.UltimateBeneficiary != null)
+            if(thisWire.SendingAccount.UltimateBeneficiary != null)
                 thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts =
                     thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts1 =
                         thisWire.SendingAccount.UltimateBeneficiary.onBoardingAccounts2 = null;
 
-            if (thisWire.ReceivingAccount.Beneficiary != null)
+            if(thisWire.ReceivingAccount.Beneficiary != null)
                 thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts =
                     thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts1 =
                         thisWire.ReceivingAccount.Beneficiary.onBoardingAccounts2 = null;
             else
                 thisWire.ReceivingAccount.Beneficiary = new onBoardingAccountBICorABA();
 
-            if (thisWire.ReceivingAccount.Intermediary != null)
+            if(thisWire.ReceivingAccount.Intermediary != null)
                 thisWire.ReceivingAccount.Intermediary.onBoardingAccounts =
                     thisWire.ReceivingAccount.Intermediary.onBoardingAccounts1 =
                         thisWire.ReceivingAccount.Intermediary.onBoardingAccounts2 = null;
 
-            if (thisWire.ReceivingAccount.UltimateBeneficiary != null)
+            if(thisWire.ReceivingAccount.UltimateBeneficiary != null)
                 thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts =
                     thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts1 =
                         thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingAccounts2 = null;
 
-            if (thisWire.SendingAccount.Beneficiary != null)
+            if(thisWire.SendingAccount.Beneficiary != null)
                 thisWire.SendingAccount.Beneficiary.onBoardingSSITemplates =
                     thisWire.SendingAccount.Beneficiary.onBoardingSSITemplates1 =
                         thisWire.SendingAccount.Beneficiary.onBoardingSSITemplates2 = null;
 
-            if (thisWire.SendingAccount.Intermediary != null)
+            if(thisWire.SendingAccount.Intermediary != null)
                 thisWire.SendingAccount.Intermediary.onBoardingSSITemplates =
                     thisWire.SendingAccount.Intermediary.onBoardingSSITemplates1 =
                         thisWire.SendingAccount.Intermediary.onBoardingSSITemplates2 = null;
 
-            if (thisWire.SendingAccount.UltimateBeneficiary != null)
+            if(thisWire.SendingAccount.UltimateBeneficiary != null)
                 thisWire.SendingAccount.UltimateBeneficiary.onBoardingSSITemplates =
                     thisWire.SendingAccount.UltimateBeneficiary.onBoardingSSITemplates1 =
                         thisWire.SendingAccount.UltimateBeneficiary.onBoardingSSITemplates2 = null;
 
-            if (thisWire.ReceivingAccount.Beneficiary != null)
+            if(thisWire.ReceivingAccount.Beneficiary != null)
                 thisWire.ReceivingAccount.Beneficiary.onBoardingSSITemplates =
                     thisWire.ReceivingAccount.Beneficiary.onBoardingSSITemplates1 =
                         thisWire.ReceivingAccount.Beneficiary.onBoardingSSITemplates2 = null;
 
-            if (thisWire.ReceivingAccount.Intermediary != null)
+            if(thisWire.ReceivingAccount.Intermediary != null)
                 thisWire.ReceivingAccount.Intermediary.onBoardingSSITemplates =
                     thisWire.ReceivingAccount.Intermediary.onBoardingSSITemplates1 =
                         thisWire.ReceivingAccount.Intermediary.onBoardingSSITemplates2 = null;
 
-            if (thisWire.ReceivingAccount.UltimateBeneficiary != null)
+            if(thisWire.ReceivingAccount.UltimateBeneficiary != null)
                 thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingSSITemplates =
                     thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingSSITemplates1 =
                         thisWire.ReceivingAccount.UltimateBeneficiary.onBoardingSSITemplates2 = null;
@@ -375,7 +375,7 @@ namespace HM.Operations.Secure.Middleware
 
         private static string GetWireStatusLabel(WireDataManager.WireStatus wireStatus, WireDataManager.SwiftStatus swiftStatus)
         {
-            switch (wireStatus)
+            switch(wireStatus)
             {
                 case WireDataManager.WireStatus.Drafted: return "<label class='label label-default'>Drafted</label>";
                 case WireDataManager.WireStatus.Initiated: return "<label class='label label-warning'>Pending</label>";
@@ -390,7 +390,7 @@ namespace HM.Operations.Secure.Middleware
 
         private static string GetSwiftStatusLabel(WireDataManager.SwiftStatus swiftStatus)
         {
-            switch (swiftStatus)
+            switch(swiftStatus)
             {
                 case WireDataManager.SwiftStatus.NotInitiated: return "<label class='label label-default'>Not Started</label>";
                 case WireDataManager.SwiftStatus.Processing: return "<label class='label label-warning'>Pending Ack</label>";
@@ -407,7 +407,7 @@ namespace HM.Operations.Secure.Middleware
         {
             var rows = new List<Row>();
 
-            foreach (var ticket in wireData)
+            foreach(var ticket in wireData)
             {
                 var messageType = ticket.HMWire.hmsWireMessageType.MessageType;
 
@@ -441,7 +441,7 @@ namespace HM.Operations.Secure.Middleware
                     ["Approved At"] = ticket.HMWire.ApprovedAt != null ? (ticket.HMWire.ApprovedAt ?? new DateTime()).ToString("MMM dd, yyyy hh:mm tt") : "-"
                 };
 
-                switch (ticket.HMWire.hmsWireStatusLkup.Status)
+                switch(ticket.HMWire.hmsWireStatusLkup.Status)
                 {
                     case "Drafted":
                         // $(row).addClass("info");
