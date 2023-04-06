@@ -258,7 +258,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
                 $scope.IsValidationFailed = true;
                 return;
             }
-            if (v.Key == "Clients" && (v.Value.indexOf("-1") >= 0 || v.Value.indexOf(",") >= 0))
+            if (v.Key == "Clients" && (v.Value == -1 || v.Value.indexOf("-1") >= 0 || v.Value.indexOf(",") >= 0))
                 $scope.IsAllorMultipleClientSelected = true;
             //else if (v.Key == "Admins" && v.Value == -1)
             //    $scope.IsAllAdminSelected = true;
