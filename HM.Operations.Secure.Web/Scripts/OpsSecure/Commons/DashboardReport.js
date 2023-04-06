@@ -249,7 +249,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
             $("#mdlToShowSchedulesConfig").modal("show");
     });
     $scope.fnValidatePreferences = function () {
-        $scope.IsAllClientSelected = false;
+        $scope.IsAllorMultipleClientSelected = false;
         $scope.IsAllAdminSelected = false;
         $scope.IsValidationFailed = false;
         $.each($scope.fnGetActivePreferences(), function (i, v) {
@@ -258,10 +258,10 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
                 $scope.IsValidationFailed = true;
                 return;
             }
-            if (v.Key == "Clients" && v.Value == -1)
-                $scope.IsAllClientSelected = true;
-            else if (v.Key == "Admins" && v.Value == -1)
-                $scope.IsAllAdminSelected = true;
+            if (v.Key == "Clients" && (v.Value.indexOf("-1") >= 0 || v.Value.indexOf(",") >= 0))
+                $scope.IsAllorMultipleClientSelected = true;
+            //else if (v.Key == "Admins" && v.Value == -1)
+            //    $scope.IsAllAdminSelected = true;
         });
         if ($scope.IsValidationFailed)
             return false;
