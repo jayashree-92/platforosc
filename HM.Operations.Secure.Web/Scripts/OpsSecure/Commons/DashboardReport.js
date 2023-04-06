@@ -352,7 +352,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
 
         $http.post("/DashboardReport/SaveTemplateAndPreferences", { templateName: $scope.TemplateName, templateId: templateId, preferences: $scope.fnGetActivePreferences() }).then(function (response) {
             $("#mdlSaveTemplate").modal("hide");
-            $scope.auditDashboardChanges($scope.IsSaveAsNew);
+            $scope.auditDashboardChanges(true);
             $scope.IsPreferencesChanged = false;
             $scope.IsPreferencesSaved = true;
             $scope.fnGetAllTemplates(response.data);
@@ -380,6 +380,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
                 if (result) {
                     $http.post("/DashboardReport/DeleteTemplate", { templateId: $("#liDashboardTemplates").val() }).then(function (response) {
                         notifySuccess("Template deleted successfully.");
+                        $scope.auditDashboardChanges(false);
                         $scope.fnGetAllTemplates();
                         $("#liDashboardTemplates").select2("val", "").trigger("change");
 
@@ -419,8 +420,8 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
     $("#pnlDashboardReports").collapse("hide");
 
 
-    $scope.auditDashboardChanges = function () {
-        var auditLogData = createDashboardAuditData();
+    $scope.auditDashboardChanges = function (isPreference) {
+        var auditLogData = createDashboardAuditData(isPreference);
         var ss = auditLogData;
         $http.post("/Audit/AuditWireLogs", JSON.stringify({ auditLogData: auditLogData }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
         });
@@ -436,20 +437,29 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
         return returndata;
     }
     
-    function createDashboardAuditData() {
+    function createDashboardAuditData(isPreference) {
         var changes = new Array();
         var index = 0;
-        var action = $scope.IsSaveAsNew ? "Added" : "Edited";
-
-        $.each($scope.AllPreferences, function (i, v) {
-            if ($scope.fnGetPrevSelectedValuesForAudit(v.Preference) != v.SelectedValues) {
-                changes[index] = new Array();
-                changes[index][1] = v.Preference;
-                changes[index][2] = action == "Added" ? "" : $scope.fnGetPrevSelectedValuesForAudit(v.Preference).replaceAll(';', '<br/>');
-                changes[index][3] = v.SelectedValues.replaceAll(';','<br/>');
-                index++;
-            }
-        });
+        var action = $scope.IsNoTemplateSelected || $scope.IsSaveAsNew ? "Added" : "Edited";
+        if (isPreference) {
+            $.each($scope.AllPreferences, function (i, v) {
+                if (action == "Added" || $scope.fnGetPrevSelectedValuesForAudit(v.Preference) != v.SelectedValues) {
+                    changes[index] = new Array();
+                    changes[index][1] = v.Preference;
+                    changes[index][2] = action == "Added" ? "" : $scope.fnGetPrevSelectedValuesForAudit(v.Preference).replaceAll(';', '<br/>');
+                    changes[index][3] = v.SelectedValues.replaceAll(';', '<br/>');
+                    index++;
+                }
+            });
+        }
+        else {
+            action = "Deleted";
+            changes[index] = new Array();
+            changes[index][1] = "Template Deletion";
+            changes[index][2] = $scope.TemplateName;
+            changes[index][3] = "Deleted";
+            index++;
+        }
         var auditdata = {};
         auditdata.ModuleName = "Wire Dashboard";
         auditdata.Action = action;

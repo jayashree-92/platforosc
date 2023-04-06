@@ -1737,7 +1737,6 @@ div#summaryReportData {
     border-color: #e5e5e5 #eee #eee;
     border-style: solid;
     border-width: 1px 0 0 0;
-    width:100%;
     /*-webkit-box-shadow: inset 0 3px 6px rgba(0,0,0,.05);*/
     /*box-shadow: inset 0 3px 6px rgba(0,0,0,.05);*/
 }
@@ -2146,7 +2145,6 @@ div[class^="dtsp-subRow"] {
     background: #e8f4e8;
     min-height: 50px;
     height: inherit;
-    width: 70%;
     padding: 4px;
     overflow: hidden;
     font-size: 11px;
@@ -2157,7 +2155,6 @@ div[class^="dtsp-subRow"] {
     background: inherit !important;
     min-height: 60px;
     height: inherit;
-    width: 70%;
     padding: 5px 8px 5px 8px;
     overflow: hidden;
 }
@@ -2165,7 +2162,6 @@ div[class^="dtsp-subRow"] {
     
     min-height: 60px;
     height: inherit;
-    width:70%;
     padding: 5px 8px 5px 8px;
     overflow: hidden;
 }
