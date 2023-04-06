@@ -154,7 +154,7 @@ namespace HM.Operations.Secure.Middleware.Jobs
             if (preferences.ContainsKey(DashboardReport.PreferenceCode.Admins))
                 adminIds = Array.ConvertAll(preferences[DashboardReport.PreferenceCode.Admins].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
             var isExternalMailAllowed = true;
-            if ((clientIds.Any(s => s == -1) && adminIds.Any(s => s == -1)) || clientIds.Count > 1 || adminIds.Count > 1)
+            if (clientIds.Any(s => s == -1) || clientIds.Count > 1)
                 isExternalMailAllowed = false;
 
             var allToEmails = job.To;
