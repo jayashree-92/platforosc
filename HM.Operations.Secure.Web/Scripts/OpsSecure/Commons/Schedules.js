@@ -279,9 +279,11 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
         $timeout(function () {
             $scope.IsAllClientAllAdminSelected = $scope.IsAllClientSelected && $scope.IsAllAdminSelected;
             if ($scope.IsAllClientAllAdminSelected) {
-                $("#dvInptScheduleExternalTo").removeClass("schedule-email-box").addClass("schedule-email-box-disabled");;
+                $("#dvInptScheduleExternalTo").removeClass("schedule-email-box").addClass("schedule-email-box-disabled");
                 $("#dvInptScheduleExternalTo").attr("contenteditable", false);
             }
+            else
+                $("#dvInptScheduleExternalTo").addClass("schedule-email-box").removeClass("schedule-email-box-disabled");
         }, 100);
         
        
