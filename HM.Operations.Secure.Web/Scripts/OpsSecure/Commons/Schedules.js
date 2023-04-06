@@ -275,7 +275,16 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
 
         if ($scope.IsScheduleLoadingInProgress) {
         }
-
+       
+        $timeout(function () {
+            $scope.IsAllClientAllAdminSelected = $scope.IsAllClientSelected && $scope.IsAllAdminSelected;
+            if ($scope.IsAllClientAllAdminSelected) {
+                $("#dvInptScheduleExternalTo").removeClass("schedule-email-box").addClass("schedule-email-box-disabled");;
+                $("#dvInptScheduleExternalTo").attr("contenteditable", false);
+            }
+        }, 100);
+        
+       
         $scope.OriginalExternalToValue = $scope.Job.Schedule.ExternalTo;
         $scope.OriginalSFTFolderValue = $scope.Job.Schedule.SFTPFolder;
 
@@ -686,8 +695,12 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
             $scope.Job.Schedule.ExternalToModifiedAt = moment($scope.Job.Schedule.ExternalToModifiedAt).format("lll");
         if ($scope.Job.Schedule.SFTPFolderWorkflowCode)
             $scope.Job.Schedule.SFTPFolderModifiedAt = moment($scope.Job.Schedule.SFTPFolderModifiedAt).format("lll");
-
-        $("#mdlToShowSchedulesConfig").modal("show");
+        if ($scope.IsDashboardSchedule) {
+            if ($scope.fnValidatePreferences())
+                $("#mdlToShowSchedulesConfig").modal("show");
+        }
+        else
+            $("#mdlToShowSchedulesConfig").modal("show");
     }
 
 

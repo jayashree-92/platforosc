@@ -28,7 +28,7 @@
                 </button>&nbsp;
                 <span ng-class="{ 'btn-group': TotalSchedules>0 && !IsNoTemplateSelected }">
                     <button ng-show="TotalSchedules>0 && !IsNoTemplateSelected" class="btn btn-sm btn-default ng-show-only" style="cursor: pointer;" data-toggle="collapse" data-target="#panelReportSchedules"><i class="glyphicon glyphicon-time"></i> {{TotalSchedules}}&nbsp;Jobs&nbsp;<span class="caret"></span></button>
-                    <button id="btnAddNewSchedule" ng-class="{ 'disabled': IsNoTemplateSelected  }" class="btn btn-default btn-sm" data-toggle="modal" data-target="#mdlToShowSchedulesConfig"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add new Job</button>
+                    <button id="btnAddNewSchedule" ng-class="{ 'disabled': IsNoTemplateSelected  }" class="btn btn-default btn-sm" data-toggle="modal" @*data-target="#mdlToShowSchedulesConfig">*@<i class="glyphicon glyphicon-plus"></i>&nbsp;Add new Job</button>
                 </span>&nbsp;
                 <span class="btn-group">
                     <button class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" ng-class="{ 'disabled': !(IsDashboardLoading) }"><i class="glyphicon glyphicon-download-alt"></i>&nbsp; Export&nbsp;&nbsp;<span class="caret"></span></button>

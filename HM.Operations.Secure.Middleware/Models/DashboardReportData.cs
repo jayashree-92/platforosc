@@ -32,6 +32,7 @@ namespace HM.Operations.Secure.Middleware.Models
             public string Preference { get; set; }
             public List<Select2Type> Options { get; set; }
             public List<string> SelectedIds { get; set; }
+            public List<string> SelectedValues { get; set; }
         }
     }
 }

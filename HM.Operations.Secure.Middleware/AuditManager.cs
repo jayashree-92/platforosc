@@ -42,8 +42,17 @@ namespace HM.Operations.Secure.Middleware
 
         public static string GetAssociationToLog(AuditLogData auditData)
         {
-            var association =
-                $"Purpose: <i>{auditData.Purpose}</i><br/>Sending Account: <i>{auditData.SendingAccount}</i><br/>Receiving Account: <i>{(string.IsNullOrWhiteSpace(auditData.ReceivingAccount) ? "N/A" : auditData.ReceivingAccount)}</i><br/>Transfer Type:<i>{auditData.TransferType}</i>";
+            var association = "";
+            switch (auditData.ModuleName)
+            {
+                case "Wire Dashboard":
+                    association = $"Dashboard Name: <i>{auditData.ModuleName}</i><br/>Template Name: <i>{auditData.TemplateName}</i><br/>";
+                    break;
+                default:
+                     association =
+                        $"Purpose: <i>{auditData.Purpose}</i><br/>Sending Account: <i>{auditData.SendingAccount}</i><br/>Receiving Account: <i>{(string.IsNullOrWhiteSpace(auditData.ReceivingAccount) ? "N/A" : auditData.ReceivingAccount)}</i><br/>Transfer Type:<i>{auditData.TransferType}</i>";
+                    break;
+            }
 
             return association;
         }

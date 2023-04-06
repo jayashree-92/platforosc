@@ -72,7 +72,7 @@ namespace HM.Operations.Secure.Middleware.Jobs
             var contentToExport = GetDashboardFileToSend(job, startDate, endDate);
             ReportDeliveryManager.CreateExportFile(contentToExport, exportFileInfo);
 
-            SendOutReport(exportFileInfo, job.hmsSchedule, subject, mailBody, false);
+            SendOutReport(exportFileInfo, job, subject, mailBody, false);
 
             //Log Schedule Execution
             LogScheduleEnd(scheduleLogId);

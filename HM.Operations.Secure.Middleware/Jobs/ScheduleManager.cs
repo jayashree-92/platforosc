@@ -142,10 +142,23 @@ namespace HM.Operations.Secure.Middleware.Jobs
                 AddSchedule(jobId, isDashboard);
         }
 
-        protected static void SendOutReport(FileInfo exportFileInfo, hmsSchedule job, string subject, string mailBody, bool isNoFilesReceived)
+        protected static void SendOutReport(FileInfo exportFileInfo, hmsDashboardSchedule schedule, string subject, string mailBody, bool isNoFilesReceived)
         {
+            var job = schedule.hmsSchedule;
+            var preferences = schedule.hmsDashboardTemplate.hmsDashboardPreferences.ToDictionary(s => (DashboardReport.PreferenceCode)s.PreferenceCode, v => v.Preferences);
+
+            var clientIds = new List<long>();
+            if (preferences.ContainsKey(DashboardReport.PreferenceCode.Clients))
+                clientIds = Array.ConvertAll(preferences[DashboardReport.PreferenceCode.Clients].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
+            var adminIds = new List<long>();
+            if (preferences.ContainsKey(DashboardReport.PreferenceCode.Admins))
+                adminIds = Array.ConvertAll(preferences[DashboardReport.PreferenceCode.Admins].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
+            var isExternalMailAllowed = true;
+            if ((clientIds.Any(s => s == -1) && adminIds.Any(s => s == -1)) || clientIds.Count > 1 || adminIds.Count > 1)
+                isExternalMailAllowed = false;
+
             var allToEmails = job.To;
-            if (!string.IsNullOrWhiteSpace(job.ExternalToApproved))
+            if (!string.IsNullOrWhiteSpace(job.ExternalToApproved) && isExternalMailAllowed)
                 allToEmails = $"{allToEmails},{job.ExternalToApproved}";
 
             var newMail = new MailInfo(subject, mailBody, allToEmails, isNoFilesReceived ? null : exportFileInfo, ccAddress: job.CC, mailSignature: Utility.MailSignatureOps);

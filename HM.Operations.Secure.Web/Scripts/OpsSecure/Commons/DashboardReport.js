@@ -213,8 +213,10 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
             function (response) {
                 $timeout(function () {
                     $scope.IsTemplateLoadingInProgress = true;
+                    $scope.OldPreferences = angular.copy(response.data);
                     $.each(response.data, function (i, v) {
                         $("#li" + v.Preference).select2("val", v.SelectedIds).trigger("change");
+                        $scope.fnSetPreferenceDataForAudit(v.Preference, $scope.OldPreferences);
                     });
                     $scope.IsTemplateLoadingInProgress = false;
                 }, 200);
@@ -224,18 +226,56 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
         $opsSharedScopes.get("ReportScheduleCtrl").fnGetSchedules($scope.SelectedTemplateId, true);
     });
 
+    $scope.fnSetPreferenceDataForAudit = function (preference,preferenceData) {
+        $.each(preferenceData, function (i, v) {
+            if (v.Preference == preference) {
+                var data = "";
+                $.each($("#li" + preference).select2("data"), function (j, k) {                    
+                    data += k.text + "; ";
+                })
+                v.SelectedValues = data;//.substring(data, data.lastIndexOf(","));
+            }
+        });
+    }
+
+
     $("#pnlDashboardPreferences").collapse().on("hide.bs.collapse", function () {
         $scope.IsTemplatePreferencePanelCollapsed = true;
     }).on("show.bs.collapse", function () {
         $scope.IsTemplatePreferencePanelCollapsed = false;
     });
+    $("#btnAddNewSchedule").on("click", function () {
+        if($scope.fnValidatePreferences())
+            $("#mdlToShowSchedulesConfig").modal("show");
+    });
+    $scope.fnValidatePreferences = function () {
+        $scope.IsAllClientSelected = false;
+        $scope.IsAllAdminSelected = false;
+        $scope.IsValidationFailed = false;
+        $.each($scope.fnGetActivePreferences(), function (i, v) {
+            if ((v.Key == "Clients" || v.Key == "Admins") && v.Value == "") {
+                notifyError("Please select valid " + v.Key + " before proceeding ");
+                $scope.IsValidationFailed = true;
+                return;
+            }
+            if (v.Key == "Clients" && v.Value == -1)
+                $scope.IsAllClientSelected = true;
+            else if (v.Key == "Admins" && v.Value == -1)
+                $scope.IsAllAdminSelected = true;
+        });
+        if ($scope.IsValidationFailed)
+            return false;
+        return true;
+    }
+
 
     $scope.fnGetActivePreferences = function () {
         var preferences = [];
 
         $($scope.AllPreferences).each(function (i, key) {
             var pref = $("#li" + key.Preference).val();
-            preferences.push({ Key: key.Preference, Value: pref == "" || pref.indexOf("-1") >= 0 ? -1 : pref });
+            preferences.push({ Key: key.Preference, Value: pref.indexOf("-1") >= 0 ? -1 : pref });// pref == "" ||
+            $scope.fnSetPreferenceDataForAudit(key.Preference, $scope.AllPreferences);
         });
 
         return preferences;
@@ -292,6 +332,8 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
             return;
         }
 
+        if (!$scope.fnValidatePreferences())
+            return;
         var templateId = 0;
 
         if (saveOriginal) {
@@ -310,6 +352,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
 
         $http.post("/DashboardReport/SaveTemplateAndPreferences", { templateName: $scope.TemplateName, templateId: templateId, preferences: $scope.fnGetActivePreferences() }).then(function (response) {
             $("#mdlSaveTemplate").modal("hide");
+            $scope.auditDashboardChanges($scope.IsSaveAsNew);
             $scope.IsPreferencesChanged = false;
             $scope.IsPreferencesSaved = true;
             $scope.fnGetAllTemplates(response.data);
@@ -374,6 +417,46 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
 
     $("#pnlDashboardPreferences").collapse("show");
     $("#pnlDashboardReports").collapse("hide");
+
+
+    $scope.auditDashboardChanges = function () {
+        var auditLogData = createDashboardAuditData();
+        var ss = auditLogData;
+        $http.post("/Audit/AuditWireLogs", JSON.stringify({ auditLogData: auditLogData }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
+        });
+    }
+
+    $scope.fnGetPrevSelectedValuesForAudit = function (preference) {
+        var returndata = "";
+        $.each($scope.OldPreferences, function (i, v) {
+             if (v.Preference == preference) { 
+                 returndata= v.SelectedValues;
+                }
+        });
+        return returndata;
+    }
+    
+    function createDashboardAuditData() {
+        var changes = new Array();
+        var index = 0;
+        var action = $scope.IsSaveAsNew ? "Added" : "Edited";
+
+        $.each($scope.AllPreferences, function (i, v) {
+            if ($scope.fnGetPrevSelectedValuesForAudit(v.Preference) != v.SelectedValues) {
+                changes[index] = new Array();
+                changes[index][1] = v.Preference;
+                changes[index][2] = action == "Added" ? "" : $scope.fnGetPrevSelectedValuesForAudit(v.Preference).replaceAll(';', '<br/>');
+                changes[index][3] = v.SelectedValues.replaceAll(';','<br/>');
+                index++;
+            }
+        });
+        var auditdata = {};
+        auditdata.ModuleName = "Wire Dashboard";
+        auditdata.Action = action;
+        auditdata.Changes = changes;
+        auditdata.TemplateName = $scope.TemplateName;        
+        return auditdata;
+    }
 
     //********************************************//
 
