@@ -422,7 +422,6 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
 
     $scope.auditDashboardChanges = function (isPreference) {
         var auditLogData = createDashboardAuditData(isPreference);
-        var ss = auditLogData;
         $http.post("/Audit/AuditWireLogs", JSON.stringify({ auditLogData: auditLogData }), { headers: { 'Content-Type': "application/json; charset=utf-8;" } }).then(function (response) {
         });
     }
