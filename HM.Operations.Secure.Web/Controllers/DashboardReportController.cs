@@ -77,7 +77,6 @@ namespace HM.Operations.Secure.Web.Controllers
                         {
                             if (!string.IsNullOrEmpty(dashboardSchedule.hmsSchedule.ExternalToApproved))
                             {
-                                dashboardSchedule.hmsSchedule.ExternalTo = $"{dashboardSchedule.hmsSchedule.ExternalTo};{dashboardSchedule.hmsSchedule.ExternalToApproved}";
                                 dashboardSchedule.hmsSchedule.ExternalToApproved = "";
                                 dashboardSchedule.hmsSchedule.ExternalToWorkflowCode = 0;
                                 dashboardSchedule.hmsSchedule.ExternalToModifiedBy = null;
@@ -125,7 +124,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     {
                         "-", "ExternalToApproved",
                         "",
-                        "Approval reverted for schedules with external mail ids",
+                        "Approval reverted for schedules with external mail-ids",
                     }
 },
             };

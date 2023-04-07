@@ -97,7 +97,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
                 update: function () { $("#li" + v.Preference).select2("onSortEnd"); }
             });
 
-            $("#li" + v.Preference).on("change", function () {
+            $("#li" + v.Preference).off("change").on("change", function () {
                 var selectedPref = $("#li" + v.Preference).select2("val");
                 v.TotalSelected = selectedPref.length == 0 || selectedPref.indexOf("-1") >= 0 ? "All" : $("#li" + v.Preference).select2("val").length;
 
@@ -383,9 +383,9 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
 
         if (templateId == "")
             templateId = 0;
-        if ($scope.IsExternalToApprovedHasValue) {
+        if ($scope.IsExternalToApprovedHasValue && templateId > 0) {
             bootbox.confirm({
-                message: "This Change will require re-approval of external mail Ids in the existing Schedule.Do you want to proceed ?",
+                message: "This change will require re-approval of external mail-Ids in the existing schedules.Do you want to proceed ?",
                 buttons: {
                     confirm: {
                         label: "Save Template",
@@ -417,6 +417,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
             $scope.IsRenameTemplate = false;
             $scope.IsSaveAsNew = false;
             notifySuccess("Template preferences saved successfully.");
+            $opsSharedScopes.get("ReportScheduleCtrl").fnGetSchedules($scope.SelectedTemplateId, true);
             $("#btnSaveTemplate").button("reset");
             $timeout(function () { $scope.IsPreferencesSaved = false; }, 5000);
         });
