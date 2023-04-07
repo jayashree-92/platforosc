@@ -186,6 +186,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
 
         $("#pnlTemplateSelection").collapse("hide");
         $("#pnlDashboardPreferences").collapse("show");
+        $("#btnSaveTemplate").popover("hide");
         $scope.IsPreferencesChanged = false;
         $scope.IsDashboardLoading = false;
         $scope.IsAllAndEverythingSelected = false;
@@ -217,6 +218,7 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
                     $.each(response.data, function (i, v) {
                         $("#li" + v.Preference).select2("val", v.SelectedIds).trigger("change");
                         $scope.fnSetPreferenceDataForAudit(v.Preference, $scope.OldPreferences);
+                        $("#s2id_li" + v.Preference).popover("hide");
                     });
                     $scope.IsTemplateLoadingInProgress = false;
                 }, 200);
@@ -245,16 +247,48 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
         $scope.IsTemplatePreferencePanelCollapsed = false;
     });
     $("#btnAddNewSchedule").on("click", function () {
-        if($scope.fnValidatePreferences())
-            $("#mdlToShowSchedulesConfig").modal("show");
+        $scope.fnIsPreferencesValidToSchedule();
     });
+
+
+    $scope.fnIsPreferencesValidToSchedule = function () {
+
+        if ($scope.IsPreferencesChanged && !$scope.IsPreferencesSaved) {
+            $scope.IsValidationFailed = true;
+            $("#btnSaveTemplate").popover({
+                placement: "top",
+                trigger: "manual",
+                container: "body",
+                content: "Please save the template preferences to proceed to schedule report",
+                html: true,
+                width: "250px"
+            });
+
+            $("#btnSaveTemplate").popover("show");
+            return false;
+        }
+
+        if ($scope.fnValidatePreferences())
+            $("#mdlToShowSchedulesConfig").modal("show");
+    };
+
     $scope.fnValidatePreferences = function () {
+        $("#btnSaveTemplate").popover("hide");
         $scope.IsAllorMultipleClientSelected = false;
         $scope.IsAllAdminSelected = false;
         $scope.IsValidationFailed = false;
         $.each($scope.fnGetActivePreferences(), function (i, v) {
-            if ((v.Key == "Clients" || v.Key == "Admins") && v.Value == "") {
-                notifyError("Please select valid " + v.Key + " before proceeding ");
+            $("#s2id_li" + v.Key).popover("hide");
+            if (v.Value == "") {
+                $("#s2id_li" + v.Key).popover({
+                    placement: "top",
+                    trigger: "manual",
+                    container: "body",
+                    content: "Please select valid " + v.Key + " before proceeding",
+                    html: true,
+                    width: "250px"
+                });
+                $("#s2id_li" + v.Key).popover("show");
                 $scope.IsValidationFailed = true;
                 return;
             }
@@ -349,8 +383,32 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
 
         if (templateId == "")
             templateId = 0;
-
-        $http.post("/DashboardReport/SaveTemplateAndPreferences", { templateName: $scope.TemplateName, templateId: templateId, preferences: $scope.fnGetActivePreferences() }).then(function (response) {
+        if ($scope.IsExternalToApprovedHasValue) {
+            bootbox.confirm({
+                message: "This Change will require re-approval of external mail Ids in the existing Schedule.Do you want to proceed ?",
+                buttons: {
+                    confirm: {
+                        label: "Save Template",
+                        className: "btn-sm btn-danger"
+                    },
+                    cancel: {
+                        label: "Dismiss",
+                        className: "btn-sm btn-default"
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $scope.fnSaveTemplate(templateId, true);
+                    }
+                }
+            });
+        }
+        else
+            $scope.fnSaveTemplate(templateId, false);
+    }
+    $scope.fnSaveTemplate = function (templateId, shouldUnApproveAllExternalTo) {
+        $("#btnSaveTemplate").button("loading");
+        $http.post("/DashboardReport/SaveTemplateAndPreferences", { templateName: $scope.TemplateName, templateId: templateId, preferences: $scope.fnGetActivePreferences(), shouldUnApproveAllExternalTo: shouldUnApproveAllExternalTo }).then(function (response) {
             $("#mdlSaveTemplate").modal("hide");
             $scope.auditDashboardChanges(true);
             $scope.IsPreferencesChanged = false;
@@ -359,9 +417,12 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
             $scope.IsRenameTemplate = false;
             $scope.IsSaveAsNew = false;
             notifySuccess("Template preferences saved successfully.");
+            $("#btnSaveTemplate").button("reset");
             $timeout(function () { $scope.IsPreferencesSaved = false; }, 5000);
         });
+        
     }
+    
 
     $scope.fnDeleteTemplate = function () {
         bootbox.confirm({

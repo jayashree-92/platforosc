@@ -44,13 +44,13 @@ namespace HM.Operations.Secure.Web.Controllers
             }));
         }
 
-        public long SaveTemplateAndPreferences(string templateName, long templateId, Dictionary<string, string> preferences)
+        public long SaveTemplateAndPreferences(string templateName, long templateId, Dictionary<string, string> preferences, bool shouldUnApproveAllExternalTo)
         {
             hmsDashboardTemplate template;
             using (var context = new OperationsSecureContext())
             {
                 template = templateId > 0
-                    ? context.hmsDashboardTemplates.Include(s => s.hmsDashboardPreferences).Single(s => s.hmsDashboardTemplateId == templateId)
+                    ? context.hmsDashboardTemplates.Include(s=>s.hmsDashboardSchedules).Include(s => s.hmsDashboardPreferences).Single(s => s.hmsDashboardTemplateId == templateId)
                     : context.hmsDashboardTemplates.Include(s => s.hmsDashboardPreferences).FirstOrDefault(s => s.TemplateName == templateName);
 
                 if (template == null)
@@ -71,7 +71,22 @@ namespace HM.Operations.Secure.Web.Controllers
                         template.IsDeleted = false;
 
                     template.TemplateName = templateName;
-
+                    if (shouldUnApproveAllExternalTo)
+                    {
+                        foreach (var dashboardSchedule in template.hmsDashboardSchedules)
+                        {
+                            if (!string.IsNullOrEmpty(dashboardSchedule.hmsSchedule.ExternalToApproved))
+                            {
+                                dashboardSchedule.hmsSchedule.ExternalTo = $"{dashboardSchedule.hmsSchedule.ExternalTo};{dashboardSchedule.hmsSchedule.ExternalToApproved}";
+                                dashboardSchedule.hmsSchedule.ExternalToApproved = "";
+                                dashboardSchedule.hmsSchedule.ExternalToWorkflowCode = 0;
+                                dashboardSchedule.hmsSchedule.ExternalToModifiedBy = null;
+                                dashboardSchedule.hmsSchedule.ExternalToModifiedAt = null;
+                                dashboardSchedule.hmsSchedule.LastModifiedBy = UserId;
+                                dashboardSchedule.hmsSchedule.LastUpdatedAt = DateTime.Now;
+                            }
+                        }
+                    }
                     context.hmsDashboardPreferences.RemoveRange(template.hmsDashboardPreferences.ToList());
                     context.SaveChanges();
                 }
@@ -92,10 +107,31 @@ namespace HM.Operations.Secure.Web.Controllers
                 context.SaveChanges();
 
             }
+            if (shouldUnApproveAllExternalTo)
+                LogUnApproveExternalToAudit(templateName);
 
             return template.hmsDashboardTemplateId;
         }
+        private void LogUnApproveExternalToAudit(string templateName)
+        {
+            var logData = new AuditLogData
+            {
+                Action = "Edited",
+                ModuleName = "Wire Dashboard",
+                TemplateName = templateName,
+                changes = new[]
+                {
+                    new[]
+                    {
+                        "-", "ExternalToApproved",
+                        "",
+                        "Approval reverted for schedules with external mail ids",
+                    }
+},
+            };
 
+            AuditManager.LogAudit(logData, UserName);
+        }
         public void DeleteTemplate(long templateId)
         {
             using (var context = new OperationsSecureContext())

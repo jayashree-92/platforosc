@@ -37,6 +37,7 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult GetSchedules(long primaryId, bool isDashboard)
         {
             var jobSchedules = GetDashboardSchedules(primaryId);
+            var isExternalToApprovedHasValue = isDashboard && jobSchedules.Any(s => !string.IsNullOrEmpty(s.Schedule.ExternalToApproved));
 
             //Set user details
             SetUserDetails(jobSchedules);
@@ -44,7 +45,7 @@ namespace HM.Operations.Secure.Web.Controllers
             //Set next execution
             ScheduleManager.SetNextExecutionTime(jobSchedules, isDashboard);
 
-            return Json(jobSchedules);
+            return Json(new { jobSchedules, isExternalToApprovedHasValue });
         }
 
         public JsonResult GetScheduleLogs(long scheduleId, string timeZone, int totalItems = 10)

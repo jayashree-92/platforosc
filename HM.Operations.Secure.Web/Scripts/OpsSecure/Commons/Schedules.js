@@ -527,23 +527,25 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
         $http.get("/Schedules/GetSchedules?primaryId=" + primaryId + "&isDashboard=" + isDashboard).then(function (response) {
 
             //Get all Schedules associated to selected template
-            if (isDashboard)
-                $opsSharedScopes.get("dashboardReportCtrl").TotalSchedules = response.data.length;
+            if (isDashboard) {
+                $opsSharedScopes.get("dashboardReportCtrl").TotalSchedules = response.data.jobSchedules.length;
+                $opsSharedScopes.get("dashboardReportCtrl").IsExternalToApprovedHasValue = response.data.isExternalToApprovedHasValue;
+            }
             else
-                $opsSharedScopes.get("getDetailsCtrl").TotalSchedules = response.data.length;
+                $opsSharedScopes.get("getDetailsCtrl").TotalSchedules = response.data.jobSchedules.length;
 
-            if (response.data.length === 0) {
+            if (response.data.jobSchedules.length === 0) {
                 $("#panelReportSchedules").collapse("hide");
             }
 
             if ($("#tblReportSchedules").hasClass("initialized")) {
                 tblReportSchedules.clear();
-                tblReportSchedules.rows.add(response.data);
+                tblReportSchedules.rows.add(response.data.jobSchedules);
                 tblReportSchedules.draw();
             } else {
                 tblReportSchedules = $("#tblReportSchedules").not(".initialized").addClass("initialized").DataTable(
                     {
-                        aaData: response.data,
+                        aaData: response.data.jobSchedules,
                         rowId: "Id",
                         "dom": "trI",
                         "bDestroy": true,
@@ -661,7 +663,7 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
                         "responsive": true,
                         "scrollY": "200px",
                         scrollCollapse: true,
-                        scroller: response.data.length > 3,
+                        scroller: response.data.jobSchedules.length > 3,
 
                         // "sDom": "<'row header'<'col-md-4 header-left'i><'col-md-5 header-center'<'#toolbar_Notification'>><'col-md-3 header-right'f>>t",
                         "preDrawCallback": function (settings) {
@@ -698,7 +700,7 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
         if ($scope.Job.Schedule.SFTPFolderWorkflowCode)
             $scope.Job.Schedule.SFTPFolderModifiedAt = moment($scope.Job.Schedule.SFTPFolderModifiedAt).format("lll");
         if ($scope.IsDashboardSchedule) {
-            if ($scope.fnValidatePreferences())
+            if ($scope.fnIsPreferencesValidToSchedule())
                 $("#mdlToShowSchedulesConfig").modal("show");
         }
         else
