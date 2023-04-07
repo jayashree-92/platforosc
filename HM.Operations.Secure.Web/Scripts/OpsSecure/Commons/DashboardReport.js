@@ -143,7 +143,6 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
                     formatResult: formatSelect,
                     formatSelection: formatSelect
                 });
-                $("#li" + v.Preference).select2("val", "");
             });
         });
     }
