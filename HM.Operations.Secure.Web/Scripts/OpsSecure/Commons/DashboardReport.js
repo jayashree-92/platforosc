@@ -309,7 +309,13 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
         var preferences = [];
 
         $($scope.AllPreferences).each(function (i, key) {
-            var pref = $("#li" + key.Preference).val();
+            var selectedPrefData = $("#li" + key.Preference).select2("data");
+            var pref = "";
+            $.each(selectedPrefData, function (i, v) {
+                pref += v.id
+                if (selectedPrefData.length - 1 > i)
+                    pref += ",";
+            })
             preferences.push({ Key: key.Preference, Value: pref.indexOf("-1") >= 0 ? -1 : pref });// pref == "" ||
             $scope.fnSetPreferenceDataForAudit(key.Preference, $scope.AllPreferences);
         });
