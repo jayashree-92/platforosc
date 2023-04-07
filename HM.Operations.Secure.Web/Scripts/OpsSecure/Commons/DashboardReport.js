@@ -107,6 +107,8 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
                 }
 
                 $scope.fnUpdatePrefernceChoices(v.Preference, selectedPref);
+                $scope.$apply();
+
             });
         });
     }
