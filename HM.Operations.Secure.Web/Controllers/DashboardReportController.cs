@@ -79,8 +79,8 @@ namespace HM.Operations.Secure.Web.Controllers
                             {
                                 dashboardSchedule.hmsSchedule.ExternalToApproved = "";
                                 dashboardSchedule.hmsSchedule.ExternalToWorkflowCode = 0;
-                                dashboardSchedule.hmsSchedule.ExternalToModifiedBy = null;
-                                dashboardSchedule.hmsSchedule.ExternalToModifiedAt = null;
+                                dashboardSchedule.hmsSchedule.ExternalToModifiedBy = UserId;
+                                dashboardSchedule.hmsSchedule.ExternalToModifiedAt = DateTime.Now;
                                 dashboardSchedule.hmsSchedule.LastModifiedBy = UserId;
                                 dashboardSchedule.hmsSchedule.LastUpdatedAt = DateTime.Now;
                             }
