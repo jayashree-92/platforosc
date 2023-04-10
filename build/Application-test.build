@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" basedir="." default="cleanAndDeployPackage"> 
+ 
+  <!--Project properties-->
+  <property name="buildDirectory" value="../HM.Operations.Secure.Web/bin" /> 
+  <property name="Configuration" value="Test" overwrite="false"/>
+  <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
+  <property name="ProjectFile" value="../HM.Operations.Secure.Web/HM.Operations.Secure.Web.csproj"/>   
+  <property name="OutputFile1" value="../HM.Operations.Secure.Web/obj/Test/"/>   
+  <property name="sourcePackageLocation" value="\\saappsclndusc01.file.core.windows.net\deployment-artifacts\QA01\IC_OPS_Secure"/>   
+  <property name="UnitTestProjectReference" value="../HedgeMark.SwiftMessageHandler.Tests/bin/QA/HedgeMark.SwiftMessageHandler.Tests.dll" />  
+  
+  <property name="allServers" value="swpfmosctcua5vf" />
+  <property name="appPoolName" value="IC_ops_secure" />
+  
+  <property name="primaryServers" value="\\swpfmosctcua5vf\f$\Apps\IC_ops_secure,
+  \\saappsclndusc01.file.core.windows.net\deployment-artifacts\HM-Ops-Secure-QA" />
+
+   <!--SQL Properties-->
+   <property name="sql.DB" value="HM_WIRES"/>
+
+  <target name="cleanAndDeployPackage" >	
+	 <nant buildfile="TestBuildAndPublish.build" />	
+	 <nant buildfile="CleanAndDeployPackage.build" />
+	 <nant buildfile="SQL-GF.Build">
+		<properties>		 
+		  <property name="sql.svr" value="swpfmsqltcu0001"/>
+		</properties>
+	 </nant>
+	
+	
+  </target>
+  
+</project>
+
+
