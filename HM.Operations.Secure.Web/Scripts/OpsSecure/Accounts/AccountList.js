@@ -2421,7 +2421,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
 
         var acc = $filter("filter")(angular.copy($scope.allAccountList), function (account) {
-            return account.Account.onBoardingAccountId != onBoardingAccount.onBoardingAccountId &&
+            return account.Account.onBoardingAccountId != onBoardingAccount.onBoardingAccountId && account.Account.Currency == onBoardingAccount.Currency &&
                 account.Account.FFCNumber == onBoardingAccount.FFCNumber && account.Account.UltimateBeneficiaryAccountNumber == onBoardingAccount.UltimateBeneficiaryAccountNumber;
         }, true)[0];
         if (acc == undefined) {
@@ -2433,7 +2433,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 onBoardingAccount.FFCNumber = "";
             else
                 onBoardingAccount.UltimateBeneficiaryAccountNumber = "";
-            notifyError("Please choose a different FFC Number or Account Number as an account exists with same information - " + accNo);
+            notifyError("Please choose a different FFC Number or Account Number or Currency as an account exists with same information - " + accNo);
         }
     }
 
