@@ -130,7 +130,7 @@ namespace HM.Operations.Secure.Middleware
 
             IsAuthorizedUserToApprove = IsWireStatusInitiated && !isUserInvolvedInInitiation && !IsDeadlineCrossed && isWireApprover && !IsNoticePending;
 
-            ShouldEnableCollateralPurpose = (wireTicket.Is3rdPartyTransfer || wireTicket.IsNotice || wireTicket.IsNoticeToFund) && wireTicket.SendingAccount.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(wireTicket.SendingAccount.SwiftGroup.SendersBIC);
+            ShouldEnableCollateralPurpose = (wireTicket.Is3rdPartyTransfer || wireTicket.IsNotice || wireTicket.IsNoticeToFund) && wireTicket.SendingAccount.AuthorizedParty == WireDataManager.AuthorizedPartyInnocap && OpsSecureSwitches.SwiftBicToEnableField21.Contains(wireTicket.SendingAccount.SwiftGroup.SendersBIC);
 
             IsLastModifiedUser = wireTicket.HMWire.LastUpdatedBy == userId;
         }
@@ -164,7 +164,8 @@ namespace HM.Operations.Secure.Middleware
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(WireDataManager));
         public static readonly string AgreementReportingOnly = "Agreement (Reporting Only)";
-        
+        public static readonly string AuthorizedPartyInnocap = "Innocap";
+
         public enum WireStatus
         {
             Drafted = 1,
@@ -374,7 +375,7 @@ namespace HM.Operations.Secure.Middleware
 
                 var fundAccounts = (from oAccnt in context.onBoardingAccounts
                                     where allFundIds.Contains(oAccnt.hmFundId) && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed" && oAccnt.AccountType != AgreementReportingOnly
-                                    let isAuthorizedSendingAccount = (currency == null || oAccnt.Currency == currency) && (isNoticeToFund || oAccnt.AuthorizedParty == "Hedgemark") && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
+                                    let isAuthorizedSendingAccount = (currency == null || oAccnt.Currency == currency) && (isNoticeToFund || oAccnt.AuthorizedParty == WireDataManager.AuthorizedPartyInnocap) && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
                                     let isAuthorizedSendingAccountFinal = (isNotice) ? isAuthorizedSendingAccount && oAccnt.SwiftGroup.AcceptedMessages.Contains("MT210") : isAuthorizedSendingAccount
                                     where (isFundTransfer || isAuthorizedSendingAccountFinal)
 
@@ -408,7 +409,7 @@ namespace HM.Operations.Secure.Middleware
                                     where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed"
                                     join oMap in context.onBoardingAccountSSITemplateMaps on oAccnt.onBoardingAccountId equals oMap.onBoardingAccountId
                                     let dmaReports = oAccnt.onBoardingAccountModuleAssociations.Select(s => s.onBoardingModule).Select(s => s.dmaReportsId)
-                                    let isAuthorizedSendingAccount = (oAccnt.AuthorizedParty == "Hedgemark" && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0)))
+                                    let isAuthorizedSendingAccount = (oAccnt.AuthorizedParty == WireDataManager.AuthorizedPartyInnocap && (oAccnt.AccountType == "DDA" || oAccnt.AccountType == "Custody" || oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0)))
                                     where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved" && isAuthorizedSendingAccount && dmaReports.Contains(reportId)
                                     select new WireAccountBaseData
                                     {

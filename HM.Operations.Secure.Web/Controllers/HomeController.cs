@@ -604,7 +604,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     .ToList();
 
                 shouldEnableCollateralPurpose = (wireTransferTypeId == 1 || wireTransferTypeId == 4) && context.onBoardingAccounts.Include(s => s.SwiftGroup)
-                    .Any(s => s.onBoardingAccountId == accountId && s.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(s.SwiftGroup.SendersBIC));
+                    .Any(s => s.onBoardingAccountId == accountId && s.AuthorizedParty == WireDataManager.AuthorizedPartyInnocap && OpsSecureSwitches.SwiftBicToEnableField21.Contains(s.SwiftGroup.SendersBIC));
             }
 
             //remove proxies to avoid circular dependency issue
@@ -646,7 +646,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var deadlineToApprove = WireDataManager.GetDeadlineToApprove(onboardAccount, valueDate);
             var registerdAddress = WireDataManager.GetFundRegistedAddress(onboardAccount.hmFundId);
 
-            var shouldEnableCollateralPurpose = onboardAccount.AuthorizedParty == "Hedgemark" && OpsSecureSwitches.SwiftBicToEnableField21.Contains(onboardAccount.SwiftGroup
+            var shouldEnableCollateralPurpose = onboardAccount.AuthorizedParty == WireDataManager.AuthorizedPartyInnocap && OpsSecureSwitches.SwiftBicToEnableField21.Contains(onboardAccount.SwiftGroup
                                                   .SendersBIC);
 
             return Json(new

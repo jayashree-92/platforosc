@@ -436,7 +436,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.copyAccount.onBoardingAccountSSITemplateMaps = [];
         $scope.copyAccount.onBoardingAccountDocuments = [];
         $scope.copyAccount.IsReceivingAccountType = ($scope.accountType == "Agreement" || $scope.accountType == "Agreement (Reporting Only)") && $.inArray($scope.AgreementType, $scope.receivingAccountTypes) > -1;
-        if ($scope.copyAccount.IsReceivingAccountType || $scope.copyAccount.AuthorizedParty != "Hedgemark")
+        if ($scope.copyAccount.IsReceivingAccountType || $scope.copyAccount.AuthorizedParty != "Innocap")
             $scope.copyAccount.IsReceivingAccount = true;
         else
             $scope.copyAccount.IsReceivingAccount = false;
@@ -833,7 +833,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $scope.accountPurpose = [{ id: "Pledge Account", text: "Pledge Account" }, { id: "Return Account", text: "Return Account" }, { id: "Both", text: "Both" }];
             }
             account.IsReceivingAccountType = account.AccountType != undefined && (account.AccountType == "Agreement" || account.AccountType == "Agreement (Reporting Only)") && $.inArray(agreementType.text, $scope.receivingAccountTypes) > -1;
-            if (account.IsReceivingAccountType || account.AuthorizedParty != "Hedgemark")
+            if (account.IsReceivingAccountType || account.AuthorizedParty != "Innocap")
                 account.IsReceivingAccount = true;
             else
                 account.IsReceivingAccount = false;
@@ -1154,7 +1154,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
     $scope.fnAuthorizedPartyChange = function () {
 
-        if ($scope.onBoardingAccountDetails[0].AuthorizedParty != "Hedgemark") {
+        if ($scope.onBoardingAccountDetails[0].AuthorizedParty != "Innocap") {
             $scope.onBoardingAccountDetails[0].IsReceivingAccount = true;
             $scope.onBoardingAccountDetails[0].AccountModule = null;
             $scope.onBoardingAccountDetails[0].SwiftGroupId = null;
