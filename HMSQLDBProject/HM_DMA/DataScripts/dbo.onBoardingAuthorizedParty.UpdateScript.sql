@@ -13,3 +13,15 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'OnboardingAccount_bkup_V21_0' AND TABLE_SCHEMA = 'DmaBackup')
+BEGIN
+	SELECT * INTO DmaBackup.OnboardingAccount_bkup_V21_0 FROM OnboardingAccount
+END
+GO
+
+IF EXISTS(SELECT * FROM OnboardingAccount WHERE AuthorizedParty='Hedgemark')
+BEGIN
+	UPDATE OnboardingAccount SET  AuthorizedParty='Innocap' WHERE AuthorizedParty='Hedgemark'
+END
+GO
+
