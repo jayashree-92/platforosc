@@ -35,7 +35,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.IsPendingApproval = false;
     $scope.IsApproved = false;
     $scope.IsWireReadOnly = $("#IsWireReadOnly").val() === "true";
-    $scope.DisabledAgreementForCashInstructions = ["CDA", "ISDA", "GMRA", "MRA", "MSFTA"];
+    //$scope.DisabledAgreementForCashInstructions = ["CDA", "ISDA", "GMRA", "MRA", "MSFTA"];
 
     function viewAttachmentTable(data) {
 
@@ -390,6 +390,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (broker != undefined)
                 $scope.broker = broker.text;
             $scope.loadAccountData();
+            $scope.fnGetSwiftGroup();
         }
     });
 
@@ -476,6 +477,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
 
             $scope.agreementTypes = response.data.agreementTypes;
             $scope.receivingAccountTypes = response.data.receivingAccountTypes;
+            $scope.DisabledAgreementForCashInstructions = response.data.disabledAgreementForCashInstructions;
             if (response.data.OnBoardingAccounts.length > 0)
                 $("#btnAccountStatusButtons").show();
             $scope.allAccountList = response.data.OnBoardingAccounts;
@@ -1104,7 +1106,9 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetSwiftGroup = function () {
-        $http.get("/FundAccounts/GetAllRelatedSwiftGroup?brokerId=" + $scope.onBoardingAccountDetails[0].dmaCounterpartyFamilyId).then(function (response) {
+        if ($scope.CounterpartyFamilyId == undefined)
+            return;
+;        $http.get("/FundAccounts/GetAllRelatedSwiftGroup?brokerId=" + $scope.CounterpartyFamilyId).then(function (response) {
             $scope.SwiftGroups = response.data.swiftGroups;
             $scope.SwiftGroupData = response.data.SwiftGroupData;
 

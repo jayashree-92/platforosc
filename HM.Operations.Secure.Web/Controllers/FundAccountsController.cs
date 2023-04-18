@@ -338,6 +338,7 @@ namespace HM.Operations.Secure.Web.Controllers
             {
                 agreementTypes = agreementTypes.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
                 receivingAccountTypes = OpsSecureSwitches.AllowedAgreementTypesForReceivingFundAccounts,
+                disabledAgreementForCashInstructions = OpsSecureSwitches.DisabledAgreementForCashInstructions,
                 OnBoardingAccounts = allFundAccounts,
                 FundAccountClearingBrokers= clearingBrokers
             });
