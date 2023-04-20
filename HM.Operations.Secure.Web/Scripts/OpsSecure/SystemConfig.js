@@ -42,6 +42,17 @@ HmOpsApp.controller("systemConfiguationCtrl", function ($scope, $http, $interval
             });
 
 
+            $scope.SaveSwitchValue = function (key, value) {
+                $http.post("/Configuration/SetSwitchValue", { key: key, value: value })
+                    .then(
+                        function (response) {
+                            notifySuccess("Changes saved successfully");
+                        },
+                        function (response) {
+                            notifyError("Saving changes failed, please try again");
+                        });
+            }
+
             $("input[id^='chkSysSwitch-'],input[id^='txtSwitch-'],input[id^='numSwitch-'],input[id^='timeSwitch-'],textarea[id^='tareSwitch-']")
                 .off("change").on("change",
                     function () {
@@ -49,15 +60,8 @@ HmOpsApp.controller("systemConfiguationCtrl", function ($scope, $http, $interval
                         var value = $(this).attr("type") == "checkbox"
                             ? $(this).prop("checked")
                             : encodeURIComponent($(this).val());
-
-                        $http.post("/Configuration/SetSwitchValue", { key: $(this).attr("data-key"), value: value })
-                            .then(
-                                function (response) {
-                                    notifySuccess("Changes saved successfully");
-                                },
-                                function (response) {
-                                    notifyError("Saving changes failed, please try again");
-                                });
+                        $scope.SaveSwitchValue($(this).attr("data-key"), value);
+                        
                     });
 
             $timeout(function () {
@@ -87,17 +91,7 @@ HmOpsApp.controller("systemConfiguationCtrl", function ($scope, $http, $interval
 
                     $(v).off("change").on("change",
                         function (e) {
-
-                            $http.post("/Configuration/SetSwitchValue?key=" +
-                                $(this).attr("data-key") +
-                                "&value=" +
-                                $(this).val()).then(
-                                    function (response) {
-                                        notifySuccess("Changes saved successfully");
-                                    },
-                                    function (response) {
-                                        notifyError("Saving changes failed, please try again");
-                                    });
+                            $scope.SaveSwitchValue($(this).attr("data-key"), $(this).val());                            
                         });
                 });
             }, 500);
