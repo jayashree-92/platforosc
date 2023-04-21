@@ -322,7 +322,7 @@ namespace HM.Operations.Secure.Middleware
                 workflowUsers = hmWire.hmsWireWorkflowLogs.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
                 attachmentUsers = hmWire.hmsWireDocuments.Select(s => users.ContainsKey(s.CreatedBy) ? users[s.CreatedBy] : "Unknown User").ToList();
                 if(hmWire.ReceivingSSITemplate != null)
-                    counterparty = context.dmaCounterPartyOnBoardings.FirstOrDefault(s => hmWire.ReceivingSSITemplate.TemplateEntityId == s.dmaCounterPartyOnBoardId);
+                    counterparty = context.dmaCounterPartyOnBoardings.FirstOrDefault(s => hmWire.SendingAccount.dmaCounterpartyId == s.dmaCounterPartyOnBoardId);
             }
 
             return new WireTicket()

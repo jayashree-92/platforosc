@@ -67,7 +67,7 @@ namespace HM.Operations.Secure.Web.Controllers
         }
 
 
-        public static Dictionary<string, string> AuthorizeRoleObjectMap = new Dictionary<string, string>()
+        public static Dictionary<string, string> AuthorizeRoleObjectMap = new()
         {
              { OpsSecureUserRoles.WireAdmin , ConfigurationManagerWrapper.GetAzureConfig("HM-Wire-Admin-Role-Id")},
              { OpsSecureUserRoles.WireApprover ,ConfigurationManagerWrapper.GetAzureConfig("HM-Wire-Approver-Role-Id")},
