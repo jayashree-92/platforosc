@@ -41,7 +41,7 @@ namespace HM.Operations.Secure.Middleware.Models
                 switch (TransferType)
                 {
                     case "3rd Party Transfer": return _counterparty;
-                    case "Fund Transfer": return "BNY";
+                    case "Fund Transfer": return _counterparty;
                     case "Fee/Expense Payment": return SSITemplate.ServiceProvider;
                     default: return _counterparty;
                 }
