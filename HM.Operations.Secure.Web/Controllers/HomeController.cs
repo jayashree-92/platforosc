@@ -347,33 +347,33 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             try
             {
-                wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
-                var deadlineToApprove = WireDataManager.GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
-                var daysToAdd = deadlineToApprove.Hours / 24;
-                SaveWireCancellationSchedule(wireTicket.WireId, wireTicket.HMWire.ValueDate, (WireDataManager.WireStatus)statusId, daysToAdd);
                 var tempFilePath = $"Temp\\{UserName}";
-
-                foreach(var file in wireTicket.HMWire.hmsWireDocuments)
+                foreach (var file in wireTicket.HMWire.hmsWireDocuments)
                 {
                     var fileName = $"{FileSystemManager.OpsSecureWiresFilesPath}\\{tempFilePath}\\{file.FileName}";
                     var fileInfo = new FileInfo(fileName);
 
-                    if(!System.IO.File.Exists(fileInfo.FullName))
+                    if (!System.IO.File.Exists(fileInfo.FullName))
                         continue;
 
                     var newFileName =
                         $"{FileSystemManager.OpsSecureWiresFilesPath}\\{wireTicket.WireId}\\{file.FileName}";
                     var newFileInfo = new FileInfo(newFileName);
 
-                    if(newFileInfo.Directory != null && !Directory.Exists(newFileInfo.Directory.FullName))
+                    if (newFileInfo.Directory != null && !Directory.Exists(newFileInfo.Directory.FullName))
                         Directory.CreateDirectory(newFileInfo.Directory.FullName);
 
-                    if(System.IO.File.Exists(newFileInfo.FullName))
+                    if (System.IO.File.Exists(newFileInfo.FullName))
                         continue;
 
                     System.IO.File.Copy(fileName, newFileName);
                     System.IO.File.Delete(fileInfo.FullName);
                 }
+
+                wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
+                var deadlineToApprove = WireDataManager.GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
+                var daysToAdd = deadlineToApprove.Hours / 24;
+                SaveWireCancellationSchedule(wireTicket.WireId, wireTicket.HMWire.ValueDate, (WireDataManager.WireStatus)statusId, daysToAdd);
             }
             catch(Exception ex)
             {
