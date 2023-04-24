@@ -366,6 +366,9 @@
     <Compile Include="vw_EmailDomailForFunds.cs">
       <DependentUpon>AdminModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="vw_EmailDomainForClients.cs">
+      <DependentUpon>AdminModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="vw_FundAccounts.cs">
       <DependentUpon>OperationsSecureModel.tt</DependentUpon>
     </Compile>

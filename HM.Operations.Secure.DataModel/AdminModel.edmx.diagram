@@ -33,6 +33,7 @@
         <AssociationConnector Association="AdminModel.FK_onboardingSubAdvisorFundMap_UmbrellaFundId" />
         <EntityTypeShape EntityType="AdminModel.vw_hmUserCoverageDetails" Width="1.5" PointX="12.375" PointY="14.75" />
         <EntityTypeShape EntityType="AdminModel.vw_FundAgreementDetails" Width="1.5" PointX="14.375" PointY="14.75" />
+        <EntityTypeShape EntityType="AdminModel.vw_EmailDomainForClients" Width="1.5" PointX="16.375" PointY="6.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -82,6 +82,22 @@ namespace HM.Operations.Secure.Middleware.Jobs
             }
         }
 
+        public static List<string> GetExternalDomainsForFunds(List<long> hmFundIds)
+        {
+            using (var context = new AdminContext())
+            {
+                return context.vw_EmailDomailForFunds.Where(s => hmFundIds.Contains(s.hmFundId ?? 0)).Select(s => s.Domain).Distinct().ToList();
+            }
+        }
+
+        public static List<string> GetExternalDomainsForClients(List<long> clientIds)
+        {
+            using (var context = new AdminContext())
+            {
+                return context.vw_EmailDomainForClients.Where(s => clientIds.Contains(s.dmaClientOnBoardId)).Select(s => s.DomainName).Distinct().ToList();
+            }
+        }
+
         public static void SetNextExecutionTime(List<JobSchedule> schedules, bool isDashboard)
         {
             if (schedules.Count == 0)

@@ -214,9 +214,10 @@ HmOpsApp.controller("dashboardReportCtrl", function ($scope, $http, $interval, $
         $http.get("/DashboardReport/GetPreferences?templateId=" + $scope.SelectedTemplateId).then(
             function (response) {
                 $timeout(function () {
+                    $scope.ExternalDomainsForDashboard = response.data.ExternalDomain;
                     $scope.IsTemplateLoadingInProgress = true;
-                    $scope.OldPreferences = angular.copy(response.data);
-                    $.each(response.data, function (i, v) {
+                    $scope.OldPreferences = angular.copy(response.data.Preference);
+                    $.each(response.data.Preference, function (i, v) {
                         $("#li" + v.Preference).select2("val", v.SelectedIds).trigger("change");
                         $scope.fnSetPreferenceDataForAudit(v.Preference, $scope.OldPreferences);
                         $("#s2id_li" + v.Preference).popover("hide");

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Com.HedgeMark.Commons.Extensions;
 using HM.Operations.Secure.DataModel;
 using HM.Operations.Secure.Middleware;
+using HM.Operations.Secure.Middleware.Jobs;
 using HM.Operations.Secure.Middleware.Models;
 
 namespace HM.Operations.Secure.Web.Controllers
@@ -37,11 +38,24 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult GetPreferences(long templateId)
         {
             var preferences = DashboardReportManager.GetPreferences(templateId);
-            return Json(preferences.Select(s => new DashboardReport.Preferences()
+            var fundIds = Array.ConvertAll(preferences.Where(s => s.PreferenceCode == (int)DashboardReport.PreferenceCode.Funds).FirstOrDefault()?.Preferences.Split(','), long.Parse).ToList();
+            var clientIds = Array.ConvertAll(preferences.Where(s => s.PreferenceCode == (int)DashboardReport.PreferenceCode.Clients).FirstOrDefault()?.Preferences.Split(','), long.Parse).ToList();
+            var fundExternaldomain = ScheduleManager.GetExternalDomainsForFunds(fundIds);
+            var clientExternaldomain = ScheduleManager.GetExternalDomainsForClients(clientIds);
+
+            var externalDomain = fundExternaldomain.Union(clientExternaldomain).ToList();
+
+            return Json(new
             {
-                Preference = ((DashboardReport.PreferenceCode)s.PreferenceCode).ToString(),
-                SelectedIds = s.Preferences.Split(',').ToList()
-            }));
+                Preference = preferences.Select(s => new DashboardReport.Preferences()
+                {
+                    Preference = ((DashboardReport.PreferenceCode)s.PreferenceCode).ToString(),
+                    SelectedIds = s.Preferences.Split(',').ToList(),
+
+                }),
+                ExternalDomain = externalDomain
+            });
+            
         }
 
         public long SaveTemplateAndPreferences(string templateName, long templateId, Dictionary<string, string> preferences, bool shouldUnApproveAllExternalTo)

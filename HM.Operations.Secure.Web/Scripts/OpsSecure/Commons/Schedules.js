@@ -333,9 +333,9 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
             }
         });
 
-
+        var externalDomains = $scope.IsDashboardSchedule ? $scope.ExternalDomainsForDashboard : $scope.ScheduleDefaults.externalDomains;
         $("#dvInptScheduleExternalTo").AutoCompleteEmail({
-            domains: $scope.ScheduleDefaults.externalDomains,
+            domains: externalDomains,
             sHighlightList: $scope.Job.Schedule.ExternalToApproved,
             bAllowListedDomainsOnly: true,
             onFocusInCallback: function () {
