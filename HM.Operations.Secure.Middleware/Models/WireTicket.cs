@@ -33,28 +33,13 @@ namespace HM.Operations.Secure.Middleware.Models
             }
         }
 
-        private string _counterparty;
-        public string Counterparty
-        {
-            get
-            {
-                switch (TransferType)
-                {
-                    case "3rd Party Transfer": return _counterparty;
-                    case "Fund Transfer": return _counterparty;
-                    case "Fee/Expense Payment": return SSITemplate.ServiceProvider;
-                    default: return _counterparty;
-                }
-            }
-            set => _counterparty = value;
-        }
-
+        public string Counterparty { get; set; }
 
         public string SendingAccountNumber
         {
             get
             {
-                if (WireId == 0)
+                if(WireId == 0)
                     return string.Empty;
 
                 return !string.IsNullOrEmpty(SendingAccount.FFCNumber) ? SendingAccount.FFCNumber : SendingAccount.UltimateBeneficiaryAccountNumber;
@@ -65,13 +50,13 @@ namespace HM.Operations.Secure.Middleware.Models
         {
             get
             {
-                if (WireId == 0)
+                if(WireId == 0)
                     return string.Empty;
 
-                if (IsFundTransfer || IsNoticeToFund)
+                if(IsFundTransfer || IsNoticeToFund)
                     return ReceivingAccount.AccountName;
 
-                if (!IsNotice)
+                if(!IsNotice)
                     return !string.IsNullOrEmpty(SSITemplate.FFCName)
                         ? SSITemplate.FFCName
                         : SSITemplate.UltimateBeneficiaryType == "Account Name"
@@ -87,13 +72,13 @@ namespace HM.Operations.Secure.Middleware.Models
         {
             get
             {
-                if (WireId == 0)
+                if(WireId == 0)
                     return string.Empty;
 
-                if (IsFundTransfer || IsNoticeToFund)
+                if(IsFundTransfer || IsNoticeToFund)
                     return !string.IsNullOrEmpty(ReceivingAccount.FFCNumber) ? ReceivingAccount.FFCNumber : ReceivingAccount.UltimateBeneficiaryAccountNumber;
 
-                if (!IsNotice)
+                if(!IsNotice)
                     return !string.IsNullOrEmpty(SSITemplate.FFCNumber) ? SSITemplate.FFCNumber : SSITemplate.UltimateBeneficiaryAccountNumber;
 
                 return "N/A";
@@ -104,7 +89,7 @@ namespace HM.Operations.Secure.Middleware.Models
         {
             get
             {
-                if (WireId == 0)
+                if(WireId == 0)
                     return string.Empty;
 
                 var accName = IsFundTransfer || IsNoticeToFund ? ReceivingAccount.AccountName : SSITemplate.TemplateName;
@@ -162,7 +147,7 @@ namespace HM.Operations.Secure.Middleware.Models
             OriginalFinMessage = swiftMessage;
             IsFeAck = swiftMessage.Trim().EndsWith(FEACK);
 
-            if (IsFeAck)
+            if(IsFeAck)
                 OriginalFinMessage = OriginalFinMessage.Replace(FEACK, string.Empty);
 
             SwiftMessage = SwiftMessage.Parse(OriginalFinMessage);
@@ -176,22 +161,22 @@ namespace HM.Operations.Secure.Middleware.Models
             var referenceTag = string.Empty;
 
             //Should use the original message
-            if (IsFeAck)
+            if(IsFeAck)
                 WireId = GetWireIdFromTransaction(SwiftMessage.GetFieldValue(FieldDirectory.FIELD_20), out referenceTag);
 
             //Should use the underlying message
-            else if (IsAckOrNack)
+            else if(IsAckOrNack)
                 WireId = GetWireIdFromTransaction(SwiftMessage.UnderlyingOriginalSwiftMessage.GetFieldValue(FieldDirectory.FIELD_20), out referenceTag);
 
             //For inbound message type - 196,296 and 900 - we will receive
-            else if (MessageWithHMTransRefInField21.Any(s => s.Equals(SwiftMessage.GetMTType())))
+            else if(MessageWithHMTransRefInField21.Any(s => s.Equals(SwiftMessage.GetMTType())))
                 WireId = GetWireIdFromTransaction(SwiftMessage.GetFieldValue(FieldDirectory.FIELD_21), out referenceTag);
 
 
             //Special Handling for MT 910 as We will not be able to derive using field 21.
             //As of now we are using field 32A - value date , currency and amount in MT 910            
             //:32A: 180830USD367574,90
-            else if (SwiftMessage.IsType(MTDirectory.MT_910))
+            else if(SwiftMessage.IsType(MTDirectory.MT_910))
             {
                 string currency;
                 decimal amount;
@@ -199,7 +184,7 @@ namespace HM.Operations.Secure.Middleware.Models
 
                 var is32APresent = SwiftMessage.HasField(FieldDirectory.FIELD_32A);
 
-                if (is32APresent)
+                if(is32APresent)
                 {
                     //get wire Id for the given combination
                     var field32A = (Field32A)SwiftMessage.GetField(FieldDirectory.FIELD_32A);
@@ -217,12 +202,12 @@ namespace HM.Operations.Secure.Middleware.Models
                     valueDate = field30.DateString.ToDateTime("yyMMdd");
                 }
 
-                using (var context = new OperationsSecureContext())
+                using(var context = new OperationsSecureContext())
                 {
                     var allPendingWires = context.hmsWires.Where(s => s.WireStatusId == 3 && s.SwiftStatusId != 5 && s.ValueDate == valueDate.Date).ToList();
                     var wire = allPendingWires.FirstOrDefault(s => s.Currency == currency && s.Amount == amount);
 
-                    if (wire != null)
+                    if(wire != null)
                         WireId = wire.hmsWireId;
                 }
             }
@@ -239,7 +224,7 @@ namespace HM.Operations.Secure.Middleware.Models
             var referenceStrSplits = wireIdString.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
             referenceTag = string.Empty;
 
-            if (wireIdString.Contains("/") && referenceStrSplits.Length > 1)
+            if(wireIdString.Contains("/") && referenceStrSplits.Length > 1)
             {
                 referenceTag = referenceStrSplits[1];
             }
