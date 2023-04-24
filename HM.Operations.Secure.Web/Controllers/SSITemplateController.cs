@@ -66,7 +66,7 @@ namespace HM.Operations.Secure.Web.Controllers
             {
                 SSITemplate = SSITemplateManager.SetSSITemplateDefaults(template),
                 AgreementType = agreementTypes.ContainsKey(template.dmaAgreementTypeId) && string.IsNullOrEmpty(template.ServiceProvider) ? agreementTypes[template.dmaAgreementTypeId] : string.Empty,
-                Broker = counterParties.ContainsKey(template.TemplateEntityId) ? counterParties[template.TemplateEntityId] : string.Empty
+                Broker = counterParties.TryGetValue(template.TemplateEntityId, out var counterParty) ? counterParty : string.Empty
             }).ToList();
 
             return Json(new

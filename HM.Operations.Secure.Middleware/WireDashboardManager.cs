@@ -21,32 +21,32 @@ namespace HM.Operations.Secure.Middleware
             List<hmsWire> wireStatusDetails;
 
             var clientIds = new List<long>() { -1 };
-            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.Clients))
-                clientIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Clients].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
+            if(searchPreference.TryGetValue(DashboardReport.PreferenceCode.Clients, out var clientIdStr))
+                clientIds = Array.ConvertAll(clientIdStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var fundIds = new List<long>() { -1 };
-            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.Funds))
-                fundIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Funds].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
+            if(searchPreference.TryGetValue(DashboardReport.PreferenceCode.Funds, out var fundIdStr))
+                fundIds = Array.ConvertAll(fundIdStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var adminIds = new List<long>() { -1 };
-            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.Admins))
-                adminIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Admins].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
+            if(searchPreference.TryGetValue(DashboardReport.PreferenceCode.Admins, out var adminIdStr))
+                adminIds = Array.ConvertAll(adminIdStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var allStatusIds = new List<long>() { -1 };
-            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.Status))
-                allStatusIds = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.Status].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
+            if(searchPreference.TryGetValue(DashboardReport.PreferenceCode.Status, out var statusIdStr))
+                allStatusIds = Array.ConvertAll(statusIdStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var agrTypes = new List<string>() { "-1" };
-            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.AccountTypes))
-                agrTypes = searchPreference[DashboardReport.PreferenceCode.AccountTypes].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if(searchPreference.TryGetValue(DashboardReport.PreferenceCode.AccountTypes, out var argTypeStr))
+                agrTypes = argTypeStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             var msgTypes = new List<long>() { -1 };
-            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.MessageTypes))
-                msgTypes = Array.ConvertAll(searchPreference[DashboardReport.PreferenceCode.MessageTypes].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
+            if(searchPreference.TryGetValue(DashboardReport.PreferenceCode.MessageTypes, out var msgTypeStr))
+                msgTypes = Array.ConvertAll(msgTypeStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries), long.Parse).ToList();
 
             var reports = new List<string>() { "-1" };
-            if(searchPreference.ContainsKey(DashboardReport.PreferenceCode.Modules))
-                reports = searchPreference[DashboardReport.PreferenceCode.Modules].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if(searchPreference.TryGetValue(DashboardReport.PreferenceCode.Modules, out var moduleStr))
+                reports = moduleStr.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
             var authorizedFundMap = authorizedDMAFundData == null ? AdminFundManager.GetHFundsCreatedForDMAOnly(PreferencesManager.FundNameInDropDown.OpsShortName).ToDictionary(s => s.HmFundId, v => v) : authorizedDMAFundData.ToDictionary(s => s.HmFundId, v => v);
             using(var context = new OperationsSecureContext())
@@ -140,10 +140,10 @@ namespace HM.Operations.Secure.Middleware
             var timeZones = FileSystemManager.GetAllTimeZones();
             var authFundIds = authorizedFundMap.Select(s => s.Key).ToList();
             var fundDetails = FundAccountManager.GetFundAccountDetails(authFundIds, isPrivilegedUser).Where(s => clientIds.Contains(-1) || clientIds.Contains(s.dmaClientOnBoardId ?? 0)).ToList();
-
+            var counterParties = OnBoardingDataManager.GetAllOnBoardedCounterparties();
             foreach(var wire in wireStatusDetails)
             {
-                var fund = authorizedFundMap.ContainsKey(wire.hmFundId) ? authorizedFundMap[wire.hmFundId] : new HFundBasic();
+                var fund = authorizedFundMap.TryGetValue(wire.hmFundId, out var fundVal) ? fundVal : new HFundBasic();
                 var fndAcct = fundDetails.FirstOrDefault(s => s.hmFundId == wire.hmFundId);
                 var thisWire = new WireTicket
                 {
@@ -169,11 +169,15 @@ namespace HM.Operations.Secure.Middleware
                 thisWire.WireLastUpdatedBy = users.First(s => s.Key == thisWire.HMWire.LastUpdatedBy).Value.HumanizeEmail();
                 thisWire.WireApprovedBy = thisWire.HMWire.ApprovedBy > 0 ? users.First(s => s.Key == thisWire.HMWire.ApprovedBy).Value.HumanizeEmail() : "-";
 
+                //Set CounterParty
+                if(thisWire.SendingAccount != null)
+                    thisWire.Counterparty = counterParties.TryGetValue(thisWire.SendingAccount.dmaCounterpartyId ?? 0, out var cptyName) ? cptyName : null;
+
                 SetUserTitles(thisWire);
                 wireData.Add(thisWire);
             }
 
-            var timeZoneInfo = ScheduleManager.TimeZones.ContainsKey(timeZone) ? ScheduleManager.TimeZones[timeZone] : Utility.DefaultSystemTimeZone;
+            var timeZoneInfo = ScheduleManager.TimeZones.TryGetValue(timeZone, out var zone) ? zone : Utility.DefaultSystemTimeZone;
 
             foreach(var s in wireData)
             {
