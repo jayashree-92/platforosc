@@ -235,22 +235,6 @@
                             <p></p>
                             <div class="row">
                                 <span class="col-md-3" style="text-align: right; padding-top: 8px;">
-                                    <label class="control-label">Send Files via SFTP To :</label>
-                                </span>
-                                <span class="col-md-7">
-                                    <input type="hidden" id="liScheduleSFTPFolders" class="form-control" ng-model="Job.Schedule.SFTPFolder" />
-                                    <div ng-show="Job.Schedule.SFTPFolderWorkflowCode!=0 && !IsSFTPFolderHasChanged" style="margin: 0px;" class="ng-show-only" ng-class="Job.Schedule.SFTPFolderWorkflowCode ==1 ?'info-block-left':'error-block-left'">{{Job.Schedule.SFTPFolderWorkflowCode ==1?'Approved By':'Rejected By'}}&nbsp;<b>{{Job.SFTPFolderModifiedBy}}</b> on {{Job.Schedule.SFTPFolderModifiedAt}}</div>
-                                    <label ng-show="Job.Schedule.SFTPFolder!=null && Job.Schedule.SFTPFolder!='' && Job.Schedule.SFTPFolderWorkflowCode==0 && Job.IsSFTPFolderRequestCreatedBySameUser" class="label label-warning ng-show-hide"><i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;{{IsSFTPFolderHasChanged?'Approval Required':'Pending Approval'}}</label>
-                                    <div class="btn-group btn-group-xs ng-show-hide" ng-show="Job.Schedule.SFTPFolder!=null && Job.Schedule.SFTPFolder!=''  && !IsSFTPFolderHasChanged  && Job.Schedule.SFTPFolderWorkflowCode==0 && !Job.IsSFTPFolderRequestCreatedBySameUser">
-                                        <button ng-click="fnApproveOrRejectSFTPFolder(1)" class="btn btn-xs btn-success ng-show-hide"><i class="glyphicon glyphicon-ok"></i>&nbsp;Approve</button>
-                                        <button tabindex="-1" ng-click="fnApproveOrRejectSFTPFolder(2)" class="btn btn-xs btn-danger ng-show-hide"><i class="glyphicon glyphicon-remove"></i>&nbsp;Reject</button>
-                                        @*<button ng-show="Job.Schedule.SFTPFolderWorkflowCode!=0" class="ng-show-hide btn btn-xs btn-warning"><i class="glyphicon glyphicon-share"></i>&nbsp;Revert</button>*@
-                                    </div>
-                                </span>
-                            </div>
-                            <p></p>
-                            <div class="row">
-                                <span class="col-md-3" style="text-align: right; padding-top: 8px;">
                                     <label class="control-label">Send Files Internally To :</label>
                                 </span>
                                 <span class="col-md-7">

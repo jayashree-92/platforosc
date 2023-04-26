@@ -185,10 +185,6 @@ namespace HM.Operations.Secure.Middleware.Jobs
                 //Send this to internal directory if configured
                 if (!string.IsNullOrWhiteSpace(job.InternalFolder))
                     ReportDeliveryManager.SendReportToInternalDir(job.InternalFolder, exportFileInfo);
-
-                //Send this to external directory if configured
-                if (!string.IsNullOrWhiteSpace(job.SFTPFolder) && job.SFTPFolderWorkflowCode == (int)ScheduleWorkflowCode.Approved)
-                    ReportDeliveryManager.SftpThisReport(job.SFTPFolder, exportFileInfo);
             }
 
             if (File.Exists(exportFileInfo.FullName))
