@@ -56,8 +56,9 @@ namespace HM.Operations.Secure.Web.Controllers
                 Redirect("/Account/Index" + Request.Url?.Query);
             }
             else
-            {               
-                Response.Redirect(new UrlHelper(Request.RequestContext).Action("Index", "Home"));
+            {
+                if (Request.Url?.AbsolutePath == "/Account/Login")
+                    Response.Redirect(new UrlHelper(Request.RequestContext).Action("Index", "Home"));
             }
         }
 
