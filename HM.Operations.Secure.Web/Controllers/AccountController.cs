@@ -56,8 +56,8 @@ namespace HM.Operations.Secure.Web.Controllers
                 Redirect("/Account/Index" + Request.Url?.Query);
             }
             else
-            {
-                RedirectAfterAuthentication(Request.Url?.Query);
+            {               
+                Response.Redirect(new UrlHelper(Request.RequestContext).Action("Index", "Home"));
             }
         }
 
