@@ -71,7 +71,8 @@ namespace HM.Operations.Secure.Web.Utility
         {
             return ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireInitiator])
                    || ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireApprover])
-                   || ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireReadOnly]);
+                   || ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireReadOnly])
+                   || ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[OpsSecureUserRoles.WireAdmin]);
         }
     }
 }
