@@ -662,19 +662,20 @@ warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomailForFunds' does not have a
           <Property Name="hmFundId" Type="bigint" />
           <Property Name="Domain" Type="nvarchar" MaxLength="1000" />
         </EntityType>
+        
         <!--Errors Found During Generation:
-warning 6002: The table/view 'HM.HMADMIN.vw_EmailDomainForClients' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="vw_EmailDomainForClients">
+warning 6002: The table/view 'HM.HMADMIN.vw_ExternalEmailDomain' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_ExternalEmailDomain">
           <Key>
             <PropertyRef Name="RowId" />
-            <PropertyRef Name="dmaClientOnBoardId" />
-            <PropertyRef Name="ClientLegalEntityName" />
+            <PropertyRef Name="dmaOnBoardingTypeId" />
+            <PropertyRef Name="Type" />
           </Key>
           <Property Name="RowId" Type="int" Nullable="false" />
-          <Property Name="dmaClientOnBoardId" Type="bigint" Nullable="false" />
-          <Property Name="ClientLegalEntityName" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="ClientShortName" Type="varchar" MaxLength="200" />
-          <Property Name="DomainName" Type="nvarchar" MaxLength="1000" />
+          <Property Name="dmaOnBoardingTypeId" Type="bigint" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="17" Nullable="false" />
+          <Property Name="dmaOnBoardingEntityId" Type="bigint" />
+          <Property Name="Domain" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'HM.HMADMIN.vw_FundAgreementDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -966,15 +967,15 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
     [vw_EmailDomailForFunds].[hmFundId] AS [hmFundId], 
     [vw_EmailDomailForFunds].[Domain] AS [Domain]
     FROM [HMADMIN].[vw_EmailDomailForFunds] AS [vw_EmailDomailForFunds]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="vw_EmailDomainForClients" EntityType="Self.vw_EmailDomainForClients" store:Type="Views" store:Schema="HMADMIN">
+          </EntitySet>          
+          <EntitySet Name="vw_ExternalEmailDomain" EntityType="Self.vw_ExternalEmailDomain" store:Type="Views" store:Schema="HMADMIN">
             <DefiningQuery>SELECT 
-    [vw_EmailDomainForClients].[RowId] AS [RowId], 
-    [vw_EmailDomainForClients].[dmaClientOnBoardId] AS [dmaClientOnBoardId], 
-    [vw_EmailDomainForClients].[ClientLegalEntityName] AS [ClientLegalEntityName], 
-    [vw_EmailDomainForClients].[ClientShortName] AS [ClientShortName], 
-    [vw_EmailDomainForClients].[DomainName] AS [DomainName]
-    FROM [HMADMIN].[vw_EmailDomainForClients] AS [vw_EmailDomainForClients]</DefiningQuery>
+    [vw_ExternalEmailDomain].[RowId] AS [RowId], 
+    [vw_ExternalEmailDomain].[dmaOnBoardingTypeId] AS [dmaOnBoardingTypeId], 
+    [vw_ExternalEmailDomain].[Type] AS [Type], 
+    [vw_ExternalEmailDomain].[dmaOnBoardingEntityId] AS [dmaOnBoardingEntityId], 
+    [vw_ExternalEmailDomain].[Domain] AS [Domain]
+    FROM [HMADMIN].[vw_ExternalEmailDomain] AS [vw_ExternalEmailDomain]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vw_FundAgreementDetails" EntityType="Self.vw_FundAgreementDetails" store:Type="Views" store:Schema="HMADMIN">
             <DefiningQuery>SELECT 
@@ -1193,7 +1194,8 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
           </AssociationSet>
           <EntitySet Name="vw_hmUserCoverageDetails" EntityType="AdminModel.vw_hmUserCoverageDetails" />
           <EntitySet Name="vw_FundAgreementDetails" EntityType="AdminModel.vw_FundAgreementDetails" />
-          <EntitySet Name="vw_EmailDomainForClients" EntityType="AdminModel.vw_EmailDomainForClients" />
+
+          <EntitySet Name="vw_ExternalEmailDomain" EntityType="AdminModel.vw_ExternalEmailDomain" />
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -1957,17 +1959,18 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
           <Property Name="CustodianCompanyName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="MarginExposureType" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="vw_EmailDomainForClients">
+        
+        <EntityType Name="vw_ExternalEmailDomain">
           <Key>
             <PropertyRef Name="RowId" />
-            <PropertyRef Name="dmaClientOnBoardId" />
-            <PropertyRef Name="ClientLegalEntityName" />
+            <PropertyRef Name="dmaOnBoardingTypeId" />
+            <PropertyRef Name="Type" />
           </Key>
           <Property Name="RowId" Type="Int32" Nullable="false" />
-          <Property Name="dmaClientOnBoardId" Type="Int64" Nullable="false" />
-          <Property Name="ClientLegalEntityName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ClientShortName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="DomainName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="dmaOnBoardingTypeId" Type="Int64" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="17" FixedLength="false" Unicode="false" />
+          <Property Name="dmaOnBoardingEntityId" Type="Int64" />
+          <Property Name="Domain" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2738,13 +2741,14 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="vw_EmailDomainForClients">
-            <EntityTypeMapping TypeName="AdminModel.vw_EmailDomainForClients">
-              <MappingFragment StoreEntitySet="vw_EmailDomainForClients">
-                <ScalarProperty Name="DomainName" ColumnName="DomainName" />
-                <ScalarProperty Name="ClientShortName" ColumnName="ClientShortName" />
-                <ScalarProperty Name="ClientLegalEntityName" ColumnName="ClientLegalEntityName" />
-                <ScalarProperty Name="dmaClientOnBoardId" ColumnName="dmaClientOnBoardId" />
+          
+          <EntitySetMapping Name="vw_ExternalEmailDomain">
+            <EntityTypeMapping TypeName="AdminModel.vw_ExternalEmailDomain">
+              <MappingFragment StoreEntitySet="vw_ExternalEmailDomain">
+                <ScalarProperty Name="Domain" ColumnName="Domain" />
+                <ScalarProperty Name="dmaOnBoardingEntityId" ColumnName="dmaOnBoardingEntityId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="dmaOnBoardingTypeId" ColumnName="dmaOnBoardingTypeId" />
                 <ScalarProperty Name="RowId" ColumnName="RowId" />
               </MappingFragment>
             </EntityTypeMapping>

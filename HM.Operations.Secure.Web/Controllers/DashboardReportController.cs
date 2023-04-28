@@ -40,10 +40,14 @@ namespace HM.Operations.Secure.Web.Controllers
             var preferences = DashboardReportManager.GetPreferences(templateId);
             var fundIds = Array.ConvertAll(preferences.Where(s => s.PreferenceCode == (int)DashboardReport.PreferenceCode.Funds).FirstOrDefault()?.Preferences.Split(','), long.Parse).ToList();
             var clientIds = Array.ConvertAll(preferences.Where(s => s.PreferenceCode == (int)DashboardReport.PreferenceCode.Clients).FirstOrDefault()?.Preferences.Split(','), long.Parse).ToList();
-            var fundExternaldomain = ScheduleManager.GetExternalDomainsForFunds(fundIds);
-            var clientExternaldomain = ScheduleManager.GetExternalDomainsForClients(clientIds);
-
-            var externalDomain = fundExternaldomain.Union(clientExternaldomain).ToList();
+           
+            if (fundIds.Contains(-1))
+            {
+                var fundMaps = AuthorizedDMAFundData.Where(s => clientIds.Contains(s.ClientId)).ToList();
+                var fundsList = fundMaps.Select(s => s.HmFundId).ToList();
+                fundIds = fundIds.Union(fundsList).ToList();
+            }
+            var externalDomain = ScheduleManager.GetExternalDomainsForDashboard(fundIds, clientIds);
 
             return Json(new
             {
@@ -54,8 +58,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
                 }),
                 ExternalDomain = externalDomain
-            });
-            
+            });            
         }
 
         public long SaveTemplateAndPreferences(string templateName, long templateId, Dictionary<string, string> preferences, bool shouldUnApproveAllExternalTo)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using Com.HedgeMark.Commons;
 using Com.HedgeMark.Commons.Mail;
 using Cronos;
 using Hangfire;
@@ -90,11 +91,11 @@ namespace HM.Operations.Secure.Middleware.Jobs
             }
         }
 
-        public static List<string> GetExternalDomainsForClients(List<long> clientIds)
+        public static List<string> GetExternalDomainsForDashboard(List<long> hmFundIds, List<long> clientIds)
         {
             using (var context = new AdminContext())
             {
-                return context.vw_EmailDomainForClients.Where(s => clientIds.Contains(s.dmaClientOnBoardId)).Select(s => s.DomainName).Distinct().ToList();
+                return context.vw_ExternalEmailDomain.Where(s => (s.dmaOnBoardingTypeId == 1 && clientIds.Contains(s.dmaOnBoardingEntityId ?? 0)) || (s.dmaOnBoardingTypeId == 2 && hmFundIds.Contains(s.dmaOnBoardingEntityId ?? 0)) || (s.dmaOnBoardingTypeId == 11 && hmFundIds.Contains(s.dmaOnBoardingEntityId ?? 0))).Select(s => s.Domain).Distinct().ToList();
             }
         }
 
@@ -175,7 +176,10 @@ namespace HM.Operations.Secure.Middleware.Jobs
 
             var allToEmails = job.To;
             if (!string.IsNullOrWhiteSpace(job.ExternalToApproved) && isExternalMailAllowed)
-                allToEmails = $"{allToEmails},{job.ExternalToApproved}";
+            {
+                var allowedExternalMailIds = FilterExternalMailIdsByConfiguredDomains(job.ExternalToApproved, schedule);
+                allToEmails = $"{allToEmails},{allowedExternalMailIds}";
+            }
 
             var newMail = new MailInfo(subject, mailBody, allToEmails, isNoFilesReceived ? null : exportFileInfo, ccAddress: job.CC, mailSignature: Utility.MailSignatureOps);
             var mailSentResult = MailIdQualifier.SendMailToQualifiedIds(newMail);
@@ -190,5 +194,38 @@ namespace HM.Operations.Secure.Middleware.Jobs
             if (File.Exists(exportFileInfo.FullName))
                 File.Delete(exportFileInfo.FullName);
         }
+
+        private static string FilterExternalMailIdsByConfiguredDomains(string allToEmails, hmsDashboardSchedule schedule)
+        {
+            if (OpsSecureSwitches.ShouldSendDashboardExternalMailToConfiguredDomains)
+            {
+                var preferences = schedule.hmsDashboardTemplate.hmsDashboardPreferences.ToDictionary(s => (DashboardReport.PreferenceCode)s.PreferenceCode, v => v.Preferences);
+                var authorizedFundMap = AdminFundManager.GetHFundsCreatedForDMAOnly(PreferencesManager.FundNameInDropDown.OpsShortName);
+
+                var clientIds = new List<long>();
+                if (preferences.TryGetValue(DashboardReport.PreferenceCode.Clients, out var clientIdStr))
+                {
+                    clientIds = Array.ConvertAll(clientIdStr.Split(','), long.Parse).ToList();
+
+                }
+                var fundIds = new List<long>();
+                if (preferences.TryGetValue(DashboardReport.PreferenceCode.Funds, out var fundIdStr))
+                {
+                    fundIds = Array.ConvertAll(fundIdStr.Split(','), long.Parse).ToList();
+                    if (fundIds.Contains(-1))
+                    {
+                        var fundMaps = authorizedFundMap.Where(s => clientIds.Contains(s.ClientId)).ToList();
+                        var fundsList = fundMaps.Select(s => s.HmFundId).ToList();
+                        fundIds = fundIds.Union(fundsList).ToList();
+                    }
+                }
+                var externalDomain = ScheduleManager.GetExternalDomainsForDashboard(fundIds, clientIds);
+
+                var externalMailList = MailIdQualifier.GetAllEmails(allToEmails);
+                return MailIdQualifier.FilterExteralMailIds(externalDomain, externalMailList);
+            }
+            return allToEmails;
+        }
+
     }
 }

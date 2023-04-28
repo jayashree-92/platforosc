@@ -124,6 +124,7 @@ namespace Com.HedgeMark.Commons
             SwiftBicToEnableField21,
             SwiftGroupToIncludeWirePurposeInWireMessage,
             ShouldUseFundAccountsView,
+            ShouldSendDashboardExternalMailToConfiguredDomains,
 
         }
 
@@ -153,7 +154,8 @@ Disclaimer: This message is Confidential until classified otherwise.
                 CreateSwitch(SwitchKey.AgreementTypesEligibleForSendingWires, SwitchType.StringList, Modules.WireSettings, "Custody,DDA,PB,Synthetic Prime Brokerage"),
                 CreateSwitch(SwitchKey.SwiftBicToEnableField21, SwitchType.StringList, Modules.WireSettings, "SBOSUS30,SBOSUS3U,CNORLULX,SBOSUS3UIMS"),
                 CreateSwitch(SwitchKey.SwiftGroupToIncludeWirePurposeInWireMessage, SwitchType.StringList, Modules.WireSettings, "Credit Suisse"),
-                CreateSwitch(SwitchKey.ShouldUseFundAccountsView, SwitchType.Boolean, Modules.General, true)
+                CreateSwitch(SwitchKey.ShouldUseFundAccountsView, SwitchType.Boolean, Modules.General, true),
+                CreateSwitch(SwitchKey.ShouldSendDashboardExternalMailToConfiguredDomains, SwitchType.Boolean, Modules.WireSettings, true)
 
             };
         }

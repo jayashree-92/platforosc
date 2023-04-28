@@ -79,7 +79,18 @@ namespace HM.Operations.Secure.Middleware.Util
             ids = string.Join(",", recipientList.Distinct());
             return ids;
         }
-
+        public static string FilterExteralMailIds(List<string> externalDomain, List<string> externalMailList)
+        {
+            var allowedMailIds = "";
+            foreach (var mailid in externalMailList)
+            {
+                MailAddress mailAddress = new MailAddress(mailid);
+                var domainName = mailAddress.Host;
+                if (externalDomain.Contains(domainName))
+                    allowedMailIds = $"{allowedMailIds}{mailid},";
+            }
+            return allowedMailIds;
+        }
         public static string SendMailToQualifiedIds(MailInfo mailInfo)
         {
             var qualifiedIds = FilterMailIds(
