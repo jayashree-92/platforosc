@@ -28,7 +28,7 @@
     var isSuggessionInProgress = false;
     var bestMatchSuggesion = "";
     var suggessionInDisplay = "";
-    var emailAddressRegEx = new RegExp(/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i);
+    var emailAddressRegEx = new RegExp(/^[#]?\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i);
 
     $.fn.AutoCompleteEmail = function (options, params) {
 
@@ -36,19 +36,7 @@
 
         var functionCall = (typeof options === "string") ? options : undefined;
 
-        if (functionCall) {
-            if (functionCall == "getEmails")
-                return getEmails();
-
-            if (functionCall == "getFormattedEmails")
-                return getFormattedEmails();
-
-            if (functionCall == "formatEmails")
-                return formatEmails(params[0], params.length > 1 ? params[1] : "");
-
-            return true;
-        }
-
+        var originalVal = "";
         var oSettings = $.extend({
             sClassOnChange: "spn-auto-email-warning",
             sClassOnError: "spn-auto-email-error",
@@ -61,7 +49,22 @@
             onFocusInCallback: function () { }
         }, options);
 
-        var originalVal = "";
+
+        if (functionCall) {
+            if (functionCall == "getEmails")
+                return getEmails();
+
+            if (functionCall == "getFormattedEmails")
+                return getFormattedEmails();
+
+            if (functionCall == "formatEmails")
+                return formatEmails(params[0], params.length > 1 ? params[1] : "", params.length > 2 ? params[2] : "");
+
+            if (functionCall == "setEmailsInUI")
+                return setFinalizedUiContent();
+            return true;
+        }
+
         bestMatchSuggesion = oSettings.domains[0];
 
         if (oSettings.asHighlightList == null || oSettings.asHighlightList.length === 0)
@@ -183,8 +186,9 @@
         }
 
         //This is a simplified version of setFinalizedUiContent()
-        function formatEmails(emailStr, emailHighlightStr) {
+        function formatEmails(emailStr, allExternalStr, emailHighlightStr) {
             var allValues = getAllEmailSplits(emailStr);
+            var allExternal = getAllEmailSplits(allExternalStr);
             var allHighlights = getAllEmailSplits(emailHighlightStr);
 
             var finalizedValues = "";
@@ -206,7 +210,9 @@
                     validDistinctEmails.push(v);
                     v = allHighlights.indexOf(v) >= 0
                         ? "<span class=\"spn-auto-email-choice-highlight\">" + v + "</span>"
-                        : "<span class=\"spn-auto-email-choice\">" + v + "</span>";
+                        : allExternal.indexOf(v) >= 0
+                            ? "<span class=\"spn-auto-email-choice-warning\">" + v + "</span>"
+                            : "<span class=\"spn-auto-email-choice\">" + v + "</span>";
                 }
                 finalizedValues += v;
             });
