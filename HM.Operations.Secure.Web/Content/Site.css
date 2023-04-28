@@ -2187,6 +2187,16 @@ div[class^="dtsp-subRow"] {
     display: inline-block;
 }
 
+.spn-auto-email-choice-warning {
+    border-radius: 2px;
+    border: 1px solid #F4BD0C;
+    background: #fff9d1;
+    padding: 0px 3px 0px 5px;
+    margin: 2px;
+    /* float: left; */
+    font-weight: bold;
+    display: inline-block;
+}
 
 .spn-auto-email-choice-close {
     display: inline-block;
