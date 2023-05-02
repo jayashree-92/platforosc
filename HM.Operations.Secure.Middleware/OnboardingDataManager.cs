@@ -130,6 +130,14 @@ namespace HM.Operations.Secure.Middleware
             return context.vw_CounterpartyAgreements.Where(x => x.FundMapId == fundId && x.dmaCounterPartyOnBoardId.HasValue && x.HMOpsStatus == "Approved").Select(x => x.dmaCounterPartyOnBoardId.Value).Distinct().ToList();
         }
 
+        public static List<string> GetServiceProvidersbyFund(long fundId)
+        {
+            using var context = new AdminContext();
+            {
+                var onbFundId = context.vw_HFund.Where(s => s.hmFundId == fundId).Select(s => s.dmaFundOnBoardId).FirstOrDefault() ?? 0;
+                return context.OnBoardingFundServiceProviderMaps.Where(x => x.dmaFundOnBoardId == onbFundId && !x.IsDeleted).Select(x => x.OnBoardingServiceProvider.ServiceProvider).Distinct().ToList();
+            }
+        }
 
         public static List<long> GetFundIdsbyCounterparty(long brokerId)
         {

@@ -21,6 +21,7 @@ namespace HM.Operations.Secure.DataModel
             this.onboardingContactFundMaps = new HashSet<onboardingContactFundMap>();
             this.onboardingSubAdvisorFundMaps = new HashSet<onboardingSubAdvisorFundMap>();
             this.onboardingSubAdvisorFundMaps1 = new HashSet<onboardingSubAdvisorFundMap>();
+            this.OnBoardingFundServiceProviderMaps = new HashSet<OnBoardingFundServiceProviderMap>();
         }
     
         public long dmaFundOnBoardId { get; set; }
@@ -286,5 +287,7 @@ namespace HM.Operations.Secure.DataModel
         public virtual ICollection<onboardingSubAdvisorFundMap> onboardingSubAdvisorFundMaps { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<onboardingSubAdvisorFundMap> onboardingSubAdvisorFundMaps1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OnBoardingFundServiceProviderMap> OnBoardingFundServiceProviderMaps { get; set; }
     }
 }

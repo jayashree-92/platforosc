@@ -164,6 +164,7 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var ssiTemplateMaps = FundAccountManager.GetAccountSsiTemplateMap(accountId);
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
+            var serviceProviders = OnBoardingDataManager.GetServiceProvidersbyFund(fundId);
             var fundData = AuthorizedDMAFundData.FirstOrDefault(s => s.HmFundId == fundId) ?? new HFundBasic();
 
             if (string.IsNullOrWhiteSpace(messages))
@@ -179,7 +180,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 context.Configuration.ProxyCreationEnabled = false;
 
                 ssiTemplates = context.onBoardingSSITemplates.Where(template => !template.IsDeleted && template.SSITemplateStatus == "Approved"
-                   && ((template.SSITemplateType == "Bank Loan/Private/IPO" && fundData.IsFundAllowedForBankLoanAndIpOs) || counterpartyIds.Contains(template.TemplateEntityId) || template.SSITemplateType == "Fee/Expense Payment")
+                   && ((template.SSITemplateType == "Bank Loan/Private/IPO" && fundData.IsFundAllowedForBankLoanAndIpOs) || counterpartyIds.Contains(template.TemplateEntityId) || (template.SSITemplateType == "Fee/Expense Payment" && serviceProviders.Contains(template.ServiceProvider)))
                    && (currency == null || template.Currency == currency) && (shouldBringAllMessageTypes || messageTypes.Contains(template.MessageType))).ToList();
             }
 

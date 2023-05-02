@@ -49,6 +49,7 @@ namespace HM.Operations.Secure.DataModel
         public virtual DbSet<vw_FundAgreementDetails> vw_FundAgreementDetails { get; set; }
 
         public virtual DbSet<vw_ExternalEmailDomain> vw_ExternalEmailDomain { get; set; }
+        public virtual DbSet<OnBoardingFundServiceProviderMap> OnBoardingFundServiceProviderMaps { get; set; }
     
         public virtual ObjectResult<USP_NEXEN_GetUserDetails_Result> USP_NEXEN_GetUserDetails(string userID, string userType)
         {

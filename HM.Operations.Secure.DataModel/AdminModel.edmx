@@ -500,6 +500,19 @@
           <Property Name="LastNAVDateNotes" Type="varchar(max)" />
           <Property Name="FeeComplexityTier" Type="varchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="OnBoardingFundServiceProviderMap">
+          <Key>
+            <PropertyRef Name="OnBoardingFundServiceProviderMapId" />
+          </Key>
+          <Property Name="OnBoardingFundServiceProviderMapId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dmaFundOnBoardId" Type="bigint" Nullable="false" />
+          <Property Name="OnBoardingServiceProviderId" Type="bigint" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="300" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="300" Nullable="false" />
+        </EntityType>
         <EntityType Name="OnBoardingServiceProvider">
           <Key>
             <PropertyRef Name="OnBoardingServiceProviderId" />
@@ -802,6 +815,30 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_OnBoardingFundServiceProviderMap_dmaFundOnBoardId">
+          <End Role="onboardingFund" Type="Self.onboardingFund" Multiplicity="1" />
+          <End Role="OnBoardingFundServiceProviderMap" Type="Self.OnBoardingFundServiceProviderMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onboardingFund">
+              <PropertyRef Name="dmaFundOnBoardId" />
+            </Principal>
+            <Dependent Role="OnBoardingFundServiceProviderMap">
+              <PropertyRef Name="dmaFundOnBoardId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OnBoardingFundServiceProviderMap_OnBoardingServiceProviderId">
+          <End Role="OnBoardingServiceProvider" Type="Self.OnBoardingServiceProvider" Multiplicity="1" />
+          <End Role="OnBoardingFundServiceProviderMap" Type="Self.OnBoardingFundServiceProviderMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OnBoardingServiceProvider">
+              <PropertyRef Name="OnBoardingServiceProviderId" />
+            </Principal>
+            <Dependent Role="OnBoardingFundServiceProviderMap">
+              <PropertyRef Name="OnBoardingServiceProviderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_onboardingSubAdvisorFundMap_dmaFundOnBoardId">
           <End Role="onboardingFund" Type="Self.onboardingFund" Multiplicity="1" />
           <End Role="onboardingSubAdvisorFundMap" Type="Self.onboardingSubAdvisorFundMap" Multiplicity="*" />
@@ -845,6 +882,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
           <EntitySet Name="onBoardingAssignmentUserGroupMap" EntityType="Self.onBoardingAssignmentUserGroupMap" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="onboardingContactFundMap" EntityType="Self.onboardingContactFundMap" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="onboardingFund" EntityType="Self.onboardingFund" Schema="HMADMIN" store:Type="Tables" />
+          <EntitySet Name="OnBoardingFundServiceProviderMap" EntityType="Self.OnBoardingFundServiceProviderMap" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="OnBoardingServiceProvider" EntityType="Self.OnBoardingServiceProvider" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="onboardingSubAdvisorFundMap" EntityType="Self.onboardingSubAdvisorFundMap" Schema="HMADMIN" store:Type="Tables" />
           <EntitySet Name="vw_HFund" EntityType="Self.vw_HFund" store:Type="Views" store:Schema="dbo">
@@ -1036,6 +1074,14 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
             <End Role="dmaOnBoardingContactDetail" EntitySet="dmaOnBoardingContactDetail" />
             <End Role="onboardingContactFundMap" EntitySet="onboardingContactFundMap" />
           </AssociationSet>
+          <AssociationSet Name="FK_OnBoardingFundServiceProviderMap_dmaFundOnBoardId" Association="Self.FK_OnBoardingFundServiceProviderMap_dmaFundOnBoardId">
+            <End Role="onboardingFund" EntitySet="onboardingFund" />
+            <End Role="OnBoardingFundServiceProviderMap" EntitySet="OnBoardingFundServiceProviderMap" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OnBoardingFundServiceProviderMap_OnBoardingServiceProviderId" Association="Self.FK_OnBoardingFundServiceProviderMap_OnBoardingServiceProviderId">
+            <End Role="OnBoardingServiceProvider" EntitySet="OnBoardingServiceProvider" />
+            <End Role="OnBoardingFundServiceProviderMap" EntitySet="OnBoardingFundServiceProviderMap" />
+          </AssociationSet>
           <AssociationSet Name="FK_onboardingSubAdvisorFundMap_dmaFundOnBoardId" Association="Self.FK_onboardingSubAdvisorFundMap_dmaFundOnBoardId">
             <End Role="onboardingFund" EntitySet="onboardingFund" />
             <End Role="onboardingSubAdvisorFundMap" EntitySet="onboardingSubAdvisorFundMap" />
@@ -1196,6 +1242,15 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
           <EntitySet Name="vw_FundAgreementDetails" EntityType="AdminModel.vw_FundAgreementDetails" />
 
           <EntitySet Name="vw_ExternalEmailDomain" EntityType="AdminModel.vw_ExternalEmailDomain" />
+          <EntitySet Name="OnBoardingFundServiceProviderMaps" EntityType="AdminModel.OnBoardingFundServiceProviderMap" />
+          <AssociationSet Name="FK_OnBoardingFundServiceProviderMap_dmaFundOnBoardId" Association="AdminModel.FK_OnBoardingFundServiceProviderMap_dmaFundOnBoardId">
+            <End Role="onboardingFund" EntitySet="onboardingFunds" />
+            <End Role="OnBoardingFundServiceProviderMap" EntitySet="OnBoardingFundServiceProviderMaps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OnBoardingFundServiceProviderMap_OnBoardingServiceProviderId" Association="AdminModel.FK_OnBoardingFundServiceProviderMap_OnBoardingServiceProviderId">
+            <End Role="OnBoardingServiceProvider" EntitySet="OnBoardingServiceProviders" />
+            <End Role="OnBoardingFundServiceProviderMap" EntitySet="OnBoardingFundServiceProviderMaps" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="USP_NEXEN_GetUserDetails_Result">
           <Property Type="Int32" Name="LDAPUserDetailId" Nullable="false" />
@@ -1387,6 +1442,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
           <Property Name="OnBoardingServiceProviderId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FeeType" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="ServiceProvider" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="OnBoardingFundServiceProviderMaps" Relationship="AdminModel.FK_OnBoardingFundServiceProviderMap_OnBoardingServiceProviderId" FromRole="OnBoardingServiceProvider" ToRole="OnBoardingFundServiceProviderMap" />
         </EntityType>
         <EntityType Name="vw_CounterpartyAgreements">
           <Key>
@@ -1873,6 +1929,7 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
           <NavigationProperty Name="onboardingContactFundMaps" Relationship="AdminModel.FK_onboardingContactFundMap_dmaFundOnBoardId" FromRole="onboardingFund" ToRole="onboardingContactFundMap" />
           <NavigationProperty Name="onboardingSubAdvisorFundMaps" Relationship="AdminModel.FK_onboardingSubAdvisorFundMap_dmaFundOnBoardId" FromRole="onboardingFund" ToRole="onboardingSubAdvisorFundMap" />
           <NavigationProperty Name="onboardingSubAdvisorFundMaps1" Relationship="AdminModel.FK_onboardingSubAdvisorFundMap_UmbrellaFundId" FromRole="onboardingFund" ToRole="onboardingSubAdvisorFundMap" />
+          <NavigationProperty Name="OnBoardingFundServiceProviderMaps" Relationship="AdminModel.FK_OnBoardingFundServiceProviderMap_dmaFundOnBoardId" FromRole="onboardingFund" ToRole="OnBoardingFundServiceProviderMap" />
         </EntityType>
         <Association Name="FK_dmaFundOnBoardPermissions_OnboardingFund_dmaFundOnBoardId">
           <End Type="AdminModel.onboardingFund" Role="onboardingFund" Multiplicity="1" />
@@ -1972,6 +2029,45 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
           <Property Name="dmaOnBoardingEntityId" Type="Int64" />
           <Property Name="Domain" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="OnBoardingFundServiceProviderMap">
+          <Key>
+            <PropertyRef Name="OnBoardingFundServiceProviderMapId" />
+          </Key>
+          <Property Name="OnBoardingFundServiceProviderMapId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dmaFundOnBoardId" Type="Int64" Nullable="false" />
+          <Property Name="OnBoardingServiceProviderId" Type="Int64" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="onboardingFund" Relationship="AdminModel.FK_OnBoardingFundServiceProviderMap_dmaFundOnBoardId" FromRole="OnBoardingFundServiceProviderMap" ToRole="onboardingFund" />
+          <NavigationProperty Name="OnBoardingServiceProvider" Relationship="AdminModel.FK_OnBoardingFundServiceProviderMap_OnBoardingServiceProviderId" FromRole="OnBoardingFundServiceProviderMap" ToRole="OnBoardingServiceProvider" />
+        </EntityType>
+        <Association Name="FK_OnBoardingFundServiceProviderMap_dmaFundOnBoardId">
+          <End Type="AdminModel.onboardingFund" Role="onboardingFund" Multiplicity="1" />
+          <End Type="AdminModel.OnBoardingFundServiceProviderMap" Role="OnBoardingFundServiceProviderMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="onboardingFund">
+              <PropertyRef Name="dmaFundOnBoardId" />
+            </Principal>
+            <Dependent Role="OnBoardingFundServiceProviderMap">
+              <PropertyRef Name="dmaFundOnBoardId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OnBoardingFundServiceProviderMap_OnBoardingServiceProviderId">
+          <End Type="AdminModel.OnBoardingServiceProvider" Role="OnBoardingServiceProvider" Multiplicity="1" />
+          <End Type="AdminModel.OnBoardingFundServiceProviderMap" Role="OnBoardingFundServiceProviderMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OnBoardingServiceProvider">
+              <PropertyRef Name="OnBoardingServiceProviderId" />
+            </Principal>
+            <Dependent Role="OnBoardingFundServiceProviderMap">
+              <PropertyRef Name="OnBoardingServiceProviderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2750,6 +2846,20 @@ warning 6002: The table/view 'HM.HMADMIN.vw_hmUserCoverageDetails' does not have
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="dmaOnBoardingTypeId" ColumnName="dmaOnBoardingTypeId" />
                 <ScalarProperty Name="RowId" ColumnName="RowId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OnBoardingFundServiceProviderMaps">
+            <EntityTypeMapping TypeName="AdminModel.OnBoardingFundServiceProviderMap">
+              <MappingFragment StoreEntitySet="OnBoardingFundServiceProviderMap">
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="OnBoardingServiceProviderId" ColumnName="OnBoardingServiceProviderId" />
+                <ScalarProperty Name="dmaFundOnBoardId" ColumnName="dmaFundOnBoardId" />
+                <ScalarProperty Name="OnBoardingFundServiceProviderMapId" ColumnName="OnBoardingFundServiceProviderMapId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

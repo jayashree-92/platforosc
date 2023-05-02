@@ -14,8 +14,17 @@ namespace HM.Operations.Secure.DataModel
     
     public partial class OnBoardingServiceProvider
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public OnBoardingServiceProvider()
+        {
+            this.OnBoardingFundServiceProviderMaps = new HashSet<OnBoardingFundServiceProviderMap>();
+        }
+    
         public long OnBoardingServiceProviderId { get; set; }
         public string FeeType { get; set; }
         public string ServiceProvider { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OnBoardingFundServiceProviderMap> OnBoardingFundServiceProviderMaps { get; set; }
     }
 }
