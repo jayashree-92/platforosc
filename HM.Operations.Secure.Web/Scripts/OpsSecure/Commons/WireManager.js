@@ -483,10 +483,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $http.get("/Home/IsWireAmountValid?wireAmount=" + wireAmount + "&valueDate=" + $("#wireValueDate").text() + "&currency=" + currency + "&wireStatusId=" + $scope.WireTicket.WireStatusId).then(
                 function (response) {
                     $timeout(function () {
-                        $scope.IsWireAmountWithInAllowedLimit = response.data == "true";
+                        $scope.IsWireAmountWithInAllowedLimit = response.data == "true";                    
+                        if (!$scope.IsWireAmountWithInAllowedLimit)
+                            $scope.fnShowErrorMessage(response.data);
                     }, 50);
-                    if (!$scope.IsWireAmountWithInAllowedLimit)
-                        $scope.fnShowErrorMessage(response.data);
                 });
         }
 
