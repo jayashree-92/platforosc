@@ -482,7 +482,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             //Check if the wire-amount is within the limit 
             $http.get("/Home/IsWireAmountValid?wireAmount=" + wireAmount + "&valueDate=" + $("#wireValueDate").text() + "&currency=" + currency + "&wireStatusId=" + $scope.WireTicket.WireStatusId).then(
                 function (response) {
-                    $scope.IsWireAmountWithInAllowedLimit = response.data == "true";
+                    $timeout(function () {
+                        $scope.IsWireAmountWithInAllowedLimit = response.data == "true";
+                    }, 50);
                     if (!$scope.IsWireAmountWithInAllowedLimit)
                         $scope.fnShowErrorMessage(response.data);
                 });
