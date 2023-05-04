@@ -95,7 +95,7 @@ namespace HM.Operations.Secure.Middleware.Jobs
         {
             using (var context = new AdminContext())
             {
-                return context.vw_ExternalEmailDomain.Where(s => (s.dmaOnBoardingTypeId == 1 && clientIds.Contains(s.dmaOnBoardingEntityId ?? 0)) || (s.dmaOnBoardingTypeId == 2 && hmFundIds.Contains(s.dmaOnBoardingEntityId ?? 0)) || (s.dmaOnBoardingTypeId == 11 && hmFundIds.Contains(s.dmaOnBoardingEntityId ?? 0))).Select(s => s.Domain).Distinct().ToList();
+                return context.vw_ExternalEmailDomain.Where(s => (s.dmaOnBoardingTypeId == 1 && clientIds.Contains(s.dmaOnBoardingEntityId ?? 0)) || (s.dmaOnBoardingTypeId != 1 && hmFundIds.Contains(s.dmaOnBoardingEntityId ?? 0))).Select(s => s.Domain).Distinct().ToList();
             }
         }
 
