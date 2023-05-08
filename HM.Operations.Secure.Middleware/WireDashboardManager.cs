@@ -97,39 +97,26 @@ namespace HM.Operations.Secure.Middleware
             if(!agrTypes.Contains("-1"))
             {
                 var allWireIds = new List<long>();
-
-                if(agrTypes.Contains("DDA"))
-                    allWireIds.AddRange(wireStatusDetails.Where(s => s.SendingAccount.AccountType == "DDA").Select(s => s.hmsWireId).ToList());
-                if(agrTypes.Contains("Custody"))
-                    allWireIds.AddRange(wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Custody").Select(s => s.hmsWireId).ToList());
-
-                if(agrTypes.Any(s => s != "DDA" && s != "Custody"))
+                var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Agreement" && s.SendingAccount.dmaAgreementOnBoardingId > 0).Select(s => s.SendingAccount.dmaAgreementOnBoardingId).Distinct().ToList();
+                using(var context = new AdminContext())
                 {
-                    var agreementIds = wireStatusDetails.Where(s => s.SendingAccount.AccountType == "Agreement" && s.SendingAccount.dmaAgreementOnBoardingId > 0).Select(s => s.SendingAccount.dmaAgreementOnBoardingId).Distinct().ToList();
-                    using(var context = new AdminContext())
-                    {
-                        var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
-                        allWireIds.AddRange(wireStatusDetails.Where(s => agrmtMap.Contains(s.SendingAccount.dmaAgreementOnBoardingId ?? 0)).Select(s => s.hmsWireId).ToList());
-                    }
+                    var agrmtMap = context.vw_CounterpartyAgreements.Where(s => agreementIds.Contains(s.dmaAgreementOnBoardingId) && agrTypes.Contains(s.AgreementType)).Select(s => s.dmaAgreementOnBoardingId).Distinct().ToList();
+                    allWireIds.AddRange(wireStatusDetails.Where(s => agrmtMap.Contains(s.SendingAccount.dmaAgreementOnBoardingId ?? 0)).Select(s => s.hmsWireId).ToList());
                 }
 
                 wireStatusDetails = wireStatusDetails.Where(s => allWireIds.Contains(s.hmsWireId)).ToList();
             }
             if(!clientIds.Contains(-1))
             {
-                using(var context = new AdminContext())
-                {
-                    var fundsOfSelectedClients = context.vw_HFund.Where(s => clientIds.Contains(s.dmaClientOnBoardId ?? 0)).Select(s => s.hmFundId).ToList();
-                    wireStatusDetails = wireStatusDetails.Where(s => fundsOfSelectedClients.Contains((int)s.hmFundId)).ToList();
-                }
+                using var context = new AdminContext();
+                var fundsOfSelectedClients = context.vw_HFund.Where(s => clientIds.Contains(s.dmaClientOnBoardId ?? 0)).Select(s => s.hmFundId).ToList();
+                wireStatusDetails = wireStatusDetails.Where(s => fundsOfSelectedClients.Contains((int)s.hmFundId)).ToList();
             }
             if(!adminIds.Contains(-1))
             {
-                using(var context = new AdminContext())
-                {
-                    var fundsOfSelectedAdmins = context.vw_HFund.Where(s => adminIds.Contains(s.FundAdministrator ?? 0)).Select(s => s.hmFundId).ToList();
-                    wireStatusDetails = wireStatusDetails.Where(s => fundsOfSelectedAdmins.Contains((int)s.hmFundId)).ToList();
-                }
+                using var context = new AdminContext();
+                var fundsOfSelectedAdmins = context.vw_HFund.Where(s => adminIds.Contains(s.FundAdministrator ?? 0)).Select(s => s.hmFundId).ToList();
+                wireStatusDetails = wireStatusDetails.Where(s => fundsOfSelectedAdmins.Contains((int)s.hmFundId)).ToList();
             }
 
             var userIds = wireStatusDetails.Select(s => s.LastUpdatedBy).Union(wireStatusDetails.Select(s => s.CreatedBy))

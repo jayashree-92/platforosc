@@ -141,8 +141,7 @@ namespace HM.Operations.Secure.Middleware
         public static Dictionary<int, string> GetAllAgreementTypes(List<string> agreementTypes = null)
         {
             using var context = new AdminContext();
-            if (agreementTypes == null)
-                agreementTypes = new List<string>();
+            agreementTypes ??= new List<string>();
             return context.dmaAgreementTypes.AsNoTracking().Where(s => agreementTypes.Count == 0 || agreementTypes.Contains(s.AgreementType)).ToDictionary(x => x.dmaAgreementTypeId, x => x.AgreementType);
         }
     }

@@ -275,17 +275,10 @@ namespace HM.Operations.Secure.Middleware
             }
         }
 
-        private static int GetAgreementId(onBoardingAccount account)
+        private static int GetAgreementTypeId(onBoardingAccount account)
         {
-            if (account.AccountType == "DDA" || account.AccountType == "Custody")
-            {
-                return OnBoardingDataManager.GetAllAgreementTypes(new List<string>() { account.AccountType }).First().Key;
-            }
-
-            using (var context = new AdminContext())
-            {
-                return context.vw_CounterpartyAgreements.First(s => s.dmaAgreementOnBoardingId == account.dmaAgreementOnBoardingId).AgreementTypeId ?? 0;
-            }
+            using var context = new AdminContext();
+            return context.vw_CounterpartyAgreements.AsNoTracking().First(s => s.dmaAgreementOnBoardingId == account.dmaAgreementOnBoardingId).AgreementTypeId ?? 0;
         }
 
         public static long AddAccount(onBoardingAccount account, string userName)
@@ -301,7 +294,7 @@ namespace HM.Operations.Secure.Middleware
                         account.UpdatedAt = DateTime.Now;
                         account.UpdatedBy = userName;
                         account.onBoardingAccountStatus = "Created";
-                        account.MarginExposureTypeID = GetAgreementId(account);
+                        account.MarginExposureTypeID = GetAgreementTypeId(account);
                     }
                     else
                     {
