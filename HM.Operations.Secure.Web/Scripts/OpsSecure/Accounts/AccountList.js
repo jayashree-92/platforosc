@@ -1134,22 +1134,25 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
     $scope.IsAuthorizedPartyCounterParty = false;
     $scope.fnAuthorizedPartyChange = function () {
-        if ($scope.onBoardingAccountDetails[0].AuthorizedParty != "Innocap") {
+        $scope.IsAuthorizedPartyCounterParty = $scope.onBoardingAccountDetails[0].AuthorizedParty == "Counterparty" && $scope.AgreementTypesToEnableAuthorizedpartyAsCounterparty.indexOf($scope.AgreementType) > -1;
+
+        if ($scope.onBoardingAccountDetails[0].AuthorizedParty != "Innocap" && !$scope.IsAuthorizedPartyCounterParty) {
             $scope.onBoardingAccountDetails[0].IsReceivingAccount = true;
-            $scope.onBoardingAccountDetails[0].AccountModule = null;
             $scope.onBoardingAccountDetails[0].SwiftGroupId = null;
             $scope.onBoardingAccountDetails[0].SwiftGroup = null;
             $scope.onBoardingAccountDetails[0].CashSweepTime = null;
             $scope.onBoardingAccountDetails[0].CashSweepTimeZone = null;
             $scope.onBoardingAccountDetails[0].CashSweep = "No";
-            $("#liAccountModule_0").select2("val", null);
             $("#liSwiftGroup0").select2("val", null);
             $("#cashSweep0").select2("val", "No").trigger("change");
+            if (!$scope.IsAuthorizedPartyCounterParty) {
+                $scope.onBoardingAccountDetails[0].AccountModule = null;
+                $("#liAccountModule_0").select2("val", null);
+            }
         }
         else
             $scope.onBoardingAccountDetails[0].IsReceivingAccount = angular.copy($scope.onBoardingAccountDetails[0].IsReceivingAccountType);
 
-        $scope.IsAuthorizedPartyCounterParty = $scope.onBoardingAccountDetails[0].AuthorizedParty == "Counterparty" && $scope.AgreementTypesToEnableAuthorizedpartyAsCounterparty.indexOf($scope.AgreementType) > -1;
     }
 
     $scope.fnCutOffTime = function (currency, cashInstruction) {
