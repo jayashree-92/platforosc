@@ -32,10 +32,8 @@ namespace HM.Operations.Secure.Web.Controllers
         {
 
             var hFunds = AuthorizedDMAFundData;
-
             var funds = hFunds.Select(s => new { id = s.HmFundId, text = s.PreferredFundName, LegalName = s.LegalFundName }).ToList();
             var hFundIds = funds.Select(s => s.id).ToList();
-
 
             var counterpartyFamilies = OnBoardingDataManager.GetAllCounterparties().Select(x => new
             {
@@ -47,7 +45,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
             var agreementData = OnBoardingDataManager.GetAgreementsForOnboardingAccountPreloadData(hFundIds, AuthorizedSessionData.IsPrivilegedUser);
             var agreementFundIds = agreementData.Where(s => s.HMFundId > 0).Select(s => s.HMFundId).ToList();
-            var fundsWithAgreements = funds.Where(s => agreementFundIds.Contains(s.id)).ToList();
+            var fundsWithAgreements = hFundIds.Where(s => agreementFundIds.Contains(s)).ToList();
             var agreements = agreementData.Select(s => new
             {
                 id = s.AgreementOnboardingId,
@@ -58,15 +56,12 @@ namespace HM.Operations.Secure.Web.Controllers
                 CounterpartyId = s.CounterpartyId,
                 AgreementType = s.AgreementType
             }).ToList();
-            var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes(new List<string> { "DDA", "Custody" });
             return Json(new
             {
                 agreements,
                 funds,
                 fundsWithAgreements,
-                counterpartyFamilies,
-                ddaAgreementTypeId = agreementTypes.First(s => s.Value == "DDA").Key,
-                custodyAgreementTypeId = agreementTypes.First(s => s.Value == "Custody").Key,
+                counterpartyFamilies
             });
 
         }
@@ -132,14 +127,14 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var contactName = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(lastname) && string.IsNullOrWhiteSpace(firstname))
+            if(string.IsNullOrWhiteSpace(lastname) && string.IsNullOrWhiteSpace(firstname))
                 return email.HumanizeEmail();
 
-            if (string.IsNullOrWhiteSpace(lastname) && !string.IsNullOrWhiteSpace(firstname))
+            if(string.IsNullOrWhiteSpace(lastname) && !string.IsNullOrWhiteSpace(firstname))
                 contactName = firstname;
-            else if (!string.IsNullOrWhiteSpace(lastname) && string.IsNullOrWhiteSpace(firstname))
+            else if(!string.IsNullOrWhiteSpace(lastname) && string.IsNullOrWhiteSpace(firstname))
                 contactName = lastname;
-            else if (!string.IsNullOrWhiteSpace(lastname) && !string.IsNullOrWhiteSpace(firstname))
+            else if(!string.IsNullOrWhiteSpace(lastname) && !string.IsNullOrWhiteSpace(firstname))
                 contactName = $"{lastname} {firstname}";
 
             return contactName;
@@ -166,14 +161,14 @@ namespace HM.Operations.Secure.Web.Controllers
             var counterpartyIds = OnBoardingDataManager.GetCounterpartyIdsbyFund(fundId);
             var fundData = AuthorizedDMAFundData.FirstOrDefault(s => s.HmFundId == fundId) ?? new HFundBasic();
 
-            if (string.IsNullOrWhiteSpace(messages))
+            if(string.IsNullOrWhiteSpace(messages))
                 messages = string.Empty;
 
             var messageTypes = messages.Split(',').ToList();
             var shouldBringAllMessageTypes = string.IsNullOrWhiteSpace(messages);
             List<onBoardingSSITemplate> ssiTemplates;
 
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -225,12 +220,12 @@ namespace HM.Operations.Secure.Web.Controllers
                 : isBankLoanOrIpo ? AuthorizedDMAFundData.Where(s => s.IsFundAllowedForBankLoanAndIpOs).Select(s => s.HmFundId).ToList()
                 : new List<long>();
 
-            if (string.IsNullOrWhiteSpace(message))
+            if(string.IsNullOrWhiteSpace(message))
                 message = string.Empty;
 
             List<onBoardingAccount> fundAccounts;
             List<onBoardingAccountSSITemplateMap> ssiTemplateMaps;
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -301,15 +296,13 @@ namespace HM.Operations.Secure.Web.Controllers
                 account.CreatedBy = account.CreatedBy.HumanizeEmail();
                 account.UpdatedBy = account.UpdatedBy.HumanizeEmail();
                 account.ApprovedBy = account.ApprovedBy.HumanizeEmail();
-                var fundAccMap = fundAccountmap.ContainsKey(account.onBoardingAccountId) ? fundAccountmap[account.onBoardingAccountId] : new vw_FundAccounts();
+                var fundAccMap = fundAccountmap.TryGetValue(account.onBoardingAccountId, out var fundAccMapVal) ? fundAccMapVal : new vw_FundAccounts();
                 return new
                 {
                     Account = FundAccountManager.SetAccountDefaults(account),
                     AccountNumber = fundAccMap.AccountNumber,
                     AgreementName = fundAccMap.AgreementShortName,
-                    AgreementTypeId = fundAccMap.AccountType == "DDA" || fundAccMap.AccountType == "Custody"
-                            ? agreementTypes.ContainsValue(fundAccMap.AccountType) ? agreementTypes.First(s => s.Value == fundAccMap.AccountType).Key
-                            : fundAccMap.dmaAgreementTypeId ?? 0 : fundAccMap.dmaAgreementTypeId ?? 0,
+                    AgreementTypeId = fundAccMap.dmaAgreementTypeId ?? 0,
 
                     CounterpartyFamilyName = fundAccMap.CounterpartyFamily,
                     CounterpartyName = fundAccMap.CounterpartyName,
@@ -321,7 +314,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 };
             }).ToList();
 
-            foreach (var clearingBroker in clearingBrokers)
+            foreach(var clearingBroker in clearingBrokers)
             {
                 var fundAccount = allFundAccounts.FirstOrDefault(s => s.Account.onBoardingAccountId == clearingBroker.ClearingBroker.onBoardingAccountId);
                 clearingBroker.AgreementName = fundAccount?.AgreementName;
@@ -340,21 +333,21 @@ namespace HM.Operations.Secure.Web.Controllers
                 receivingAccountTypes = OpsSecureSwitches.AllowedAgreementTypesForReceivingFundAccounts,
                 disabledAgreementForCashInstructions = OpsSecureSwitches.DisabledAgreementForCashInstructions,
                 OnBoardingAccounts = allFundAccounts,
-                FundAccountClearingBrokers= clearingBrokers
+                FundAccountClearingBrokers = clearingBrokers
             });
         }
 
         public void AddAccounts(List<onBoardingAccount> onBoardingAccounts, string fundName = "", string agreement = "", string broker = "")
         {
-            foreach (var account in onBoardingAccounts)
+            foreach(var account in onBoardingAccounts)
             {
                 var ssiTemplates = account.onBoardingAccountSSITemplateMaps.ToList();
 
-                if (ssiTemplates.Count > 0)
+                if(ssiTemplates.Count > 0)
                 {
                     ssiTemplates.RemoveAll(x => x.onBoardingSSITemplateId == 0);
 
-                    if (account.onBoardingAccountId > 0)
+                    if(account.onBoardingAccountId > 0)
                         ssiTemplates.ForEach(x =>
                         {
                             x.onBoardingAccountId = account.onBoardingAccountId;
@@ -375,7 +368,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
                     account.onBoardingAccountSSITemplateMaps = ssiTemplates;
                 }
-                if (!string.IsNullOrEmpty(account.AccountModule))
+                if(!string.IsNullOrEmpty(account.AccountModule))
                 {
                     var onboardModuleAssociations = account.AccountModule.Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
                         .Select(s => s.ToLong()).Select(module => new onBoardingAccountModuleAssociation()
@@ -392,7 +385,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
                 var accountId = FundAccountManager.AddAccount(account, UserName);
 
-                if (accountId > 0)
+                if(accountId > 0)
                 {
                     AuditManager.Log(auditLogList);
                 }
@@ -510,7 +503,7 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult GetAccountClearingBrokers(long accountId)
         {
             List<hmsFundAccountClearingBroker> clearingBrokers;
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
@@ -522,11 +515,11 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public void AddOrUpdateMarginExposureType(long accountId, int exposureTypeId)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 var account = context.onBoardingAccounts.FirstOrDefault(s => s.onBoardingAccountId == accountId);
 
-                if (account == null)
+                if(account == null)
                     return;
 
                 account.MarginExposureTypeID = exposureTypeId;
@@ -537,15 +530,15 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public string AddClearingBrokers(long accountId, string clearingBrokerName)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
                 var clearingBroker = context.hmsFundAccountClearingBrokers.FirstOrDefault(s => s.ClearingBrokerName == clearingBrokerName);
-                if (clearingBroker != null)
+                if(clearingBroker != null)
                     return context.onBoardingAccounts.FirstOrDefault(s => s.onBoardingAccountId == clearingBroker.onBoardingAccountId).AccountName;
-                
+
                 context.hmsFundAccountClearingBrokers.Add(new hmsFundAccountClearingBroker()
                 {
                     ClearingBrokerName = clearingBrokerName,
@@ -561,19 +554,19 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public void DeleteClearingBrokers(long clearingBrokerId)
         {
-            using (var context = new OperationsSecureContext())
+            using(var context = new OperationsSecureContext())
             {
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
                 var clearingBroker = context.hmsFundAccountClearingBrokers.FirstOrDefault(s => s.hmsFundAccountClearingBrokerId == clearingBrokerId);
-                if (clearingBroker != null) context.hmsFundAccountClearingBrokers.Remove(clearingBroker);
+                if(clearingBroker != null) context.hmsFundAccountClearingBrokers.Remove(clearingBroker);
                 context.SaveChanges();
             }
         }
 
         public void AddOrUpdateCallback(hmsAccountCallback callback)
         {
-            if (callback.hmsAccountCallbackId > 0)
+            if(callback.hmsAccountCallbackId > 0)
             {
                 var existingCallback = FundAccountManager.GetCallbackData(callback.hmsAccountCallbackId);
                 callback.RecCreatedDt = existingCallback.RecCreatedDt;
@@ -620,7 +613,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public void AddorEditBankAccountAddress(hmsBankAccountAddress accountAddress)
         {
-            if (accountAddress.hmsBankAccountAddressId == 0)
+            if(accountAddress.hmsBankAccountAddressId == 0)
             {
                 accountAddress.IsDeleted = false;
                 accountAddress.CreatedAt = DateTime.Now;
@@ -634,7 +627,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public void AddorEditAccountBiCorAba(onBoardingAccountBICorABA accountBiCorAba)
         {
-            if (accountBiCorAba.onBoardingAccountBICorABAId == 0)
+            if(accountBiCorAba.onBoardingAccountBICorABAId == 0)
             {
                 accountBiCorAba.IsDeleted = false;
                 accountBiCorAba.CreatedAt = DateTime.Now;
@@ -664,9 +657,9 @@ namespace HM.Operations.Secure.Web.Controllers
             }, JsonContentType, JsonContentEncoding);
         }
 
-        public void UpdateContacts(long accountId,string contactType, string contactName)
+        public void UpdateContacts(long accountId, string contactType, string contactName)
         {
-            FundAccountManager.UpdateContacts(accountId, contactType,contactName, UserName);
+            FundAccountManager.UpdateContacts(accountId, contactType, contactName, UserName);
         }
 
         public void UpdateTreasuryMarginCheck(long accountId, bool isExcludedFromTreasuryMarginCheck)
@@ -700,7 +693,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
         public void RemoveAccountDocument(string fileName, long documentId)
         {
-            if (documentId > 0)
+            if(documentId > 0)
                 FundAccountManager.RemoveAccountDocument(documentId);
         }
 
@@ -794,7 +787,7 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var accountRows = new List<Row>();
 
-            foreach (var account in accountList)
+            foreach(var account in accountList)
             {
                 var row = new Row
                 {
@@ -817,7 +810,7 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             var clearingBrokerRows = new List<Row>();
 
-            foreach (var clearingBroker in clearingBrokers)
+            foreach(var clearingBroker in clearingBrokers)
             {
                 var row = new Row
                 {
@@ -852,16 +845,16 @@ namespace HM.Operations.Secure.Web.Controllers
             };
         }
         private ExportContent CreateClearingBrokersExportContent(List<FundAccountClearingBrokerData> clearingBrokers)
-        {       
+        {
             var groupRows = new List<GroupRow>();
-            var dataRows=new List<Row>();
+            var dataRows = new List<Row>();
             var groupedData = clearingBrokers.GroupBy(s => s.AccountName).ToDictionary(s => s.Key, v => v.ToList());
-            var startIndex =  1;
+            var startIndex = 1;
             var endIndex = 0;
-            foreach (var fund in groupedData.Keys)
+            foreach(var fund in groupedData.Keys)
             {
-                startIndex = dataRows.Count+2;
-                endIndex = startIndex+ groupedData[fund].Count-1;
+                startIndex = dataRows.Count + 2;
+                endIndex = startIndex + groupedData[fund].Count - 1;
                 var row = BuildClearingBrokerGroupRow(groupedData[fund][0]);
                 row.RowHighlight = Row.Highlight.SubHeader;
                 dataRows.Add(row);
@@ -882,21 +875,24 @@ namespace HM.Operations.Secure.Web.Controllers
             var fundAccountMap = fundAccounts.ToDictionary(s => s.onBoardingAccountId, v => v);
             var accountListRows = new List<Row>();
 
-            foreach (var account in onBoardingAccounts)
+            foreach(var account in onBoardingAccounts)
             {
+                var isFundAccountAvailable = fundAccountMap.TryGetValue(account.onBoardingAccountId, out var fndAccVal);
+                  
+
                 var row = new Row
                 {
                     ["Account Id"] = account.onBoardingAccountId.ToString(),
                     ["Entity Type"] = account.AccountType,
-                    ["Client Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].ClientName : string.Empty,
-                    ["Fund Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].LegalFundName : string.Empty,
-                    ["Fund Status"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].LaunchStatus : string.Empty,
-                    ["Agreement Name"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].AgreementShortName : string.Empty,
-                    ["Counterparty"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].CounterpartyName : string.Empty,
-                    ["Counterparty Family"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].CounterpartyFamily : string.Empty,
+                    ["Client Name"] = isFundAccountAvailable ? fndAccVal.ClientName : string.Empty,
+                    ["Fund Name"] = isFundAccountAvailable ? fndAccVal.LegalFundName : string.Empty,
+                    ["Fund Status"] = isFundAccountAvailable ? fndAccVal.LaunchStatus : string.Empty,
+                    ["Agreement Name"] = isFundAccountAvailable ? fndAccVal.AgreementShortName : string.Empty,
+                    ["Counterparty"] = isFundAccountAvailable ? fndAccVal.CounterpartyName : string.Empty,
+                    ["Counterparty Family"] = isFundAccountAvailable ? fndAccVal.CounterpartyFamily : string.Empty,
                     ["Account Name"] = account.AccountName,
-                    ["Account Number"] = fundAccountMap.ContainsKey(account.onBoardingAccountId) ? fundAccountMap[account.onBoardingAccountId].AccountNumber : string.Empty,
-                    ["Account Type"] = account.AccountPurpose,
+                    ["Account Number"] = isFundAccountAvailable ? fndAccVal.AccountNumber : string.Empty,
+                    ["Agreement Type"] = isFundAccountAvailable ? fndAccVal.AgreementType : account.AccountPurpose,
                     ["Account Status"] = account.AccountStatus,
                     ["Currency"] = account.Currency,
                     ["Description"] = account.Description,
@@ -908,7 +904,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     ["Cash Sweep"] = account.CashSweep
                 };
 
-                if (account.CashSweepTime != null)
+                if(account.CashSweepTime != null)
                 {
                     var dateTime = DateTime.Today.AddHours(account.CashSweepTime.Value.Hours).AddMinutes(account.CashSweepTime.Value.Minutes);
                     var stringTime = dateTime.ToString("hh:mm tt");
@@ -922,7 +918,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
                 row["Cash Sweep Time Zone"] = account.CashSweepTimeZone;
 
-                if (account.WirePortalCutoff != null && account.WirePortalCutoff.CutoffTime != null)
+                if(account.WirePortalCutoff != null && account.WirePortalCutoff.CutoffTime != null)
                 {
                     var dateTime = DateTime.Today.AddHours(account.WirePortalCutoff.CutoffTime.Hours).AddMinutes(account.WirePortalCutoff.CutoffTime.Minutes);
                     var stringTime = dateTime.ToString("hh:mm tt");
@@ -975,7 +971,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 row["UpdatedBy"] = account.UpdatedBy;
                 row["ModifiedDate"] = account.UpdatedAt + "";
                 row["ApprovedBy"] = account.ApprovedBy;
-                switch (account.onBoardingAccountStatus)
+                switch(account.onBoardingAccountStatus)
                 {
                     case "Approved":
                         row.RowHighlight = Row.Highlight.Success;
@@ -1004,23 +1000,23 @@ namespace HM.Operations.Secure.Web.Controllers
             var swiftgroups = FundAccountManager.GetAllSwiftGroup();
 
             var bulkUploadLogs = new List<hmsBulkUploadLog>();
-            for (var i = 0; i < Request.Files.Count; i++)
+            for(var i = 0; i < Request.Files.Count; i++)
             {
                 var file = Request.Files[i];
 
-                if (file == null)
+                if(file == null)
                     throw new Exception("unable to retrieve file information");
 
                 var fileInfo = new FileInfo(
                     $"{FileSystemManager.OpsSecureBulkFileUploads}\\FundAccount\\{DateTime.Now:yyyy-MM-dd}\\{file.FileName}");
 
-                if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
+                if(fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
                     Directory.CreateDirectory(fileInfo.Directory.FullName);
 
                 var newFileName = file.FileName;
                 var splitFileNames = file.FileName.Split('.');
                 var ind = 1;
-                while (System.IO.File.Exists(fileInfo.FullName))
+                while(System.IO.File.Exists(fileInfo.FullName))
                 {
                     newFileName = $"{splitFileNames[0]}_{ind++}.{splitFileNames[1]}";
                     fileInfo = new FileInfo(
@@ -1031,9 +1027,9 @@ namespace HM.Operations.Secure.Web.Controllers
 
                 var accountRows = ReportDeliveryManager.ParseAsRows(fileInfo, "List of Accounts", string.Empty, true);
 
-                if (accountRows.Count > 0)
+                if(accountRows.Count > 0)
                 {
-                    foreach (var account in accountRows)
+                    foreach(var account in accountRows)
                     {
                         var accountDetail = new onBoardingAccount
                         {
@@ -1049,33 +1045,33 @@ namespace HM.Operations.Secure.Web.Controllers
 
                         var fund = hFunds.FirstOrDefault(x => x.LegalFundName == account["Fund Name"] || x.PreferredFundName == account["Fund Name"]);
 
-                        if (fund == null)
+                        if(fund == null)
                             continue;
 
 
-                        if (account["Entity Type"] == "Agreement")
+                        if(account["Entity Type"] == "Agreement")
                         {
                             accountDetail.dmaAgreementOnBoardingId = agreements.FirstOrDefault(x => x.Value == account["Agreement Name"]).Key;
 
                             //No agreement available for given name
-                            if (accountDetail.dmaAgreementOnBoardingId == 0)
+                            if(accountDetail.dmaAgreementOnBoardingId == 0)
                                 continue;
 
                             accountDetail.hmFundId = fund.HmFundId;
                             var counterPartyByAgreement = onboardingAccounts.FirstOrDefault(s => s.dmaAgreementOnBoardingId == accountDetail.dmaAgreementOnBoardingId);
-                            if (counterPartyByAgreement != null)
+                            if(counterPartyByAgreement != null)
                             {
                                 accountDetail.dmaCounterpartyFamilyId = counterPartyByAgreement.dmaCounterpartyFamilyId;
                                 accountDetail.dmaCounterpartyId = counterPartyByAgreement.dmaCounterpartyId;
                             }
 
-                            if (accountDetail.onBoardingAccountId == 0)
+                            if(accountDetail.onBoardingAccountId == 0)
                             {
                                 var existsAccount = onboardingAccounts.FirstOrDefault(x =>
                                     x.dmaAgreementOnBoardingId == accountDetail.dmaAgreementOnBoardingId &&
                                     x.hmFundId == accountDetail.hmFundId &&
                                     x.UltimateBeneficiaryAccountNumber == accountDetail.UltimateBeneficiaryAccountNumber);
-                                if (existsAccount != null) continue;
+                                if(existsAccount != null) continue;
                             }
                         }
                         else
@@ -1083,11 +1079,11 @@ namespace HM.Operations.Secure.Web.Controllers
                             accountDetail.hmFundId = fund.HmFundId;
                             accountDetail.dmaCounterpartyFamilyId = counterpartyFamilies.FirstOrDefault(x => x.Value == account["Counterparty Family"]).Key;
                             accountDetail.dmaCounterpartyId = counterparties.FirstOrDefault(x => x.Value == account["Counterparty"]).Key;
-                            if (accountDetail.onBoardingAccountId == 0)
+                            if(accountDetail.onBoardingAccountId == 0)
                             {
                                 var existsAccount = onboardingAccounts.FirstOrDefault(x => x.hmFundId == accountDetail.hmFundId &&
                                     x.dmaCounterpartyFamilyId == accountDetail.dmaCounterpartyFamilyId && x.UltimateBeneficiaryAccountNumber == accountDetail.UltimateBeneficiaryAccountNumber);
-                                if (existsAccount != null) continue;
+                                if(existsAccount != null) continue;
                             }
                         }
                         accountDetail.AccountName = account["Account Name"];
@@ -1099,7 +1095,7 @@ namespace HM.Operations.Secure.Web.Controllers
                         accountDetail.AuthorizedParty = account["Authorized Party"];
                         accountDetail.CashInstruction = account["Cash Instruction Mechanism"];
                         accountDetail.SwiftGroup.SwiftGroup = account["Swift Group"];
-                        if (!string.IsNullOrWhiteSpace(account["Swift Group"]))
+                        if(!string.IsNullOrWhiteSpace(account["Swift Group"]))
                         {
                             var swiftGroup = swiftgroups.FirstOrDefault(x => x.SwiftGroup == account["Swift Group"]);
                             accountDetail.SwiftGroup.SendersBIC = (swiftGroup != null) ? swiftGroup.SendersBIC : string.Empty;
@@ -1108,13 +1104,13 @@ namespace HM.Operations.Secure.Web.Controllers
 
                         accountDetail.CashSweep = account["Cash Sweep"];
 
-                        if (!string.IsNullOrWhiteSpace(account["Cash Sweep Time"]))
+                        if(!string.IsNullOrWhiteSpace(account["Cash Sweep Time"]))
                         {
                             var cashSweepTime = account["Cash Sweep Time"];
                             var increment = (cashSweepTime.Contains("PM") ? 12 : 0);
                             cashSweepTime = cashSweepTime.Replace("PM", "").Replace("AM", "").Trim();
                             var splitCashSweep = cashSweepTime.Split(':');
-                            if (splitCashSweep.Length > 1)
+                            if(splitCashSweep.Length > 1)
                             {
                                 var hours = Convert.ToInt32(splitCashSweep[0]);
                                 hours = hours >= 12 ? hours % 12 : hours;
@@ -1124,13 +1120,13 @@ namespace HM.Operations.Secure.Web.Controllers
                             accountDetail.CashSweepTimeZone = account["Cash Sweep Time Zone"];
                         }
 
-                        if (!string.IsNullOrWhiteSpace(account["Cutoff Time"]))
+                        if(!string.IsNullOrWhiteSpace(account["Cutoff Time"]))
                         {
                             var cutoffTime = account["Cutoff Time"];
                             var increment = (cutoffTime.Contains("PM") ? 12 : 0);
                             cutoffTime = cutoffTime.Replace("PM", "").Replace("AM", "").Trim();
                             var splitCutoffTime = cutoffTime.Split(':');
-                            if (splitCutoffTime.Length > 1)
+                            if(splitCutoffTime.Length > 1)
                             {
                                 var hours = Convert.ToInt32(splitCutoffTime[0]);
                                 hours = hours >= 12 ? hours % 12 : hours;
@@ -1139,15 +1135,15 @@ namespace HM.Operations.Secure.Web.Controllers
                             }
                         }
                         accountDetail.WirePortalCutoff.CutOffTimeZone = string.IsNullOrWhiteSpace(account["Cutoff Time Zone"]) ? "EST" : account["Cutoff Time Zone"];
-                        if (!string.IsNullOrWhiteSpace(account["Days to wire per V.D"]))
+                        if(!string.IsNullOrWhiteSpace(account["Days to wire per V.D"]))
                         {
                             var wirePerDays = account["Days to wire per V.D"].Replace(" Days", "").Replace(" Day", "").Trim();
                             accountDetail.WirePortalCutoff.DaystoWire = Convert.ToInt32(wirePerDays);
                         }
 
-                        if (!string.IsNullOrWhiteSpace(account["Cash Sweep"]) && account["Cash Sweep"] == "Yes")
+                        if(!string.IsNullOrWhiteSpace(account["Cash Sweep"]) && account["Cash Sweep"] == "Yes")
                         {
-                            if (!string.IsNullOrWhiteSpace(account["Holdback Amount"]))
+                            if(!string.IsNullOrWhiteSpace(account["Holdback Amount"]))
                                 accountDetail.HoldbackAmount = Convert.ToDouble(account["Holdback Amount"]);
 
                             accountDetail.SweepComments = account["Sweep Comments"];
@@ -1163,7 +1159,7 @@ namespace HM.Operations.Secure.Web.Controllers
                         accountDetail.BeneficiaryAccountNumber = account["Beneficiary Account Number"];
                         accountDetail.Beneficiary.BICorABA = account["Beneficiary BIC or ABA"];
                         var beneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.BeneficiaryType == "ABA") && x.BICorABA == accountDetail.Beneficiary.BICorABA);
-                        if (beneficiaryBiCorAba != null)
+                        if(beneficiaryBiCorAba != null)
                         {
                             accountDetail.Beneficiary.onBoardingAccountBICorABAId = beneficiaryBiCorAba.onBoardingAccountBICorABAId;
                             accountDetail.Beneficiary.BankName = beneficiaryBiCorAba.BankName;
@@ -1183,7 +1179,7 @@ namespace HM.Operations.Secure.Web.Controllers
                         accountDetail.IntermediaryAccountNumber = account["Intermediary Account Number"];
                         accountDetail.Intermediary.BICorABA = account["Intermediary BIC or ABA"];
                         var intermediaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.IntermediaryType == "ABA") && x.BICorABA == accountDetail.Intermediary.BICorABA);
-                        if (intermediaryBiCorAba != null)
+                        if(intermediaryBiCorAba != null)
                         {
                             accountDetail.Intermediary.onBoardingAccountBICorABAId = intermediaryBiCorAba.onBoardingAccountBICorABAId;
                             accountDetail.Intermediary.BankName = intermediaryBiCorAba.BankName;
@@ -1202,7 +1198,7 @@ namespace HM.Operations.Secure.Web.Controllers
                         accountDetail.UltimateBeneficiaryType = account["Ultimate Beneficiary Type"];
                         accountDetail.UltimateBeneficiary.BICorABA = account["Ultimate Beneficiary BIC or ABA"];
                         var ultimateBeneficiaryBiCorAba = accountBicorAba.FirstOrDefault(x => x.IsABA == (accountDetail.UltimateBeneficiaryType == "ABA") && x.BICorABA == accountDetail.UltimateBeneficiary.BICorABA);
-                        if (ultimateBeneficiaryBiCorAba != null && accountDetail.UltimateBeneficiaryType != "Account Name")
+                        if(ultimateBeneficiaryBiCorAba != null && accountDetail.UltimateBeneficiaryType != "Account Name")
                         {
                             accountDetail.UltimateBeneficiary.onBoardingAccountBICorABAId = ultimateBeneficiaryBiCorAba.onBoardingAccountBICorABAId;
                             accountDetail.UltimateBeneficiary.BankName = ultimateBeneficiaryBiCorAba.BankName;
@@ -1236,7 +1232,7 @@ namespace HM.Operations.Secure.Web.Controllers
                             : DateTime.Now;
                         accountDetail.IsDeleted = false;
 
-                        if (accountDetail.hmFundId != 0)
+                        if(accountDetail.hmFundId != 0)
                             FundAccountManager.AddAccount(accountDetail, UserName);
                     }
                 }
@@ -1326,8 +1322,8 @@ namespace HM.Operations.Secure.Web.Controllers
         public JsonResult UploadAccountFiles(long accountId)
         {
             var aDocuments = new List<onBoardingAccountDocument>();
-            if (aDocuments == null) throw new ArgumentNullException(nameof(aDocuments));
-            if (accountId <= 0)
+            if(aDocuments == null) throw new ArgumentNullException(nameof(aDocuments));
+            if(accountId <= 0)
             {
                 return Json(new
                 {
@@ -1342,19 +1338,19 @@ namespace HM.Operations.Secure.Web.Controllers
                 }, JsonContentType, JsonContentEncoding);
             }
 
-            for (var i = 0; i < Request.Files.Count; i++)
+            for(var i = 0; i < Request.Files.Count; i++)
             {
                 var file = Request.Files[i];
 
-                if (file == null)
+                if(file == null)
                     throw new Exception("unable to retrieve file information");
                 var fileName = $"{FileSystemManager.OpsSecureAccountsFileUploads}{accountId}\\{file.FileName}";
                 var fileInfo = new FileInfo(fileName);
 
-                if (fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
+                if(fileInfo.Directory != null && !Directory.Exists(fileInfo.Directory.FullName))
                     Directory.CreateDirectory(fileInfo.Directory.FullName);
 
-                if (System.IO.File.Exists(fileInfo.FullName))
+                if(System.IO.File.Exists(fileInfo.FullName))
                 {
                     FundAccountManager.RemoveAccountDocument(accountId, file.FileName);
                     System.IO.File.Delete(fileInfo.FullName);

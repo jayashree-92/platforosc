@@ -385,11 +385,7 @@ HmOpsApp.controller("SSITemplateListController", function ($scope, $http, $timeo
                                     "mRender": function (tdata) {
                                         if (tdata === "Agreement")
                                             return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Agreement</label>";
-                                        if (tdata === "DDA")
-                                            return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">DDA</label>";
-                                        if (tdata == "Custody")
-                                            return "<label class=\"label ng-show-only label-primary\" style=\"font-size: 12px;\">Custody</label>";
-                                        return "";
+                                        return "<label class='label label-default'>" + tdata + "</label>";
                                     }
                                 },
                                 { "sTitle": "Account Number", "mData": "AccountNumber", },

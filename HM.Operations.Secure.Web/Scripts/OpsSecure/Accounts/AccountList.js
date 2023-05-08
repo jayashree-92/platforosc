@@ -1,7 +1,7 @@
 ﻿$("#liAccounts").addClass("active");
 HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, $filter, $q) {
     $("#onboardingMenu").addClass("active");
-    var accountTable, accountSsiTemplateTable,accountClearingBrokerTable, tblSsiTemplateRow;
+    var accountTable, accountSsiTemplateTable, accountClearingBrokerTable, tblSsiTemplateRow;
     var myDropZone;
 
     $scope.onBoardingAccountDetails = [];
@@ -16,7 +16,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.ContactType = [{ id: "Cash", text: "Cash" }, { id: "Custody", text: "Custody" }, { id: "PB Client Service", text: "PB Client Service" }, { id: "Margin", text: "Margin" }];
     $scope.accountPurpose = [];
     $scope.accountStatus = [{ id: "Requested", text: "Requested" }, { id: "Reserved", text: "Reserved" }, { id: "Open", text: "Open" }, { id: "Requested Closure", text: "Requested Closure" }, { id: "Closed", text: "Closed" }];
-    $scope.entityTypes = [{ id: "Agreement", text: "Agreement" }, { id: "Agreement (Reporting Only)", text: "Agreement (Reporting Only)" }, { id: "DDA", text: "DDA" }, { id: "Custody", text: "Custody" }];
+    $scope.entityTypes = [{ id: "Agreement", text: "Agreement" }, { id: "Agreement (Reporting Only)", text: "Agreement (Reporting Only)" }];
     $scope.SwiftGroups = [];
     $scope.SwiftGroupData = [];
     var tblAccountDocuments;
@@ -237,8 +237,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.fundsWithAgreements = response.data.fundsWithAgreements;
             $scope.agreements = response.data.agreements;
             $scope.counterpartyFamilies = response.data.counterpartyFamilies;
-            $scope.ddaAgreementTypeId = response.data.ddaAgreementTypeId;
-            $scope.custodyAgreementTypeId = response.data.custodyAgreementTypeId;
         });
     }
 
@@ -262,12 +260,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             data: $scope.funds
         });
 
-        $("#liBroker").select2({
-            placeholder: "Select a broker",
-            allowClear: true,
-            data: $scope.counterpartyFamilies
-        });
-
+     
         $("#liAgreement").select2({
             placeholder: "Select an agreement",
             allowClear: true,
@@ -283,7 +276,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $("#liAccountType").select2("val", "");
         $("#liFund").select2("val", "");
         $("#liAgreement").select2("val", "");
-        $("#liBroker").select2("val", "");
+        
         if (!$scope.isEdit) {
             $scope.AgreementTypeId = 0;
             $scope.CounterpartyFamilyId = 0;
@@ -291,8 +284,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.AgrementType = "";
             $scope.broker = "";
         }
-        $("#spnBroker").hide();
-        $("#spnBrokerFamily").hide();
         $("#spnAgreement").hide();
 
 
@@ -305,22 +296,12 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         var thisFunds = [];
         $scope.AgreementTypeId = 0;
         if ($(this).val() != "" && $(this).val() != undefined) {
-            if ($(this).val() == "Agreement" || $(this).val() == "Agreement (Reporting Only)") {
-                $("#spnBroker").hide();
-                $("#spnBrokerFamily").hide();
-                $("#spnAgreement").show();
-                thisFunds = angular.copy($scope.fundsWithAgreements);
-            } else {
-                $scope.AgreementTypeId = angular.copy($(this).val() == "DDA" ? $scope.ddaAgreementTypeId : $scope.custodyAgreementTypeId);
-                $("#spnBroker").show();
-                $("#spnBrokerFamily").show();
-                $("#spnAgreement").hide();
-                thisFunds = angular.copy($scope.funds);
-            }
+
+            $("#spnAgreement").show();
+            thisFunds = angular.copy($scope.fundsWithAgreements);
+
         } else {
             $scope.AgreementTypeId = 0;
-            $("#spnBroker").hide();
-            $("#spnBrokerFamily").hide();
             $("#spnAgreement").hide();
         }
 
@@ -331,7 +312,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         });
         $("#liFund").select2("val", "");
         $("#liAgreement").select2("val", "");
-        $("#liBroker").select2("val", "");
 
         $scope.CounterpartyFamilyId = 0;
         $scope.AgrementType = "";
@@ -391,20 +371,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 $scope.broker = broker.text;
             $scope.loadAccountData();
             $scope.fnGetSwiftGroup();
-        }
-    });
-
-    angular.element(document).on("change", "#liBroker", function (event) {
-        event.stopPropagation();
-        $scope.CounterpartyId = $(this).val();
-
-        if ($(this).val() > 0) {
-            $scope.CounterpartyName = $(this).select2("data").text;
-            $scope.CounterpartyFamilyName = $(this).select2("data").familyText;
-            $scope.CounterpartyFamilyId = $(this).select2("data").familyId;
-            $scope.IsBNYMBroker = $scope.CounterpartyName == "The Bank of New York Mellon";
-            $scope.$apply();
-            $scope.loadAccountData();
         }
     });
 
@@ -546,12 +512,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                                         switch (tData) {
                                             case "Agreement": return "<label class='label label-success'>" + tData + "</label>";
                                             case "Agreement (Reporting Only)": return "<label class='label label-default'>" + tData + "</label>";
-                                            case "DDA": return "<label class='label label-warning'>" + tData + "</label>";
-                                            case "Custody": return "<label class='label label-info'>" + tData + "</label>";
                                         }
                                         return "<label class='label label-default'>" + tData + "</label>";
                                     }
-                                    return "";
+                                    return "unknown data";
                                 },
                                 sp: function (tData) { return tData; }
                             },
@@ -566,7 +530,20 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         { "mData": "CounterpartyName", "sTitle": "Counterparty" },
                         { "mData": "Account.AccountName", "sTitle": "Account Name" },
                         { "mData": "AccountNumber", "sTitle": "Account Number" },
-                        { "mData": "Account.AccountPurpose", "sTitle": "Account Type" },
+                        //{ "mData": "Account.AccountPurpose", "sTitle": "Account Type" },
+                        {
+                            "mData": "Account.MarginExposureTypeID", "sTitle": "Agreement Type", "mRender": function (tData) {
+                                var agrType = $.grep($scope.agreementTypes, function (v) { return v.id == tData; })[0];
+
+                                if (agrType == undefined)
+                                    return "un-known";
+
+                                return agrType.text;
+                            }
+                        },
+
+
+
                         { "mData": "Account.AccountStatus", "sTitle": "Account Status" },
                         { "mData": "Account.Currency", "sTitle": "Currency" },
                         { "mData": "Account.Description", "sTitle": "Description" },
@@ -574,7 +551,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                         { "mData": "Account.AuthorizedParty", "sTitle": "Authorized Party" },
                         { "mData": "Account.CashInstruction", "sTitle": "Cash Instruction Mechanism" },
                         { "mData": "Account.SwiftGroup", "sTitle": "Swift Group", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.SwiftGroup : ""; } },
-                        { "mData": "Account.SwiftGroup", "sTitle": "Senders BIC", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.SendersBIC : ""; } },
+                        { "mData": "Account.SendersBIC", "sTitle": "Senders BIC", "mRender": function (tdata, type, row, meta) { return tdata != null ? tdata.SendersBIC : ""; } },
 
                         { "mData": "Account.CashSweep", "sTitle": "Cash Sweep" },
                         {
@@ -1108,7 +1085,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnGetSwiftGroup = function () {
         if ($scope.CounterpartyFamilyId == undefined)
             return;
-;        $http.get("/FundAccounts/GetAllRelatedSwiftGroup?brokerId=" + $scope.CounterpartyFamilyId).then(function (response) {
+        ; $http.get("/FundAccounts/GetAllRelatedSwiftGroup?brokerId=" + $scope.CounterpartyFamilyId).then(function (response) {
             $scope.SwiftGroups = response.data.swiftGroups;
             $scope.SwiftGroupData = response.data.SwiftGroupData;
 
@@ -1333,8 +1310,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetAccountDescriptions = function () {
-        var agrmTypeId = $scope.AccountType == "DDA" ? $scope.ddaAgreementTypeId : $scope.AccountType == "Custody" ? $scope.custodyAgreementTypeId : $scope.AgreementTypeId;
-        $http.get("/FundAccounts/GetAccountDescriptionsByAgreementTypeId?agreementTypeId=" + agrmTypeId).then(function (response) {
+        $http.get("/FundAccounts/GetAccountDescriptionsByAgreementTypeId?agreementTypeId=" + $scope.AgreementTypeId).then(function (response) {
             $scope.AccountDescriptions = response.data.accountDescriptions;
             $("#liAccountDescriptions0").select2({
                 placeholder: "Select Description",
@@ -1426,8 +1402,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
         if ($scope.detail == "Description") {
-            var agrmTypeId = $scope.AccountType == "DDA" ? $scope.ddaAgreementTypeId : $scope.AccountType == "Custody" ? $scope.custodyAgreementTypeId : $scope.AgreementTypeId;
-            $http.post("/FundAccounts/AddAccountDescriptions", { accountDescription: $("#txtDetail").val(), agreementTypeId: agrmTypeId }).then(function (response) {
+            $http.post("/FundAccounts/AddAccountDescriptions", { accountDescription: $("#txtDetail").val(), agreementTypeId: $scope.AgreementTypeId }).then(function (response) {
                 notifySuccess("Description added successfully");
                 $scope.onBoardingAccountDetails[0].Description = $("#txtDetail").val();
                 $scope.fnGetAccountDescriptions();
@@ -2089,7 +2064,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if ($scope.isEdit)
             $scope.IsContactTypeChanged = true;
     }
-   
+
     $scope.IsContactsUpdated = false;
     $scope.fnUpdateContacts = function (contacts) {
         if ($scope.isEdit) {
@@ -2142,7 +2117,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 clearingBrokerName: $("#txtNewClearingBroker").val(),
             })
         }).then(function (response) {
-            if (response.data != ''){
+            if (response.data != '') {
                 notifyError("Clearing broker - '" + $("#txtNewClearingBroker").val() + "' already added in Fund Account-'" + response.data + "'");
                 return;
             }
@@ -3055,7 +3030,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 aaData: data,
                 "bDestroy": true,
                 "columns": [
-                    { "mData": "ClearingBroker.hmsFundAccountClearingBrokerId", "sTitle": "hmsFundAccountClearingBrokerId", visible: false },                    
+                    { "mData": "ClearingBroker.hmsFundAccountClearingBrokerId", "sTitle": "hmsFundAccountClearingBrokerId", visible: false },
                     {
                         "mData": "AccountName", "sTitle": "Fund Account Name", visible: false
                     },
@@ -3082,7 +3057,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                     },
                     {
                         "mData": "ExposureTypeId", "sTitle": "Exposure Type", mRender: function (tdata) {
-                           var selectedData=  $.grep($scope.agreementTypes, function (value) {
+                            var selectedData = $.grep($scope.agreementTypes, function (value) {
                                 return (value.id == tdata)
                             });
                             return selectedData[0].text;
@@ -3105,14 +3080,14 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                             return "<div  title='" + getDateForToolTip(tdata) + "' date='" + tdata + "'>" + getDateForToolTip(tdata) + "</div>";
                         }
                     },
-                   
+
                 ],
                 "oLanguage": {
                     "sSearch": "",
                     "sInfo": "&nbsp;&nbsp;Showing _START_ to _END_ of _TOTAL_ Clearing Brokers",
                     "sInfoFiltered": " - filtering from _MAX_ Clearing Brokers"
                 },
-                
+
                 //"scrollX": false,
                 "deferRender": true,
                 // "scroller": true,
@@ -3191,12 +3166,10 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                                 switch (tData) {
                                     case "Agreement": return "<label class='label label-success'>" + tData + "</label>";
                                     case "Agreement (Reporting Only)": return "<label class='label label-default'>" + tData + "</label>";
-                                    case "DDA": return "<label class='label label-warning'>" + tData + "</label>";
-                                    case "Custody": return "<label class='label label-info'>" + tData + "</label>";
                                 }
                                 return "<label class='label label-default'>" + tData + "</label>";
                             }
-                            return "";
+                            return "unknown data";
                         }
                     },
                     {

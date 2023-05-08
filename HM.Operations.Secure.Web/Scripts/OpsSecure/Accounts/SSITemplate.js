@@ -43,12 +43,10 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                         if (tdata != null && tdata != "undefinied") {
                             switch (tdata) {
                                 case "Agreement": return "<label class='label label-success'>" + tdata + "</label>";
-                                case "DDA": return "<label class='label label-warning'>" + tdata + "</label>";
-                                case "Custody": return "<label class='label label-info'>" + tdata + "</label>";
                             }
                             return "<label class='label label-default'>" + tdata + "</label>";
                         }
-                        return "";
+                        return "unknown data";
                     }
                 },
                 {
@@ -734,11 +732,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     "mRender": function (tdata) {
                         if (tdata === "Agreement")
                             return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Agreement</label>";
-                        if (tdata === "DDA")
-                            return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">DDA</label>";
-                        if (tdata == "Custody")
-                            return "<label class=\"label ng-show-only label-primary\" style=\"font-size: 12px;\">Custody</label>";
-                        return "";
+                        return "<label class='label label-default'>" + tdata + "</label>";;
                     }
                 },
                 {
@@ -961,11 +955,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                     "mRender": function (tdata) {
                         if (tdata === "Agreement")
                             return "<label class=\"label ng-show-only label-info\" style=\"font-size: 12px;\">Agreement</label>";
-                        if (tdata === "DDA")
-                            return "<label class=\"label ng-show-only label-default\" style=\"font-size: 12px;\">DDA</label>";
-                        if (tdata == "Custody")
-                            return "<label class=\"label ng-show-only label-primary\" style=\"font-size: 12px;\">Custody</label>";
-                        return "";
+                        return "<label class='label label-default'>" + tdata + "</label>";
                     }
                 },
                 {
