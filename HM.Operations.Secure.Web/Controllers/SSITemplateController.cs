@@ -123,7 +123,8 @@ namespace HM.Operations.Secure.Web.Controllers
             var permittedAgreementTypes = OpsSecureSwitches.AllowedAgreementTypesForSSITemplateCreation;
             var accountTypes = OnBoardingDataManager.GetAllAgreementTypes().Where(x => permittedAgreementTypes.Contains(x.Value)).Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList();
             var currencies = FundAccountManager.GetAllCurrencies().Select(currency => new { id = currency, text = currency }).ToList();
-            var addressList = FundAccountManager.GetAllBankAccountAddress().Select(s => new { id = s.AccountName, text = s.AccountName }).OrderBy(s => s.text).ToList();
+            var allBankAccountAddress = FundAccountManager.GetAllBankAccountAddress();
+            var addressList = allBankAccountAddress.Select(s => new { id = s.AccountName, text = s.AccountName }).OrderBy(s => s.text).ToList();
 
             return Json(new
             {
@@ -132,6 +133,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 accountTypes,
                 currencies,
                 addressList,
+                allBankAccountAddress
             });
         }
 
