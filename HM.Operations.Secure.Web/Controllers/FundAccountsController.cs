@@ -296,6 +296,11 @@ namespace HM.Operations.Secure.Web.Controllers
             var fundAccountmap = fundAccounts.ToDictionary(s => s.onBoardingAccountId, v => v);
             var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
             var clearingBrokers = FundAccountManager.GetAllClearingBrokers();
+            var authorizedParties = FundAccountManager.GetAllAuthorizedParty().Select(choice => new
+            {
+                id = choice.AuthorizedParty,
+                text = choice.AuthorizedParty
+            }).OrderBy(x => x.text).ToList();
 
             var allFundAccounts = onBoardingAccounts.AsParallel().Select(account =>
             {
@@ -340,8 +345,10 @@ namespace HM.Operations.Secure.Web.Controllers
                 agreementTypes = agreementTypes.Select(x => new { id = x.Key, text = x.Value }).OrderBy(x => x.text).ToList(),
                 receivingAccountTypes = OpsSecureSwitches.AllowedAgreementTypesForReceivingFundAccounts,
                 disabledAgreementForCashInstructions = OpsSecureSwitches.DisabledAgreementForCashInstructions,
+                agreementTypesToEnableAuthorizedpartyAsCounterparty = OpsSecureSwitches.AgreementTypesToEnableAuthorizedpartyAsCounterparty,
                 OnBoardingAccounts = allFundAccounts,
-                FundAccountClearingBrokers= clearingBrokers
+                FundAccountClearingBrokers = clearingBrokers,
+                AllAuthorizedParties = authorizedParties
             });
         }
 

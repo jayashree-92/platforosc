@@ -119,6 +119,7 @@ namespace Com.HedgeMark.Commons
             AllowedAgreementStatusForFundAccountCreation,
             AllowedAgreementTypesForReceivingFundAccounts,
             DisabledAgreementForCashInstructions,
+            AgreementTypesToEnableAuthorizedpartyAsCounterparty,
             /*Wire settings*/
             AgreementTypesEligibleForSendingWires,
             SwiftBicToEnableField21,
@@ -150,6 +151,7 @@ Disclaimer: This message is Confidential until classified otherwise.
                 CreateSwitch(SwitchKey.AllowedAgreementTypesForReceivingFundAccounts, SwitchType.StringList, Modules.OpsSecure, "FCM,CDA,ISDA,GMRA,MRA,MSFTA,FXPB,CDA Amnd"),
                 CreateSwitch(SwitchKey.AllowedAgreementTypesForSSITemplateCreation , SwitchType.StringList, Modules.OpsSecure,  "ISDA,PB,FCM,CDA,FXPB,GMRA,MSLA,MRA,MSFTA,Listed Options,Non-US Listed Options"),
                 CreateSwitch(SwitchKey.DisabledAgreementForCashInstructions , SwitchType.StringList, Modules.OpsSecure,  "CDA,ISDA,GMRA,MRA,MSFTA"),
+                CreateSwitch(SwitchKey.AgreementTypesToEnableAuthorizedpartyAsCounterparty , SwitchType.StringList, Modules.OpsSecure,  "CDA,FCM"),
 
                 CreateSwitch(SwitchKey.AgreementTypesEligibleForSendingWires, SwitchType.StringList, Modules.WireSettings, "Custody,DDA,PB,Synthetic Prime Brokerage"),
                 CreateSwitch(SwitchKey.SwiftBicToEnableField21, SwitchType.StringList, Modules.WireSettings, "SBOSUS30,SBOSUS3U,CNORLULX,SBOSUS3UIMS"),
