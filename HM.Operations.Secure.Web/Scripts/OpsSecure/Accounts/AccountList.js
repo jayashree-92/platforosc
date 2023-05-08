@@ -444,11 +444,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $scope.agreementTypes = response.data.agreementTypes;
             $scope.receivingAccountTypes = response.data.receivingAccountTypes;
             $scope.DisabledAgreementForCashInstructions = response.data.disabledAgreementForCashInstructions;
+            $scope.AgreementTypesToEnableAuthorizedpartyAsCounterparty = response.data.agreementTypesToEnableAuthorizedpartyAsCounterparty;
             if (response.data.OnBoardingAccounts.length > 0)
                 $("#btnAccountStatusButtons").show();
             $scope.allAccountList = response.data.OnBoardingAccounts;
             $scope.accountDetail = response.data.OnBoardingAccounts[0];
             $scope.clearingBrokersList = response.data.FundAccountClearingBrokers;
+            $scope.authorizedPartyData = response.data.AllAuthorizedParties;
             if ($("#accountTable").hasClass("initialized")) {
                 accountTable.clear();
                 accountTable.rows.add($scope.allAccountList);
@@ -1065,21 +1067,19 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     }
 
     $scope.fnGetAuthorizedParty = function () {
-        $http.get("/FundAccounts/GetAllAuthorizedParty").then(function (response) {
-            $scope.authorizedPartyData = response.data.AuthorizedParties;
+        var authorizedPartyData = $scope.AgreementTypesToEnableAuthorizedpartyAsCounterparty.indexOf($scope.AgreementType)>-1 ? $.grep($scope.authorizedPartyData, function (v) { return v.text == "Counterparty" }) : $scope.authorizedPartyData;
+        $scope.IsAuthorizedPartyCounterParty = $scope.onBoardingAccountDetails[0].AuthorizedParty == "Counterparty" && $scope.AgreementTypesToEnableAuthorizedpartyAsCounterparty.indexOf($scope.AgreementType) > -1;
 
-            $("#liAuthorizedParty0").select2({
-                placeholder: "Select a Authorized Party",
-                allowClear: true,
-                data: response.data.AuthorizedParties
-            });
-
-            if ($scope.onBoardingAccountDetails[0].AuthorizedParty != null && $scope.onBoardingAccountDetails[0].AuthorizedParty != "undefined") {
-                $("#liAuthorizedParty0").select2("val", $scope.onBoardingAccountDetails[0].AuthorizedParty);
-                $scope.fnAuthorizedPartyChange();
-            }
-
+        $("#liAuthorizedParty0").select2({
+            placeholder: "Select a Authorized Party",
+            allowClear: true,
+            data: authorizedPartyData
         });
+
+        if ($scope.onBoardingAccountDetails[0].AuthorizedParty != null && $scope.onBoardingAccountDetails[0].AuthorizedParty != "undefined") {
+            $("#liAuthorizedParty0").select2("val", $scope.onBoardingAccountDetails[0].AuthorizedParty);
+            $scope.fnAuthorizedPartyChange();
+        }       
     }
 
     $scope.fnGetSwiftGroup = function () {
@@ -1132,9 +1132,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#txtSender0").val("");
         }
     }
-
+    $scope.IsAuthorizedPartyCounterParty = false;
     $scope.fnAuthorizedPartyChange = function () {
-
         if ($scope.onBoardingAccountDetails[0].AuthorizedParty != "Innocap") {
             $scope.onBoardingAccountDetails[0].IsReceivingAccount = true;
             $scope.onBoardingAccountDetails[0].AccountModule = null;
@@ -1149,6 +1148,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
         else
             $scope.onBoardingAccountDetails[0].IsReceivingAccount = angular.copy($scope.onBoardingAccountDetails[0].IsReceivingAccountType);
+
+        $scope.IsAuthorizedPartyCounterParty = $scope.onBoardingAccountDetails[0].AuthorizedParty == "Counterparty" && $scope.AgreementTypesToEnableAuthorizedpartyAsCounterparty.indexOf($scope.AgreementType) > -1;
     }
 
     $scope.fnCutOffTime = function (currency, cashInstruction) {

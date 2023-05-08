@@ -572,23 +572,29 @@ HmOpsApp.controller("ReportScheduleCtrl", function ($scope, $http, $timeout, $q,
 
                                     var totalEmails = filteredInternal.length + filteredExternals.length;
 
-                                    var customString = "";
+                                    var allEmails = "";
+                                    var allExternals = "";
                                     if (filteredInternal.length > 1) {
-                                        customString = filteredInternal[0] + ";" + filteredInternal[1] + ";";
+                                        allEmails = filteredInternal[0] + ";" + filteredInternal[1] + ";";
                                     } else {
                                         if (filteredInternal.length > 0)
-                                            customString += filteredInternal[0] + ";";
-                                        if (filteredExternals.length > 0)
-                                            customString += filteredExternals[0] + ";";
-                                        if (filteredInternal.length == 0 && filteredExternals.length > 1)
-                                            customString += filteredExternals[1] + ";";
+                                            allEmails += filteredInternal[0] + ";";
+                                        if (filteredExternals.length > 0) {
+                                            allEmails += filteredExternals[0] + ";";
+                                            allExternals += filteredExternals[0] + ";";
+                                        }
+                                        if (filteredInternal.length == 0 && filteredExternals.length > 1) {
+                                            allEmails += filteredExternals[1] + ";";
+                                            allExternals += filteredExternals[1] + ";";
+                                        }
+
                                     }
 
-                                    var filteredExternalStr = "<b><i>" + filteredExternals.join("</i></b>,<br/><b><i>") + "</i></b>";
+                                    var filteredExternalStr = "<b><i>" + filteredExternals.join('</i></b>,<br/><b><i>') + "</i></b>";
 
-                                    var moreStr = (totalEmails > 2 ? " and <span class=\"spnScheculeEmailPopOver\"  style=\"text-decoration:underline;\" data-container=\"body\" data-toggle=\"popover\" data-html=\"true\" data-trigger=\"hover\" data-placement=\"left\" data-content=\"" + filteredInternal.join(",<br/>") + ",<br/>" + filteredExternalStr + "\"><b>" + (totalEmails - 2) + " more</b></span>" : "");
+                                    var moreStr = (totalEmails > 2 ? " and <span class=\"spnScheculeEmailPopOver\"  style=\"text-decoration:underline;\" data-container=\"body\" data-toggle=\"popover\" data-html=\"true\" data-trigger=\"hover\" data-placement=\"left\" data-content=\"" + filteredInternal.join(',<br/>') + ",<br/>" + filteredExternalStr + "\"><b>" + (totalEmails - 2) + " more</b></span>" : "");
 
-                                    var finalString = $(this).AutoCompleteEmail("formatEmails", [customString, row.Schedule.ExternalToApproved]) + moreStr;
+                                    var finalString = $(this).AutoCompleteEmail("formatEmails", [allEmails, allExternals, row.Schedule.ExternalToApproved]) + moreStr;
 
                                     if (finalString.trim() == "")
                                         return "-";

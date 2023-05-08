@@ -8,6 +8,7 @@ namespace Com.HedgeMark.Commons
     public class ExternalSftpTransfer
     {
         public static DirectoryInfo ExternalFileDropLocation => new DirectoryInfo(ConfigurationManagerWrapper.StringSetting("ExternalSftpOutgoingFileDropPath", "C://ManagedAccountsFilePath//ExternalSftpOutgoingFileDropPath/Ops-Secure/"));
+       
         public static List<string> ExternalClients { get; set; }
 
         static ExternalSftpTransfer()

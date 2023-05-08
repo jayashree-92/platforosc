@@ -13,17 +13,3 @@ FROM onboardingAccount TGT , HM.HMADMIN.vw_CounterpartyAgreements SRC
 WHERE TGT.dmaCounterpartyId = SRC.dmaCounterpartyOnboardId AND TGT.hmFundId = SRC.FundMapId
 AND TGT.AccountType = SRC.AgreementType AND TGT.IsDeleted=0 AND TGT.AccountType In ('DDA' ,'Custody') 
 AND hmFundId !=0 AND dmaCounterpartyId is not null;
-
-
---UPDATE TGT SET TGT.AccountType = 'Agreement'
---FROM onboardingAccount TGT , HM.HMADMIN.vw_CounterpartyAgreements SRC 
---WHERE TGT.dmaCounterpartyId = SRC.dmaCounterpartyOnboardId AND TGT.hmFundId = SRC.FundMapId
---AND TGT.AccountType = SRC.AgreementType AND TGT.IsDeleted=0 AND TGT.AccountType In ('DDA' ,'Custody') 
---AND hmFundId !=0 AND dmaCounterpartyId is not null;
-
-
-
---select SRC.AgreementType,TGT.AccountType FROM onboardingAccount TGT , HM.HMADMIN.vw_CounterpartyAgreements SRC 
---WHERE TGT.dmaCounterpartyId = SRC.dmaCounterpartyOnboardId AND TGT.hmFundId = SRC.FundMapId
---AND TGT.AccountType = SRC.AgreementType AND TGT.IsDeleted=0 AND TGT.AccountType In ('DDA' ,'Custody') 
---AND hmFundId !=0 AND dmaCounterpartyId is not null

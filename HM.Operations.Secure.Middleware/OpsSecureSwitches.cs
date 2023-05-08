@@ -20,11 +20,12 @@ namespace HM.Operations.Secure.Middleware
         public static List<string> AllowedAgreementStatusForFundAccountCreation => GetSwitchValue(SwitchKey.AllowedAgreementStatusForFundAccountCreation);
         public static List<string> AllowedAgreementTypesForReceivingFundAccounts => GetSwitchValue(SwitchKey.AllowedAgreementTypesForReceivingFundAccounts);
         public static List<string> DisabledAgreementForCashInstructions => GetSwitchValue(SwitchKey.DisabledAgreementForCashInstructions);
+        public static List<string> AgreementTypesToEnableAuthorizedpartyAsCounterparty => GetSwitchValue(SwitchKey.AgreementTypesToEnableAuthorizedpartyAsCounterparty);
         public static List<string> TreasuryReportAgreementTypesToUseMarginExcessOrDeficit => GetSwitchValue(SwitchKey.TreasuryReportAgreementTypesToUseMarginExcessOrDeficit);
         public static List<string> SwiftBicToEnableField21 => GetSwitchValue(SystemSwitches.SwitchKey.SwiftBicToEnableField21);
         public static List<string> SwiftGroupToIncludeWirePurposeInWireMessage => OpsSecureSwitches.GetSwitchValue(Switches.SwitchKey.SwiftGroupToIncludeWirePurposeInWireMessage);
         public static int SchedulerProcessId => (int)GetSwitchValue(SwitchKey.SchedulerProcessId);
-
+        public static bool ShouldSendDashboardExternalMailToConfiguredDomains => (bool)GetSwitchValue(SwitchKey.ShouldSendDashboardExternalMailToConfiguredDomains);
         public static void ResetSwitches()
         {
             InitializeAllSwitches();

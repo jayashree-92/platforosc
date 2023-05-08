@@ -12,12 +12,12 @@ namespace HM.Operations.Secure.DataModel
     using System;
     using System.Collections.Generic;
     
-    public partial class vw_EmailDomainForClients
+    public partial class vw_ExternalEmailDomain
     {
         public int RowId { get; set; }
-        public long dmaClientOnBoardId { get; set; }
-        public string ClientLegalEntityName { get; set; }
-        public string ClientShortName { get; set; }
-        public string DomainName { get; set; }
+        public long dmaOnBoardingTypeId { get; set; }
+        public string Type { get; set; }
+        public Nullable<long> dmaOnBoardingEntityId { get; set; }
+        public string Domain { get; set; }
     }
 }

@@ -379,14 +379,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 }
             }
         });
-    }
-
-    $scope.fnGetAccountAddressList = function () {
-        $http.get("/FundAccounts/GetAllBankAccountAddress").then(function (response) {
-            $scope.bankAddressList = response.data.addressList;
-
-        });
-    }
+    }   
 
     $("#liUltimateBeneficiaryType").on("change", function (e) {
         $("#liUltimateBeneficiaryBICorABA").select2("val", "").trigger("change");
@@ -413,6 +406,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             $scope.AccountTypes = response.data.accountTypes;
             $scope.currencies = response.data.currencies;
             $scope.accountAddressList = response.data.addressList;
+            $scope.bankAddressList = response.data.allBankAccountAddress;
 
             $("#liSSITemplateType").select2({
                 placeholder: "Select Template Type",
@@ -461,7 +455,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 data: $scope.messageTypes
             });
             $scope.fnGetBicorAba(false);
-            $scope.fnGetAccountAddressList();
 
             $("#liUltimateBeneficiaryAccount").select2({
                 placeholder: "Select Account",

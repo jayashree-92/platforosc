@@ -27,6 +27,7 @@ namespace HM.Operations.Secure.Middleware
                         select new HFundBasic()
                         {
                             HmFundId = fnd.HFund.hmFundId,
+                            ClientId = fnd.HFund.dmaClientOnBoardId ?? 0,
                             OnBoardFundId = fnd.HFund.OnBoardFundId ?? 0,
                             PreferredFundName = fnd.PreferredFundName ?? "Unknown Fund-" + fnd.HFund.hmFundId,
                             FundType = "DMA",
@@ -77,6 +78,7 @@ namespace HM.Operations.Secure.Middleware
     public class HFundBasic
     {
         public long HmFundId { get; set; }
+        public long ClientId { get; set; }
         public long OnBoardFundId { get; set; }
         public string PreferredFundName { get; set; }
         public string LegalFundName { get; set; }
