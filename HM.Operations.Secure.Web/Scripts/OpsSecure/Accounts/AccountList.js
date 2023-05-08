@@ -1137,7 +1137,6 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         $scope.IsAuthorizedPartyCounterParty = $scope.onBoardingAccountDetails[0].AuthorizedParty == "Counterparty" && $scope.AgreementTypesToEnableAuthorizedpartyAsCounterparty.indexOf($scope.AgreementType) > -1;
 
         if ($scope.onBoardingAccountDetails[0].AuthorizedParty != "Innocap" && !$scope.IsAuthorizedPartyCounterParty) {
-            $scope.onBoardingAccountDetails[0].IsReceivingAccount = true;
             $scope.onBoardingAccountDetails[0].SwiftGroupId = null;
             $scope.onBoardingAccountDetails[0].SwiftGroup = null;
             $scope.onBoardingAccountDetails[0].CashSweepTime = null;
@@ -1148,6 +1147,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             if (!$scope.IsAuthorizedPartyCounterParty) {
                 $scope.onBoardingAccountDetails[0].AccountModule = null;
                 $("#liAccountModule_0").select2("val", null);
+                $scope.onBoardingAccountDetails[0].IsReceivingAccount = true;
             }
         }
         else
