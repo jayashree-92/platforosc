@@ -1090,11 +1090,13 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     $scope.fnGetAuthorizedParty = function () {
         $http.get("/FundAccounts/GetAllAuthorizedParty").then(function (response) {
             $scope.authorizedPartyData = response.data.AuthorizedParties;
+            var authorizedPartyData = $scope.AgreementType == "FCM" || $scope.AgreementType == "CDA" ? $.grep(response.data.AuthorizedParties, function (v) { return v.text == "Counterparty" }) : response.data.AuthorizedParties;
+            $scope.IsAuthorizedPartyCounterParty = $scope.onBoardingAccountDetails[0].AuthorizedParty == "Counterparty" && ($scope.AgreementType == "FCM" || $scope.AgreementType == "CDA");
 
             $("#liAuthorizedParty0").select2({
                 placeholder: "Select a Authorized Party",
                 allowClear: true,
-                data: response.data.AuthorizedParties
+                data: authorizedPartyData
             });
 
             if ($scope.onBoardingAccountDetails[0].AuthorizedParty != null && $scope.onBoardingAccountDetails[0].AuthorizedParty != "undefined") {
@@ -1155,9 +1157,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#txtSender0").val("");
         }
     }
-
+    $scope.IsAuthorizedPartyCounterParty = false;
     $scope.fnAuthorizedPartyChange = function () {
-
         if ($scope.onBoardingAccountDetails[0].AuthorizedParty != "Innocap") {
             $scope.onBoardingAccountDetails[0].IsReceivingAccount = true;
             $scope.onBoardingAccountDetails[0].AccountModule = null;
@@ -1172,6 +1173,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         }
         else
             $scope.onBoardingAccountDetails[0].IsReceivingAccount = angular.copy($scope.onBoardingAccountDetails[0].IsReceivingAccountType);
+
+        $scope.IsAuthorizedPartyCounterParty = $scope.onBoardingAccountDetails[0].AuthorizedParty == "Counterparty" && ($scope.AgreementType == "FCM" || $scope.AgreementType == "CDA");
     }
 
     $scope.fnCutOffTime = function (currency, cashInstruction) {
