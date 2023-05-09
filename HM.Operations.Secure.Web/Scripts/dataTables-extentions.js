@@ -793,10 +793,10 @@ function renderDataAsCurrency(tdata, type, row) {
     return $.convertToCurrency(tdata.toString(), 2);
 }
 
-var constructCSVstring = function (dtDatatable) {
+var constructCSVstring = function (dtDatatable, bIgnoreLastColumn) {
 
     var allColumns = dtDatatable.columns().nodes().to$().toArray();
-    var totalColumns = allColumns.length;
+    var totalColumns = bIgnoreLastColumn == undefined || bIgnoreLastColumn == false ? allColumns.length : allColumns.length - 1;
 
     var rows = [];
     var headerRow = "";

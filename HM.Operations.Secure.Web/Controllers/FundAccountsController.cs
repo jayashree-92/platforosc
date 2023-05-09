@@ -45,7 +45,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
             var agreementData = OnBoardingDataManager.GetAgreementsForOnboardingAccountPreloadData(hFundIds, AuthorizedSessionData.IsPrivilegedUser);
             var agreementFundIds = agreementData.Where(s => s.HMFundId > 0).Select(s => s.HMFundId).ToList();
-            var fundsWithAgreements = hFundIds.Where(s => agreementFundIds.Contains(s)).ToList();
+            var fundsWithAgreements = funds.Where(s => agreementFundIds.Contains(s.id)).ToList();
             var agreements = agreementData.Select(s => new
             {
                 id = s.AgreementOnboardingId,
@@ -886,7 +886,7 @@ namespace HM.Operations.Secure.Web.Controllers
             foreach(var account in onBoardingAccounts)
             {
                 var isFundAccountAvailable = fundAccountMap.TryGetValue(account.onBoardingAccountId, out var fndAccVal);
-                  
+
 
                 var row = new Row
                 {
