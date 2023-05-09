@@ -10,7 +10,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $scope.reasonDetail = "";
     $scope.description = "";
     $scope.BrokerTemplateTypeId = 2;
-    $scope.IsBNYMBroker = false;
     $scope.IsPendingApproval = false;
     $scope.IsApproved = false;
     $scope.IsWireReadOnly = $("#IsWireReadOnly").val() === "true";
@@ -476,7 +475,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
     $("#liBroker").change(function () {
         if ($scope.SSITemplateType == "Broker") {
             $scope.broker = ($(this).val() > 0) ? $("#liBroker").select2("data").text : "";
-            $scope.IsBNYMBroker = $scope.broker == "The Bank of New York Mellon";
             $scope.ssiTemplate.TemplateName = $scope.broker + " - " + $scope.accountType + " - " + $scope.currency + " - " + $scope.reasonDetail;
         }
     });
@@ -556,7 +554,6 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
                 $scope.currency = templateListBank[1].trim();
                 $scope.reasonDetail = templateListBank[2].trim();
             }
-            $scope.IsBNYMBroker = $scope.broker == "The Bank of New York Mellon";
             $scope.IsPendingApproval = $scope.ssiTemplate.SSITemplateStatus == "Pending Approval";
             $scope.IsApproved = $scope.ssiTemplate.SSITemplateStatus == "Approved";
 
@@ -1385,7 +1382,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             return;
         }
 
-        if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0) && !$scope.IsBNYMBroker) {
+        if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0)) {
             notifyWarning("Please add atleast one Callback check to approve SSI template");
             return;
         }
@@ -1397,7 +1394,7 @@ HmOpsApp.controller("SSITemplateCtrl", function ($scope, $http, $timeout, $filte
             //  $("#btnSaveCommentAgreements").addClass("btn-warning").removeClass("btn-success").removeClass("btn-info");
             $("#btnSaveCommentAgreements").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
         } else if (statusAction == "Approve") {
-            if ($scope.IsKeyFieldsChanged && !$scope.IsBNYMBroker) {
+            if ($scope.IsKeyFieldsChanged) {
                 notifyWarning("Please add one Callback check to approve account");
                 return;
             }
