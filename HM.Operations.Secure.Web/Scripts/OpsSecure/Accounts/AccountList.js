@@ -31,7 +31,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
     //var rejectedStatus = "Rejected";
     var pendingStatus = "Pending Approval";
     var createdStatus = "Created";
-    $scope.IsBNYMBroker = false;
+    
     $scope.IsPendingApproval = false;
     $scope.IsApproved = false;
     $scope.IsWireReadOnly = $("#IsWireReadOnly").val() === "true";
@@ -711,8 +711,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
         if (account.onBoardingAccountStatus != createdStatus) {
             $("#btnAccountStatusButtons button[id='revert']").removeClass("disabled");
         }
-        $scope.IsBNYMBroker = $scope.CounterpartyName == "The Bank of New York Mellon";
-
+        
         $("#btnEdit").prop("disabled", false);
 
         $("#btnDel").prop("disabled", false);
@@ -876,7 +875,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             return;
         }
 
-        if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0) && !$scope.IsBNYMBroker && $scope.onBoardingAccountDetails[0].AccountStatus != "Closed") {
+        if (statusAction == "Approve" && ($scope.CallBackChecks == undefined || $scope.CallBackChecks.length == 0) && $scope.onBoardingAccountDetails[0].AccountStatus != "Closed") {
             notifyWarning("Please add at-least one Callback check to approve account");
             return;
         }
@@ -888,7 +887,7 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
             $("#btnSaveComment").html('<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Request for approval');
         } else if (statusAction == "Approve") {
 
-            if ($scope.IsKeyFieldsChanged && !$scope.IsBNYMBroker && $scope.onBoardingAccountDetails[0].AccountStatus != "Closed") {
+            if ($scope.IsKeyFieldsChanged && $scope.onBoardingAccountDetails[0].AccountStatus != "Closed") {
                 notifyWarning("Please add one Callback check to approve account");
                 return;
             }
