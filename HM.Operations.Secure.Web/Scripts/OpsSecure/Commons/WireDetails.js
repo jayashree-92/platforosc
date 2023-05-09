@@ -84,7 +84,12 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                     "render": function (tdata, type, row) {
                         switch (tdata) {
                             case 1: return "<label class='label label-default'>Drafted</label>";
-                            case 2: return "<label class='label label-warning'>Pending</label>";
+                            case 2:
+                                var isPast = moment().add(row.Deadline).isBefore(moment());
+                                if (isPast) {
+                                    return "<label class='label label-warning font-danger'>Overdue</label>";
+                                }
+                                return "<label class='label label-warning'>Pending</label>";
                             case 3: return "<label class='label label-success'>Approved</label>";
                             case 4: return row.HMWire.SwiftStatusId == 1 ? "<label class='label label-danger'>Rejected</label>" : "<label class='label label-default'>Cancelled</label>";
                             case 5: return "<label class='label label-danger'>Failed</label>";
@@ -135,7 +140,13 @@ HmOpsApp.controller("wireDetailsCtrl", function ($scope, $http, $timeout, $opsSh
                             break;
                         case "Initiated":
                         case "Pending":
-                            $(row).addClass("warning");
+                            var isPast = moment().add(data.Deadline).isBefore(moment());
+                            if (isPast) {
+                                $(row).addClass("causion");
+                            }
+                            else {
+                                $(row).addClass("warning");
+                            }
                             break;
                         case "Approved":
                         case "Processing":

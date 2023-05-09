@@ -1190,6 +1190,31 @@ body > .popover .popover-content {
     /*font-weight: bolder;*/
 }
 
+
+.table > thead > tr > td.causion,
+.table > tbody > tr > td.causion,
+.table > tfoot > tr > td.causion,
+.table > thead > tr > th.causion,
+.table > tbody > tr > th.causion,
+.table > tfoot > tr > th.causion,
+.table > thead > tr.causion > td,
+.table > tbody > tr.causion > td,
+.table > tfoot > tr.causion > td,
+.table > thead > tr.causion > th,
+.table > tbody > tr.causion > th,
+.table > tfoot > tr.causion > th {
+    background-color: #f5e9d2;
+    cursor: pointer !important;
+    /*font-weight: bolder;*/
+}
+
+.table-hover > tbody > tr > td.causion:hover,
+.table-hover > tbody > tr > th.causion:hover,
+.table-hover > tbody > tr.causion:hover > td,
+.table-hover > tbody > tr.causion:hover > th {
+    background-color: #f5e3c1;
+}
+
 .table > thead > tr > td.bolder,
 .table > tbody > tr > td.bolder,
 .table > tfoot > tr > td.bolder,
