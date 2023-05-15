@@ -1,6 +1,6 @@
 USE dbmod_data_backup_db;
 
-IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'onboardingAccount_Bkup_V21_0_20_May_2023' AND TABLE_SCHEMA='dbmod_data_backup_db')
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'onboardingAccount_Bkup_V21_0_20_May_2023' AND TABLE_SCHEMA='dbo')
 BEGIN
 	SELECT * INTO dbmod_data_backup_db.DBO.onboardingAccount_Bkup_V21_0_20_May_2023 FROM HM_WIRES.DBO.onboardingAccount
 END
