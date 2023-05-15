@@ -161,6 +161,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.receivingAccountsListOfFund = response.data.receivingAccountsList;
 
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
+            $("#wireAmount").html($.convertToCurrency($scope.WireTicket.Amount, 2));            
             $scope.OriginalSystemAmount = $.convertToCurrency($scope.WireTicket.SystemAmount, 2);
             $scope.ModifiedWireAmount = $.convertToCurrency($scope.WireTicket.Amount, 2);
             $scope.castToDate($scope.wireTicketObj.SendingAccount);
