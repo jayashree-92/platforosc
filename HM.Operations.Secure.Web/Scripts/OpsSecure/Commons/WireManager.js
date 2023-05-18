@@ -478,10 +478,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         if (isNaN(wireAmount))
             wireAmount = 0;
-
-        if ($("#wireValueDate").text() != "") {
+        var valueDate = $("#wireValueDate").text() == "" ? moment($scope.WireTicket.ValueDate).format("YYYY-MM-DD") : $("#wireValueDate").text();
+        if (valueDate != "") {
             //Check if the wire-amount is within the limit 
-            $http.get("/Home/IsWireAmountValid?wireAmount=" + wireAmount + "&valueDate=" + $("#wireValueDate").text() + "&currency=" + currency + "&wireStatusId=" + $scope.WireTicket.WireStatusId).then(
+            $http.get("/Home/IsWireAmountValid?wireAmount=" + wireAmount + "&valueDate=" + valueDate + "&currency=" + currency + "&wireStatusId=" + $scope.WireTicket.WireStatusId).then(
                 function (response) {
                     $timeout(function () {
                         $scope.IsWireAmountWithInAllowedLimit = response.data == "true";                    
