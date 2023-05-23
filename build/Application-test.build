@@ -14,6 +14,8 @@
   <property name="appPoolName" value="IC_ops_secure" />
   
   <property name="primaryServers" value="\\swpfmosctcua5vf\f$\Apps\IC_ops_secure,
+  \\swpfmosctcung24\f$\Apps\IC_ops_secure,
+  \\swpfmosctcu2f93\f$\Apps\IC_ops_secure
   \\saappsclndusc01.file.core.windows.net\deployment-artifacts\HM-Ops-Secure-QA" />
 
    <!--SQL Properties-->
