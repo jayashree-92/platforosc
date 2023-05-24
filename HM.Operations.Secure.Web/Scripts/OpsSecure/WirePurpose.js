@@ -17,6 +17,7 @@ HmOpsApp.controller("WirePurposeMgmtCtrl", function ($scope, $http, $timeout) {
             tblWirePurposeForOtherReports = $("#tblWirePurposeForOtherReports").DataTable({
                 data: response.data,
                 "bDestroy": true,
+                iDisplayLength: -1,
                 rowId: "hmsWirePurposeId",
                 "columns": [
                     { "mData": "hmsWirePurposeId", "sTitle": "Id" },
