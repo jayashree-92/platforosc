@@ -94,8 +94,9 @@ namespace HM.Operations.Secure.Middleware
             IsWireStatusDrafted = (int)WireDataManager.WireStatus.Drafted == wireStatusId;
             IsWireStatusCancelled = (int)WireDataManager.WireStatus.Cancelled == wireStatusId;
             IsWireStatusApproved = (int)WireDataManager.WireStatus.Approved == wireStatusId;
-            IsWireStatusFailed = (int)WireDataManager.WireStatus.Failed == wireStatusId;
+            IsWireStatusFailed = wireStatusId is (int)WireDataManager.WireStatus.Failed or (int)WireDataManager.WireStatus.SystemFailure;
             IsWireStatusInitiated = (int)WireDataManager.WireStatus.Initiated == wireStatusId;
+            IsWireStatusSystemFailure = (int)WireDataManager.WireStatus.SystemFailure == wireStatusId;
             IsWireStatusOnHold = (int)WireDataManager.WireStatus.OnHold == wireStatusId;
 
             var swiftStatusId = wireTicket.HMWire.SwiftStatusId;
@@ -125,10 +126,10 @@ namespace HM.Operations.Secure.Middleware
             IsDraftEnabled = (IsWireStatusInitiated || IsWireStatusFailed || IsWireStatusCancelled) && IsSwiftStatusNotInitiated;//!IsDeadlineCrossed && 
             IsWirePurposeAdhoc = isAdHocWire || wireTicket.HMWire.hmsWirePurposeLkup.ReportName == ReportName.AdhocWireReport;
 
-            var isUserInvolvedInInitiation = wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId == (int)WireDataManager.WireStatus.Initiated || s.WireStatusId == (int)WireDataManager.WireStatus.Drafted).Any(s => s.CreatedBy == userId)
+            var isUserInvolvedInInitiation = wireTicket.HMWire.hmsWireWorkflowLogs.Where(s => s.WireStatusId is (int)WireDataManager.WireStatus.Initiated or (int)WireDataManager.WireStatus.Drafted).Any(s => s.CreatedBy == userId)
                 || wireTicket.HMWire.CreatedBy == userId || wireTicket.HMWire.LastUpdatedBy == userId;
 
-            IsAuthorizedUserToApprove = IsWireStatusInitiated && !isUserInvolvedInInitiation && !IsDeadlineCrossed && isWireApprover && !IsNoticePending;
+            IsAuthorizedUserToApprove = (IsWireStatusInitiated || IsWireStatusSystemFailure) && !isUserInvolvedInInitiation && !IsDeadlineCrossed && isWireApprover && !IsNoticePending;
 
             ShouldEnableCollateralPurpose = (wireTicket.Is3rdPartyTransfer || wireTicket.IsNotice || wireTicket.IsNoticeToFund) && wireTicket.SendingAccount.AuthorizedParty == WireDataManager.AuthorizedPartyInnocap && OpsSecureSwitches.SwiftBicToEnableField21.Contains(wireTicket.SendingAccount.SwiftGroup.SendersBIC);
 
@@ -139,6 +140,7 @@ namespace HM.Operations.Secure.Middleware
         public bool IsWireStatusCancelled { get; private set; }
         public bool IsWireStatusApproved { get; private set; }
         public bool IsWireStatusFailed { get; private set; }
+        public bool IsWireStatusSystemFailure { get; private set; }
         public bool IsWireStatusInitiated { get; private set; }
         public bool IsWireStatusOnHold { get; private set; }
         public bool IsSwiftStatusNotInitiated { get; private set; }
@@ -173,7 +175,8 @@ namespace HM.Operations.Secure.Middleware
             Approved,
             Cancelled,
             Failed,
-            OnHold
+            OnHold,
+            SystemFailure
         }
 
         public enum SwiftStatus
@@ -206,7 +209,7 @@ namespace HM.Operations.Secure.Middleware
         {
             var wireIdStr = wireId.ToString();
             wireIdStr = wireIdStr.Length < 6 ? wireIdStr.PadLeft(6, '0') : wireIdStr;
-            var environmentStr = Utility.Environment.ToUpper() == "PROD" ? string.Empty : Utility.Environment.ToUpper()[0].ToString();
+            var environmentStr = Utility.Environment.ToUpper() == "PRODUCTION" ? string.Empty : Utility.Environment.ToUpper()[0].ToString();
             return $"{environmentStr}DMO{wireIdStr}";
         }
 
@@ -403,20 +406,20 @@ namespace HM.Operations.Secure.Middleware
             context.Configuration.ProxyCreationEnabled = false;
 
             var fundAccounts = (from oAccnt in context.onBoardingAccounts
-                where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed"
-                join oMap in context.onBoardingAccountSSITemplateMaps on oAccnt.onBoardingAccountId equals oMap.onBoardingAccountId
-                let dmaReports = oAccnt.onBoardingAccountModuleAssociations.Select(s => s.onBoardingModule).Select(s => s.dmaReportsId)
-                let isAuthorizedSendingAccount = (oAccnt.AuthorizedParty == WireDataManager.AuthorizedPartyInnocap && oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
-                where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved" && isAuthorizedSendingAccount && dmaReports.Contains(reportId)
-                select new WireAccountBaseData
-                {
-                    OnBoardAccountId = oAccnt.onBoardingAccountId,
-                    AccountName = oAccnt.AccountName,
-                    AccountNumber = oAccnt.UltimateBeneficiaryAccountNumber,
-                    FFCNumber = oAccnt.FFCNumber,
-                    IsAuthorizedSendingAccount = isAuthorizedSendingAccount,
-                    Currency = oAccnt.Currency
-                }).ToList();
+                                where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed"
+                                join oMap in context.onBoardingAccountSSITemplateMaps on oAccnt.onBoardingAccountId equals oMap.onBoardingAccountId
+                                let dmaReports = oAccnt.onBoardingAccountModuleAssociations.Select(s => s.onBoardingModule).Select(s => s.dmaReportsId)
+                                let isAuthorizedSendingAccount = (oAccnt.AuthorizedParty == WireDataManager.AuthorizedPartyInnocap && oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
+                                where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved" && isAuthorizedSendingAccount && dmaReports.Contains(reportId)
+                                select new WireAccountBaseData
+                                {
+                                    OnBoardAccountId = oAccnt.onBoardingAccountId,
+                                    AccountName = oAccnt.AccountName,
+                                    AccountNumber = oAccnt.UltimateBeneficiaryAccountNumber,
+                                    FFCNumber = oAccnt.FFCNumber,
+                                    IsAuthorizedSendingAccount = isAuthorizedSendingAccount,
+                                    Currency = oAccnt.Currency
+                                }).ToList();
             return fundAccounts;
         }
 

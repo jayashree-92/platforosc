@@ -181,7 +181,7 @@ namespace HM.Operations.Secure.Middleware
             }
 
             //Custom ordering as per HMOS-56
-            var customWireStatusOrder = new[] { 2, 5, 1, 4, 3 };
+            var customWireStatusOrder = new[] { 2, 5, 7, 1, 4, 3 };
             var customSwiftStatusOrder = new[] { 2, 4, 6, 3, 5, 1 };
             wireData = wireData.OrderBy(s => Array.IndexOf(customWireStatusOrder, s.HMWire.WireStatusId)).ThenBy(s => Array.IndexOf(customSwiftStatusOrder, s.HMWire.SwiftStatusId)).ToList();
             return wireData;
@@ -199,7 +199,7 @@ namespace HM.Operations.Secure.Middleware
             }
 
             //approved wire
-            if((thisWire.HMWire.WireStatusId == 3 || thisWire.HMWire.WireStatusId == 5) && thisWire.HMWire.ApprovedBy == null)
+            if((thisWire.HMWire.WireStatusId == 3 || thisWire.HMWire.WireStatusId == 5 || thisWire.HMWire.WireStatusId == 7) && thisWire.HMWire.ApprovedBy == null)
             {
                 thisWire.WireApprovedBy = thisWire.WireLastUpdatedBy;
                 thisWire.HMWire.ApprovedAt = thisWire.HMWire.LastModifiedAt;
@@ -373,6 +373,7 @@ namespace HM.Operations.Secure.Middleware
                 case WireDataManager.WireStatus.Approved: return "<label class='label label-success'>Approved</label>";
                 case WireDataManager.WireStatus.Cancelled: return (int)swiftStatus == 1 ? "<label class='label label-danger'>Rejected</label>" : "<label class='label label-default'>Cancelled</label>";
                 case WireDataManager.WireStatus.Failed: return "<label class='label label-danger'>Failed</label>";
+                case WireDataManager.WireStatus.SystemFailure: return "<label class='label label-danger'>System Failure</label>";
                 case WireDataManager.WireStatus.OnHold: return "<label class='label label-info'>On-Hold</label>";
                 default:
                     return "Status Unknown";

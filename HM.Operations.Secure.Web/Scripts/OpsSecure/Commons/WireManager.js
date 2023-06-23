@@ -291,6 +291,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                 else
                     return "glyphicon-trash" + $scope.getSwiftStatusString(wireLog.SwiftStatusId);
             case 5:
+            case 7:
                 return "glyphicon-remove";
             case 6:
                 return "glyphicon-exclamation-sign";
@@ -329,6 +330,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case 6:
                 angular.element("#workflowStatus_" + index).addClass("text-info");
                 return "On Hold";
+            case 7:
+                angular.element("#workflowStatus_" + index).addClass("text-danger");
+                return "System Failure";
         }
         return "";
     }
@@ -382,6 +386,9 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             case 6:
                 angular.element("#spnwireStatus").addClass("label-info");
                 return "On Hold";
+            case 7:
+                angular.element("#spnwireStatus").addClass("label-danger");
+                return "System Failure";
             default:
                 return "Draft";
         }

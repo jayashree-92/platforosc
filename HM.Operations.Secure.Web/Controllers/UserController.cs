@@ -33,8 +33,8 @@ namespace HM.Operations.Secure.Web.Controllers
             {
                 users = context.hmsUsers.ToList();
                 var allWires = context.hmsWires.Select(s => new { s.WireStatusId, s.CreatedBy, s.ApprovedBy, s.LastUpdatedBy, s.LastModifiedAt }).ToList();
-                initiatorCount = allWires.Where(s => s.WireStatusId != (int)WireDataManager.WireStatus.Cancelled && s.WireStatusId != (int)WireDataManager.WireStatus.Failed).GroupBy(s => s.CreatedBy).ToDictionary(s => s.Key, v => v.Count());
-                approvedCount = allWires.Where(s => s.ApprovedBy != null && s.WireStatusId != (int)WireDataManager.WireStatus.Cancelled && s.WireStatusId != (int)WireDataManager.WireStatus.Failed).GroupBy(s => s.ApprovedBy).ToDictionary(s => s.Key.ToInt(), v => v.Count());
+                initiatorCount = allWires.Where(s => s.WireStatusId != (int)WireDataManager.WireStatus.Cancelled && s.WireStatusId != (int)WireDataManager.WireStatus.Failed && s.WireStatusId != (int)WireDataManager.WireStatus.SystemFailure).GroupBy(s => s.CreatedBy).ToDictionary(s => s.Key, v => v.Count());
+                approvedCount = allWires.Where(s => s.ApprovedBy != null && s.WireStatusId != (int)WireDataManager.WireStatus.Cancelled && s.WireStatusId != (int)WireDataManager.WireStatus.Failed && s.WireStatusId != (int)WireDataManager.WireStatus.SystemFailure).GroupBy(s => s.ApprovedBy).ToDictionary(s => s.Key.ToInt(), v => v.Count());
                 lastAccessedOnMap = allWires.GroupBy(s => s.LastUpdatedBy).ToDictionary(s => s.Key, v => v.Max(s1 => s1.LastModifiedAt.DateTime));
             }
 

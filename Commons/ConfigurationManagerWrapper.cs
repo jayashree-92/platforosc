@@ -60,8 +60,6 @@ namespace Com.HedgeMark.Commons
             return string.IsNullOrEmpty(setting) ? defaultValue : setting;
         }
 
-
-
         public static List<long> IntegerListSetting(string key, string defaultValue = "")
         {
             var setting = GetResolvedValue(key);

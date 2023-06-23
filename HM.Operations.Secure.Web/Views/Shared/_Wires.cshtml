@@ -1016,7 +1016,7 @@
 
             <div class="modal-footer form-inline">
 
-                @if (User.IsWireUser())
+                @if(User.IsWireUser())
                 {
                     <div class="panel panel-heading collapse wireError" id="wireErrorStatus" data-toggle="collapse" style="background: #F5F5F5; text-transform: inherit; font-size: 13px; padding: 0px;">
                         <p style="color: darkred; font-weight: bold;"> {{ validationMsg }}</p>
@@ -1062,7 +1062,7 @@
                         <i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Un-Hold and {{getInitiateButtonText()}}
                     </button>
                     <button id="approveWire" type="button" class="btn btn-sm btn-success ng-show-only" title="Approve" ng-if="WireTicketStatus.IsAuthorizedUserToApprove" ng-disabled="!IsWireAmountWithInAllowedLimit" ng-click="fnUpdateWireWithStatus(3)" style="vertical-align: -webkit-baseline-middle;" data-loading-text="<i class='glyphicon glyphicon-refresh icon-rotate'></i>&nbsp;<span class='statusFill'>Approving...</span>">
-                        <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Approve
+                        <i class="glyphicon glyphicon-ok-sign"></i>&nbsp;{{WireTicketStatus.IsWireStatusSystemFailure? 'Approve (retry)' : 'Approve'}}
                     </button>
                     <button id="cancelWire" type="button"
                             data-container="body" data-toggle="popover" data-placement="top" data-html="true"

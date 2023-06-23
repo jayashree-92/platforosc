@@ -104,6 +104,9 @@ HmOpsApp.controller("wiresDashboardCtrl", function ($scope, $http, $opsSharedSco
                                 case "Failed":
                                     $(row).addClass("danger");
                                     break;
+                                case "System Failure":
+                                    $(row).addClass("danger");
+                                    break;
                                 case "On Hold":
                                     $(row).addClass("blockedSection");
                                     break;

@@ -76,7 +76,7 @@ namespace HM.Operations.Secure.Web.Controllers
                         wireStatusCount.Cancelled += 1;
 
                     //Failed
-                    if(statusCount.WireStatusId == 5 || statusCount.SwiftStatusId == 4 || statusCount.SwiftStatusId == 6)
+                    if(statusCount.WireStatusId == 5 || statusCount.WireStatusId == 7 || statusCount.SwiftStatusId == 4 || statusCount.SwiftStatusId == 6)
                         wireStatusCount.Failed += 1;
 
                     //Acknowledged
@@ -348,22 +348,22 @@ namespace HM.Operations.Secure.Web.Controllers
             try
             {
                 var tempFilePath = $"Temp\\{UserName}";
-                foreach (var file in wireTicket.HMWire.hmsWireDocuments)
+                foreach(var file in wireTicket.HMWire.hmsWireDocuments)
                 {
                     var fileName = $"{FileSystemManager.OpsSecureWiresFilesPath}\\{tempFilePath}\\{file.FileName}";
                     var fileInfo = new FileInfo(fileName);
 
-                    if (!System.IO.File.Exists(fileInfo.FullName))
+                    if(!System.IO.File.Exists(fileInfo.FullName))
                         continue;
 
                     var newFileName =
                         $"{FileSystemManager.OpsSecureWiresFilesPath}\\{wireTicket.WireId}\\{file.FileName}";
                     var newFileInfo = new FileInfo(newFileName);
 
-                    if (newFileInfo.Directory != null && !Directory.Exists(newFileInfo.Directory.FullName))
+                    if(newFileInfo.Directory != null && !Directory.Exists(newFileInfo.Directory.FullName))
                         Directory.CreateDirectory(newFileInfo.Directory.FullName);
 
-                    if (System.IO.File.Exists(newFileInfo.FullName))
+                    if(System.IO.File.Exists(newFileInfo.FullName))
                         continue;
 
                     System.IO.File.Copy(fileName, newFileName);

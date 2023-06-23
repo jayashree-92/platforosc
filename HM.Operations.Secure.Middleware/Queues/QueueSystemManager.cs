@@ -36,6 +36,8 @@ namespace HM.Operations.Secure.Middleware.Queues
         /*Ack In-Bound Parameters*/
         private static string ReceiverAckQueueName => ConfigurationManagerWrapper.StringSetting("ReceiverAckQueueName", "DMO.EMX.EMX2DMO.ACK.U1.F");
 
+        private static int AttemptIntervalToConnectToMQIfFailed => ConfigurationManagerWrapper.IntegerSetting("AttemptIntervalToConnectToMQIfFailed", 10);
+
         //We might need to create Queue based on Environmental parametes
 
         private static MQQueueManager QueueManager;
@@ -46,7 +48,7 @@ namespace HM.Operations.Secure.Middleware.Queues
             ConnectMQ();
         }
 
-        private static void ConnectMQ()
+        private static void ConnectMQ(int attemptsToConnect = 12)
         {
             try
             {
@@ -69,18 +71,24 @@ namespace HM.Operations.Secure.Middleware.Queues
             }
             catch(MQException mexc)
             {
-                var message = $"Unable to connect to Queue Manager: {mexc.Message} ReasonCode: {mexc.ReasonCode}{mexc.StackTrace}";
+                var message = $"Unable to connect to Queue Manager: {mexc.Message} ReasonCode: {mexc.ReasonCode}{mexc.StackTrace} on :{Environment.MachineName}";
                 if(DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
                     Logger.Error(message, mexc);
-                throw new Exception(message, mexc);
+
+                if(attemptsToConnect > 0)
+                {
+                    Thread.Sleep(1000 * AttemptIntervalToConnectToMQIfFailed);
+                    ConnectMQ(--attemptsToConnect);
+                }
+                else { throw new Exception(message, mexc); }
             }
         }
 
 
         public static void SendMessage(string swiftMessage)
         {
-            if(Utility.IsLocal)
-                return;
+            //if(Utility.IsLocal)
+            //    return;
 
             //Send this Swift Message
             SendMessageInQueue(swiftMessage);
