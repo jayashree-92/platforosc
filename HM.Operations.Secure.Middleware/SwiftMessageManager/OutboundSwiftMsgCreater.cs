@@ -20,7 +20,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         protected static readonly string HMBICSender = $"{HMBIC}{ConfigurationManagerWrapper.StringSetting("HMBICSender", "XXXX")}";
         public static AbstractMT CreateMessage(WireTicket wire, string messageType, string originalMessageType, WireReferenceTag referenceTag = WireReferenceTag.NA)
         {
-            switch (messageType)
+            switch(messageType)
             {
                 //MT103 - Single customer credit transfer
                 case "MT103":
@@ -74,7 +74,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
         private static Field21 GetField21(WireTicket wire)
         {
-            if (wire.HMWire.hmsWireField != null && wire.HMWire.hmsWireField.hmsCollateralCashPurposeLkupId > 0)
+            if(wire.HMWire.hmsWireField != null && wire.HMWire.hmsWireField.hmsCollateralCashPurposeLkupId > 0)
                 return new Field21().setReference(wire.HMWire.hmsWireField.hmsCollateralCashPurposeLkup.PurposeCode);
 
             return new Field21().setReference("NONREF");
@@ -116,7 +116,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
         private static void SetField50X(AbstractMT mtMessage, WireTicket wire)
         {
-            if (!wire.IsFundTransfer && !wire.IsNoticeToFund && wire.SSITemplate != null
+            if(!wire.IsFundTransfer && !wire.IsNoticeToFund && wire.SSITemplate != null
                     ? wire.SSITemplate.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiary.BICorABA)
                     : wire.SendingAccount.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiary.BICorABA))
                 mtMessage.addField(GetField50C(wire));
@@ -176,26 +176,23 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             return f50K;
         }
 
-        private static void SetField52X(AbstractMT mtMessage, WireTicket wire, bool shouldUseSSIBeneficiary)
-        {
 
-            if (shouldUseSSIBeneficiary)
+        private static void SetField52X(AbstractMT mtMessage, WireTicket wire, bool isNotice)
+        {
+            if(isNotice)
             {
                 var shouldUseSsi = !wire.IsFundTransfer && !wire.IsNoticeToFund && wire.SSITemplate != null;
 
-                if (shouldUseSsi)
+                if(shouldUseSsi)
                 {
-                    if (wire.SSITemplate.IntermediaryType == "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA))
-                        mtMessage.addField(GetField52D(wire, true));
-                    else if ((wire.SSITemplate.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA))
-                             || (wire.SSITemplate.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Beneficiary.BICorABA)))
+                    if(wire.SSITemplate.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiary.BICorABA))
                         mtMessage.addField(GetField52A(wire, true));
                     else
                         mtMessage.addField(GetField52D(wire, true));
                 }
                 else
                 {
-                    if (wire.ReceivingAccount.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.Beneficiary.BICorABA))
+                    if(wire.ReceivingAccount.BeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.Beneficiary.BICorABA))
                         mtMessage.addField(GetField52A(wire, true));
                     else
                         mtMessage.addField(GetField52D(wire, true));
@@ -203,7 +200,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             }
             else
             {
-                if (wire.SendingAccount.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiary.BICorABA))
+                if(wire.SendingAccount.UltimateBeneficiaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.UltimateBeneficiary.BICorABA))
                     mtMessage.addField(GetField52A(wire, false));
                 else
                     mtMessage.addField(GetField52D(wire, false));
@@ -214,7 +211,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         /// "Ordering Customer"
         /// </summary>
         /// <param name="wire"></param>
-        /// <param name="shouldUseBeneficiary"></param>
+        /// <param name="isNotice"></param>
         /// <returns></returns>
         //private static Field50A GetField50A(WireTicket wire)
         //{
@@ -224,20 +221,18 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         //    return f50A;
         //}
 
-        private static Field52A GetField52A(WireTicket wire, bool shouldUseBeneficiary)
+        private static Field52A GetField52A(WireTicket wire, bool isNotice)
         {
             Field52A f52A;
-            if (shouldUseBeneficiary)
+            if(isNotice)
             {
                 var shouldUseSsi = !wire.IsFundTransfer && !wire.IsNoticeToFund && wire.SSITemplate != null;
-                var isInterBicAvailable = shouldUseSsi && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA);
-
                 f52A = new Field52A()
                     .setAccount(shouldUseSsi
-                        ? isInterBicAvailable ? wire.SSITemplate.IntermediaryAccountNumber ?? string.Empty : wire.SSITemplate.BeneficiaryAccountNumber ?? string.Empty
+                        ? wire.SSITemplate.UltimateBeneficiaryAccountNumber ?? string.Empty
                         : wire.ReceivingAccount.BeneficiaryAccountNumber)
                     .setBIC(shouldUseSsi
-                        ? isInterBicAvailable ? wire.SSITemplate.Intermediary.BICorABA : wire.SSITemplate.Beneficiary.BICorABA
+                        ? wire.SSITemplate.UltimateBeneficiary.BICorABA
                         : wire.ReceivingAccount.Beneficiary.BICorABA);
                 return f52A;
             }
@@ -248,27 +243,24 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             return f52A;
         }
 
-        private static Field52D GetField52D(WireTicket wire, bool shouldUseBeneficiary)
+        private static Field52D GetField52D(WireTicket wire, bool isNotice)
         {
             string nameAndAddress;
             Field52D f52D;
-            if (shouldUseBeneficiary)
+            if(isNotice)
             {
                 var shouldUseSsi = !wire.IsFundTransfer && !wire.IsNoticeToFund && wire.SSITemplate != null;
-                var isInterBicAvailable = shouldUseSsi && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA);
 
                 nameAndAddress = shouldUseSsi
-                    ? isInterBicAvailable
-                        ? wire.SSITemplate.Intermediary.BankName ?? string.Empty
-                        : wire.SSITemplate.Beneficiary.BankName ?? string.Empty
-                    : wire.ReceivingAccount?.Beneficiary?.BankName ?? string.Empty;
+                    ? wire.SSITemplate.UltimateBeneficiary.BankName ?? string.Empty
+                    : wire.ReceivingAccount?.UltimateBeneficiary?.BankName ?? string.Empty;
 
                 nameAndAddress += $"\n{wire.FundRegisterAddress}";
 
                 f52D = new Field52D()
                     .setAccount(shouldUseSsi
-                        ? isInterBicAvailable ? wire.SSITemplate.Intermediary.BICorABA : wire.SSITemplate.Beneficiary.BICorABA
-                        : wire.ReceivingAccount.Beneficiary.BICorABA)
+                        ? wire.SSITemplate.UltimateBeneficiary.BICorABA
+                        : wire.ReceivingAccount?.UltimateBeneficiary?.BICorABA)
                     .setNameAndAddress(nameAndAddress);
 
                 return f52D;
@@ -312,19 +304,32 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             return f53B;
         }
 
-        private static void SetField56X(AbstractMT mtMessage, WireTicket wire)
+        private static void SetField56X(AbstractMT mtMessage, WireTicket wire, bool isNotice)
         {
-            var isBicIntermediaryAvailable = (wire.IsFundTransfer || wire.IsNoticeToFund) ? (wire.ReceivingAccount.IntermediaryType != "ABA" && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.Intermediary.BICorABA)) : (wire.SSITemplate.IntermediaryType != "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA));
-            if (isBicIntermediaryAvailable)
-                mtMessage.addField(GetField56A(wire));
+
+            if(isNotice)
+            {
+                var isBicIntermediaryAvailableForNotice = wire.SendingAccount.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.Intermediary.BICorABA);
+                if(isBicIntermediaryAvailableForNotice)
+                    mtMessage.addField(GetField56A(wire, true));
+                else
+                    mtMessage.addField(GetField56D(wire, true));
+            }
+
+            var isBicIntermediaryAvailable = (wire.IsFundTransfer || wire.IsNoticeToFund)
+                ? (wire.ReceivingAccount.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.Intermediary.BICorABA))
+                : (wire.SSITemplate.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA));
+
+            if(isBicIntermediaryAvailable)
+                mtMessage.addField(GetField56A(wire, false));
             else
-                mtMessage.addField(GetField56D(wire));
+                mtMessage.addField(GetField56D(wire, false));
         }
 
         private static void SetField57X(AbstractMT mtMessage, WireTicket wire)
         {
             var isBicBeneficiaryAvailable = (wire.IsFundTransfer || wire.IsNoticeToFund) ? (wire.ReceivingAccount.BeneficiaryType != "ABA" && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.Beneficiary.BICorABA)) : (wire.SSITemplate.BeneficiaryType != "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Beneficiary.BICorABA));
-            if (isBicBeneficiaryAvailable)
+            if(isBicBeneficiaryAvailable)
                 mtMessage.addField(GetField57A(wire));
             else
                 mtMessage.addField(GetField57D(wire));
@@ -333,7 +338,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         private static void SetField58X(AbstractMT mtMessage, WireTicket wire)
         {
             var isBicUltimateAvailable = (wire.IsFundTransfer || wire.IsNoticeToFund) ? (wire.ReceivingAccount.UltimateBeneficiaryType != "ABA" && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.UltimateBeneficiary.BICorABA)) : (wire.SSITemplate.UltimateBeneficiaryType != "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiary.BICorABA));
-            if (isBicUltimateAvailable)
+            if(isBicUltimateAvailable)
                 mtMessage.addField(GetField58A(wire));
             else
                 mtMessage.addField(GetField58D(wire));
@@ -342,31 +347,64 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         private static void SetField59X(AbstractMT mtMessage, WireTicket wire)
         {
             var isBicUltimateAvailable = (wire.IsFundTransfer || wire.IsNoticeToFund) ? (wire.ReceivingAccount.UltimateBeneficiaryType != "ABA" && !string.IsNullOrWhiteSpace(wire.ReceivingAccount.UltimateBeneficiary.BICorABA)) : (wire.SSITemplate.UltimateBeneficiaryType != "ABA" && !string.IsNullOrWhiteSpace(wire.SSITemplate.UltimateBeneficiary.BICorABA));
-            if (isBicUltimateAvailable)
+            if(isBicUltimateAvailable)
                 mtMessage.addField(GetField59A(wire));
             else
                 mtMessage.addField(GetField59(wire));
         }
 
 
-        private static Field56A GetField56A(WireTicket wire)
+        private static Field56A GetField56A(WireTicket wire, bool isNotice)
         {
-            var f56A = new Field56A()
-                .setAccount((wire.IsFundTransfer || wire.IsNoticeToFund) ? wire.ReceivingAccount.IntermediaryAccountNumber : wire.SSITemplate.IntermediaryAccountNumber)
-                .setBIC((wire.IsFundTransfer || wire.IsNoticeToFund) ? wire.ReceivingAccount.IntermediaryType == "ABA" ? string.Empty :
-                        wire.ReceivingAccount.Intermediary.BICorABA : wire.SSITemplate.IntermediaryType == "ABA" ? string.Empty : wire.SSITemplate.Intermediary.BICorABA);
+            var f56A = new Field56A();
+            if(isNotice)
+            {
+                f56A.setAccount(wire.SendingAccount.IntermediaryAccountNumber ?? wire.SendingAccount.BeneficiaryAccountNumber)
+                    .setBIC((wire.SendingAccount.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SendingAccount.Intermediary.BICorABA))
+                        ? wire.SendingAccount.Intermediary.BICorABA
+                        : wire.SendingAccount.Beneficiary.BICorABA ?? string.Empty);
+
+                return f56A;
+            }
+
+            f56A.setAccount((wire.IsFundTransfer || wire.IsNoticeToFund) ? wire.ReceivingAccount.IntermediaryAccountNumber : wire.SSITemplate.IntermediaryAccountNumber)
+                 .setBIC((wire.IsFundTransfer || wire.IsNoticeToFund) ? wire.ReceivingAccount.IntermediaryType == "BIC" ?
+                         wire.ReceivingAccount.Intermediary.BICorABA : string.Empty
+                     : wire.SSITemplate.IntermediaryType == "BIC" ? wire.SSITemplate.Intermediary.BICorABA : string.Empty);
             return f56A;
         }
 
-        private static Field56D GetField56D(WireTicket wire)
+        private static Field56D GetField56D(WireTicket wire, bool isNotice)
         {
+            var f56D = new Field56D();
+            if(isNotice)
+            {
+                var interBicOrAbaforNotice = wire.SendingAccount.IntermediaryType == "ABA" && !string.IsNullOrWhiteSpace(wire.SendingAccount.Intermediary.BICorABA)
+                    ? wire.SendingAccount.IntermediaryType == "ABA"
+                        ? wire.SendingAccount.Intermediary.BICorABA
+                        : wire.SendingAccount.Beneficiary.BICorABA ?? string.Empty
+                    : string.Empty;
+
+                f56D = new Field56D().setAccount(interBicOrAbaforNotice);
+
+                if(string.IsNullOrWhiteSpace(interBicOrAbaforNotice))
+                    return f56D;
+
+                var nameAndAddressedForNotice = (!string.IsNullOrWhiteSpace(wire.SendingAccount.Intermediary.BankName))
+                    ? $"{wire.SendingAccount.Intermediary.BankName}\n{wire.SendingAccount.Intermediary.BankAddress}"
+                    : $"{wire.SendingAccount.Beneficiary.BankName}\n{wire.SendingAccount.Beneficiary.BankAddress}";
+
+                f56D.setNameAndAddress(nameAndAddressedForNotice);
+                return f56D;
+            }
+
             var interBicOrAba = (wire.IsFundTransfer || wire.IsNoticeToFund)
-                ? wire.ReceivingAccount.IntermediaryType == "ABA" ? wire.ReceivingAccount.Intermediary.BICorABA : string.Empty
-                : wire.SSITemplate.IntermediaryType == "ABA" ? wire.SSITemplate.Intermediary.BICorABA : string.Empty;
+            ? wire.ReceivingAccount.IntermediaryType == "ABA" ? wire.ReceivingAccount.Intermediary.BICorABA : string.Empty
+            : wire.SSITemplate.IntermediaryType == "ABA" ? wire.SSITemplate.Intermediary.BICorABA : string.Empty;
 
-            var f56D = new Field56D().setAccount(!string.IsNullOrWhiteSpace(interBicOrAba) ? $"/FW{interBicOrAba}" : string.Empty);
+            f56D = new Field56D().setAccount(!string.IsNullOrWhiteSpace(interBicOrAba) ? $"/FW{interBicOrAba}" : string.Empty);
 
-            if (string.IsNullOrWhiteSpace(interBicOrAba))
+            if(string.IsNullOrWhiteSpace(interBicOrAba))
                 return f56D;
 
             var nameAndAddressed = (wire.IsFundTransfer || wire.IsNoticeToFund)
@@ -395,7 +433,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             var f57D = new Field57D().setAccount(!string.IsNullOrWhiteSpace(beneficiaryBicOrAba) ? $"/FW{beneficiaryBicOrAba}"
                 : string.Empty);
 
-            if (string.IsNullOrWhiteSpace(beneficiaryBicOrAba))
+            if(string.IsNullOrWhiteSpace(beneficiaryBicOrAba))
                 return f57D;
 
             var nameAndAddressed = (wire.IsFundTransfer || wire.IsNoticeToFund)
@@ -428,14 +466,14 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 .setAccount(isAbaAvailable ? $"/FW{((wire.IsFundTransfer || wire.IsNoticeToFund) ? wire.ReceivingAccount.UltimateBeneficiary.BICorABA : wire.SSITemplate.UltimateBeneficiary.BICorABA)}"
                     : (wire.IsFundTransfer || wire.IsNoticeToFund) ? wire.ReceivingAccount.UltimateBeneficiaryAccountNumber : wire.SSITemplate.UltimateBeneficiaryAccountNumber);
 
-            if (!isAbaAvailable)
+            if(!isAbaAvailable)
             {
                 f58D.setNameAndAddress((wire.IsFundTransfer || wire.IsNoticeToFund)
                     ? $"{wire.ReceivingAccount.UltimateBeneficiaryAccountName}\n{wire.FundRegisterAddress}"
                     : $"{wire.SSITemplate.UltimateBeneficiaryAccountName}\n{wire.ReceivingSsiUltimateBeneAccountAddress}");
             }
 
-            if (!isAbaAvailable)
+            if(!isAbaAvailable)
                 return f58D;
 
             var nameAndAddressed = (wire.IsFundTransfer || wire.IsNoticeToFund)
@@ -470,7 +508,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
         private static Field70 GetField70(WireTicket wire)
         {
             var f70 = new Field70();
-            if (!wire.ShouldIncludeWirePurpose)
+            if(!wire.ShouldIncludeWirePurpose)
                 return f70;
 
             f70.setNarrativeLine1("/RFB/" + (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral ? wire.CollateralPaymentReason : wire.HMWire.hmsWirePurposeLkup.Purpose));
@@ -498,7 +536,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             var ffcName = (wire.IsFundTransfer || wire.IsNoticeToFund) ? wire.ReceivingAccount.FFCName : wire.SSITemplate.FFCName;
             var reference = (wire.IsFundTransfer || wire.IsNoticeToFund) ? wire.ReceivingAccount.Reference : wire.SSITemplate.Reference;
 
-            if (string.IsNullOrWhiteSpace(ffcNumber) && string.IsNullOrWhiteSpace(wire.HMWire.SenderDescription) && (messageType == "MT103" || !wire.ShouldIncludeWirePurpose))
+            if(string.IsNullOrWhiteSpace(ffcNumber) && string.IsNullOrWhiteSpace(wire.HMWire.SenderDescription) && (messageType == "MT103" || !wire.ShouldIncludeWirePurpose))
                 return f72;
 
             var senderDescriptionInfo = (wire.HMWire.SenderDescription ?? string.Empty).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
@@ -513,38 +551,38 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             f72.setNarrativeLine1(narrativeLine1.Length > 30 ? narrativeLine1.Substring(0, 30) : narrativeLine1);
 
             string narrativeLine2;
-            if (wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral)
+            if(wire.HMWire.hmsWirePurposeLkup.ReportName == ReportName.Collateral)
                 narrativeLine2 = $"{(wire.ShouldIncludeWirePurpose ? wire.ShortFundName : ffcNumber)}";
-            else if (wire.ShouldIncludeWirePurpose)
+            else if(wire.ShouldIncludeWirePurpose)
                 narrativeLine2 = $"{(!string.IsNullOrEmpty(ffcNumber) ? ffcNumber : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
             else
                 narrativeLine2 = $"{(!string.IsNullOrEmpty(ffcName) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
-            if (!string.IsNullOrWhiteSpace(narrativeLine2.Trim()))
+            if(!string.IsNullOrWhiteSpace(narrativeLine2.Trim()))
                 f72.setNarrativeLine2($"//{(narrativeLine2.Length > 33 ? narrativeLine2.Substring(0, 33) : narrativeLine2)}");
 
             var narrativeLine3 = wire.ShouldIncludeWirePurpose
                  ? $"{(!string.IsNullOrEmpty(ffcName) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}"
                  : $"{(!string.IsNullOrEmpty(reference) ? reference : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
-            if (!string.IsNullOrWhiteSpace(narrativeLine3.Trim()))
+            if(!string.IsNullOrWhiteSpace(narrativeLine3.Trim()))
                 f72.setNarrativeLine3($"//{narrativeLine3}");
 
             var narrativeLine4 = wire.ShouldIncludeWirePurpose
                 ? $"{(!string.IsNullOrEmpty(reference) ? ffcName : descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}"
                 : $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
-            if (!string.IsNullOrWhiteSpace(narrativeLine4))
+            if(!string.IsNullOrWhiteSpace(narrativeLine4))
                 f72.setNarrativeLine4($"//{narrativeLine4}");
 
             var narrativeLine5 = $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
-            if (!string.IsNullOrWhiteSpace(narrativeLine5.Trim()))
+            if(!string.IsNullOrWhiteSpace(narrativeLine5.Trim()))
                 f72.setNarrativeLine5($"//{narrativeLine5}");
 
             var narrativeLine6 = $"{(descIndex < descriptionCount ? senderDescriptionInfo[descIndex++] : string.Empty)}";
 
-            if (!string.IsNullOrWhiteSpace(narrativeLine6.Trim()))
+            if(!string.IsNullOrWhiteSpace(narrativeLine6.Trim()))
                 f72.setNarrativeLine6($"//{narrativeLine6}");
 
             return f72;
@@ -575,7 +613,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             mt103.addField(GetField53B(wire));
 
             //Optional
-            SetField56X(mt103, wire);
+            SetField56X(mt103, wire, false);
 
             //Optional
             SetField57X(mt103, wire);
@@ -611,7 +649,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             mt202.addField(GetField53B(wire));
 
             //Optional
-            SetField56X(mt202, wire);
+            SetField56X(mt202, wire, false);
 
             //Optional
             SetField57X(mt202, wire);
@@ -644,7 +682,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             mt202Cov.addField(GetField53B(wire));
 
             //Optional
-            SetField56X(mt202Cov, wire);
+            SetField56X(mt202Cov, wire, false);
 
             //Optional
             SetField57X(mt202Cov, wire);
@@ -681,7 +719,10 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             SetField52X(mt210, wire, true);
 
             //Optional
-            //mt210.addField(GetField56A(wire));
+            // mt210.addField(GetField56A(wire));
+
+            SetField56X(mt210, wire, true);
+
 
             return mt210;
         }
@@ -700,7 +741,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             // We need the original message 
             var originalMessage = CreateMessage(wire, originalMessageType, string.Empty);
 
-            foreach (var originalField in originalMessage.Block4.GetFields())
+            foreach(var originalField in originalMessage.Block4.GetFields())
             {
                 mt192.Block4.AddField(originalField);
             }
@@ -722,7 +763,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             // We need the original message 
             var originalMessage = CreateMessage(wire, originalMessageType, string.Empty);
 
-            foreach (var originalField in originalMessage.Block4.GetFields())
+            foreach(var originalField in originalMessage.Block4.GetFields())
             {
                 mt292.Block4.AddField(originalField);
             }
