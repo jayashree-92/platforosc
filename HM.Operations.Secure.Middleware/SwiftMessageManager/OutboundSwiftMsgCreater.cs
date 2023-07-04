@@ -420,9 +420,9 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                 : (wire.SSITemplate.IntermediaryType == "BIC" && !string.IsNullOrWhiteSpace(wire.SSITemplate.Intermediary.BICorABA));
 
             if(isBicIntermediaryAvailable)
-                mtMessage.addField(GetField56A(wire, false));
+                mtMessage.addField(GetField56A(wire));
             else
-                mtMessage.addField(GetField56D(wire, false));
+                mtMessage.addField(GetField56D(wire));
         }
 
         private static void SetField57X(AbstractMT mtMessage, WireTicket wire)
@@ -463,33 +463,13 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
             return f56A;
         }
 
-        private static Field56D GetField56D(WireTicket wire, bool isNotice)
+        private static Field56D GetField56D(WireTicket wire)
         {
-            Field56D f56D;
-            if(isNotice)
-            {
-                var interBicOrAbaforNotice = wire.SendingAccount.IntermediaryType == "ABA" && !string.IsNullOrWhiteSpace(wire.SendingAccount.Intermediary.BICorABA)
-                    ? wire.SendingAccount.IntermediaryType == "ABA" ? wire.SendingAccount.Intermediary.BICorABA : wire.SendingAccount.Beneficiary.BICorABA ?? string.Empty
-                    : string.Empty;
-
-                f56D = new Field56D().setAccount(interBicOrAbaforNotice);
-
-                if(string.IsNullOrWhiteSpace(interBicOrAbaforNotice))
-                    return f56D;
-
-                var nameAndAddressedForNotice = (!string.IsNullOrWhiteSpace(wire.SendingAccount.Intermediary.BankName))
-                    ? $"{wire.SendingAccount.Intermediary.BankName}\n{wire.SendingAccount.Intermediary.BankAddress}"
-                    : $"{wire.SendingAccount.Beneficiary.BankName}\n{wire.SendingAccount.Beneficiary.BankAddress}";
-
-                f56D.setNameAndAddress(nameAndAddressedForNotice);
-                return f56D;
-            }
-
             var interBicOrAba = (wire.IsFundTransfer || wire.IsNoticeToFund)
             ? wire.ReceivingAccount.IntermediaryType == "ABA" ? wire.ReceivingAccount.Intermediary.BICorABA : string.Empty
             : wire.SSITemplate.IntermediaryType == "ABA" ? wire.SSITemplate.Intermediary.BICorABA : string.Empty;
 
-            f56D = new Field56D().setAccount(!string.IsNullOrWhiteSpace(interBicOrAba) ? $"/FW{interBicOrAba}" : string.Empty);
+            var f56D = new Field56D().setAccount(!string.IsNullOrWhiteSpace(interBicOrAba) ? $"/FW{interBicOrAba}" : string.Empty);
 
             if(string.IsNullOrWhiteSpace(interBicOrAba))
                 return f56D;
