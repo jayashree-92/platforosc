@@ -135,8 +135,8 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
         if (isAdd)
             $scope.wirePortalCutoff = angular.copy($scope.dummyCutoff);
         else {
-            var date = new Date();
-            $scope.selectedRowData.WirePortalCutoff.CutoffTime = new Date(date.getYear(), date.getMonth(), date.getDate(), $scope.selectedRowData.WirePortalCutoff.CutoffTime.Hours, $scope.selectedRowData.WirePortalCutoff.CutoffTime.Minutes, $scope.selectedRowData.WirePortalCutoff.CutoffTime.Seconds);
+            //var date = new Date();
+            //$scope.selectedRowData.WirePortalCutoff.CutoffTime = new Date(date.getYear(), date.getMonth(), date.getDate(), $scope.selectedRowData.WirePortalCutoff.CutoffTime.Hours, $scope.selectedRowData.WirePortalCutoff.CutoffTime.Minutes, $scope.selectedRowData.WirePortalCutoff.CutoffTime.Seconds);
             $scope.wirePortalCutoff = angular.copy($scope.selectedRowData);
         }
 
@@ -146,6 +146,8 @@ HmOpsApp.controller("WirePortalCutoffCtrl", function ($scope, $http, $timeout, $
             $("#liCurrency").select2("val", $scope.wirePortalCutoff.WirePortalCutoff.Currency);
             $("#liTimeZone").select2("val", $scope.wirePortalCutoff.WirePortalCutoff.CutOffTimeZone);
             $scope.ExistingWireCutOff = angular.copy($scope.wirePortalCutoff);
+            if (!isAdd)
+                $("#cutoffTime").val(moment($scope.wirePortalCutoff.WirePortalCutoff.CutoffTime).format("HH:mm"));
 
             $timeout(function () {
                 $scope.IsWireCutOffLoading = false;
