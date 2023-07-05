@@ -657,7 +657,10 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
 
         private static void SetSenderAndReceiverFromHM(AbstractMT callingMethod, WireTicket wire)
         {
-            callingMethod.setSenderAndReceiver(HMBICSender, wire.SendingAccount.SwiftGroup.SendersBIC);
+            callingMethod.setSenderAndReceiver(HMBICSender,
+                callingMethod.MessageType == "210"
+                    ? wire.ReceivingAccount.SwiftGroup.SendersBIC
+                    : wire.SendingAccount.SwiftGroup.SendersBIC);
         }
 
         private static MT103 CreateMt103(WireTicket wire, string messageType, WireReferenceTag referenceTag)
