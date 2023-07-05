@@ -265,7 +265,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                         : wire.ReceivingAccount.UltimateBeneficiaryAccountNumber)
                         .setNameAndAddress(shouldUseSsi
                         ? $"{wire.SSITemplate.UltimateBeneficiaryAccountName}\n{wire.ReceivingSsiUltimateBeneAccountAddress}"
-                        : $"{wire.ReceivingAccount.UltimateBeneficiaryAccountName}\n{wire.FundRegisterAddress}");
+                        : $"{wire.ReceivingAccount.UltimateBeneficiaryAccountName}\n{wire.FundRegisterAddress ?? string.Empty}");
 
                     return f52D;
                 }
@@ -380,7 +380,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                     if(isBicIntermediaryReceAvailableForNotice)
                     {
                         mtMessage.addField(new Field56A()
-                            .setAccount(wire.ReceivingAccount.IntermediaryAccountNumber ?? wire.ReceivingAccount.BeneficiaryAccountNumber)
+                            .setAccount(wire.ReceivingAccount.IntermediaryAccountNumber ?? wire.ReceivingAccount.BeneficiaryAccountNumber ?? string.Empty)
                             .setBIC(wire.ReceivingAccount.Intermediary.BICorABA ?? string.Empty));
                         return;
                     }
@@ -400,7 +400,7 @@ namespace HM.Operations.Secure.Middleware.SwiftMessageManager
                     if(isBicBeneficiaryReceAvailableForNotice)
                     {
                         mtMessage.addField(new Field56A()
-                            .setAccount(wire.ReceivingAccount.IntermediaryAccountNumber ?? wire.ReceivingAccount.BeneficiaryAccountNumber)
+                            .setAccount(wire.ReceivingAccount.IntermediaryAccountNumber ?? wire.ReceivingAccount.BeneficiaryAccountNumber ?? string.Empty)
                             .setBIC(wire.ReceivingAccount.Beneficiary.BICorABA ?? string.Empty));
                         return;
                     }
