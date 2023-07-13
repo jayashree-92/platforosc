@@ -347,6 +347,8 @@ namespace HM.Operations.Secure.Web.Controllers
         {
             try
             {
+                wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
+
                 var tempFilePath = $"Temp\\{UserName}";
                 foreach(var file in wireTicket.HMWire.hmsWireDocuments)
                 {
@@ -370,7 +372,6 @@ namespace HM.Operations.Secure.Web.Controllers
                     System.IO.File.Delete(fileInfo.FullName);
                 }
 
-                wireTicket = WireDataManager.SaveWireData(wireTicket, (WireDataManager.WireStatus)statusId, comment, UserDetails.Id);
                 var deadlineToApprove = WireDataManager.GetDeadlineToApprove(wireTicket.SendingAccount, wireTicket.HMWire.ValueDate);
                 var daysToAdd = deadlineToApprove.Hours / 24;
                 SaveWireCancellationSchedule(wireTicket.WireId, wireTicket.HMWire.ValueDate, (WireDataManager.WireStatus)statusId, daysToAdd);
