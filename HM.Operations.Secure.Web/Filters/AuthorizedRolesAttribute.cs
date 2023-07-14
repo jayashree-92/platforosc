@@ -31,13 +31,15 @@ namespace HM.Operations.Secure.Web.Filters
                 else
                 {
                     var claimsIdentity = ClaimsPrincipal.Current.Identities.First();
-                    {
-                        claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, userRole));
-                    }
+
+
+                    claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, userRole));
                 }
             }
 
-            return this.Roles.Split(',').Any(role => ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[role]));
+            //return this.Roles.Split(',').Any(role => ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[role]));
+
+            return this.Roles.Split(',').Any(role => ClaimsPrincipal.Current.Claims.Any(claim => claim.Value == AccountController.AuthorizeRoleObjectMap[role]));
         }
 
         private static string GetUserRole(string userName)
