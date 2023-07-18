@@ -17,40 +17,33 @@ namespace HM.Operations.Secure.Web.Filters
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             if(!httpContext.User.Identity.IsAuthenticated)
-            {
                 return false;
-            }
-            if(!(ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, OpsSecureUserRoles.DMAAdmin) || ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, OpsSecureUserRoles.DMAUser)))
+
+            if(ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, OpsSecureUserRoles.DMAAdmin) || ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, OpsSecureUserRoles.DMAUser))
+                return this.Roles.Split(',').Any(role => ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[role]));
+
+            var userRole = httpContext.Session["userRole"].ToString();
+            if(string.IsNullOrWhiteSpace(userRole))
             {
-                var userRole = httpContext.Session["userRole"].ToString();
-                if(string.IsNullOrWhiteSpace(userRole))
-                {
-                    userRole = GetUserRole(httpContext.User.Identity.Name);
-                    httpContext.Session["userRole"] = userRole;
-                }
-                else
-                {
-                    var claimsIdentity = ClaimsPrincipal.Current.Identities.First();
-
-
-                    claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, userRole));
-                }
+                userRole = GetUserRole(httpContext.User.Identity.Name);
+                httpContext.Session["userRole"] = userRole;
+            }
+            else
+            {
+                var claimsIdentity = ClaimsPrincipal.Current.Identities.First();
+                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, userRole));
             }
 
-            //return this.Roles.Split(',').Any(role => ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[role]));
-
-            return this.Roles.Split(',').Any(role => ClaimsPrincipal.Current.Claims.Any(claim => claim.Value == AccountController.AuthorizeRoleObjectMap[role]));
+            return this.Roles.Split(',').Any(role => ClaimsPrincipal.Current.HasClaim(ClaimTypes.Role, AccountController.AuthorizeRoleObjectMap[role]));
         }
 
         private static string GetUserRole(string userName)
         {
-            using(var context = new AdminContext())
-            {
-                return (from aspUser in context.aspnet_Users
-                        where aspUser.UserName == userName && aspUser.aspnet_Roles.Any(r => AuthorizationManager.AuthorizedDmaUserRoles.Contains(r.RoleName)) //&& !usr.isDeleted
-                        let role = aspUser.aspnet_Roles.Any(r => r.RoleName == OpsSecureUserRoles.DMAAdmin) ? OpsSecureUserRoles.DMAAdmin : OpsSecureUserRoles.DMAUser
-                        select role).FirstOrDefault() ?? string.Empty;
-            }
+            using var context = new AdminContext();
+            return (from aspUser in context.aspnet_Users
+                    where aspUser.UserName == userName && aspUser.aspnet_Roles.Any(r => AuthorizationManager.AuthorizedDmaUserRoles.Contains(r.RoleName)) //&& !usr.isDeleted
+                    let role = aspUser.aspnet_Roles.Any(r => r.RoleName == OpsSecureUserRoles.DMAAdmin) ? OpsSecureUserRoles.DMAAdmin : OpsSecureUserRoles.DMAUser
+                    select role).FirstOrDefault() ?? string.Empty;
         }
     }
 }
