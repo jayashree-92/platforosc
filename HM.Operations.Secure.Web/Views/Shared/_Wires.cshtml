@@ -467,6 +467,7 @@
                             (<b>Beginning Treasury:</b>{{ CashBalance.TreasuryBalance}} {{CashBalance.Currency}} - <b>Total Wire Entered:</b>{{CashBalance.TotalWireEntered}} {{CashBalance.Currency}})  <span style="font-size: 13px;">+</span> <b>Buffer</b> :{{CashBalance.MarginBuffer}} {{CashBalance.Currency}}
                         </span><span class="glyphicon  pull-right" ng-class="{ 'glyphicon-chevron-right': !isCashBalancesCollapsed , 'glyphicon-chevron-down': isCashBalancesCollapsed }"></span>
                         <span class="small" ng-if="IsDeadlineCrossed && CashBalance.IsCashSweepAccount">(<b>Hold Back Balance:</b>{{CashBalance.AvailableHoldBackBalance}} USD)</span>
+                        <span class="pull-right" id="btnRetryGetCashBalances" ng-click="fnGetCashBalances(WireTicket.ValueDate,$event)" data-loading-text="<i class='glyphicon glyphicon-repeat icon-rotate'></i>&nbsp;&nbsp;"><i placeholder="Click to retrieve cash balances" class="glyphicon glyphicon-repeat icon-lg"></i>&nbsp;</span>
                     </div>
                     <div id="cashBalancesDiv" class="panel-body collapse">
                         <span class="ng-show-hide" style="line-height: 2; padding: 0px;white-space:pre-line">

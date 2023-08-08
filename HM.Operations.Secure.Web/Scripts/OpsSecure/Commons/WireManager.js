@@ -161,7 +161,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.receivingAccountsListOfFund = response.data.receivingAccountsList;
 
             $scope.WireTicket = $scope.wireTicketObj.HMWire;
-            $("#wireAmount").html($.convertToCurrency($scope.WireTicket.Amount, 2));            
+            $("#wireAmount").html($.convertToCurrency($scope.WireTicket.Amount, 2));
             $scope.OriginalSystemAmount = $.convertToCurrency($scope.WireTicket.SystemAmount, 2);
             $scope.ModifiedWireAmount = $.convertToCurrency($scope.WireTicket.Amount, 2);
             $scope.castToDate($scope.wireTicketObj.SendingAccount);
@@ -197,7 +197,10 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
             $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
 
-            $scope.fnGetCashBalances(moment($scope.WireTicket.ValueDate).format("YYYY-MM-DD"));
+            $timeout(function () {
+                $scope.fnGetCashBalances(moment($scope.WireTicket.ValueDate).format("YYYY-MM-DD"));
+            }, 200);
+
         });
     }
 
@@ -491,7 +494,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $http.get("/Home/IsWireAmountValid?wireAmount=" + wireAmount + "&valueDate=" + valueDate + "&currency=" + currency + "&wireStatusId=" + $scope.WireTicket.WireStatusId).then(
                 function (response) {
                     $timeout(function () {
-                        $scope.IsWireAmountWithInAllowedLimit = response.data == "true";                    
+                        $scope.IsWireAmountWithInAllowedLimit = response.data == "true";
                         if (!$scope.IsWireAmountWithInAllowedLimit)
                             $scope.fnShowErrorMessage(response.data);
                     }, 50);
@@ -1196,7 +1199,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.WireTicket = {
         hmsWireId: 0
     }
-    
+
     angular.element("#uploadWireFiles").dropzone({
         url: "/Home/UploadWireFiles?wireId=" + $scope.WireTicket.hmsWireId,
         dictDefaultMessage: "<span style='font-size:20px;font-weight:normal;font-style:italic'>Drag/Drop wire documents here&nbsp;<i class='glyphicon glyphicon-download-alt'></i></span>",
@@ -1231,7 +1234,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             });
 
             $scope.viewAttachmentTable($scope.WireTicket.hmsWireDocuments);
-          
+
         },
         queuecomplete: function () {
         },
@@ -1615,7 +1618,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
     $scope.CashBalance.HoldBackAmount = 0;
     $scope.CashBalance.ConversionRate = 0;
 
-    $scope.fnGetCashBalances = function (valueDate) {
+    $scope.fnGetCashBalances = function (valueDate, $event) {
+        if ($event != undefined)
+            $event.stopPropagation();
+
+        valueDate = moment(valueDate).format("YYYY-MM-DD");
 
         $scope.CashBalance = {};
         $scope.CashBalance.IsCashBalanceAvailable = false;
@@ -1624,6 +1631,8 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
 
         if ($scope.WireTicket.OnBoardAccountId == undefined || $scope.WireTicket.OnBoardAccountId == 0)
             return;
+
+        $("#btnRetryGetCashBalances").button("loading");
 
         $http.get("/Home/GetCashBalances?sendingAccountId=" + $scope.WireTicket.OnBoardAccountId + "&valueDate=" + valueDate)
             .then(function (response) {
@@ -1641,7 +1650,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                     v.PendingWireAmount = $.convertToCurrency(v.PendingWireAmount, 2);
                     v.TotalWireEntered = $.convertToCurrency(v.TotalWireEntered, 2);
                 });
-
+                $("#btnRetryGetCashBalances").button("reset");
                 $timeout($scope.fnCalculateCashBalance(), 300);
             });
     }
