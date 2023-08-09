@@ -543,9 +543,11 @@ namespace HM.Operations.Secure.Web.Controllers
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                var clearingBroker = context.hmsFundAccountClearingBrokers.FirstOrDefault(s => s.ClearingBrokerName == clearingBrokerName);
+                var clearingBroker = context.hmsFundAccountClearingBrokers.Include(s => s.onBoardingAccount)
+                    .Where(s => !s.onBoardingAccount.IsDeleted).FirstOrDefault(s => s.ClearingBrokerName == clearingBrokerName);
+
                 if(clearingBroker != null)
-                    return context.onBoardingAccounts.FirstOrDefault(s => s.onBoardingAccountId == clearingBroker.onBoardingAccountId).AccountName;
+                    return context.onBoardingAccounts.First(s => s.onBoardingAccountId == clearingBroker.onBoardingAccountId).AccountName;
 
                 context.hmsFundAccountClearingBrokers.Add(new hmsFundAccountClearingBroker()
                 {
