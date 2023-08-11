@@ -1485,6 +1485,8 @@ HmOpsApp.controller("AccountListController", function ($scope, $http, $timeout, 
                 allowClear: true,
                 data: $scope.agreementTypes
             });
+            $("#liExposureAgreementType").select2("val", $scope.onBoardingAccountDetails[0].MarginExposureTypeID).trigger("change");
+
         });
     }
 

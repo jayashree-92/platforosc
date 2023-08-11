@@ -532,6 +532,7 @@ namespace HM.Operations.Secure.Web.Controllers
 
                 account.MarginExposureTypeID = exposureTypeId;
                 context.onBoardingAccounts.AddOrUpdate(account);
+                context.SaveChanges();
             }
         }
 
