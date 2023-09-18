@@ -563,7 +563,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount && s.FundId == fundId).Select(s => new
             {
                 id = s.OnBoardAccountId,
-                text = s.AccountNameAndNumber + (s.IsSubAdvisorFund ? " (Sub-advisor)" : ""),
+                text = $"{s.AccountNameAndNumber}{(s.IsSubAdvisorFund ? " (Sub-advisor)" : "")} {s.AgreementType}",
                 Currency = s.Currency,
                 isParentFund = s.IsParentFund,
                 isSubAdvisorFund = s.IsSubAdvisorFund,
@@ -573,7 +573,7 @@ namespace HM.Operations.Secure.Web.Controllers
             var receivingAccountsList = fundAccounts.Select(s => new
             {
                 id = s.OnBoardAccountId,
-                text = s.AccountNameAndNumber + (s.IsSubAdvisorFund ? " (Sub-advisor)" : ""),
+                text = $"{s.AccountNameAndNumber}{(s.IsSubAdvisorFund ? " (Sub-advisor)" : "")} {s.AgreementType}",
                 Currency = s.Currency,
                 isParentFund = s.IsParentFund,
                 isSubAdvisorFund = s.IsSubAdvisorFund,
@@ -625,6 +625,7 @@ namespace HM.Operations.Secure.Web.Controllers
                 ssiTemplate.onBoardingAccountSSITemplateMaps.ForEach(s => { s.onBoardingSSITemplate = null; s.onBoardingAccount = null; });
             });
 
+            var agreementTypes = OnBoardingDataManager.GetAllAgreementTypes();
             using(var context = new AdminContext())
             {
                 var entityIds = receivingAccounts.Select(s => s.TemplateEntityId).Distinct().ToList();
@@ -634,7 +635,9 @@ namespace HM.Operations.Secure.Web.Controllers
                 var receivingAccountList = receivingAccounts.Select(s => new
                 {
                     id = s.onBoardingSSITemplateId,
-                    text = string.IsNullOrWhiteSpace(s.FFCNumber) ? $"{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}" : $"{s.FFCNumber}-{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}"
+                    text = $"{(string.IsNullOrWhiteSpace(s.FFCNumber)
+                        ? $"{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}"
+                        : $"{s.FFCNumber}-{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}")} {(agreementTypes.TryGetValue(s.dmaAgreementTypeId, out var agreementType) ? agreementType : "UnKnownAgrType")}"
                 }).ToList();
                 return Json(new { receivingAccounts, receivingAccountList, counterparties = counterParties, shouldEnableCollateralPurpose });
             }

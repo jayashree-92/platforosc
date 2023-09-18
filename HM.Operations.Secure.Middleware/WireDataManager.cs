@@ -28,6 +28,8 @@ namespace HM.Operations.Secure.Middleware
         public bool IsParentFund { get; set; }
         public bool IsSubAdvisorFund { get; set; }
         public long FundId { get; set; }
+        public string AgreementType { get; set; }
+        public string Description { get; set; }
 
         public string AccountNameAndNumber => string.IsNullOrWhiteSpace(FFCNumber) ? $"{AccountNumber}-{AccountName}" : $"{FFCNumber}-{AccountNumber}-{AccountName}";
 
@@ -374,10 +376,10 @@ namespace HM.Operations.Secure.Middleware
                 context.Configuration.LazyLoadingEnabled = false;
                 context.Configuration.ProxyCreationEnabled = false;
 
-                var fundAccounts = (from oAccnt in context.onBoardingAccounts
-                                    where allFundIds.Contains(oAccnt.hmFundId) && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed" && oAccnt.AccountType != AgreementReportingOnly
+                var fundAccounts = (from oAccnt in context.vw_FundAccounts
+                                    where allFundIds.Contains(oAccnt.hmFundId) && oAccnt.AccountStatus == "Approved"  && oAccnt.AccountStatus != "Closed" && oAccnt.AccountType != AgreementReportingOnly
                                     let isAuthorizedSendingAccount = (currency == null || oAccnt.Currency == currency) && (isNoticeToFund || oAccnt.AuthorizedParty == WireDataManager.AuthorizedPartyInnocap) && oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0)
-                                    let isAuthorizedSendingAccountFinal = isNotice ? isAuthorizedSendingAccount && oAccnt.SwiftGroup.AcceptedMessages.Contains("MT210") : isAuthorizedSendingAccount
+                                    let isAuthorizedSendingAccountFinal = isNotice ? isAuthorizedSendingAccount && oAccnt.AcceptedMessages.Contains("MT210") : isAuthorizedSendingAccount
                                     where (isFundTransfer || isAuthorizedSendingAccountFinal)
 
                                     select new WireAccountBaseData
@@ -390,7 +392,9 @@ namespace HM.Operations.Secure.Middleware
                                         Currency = oAccnt.Currency,
                                         IsParentFund = parentFundIds.Contains(oAccnt.hmFundId),
                                         IsSubAdvisorFund = subFundIds.Contains(oAccnt.hmFundId),
-                                        FundId = oAccnt.hmFundId
+                                        FundId = oAccnt.hmFundId,
+                                        AgreementType = oAccnt.AgreementType,
+                                        Description = oAccnt.Description,
                                     }).Distinct().ToList();
 
                 return fundAccounts;
