@@ -688,6 +688,11 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             return true;
         }
 
+        if ($scope.wireTicketObj.IsBankLoanPrivateOrIpo && $scope.WireTicket.hmsWireDocuments.length == 0) {
+            $scope.fnShowErrorMessage("Please attach file to initiate the wire for the seletec transfer type.");
+            return false;
+        }
+
         //validate against the available cash balances
         if (!$scope.wireTicketObj.IsNotice && !$scope.wireTicketObj.IsNoticeToFund && $scope.CashBalance.IsNewBalanceOffLimit) {
 

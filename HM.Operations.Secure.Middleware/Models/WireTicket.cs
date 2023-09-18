@@ -16,12 +16,11 @@ namespace HM.Operations.Secure.Middleware.Models
         public long WireId => HMWire?.hmsWireId ?? 0;
 
         public bool IsFundTransfer => HMWire.WireTransferTypeId == 2;
-
         public bool Is3rdPartyTransfer => HMWire.WireTransferTypeId == 1;
-
-        public bool IsNotice => HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.TransferType == "Notice";
-        public bool IsNoticeToFund => HMWire.hmsWireTransferTypeLKup != null && HMWire.hmsWireTransferTypeLKup.TransferType == "Notice to Fund";
-
+        public bool IsBankLoanPrivateOrIpo => HMWire.WireTransferTypeId == 5;
+        public bool IsNotice => HMWire.hmsWireTransferTypeLKup is { TransferType: "Notice" };
+        public bool IsNoticeToFund => HMWire.hmsWireTransferTypeLKup is { TransferType: "Notice to Fund" };
+        
         public string TransferType => HMWire.hmsWireTransferTypeLKup == null ? "3rd Party Transfer" : HMWire.hmsWireTransferTypeLKup.TransferType;
 
         public bool IsSenderInformationRequired
