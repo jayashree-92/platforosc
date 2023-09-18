@@ -1514,7 +1514,12 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
                             var selectedAccount = $("#liSendingAccount").select2("data");
                             return recAcc.id != $scope.WireTicket.OnBoardAccountId
                                 && recAcc.Currency == $("#liCurrency").select2("val")
-                                && (recAcc.fundId == selectedAccount.fundId || (!selectedAccount.isSubAdvisorFund || recAcc.isParentFund));
+                                && (recAcc.fundId == selectedAccount.fundId || (!selectedAccount.isSubAdvisorFund || recAcc.isParentFund))
+                                //HMOS-391
+                                && (!$scope.wireTicketObj.IsFundTransfer ||
+                                    ($("#liWiresPurpose").select2('data').text.indexOf("Redemption") >= 0
+                                        ? recAcc.authorizedParty == "Administrator" || recAcc.authorizedParty == "Client"
+                                        : recAcc.authorizedParty != "Administrator" && recAcc.authorizedParty != "Client"));
                         }, true);
 
                         angular.element("#liReceivingBookAccount").select2("destroy");

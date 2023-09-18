@@ -563,21 +563,23 @@ namespace HM.Operations.Secure.Web.Controllers
             var sendingAccountsList = fundAccounts.Where(s => s.IsAuthorizedSendingAccount && s.FundId == fundId).Select(s => new
             {
                 id = s.OnBoardAccountId,
-                text = $"{s.AccountNameAndNumber}{(s.IsSubAdvisorFund ? " (Sub-advisor)" : "")} {s.AgreementType}",
+                text = $"{s.AccountNameAndNumber}{(s.IsSubAdvisorFund ? " (Sub-advisor)" : "")}-{s.AgreementType}",
                 Currency = s.Currency,
                 isParentFund = s.IsParentFund,
                 isSubAdvisorFund = s.IsSubAdvisorFund,
-                fundId = s.FundId
+                fundId = s.FundId,
+                authorizedParty = s.AuthorizedParty
             }).ToList();
 
             var receivingAccountsList = fundAccounts.Select(s => new
             {
                 id = s.OnBoardAccountId,
-                text = $"{s.AccountNameAndNumber}{(s.IsSubAdvisorFund ? " (Sub-advisor)" : "")} {s.AgreementType}",
+                text = $"{s.AccountNameAndNumber}{(s.IsSubAdvisorFund ? " (Sub-advisor)" : "")}-{s.AgreementType}",
                 Currency = s.Currency,
                 isParentFund = s.IsParentFund,
                 isSubAdvisorFund = s.IsSubAdvisorFund,
-                fundId = s.FundId
+                fundId = s.FundId,
+                authorizedParty = s.AuthorizedParty
             }).ToList();
 
             var currencies = sendingAccountsList.Select(s => new { id = s.Currency, text = s.Currency }).Distinct().OrderBy(s => s.text).ToList();
@@ -637,7 +639,7 @@ namespace HM.Operations.Secure.Web.Controllers
                     id = s.onBoardingSSITemplateId,
                     text = $"{(string.IsNullOrWhiteSpace(s.FFCNumber)
                         ? $"{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}"
-                        : $"{s.FFCNumber}-{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}")} {(agreementTypes.TryGetValue(s.dmaAgreementTypeId, out var agreementType) ? agreementType : "UnKnownAgrType")}"
+                        : $"{s.FFCNumber}-{s.UltimateBeneficiaryAccountNumber}-{s.TemplateName}")}-{(agreementTypes.TryGetValue(s.dmaAgreementTypeId, out var agreementType) ? agreementType : "UnKnownAgrType")}"
                 }).ToList();
                 return Json(new { receivingAccounts, receivingAccountList, counterparties = counterParties, shouldEnableCollateralPurpose });
             }

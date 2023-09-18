@@ -30,6 +30,7 @@ namespace HM.Operations.Secure.Middleware
         public long FundId { get; set; }
         public string AgreementType { get; set; }
         public string Description { get; set; }
+        public string AuthorizedParty { get; set; }
 
         public string AccountNameAndNumber => string.IsNullOrWhiteSpace(FFCNumber) ? $"{AccountNumber}-{AccountName}" : $"{FFCNumber}-{AccountNumber}-{AccountName}";
 
@@ -359,7 +360,7 @@ namespace HM.Operations.Secure.Middleware
                     .Select(s => new { parentFundId = s.parentFund.FundMapId ?? 0, umberllaFundId = s.umberllaFund.FundMapId ?? 0 }).GroupBy(s => s.parentFundId).ToDictionary(s => s.Key, v => v.Select(s => s.umberllaFundId));
             }
 
-            List<long> parentFundIds = new List<long>(), subFundIds = new List<long>();
+            List<long> parentFundIds = new(), subFundIds = new();
 
             foreach(var umberllaMap in umberllaFundMap)
             {
@@ -377,7 +378,7 @@ namespace HM.Operations.Secure.Middleware
                 context.Configuration.ProxyCreationEnabled = false;
 
                 var fundAccounts = (from oAccnt in context.vw_FundAccounts
-                                    where allFundIds.Contains(oAccnt.hmFundId) && oAccnt.AccountStatus == "Approved"  && oAccnt.AccountStatus != "Closed" && oAccnt.AccountType != AgreementReportingOnly
+                                    where allFundIds.Contains(oAccnt.hmFundId) && oAccnt.ApprovalStatus == "Approved"  && oAccnt.AccountStatus != "Closed" && oAccnt.AccountType != AgreementReportingOnly
                                     let isAuthorizedSendingAccount = (currency == null || oAccnt.Currency == currency) && (isNoticeToFund || oAccnt.AuthorizedParty == WireDataManager.AuthorizedPartyInnocap) && oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0)
                                     let isAuthorizedSendingAccountFinal = isNotice ? isAuthorizedSendingAccount && oAccnt.AcceptedMessages.Contains("MT210") : isAuthorizedSendingAccount
                                     where (isFundTransfer || isAuthorizedSendingAccountFinal)
@@ -395,6 +396,7 @@ namespace HM.Operations.Secure.Middleware
                                         FundId = oAccnt.hmFundId,
                                         AgreementType = oAccnt.AgreementType,
                                         Description = oAccnt.Description,
+                                        AuthorizedParty = oAccnt.AuthorizedParty
                                     }).Distinct().ToList();
 
                 return fundAccounts;
@@ -409,12 +411,13 @@ namespace HM.Operations.Secure.Middleware
             context.Configuration.LazyLoadingEnabled = false;
             context.Configuration.ProxyCreationEnabled = false;
 
-            var fundAccounts = (from oAccnt in context.onBoardingAccounts
-                                where oAccnt.hmFundId == hmFundId && oAccnt.onBoardingAccountStatus == "Approved" && !oAccnt.IsDeleted && oAccnt.AccountStatus != "Closed"
+            var fundAccounts = (from oAccnt in context.vw_FundAccounts
+                                where oAccnt.hmFundId == hmFundId && oAccnt.ApprovalStatus == "Approved" && oAccnt.AccountStatus != "Closed"
                                 join oMap in context.onBoardingAccountSSITemplateMaps on oAccnt.onBoardingAccountId equals oMap.onBoardingAccountId
-                                let dmaReports = oAccnt.onBoardingAccountModuleAssociations.Select(s => s.onBoardingModule).Select(s => s.dmaReportsId)
                                 let isAuthorizedSendingAccount = (oAccnt.AuthorizedParty == WireDataManager.AuthorizedPartyInnocap && oAccnt.AccountType == "Agreement" && allEligibleAgreementIds.Contains(oAccnt.dmaAgreementOnBoardingId ?? 0))
-                                where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved" && isAuthorizedSendingAccount && dmaReports.Contains(reportId)
+                                where oMap.onBoardingSSITemplateId == onBoardSSITemplateId && oMap.Status == "Approved" && isAuthorizedSendingAccount 
+                                let dmaReports = context.onBoardingAccountModuleAssociations.Where(s=>s.onBoardingAccountId == oAccnt.onBoardingAccountId).Select(s => s.onBoardingModule.dmaReportsId)
+                                where dmaReports.Contains(reportId)
                                 select new WireAccountBaseData
                                 {
                                     OnBoardAccountId = oAccnt.onBoardingAccountId,
@@ -422,7 +425,10 @@ namespace HM.Operations.Secure.Middleware
                                     AccountNumber = oAccnt.UltimateBeneficiaryAccountNumber,
                                     FFCNumber = oAccnt.FFCNumber,
                                     IsAuthorizedSendingAccount = isAuthorizedSendingAccount,
-                                    Currency = oAccnt.Currency
+                                    Currency = oAccnt.Currency,
+                                    AgreementType = oAccnt.AgreementType,
+                                    Description = oAccnt.Description,
+                                    AuthorizedParty = oAccnt.AuthorizedParty
                                 }).ToList();
             return fundAccounts;
         }
