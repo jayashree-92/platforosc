@@ -689,7 +689,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
 
         if ($scope.wireTicketObj.IsBankLoanPrivateOrIpo && $scope.WireTicket.hmsWireDocuments.length == 0) {
-            $scope.fnShowErrorMessage("Please attach file to initiate the wire for the seletec transfer type.");
+            $scope.fnShowErrorMessage("Please attach file to initiate the wire for the selected transfer type.");
             return false;
         }
 
@@ -1848,6 +1848,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
             $scope.wireTicketObj.IsFundTransfer = $scope.WireTicket.WireTransferTypeId == 2;
             $scope.wireTicketObj.IsNotice = $scope.WireTicket.WireTransferTypeId == 4;
             $scope.wireTicketObj.IsNoticeToFund = $scope.WireTicket.WireTransferTypeId == 6;
+            $scope.wireTicketObj.IsBankLoanPrivateOrIpo = $scope.WireTicket.WireTransferTypeId == 5;
 
             if ($scope.wireTicketObj.IsNotice || $scope.wireTicketObj.IsNoticeToFund)
                 $("#wireValueDate").datepicker("setStartDate", "-3d");
