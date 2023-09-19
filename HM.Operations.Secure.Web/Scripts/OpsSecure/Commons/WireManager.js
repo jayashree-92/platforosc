@@ -689,7 +689,7 @@ HmOpsApp.controller("wireInitiationCtrl", function ($scope, $http, $timeout, $q,
         }
 
         if ($scope.wireTicketObj.IsBankLoanPrivateOrIpo && $scope.WireTicket.hmsWireDocuments.length == 0) {
-            $scope.fnShowErrorMessage("Please attach file to initiate the wire for the selected transfer type.");
+            $scope.fnShowErrorMessage("For Initiating wire with Transfer Type BankLoan/Private/IPO, attachment is mandatory");
             return false;
         }
 
