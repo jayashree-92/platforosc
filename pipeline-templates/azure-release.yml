@@ -20,8 +20,8 @@ stages:
               displayName: 'Powershell Command'
               errorActionPreference: 'Continue'
             
-            # - task: DownloadPipelineArtifact@2
-            #   inputs:
-            #     buildType: 'current'
-            #     artifactName: 'drop'
-            #     targetPath: '$(System.ArtifactsDirectory)'
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                buildType: 'current'
+                artifactName: 'drop'
+                targetPath: '$(System.ArtifactsDirectory)'
