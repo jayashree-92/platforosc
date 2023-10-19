@@ -4,11 +4,11 @@ parameters:
 
 stages:
 - stage: ${{ parameters.environment }}
-  displayName: '${{ parameters.environment }}'
+  displayName: 'Release ${{ parameters.environment }}'
   jobs:
   - deployment:
     displayName: 'Release ${{ parameters.environment }}'
-    environment: ${{ parameters.environment }}
+    environment: ${{ tolower(parameters.environment) }}
     strategy:
       runOnce:
         deploy:

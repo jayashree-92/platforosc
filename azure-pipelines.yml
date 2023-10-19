@@ -14,12 +14,12 @@ parameters:
   - name: environment
     displayName: Environment
     values:
-      - development
-      - test1
-      - test2
-      - qa1
-      - qa2
-      - production
+      - Development
+      - Test1
+      - Test2
+      - QA1
+      - QA2
+      - Production
 
 variables:
   solution: '**/*.sln'
