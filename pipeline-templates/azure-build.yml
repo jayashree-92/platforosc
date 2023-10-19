@@ -16,7 +16,7 @@ stages:
       - task: MSBuild@1
         inputs:
          solution: '$(solution)'
-      - #task: VSTest@2
+      #- task: VSTest@2
         #inputs:
           #platform: '$(buildPlatform)'
           #configuration: '$(buildConfiguration)'
