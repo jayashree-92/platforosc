@@ -8,7 +8,7 @@ stages:
   jobs:
   - deployment:
     displayName: 'Release ${{ parameters.environment }}'
-    environment: ${{ toLower(parameters.environment) }}
+    environment: ${{ lower(parameters.environment) }}
     strategy:
       runOnce:
         deploy:
