@@ -7,7 +7,7 @@ stages:
   displayName: 'Release ${{ parameters.environment }}'
   jobs:
   - deployment:
-    displayName: 'Release ${{ parameters.environment }}'
+    displayName: 'Release_${{ parameters.environment }}'
     environment: 
       name: ${{ lower(parameters.environment) }}
       resourceType: virtualMachine
@@ -19,3 +19,9 @@ stages:
                 Write-Host "Testing steps for deployment"
               displayName: 'Powershell Command'
               errorActionPreference: 'Continue'
+            
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                buildType: 'current'
+                artifactName: 'drop'
+                targetPath: '$(System.ArtifactsDirectory)'
