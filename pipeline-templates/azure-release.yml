@@ -8,7 +8,9 @@ stages:
   jobs:
   - deployment:
     displayName: 'Release ${{ parameters.environment }}'
-    environment: ${{ lower(parameters.environment) }}
+    environment: 
+      name: ${{ lower(parameters.environment) }}
+      resourceType: virtualMachine
     strategy:
       runOnce:
         deploy:
