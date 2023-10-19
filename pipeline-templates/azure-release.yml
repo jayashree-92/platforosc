@@ -1,0 +1,19 @@
+parameters:
+  - name: environment
+    type: string
+
+stages:
+- stage: ${{ parameters.environment }}
+  displayName: '${{ parameters.environment }}'
+  jobs:
+  - deployment:
+    displayName: 'Release ${{ parameters.environment }}'
+    environment: ${{ parameters.environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - powershell: |
+                Write-Host "Testing steps for deployment"
+              displayName: 'Powershell Command'
+              errorActionPreference: 'Continue'

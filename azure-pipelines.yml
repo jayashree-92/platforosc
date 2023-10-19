@@ -3,13 +3,23 @@
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
-trigger:
-- AzureRelease
+trigger: none
 
 pool:
   name: "pipeline-cu-developers"
   demands:
   - Agent.OS -equals Windows_NT
+
+parameters:
+  - name: environment
+    displayName: Environment
+    values:
+      - development
+      - test1
+      - test2
+      - qa1
+      - qa2
+      - production
 
 variables:
   solution: '**/*.sln'
@@ -17,33 +27,7 @@ variables:
   buildConfiguration: 'Local'
 
 stages:
-- stage: Build
-  displayName: Build Solutions  
-  jobs:
-    - job: Build
-      displayName: Build
-      steps:
-      - task: NuGetToolInstaller@1
-      - task: NuGetAuthenticate@1
-      - task: NuGetCommand@2
-        inputs:
-         command: 'restore'
-         restoreSolution: '$(solution)'
-         feedsToUse: 'config'
-         nugetConfigPath: 'nuget.config'   
-      - task: MSBuild@1
-        inputs:
-         solution: '$(solution)'
-      - task: VSTest@2
-        inputs:
-          platform: '$(buildPlatform)'
-          configuration: '$(buildConfiguration)'
-      - task: CopyFiles@2
-        inputs:
-         Contents: '**\bin\$(buildConfiguration)\**'
-         TargetFolder: '$(Build.ArtifactStagingDirectory)'      
-      - task: PublishBuildArtifacts@1
-        inputs:
-         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-         ArtifactName: 'drop'
-         publishLocation: 'Container'
+  - template: pipeline-templates/azure-build.yml
+  - template: pipeline-templates/azure-release.yml
+    parameters:
+      environment: ${{ parameters.environment }}
