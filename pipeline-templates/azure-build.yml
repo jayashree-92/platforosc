@@ -16,7 +16,7 @@ stages:
       - task: MSBuild@1
         inputs:
          solution: '$(solution)'
-         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.ArtifactStagingDirectory)"'
+         #msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.ArtifactStagingDirectory)"'
       #- task: VSTest@2
         #inputs:
           #platform: '$(buildPlatform)'
@@ -24,7 +24,11 @@ stages:
       #- task: CopyFiles@2
        # inputs:
          #Contents: '**\bin\$(buildConfiguration)\**'
-         #TargetFolder: '$(Build.ArtifactStagingDirectory)'      
+         #TargetFolder: '$(Build.ArtifactStagingDirectory)' 
+     - task: DotNetCoreCLI@2
+        inputs:
+         command: 'publish'
+         publishWebProjects: true              
       - task: PublishBuildArtifacts@1
         inputs:
          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
