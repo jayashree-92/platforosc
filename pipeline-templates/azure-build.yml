@@ -25,7 +25,7 @@ stages:
        # inputs:
          #Contents: '**\bin\$(buildConfiguration)\**'
          #TargetFolder: '$(Build.ArtifactStagingDirectory)' 
-     - task: DotNetCoreCLI@2
+      - task: DotNetCoreCLI@2
         inputs:
          command: 'publish'
          publishWebProjects: true              
