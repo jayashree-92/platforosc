@@ -25,10 +25,10 @@ stages:
        # inputs:
          #Contents: '**\bin\$(buildConfiguration)\**'
          #TargetFolder: '$(Build.ArtifactStagingDirectory)' 
-      - task: DotNetCoreCLI@2
+      - task: PublishPipelineArtifact@1
         inputs:
-         command: 'publish'
-         publishWebProjects: true              
+         targetPath: '$(System.DefaultWorkingDirectory)/HM.Operations.Secure.Web'
+         publishLocation: 'pipeline'             
       - task: PublishBuildArtifacts@1
         inputs:
          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
