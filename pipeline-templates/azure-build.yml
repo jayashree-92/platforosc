@@ -1,6 +1,6 @@
 stages:
 - stage: Build
-  displayName: Build Solutions  
+  displayName: Build and Test  
   jobs:
     - job: Build
       displayName: Build
@@ -13,10 +13,10 @@ stages:
          restoreSolution: '$(solution)'
          feedsToUse: 'config'
          nugetConfigPath: 'nuget.config'   
-      - task: MSBuild@1
+      - task: VSBuild@1
         inputs:
          solution: '$(solution)'
-         #msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.ArtifactStagingDirectory)"'
+         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
       #- task: VSTest@2
         #inputs:
           #platform: '$(buildPlatform)'
@@ -25,12 +25,12 @@ stages:
        # inputs:
          #Contents: '**\bin\$(buildConfiguration)\**'
          #TargetFolder: '$(Build.ArtifactStagingDirectory)' 
-      - task: PublishPipelineArtifact@1
-        inputs:
-         targetPath: '$(System.DefaultWorkingDirectory)/HM.Operations.Secure.Web/HM.Operations.Secure.Web.csproj'
-         publishLocation: 'pipeline'             
+      #- task: PublishPipelineArtifact@1
+       # inputs:
+        # targetPath: '$(System.DefaultWorkingDirectory)/HM.Operations.Secure.Web/HM.Operations.Secure.Web.csproj'
+        # publishLocation: 'pipeline'             
       - task: PublishBuildArtifacts@1
         inputs:
-         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+         PathtoPublish: '$(build.artifactStagingDirectory)'
          ArtifactName: 'drop'
-         publishLocation: 'Container'
+        # publishLocation: 'Container'
