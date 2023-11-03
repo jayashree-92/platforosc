@@ -27,7 +27,7 @@ stages:
          #TargetFolder: '$(Build.ArtifactStagingDirectory)' 
       - task: PublishPipelineArtifact@1
         inputs:
-         targetPath: '$(System.DefaultWorkingDirectory)/HM.Operations.Secure.Web'
+         targetPath: '$(System.DefaultWorkingDirectory)/HM.Operations.Secure.Web/HM.Operations.Secure.Web.csproj'
          publishLocation: 'pipeline'             
       - task: PublishBuildArtifacts@1
         inputs:
