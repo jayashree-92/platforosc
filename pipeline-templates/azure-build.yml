@@ -20,17 +20,8 @@ stages:
       #- task: VSTest@2
         #inputs:
           #platform: '$(buildPlatform)'
-          #configuration: '$(buildConfiguration)'
-      #- task: CopyFiles@2
-       # inputs:
-         #Contents: '**\bin\$(buildConfiguration)\**'
-         #TargetFolder: '$(Build.ArtifactStagingDirectory)' 
-      #- task: PublishPipelineArtifact@1
-       # inputs:
-        # targetPath: '$(System.DefaultWorkingDirectory)/HM.Operations.Secure.Web/HM.Operations.Secure.Web.csproj'
-        # publishLocation: 'pipeline'             
+          #configuration: '$(buildConfiguration)'             
       - task: PublishBuildArtifacts@1
         inputs:
          PathtoPublish: '$(build.artifactStagingDirectory)'
          ArtifactName: 'drop'
-        # publishLocation: 'Container'
