@@ -1,1 +1,34 @@
-----
+trigger:
+- '*'
+pool:
+  name: "pipeline-cu-developers"
+  demands:
+  - Agent.OS -equals Windows_NT
+pr:
+- '*'
+parameters:
+  - name: environment
+    displayName: Environment
+    values:
+      - IC-Admin-Dev
+  - name: file
+    values:
+      - Dev01-Admin-Website.build
+
+jobs:
+- deployment: 
+  displayName: 'Build Job'
+  environment : 
+    name : '${{ parameters.environment }}'
+    resourceType: VirtualMachine
+  
+  strategy:
+   runOnce:
+     deploy:
+        steps:
+        - script: |
+           cd path/to/your/project
+           nuget restore
+           .\NAnt.exe -buildfile:path/to/your/NAnt.build
+          displayName: Run NAnt Build
+      
