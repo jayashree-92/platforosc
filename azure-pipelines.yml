@@ -31,4 +31,17 @@ stages:
   - template: pipeline-templates/azure-release.yml
     parameters:
       environment: ${{ parameters.environment }}
+  - stage: deployement
+    displayName: deployment
+    jobs:
+      - job: powershell
+        steps :
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |
+                echo %WORKSPACE%
+                nuget sources
+                nuget config -set repositoryPath="%WORKSPACE%\packages"
+                nuget restore "HMOSecureWeb.sln" -NoCache -PackagesDirectory packages
 
