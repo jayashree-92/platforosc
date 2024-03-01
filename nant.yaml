@@ -18,7 +18,8 @@ steps:
       script: |
         # Download NAnt
         Invoke-WebRequest -Uri 'https://sourceforge.net/projects/nant/files/latest/download' -OutFile 'nant.zip'
-        Expand-Archive -Path 'nant.zip' -DestinationPath 'C:\Nant'
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        [System.IO.Compression.ZipFile]::ExtractToDirectory('nant.zip', 'C:\Nant')
         Remove-Item -Path 'nant.zip' -Force
 
         # Add NAnt to PATH
