@@ -7,8 +7,6 @@ stages:
   jobs:
   - deployment: DeployWeb
     displayName: deploy Web App
-    pool:
-      vmImage: 'Ubuntu-latest'
     environment: 
       name: 'development'
     strategy:
