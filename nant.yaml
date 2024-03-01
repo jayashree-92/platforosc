@@ -2,16 +2,20 @@
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
-environment: 
-  name: 'development'
-strategy: 
- runOnce:
-   deploy:
-     steps:
-     - task: PowerShell@2
-       inputs:
-         targetType: 'inline'
-         script: |
-           # Write your PowerShell commands here.
-           
-            NAnt -buildfile build/Application-dev.build
+stages:
+- stage: deploy
+  jobs:
+  - deployment: DeployWeb
+    displayName: deploy Web App
+    pool:
+      vmImage: 'Ubuntu-latest'
+    environment: 
+      name: 'development'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: 'NAnt -buildfile build/Application-dev.build'
