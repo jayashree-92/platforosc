@@ -16,12 +16,12 @@ steps:
       targetType: 'inline'
       script: |
         # Download NAnt ZIP file
-        Invoke-WebRequest -Uri 'https://sourceforge.net/projects/nant/files/latest/download' -OutFile 'Downloads/nant.zip'
+        Invoke-WebRequest -Uri 'https://sourceforge.net/projects/nant/files/latest/download' -OutFile 'nant.zip'
 
   - task: ExtractFiles@1
     inputs:
-      archiveFilePatterns: 'Downloads/nant.zip'
-      destinationFolder: 'C:\Program Files/nant'
+      archiveFilePatterns: 'nant.zip'
+      destinationFolder: 'nant'
       cleanDestinationFolder: true
       overwriteExistingFiles: true
 
