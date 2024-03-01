@@ -33,4 +33,6 @@ steps:
         # Add NAnt to system PATH
         $env:PATH += ';$(Agent.ToolsDirectory)\Nant\bin'
         Write-Host 'NAnt installed successfully.'
+        nant -version
+
 
