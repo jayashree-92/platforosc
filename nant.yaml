@@ -18,14 +18,12 @@ steps:
         # Download NAnt ZIP file
         Invoke-WebRequest -Uri 'https://sourceforge.net/projects/nant/files/latest/download' -OutFile 'nant.zip'
 
-  - task: PowerShell@2
-    displayName: 'Extract NAnt'
+  - task: ExtractFiles@1
     inputs:
-      targetType: 'inline'
-      script: |
-        # Extract NAnt to a folder
-        Expand-Archive -Path 'nant.zip' -DestinationPath '$(Agent.ToolsDirectory)\Nant'
-        Remove-Item -Path 'nant.zip' -Force
+      archiveFilePatterns: '**/nant.zip'
+      destinationFolder: 'c:/nant'
+      cleanDestinationFolder: true
+      overwriteExistingFiles: false
 
   - task: PowerShell@2
     displayName: 'Add NAnt to PATH'
