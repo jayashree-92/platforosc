@@ -2,9 +2,13 @@
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
-stages:
+
+pool:
+  vmImage: 'windows-latest'
 - stage: deploy
   jobs:
+
+    
   - deployment: DeployWeb
     displayName: deploy Web App
     environment: 
@@ -13,6 +17,10 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: 'make install MONO= MCS=csc prefix="C:\Program Files" TARGET=net-2.0'
           - task: PowerShell@2
             inputs:
               targetType: 'inline'
