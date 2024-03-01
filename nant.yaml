@@ -18,7 +18,7 @@ steps:
       script: |
         # Download NAnt
         Invoke-WebRequest -Uri 'https://sourceforge.net/projects/nant/files/latest/download' -OutFile 'nant.zip'
-        Expand-Archive -Path 'nant.zip' -DestinationPath '$(Agent.ToolsDirectory)\Nant'
+        Expand-Archive -Path 'nant.zip' -DestinationPath 'C:\Nant'
         Remove-Item -Path 'nant.zip' -Force
 
         # Add NAnt to PATH
