@@ -13,23 +13,10 @@ stages:
             version: 8.x
             performMultiLevelLookup: true
             includePreviewVersions: true
-      - task: ExtractFiles@1
+      - task: PowerShell@2
         inputs:
-            archiveFilePatterns: 'nant.zip'
-            destinationFolder: 'nant'
-            cleanDestinationFolder: false
-            overwriteExistingFiles: true
-  - deployment: RunNantBuild
-    dependsOn: InstallDotNet
-    displayName: 'Build with NAnt'
-    pool:
-      vmImage: 'windows-latest'
-    environment:
-      name: development 
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - script: 'nant\nant\bin\NAnt.exe -help'
+          targetType: 'inline'
+          script: 'dotnet add package NAnt --version 0.92.0'
+      
 
 
