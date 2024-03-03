@@ -25,10 +25,10 @@ steps:
 #      cleanDestinationFolder: true
 #      overwriteExistingFiles: true
 
-  - script: nant build
-    displayName: Build with NAnt
-    env:
-      PATH: $(PATH);C:\path\to\nant
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: '[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Users\adm_herrkiba\Downloads\nant-0.92-bin\nant\bin", [EnvironmentVariableTarget]::Machine)'
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
