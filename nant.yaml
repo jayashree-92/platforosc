@@ -10,13 +10,13 @@ steps:
       performMultiLevelLookup: true
       includePreviewVersions: true
 
-  - task: PowerShell@2
-    displayName: 'Download NAnt'
-    inputs:
-      targetType: 'inline'
-      script: |
-        # Download NAnt ZIP file
-        Invoke-WebRequest -Uri 'https://sourceforge.net/projects/nant/files/latest/download' -OutFile 'nant.zip'
+#  - task: PowerShell@2
+#    displayName: 'Download NAnt'
+#    inputs:
+#      targetType: 'inline'
+#      script: |
+#        # Download NAnt ZIP file
+#        Invoke-WebRequest -Uri 'https://sourceforge.net/projects/nant/files/latest/download' -OutFile 'nant.zip'
 
 #  - task: ExtractFiles@1
 #    inputs:
@@ -31,7 +31,7 @@ steps:
       targetType: 'inline'
       script: |
         # Add NAnt to system PATH
-        $env:PATH += ';$(Agent.ToolsDirectory)\Nant\bin'
+        $env:PATH += ';nant\bin'
         Write-Host 'NAnt installed successfully.'
         nant -version
 
