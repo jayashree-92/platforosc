@@ -20,6 +20,7 @@ stages:
             cleanDestinationFolder: false
             overwriteExistingFiles: true
   - deployment: RunNantBuild
+    dependsOn: InstallDotNet
     displayName: 'Build with NAnt'
     pool:
       vmImage: 'windows-latest'
