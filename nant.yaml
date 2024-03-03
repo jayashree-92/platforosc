@@ -19,9 +19,10 @@ steps:
 
 
   - task: PowerShell@2
+    displayName: test the nant command
     inputs:
       targetType: 'inline'
-      script: 'nant/bin/nnant.exe -version'
+      script: 'nant/bin/NAnt.exe -version'
 
         
   
