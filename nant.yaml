@@ -3,12 +3,12 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
-    inputs:
-      version: 8.x
-      performMultiLevelLookup: true
-      includePreviewVersions: true
+#  - task: UseDotNet@2
+#    displayName: 'Install .NET Core SDK'
+#    inputs:
+#      version: 8.x
+#      performMultiLevelLookup: true
+#      includePreviewVersions: true
 
   - task: ExtractFiles@1
     inputs:
@@ -22,7 +22,7 @@ steps:
     displayName: test the nant command
     inputs:
       targetType: 'inline'
-      script: 'nant/bin/NAnt.exe -version'
+      script: 'nant\bin\NAnt.exe -version'
 
         
   
