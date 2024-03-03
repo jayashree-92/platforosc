@@ -22,7 +22,7 @@ steps:
     displayName: test the nant command
     inputs:
       targetType: 'inline'
-      script: 'nant\nant\bin\NAnt.exe -version'
+      script: 'nant\nant\bin\NAnt.exe -help'
 
         
   
