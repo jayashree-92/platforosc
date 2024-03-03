@@ -40,4 +40,4 @@ stages:
       runOnce:
         deploy:
           steps:
-          - script: $(System.DefaultWorkingDirectory)\nant\nant\bin\NAnt.exe -help
+          - script: 'nant\nant\bin\NAnt.exe -help'
