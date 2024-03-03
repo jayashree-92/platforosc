@@ -1,4 +1,5 @@
 stages:
+
 - stage: InstallDependencies
   jobs:
   - job : InstallDotNet
@@ -12,21 +13,13 @@ stages:
             version: 8.x
             performMultiLevelLookup: true
             includePreviewVersions: true
-
-- stage: ExtractFiles
-  jobs:
-  - job : ExtractNant
-    displayName: 'Extract NAnt'
-    pool:
-      vmImage: 'windows-latest'
-
-    steps:
       - task: ExtractFiles@1
         inputs:
             archiveFilePatterns: 'nant.zip'
             destinationFolder: 'nant'
-            cleanDestinationFolder: true
+            cleanDestinationFolder: false
             overwriteExistingFiles: true
+
 
 - stage: BuildWithNant
   jobs:
