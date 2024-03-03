@@ -3,12 +3,12 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
-    inputs:
-      version: 8.x
-      performMultiLevelLookup: true
-      includePreviewVersions: true
+#  - task: UseDotNet@2
+#    displayName: 'Install .NET Core SDK'
+#    inputs:
+#      version: 8.x
+#      performMultiLevelLookup: true
+#      includePreviewVersions: true
 
 #  - task: PowerShell@2
 #    displayName: 'Download NAnt'
@@ -25,7 +25,9 @@ steps:
 #      cleanDestinationFolder: true
 #      overwriteExistingFiles: true
 
-  
+  - task: PowerShell@2
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/nant.ps1'
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
