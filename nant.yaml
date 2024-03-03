@@ -3,20 +3,20 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
-    inputs:
-      version: 8.x
-      performMultiLevelLookup: true
-      includePreviewVersions: true
+#  - task: UseDotNet@2
+#    displayName: 'Install .NET Core SDK'
+#    inputs:
+#      version: 8.x
+#      performMultiLevelLookup: true
+#      includePreviewVersions: true
 
-  - task: PowerShell@2
-    displayName: 'Download NAnt'
-    inputs:
-      targetType: 'inline'
-      script: |
-        # Download NAnt ZIP file
-        Invoke-WebRequest -Uri 'https://sourceforge.net/projects/nant/files/latest/download' -OutFile 'nant.zip'
+#  - task: PowerShell@2
+#    displayName: 'Download NAnt'
+#    inputs:
+#      targetType: 'inline'
+#      script: |
+#        # Download NAnt ZIP file
+#        Invoke-WebRequest -Uri 'https://sourceforge.net/projects/nant/files/latest/download' -OutFile 'nant.zip'
 
 #  - task: ExtractFiles@1
 #    inputs:
@@ -26,13 +26,14 @@ steps:
 #      overwriteExistingFiles: true
 
   - task: PowerShell@2
-    displayName: 'Add NAnt to PATH'
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/nant.ps1'
+  - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: |
-        # Add NAnt to system PATH
-        $env:PATH += ';$(Agent.ToolsDirectory)\Nant\bin'
-        Write-Host 'NAnt installed successfully.'
-        nant -version
+      script: 'nant -version'
+
+        
+  
 
 

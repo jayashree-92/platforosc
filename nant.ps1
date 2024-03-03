@@ -1,17 +1,20 @@
-# Specify the path where you've downloaded the NAnt ZIP file
-$NantInstallerPath = "C:\NAnt.zip"
+# Define the download URL for NAnt (replace with the actual URL)
+$nantDownloadUrl = 'https://sourceforge.net/projects/nant'
 
-# Specify the installation directory for NAnt
-$InstallDirectory = "C:\Program Files\NAnt"
+# Define the target installation folder
+$installFolder = 'Downloads'
 
-# Extract NAnt to the installation directory
-Expand-Archive -Path $NantInstallerPath -DestinationPath $InstallDirectory
+# Create the installation folder if it doesn't exist
+New-Item -ItemType Directory -Path $installFolder -Force
 
-# Add NAnt to the system PATH
-$env:Path += ";$InstallDirectory\bin"
+# Download NAnt zip file
+Invoke-WebRequest -Uri $nantDownloadUrl -OutFile "$installFolder\nant.zip"
 
-# Verify installation
-Write-Host "NAnt installed successfully!"
+# Extract NAnt from the zip file
+Expand-Archive -Path "$installFolder\nant.zip" -DestinationPath $installFolder -Force
 
-# Optional: Clean up the downloaded ZIP file
-Remove-Item -Path $NantInstallerPath
+# Add NAnt folder to PATH
+$env:Path += ";$installFolder"
+
+# Verify that NAnt is now part of the PATH
+echo "NAnt installation completed. NAnt is available in the PATH."
