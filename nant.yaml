@@ -28,14 +28,14 @@ stages:
 
 - stage: BuildWithNant
   jobs:
-  - job: RunNantBuild
+  - deployment: RunNantBuild
     displayName: 'Build with NAnt'
     pool:
       vmImage: 'windows-latest'
-    steps:
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Assuming NAnt is installed on the agent
-          nant\bin\NAnt.exe -buildfile:build/Application-dev.build
+    environment:
+      name:development 
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: nant\nant\bin\NAnt.exe -buildfile:build/Application-dev.build
