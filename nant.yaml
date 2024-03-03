@@ -1,4 +1,33 @@
 stages:
+- stage: InstallDependencies
+  jobs:
+  - job : InstallDotNet
+    displayName: 'Install .NET Core SDK'
+    pool:
+      vmImage: 'windows-latest'
+
+    steps:
+      - task: UseDotNet@2
+        inputs:
+            version: 8.x
+            performMultiLevelLookup: true
+            includePreviewVersions: true
+
+- stage: ExtractFiles
+  jobs:
+  - job : ExtractNant
+    displayName: 'Extract NAnt'
+    pool:
+      vmImage: 'windows-latest'
+
+    steps:
+      - task: ExtractFiles@1
+        inputs:
+            archiveFilePatterns: 'nant.zip'
+            destinationFolder: 'nant'
+            cleanDestinationFolder: true
+            overwriteExistingFiles: true
+
 - stage: BuildWithNant
   jobs:
   - deployment: RunNantBuild
@@ -11,4 +40,4 @@ stages:
       runOnce:
         deploy:
           steps:
-          - script: nant -buildfile:build/Application-dev.build
+          - script: nant\nant\bin\NAnt.exe -help
