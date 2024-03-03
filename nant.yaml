@@ -33,7 +33,7 @@ stages:
     pool:
       vmImage: 'windows-latest'
     environment:
-      name:development 
+      name: development 
     strategy:
       runOnce:
         deploy:
