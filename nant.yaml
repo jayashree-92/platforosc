@@ -1,22 +1,18 @@
+pool:
+  name: pipeline-cu-developers 
 stages:
 
-- stage: InstallDependencies
+- stage: BuildWithNant
   jobs:
-  - job : InstallDotNet
-    displayName: 'Install .NET Core SDK'
-    pool:
-      vmImage: 'windows-latest'
-
-    steps:
-      - task: UseDotNet@2
-        inputs:
-            version: 8.x
-            performMultiLevelLookup: true
-            includePreviewVersions: true
-      - task: PowerShell@2
-        inputs:
-          targetType: 'inline'
-          script: 'dotnet add package NAnt --version 0.92.0'
+  - deployment: RunNantBuild
+    displayName: 'Build with NAnt'
+    environment:
+      name: development 
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: nant\nant\bin\NAnt.exe -buildfile:build/Application-dev.build
       
 
 
