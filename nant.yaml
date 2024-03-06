@@ -4,15 +4,11 @@ stages:
 
 - stage: BuildWithNant
   jobs:
-  - deployment: RunNantBuild
+  - job: RunNantBuild
     displayName: 'Build with NAnt'
-    environment:
-      name: development 
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - script: nant -buildfile:'$(System.DefaultWorkingDirectory)/build/Application-dev.build'
+
+    steps:
+      - script: nant -buildfile:'$(System.DefaultWorkingDirectory)/build/Application-dev.build'
       
 
 
