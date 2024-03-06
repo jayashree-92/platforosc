@@ -8,7 +8,7 @@ stages:
     displayName: 'Build with NAnt'
     
     steps:
-      - script: dir "C:\Program Files (x86)"
+      - script: dir "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework"
         displayName: dir
       - script: nant -buildfile:$(System.DefaultWorkingDirectory)/build/Application-dev.build -verbose
 
