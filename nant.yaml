@@ -13,12 +13,6 @@ stages:
        deploy: 
         steps:
         - script: nuget restore $(System.DefaultWorkingDirectory)/HMOSecureWeb.sln
-
-        - task: NuGetCommand@2
-          inputs:
-            command: 'restore'
-            restoreSolution: '$(System.DefaultWorkingDirectory)/Commons/Commons.csproj'
-            feedsToUse: 'select'
         - script: nant -buildfile:$(System.DefaultWorkingDirectory)/build/Application-dev.build -verbose
 
       
