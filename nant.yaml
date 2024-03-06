@@ -12,6 +12,7 @@ stages:
      runOnce:
        deploy: 
         steps:
+        - script: nuget restore $(System.DefaultWorkingDirectory)/HMOSecureWeb.sln
 
         - task: NuGetCommand@2
           inputs:
