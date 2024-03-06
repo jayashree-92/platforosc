@@ -12,12 +12,11 @@ stages:
      runOnce:
        deploy: 
         steps:
-        - script: dir "C:\Users\<username>\.nuget\packages"
-          displayName: dir
+
         - task: NuGetCommand@2
           inputs:
             command: 'restore'
-            restoreSolution: 'HMOSecureWeb.sln'
+            restoreSolution: 'Commons\Commons.csproj'
             feedsToUse: 'select'
         - script: nant -buildfile:$(System.DefaultWorkingDirectory)/build/Application-dev.build -verbose
 
