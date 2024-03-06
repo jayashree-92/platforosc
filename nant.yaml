@@ -12,7 +12,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - script: nant -buildfile:$(System.DefaultWorkingDirectory)/build/Application-dev.build
+          - script: nant -buildfile:$(Pipeline.Workspace)/build/Application-dev.build
       
 
 
