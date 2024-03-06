@@ -12,7 +12,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - script: nant\nant\bin\NAnt.exe -buildfile:build/Application-dev.build
+          - script: nant -buildfile:build/Application-dev.build
       
 
 
