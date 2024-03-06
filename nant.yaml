@@ -12,7 +12,7 @@ stages:
      runOnce:
        deploy: 
         steps:
-        - script: dir "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework"
+        - script: dir "C:\Users\<username>\.nuget\packages"
           displayName: dir
         - task: NuGetCommand@2
           inputs:
