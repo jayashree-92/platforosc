@@ -12,7 +12,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - script: nant -buildfile:$(Pipeline.Workspace)/build/Application-dev.build
+          - script: nant -help
       
 
 
