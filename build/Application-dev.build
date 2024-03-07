@@ -13,7 +13,7 @@
   <property name="allServers" value="vmwclnwosdusc01" />
   <property name="appPoolName" value="OPS_Secure_Dev01" />
   
-  <property name="primaryServers" value="\\vmwclnwosdusc01\e$\OPS_Secure_Dev01,
+  <property name="primaryServers" value="\\vmwclnwosdusc01\OPS_Secure_Dev01,
   \\saappsclndusc01.file.core.windows.net\deployment-artifacts\HM-Ops-Secure" />
 
    <!--SQL Properties-->
