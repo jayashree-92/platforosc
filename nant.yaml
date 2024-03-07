@@ -13,6 +13,7 @@ stages:
        deploy: 
         steps:
         - task: PowerShell@2
+          displayName: nuget restore
           inputs:
             targetType: 'inline'
             script: |
@@ -22,6 +23,7 @@ stages:
               nuget restore "HMOSecureWeb.sln" -NoCache -PackagesDirectory packages
 
         - script: nant -buildfile:$(System.DefaultWorkingDirectory)/build/Application-dev.build -verbose
+          displayName: nant build
 
       
 
