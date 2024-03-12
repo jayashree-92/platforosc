@@ -20,7 +20,7 @@ stages:
               echo $(System.DefaultWorkingDirectory)
               nuget sources
               nuget config -set repositoryPath="$(System.DefaultWorkingDirectory)\packages"
-              nuget restore "Commons/packages.config"
+              nuget restore "$(System.DefaultWorkingDirectory)/HMOSecureWeb.sln"
 #        - script: ping vmwclnwosdusc01.innocap.com
         - script: dir \\vmwclnwosdusc01\devops-share
         - script: nant -buildfile:$(System.DefaultWorkingDirectory)/build/Application-dev.build -verbose
