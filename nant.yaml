@@ -19,9 +19,8 @@ stages:
             script: |
               echo $(System.DefaultWorkingDirectory)
               nuget sources
-              echo sources done
               nuget config -set repositoryPath="$(System.DefaultWorkingDirectory)\packages"
-              echo packages done
+              dir
               nuget restore "HMOSecureWeb.sln" -NoHttpCache -PackagesDirectory packages\
 #        - script: ping vmwclnwosdusc01.innocap.com
         - script: dir \\vmwclnwosdusc01\devops-share
