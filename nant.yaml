@@ -14,7 +14,7 @@ stages:
           nuget sources
           nuget config -set repositoryPath="$(System.DefaultWorkingDirectory)\packages"
           nuget restore "HMOSecureWeb.sln" -NoHttpCache -PackagesDirectory packages\
-  - script : ping vmwclnwosdusc01.innocap.com
+    - script : ping vmwclnwosdusc01.innocap.com
 
 - stage: deployment 
   jobs:
