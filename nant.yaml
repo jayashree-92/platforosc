@@ -4,7 +4,20 @@ stages:
 
 - stage: BuildWithNant
   jobs:
+  - job: 
+    steps:
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          nuget sources
+          nuget config -set repositoryPath="$(System.DefaultWorkingDirectory)\packages"
+          nuget restore "HMOSecureWeb.sln" -NoHttpCache -PackagesDirectory packages\
+
+- stage: deployment 
+  jobs:
   - deployment: RunNantBuild
+
     displayName: 'Build with NAnt'
     environment:
       name: development 
@@ -12,16 +25,7 @@ stages:
      runOnce:
        deploy: 
         steps:
-        - task: PowerShell@2
-          displayName: nuget restore
-          inputs:
-            targetType: 'inline'
-            script: |
-              echo $(System.DefaultWorkingDirectory)
-              nuget sources
-              nuget config -set repositoryPath="$(System.DefaultWorkingDirectory)\packages"
-              Get-ChildItem -Path '$(System.DefaultWorkingDirectory)' -Recurse 
-              nuget restore "$(System.DefaultWorkingDirectory)\Platform-OSC\HMOSecureWeb.sln" -NoHttpCache -PackagesDirectory packages\
+
 #        - script: ping vmwclnwosdusc01.innocap.com
         - script: dir \\vmwclnwosdusc01\devops-share
         - script: nant -buildfile:$(System.DefaultWorkingDirectory)/build/Application-dev.build -verbose
