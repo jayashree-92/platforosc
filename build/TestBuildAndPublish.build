@@ -68,7 +68,7 @@
       <arg value="/p:OutDir=${OutputFile1}" />
       <arg value="/p:WebProjectOutputDir=${sourcePackageLocation}" />
     </exec>
-	<copy todir="${sourcePackageLocation}\bin\" verbose="true">
+	<copy todir="${sourcePackageLocation}" verbose="true">
     <fileset basedir=".">
 		<include name="${buildDirectory}\ExternalLibraries\Aspose.Cells.lic"/>
 		<include name="${buildDirectory}\ExternalLibraries\Aspose.Pdf.lic"/>
