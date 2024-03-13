@@ -7,7 +7,7 @@
   <property name="SolutionFile" value="../HMOSecureWeb.sln"/>   
   <property name="ProjectFile" value="../HM.Operations.Secure.Web/HM.Operations.Secure.Web.csproj"/>   
   <property name="OutputFile1" value="../HM.Operations.Secure.Web/obj/Test/"/>   
-  <property name="sourcePackageLocation" value="\\vmwclnwosdusc01\devops-share/"/>   
+  <property name="sourcePackageLocation" value="\\vmwclnwosdusc01\devops-share"/>   
   <property name="UnitTestProjectReference" value="../HedgeMark.SwiftMessageHandler.Tests/bin/QA/HedgeMark.SwiftMessageHandler.Tests.dll" />  
   
   <property name="allServers" value="vmwclnwosdusc01" />
