@@ -2,19 +2,19 @@ pool:
   name: pipeline-cu-developers 
 stages:
 
-- stage: BuildWithNant
-  jobs:
-  - job: 
-    steps:
-    - task: PowerShell@2
-      displayName: NUGET PACKAGES
-      inputs:
-        targetType: 'inline'
-        script: |
-          nuget sources
-          nuget config -set repositoryPath="$(System.DefaultWorkingDirectory)\packages"
-          nuget restore "HMOSecureWeb.sln" -NoHttpCache -PackagesDirectory packages\
-    - script : ping 10.60.65.7
+#- stage: BuildWithNant
+#  jobs:
+#  - job: 
+#    steps:
+#    - task: PowerShell@2
+#      displayName: NUGET PACKAGES
+#      inputs:
+#        targetType: 'inline'
+#        script: |
+#          nuget sources
+#          nuget config -set repositoryPath="$(System.DefaultWorkingDirectory)\packages"
+#          nuget restore "HMOSecureWeb.sln" -NoHttpCache -PackagesDirectory packages\
+#    - script : ping 10.60.65.7
 
 - stage: deployment 
   jobs:
