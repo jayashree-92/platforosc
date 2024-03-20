@@ -1,38 +1,18 @@
 pool:
-  name: pipeline-cu-developers 
+  name: Platform-OSC-dev
 stages:
 
-#- stage: BuildWithNant
-#  jobs:
-#  - job: 
-#    steps:
-#    - task: PowerShell@2
-#      displayName: NUGET PACKAGES
-#      inputs:
-#        targetType: 'inline'
-#        script: |
-#          nuget sources
-#          nuget config -set repositoryPath="$(System.DefaultWorkingDirectory)\packages"
-#          nuget restore "HMOSecureWeb.sln" -NoHttpCache -PackagesDirectory packages\
-#    - script : ping 10.60.65.7
-
-- stage: deployment 
+- stage: BuildWithNant
   jobs:
-  - deployment: RunNantBuild
-
-    displayName: 'Build with NAnt'
-    environment:
-      name: development 
-    strategy:
-     runOnce:
-       deploy: 
-        steps:
-
-        - script: hostname
-#        - script: dir \\vmwclnwosdusc01\devops-share
-        - script: nant -buildfile:$(System.DefaultWorkingDirectory)/build/Application-dev.build -verbose
-          displayName: nant build
-
-      
-
-
+  - job: 
+    steps:
+    - task: PowerShell@2
+      displayName: NUGET PACKAGES
+      inputs:
+        targetType: 'inline'
+        script: |
+          nuget sources
+          nuget config -set repositoryPath="$(System.DefaultWorkingDirectory)\packages"
+          nuget restore "HMOSecureWeb.sln" -NoHttpCache -PackagesDirectory packages\
+    - script: nant -buildfile:$(System.DefaultWorkingDirectory)/build/Application-dev.build -verbose
+      displayName: nant build
