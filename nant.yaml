@@ -13,6 +13,6 @@ stages:
         script: |
           nuget sources
           nuget config -set repositoryPath="$(System.DefaultWorkingDirectory)\packages"
-          nuget restore "HMOSecureWeb.sln" -NoHttpCache -PackagesDirectory packages\
+          nuget restore "HMOSecureWeb.sln" -NoCache  -PackagesDirectory packages\
     - script: nant -buildfile:$(System.DefaultWorkingDirectory)/build/Application-dev.build -verbose
       displayName: nant build
