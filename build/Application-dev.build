@@ -22,11 +22,11 @@
   <target name="cleanAndDeployPackage" >	
 	 <nant buildfile="TestBuildAndPublish.build" />	
 	 <nant buildfile="CleanAndDeployPackage.build" />
-	 <!--nant buildfile="SQL-GF.Build">
+	 <nant buildfile="SQL-GF.Build">
 		<properties>		 
 		  <property name="sql.svr" value="vmwclnsqldusc01"/>
 		</properties>
-	 </nant-->
+	 </nant>
 	
 	
   </target>
