@@ -1,10 +1,17 @@
-pool:
-  name: Platform-OSC-dev
-stages:
+parameters:
+  - name: environment
+    displayName: environment
+    values:
+    - dev
+    - qa
 
+pool:
+  name: Platform-OSC-${{ parameters.environment }}
+
+stages:
 - stage: BuildWithNant
   jobs:
-  - job: 
+  - job:
     steps:
     - task: PowerShell@2
       displayName: NUGET PACKAGES
@@ -13,6 +20,6 @@ stages:
         script: |
           nuget sources
           nuget config -set repositoryPath="$(System.DefaultWorkingDirectory)\packages"
-          nuget restore "HMOSecureWeb.sln" -NoCache  -PackagesDirectory packages\
-    - script: E:\Software\nant-0.92\bin\nant.exe -buildfile:$(System.DefaultWorkingDirectory)/build/Application-dev.build -verbose
+          nuget restore "HMOSecureWeb.sln" -NoCache -PackagesDirectory packages
+    - script: E:\Software\nant-0.92\bin\nant.exe -buildfile:$(System.DefaultWorkingDirectory)/build/Application-${{ parameters.environment }}.build -verbose
       displayName: nant build
