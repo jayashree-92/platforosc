@@ -5,11 +5,13 @@ parameters:
     - dev
     - qa
 
-pool:
-  name: Platform-OSC-${{ parameters.environment }}
+
 
 stages:
+
 - stage: BuildWithNant
+  pool:
+    name: Platform-OSC-${{ parameters.environment }}
   jobs:
   - job:
     steps:
