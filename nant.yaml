@@ -13,7 +13,7 @@ parameters:
 
 stages:
 
-- stage: Build & Deploy OpsSecure in ${{ parameters.environment }}
+- stage: Build and Deploy OpsSecure in ${{ parameters.environment }}
   pool:
     name: Platform-OSC-${{ parameters.environment }}
   jobs:
