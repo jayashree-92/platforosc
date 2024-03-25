@@ -1,3 +1,8 @@
+#Azure Build and Release yaml for Operations Secure Environments 
+
+trigger:
+     none
+
 parameters:
   - name: environment
     displayName: environment
@@ -6,11 +11,9 @@ parameters:
     - qa
     - test
 
-
-
 stages:
 
-- stage: BuildWithNant
+- stage: Build & Deploy OpsSecure in ${{ parameters.environment }}
   pool:
     name: Platform-OSC-${{ parameters.environment }}
   jobs:
