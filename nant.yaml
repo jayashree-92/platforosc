@@ -1,4 +1,4 @@
-#Azure Build and Release yaml for Operations Secure Environments 
+# Azure Build and Release yaml pipeline for Operation Secure Environment
 
 trigger:
      none
