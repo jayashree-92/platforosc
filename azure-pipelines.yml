@@ -6,9 +6,8 @@
 trigger: none
 
 pool:
-  name: "pipeline-cu-developers"
-  demands:
-  - Agent.OS -equals Windows_NT
+  name: "platform-application-agent-pool"
+
 
 parameters:
   - name: environment
