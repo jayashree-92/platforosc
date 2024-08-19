@@ -11,7 +11,7 @@ $sqlServer = "vmwclnsqldusc01"
 $sqlDB = "HM_WIRES"
 
 Write-Host "Executing Scripts to DB: $sqlDB in server: $sqlServer"
-Write-Host hostname
+hostname
 Write-Host "Current Directory: $(Get-Location)"
 
 # Execute SQL files
