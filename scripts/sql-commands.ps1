@@ -1,6 +1,9 @@
+param (
+    [string]$rootDir
+)
 # Set variables
 $DoubleQuote = '"'
-$rootDirSql = "$(System.DefaultWorkingDirectory)\HMSQLDBProject\HM_DMA"
+$rootDirSql = "$rootDir\HMSQLDBProject\HM_DMA"
 $dirSql = "${rootDirSql}\CreateScripts"
 $ChangeSql = "${rootDirSql}\ChangeScripts"
 $DataSql = "${rootDirSql}\DataScripts"
