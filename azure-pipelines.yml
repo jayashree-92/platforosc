@@ -43,4 +43,6 @@ stages:
                 nuget sources
                 nuget config -set repositoryPath="%WORKSPACE%\packages"
                 nuget restore "HMOSecureWeb.sln" -NoCache -PackagesDirectory packages
+                sc.exe config $serviceName obj= "$Username" password= "$Password"
+                
 
