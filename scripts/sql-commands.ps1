@@ -14,6 +14,8 @@ Write-Host "Executing Scripts to DB: $sqlDB in server: $sqlServer"
 
 # Execute SQL files
 $scriptPaths = @("${dirSql}\Tables\*.sql", "${ChangeSql}\*.sql", "${dirSql}\Views\*.sql", "${DataSql}\*.sql")
+Write-Host "Script Path: $scriptPath"
+Write-Host "Current Directory: $(Get-Location)"
 
 foreach ($scriptPath in $scriptPaths) {
     foreach ($sqlScript in Get-ChildItem -Path $scriptPath -Recurse) {
