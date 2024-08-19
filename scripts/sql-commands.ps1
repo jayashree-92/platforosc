@@ -7,8 +7,8 @@ $DataSql = "${rootDirSql}\DataScripts"
 $DMAStagingTypes = "${rootDirSql}\DMAStagingTypes.sql"
 
 # Set SQL Server and Database details
-$sqlServer = "your_sql_server"
-$sqlDB = "your_database_name"
+$sqlServer = "vmwclnsqldusc01"
+$sqlDB = "HM_WIRES"
 
 Write-Host "Executing Scripts to DB: $sqlDB in server: $sqlServer"
 
