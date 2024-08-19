@@ -1,6 +1,6 @@
 # Set variables
 $DoubleQuote = '"'
-$rootDirSql = "..\HMSQLDBProject\HM_DMA"
+$rootDirSql = "$(System.DefaultWorkingDirectory\HMSQLDBProject\HM_DMA"
 $dirSql = "${rootDirSql}\CreateScripts"
 $ChangeSql = "${rootDirSql}\ChangeScripts"
 $DataSql = "${rootDirSql}\DataScripts"
