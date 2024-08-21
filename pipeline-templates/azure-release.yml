@@ -24,4 +24,5 @@ stages:
               inputs:
                 buildType: 'current'
                 artifactName: 'drop'
-                targetPath: '$(System.ArtifactsDirectory)'
+#                targetPath: '$(System.ArtifactsDirectory)'
+                targetPath: 'C:\azure-devops-deployment'
