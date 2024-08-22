@@ -1,6 +1,6 @@
 # Variables
-$sourcePath = "C:\path\to\source\repo"   # Replace with the path to your source repo
-$destinationPath = "C:\path\to\destination\repo" # Replace with the path to your destination repo
+$sourcePath = "C:\azure-devops-deployment\deployment"   # Replace with the path to your source repo
+$destinationPath = "\\vmwclnwosdusc01\devops-share" # Replace with the path to your destination repo
 
 # Copy all files and folders from the source to the destination
 Write-Host "Copying files from $sourcePath to $destinationPath ..."
