@@ -22,5 +22,5 @@ if ($?) {
     Write-Host "Error during file copy."
 }
 
-
-Remove-Item -Path "C:\azure-devops-deployment\*" -Recurse -Force
+$repoPath = "C:\azure-devops-deployment"
+Remove-Item -Path "$repoPath\*" -Recurse -Force
