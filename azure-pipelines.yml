@@ -44,10 +44,10 @@ stages:
                 sc.exe config "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" obj= "innocap\gmsa-icappsvc01$"
                 
                 # Restart the service to apply changes
-                Restart-Service -Name "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" -Force
+                #Restart-Service -Name "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" -Force
                 
                 # Output success message
-                Write-Host "Service has been successfully configured and restarted."
+                #Write-Host "Service has been successfully configured and restarted."
 
           - task: PowerShell@2
             displayName: SQL commands
