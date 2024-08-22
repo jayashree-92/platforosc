@@ -50,17 +50,17 @@ stages:
             inputs:
               filePath: '$(System.DefaultWorkingDirectory)/scripts/sql-commands.ps1'
               arguments: '-rootDir "$(System.DefaultWorkingDirectory)"'
-          - task: PowerShell@2
-            displayName: extract move and clean
-            inputs:
-              filePath: '$(System.DefaultWorkingDirectory)/scripts/move.ps1'
-          - task: DeleteFiles@1
-            inputs:
-              SourceFolder: 'C:\azure-devops-deployment'
-              Contents: '*'
-          - task: PowerShell@2
-            displayName: backup
-            inputs:
-              filePath: '$(System.DefaultWorkingDirectory)/scripts/backup.ps1'
+#          - task: PowerShell@2
+#            displayName: extract move and clean
+#            inputs:
+#              filePath: '$(System.DefaultWorkingDirectory)/scripts/move.ps1'
+#          - task: DeleteFiles@1
+#           inputs:
+#              SourceFolder: 'C:\azure-devops-deployment'
+#              Contents: '*'
+#          - task: PowerShell@2
+#            displayName: backup
+#            inputs:
+#              filePath: '$(System.DefaultWorkingDirectory)/scripts/backup.ps1'
                 
 
