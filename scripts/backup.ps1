@@ -1,6 +1,6 @@
 # Define the source and destination paths
-$sourcePath = "C:\path\to\source\folder"
-$destinationRootPath = "C:\path\to\destination\folder"
+$sourcePath = "\\vmwclnwosdusc01\devops-share"
+$destinationRootPath = "C:\Backup"
 
 # Get the current date and time to create a unique folder name
 $dateTime = Get-Date -Format "yyyyMMdd-HHmmss"
