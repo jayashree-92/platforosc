@@ -29,7 +29,7 @@ stages:
             - task: PowerShell@2
               inputs:
                 targetType: 'inline'
-                script: 'Expand-Archive -Path "C:\azure-devops-deployment\HM.Operations.Secure.Web.zip" -DestinationPath "C:\azure-devops-deployment -Force'
+                script: 'Expand-Archive -Path "C:\azure-devops-deployment\HM.Operations.Secure.Web.zip" -DestinationPath "C:\azure-devops-deployment" -Force'
             - task: PowerShell@2
               inputs:
                 targetType: 'inline'
