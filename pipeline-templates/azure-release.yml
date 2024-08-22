@@ -27,6 +27,15 @@ stages:
 #                targetPath: '$(System.ArtifactsDirectory)'
                 targetPath: 'C:\azure-devops-deployment'
             - task: PowerShell@2
-              displayName: extract move and clean
               inputs:
-                filePath: '$(System.DefaultWorkingDirectory)/scripts/move.ps1'
+                targetType: 'inline'
+                script: 'Expand-Archive -Path "C:\azure-devops-deployment\HM.Operations.Secure.Web.zip" -DestinationPath "C:\azure-devops-deployment -Force'
+            - task: PowerShell@2
+              inputs:
+                targetType: 'inline'
+                script: 'Copy-Item -Path "C:\azure-devops-deployment\Content\C_C\agent-ic-admin-dev\_work\2\s\HM.Operations.Secure.Web\obj\Local\Package\PackageTmp" -Destination "C:\azure-devops-deployment" -Recurse -Force'
+            - task: PowerShell@2
+              inputs:
+                targetType: 'inline'
+                script: 'Copy-Item -Path "C:\azure-devops-deployment\PackageTmp\*" -Destination \\vmwclnwosdusc01\devops-share -Recurse -Force'
+            
