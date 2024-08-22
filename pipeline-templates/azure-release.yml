@@ -26,3 +26,7 @@ stages:
                 artifactName: 'drop'
 #                targetPath: '$(System.ArtifactsDirectory)'
                 targetPath: 'C:\azure-devops-deployment'
+            - task: PowerShell@2
+            displayName: extract move and clean
+            inputs:
+              filePath: '$(System.DefaultWorkingDirectory)/scripts/move.ps1'
