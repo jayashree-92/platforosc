@@ -36,6 +36,7 @@ stages:
       - job: powershell
         steps :
           - task: PowerShell@2
+            
             inputs:
               targetType: 'inline'
               script: |
@@ -45,9 +46,17 @@ stages:
                 nuget restore "HMOSecureWeb.sln" -NoCache -PackagesDirectory packages
 #                sc.exe config "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" obj= "innocap\svc-dev-ic001" password= "teller6layman%8%calender"
           - task: PowerShell@2
+            displayName: SQL commands
             inputs:
               filePath: '$(System.DefaultWorkingDirectory)/scripts/sql-commands.ps1'
               arguments: '-rootDir "$(System.DefaultWorkingDirectory)"'
-
+          - task: PowerShell@2
+            displayName: extract move and clean
+            inputs:
+              filePath: '$(System.DefaultWorkingDirectory)/scripts/move.ps1'
+          - task: PowerShell@2
+            displayName: backup
+            inputs:
+              filePath: '$(System.DefaultWorkingDirectory)/scripts/backup.ps1'
                 
 
