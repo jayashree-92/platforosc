@@ -11,13 +11,4 @@ $destinationPath = "\\vmwclnwosdusc01\devops-share" # Replace with the path to y
 Write-Host "Copying files from $sourcePath to $destinationPath ..."
 Copy-Item -Path "$sourcePath\*" -Destination $destinationPath -Recurse -Force
 
-# Verify that the copy was successful
-if ($?) {
-    Write-Host "Files copied successfully."
-
-    # Optionally, delete the source files after copying
-    # Remove-Item -Path "$sourcePath\*" -Recurse -Force
-    # Write-Host "Source files deleted."
-} else {
-    Write-Host "Error during file copy."
-}
+# Verify that the copy was successfu
