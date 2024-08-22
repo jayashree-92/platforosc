@@ -36,31 +36,17 @@ stages:
       - job: powershell
         steps :
           - task: PowerShell@2
-            
+            displayName: service acount connection and restart    
             inputs:
               targetType: 'inline'
-              script: |
-                echo %WORKSPACE%
-                nuget sources
-                nuget config -set repositoryPath="%WORKSPACE%\packages"
-                nuget restore "HMOSecureWeb.sln" -NoCache -PackagesDirectory packages
-#                sc.exe config "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" obj= "innocap\svc-dev-ic001" password= "teller6layman%8%calender"
+              script: 
+                sc.exe config "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" obj= "innocap\svc-dev-ic001" password= "teller6layman%8%calender"
+                Restart-Service -Name "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" -Force
           - task: PowerShell@2
             displayName: SQL commands
             inputs:
               filePath: '$(System.DefaultWorkingDirectory)/scripts/sql-commands.ps1'
               arguments: '-rootDir "$(System.DefaultWorkingDirectory)"'
-#          - task: PowerShell@2
-#            displayName: extract move and clean
-#            inputs:
-#              filePath: '$(System.DefaultWorkingDirectory)/scripts/move.ps1'
-#          - task: DeleteFiles@1
-#           inputs:
-#              SourceFolder: 'C:\azure-devops-deployment'
-#              Contents: '*'
-#          - task: PowerShell@2
-#            displayName: backup
-#            inputs:
-#              filePath: '$(System.DefaultWorkingDirectory)/scripts/backup.ps1'
+
                 
 
