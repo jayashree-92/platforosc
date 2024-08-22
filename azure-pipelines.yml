@@ -36,14 +36,19 @@ stages:
       - job: powershell
         steps :
           - task: PowerShell@2
-            displayName: service acount connection and restart    
+            displayName: Service Account Connection and Restart    
             inputs:
               targetType: 'inline'
-              script: 
-                #sc.exe config "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" obj= "innocap\gmsa-icappsvc01$" password= ""
+              script: |
+                # Update service to use gMSA
                 sc.exe config "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" obj= "innocap\gmsa-icappsvc01$"
-                echo "it's good"
+                
+                # Restart the service to apply changes
                 Restart-Service -Name "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" -Force
+                
+                # Output success message
+                Write-Host "Service has been successfully configured and restarted."
+
           - task: PowerShell@2
             displayName: SQL commands
             inputs:
