@@ -32,7 +32,7 @@ stages:
                 targetType: 'inline'
                 script: 'Remove-Item -Path "\\vmwclnwosdusc01\devops-share\*" -Recurse -Force'
             - task: PowerShell@2
-              displayNamem : archive
+              displayName : archive
               inputs:
                 targetType: 'inline'
                 script: 'Expand-Archive -Path "C:\azure-devops-deployment\HM.Operations.Secure.Web.zip" -DestinationPath "C:\azure-devops-deployment" -Force'
@@ -42,6 +42,7 @@ stages:
                 targetType: 'inline'
                 script: 'Copy-Item -Path "C:\azure-devops-deployment\Content\C_C\agent-ic-admin-dev\_work\2\s\HM.Operations.Secure.Web\obj\Local\Package\PackageTmp" -Destination "C:\azure-devops-deployment" -Recurse -Force'
             - task: PowerShell@2
+              displayName: end
               inputs:
                 targetType: 'inline'
                 script: 'Copy-Item -Path "C:\azure-devops-deployment\PackageTmp\*" -Destination \\vmwclnwosdusc01\devops-share -Recurse -Force'
