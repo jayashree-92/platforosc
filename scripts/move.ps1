@@ -21,6 +21,3 @@ if ($?) {
 } else {
     Write-Host "Error during file copy."
 }
-
-#$repoPath = "C:\azure-devops-deployment"
-#Remove-Item -Path "$repoPath\*" -Recurse -Force
