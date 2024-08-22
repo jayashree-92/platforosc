@@ -40,7 +40,8 @@ stages:
             inputs:
               targetType: 'inline'
               script: 
-                sc.exe config "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" obj= "innocap\svc-dev-ic001" password= "teller6layman%8%calender"
+                sc.exe config "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" obj= "innocap\gmsa-icappsvc01$" password= ""
+                echo "it's good"
                 Restart-Service -Name "vstsagent.Innocap.platform-ic-admin-dev.platform-agent01" -Force
           - task: PowerShell@2
             displayName: SQL commands
