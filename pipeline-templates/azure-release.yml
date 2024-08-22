@@ -46,3 +46,8 @@ stages:
               inputs:
                 targetType: 'inline'
                 script: 'Copy-Item -Path "C:\azure-devops-deployment\PackageTmp\*" -Destination \\vmwclnwosdusc01\devops-share -Recurse -Force'
+             task: PowerShell@2
+              displayName : clean repo
+              inputs:
+                targetType: 'inline'
+                script: 'Remove-Item -Path "C:\azure-devops-deployment\*" -Recurse -Force'
