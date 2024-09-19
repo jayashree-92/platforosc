@@ -71,6 +71,6 @@ stages:
                 script: 'Copy-Item -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\PackageTmp\*" -Destination \\vmwclnwosdusc01\e$\OPS_Secure_Dev01 -Recurse -Force' #  "C:\azure-devops-deployment\PackageTmp\*"
             - task: PowerShell@2
               displayName : clean repo
-             inputs:
+              inputs:
                 targetType: 'inline'
                 script: 'Remove-Item -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\*" -Recurse -Force'
