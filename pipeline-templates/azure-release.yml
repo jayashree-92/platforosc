@@ -25,7 +25,7 @@ stages:
                 buildType: 'current'
                 artifactName: 'drop'
 #                targetPath: '$(System.ArtifactsDirectory)'
-                targetPath: '\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test' #\ C:\azure-devops-deployment
+                targetPath: '\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test' #\ C:\azure-devops-deployment
             - task: PowerShell@2
               displayName: backup
               inputs:
