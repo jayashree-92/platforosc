@@ -25,7 +25,7 @@ stages:
                 buildType: 'current'
                 artifactName: 'drop'
 #                targetPath: '$(System.ArtifactsDirectory)'
-                targetPath: 'C:\azure-devops-deployment'
+                targetPath: '\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test' #\ C:\azure-devops-deployment
             - task: PowerShell@2
               displayName: backup
               inputs:
@@ -58,17 +58,17 @@ stages:
               displayName : archive
               inputs:
                 targetType: 'inline'
-                script: 'Expand-Archive -Path "C:\azure-devops-deployment\HM.Operations.Secure.Web.zip" -DestinationPath "C:\azure-devops-deployment" -Force'
+                script: 'Expand-Archive -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\HM.Operations.Secure.Web.zip" -DestinationPath "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test" -Force' #  "C:\azure-devops-deployment\HM.Operations.Secure.Web.zip" -DestinationPath "C:\azure-devops-deployment"
             - task: PowerShell@2
               displayName : copy content
               inputs:
                 targetType: 'inline'
-                script: 'Copy-Item -Path "C:\azure-devops-deployment\Content\C_C\agent-ic-admin-dev\_work\2\s\HM.Operations.Secure.Web\obj\Local\Package\PackageTmp" -Destination "C:\azure-devops-deployment" -Recurse -Force'
+                script: 'Copy-Item -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\Content\C_C\agent-ic-admin-dev\_work\2\s\HM.Operations.Secure.Web\obj\Local\Package\PackageTmp" -Destination "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test" -Recurse -Force' # \\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test
             - task: PowerShell@2
               displayName: end
               inputs:
                 targetType: 'inline'
-                script: 'Copy-Item -Path "C:\azure-devops-deployment\PackageTmp\*" -Destination \\vmwclnwosdusc01\devops-share -Recurse -Force'
+                script: 'Copy-Item -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\PackageTmp\*" -Destination \\vmwclnwosdusc01\devops-share -Recurse -Force' #  "C:\azure-devops-deployment\PackageTmp\*"
           #  - task: PowerShell@2
           #    displayName : clean repo
           #   inputs:
