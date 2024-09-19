@@ -32,7 +32,7 @@ stages:
                 targetType: 'inline'
                 script: |
                   # Define the source and destination paths
-                  $sourcePath = "\\vmwclnwosdusc01\devops-share"
+                  $sourcePath = "\\vmwclnwosdusc01\e$\OPS_Secure_Dev01"
                   $destinationRootPath = "C:\Backup"
                   
                   # Get the current date and time to create a unique folder name
@@ -53,7 +53,7 @@ stages:
               displayName : clean old repos
               inputs:
                 targetType: 'inline'
-                script: 'Remove-Item -Path "\\vmwclnwosdusc01\devops-share\*" -Recurse -Force'
+                script: 'Remove-Item -Path "\\vmwclnwosdusc01\e$\OPS_Secure_Dev01\*" -Recurse -Force'
             - task: PowerShell@2
               displayName : archive
               inputs:
@@ -68,7 +68,7 @@ stages:
               displayName: end
               inputs:
                 targetType: 'inline'
-                script: 'Copy-Item -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\PackageTmp\*" -Destination \\vmwclnwosdusc01\devops-share -Recurse -Force' #  "C:\azure-devops-deployment\PackageTmp\*"
+                script: 'Copy-Item -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\PackageTmp\*" -Destination \\vmwclnwosdusc01\e$\OPS_Secure_Dev01 -Recurse -Force' #  "C:\azure-devops-deployment\PackageTmp\*"
           #  - task: PowerShell@2
           #    displayName : clean repo
           #   inputs:
