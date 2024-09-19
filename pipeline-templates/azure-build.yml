@@ -12,7 +12,7 @@ stages:
          command: 'restore'
          restoreSolution: '$(solution)'
          feedsToUse: 'config'
-         nugetConfigPath: 'nuget.config'   
+         nugetConfigPath: 'AzureNuget.config'   
       - task: VSBuild@1
         inputs:
          solution: '$(solution)'
