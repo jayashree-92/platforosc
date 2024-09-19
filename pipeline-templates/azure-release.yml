@@ -69,8 +69,8 @@ stages:
               inputs:
                 targetType: 'inline'
                 script: 'Copy-Item -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\PackageTmp\*" -Destination \\vmwclnwosdusc01\e$\OPS_Secure_Dev01 -Recurse -Force' #  "C:\azure-devops-deployment\PackageTmp\*"
-          #  - task: PowerShell@2
-          #    displayName : clean repo
-          #   inputs:
-          #      targetType: 'inline'
-          #      script: 'Remove-Item -Path "C:\azure-devops-deployment\*" -Recurse -Force'
+            - task: PowerShell@2
+              displayName : clean repo
+             inputs:
+                targetType: 'inline'
+                script: 'Remove-Item -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\*" -Recurse -Force'
