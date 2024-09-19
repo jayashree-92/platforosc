@@ -44,7 +44,7 @@ stages:
                   
                   # Move all files and directories from the source path to the new destination folder
                   Get-ChildItem -Path $sourcePath | ForEach-Object {
-                      Move-Item -Path $_.FullName -Destination $destinationFolderPath -Force
+                      Move-Item -Path $_.FullName -Destination $destinationFolderPath -Recurse -Force
                   }
                   
                   # Optional: Confirm the operation is completed
