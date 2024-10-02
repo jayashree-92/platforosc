@@ -33,6 +33,6 @@ stages:
           script: 'Remove-Item -Path "$(build.artifactStagingDirectory)\HM.Operations.Secure.Web.zip" -Force'
       - task: PublishBuildArtifacts@1
         inputs:
-         PathtoPublish: 'C:\azure-devops-deployment'
+         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
          ArtifactName: 'drop'
-         publishLocation: 'Container'
+#         publishLocation: 'Container'
