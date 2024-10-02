@@ -25,4 +25,4 @@ stages:
         inputs:
          PathtoPublish: '$(build.artifactStagingDirectory)'
          ArtifactName: 'drop'
-         ZipAfterPublish = false
+         publishLocation: 'Container'
