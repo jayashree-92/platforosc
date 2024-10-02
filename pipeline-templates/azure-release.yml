@@ -60,7 +60,7 @@ stages:
               targetType: 'inline'
               script: 'Copy-Item -Path "$(Pipeline.Workspace)\drop\Content\C_C\agent-ic-admin-dev\_work\2\s\HM.Operations.Secure.Web\obj\Local\Package\PackageTmp" -Destination "$(Pipeline.Workspace)" -Recurse -Force' # \\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test
           - task: PowerShell@2
-            displayName: end
+            displayName: exclude .config files
             inputs:
               targetType: 'inline'
               script: |
