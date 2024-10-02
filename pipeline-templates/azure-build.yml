@@ -23,6 +23,6 @@ stages:
           #configuration: '$(buildConfiguration)'             
       - task: PublishBuildArtifacts@1
         inputs:
-         PathtoPublish: '$(build.artifactStagingDirectory)/Content/C_C/agent-ic-admin-dev/_work/2/s/HM.Operations.Secure.Web/obj/Local/Package/PackageTmp'
+         PathtoPublish: '$(build.artifactStagingDirectory)'
          ArtifactName: 'drop'
          publishLocation: 'Container'
