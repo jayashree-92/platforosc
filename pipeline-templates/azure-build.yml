@@ -22,7 +22,7 @@ stages:
           #platform: '$(buildPlatform)'
           #configuration: '$(buildConfiguration)' 
       - task: PowerShell@2
-              displayName : archive
+            displayName : archive
               inputs:
                 targetType: 'inline'
                 script: 'Expand-Archive -Path "$(build.artifactStagingDirectory)\HM.Operations.Secure.Web.zip" -DestinationPath "$(build.artifactStagingDirectory)" -Force' #  "C:\azure-devops-deployment\HM.Operations.Secure.Web.zip" -DestinationPath "C:\azure-devops-deployment"            
