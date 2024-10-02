@@ -33,6 +33,6 @@ stages:
           script: 'Remove-Item -Path "$(build.artifactStagingDirectory)\HM.Operations.Secure.Web.zip" -Force'
       - task: PublishBuildArtifacts@1
         inputs:
-         PathtoPublish: '$(build.artifactStagingDirectory)\M.Operations.Secure.Web\obj\Local\Package\PackageTmp'
+         PathtoPublish: '$(build.artifactStagingDirectory)'
          ArtifactName: 'drop'
          publishLocation: 'Container'
