@@ -16,7 +16,7 @@ stages:
       - task: VSBuild@1
         inputs:
          solution: '$(solution)'
-         msbuildArgs: '/p:DeployOnBuild=false /p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+         msbuildArgs: '/p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
       #- task: VSTest@2
         #inputs:
           #platform: '$(buildPlatform)'
