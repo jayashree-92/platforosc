@@ -64,8 +64,8 @@ stages:
             inputs:
               targetType: 'inline'
               script: 'Copy-Item -Path "$(Pipeline.Workspace)\PackageTmp\*" -Destination C:\azure-devops-deployment -Recurse -Force' #  "C:\azure-devops-deployment\PackageTmp\* \\vmwclnwosdusc01\e$\OPS_Secure_Dev01"
-          - task: PowerShell@2
-            displayName : clean repo
-            inputs:
-              targetType: 'inline'
-              script: 'Remove-Item -Path "$(Pipeline.Workspace)\*" -Recurse -Force'
+#          - task: PowerShell@2
+#            displayName : clean repo
+#            inputs:
+#              targetType: 'inline'
+#              script: 'Remove-Item -Path "$(Pipeline.Workspace)\*" -Recurse -Force'
