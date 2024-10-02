@@ -63,6 +63,17 @@ stages:
             displayName: end
             inputs:
               targetType: 'inline'
+              script: |
+                $directoryPath = "$(Pipeline.Workspace)\PackageTmp"
+                $configFiles = Get-ChildItem -Path $directoryPath -Recurse -Filter "*.config"
+                foreach ($file in $configFiles) {
+                  Remove-Item -Path $file.FullName -Force
+                }
+                Write-Output "All .config files have been deleted."
+          - task: PowerShell@2
+            displayName: end
+            inputs:
+              targetType: 'inline'
               script: 'Copy-Item -Path "$(Pipeline.Workspace)\PackageTmp\*" -Destination C:\azure-devops-deployment -Recurse -Force' #  "C:\azure-devops-deployment\PackageTmp\* \\vmwclnwosdusc01\e$\OPS_Secure_Dev01"
 #          - task: PowerShell@2
 #            displayName : clean repo
