@@ -58,7 +58,7 @@ stages:
             displayName : copy content
             inputs:
               targetType: 'inline'
-              script: 'Copy-Item -Path "$(Pipeline.Workspace)\Content\C_C\agent-ic-admin-dev\_work\2\s\HM.Operations.Secure.Web\obj\Local\Package\PackageTmp" -Destination "C:\azure-devops-deployment" -Recurse -Force' # \\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test
+              script: 'Copy-Item -Path "$(Pipeline.Workspace)\drop\Content\C_C\agent-ic-admin-dev\_work\2\s\HM.Operations.Secure.Web\obj\Local\Package\PackageTmp" -Destination "C:\azure-devops-deployment" -Recurse -Force' # \\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test
           - task: PowerShell@2
             displayName: end
             inputs:
