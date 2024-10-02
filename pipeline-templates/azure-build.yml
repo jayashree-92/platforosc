@@ -25,4 +25,4 @@ stages:
         inputs:
          PathtoPublish: '$(build.artifactStagingDirectory)'
          ArtifactName: 'drop'
-         publishLocation: 'Container'
+#         publishLocation: 'Container'
