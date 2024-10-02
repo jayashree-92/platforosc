@@ -13,8 +13,7 @@ stages:
       resourceType: virtualMachine
     strategy:
       runOnce:
-        deploy:
-    
+        deploy:    
             - task: DownloadPipelineArtifact@2
               inputs:
                 buildType: 'current'
