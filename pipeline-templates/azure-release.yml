@@ -54,11 +54,11 @@ stages:
               inputs:
                 targetType: 'inline'
                 script: 'Remove-Item -Path "\\vmwclnwosdusc01\e$\OPS_Secure_Dev01\*" -Recurse -Force'
-            - task: PowerShell@2
-              displayName : archive
-              inputs:
-                targetType: 'inline'
-                script: 'Expand-Archive -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\HM.Operations.Secure.Web.zip" -DestinationPath "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test" -Force' #  "C:\azure-devops-deployment\HM.Operations.Secure.Web.zip" -DestinationPath "C:\azure-devops-deployment"
+            #- task: PowerShell@2
+            #  displayName : archive
+            #  inputs:
+            #    targetType: 'inline'
+            #    script: 'Expand-Archive -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\HM.Operations.Secure.Web.zip" -DestinationPath "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test" -Force' #  "C:\azure-devops-deployment\HM.Operations.Secure.Web.zip" -DestinationPath "C:\azure-devops-deployment"
             - task: PowerShell@2
               displayName : copy content
               inputs:
