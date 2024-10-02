@@ -20,9 +20,19 @@ stages:
       #- task: VSTest@2
         #inputs:
           #platform: '$(buildPlatform)'
-          #configuration: '$(buildConfiguration)'             
+          #configuration: '$(buildConfiguration)' 
+      - task: PowerShell@2
+              displayName : archive
+              inputs:
+                targetType: 'inline'
+                script: 'Expand-Archive -Path "$(build.artifactStagingDirectory)\HM.Operations.Secure.Web.zip" -DestinationPath "$(build.artifactStagingDirectory)" -Force' #  "C:\azure-devops-deployment\HM.Operations.Secure.Web.zip" -DestinationPath "C:\azure-devops-deployment"            
+      - task: PowerShell@2
+              displayName : rmove-zip-file
+              inputs:
+                targetType: 'inline'
+                script: 'Remove-Item -Path "$(build.artifactStagingDirectory)\HM.Operations.Secure.Web.zip" -Force'
       - task: PublishBuildArtifacts@1
         inputs:
-         PathtoPublish: '$(build.artifactStagingDirectory)'
+         PathtoPublish: '$(build.artifactStagingDirectory)\M.Operations.Secure.Web\obj\Local\Package\PackageTmp'
          ArtifactName: 'drop'
          publishLocation: 'Container'
