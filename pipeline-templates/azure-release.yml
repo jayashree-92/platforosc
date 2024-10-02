@@ -16,9 +16,9 @@ stages:
         deploy:  
           steps:  
           - task: DownloadPipelineArtifact@2
-              inputs:
-                buildType: 'current'
-                artifactName: 'drop'
+            inputs:
+              buildType: 'current'
+              artifactName: 'drop'
   #                targetPath: '$(System.ArtifactsDirectory)'
                 targetPath: 'C:\azure-devops-deployment' #'\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test' #\ C:\azure-devops-deployment
             - task: PowerShell@2
