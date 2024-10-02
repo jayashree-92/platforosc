@@ -1,6 +1,3 @@
-parameters:
-  - name: environment
-    type: string
 stages:
 - stage: ${{ parameters.environment }}
   displayName: 'Release ${{ parameters.environment }}'
