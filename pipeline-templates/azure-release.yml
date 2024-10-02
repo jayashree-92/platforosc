@@ -15,12 +15,12 @@ stages:
       runOnce:
         deploy:  
           steps:  
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              buildType: 'current'
-              artifactName: 'drop'
-  #                targetPath: '$(System.ArtifactsDirectory)'
-              targetPath: 'C:\azure-devops-deployment' #'\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test' #\ C:\azure-devops-deployment
+#          - task: DownloadPipelineArtifact@2
+#            inputs:
+#              buildType: 'current'
+#              artifactName: 'drop'
+#                targetPath: '$(System.ArtifactsDirectory)'
+#              targetPath: 'C:\azure-devops-deployment' #'\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test' #\ C:\azure-devops-deployment
           - task: PowerShell@2
             displayName: backup
             inputs:
@@ -58,7 +58,7 @@ stages:
             displayName : copy content
             inputs:
               targetType: 'inline'
-              script: 'Copy-Item -Path "$(Pipeline.Workspace)\drop\Content\C_C\agent-ic-admin-dev\_work\2\s\HM.Operations.Secure.Web\obj\Local\Package\PackageTmp" -Destination "C:\azure-devops-deployment" -Recurse -Force' # \\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test
+              script: 'Copy-Item -Path "$(Pipeline.Workspace)\drop\Content\C_C\agent-ic-admin-dev\_work\2\s\HM.Operations.Secure.Web\obj\Local\Package\PackageTmp" -Destination "$(Pipeline.Workspace)" -Recurse -Force' # \\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test
           - task: PowerShell@2
             displayName: end
             inputs:
