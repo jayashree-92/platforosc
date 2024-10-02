@@ -14,12 +14,7 @@ stages:
     strategy:
       runOnce:
         deploy:
-          steps:
-            - powershell: |
-                Write-Host "Testing steps for deployment"
-              displayName: 'Powershell Command'
-              errorActionPreference: 'Continue'
-            
+    
             - task: DownloadPipelineArtifact@2
               inputs:
                 buildType: 'current'
