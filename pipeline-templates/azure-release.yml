@@ -80,10 +80,10 @@ stages:
             displayName: clean old repos
             inputs:
               targetType: 'inline'
-              script: 'echo "$(Build.Repository.LocalPath)"'
+              script: 'echo "$(Build.Repository.LocalPath)/$(Build.Repository.Name)"'
 
           - task: PowerShell@2
             displayName: SQL commands
             inputs:
-              filePath: '$(Build.Repository.LocalPath)/scripts/sql-commands.ps1'
+              filePath: '$(Build.Repository.LocalPath)/$(Build.Repository.Name)/scripts/sql-commands.ps1'
               arguments: '-rootDir "$(System.DefaultWorkingDirectory)"'
