@@ -9,6 +9,7 @@ pool:
   name: "platform-application-agent-pool"
 
 
+
 parameters:
   - name: environment
     displayName: Environment
@@ -24,6 +25,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Local'
+  group: ${{ parameters.environment }}
 
 stages:
   - template: pipeline-templates/azure-build.yml
