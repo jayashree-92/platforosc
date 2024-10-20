@@ -80,10 +80,4 @@ stages:
             displayName: clean old repos
             inputs:
               targetType: 'inline'
-              script: 'dir "$(System.DefaultWorkingDirectory)" /a'
-
-          - task: PowerShell@2
-            displayName: SQL commands
-            inputs:
-              filePath: '$(Build.Repository.LocalPath)/$(Build.Repository.Name)/scripts/sql-commands.ps1'
-              arguments: '-rootDir "$(System.DefaultWorkingDirectory)"'
+              script: 'Get-ChildItem -Path $env:System_DefaultWorkingDirectory -Force'
