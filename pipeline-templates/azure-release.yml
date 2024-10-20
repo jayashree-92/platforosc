@@ -76,11 +76,12 @@ stages:
               targetType: 'inline'
               script: 'Copy-Item -Path "$(Pipeline.Workspace)\PackageTmp\*" -Destination C:\azure-devops-deployment -Recurse -Force'
           
-          - script: |
-              echo "Current Working Directory: $(System.DefaultWorkingDirectory)"
-              dir $(System.DefaultWorkingDirectory)/scripts
-            displayName: 'List contents of the scripts directory'
-            
+          - task: PowerShell@2
+            displayName: clean old repos
+            inputs:
+              targetType: 'inline'
+              script: 'echo "$(System.DefaultWorkingDirectory)"'
+
           - task: PowerShell@2
             displayName: SQL commands
             inputs:
