@@ -27,9 +27,24 @@ variables:
 
 stages:
   - template: pipeline-templates/azure-build.yml
-  - template: pipeline-templates/azure-release.yml
-    parameters:
-      environment: ${{ parameters.environment }}
+    - stage: SetupVariables
+    jobs:
+    - job: LoadVariables
+      displayName: "Load variables from the library"
+      steps:
+      - task: AzureKeyVault@2
+        inputs:
+          azureSubscription: 'your-azure-subscription'
+          keyVaultName: '$(environment)'
+          SecretsFilter: '*'
+      variables:
+        - group: ${{ parameters.environment }}  # Dynamically load variables from the corresponding environment library
+
+    - template: pipeline-templates/azure-release.yml
+      parameters:
+        environment: ${{ parameters.environment }}  # Environment
+        sourcePath: ${{ variables.sourcePath }}     # Fetch the sourcePath from the variable group
+        destinationRootPath: ${{ variables.destinationRootPath }}  # Fetch the destinationRootPath from the variable group
   - stage: deployement
     displayName: deployment
     jobs:
