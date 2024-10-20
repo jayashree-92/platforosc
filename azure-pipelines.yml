@@ -25,20 +25,10 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Local'
-  group: ${{ parameters.environment }}
+  group: Development
 
 stages:
-  - template: pipeline-templates/azure-build.yml
-
-  - stage: SetupVariables
-    jobs:
-    - job: LoadVariables
-      displayName: "Load variables from the library"
-      variables:
-        - group: ${{ parameters.environment }}  # Load variables from the corresponding environment library
-
-
-        
+  - template: pipeline-templates/azure-build.yml        
   - template: pipeline-templates/azure-release.yml
     parameters:
       environment: ${{ parameters.environment }}  # Environment
