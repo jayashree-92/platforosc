@@ -61,7 +61,7 @@ stages:
             displayName: SQL commands
             inputs:
               filePath: '$(System.DefaultWorkingDirectory)/scripts/sql-commands.ps1'
-              arguments: '-rootDir "$(System.DefaultWorkingDirectory)" -rootDirSql "$rootDir\HMSQLDBProject\HM_DMA" -sqlServer "vmwclnsqldusc01" -sqlDB "HM_WIRES"'
+              arguments: '-rootDir "$(System.DefaultWorkingDirectory)" -rootDirSql "$rootDir\$(rootDirSql)" -sqlServer "$(sqlServer)" -sqlDB "$(sqlDB)"'
 
                 
 
