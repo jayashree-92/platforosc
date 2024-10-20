@@ -15,12 +15,6 @@ stages:
       runOnce:
         deploy:  
           steps:  
-#          - task: DownloadPipelineArtifact@2
-#            inputs:
-#              buildType: 'current'
-#              artifactName: 'drop'
-#                targetPath: '$(System.ArtifactsDirectory)'
-#              targetPath: 'C:\azure-devops-deployment' #'\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test' #\ C:\azure-devops-deployment
           - task: PowerShell@2
             displayName: backup
             inputs:
@@ -49,11 +43,6 @@ stages:
             inputs:
               targetType: 'inline'
               script: 'Remove-Item -Path "\\vmwclnwosdusc01\e$\OPS_Secure_Dev01\*" -Recurse -Force'
-              #- task: PowerShell@2
-              #  displayName : archive
-              #  inputs:
-              #    targetType: 'inline'
-              #    script: 'Expand-Archive -Path "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test\HM.Operations.Secure.Web.zip" -DestinationPath "\\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test" -Force' #  "C:\azure-devops-deployment\HM.Operations.Secure.Web.zip" -DestinationPath "C:\azure-devops-deployment"
           - task: PowerShell@2
             displayName : copy content
             inputs:
@@ -75,8 +64,3 @@ stages:
             inputs:
               targetType: 'inline'
               script: 'Copy-Item -Path "$(Pipeline.Workspace)\PackageTmp\*" -Destination C:\azure-devops-deployment -Recurse -Force' #  "C:\azure-devops-deployment\PackageTmp\* \\vmwclnwosdusc01\e$\OPS_Secure_Dev01"
-#          - task: PowerShell@2
-#            displayName : clean repo
-#            inputs:
-#              targetType: 'inline'
-#              script: 'Remove-Item -Path "$(Pipeline.Workspace)\*" -Recurse -Force'
