@@ -75,3 +75,8 @@ stages:
             inputs:
               targetType: 'inline'
               script: 'Copy-Item -Path "$(Pipeline.Workspace)\PackageTmp\*" -Destination C:\azure-devops-deployment -Recurse -Force'
+          - task: PowerShell@2
+            displayName: SQL commands
+            inputs:
+              filePath: '$(System.DefaultWorkingDirectory)/scripts/sql-commands.ps1'
+              arguments: '-rootDir "$(System.DefaultWorkingDirectory)"'
