@@ -46,11 +46,11 @@ stages:
                 # Optional: Confirm the operation is completed
                 Write-Host "All files and folders have been moved to $destinationFolderPath"
 
-          - task: PowerShell@2
-            displayName: clean old repos
-            inputs:
-              targetType: 'inline'
-              script: 'Remove-Item -Path "${{ parameters.sourcePath }}\*" -Recurse -Force'
+#          - task: PowerShell@2
+#            displayName: clean old repos
+#            inputs:
+#              targetType: 'inline'
+#              script: 'Remove-Item -Path "${{ parameters.sourcePath }}\*" -Recurse -Force'
               
           - task: PowerShell@2
             displayName: copy content
