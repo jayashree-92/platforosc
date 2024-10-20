@@ -36,8 +36,8 @@ stages:
   - template: pipeline-templates/azure-release.yml
     parameters:
       environment: ${{ parameters.environment }}  # Environment
-      sourcePath: ${{ variables.sourcePath }}     # Fetch the sourcePath from the variable group
-      destinationRootPath: ${{ variables.destinationRootPath }}  # Fetch the destinationRootPath from the variable group
+      sourcePath: $(sourcePath)     # Fetch the sourcePath from the variable group
+      destinationRootPath: $(destinationRootPath)  # Fetch the destinationRootPath from the variable group
   - stage: deployement
     displayName: deployment
     jobs:
