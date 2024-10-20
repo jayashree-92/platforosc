@@ -3,10 +3,10 @@ parameters:
     type: string
   - name: sourcePath
     type: string
-    default: "\\vmwclnwosdusc01\e$\OPS_Secure_Dev01"  # Default value, can be overridden
+    #default: "\\vmwclnwosdusc01\e$\OPS_Secure_Dev01"  # Default value, can be overridden
   - name: destinationRootPath
     type: string
-    default: "C:\Backup"  # Default value, can be overridden
+   #default: "C:\Backup"  # Default value, can be overridden
 
 stages:
 - stage: ${{ parameters.environment }}
