@@ -6,7 +6,7 @@ parameters:
     default: "\\vmwclnwosdusc01\e$\OPS_Secure_Dev01"  # Default value, can be overridden
   - name: destinationRootPath
     type: string
-    default: "C:\Backup"
+    default: "C:\Backup"  # Default value, can be overridden
 
 stages:
 - stage: ${{ parameters.environment }}
@@ -21,14 +21,15 @@ stages:
       runOnce:
         deploy:  
           steps:  
+
           - task: PowerShell@2
             displayName: backup
             inputs:
               targetType: 'inline'
               script: |
-                # Define the source and destination paths
-                $sourcePath = "\\vmwclnwosdusc01\e$\OPS_Secure_Dev01"
-                $destinationRootPath = "C:\Backup"
+                # Define the source and destination paths from pipeline variables
+                $sourcePath = "${{ parameters.sourcePath }}"
+                $destinationRootPath = "${{ parameters.destinationRootPath }}"
                 
                 # Get the current date and time to create a unique folder name
                 $dateTime = Get-Date -Format "yyyyMMdd-HHmmss"
@@ -41,19 +42,22 @@ stages:
                 Get-ChildItem -Path $sourcePath | ForEach-Object {
                     Copy-Item -Path $_.FullName -Destination $destinationFolderPath -Recurse -Force
                 }
-                  
+                
                 # Optional: Confirm the operation is completed
                 Write-Host "All files and folders have been moved to $destinationFolderPath"
+
           - task: PowerShell@2
-            displayName : clean old repos
+            displayName: clean old repos
             inputs:
               targetType: 'inline'
-              script: 'Remove-Item -Path "\\vmwclnwosdusc01\e$\OPS_Secure_Dev01\*" -Recurse -Force'
+              script: 'Remove-Item -Path "${{ parameters.sourcePath }}\*" -Recurse -Force'
+              
           - task: PowerShell@2
-            displayName : copy content
+            displayName: copy content
             inputs:
               targetType: 'inline'
-              script: 'Copy-Item -Path "$(Pipeline.Workspace)\drop\Content\C_C\agent-ic-admin-dev\_work\2\s\HM.Operations.Secure.Web\obj\Local\Package\PackageTmp" -Destination "$(Pipeline.Workspace)" -Recurse -Force' # \\vmwclnwosdusc01\e$\Operations_Secure_Jenkins\Test
+              script: 'Copy-Item -Path "$(Pipeline.Workspace)\drop\Content\C_C\agent-ic-admin-dev\_work\2\s\HM.Operations.Secure.Web\obj\Local\Package\PackageTmp" -Destination "$(Pipeline.Workspace)" -Recurse -Force'
+
           - task: PowerShell@2
             displayName: exclude .config files
             inputs:
@@ -65,8 +69,9 @@ stages:
                   Remove-Item -Path $file.FullName -Force
                 }
                 Write-Output "All .config files have been deleted."
+
           - task: PowerShell@2
             displayName: end
             inputs:
               targetType: 'inline'
-              script: 'Copy-Item -Path "$(Pipeline.Workspace)\PackageTmp\*" -Destination C:\azure-devops-deployment -Recurse -Force' #  "C:\azure-devops-deployment\PackageTmp\* \\vmwclnwosdusc01\e$\OPS_Secure_Dev01"
+              script: 'Copy-Item -Path "$(Pipeline.Workspace)\PackageTmp\*" -Destination C:\azure-devops-deployment -Recurse -Force'
