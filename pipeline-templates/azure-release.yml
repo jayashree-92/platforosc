@@ -85,5 +85,5 @@ stages:
           - task: PowerShell@2
             displayName: SQL commands
             inputs:
-              filePath: '$(System.DefaultWorkingDirectory)/scripts/sql-commands.ps1'
+              filePath: '$(System.Build.Repository.LocalPath)/scripts/sql-commands.ps1'
               arguments: '-rootDir "$(System.DefaultWorkingDirectory)"'
