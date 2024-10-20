@@ -37,11 +37,7 @@ stages:
       variables:
         - group: ${{ parameters.environment }}  # Load variables from the corresponding environment library
 
-      steps:
-      - script: |
-          echo "Listing all variables from the group:"
-          env | sort
-        displayName: "List all downloaded variables"
+
         
   - template: pipeline-templates/azure-release.yml
     parameters:
