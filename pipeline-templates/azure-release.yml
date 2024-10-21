@@ -30,7 +30,7 @@ stages:
                 # Define the source and destination paths from pipeline variables
                 $sourcePath = "${{ parameters.sourcePath }}"
                 $destinationRootPath = "${{ parameters.destinationRootPath }}"
-                
+                if (![string]::IsNullOrWhiteSpace($destinationRootPath)) {
                 # Get the current date and time to create a unique folder name
                 $dateTime = Get-Date -Format "yyyyMMdd-HHmmss"
                 $destinationFolderPath = Join-Path -Path $destinationRootPath -ChildPath "Backup_$dateTime"
@@ -44,7 +44,7 @@ stages:
                 }
                 
                 # Optional: Confirm the operation is completed
-                Write-Host "All files and folders have been moved to $destinationFolderPath"
+                Write-Host "All files and folders have been moved to $destinationFolderPath"}
 
 #          - task: PowerShell@2
 #            displayName: clean old repos
